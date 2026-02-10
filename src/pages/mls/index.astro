@@ -1,0 +1,80 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { listKbPagesByPrefix } from '../../lib/directus';
+
+const items = await listKbPagesByPrefix({ prefix: '/docs/propertylist-mls-user-manual/', lang: 'en', limit: 250 });
+---
+
+<Layout
+	lang="en"
+	title="MLS User Manual • PropertyList Info Hub"
+	description="Learn how to use the PropertyList MLS."
+	canonical="https://info.propertylist.es/mls/"
+>
+	<h1>MLS User Manual</h1>
+	<p class="sub">Learn how to use the PropertyList MLS.</p>
+
+	{items.length ? (
+		<div class="list">
+			{items.map((p) => (
+				<a class="row" href={p.path}>
+					<div class="rowTitle">{p.title}</div>
+					{p.description ? <div class="rowDesc">{p.description}</div> : null}
+				</a>
+			))}
+		</div>
+	) : (
+		<div class="empty">No MLS manual pages yet.</div>
+	)}
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.list {
+		display: grid;
+		gap: 10px;
+	}
+
+	.row {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 12px 14px;
+		text-decoration: none;
+	}
+
+	.row:hover {
+		text-decoration: none;
+		border-color: rgba(14, 165, 233, 0.35);
+	}
+
+	.rowTitle {
+		font-weight: 800;
+		letter-spacing: -0.01em;
+	}
+
+	.rowDesc {
+		margin-top: 6px;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 14px;
+		line-height: 1.4;
+	}
+
+	.empty {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+</style>
+

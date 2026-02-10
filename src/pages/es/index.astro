@@ -1,16 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { listKbPagesByPrefix } from '../lib/directus';
-import background from '../assets/background.svg';
+import Layout from '../../layouts/Layout.astro';
+import { listKbPagesByPrefix } from '../../lib/directus';
+import background from '../../assets/background.svg';
 
-const latestDocs = await listKbPagesByPrefix({ prefix: '/docs/', lang: 'en', limit: 8 });
-const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/', lang: 'en', limit: 8 });
+const latestDocs = await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 8 });
+const latestGeneral = await listKbPagesByPrefix({ prefix: '/es/informacion-general/', lang: 'es', limit: 8 });
 ---
 
 <Layout
-	lang="en"
+	lang="es"
 	title="PropertyList Info Hub"
-	description="How to use PropertyList.es, features, pricing and more."
+	description="Cómo usar PropertyList.es, funciones, precios y más."
 >
 	<section class="hero">
 		<div class="heroBg" aria-hidden="true">
@@ -18,71 +18,71 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 		</div>
 		<div class="heroInner">
 			<div class="heroCopy">
-				<div class="tagRow" aria-label="Key topics">
-					<a class="tag" href="/what-we-offer/">What is PropertyList?</a>
-					<a class="tag" href="/docs/getting-started/">How to use PropertyList</a>
+				<div class="tagRow" aria-label="Temas clave">
+					<a class="tag" href="/es/lo-que-ofrecemos/">¿Qué es PropertyList?</a>
+					<a class="tag" href="/es/docs/empezar/">Cómo usar PropertyList</a>
 				</div>
-				<div class="pillRow" role="tablist" aria-label="User type">
+				<div class="pillRow" role="tablist" aria-label="Tipo de usuario">
 					<button class="pill isActive" type="button" data-persona="freelancer">Freelancer</button>
-					<button class="pill" type="button" data-persona="agency">Agency</button>
-					<button class="pill" type="button" data-persona="developer">Developer</button>
-					<button class="pill" type="button" data-persona="service">Property Service</button>
+					<button class="pill" type="button" data-persona="agency">Agencia</button>
+					<button class="pill" type="button" data-persona="developer">Promotor</button>
+					<button class="pill" type="button" data-persona="service">Servicios</button>
 				</div>
-				<h1>Share Properties for Free</h1>
+				<h1>Comparte propiedades gratis</h1>
 				<p class="lead">
-					PropertyList empowers you to instantly share your properties with a vast network of real estate agents
-					and seamlessly integrates them into each other’s websites.
+					PropertyList te permite compartir tus propiedades al instante con una gran red de agentes e integrarlas
+					en sus webs y viceversa.
 				</p>
 				<div class="ctaRow">
-					<a class="btnPrimary" href="/docs/">Browse documentation</a>
-					<a class="btnSecondary" href="/search">Search guides</a>
+					<a class="btnPrimary" href="/es/docs/">Ver documentación</a>
+					<a class="btnSecondary" href="/es/search">Buscar guías</a>
 				</div>
 				<div class="metaRow">
 					<div class="metaItem">
 						<div class="metaKpi">316+</div>
-						<div class="metaLabel">Imported articles</div>
+						<div class="metaLabel">Artículos importados</div>
 					</div>
 					<div class="metaItem">
 						<div class="metaKpi">EN/ES</div>
-						<div class="metaLabel">Bilingual support</div>
+						<div class="metaLabel">Bilingüe</div>
 					</div>
 					<div class="metaItem">
 						<div class="metaKpi">MLS</div>
-						<div class="metaLabel">User manual</div>
+						<div class="metaLabel">Manual de usuario</div>
 					</div>
 				</div>
 
-				<div class="personaBox" aria-label="Quick links">
+				<div class="personaBox" aria-label="Enlaces rápidos">
 					<div class="personaPanel isActive" data-persona-panel="freelancer" role="tabpanel">
-						<div class="personaTitle">Freelancer quick start</div>
+						<div class="personaTitle">Inicio rápido</div>
 						<div class="personaLinks">
-							<a href="/docs/getting-started/">Getting started</a>
-							<a href="/mls/">MLS overview</a>
-							<a href="/laws/">Key legal guides</a>
+							<a href="/es/docs/empezar/">Empezar</a>
+							<a href="/es/mls/">Manual del MLS</a>
+							<a href="/es/leyes/">Guías legales</a>
 						</div>
 					</div>
 					<div class="personaPanel" data-persona-panel="agency" role="tabpanel">
-						<div class="personaTitle">Agency quick start</div>
+						<div class="personaTitle">Agencias</div>
 						<div class="personaLinks">
-							<a href="/docs/">Browse docs</a>
-							<a href="/general-information/">Latest updates</a>
-							<a href="/search">Search everything</a>
+							<a href="/es/docs/">Documentación</a>
+							<a href="/es/informacion-general/">Últimas novedades</a>
+							<a href="/es/search">Buscar</a>
 						</div>
 					</div>
 					<div class="personaPanel" data-persona-panel="developer" role="tabpanel">
-						<div class="personaTitle">Developer quick start</div>
+						<div class="personaTitle">Promotores</div>
 						<div class="personaLinks">
-							<a href="/docs/">Documentation</a>
-							<a href="/general-information/">Platform news</a>
-							<a href="/search">Search</a>
+							<a href="/es/docs/">Documentación</a>
+							<a href="/es/informacion-general/">Noticias</a>
+							<a href="/es/search">Buscar</a>
 						</div>
 					</div>
 					<div class="personaPanel" data-persona-panel="service" role="tabpanel">
-						<div class="personaTitle">Property service quick start</div>
+						<div class="personaTitle">Servicios</div>
 						<div class="personaLinks">
-							<a href="/general-information/">General information</a>
-							<a href="/docs/">Documentation</a>
-							<a href="/search">Search</a>
+							<a href="/es/informacion-general/">Información general</a>
+							<a href="/es/docs/">Documentación</a>
+							<a href="/es/search">Buscar</a>
 						</div>
 					</div>
 				</div>
@@ -90,23 +90,23 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 
 			<div class="heroVisual" aria-hidden="true">
 				<div class="visualCard">
-					<div class="visualTitle">MLS User Manual</div>
+					<div class="visualTitle">Manual del MLS</div>
 					<div class="visualLine"></div>
 					<div class="visualLine short"></div>
 					<div class="visualPills">
-						<span>Listings</span>
-						<span>Exports</span>
-						<span>Reports</span>
+						<span>Listados</span>
+						<span>Exportar</span>
+						<span>Informes</span>
 					</div>
 				</div>
 				<div class="visualCard">
-					<div class="visualTitle">Laws &amp; Procedures</div>
+					<div class="visualTitle">Leyes y procedimientos</div>
 					<div class="visualLine"></div>
 					<div class="visualLine"></div>
 					<div class="visualLine short"></div>
 				</div>
 				<div class="visualCard">
-					<div class="visualTitle">General Information</div>
+					<div class="visualTitle">Información general</div>
 					<div class="visualLine"></div>
 					<div class="visualLine short"></div>
 				</div>
@@ -116,11 +116,11 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 
 	<section class="section">
 		<div class="sectionHeader">
-			<h2>Browse Documentation</h2>
-			<a class="link" href="/docs/">View all</a>
+			<h2>Explorar documentación</h2>
+			<a class="link" href="/es/docs/">Ver todo</a>
 		</div>
 		<div class="grid">
-			<a class="tile" href="/neighbourhood/">
+			<a class="tile" href="/es/barrios/">
 				<div class="tileIcon" aria-hidden="true">
 					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -135,10 +135,10 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 						/>
 					</svg>
 				</div>
-				<h3>Neighbourhood Guides</h3>
-				<p>Area overviews and local knowledge.</p>
+				<h3>Guías de barrios</h3>
+				<p>Información de zonas y estilo de vida.</p>
 			</a>
-			<a class="tile" href="/mls/">
+			<a class="tile" href="/es/mls/">
 				<div class="tileIcon" aria-hidden="true">
 					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -151,10 +151,10 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 						<path d="M8.5 15.5h6" stroke="currentColor" stroke-width="1.6" />
 					</svg>
 				</div>
-				<h3>MLS User Manual</h3>
-				<p>Workflows, listings, exports, and reports.</p>
+				<h3>Manual del MLS</h3>
+				<p>Flujos, listados, exportaciones e informes.</p>
 			</a>
-			<a class="tile" href="/laws/">
+			<a class="tile" href="/es/leyes/">
 				<div class="tileIcon" aria-hidden="true">
 					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -166,16 +166,16 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 						<path d="M12 9v6" stroke="currentColor" stroke-width="1.6" />
 					</svg>
 				</div>
-				<h3>Laws &amp; Procedures</h3>
-				<p>Rentals, taxes, inheritance, and more.</p>
+				<h3>Leyes y procedimientos</h3>
+				<p>Alquileres, impuestos, herencias y más.</p>
 			</a>
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHeader">
-			<h2>Latest Documentation</h2>
-			<a class="link" href="/docs/">View all</a>
+			<h2>Última documentación</h2>
+			<a class="link" href="/es/docs/">Ver todo</a>
 		</div>
 		<div class="list">
 			{latestDocs.length ? (
@@ -186,15 +186,15 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 					</a>
 				))
 			) : (
-				<div class="empty">No documentation pages yet.</div>
+				<div class="empty">Aún no hay páginas.</div>
 			)}
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHeader">
-			<h2>General Information</h2>
-			<a class="link" href="/general-information/">View all</a>
+			<h2>Información general</h2>
+			<a class="link" href="/es/informacion-general/">Ver todo</a>
 		</div>
 		<div class="cards">
 			{latestGeneral.length ? (
@@ -205,24 +205,24 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/
 					</a>
 				))
 			) : (
-				<div class="empty">No articles yet.</div>
+				<div class="empty">Aún no hay artículos.</div>
 			)}
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHeader">
-			<h2>Be a part of the community</h2>
-			<a class="link" href="/community/">Ask a question</a>
+			<h2>Sé parte de la comunidad</h2>
+			<a class="link" href="/es/comunidad/">Haz una pregunta</a>
 		</div>
 		<div class="grid">
 			<div class="tile mutedTile">
-				<h3>Latest Forum Topics</h3>
-				<p>Coming soon.</p>
+				<h3>Últimos temas del foro</h3>
+				<p>Próximamente.</p>
 			</div>
 			<div class="tile mutedTile">
-				<h3>Video Tutorials</h3>
-				<p>Coming soon.</p>
+				<h3>Tutoriales en vídeo</h3>
+				<p>Próximamente.</p>
 			</div>
 		</div>
 	</section>
