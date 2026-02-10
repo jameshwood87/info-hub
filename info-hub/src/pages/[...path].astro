@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getKbPageByPath } from '../lib/directus';
+
+const rawPath = Astro.params.path ?? '';
+const normalizedPath = `/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
+
+const page = await getKbPageByPath(normalizedPath);
+
+if (!page) {
+	return new Response('Not Found', { status: 404 });
+}
+
+const lang = page.language || 'en';
+const title = page.seo_title || page.title;
+const description = page.seo_description || page.description || undefined;
+const canonical = `https://info.propertylist.es${page.path}`;
+const hreflangs = [
+	{ hreflang: 'en', href: `https://info.propertylist.es${page.path.replace(/^\/es\//, '/')}` },
+	{ hreflang: 'es', href: `https://info.propertylist.es${page.path.startsWith('/es/') ? page.path : `/es${page.path}`}` },
+];
+---
+
+<Layout lang={lang} title={title} description={description} canonical={canonical} hreflangs={hreflangs}>
+	<article>
+		<h1>{page.title}</h1>
+		{page.description ? <p>{page.description}</p> : null}
+		{page.body ? <Fragment set:html={page.body} /> : null}
+	</article>
+</Layout>

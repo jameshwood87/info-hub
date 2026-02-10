@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const q = (Astro.url.searchParams.get('q') || '').trim();
+---
+
+<Layout lang="es" title="Buscar • PropertyList Info Hub">
+	<h1>Buscar</h1>
+	<form method="get" action="/es/search">
+		<input name="q" value={q} placeholder="Buscar en la documentación" />
+		<button type="submit">Buscar</button>
+	</form>
+	<div id="results"></div>
+	<script define:vars={{ q }}>
+		const resultsEl = document.getElementById('results');
+		const input = document.querySelector('input[name="q"]');
+
+		async function runSearch(query) {
+			if (!query) {
+				resultsEl.textContent = '';
+				return;
+			}
+			const res = await fetch(`/api/search.json?lang=es&q=${encodeURIComponent(query)}`);
+			const json = await res.json();
+			const results = Array.isArray(json.results) ? json.results : [];
+			if (!results.length) {
+				resultsEl.textContent = 'Sin resultados.';
+				return;
+			}
+			resultsEl.innerHTML = `<ul>${results
+				.map((r) => `<li><a href="${r.path}">${r.title}</a></li>`)
+				.join('')}</ul>`;
+		}
+
+		if (q) runSearch(q);
+		input?.addEventListener('input', (e) => runSearch(e.target.value.trim()));
+	</script>
+</Layout>
+
