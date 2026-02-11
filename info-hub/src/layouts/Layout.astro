@@ -864,29 +864,32 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 
 	@media (min-width: 961px) {
 		:global(.docNav) {
-			scrollbar-width: none;
-			-ms-overflow-style: none;
+			scrollbar-width: thin;
+			scrollbar-color: transparent transparent;
 		}
 
 		:global(.docNav::-webkit-scrollbar) {
-			width: 0;
-			height: 0;
-		}
-
-		:global(.docNav:hover) {
-			scrollbar-width: thin;
-		}
-
-		:global(.docNav:hover::-webkit-scrollbar) {
 			width: 10px;
 			height: 10px;
 		}
 
-		:global(.docNav:hover::-webkit-scrollbar-thumb) {
-			background: rgba(11, 18, 32, 0.22);
+		:global(.docNav::-webkit-scrollbar-track) {
+			background: transparent;
+		}
+
+		:global(.docNav::-webkit-scrollbar-thumb) {
+			background: transparent;
 			border-radius: 999px;
 			border: 3px solid rgba(0, 0, 0, 0);
 			background-clip: padding-box;
+		}
+
+		:global(.docNav:hover) {
+			scrollbar-color: rgba(11, 18, 32, 0.22) transparent;
+		}
+
+		:global(.docNav:hover::-webkit-scrollbar-thumb) {
+			background: rgba(11, 18, 32, 0.22);
 		}
 	}
 
@@ -933,12 +936,19 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		background: rgba(255, 255, 255, 0.85);
 		text-decoration: none;
 		color: rgba(11, 18, 32, 0.84);
-		font-weight: 700;
+		font-weight: 500;
 		line-height: 1.2;
 	}
 
 	:global(.docNavLink:hover) {
 		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	:global(.docNav a.docNavLink:visited),
+	:global(.docNav a.docNavSummaryLink:visited),
+	:global(.docNavDrawerBody a.docNavLink:visited),
+	:global(.docNavDrawerBody a.docNavSummaryLink:visited) {
+		color: inherit;
 	}
 
 	:global(.docNavLink.active) {
@@ -1011,18 +1021,33 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		color: #00ae9a;
 	}
 
-	:global(li[data-depth='1'] a.docNavLink),
-	:global(li[data-depth='1'] summary.docNavSummary) {
-		font-weight: 700;
-		font-size: 15px;
-		color: rgba(11, 18, 32, 0.84);
+	:global(li.docNavNode[data-depth='1'] summary.docNavSummary),
+	:global(li.docNavNode[data-depth='2'] summary.docNavSummary),
+	:global(li.docNavNode[data-depth='3'] summary.docNavSummary) {
+		font-weight: 800;
+		color: rgba(11, 18, 32, 0.9);
 	}
 
-	:global(li[data-depth='2'] a.docNavLink),
-	:global(li[data-depth='2'] summary.docNavSummary) {
-		font-weight: 650;
+	:global(li.docNavNode[data-depth='1'] summary.docNavSummary) {
+		font-size: 15px;
+	}
+
+	:global(li.docNavNode[data-depth='2'] summary.docNavSummary),
+	:global(li.docNavNode[data-depth='3'] summary.docNavSummary) {
 		font-size: 14px;
-		color: rgba(11, 18, 32, 0.82);
+	}
+
+	:global(li.docNavItem[data-depth='1'] > a.docNavLink) {
+		font-weight: 500;
+		font-size: 15px;
+		color: rgba(11, 18, 32, 0.88);
+	}
+
+	:global(li.docNavItem[data-depth='2'] > a.docNavLink),
+	:global(li.docNavItem[data-depth='3'] > a.docNavLink) {
+		font-weight: 500;
+		font-size: 14px;
+		color: rgba(11, 18, 32, 0.86);
 	}
 
 	:global(.docNavSummary::after) {
