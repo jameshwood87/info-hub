@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getKbPageByPath } from '../../lib/directus';
+import { getKbPageByPath, listKbPagesByPrefix } from '../../lib/directus';
 
 const rawPath = Astro.params.path ?? '';
 const normalizedPath = `/es/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
@@ -12,18 +12,250 @@ if (!page) {
 }
 
 const title = page.seo_title || page.title;
+const h1 = page.title;
 const description = page.seo_description || page.description || undefined;
 const canonical = `https://info.propertylist.es${page.path}`;
 const hreflangs = [
 	{ hreflang: 'en', href: `https://info.propertylist.es${page.path.replace(/^\/es\//, '/')}` },
 	{ hreflang: 'es', href: `https://info.propertylist.es${page.path}` },
 ];
+
+const titleCase = (s: string) =>
+	String(s || '')
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase());
+
+const labelForCrumb = (seg: string) => {
+	const map: Record<string, string> = {
+		es: 'Inicio',
+		docs: 'Docs',
+		'informacion-general': 'Noticias',
+		leyes: 'Leyes',
+		'leyes-procedimientos': 'Leyes y procedimientos',
+		mls: 'MLS',
+		barrios: 'Barrios',
+		comunidad: 'Comunidad',
+	};
+	return map[seg] || titleCase(seg);
+};
+
+const stripTags = (html: string) => String(html || '').replace(/<[^>]+>/g, '');
+const slugify = (s: string) =>
+	stripTags(s)
+		.toLowerCase()
+		.normalize('NFKD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/&[a-z0-9#]+;/gi, '')
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+
+const withHeadingIdsAndToc = (html: string | null | undefined) => {
+	const body = String(html || '');
+	const used = new Map<string, number>();
+	const toc: Array<{ depth: 2 | 3; id: string; text: string }> = [];
+
+	const withIds = body.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi, (m, levelRaw, attrs, inner) => {
+		const depth = (Number(levelRaw) as 2 | 3) || 2;
+		const hasId = /\bid\s*=/.test(String(attrs || ''));
+		const text = stripTags(inner).replace(/\s+/g, ' ').trim();
+		const base = slugify(text) || `section-${toc.length + 1}`;
+		const n = (used.get(base) || 0) + 1;
+		used.set(base, n);
+		const id = n === 1 ? base : `${base}-${n}`;
+		toc.push({ depth, id, text });
+		if (hasId) return m;
+		return `<h${depth}${attrs} id="${id}">${inner}</h${depth}>`;
+	});
+
+	const withCallouts = withIds.replace(
+		/<blockquote([^>]*)>\s*(<p[^>]*>\s*)?(<strong[^>]*>\s*)?(Tip|Note|Warning|Consejo|Nota|Advertencia)\s*:?\s*(<\/strong>\s*)?/gi,
+		(_m, attrs, pOpen = '', strongOpen = '', kind, strongClose = '') => {
+			const raw = String(kind || '').toLowerCase();
+			const k = raw === 'consejo' ? 'tip' : raw === 'advertencia' ? 'warning' : raw === 'nota' ? 'note' : raw;
+			const hasClass = /\bclass\s*=/.test(String(attrs || ''));
+			const nextAttrs = hasClass
+				? String(attrs).replace(/\bclass\s*=\s*(['"])([\s\S]*?)\1/i, (_m: string, q: string, v: string) => {
+						const next = v.includes(k) ? v : `${v} ${k}`.trim();
+						return ` class=${q}${next}${q}`;
+					})
+				: `${attrs} class="${k}"`;
+			return `<blockquote${nextAttrs}>${pOpen}${strongOpen}${kind}${strongClose}`;
+		},
+	);
+
+	return { html: withCallouts, toc };
+};
+
+const { html: bodyHtml, toc } = withHeadingIdsAndToc(page.body);
+const bodyHasH1 = /<h1\b/i.test(bodyHtml);
+const cleanedBodyHtml = bodyHtml.replace(
+	/<(p|h[1-6])\b[^>]*>\s*(?:<a\b[^>]*>\s*)?Managing Listings\s*-\s*Previous\s*Tracking property enquiries\/leads\s*(?:<\/a>\s*)?<\/\1>\s*/gi,
+	'',
+);
+
+const crumbs = (() => {
+	const parts = page.path.split('/').filter(Boolean);
+	const usable = parts[0] === 'es' ? parts.slice(1) : parts;
+	const acc: Array<{ href: string; label: string }> = [];
+	let current = '';
+	for (const seg of usable.slice(0, -1)) {
+		current += `/${seg}`;
+		acc.push({ href: `/es${current}/`, label: labelForCrumb(seg) });
+	}
+	return acc;
+})();
+
+const parentPrefix = page.path.replace(/[^/]+\/$/, '');
+const siblings = await listKbPagesByPrefix({
+	prefix: parentPrefix,
+	lang: 'es',
+	limit: 500,
+});
+const siblingSorted = [...siblings].sort((a, b) => a.path.localeCompare(b.path));
+const currentIndex = siblingSorted.findIndex((p) => p.path === page.path);
+const prev = currentIndex > 0 ? siblingSorted[currentIndex - 1] : null;
+const next = currentIndex >= 0 && currentIndex < siblingSorted.length - 1 ? siblingSorted[currentIndex + 1] : null;
+
+const extractSteps = (html: string) => {
+	const m = html.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+	if (!m) return [];
+	const olInner = m[1] || '';
+	const steps: string[] = [];
+	const liRe = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+	let hit: RegExpExecArray | null = null;
+	while ((hit = liRe.exec(olInner))) {
+		const text = stripTags(hit[1] || '').replace(/\s+/g, ' ').trim();
+		if (text) steps.push(text);
+		if (steps.length >= 10) break;
+	}
+	return steps;
+};
+
+const origin = 'https://info.propertylist.es';
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{
+			'@type': 'ListItem',
+			position: 1,
+			name: 'Inicio',
+			item: `${origin}/es/`,
+		},
+		...crumbs.map((c, i) => ({
+			'@type': 'ListItem',
+			position: i + 2,
+			name: c.label,
+			item: `${origin}${c.href}`,
+		})),
+	],
+};
+
+const articleLd = {
+	'@context': 'https://schema.org',
+	'@type': 'TechArticle',
+	headline: h1,
+	description: description,
+	inLanguage: 'es',
+	mainEntityOfPage: canonical,
+	url: canonical,
+};
+
+const stepTexts = extractSteps(bodyHtml);
+const howToLd =
+	stepTexts.length >= 2
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'HowTo',
+				name: h1,
+				description: description,
+				inLanguage: 'es',
+				step: stepTexts.map((t, i) => ({
+					'@type': 'HowToStep',
+					position: i + 1,
+					name: t.length > 80 ? `${t.slice(0, 77)}...` : t,
+					text: t,
+				})),
+			}
+		: null;
+
+const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] : [])]);
 ---
 
 <Layout lang="es" title={title} description={description} canonical={canonical} hreflangs={hreflangs}>
-	<article>
-		<h1>{page.title}</h1>
-		{page.description ? <p>{page.description}</p> : null}
-		{page.body ? <Fragment set:html={page.body} /> : null}
+	<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
+	<article class="doc">
+		<header class="docHeader">
+			<div class="docHeaderTop">
+				<div class="docIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M7.5 3.75h9a1.75 1.75 0 0 1 1.75 1.75v13A1.75 1.75 0 0 1 16.5 20.25h-9A1.75 1.75 0 0 1 5.75 18.5v-13A1.75 1.75 0 0 1 7.5 3.75Z"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+						<path d="M8.5 8h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						<path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						<path d="M8.5 16h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+					</svg>
+				</div>
+				<nav class="docCrumbs" aria-label="Breadcrumb">
+					<a href="/es/">Inicio</a>
+					{crumbs.map((c) => (
+						<>
+							<span class="docCrumbSep" aria-hidden="true">
+								/
+							</span>
+							<a href={c.href}>{c.label}</a>
+						</>
+					))}
+				</nav>
+			</div>
+
+			{!bodyHasH1 ? <h1 class="docTitle">{h1}</h1> : null}
+			{!bodyHasH1 && page.description ? <p class="docLead">{page.description}</p> : null}
+		</header>
+
+		<div class="docGrid">
+			<div class="docMain">
+				<div class="docContent">{cleanedBodyHtml ? <Fragment set:html={cleanedBodyHtml} /> : null}</div>
+
+				{prev || next ? (
+					<footer class="docPager" aria-label="Page navigation">
+						{prev ? (
+							<a class="docPagerLink" href={prev.path}>
+								<span class="docPagerKicker">Anterior</span>
+								<span class="docPagerTitle">{prev.title}</span>
+							</a>
+						) : (
+							<span />
+						)}
+						{next ? (
+							<a class="docPagerLink" href={next.path}>
+								<span class="docPagerKicker">Siguiente</span>
+								<span class="docPagerTitle">{next.title}</span>
+							</a>
+						) : null}
+					</footer>
+				) : null}
+			</div>
+
+			{toc.filter((t) => t.depth === 2).length > 1 ? (
+				<aside class="docToc" aria-label="En esta página">
+					<div class="docTocTitle">En esta página</div>
+					<ol class="docTocList">
+						{toc
+							.filter((t) => t.depth === 2)
+							.slice(0, 12)
+							.map((t) => (
+								<li>
+									<a href={`#${t.id}`}>{t.text}</a>
+								</li>
+							))}
+					</ol>
+				</aside>
+			) : null}
+		</div>
 	</article>
 </Layout>
