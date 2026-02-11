@@ -179,19 +179,45 @@ const sortTree = (node: Node) => {
 
 sortTree(root);
 
-const escapeHtml = (s: string) =>
-	s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+const segmentDescriptions: Record<string, string> = {
+	'getting-started': 'Set up your account, get the app, and learn the basics.',
+	'listing-a-property-what-to-know': 'Before you publish: compliance, preparation, and best practices.',
+	'listing-a-property': 'Create, edit, and manage listings from start to finish.',
+	'microsite-share-properties-listings': 'Share properties with links, microsites, and clients.',
+	'managing-listings': 'Update status, edit listings, and track enquiries and activity.',
+	'export-listings': 'Export listings to portals, websites, and MLS feeds.',
+	'marketing-and-promotion': 'Promote listings across MLS, portals, and social channels.',
+	'tracking-listing-exposure': 'Measure listing performance and visibility.',
+	'searching-for-properties': 'Find listings fast with filters, saved searches, and alerts.',
+	'ai-ezd_ampersand-automation': 'Automate workflows and use AI features where available.',
+	'mls-property-alerts': 'Set up alerts to keep buyers and agents updated.',
+	'managing-your-leads': 'Capture leads, qualify them, and follow up effectively.',
+	'reports-and-statistics': 'Create reports and track performance and trends.',
+	'security': 'Keep accounts secure and manage access.',
+	'technical-documentation': 'Technical notes for integrations and advanced setup.',
+	'new-features-roadmap': 'What’s new and what’s coming next.',
+	'faq-mls': 'Common questions, troubleshooting, and quick answers.',
+	'additional-resources': 'Templates, checklists, and supporting materials.',
+	'documents': 'Upload, share, and manage documents for listings and clients.',
+	'requests': 'Manage viewing and information requests from clients.',
+};
 
-const renderNodesHtml = (nodes: Node[]): string =>
-	nodes
-		.map((n) => {
-			const label = escapeHtml((n.title || '').toLowerCase());
-			const href = escapeHtml(n.path);
-			const title = escapeHtml(n.title);
-			const children = n.children.length ? `<ul>${renderNodesHtml(n.children)}</ul>` : '';
-			return `<li class="node" data-node="1" data-label="${label}"><a href="${href}">${title}</a>${children}</li>`;
-		})
-		.join('');
+type PageLink = { path: string; title: string };
+
+const listDescendantPages = (node: Node): PageLink[] => {
+	const out: PageLink[] = [];
+	const visit = (n: Node) => {
+		for (const c of n.children) {
+			const page = pagesByPath.get(c.path);
+			if (page?.title) out.push({ path: c.path, title: cleanTitle(page.title) });
+			visit(c);
+		}
+	};
+	visit(node);
+	return out
+		.filter((p) => p.path !== node.path)
+		.sort((a, b) => a.title.localeCompare(b.title));
+};
 ---
 
 <Layout
@@ -229,8 +255,62 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		</section>
 	) : null}
 
-	<section class="treeWrap" aria-label="Manual contents">
-		{root.children.length ? <ul class="tree" set:html={renderNodesHtml(root.children)} /> : <div class="empty">No MLS docs yet.</div>}
+	<section class="contents" aria-label="Manual contents">
+		<div class="contentsHeader">
+			<h2 class="contentsTitle">Browse by topic</h2>
+			<p class="contentsSub">Choose a topic, then pick a guide. Use the filter to search across all topics.</p>
+		</div>
+		{root.children.length ? (
+			<div class="grid" data-grid="1">
+				{root.children.map((seg) => {
+					const pages = listDescendantPages(seg);
+					const featured = pages.slice(0, 8);
+					const remaining = pages.slice(8);
+					const label = (seg.title || '').toLowerCase();
+					const desc = segmentDescriptions[seg.seg] || 'Guides and workflows for this topic.';
+					return (
+						<section class="card" data-card="1" data-label={label}>
+							<div class="cardHeader">
+								<a class="cardTitle" href={seg.path}>
+									{seg.title}
+								</a>
+								<span class="cardMeta">{pages.length} guides</span>
+							</div>
+							<p class="cardDesc">{desc}</p>
+							{featured.length ? (
+								<ul class="list">
+									{featured.map((p) => (
+										<li data-node="1" data-label={p.title.toLowerCase()}>
+											<a class="listRow" href={p.path}>
+												<span class="listRowTitle">{p.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<div class="emptySmall">No guides yet.</div>
+							)}
+							{remaining.length ? (
+								<details class="more" data-more="1">
+									<summary class="moreSummary">Show all ({pages.length})</summary>
+									<ul class="list moreList">
+										{remaining.map((p) => (
+											<li data-node="1" data-label={p.title.toLowerCase()}>
+												<a class="listRow" href={p.path}>
+													<span class="listRowTitle">{p.title}</span>
+												</a>
+											</li>
+										))}
+									</ul>
+								</details>
+							) : null}
+						</section>
+					);
+				})}
+			</div>
+		) : (
+			<div class="empty">No MLS docs yet.</div>
+		)}
 	</section>
 </Layout>
 
@@ -358,30 +438,56 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		padding: 14px;
 	}
 
-	.tree,
-	.tree ul {
-		margin: 0;
+	.contents {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
 	}
 
-	.tree {
-		list-style: none;
-		padding: 0;
+	.contentsHeader {
+		display: grid;
+		gap: 6px;
+		margin-bottom: 12px;
+	}
+
+	.contentsTitle {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.contentsSub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+		max-width: 75ch;
+	}
+
+	.grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 12px;
+		align-items: start;
 	}
 
-	.tree > .node {
+	.card {
 		background: rgba(255, 255, 255, 0.82);
 		border: 1px solid rgba(16, 24, 40, 0.08);
 		border-radius: 16px;
 		padding: 12px 12px;
+		display: grid;
+		gap: 10px;
 	}
 
-	.tree > .node > a {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.cardTitle {
 		color: rgba(16, 24, 40, 0.92);
 		text-decoration: none;
 		font-weight: 900;
@@ -389,57 +495,72 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		line-height: 1.2;
 	}
 
-	.tree > .node > a:hover {
+	.cardTitle:hover {
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
 	}
 
-	.tree > .node > ul {
+	.cardMeta {
+		font-size: 12px;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.6);
+		background: rgba(16, 24, 40, 0.05);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		padding: 4px 8px;
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+
+	.cardDesc {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.5;
+		font-weight: 650;
+	}
+
+	.list {
 		list-style: none;
-		padding: 10px 0 0 0;
+		padding: 0;
 		margin: 0;
 		display: grid;
 		gap: 6px;
 	}
 
-	.tree ul .node {
-		position: relative;
-		padding-left: 14px;
-	}
-
-	.tree ul .node::before {
-		content: '';
-		width: 6px;
-		height: 6px;
-		border-radius: 999px;
-		background: rgba(0, 174, 154, 0.85);
-		position: absolute;
-		left: 0;
-		top: 0.7em;
-	}
-
-	.tree ul .node > a {
-		color: rgba(16, 24, 40, 0.86);
-		text-decoration: none;
-		font-weight: 800;
-	}
-
-	.tree ul .node > a:hover {
-		text-decoration: underline;
-		text-decoration-thickness: 2px;
-	}
-
-	.tree ul ul {
-		list-style: none;
-		margin: 6px 0 0 0;
-		padding-left: 14px;
+	.listRow {
 		display: grid;
-		gap: 6px;
-		border-left: 1px solid rgba(16, 24, 40, 0.12);
+		grid-template-columns: 1fr;
+		gap: 2px;
+		padding: 8px 10px;
+		border-radius: 12px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.9);
+		text-decoration: none;
 	}
 
-	.tree ul ul .node::before {
-		background: rgba(16, 24, 40, 0.28);
+	.listRow:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.listRowTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.9);
+	}
+
+	.more {
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		padding-top: 10px;
+	}
+
+	.moreSummary {
+		cursor: pointer;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.78);
+	}
+
+	.moreList {
+		margin-top: 10px;
 	}
 
 	.empty,
@@ -456,7 +577,7 @@ const renderNodesHtml = (nodes: Node[]): string =>
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
-		.tree {
+		.grid {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -473,11 +594,14 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		const input = document.getElementById('doc-filter');
 		if (!(input instanceof HTMLInputElement)) return;
 		const nodes = Array.from(document.querySelectorAll('li[data-node]'));
+		const cards = Array.from(document.querySelectorAll('section[data-card]'));
 
 		const apply = () => {
 			const q = (input.value || '').trim().toLowerCase();
 			if (!q) {
 				for (const li of nodes) li.hidden = false;
+				for (const c of cards) c.hidden = false;
+				for (const d of Array.from(document.querySelectorAll('details[data-more]'))) d.open = false;
 				return;
 			}
 
@@ -486,12 +610,14 @@ const renderNodesHtml = (nodes: Node[]): string =>
 				li.hidden = !label.includes(q);
 			}
 
-			for (let i = nodes.length - 1; i >= 0; i--) {
-				const li = nodes[i];
-				const child = li.querySelector('ul');
-				if (!child) continue;
-				const hasVisibleChild = Array.from(child.querySelectorAll(':scope > li[data-node]')).some((c) => !c.hidden);
-				if (hasVisibleChild) li.hidden = false;
+			for (const c of cards) {
+				const label = (c.getAttribute('data-label') || '').toLowerCase();
+				const hasVisibleChild = Array.from(c.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+				c.hidden = !(label.includes(q) || hasVisibleChild);
+				for (const d of Array.from(c.querySelectorAll('details[data-more]'))) {
+					const hasVisible = Array.from(d.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+					d.open = hasVisible;
+				}
 			}
 		};
 
