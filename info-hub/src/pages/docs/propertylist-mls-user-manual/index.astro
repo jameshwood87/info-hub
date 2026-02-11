@@ -5,6 +5,31 @@ import { listKbPagesByPrefix } from '../../../lib/directus';
 const base = '/docs/propertylist-mls-user-manual/';
 const items = await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 });
 
+const topTasks = (() => {
+	const picks: string[][] = [
+		['/creating-a-new-listing', 'creating-a-new-listing'],
+		['/import-properties', 'import-properties'],
+		['/export-listings-xml', 'export-listings-xml'],
+		['/portal-leads', 'portal-leads'],
+		['/upload', 'upload'],
+	];
+
+	const pickByPathIncludes = (needles: string[]) => items.find((p) => needles.some((n) => p.path.includes(n))) || null;
+
+	const chosen: typeof items = [];
+	for (const needles of picks) {
+		const hit = pickByPathIncludes(needles);
+		if (hit && !chosen.some((c) => c.path === hit.path)) chosen.push(hit);
+	}
+
+	for (const item of items) {
+		if (chosen.length >= 6) break;
+		if (!chosen.some((c) => c.path === item.path)) chosen.push(item);
+	}
+
+	return chosen.slice(0, 6);
+})();
+
 const titleCase = (s: string) =>
 	s
 		.replace(/[_-]+/g, ' ')
@@ -146,21 +171,95 @@ const renderNodesHtml = (nodes: Node[]): string =>
 
 <Layout
 	lang="en"
-	title="MLS User Manual • PropertyList Info Hub"
-	description="Browse the PropertyList MLS user manual."
+	title="MLS & CRM User Manual • PropertyList Info Hub"
+	description="MLS & CRM user manual for PropertyList: listings, leads, contacts, documents, XML import/export, and reporting."
 	canonical="https://info.propertylist.es/docs/propertylist-mls-user-manual/"
 >
-	<h1>MLS USER MANUAL</h1>
-	<label class="filterLabel" for="doc-filter">Filter</label>
-	<input id="doc-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" />
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">User manual</div>
+			<h1>MLS &amp; CRM USER MANUAL</h1>
+			<p class="lead">
+				Step-by-step guides for using PropertyList to manage listings, contacts, leads, documents, reports, and XML import/export.
+				Use the filter to quickly find the exact workflow you need.
+			</p>
+			<div class="filterRow">
+				<label class="filterLabel" for="doc-filter">Filter</label>
+				<input id="doc-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search within this manual…" />
+			</div>
+		</div>
+	</section>
 
-	{root.children.length ? <ul class="tree" set:html={renderNodesHtml(root.children)} /> : <div class="empty">No MLS docs yet.</div>}
+	{topTasks.length ? (
+		<section class="top">
+			<h2>Popular tasks</h2>
+			<div class="rows">
+				{topTasks.map((p) => (
+					<a class="row" href={p.path}>
+						<div class="rowTitle">{cleanTitle(p.title)}</div>
+						{p.description ? <div class="rowDesc">{p.description}</div> : null}
+					</a>
+				))}
+			</div>
+		</section>
+	) : null}
+
+	<section class="treeWrap" aria-label="Manual contents">
+		{root.children.length ? <ul class="tree" set:html={renderNodesHtml(root.children)} /> : <div class="empty">No MLS docs yet.</div>}
+	</section>
 </Layout>
 
 <style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
 	h1 {
 		margin: 0 0 8px;
-		letter-spacing: -0.02em;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	h2 {
+		margin: 0 0 12px;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.lead {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.filterRow {
+		margin-top: 12px;
 	}
 
 	.filterLabel {
@@ -179,6 +278,53 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		margin: 0 0 12px;
 	}
 
+	.top {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin: 14px 0;
+	}
+
+	.rows {
+		display: grid;
+		gap: 10px;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.row {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 12px 14px;
+		text-decoration: none;
+	}
+
+	.row:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.rowTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.92);
+	}
+
+	.rowDesc {
+		margin-top: 6px;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 14px;
+		line-height: 1.4;
+	}
+
+	.treeWrap {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
 	.tree,
 	.tree ul {
 		list-style: disc;
@@ -188,6 +334,7 @@ const renderNodesHtml = (nodes: Node[]): string =>
 
 	.tree > .node {
 		margin-top: 6px;
+		break-inside: avoid;
 	}
 
 	.node a {
@@ -206,6 +353,28 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		border: 1px dashed rgba(16, 24, 40, 0.18);
 		border-radius: 16px;
 		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (min-width: 980px) {
+		.tree {
+			columns: 2;
+			column-gap: 24px;
+		}
+		.tree > .node {
+			padding-right: 8px;
+		}
+	}
+
+	@media (max-width: 980px) {
+		.rows {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 620px) {
+		.rows {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>
 
