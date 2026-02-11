@@ -488,11 +488,15 @@ const listDescendantPages = (node: Node): PageLink[] => {
 	}
 
 	.cardTitle {
-		color: rgba(16, 24, 40, 0.92);
+		color: #00ae9a;
 		text-decoration: none;
 		font-weight: 900;
 		letter-spacing: -0.01em;
 		line-height: 1.2;
+	}
+
+	.cardTitle:visited {
+		color: #00ae9a;
 	}
 
 	.cardTitle:hover {
@@ -595,6 +599,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 		if (!(input instanceof HTMLInputElement)) return;
 		const nodes = Array.from(document.querySelectorAll('li[data-node]'));
 		const cards = Array.from(document.querySelectorAll('section[data-card]'));
+		const top = document.querySelector('section.top');
 
 		const apply = () => {
 			const q = (input.value || '').trim().toLowerCase();
@@ -602,8 +607,11 @@ const listDescendantPages = (node: Node): PageLink[] => {
 				for (const li of nodes) li.hidden = false;
 				for (const c of cards) c.hidden = false;
 				for (const d of Array.from(document.querySelectorAll('details[data-more]'))) d.open = false;
+				if (top instanceof HTMLElement) top.hidden = false;
 				return;
 			}
+
+			if (top instanceof HTMLElement) top.hidden = true;
 
 			for (const li of nodes) {
 				const label = (li.getAttribute('data-label') || '').toLowerCase();
