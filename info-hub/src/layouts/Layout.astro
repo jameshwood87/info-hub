@@ -797,6 +797,11 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		opacity: 0.65;
 	}
 
+	:global(.docCrumbCurrent) {
+		color: rgba(11, 18, 32, 0.86);
+		font-weight: 900;
+	}
+
 	:global(.docTitle) {
 		margin: 0 0 10px;
 		letter-spacing: -0.03em;
@@ -821,7 +826,7 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 	}
 
 	:global(.docGrid.withNav) {
-		grid-template-columns: 280px minmax(0, 1fr) 260px;
+		grid-template-columns: 260px minmax(0, 1fr) 220px;
 	}
 
 	:global(.docBrowseBtn) {

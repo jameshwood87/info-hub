@@ -130,6 +130,8 @@ const stripInfoHubSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\
 const labelForCrumb = (seg: string) => {
 	const map: Record<string, string> = {
 		docs: 'Docs',
+		'propertylist-mls-user-manual': 'MLS & CRM User Manual',
+		'mls-user-manual': 'MLS & CRM User Manual',
 		'general-information': 'News',
 		laws: 'Laws',
 		'laws-procedures': 'Laws & Procedures',
@@ -195,6 +197,10 @@ const cleanedBodyHtml = bodyHtml.replace(
 	'',
 );
 
+const renamedBodyHtml = cleanedBodyHtml
+	.replace(/<h([23])([^>]*)>\s*MLS\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>')
+	.replace(/<h([23])([^>]*)>\s*Propertylist\s*Mls\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>');
+
 const crumbs = (() => {
 	const parts = page.path.split('/').filter(Boolean);
 	const acc: Array<{ href: string; label: string }> = [];
@@ -253,7 +259,8 @@ for (const p of docsItems) {
 		parent = ensureDocChild(parent, seg, acc);
 		const pageHit = docsByPath.get(acc);
 		parent.hasPage = Boolean(pageHit);
-		if (pageHit?.title) parent.title = stripInfoHubSuffix(pageHit.title);
+		if (acc === '/docs/propertylist-mls-user-manual/') parent.title = 'MLS & CRM User Manual';
+		else if (pageHit?.title) parent.title = stripInfoHubSuffix(pageHit.title);
 	}
 }
 
@@ -352,6 +359,12 @@ const breadcrumbLd = {
 			name: c.label,
 			item: `${origin}${c.href}`,
 		})),
+		{
+			'@type': 'ListItem',
+			position: crumbs.length + 2,
+			name: stripInfoHubSuffix(h1),
+			item: canonical,
+		},
 	],
 };
 
@@ -413,6 +426,10 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 							<a href={c.href}>{c.label}</a>
 						</>
 					))}
+					<span class="docCrumbSep" aria-hidden="true">
+						/
+					</span>
+					<span class="docCrumbCurrent">{stripInfoHubSuffix(h1)}</span>
 				</nav>
 				{isDocs ? (
 					<button class="docBrowseBtn" type="button" data-doc-nav-open>
@@ -455,7 +472,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			) : null}
 
 			<div class="docMain">
-				<div class="docContent">{cleanedBodyHtml ? <Fragment set:html={cleanedBodyHtml} /> : null}</div>
+				<div class="docContent">{renamedBodyHtml ? <Fragment set:html={renamedBodyHtml} /> : null}</div>
 
 				{prev || next ? (
 					<footer class="docPager" aria-label="Page navigation">
@@ -549,12 +566,27 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
   const scrollToActive = (container) => {
     if (!(container instanceof HTMLElement)) return;
+    if (container.scrollHeight <= container.clientHeight) return;
     const active = container.querySelector('.docNavLink.active');
     if (!(active instanceof HTMLElement)) return;
     const c = container.getBoundingClientRect();
     const a = active.getBoundingClientRect();
     const delta = a.top - c.top - container.clientHeight * 0.35;
     container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
+  const ensureScrolledToActive = (container, tries = 0) => {
+    if (!(container instanceof HTMLElement)) return;
+    scrollToActive(container);
+    const active = container.querySelector('.docNavLink.active');
+    if (active instanceof HTMLElement) {
+      const c = container.getBoundingClientRect();
+      const a = active.getBoundingClientRect();
+      const visible = a.top >= c.top + 10 && a.bottom <= c.bottom - 10;
+      if (visible) return;
+    }
+    if (tries >= 10) return;
+    setTimeout(() => ensureScrolledToActive(container, tries + 1), 60);
   };
 
   const setOpen = (next) => {
@@ -564,17 +596,15 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     document.documentElement.classList.toggle('docNavLock', next);
     if (next && drawer instanceof HTMLElement) drawer.focus?.();
     if (!next && openBtn instanceof HTMLElement) openBtn.focus?.();
-    if (next && drawerBody instanceof HTMLElement) {
-      requestAnimationFrame(() => scrollToActive(drawerBody));
-    }
+    if (next && drawerBody instanceof HTMLElement) requestAnimationFrame(() => ensureScrolledToActive(drawerBody, 0));
   };
 
   setOpen(false);
   mobileMq.addEventListener?.('change', () => setOpen(false));
 
   if (desktopNav instanceof HTMLElement) {
-    requestAnimationFrame(() => scrollToActive(desktopNav));
-    setTimeout(() => scrollToActive(desktopNav), 0);
+    requestAnimationFrame(() => ensureScrolledToActive(desktopNav, 0));
+    window.addEventListener('load', () => ensureScrolledToActive(desktopNav, 0), { once: true });
   }
 
   const restoreDefaults = () => {

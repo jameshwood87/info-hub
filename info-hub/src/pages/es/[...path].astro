@@ -252,6 +252,12 @@ const breadcrumbLd = {
 			name: c.label,
 			item: `${origin}${c.href}`,
 		})),
+		{
+			'@type': 'ListItem',
+			position: crumbs.length + 2,
+			name: h1,
+			item: canonical,
+		},
 	],
 };
 
@@ -313,6 +319,10 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 							<a href={c.href}>{c.label}</a>
 						</>
 					))}
+					<span class="docCrumbSep" aria-hidden="true">
+						/
+					</span>
+					<span class="docCrumbCurrent">{h1}</span>
 				</nav>
 				{isDocs ? (
 					<button class="docBrowseBtn" type="button" data-doc-nav-open>
@@ -449,12 +459,27 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
   const scrollToActive = (container) => {
     if (!(container instanceof HTMLElement)) return;
+    if (container.scrollHeight <= container.clientHeight) return;
     const active = container.querySelector('.docNavLink.active');
     if (!(active instanceof HTMLElement)) return;
     const c = container.getBoundingClientRect();
     const a = active.getBoundingClientRect();
     const delta = a.top - c.top - container.clientHeight * 0.35;
     container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
+  const ensureScrolledToActive = (container, tries = 0) => {
+    if (!(container instanceof HTMLElement)) return;
+    scrollToActive(container);
+    const active = container.querySelector('.docNavLink.active');
+    if (active instanceof HTMLElement) {
+      const c = container.getBoundingClientRect();
+      const a = active.getBoundingClientRect();
+      const visible = a.top >= c.top + 10 && a.bottom <= c.bottom - 10;
+      if (visible) return;
+    }
+    if (tries >= 10) return;
+    setTimeout(() => ensureScrolledToActive(container, tries + 1), 60);
   };
 
   const setOpen = (next) => {
@@ -464,17 +489,15 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     document.documentElement.classList.toggle('docNavLock', next);
     if (next && drawer instanceof HTMLElement) drawer.focus?.();
     if (!next && openBtn instanceof HTMLElement) openBtn.focus?.();
-    if (next && drawerBody instanceof HTMLElement) {
-      requestAnimationFrame(() => scrollToActive(drawerBody));
-    }
+    if (next && drawerBody instanceof HTMLElement) requestAnimationFrame(() => ensureScrolledToActive(drawerBody, 0));
   };
 
   setOpen(false);
   mobileMq.addEventListener?.('change', () => setOpen(false));
 
   if (desktopNav instanceof HTMLElement) {
-    requestAnimationFrame(() => scrollToActive(desktopNav));
-    setTimeout(() => scrollToActive(desktopNav), 0);
+    requestAnimationFrame(() => ensureScrolledToActive(desktopNav, 0));
+    window.addEventListener('load', () => ensureScrolledToActive(desktopNav, 0), { once: true });
   }
 
   const restoreDefaults = () => {
