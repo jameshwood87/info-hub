@@ -483,10 +483,10 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const overlay = document.querySelector('[data-doc-nav-overlay]');
   const drawer = overlay?.querySelector('.docNavDrawer');
   const closeBtn = overlay?.querySelector('[data-doc-nav-close]');
-  const inputs = Array.from(document.querySelectorAll('input[data-doc-nav-filter]'));
   const mobileMq = window.matchMedia('(max-width: 960px)');
   const desktopNav = document.querySelector('.docNav');
   const drawerBody = overlay?.querySelector('.docNavDrawerBody');
+  const getInputs = () => Array.from(document.querySelectorAll('input[data-doc-nav-filter]')).filter((x) => x instanceof HTMLInputElement);
 
   const scrollToActive = (container) => {
     if (!(container instanceof HTMLElement)) return;
@@ -502,8 +502,50 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     container.scrollTop = Math.max(0, container.scrollTop + delta);
   };
 
+  const STORAGE_KEY = 'docNavScrollTargetV1';
+  const normalisePath = (href) => {
+    try {
+      const u = new URL(String(href || ''), window.location.origin);
+      const p = u.pathname || '/';
+      return p.endsWith('/') ? p : p + '/';
+    } catch {
+      return null;
+    }
+  };
+
+  const scrollElementToTop = (container, el) => {
+    if (!(container instanceof HTMLElement)) return;
+    if (!(el instanceof HTMLElement)) return;
+    const c = container.getBoundingClientRect();
+    const a = el.getBoundingClientRect();
+    const delta = a.top - c.top - 8;
+    container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
+  const scrollToStoredTarget = (container) => {
+    if (!(container instanceof HTMLElement)) return false;
+    const target = sessionStorage.getItem(STORAGE_KEY);
+    if (!target) return false;
+    const current = normalisePath(window.location.pathname);
+    if (!current || current !== target) return false;
+    sessionStorage.removeItem(STORAGE_KEY);
+    const links = Array.from(container.querySelectorAll('a.docNavLink, a.docNavSummaryLink'));
+    const hit = links.find((a) => normalisePath(a.getAttribute('href')) === target);
+    if (hit instanceof HTMLElement) {
+      scrollElementToTop(container, hit);
+      return true;
+    }
+    const active = container.querySelector('.docNavLink.active, .docNavSummary.active, .docNavSummaryLink.active');
+    if (active instanceof HTMLElement) {
+      scrollElementToTop(container, active);
+      return true;
+    }
+    return false;
+  };
+
   const ensureScrolledToActive = (container, tries = 0) => {
     if (!(container instanceof HTMLElement)) return;
+    if (tries === 0 && scrollToStoredTarget(container)) return;
     scrollToActive(container);
     const active = container.querySelector('.docNavLink.active');
     if (active instanceof HTMLElement) {
@@ -594,6 +636,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const onInput = (ev) => {
     const src = ev?.target;
     if (!(src instanceof HTMLInputElement)) return;
+    if (!src.matches('input[data-doc-nav-filter]')) return;
+    const inputs = getInputs();
     for (const other of inputs) {
       if (other instanceof HTMLInputElement && other !== src) other.value = src.value;
     }
@@ -604,14 +648,11 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     requestAnimationFrame(() => scrollToFirstVisible(container));
   };
 
-  for (const input of inputs) {
-    if (!(input instanceof HTMLInputElement)) continue;
-    input.addEventListener('input', onInput, { passive: true });
-    input.addEventListener('search', onInput, { passive: true });
-    input.addEventListener('keyup', onInput, { passive: true });
-  }
-  for (const input of inputs) {
-    if (!(input instanceof HTMLInputElement)) continue;
+  document.addEventListener('input', onInput, true);
+  document.addEventListener('search', onInput, true);
+  document.addEventListener('keyup', onInput, true);
+  const initialInputs = getInputs();
+  for (const input of initialInputs) {
     if (input.value.trim()) {
       applyTo(desktopNav, input.value);
       applyTo(drawerBody, input.value);
@@ -621,12 +662,26 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
   if (openBtn instanceof HTMLElement) openBtn.addEventListener('click', () => setOpen(true));
   if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
+  if (desktopNav instanceof HTMLElement) {
+    desktopNav.addEventListener('click', (e) => {
+      const el = e.target;
+      if (!(el instanceof Element)) return;
+      const a = el.closest('a.docNavLink, a.docNavSummaryLink');
+      if (!(a instanceof HTMLAnchorElement)) return;
+      const next = normalisePath(a.getAttribute('href'));
+      if (next) sessionStorage.setItem(STORAGE_KEY, next);
+    });
+  }
   if (drawerBody instanceof HTMLElement) {
     drawerBody.addEventListener('click', (e) => {
       const el = e.target;
       if (!(el instanceof Element)) return;
-      const a = el.closest('a');
-      if (a) setOpen(false);
+      const a = el.closest('a.docNavLink, a.docNavSummaryLink');
+      if (a instanceof HTMLAnchorElement) {
+        const next = normalisePath(a.getAttribute('href'));
+        if (next) sessionStorage.setItem(STORAGE_KEY, next);
+        setOpen(false);
+      }
     });
   }
   if (overlay instanceof HTMLElement) {
