@@ -424,9 +424,9 @@ const hrefForPersona = (nextPersona: string) => {
 	}
 
 	.topCta {
-		position: absolute;
-		top: 0;
-		right: 0;
+		justify-self: end;
+		max-width: 100%;
+		white-space: normal;
 	}
 
 	.heroCopy {
@@ -500,6 +500,8 @@ const hrefForPersona = (nextPersona: string) => {
 		border-radius: 12px;
 		text-decoration: none;
 		font-weight: 700;
+		max-width: 100%;
+		white-space: normal;
 	}
 
 	.btnPrimary {
@@ -535,7 +537,7 @@ const hrefForPersona = (nextPersona: string) => {
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		border-radius: 14px;
 		padding: 12px 14px;
-		min-width: 160px;
+		min-width: 140px;
 	}
 
 	.metaKpi {
@@ -590,6 +592,7 @@ const hrefForPersona = (nextPersona: string) => {
 		padding: 10px 12px;
 		font-weight: 800;
 		text-decoration: none;
+		overflow-wrap: anywhere;
 	}
 
 	.personaLinks a:hover {
@@ -923,6 +926,11 @@ const hrefForPersona = (nextPersona: string) => {
 			padding: 16px;
 		}
 
+		.topCta {
+			justify-self: start;
+			width: 100%;
+		}
+
 		.heroCopy {
 			padding: 0;
 		}
@@ -955,6 +963,11 @@ const hrefForPersona = (nextPersona: string) => {
 			flex: 0 0 auto;
 			min-height: 44px;
 			padding: 10px 12px;
+		}
+
+		.metaItem {
+			min-width: 0;
+			flex: 1 1 140px;
 		}
 
 		.searchBar {

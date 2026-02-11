@@ -94,6 +94,31 @@ const decodeHtmlEntities = (s: string) =>
 const stripSuffix = (t: string) => t.replace(/\s*•\s*PropertyList Info Hub\s*$/i, '').trim();
 const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 
+const topTaskIcons = {
+	listing:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z" stroke="currentColor" stroke-width="1.7" /><path d="M12 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M9 14h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	importIcon:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3.5v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M8.5 10.5 12 13.8l3.5-3.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /><path d="M5.5 20.5h13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	exportIcon:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 20.5v-10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M8.5 13.5 12 10.2l3.5 3.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /><path d="M5.5 3.5h13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	leads:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.8 20.5c0-2.7-2-4.4-4.8-4.4s-4.8 1.7-4.8 4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M12 13.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" /></svg>',
+	upload:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.2 12.8 13 8a3.3 3.3 0 0 1 4.7 4.7l-6 6a5.3 5.3 0 0 1-7.5-7.5l6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>',
+	defaultIcon:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z" stroke="currentColor" stroke-width="1.7" /><path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.7" /></svg>',
+};
+
+const iconForTopTask = (path: string) => {
+	const p = String(path || '');
+	if (p.includes('/creating-a-new-listing')) return topTaskIcons.listing;
+	if (p.includes('/import-properties')) return topTaskIcons.importIcon;
+	if (p.includes('/export-listings-xml') || p.includes('/export-listings')) return topTaskIcons.exportIcon;
+	if (p.includes('/portal-leads') || p.includes('/leads')) return topTaskIcons.leads;
+	if (p.includes('/upload') || p.includes('/documents')) return topTaskIcons.upload;
+	return topTaskIcons.defaultIcon;
+};
+
 type Node = {
 	key: string;
 	path: string;
@@ -196,8 +221,8 @@ const renderNodesHtml = (nodes: Node[]): string =>
 			<div class="rows">
 				{topTasks.map((p) => (
 					<a class="row" href={p.path}>
+						<div class="rowIcon" aria-hidden="true" set:html={iconForTopTask(p.path)} />
 						<div class="rowTitle">{cleanTitle(p.title)}</div>
-						{p.description ? <div class="rowDesc">{p.description}</div> : null}
 					</a>
 				))}
 			</div>
@@ -298,6 +323,10 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		border-radius: 14px;
 		padding: 12px 14px;
 		text-decoration: none;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+		align-content: start;
 	}
 
 	.row:hover {
@@ -305,17 +334,21 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		border-color: rgba(0, 174, 154, 0.35);
 	}
 
+	.rowIcon {
+		width: 42px;
+		height: 42px;
+		border-radius: 14px;
+		display: grid;
+		place-items: center;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(0, 174, 154, 0.95);
+	}
+
 	.rowTitle {
 		font-weight: 900;
 		letter-spacing: -0.01em;
 		color: rgba(16, 24, 40, 0.92);
-	}
-
-	.rowDesc {
-		margin-top: 6px;
-		color: rgba(16, 24, 40, 0.7);
-		font-size: 14px;
-		line-height: 1.4;
 	}
 
 	.treeWrap {
