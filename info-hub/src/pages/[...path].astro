@@ -187,6 +187,11 @@ const withHeadingIdsAndToc = (html: string | null | undefined) => {
 };
 
 const { html: bodyHtml, toc } = withHeadingIdsAndToc(page.body);
+const bodyHasH1 = /<h1\b/i.test(bodyHtml);
+const cleanedBodyHtml = bodyHtml.replace(
+	/<(p|h[1-6])\b[^>]*>\s*(?:<a\b[^>]*>\s*)?Managing Listings\s*-\s*Previous\s*Tracking property enquiries\/leads\s*(?:<\/a>\s*)?<\/\1>\s*/gi,
+	'',
+);
 
 const crumbs = (() => {
 	const parts = page.path.split('/').filter(Boolean);
@@ -306,13 +311,13 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 				</nav>
 			</div>
 
-			<h1 class="docTitle">{h1}</h1>
-			{page.description ? <p class="docLead">{page.description}</p> : null}
+			{!bodyHasH1 ? <h1 class="docTitle">{h1}</h1> : null}
+			{!bodyHasH1 && page.description ? <p class="docLead">{page.description}</p> : null}
 		</header>
 
 		<div class="docGrid">
 			<div class="docMain">
-				<div class="docContent">{bodyHtml ? <Fragment set:html={bodyHtml} /> : null}</div>
+				<div class="docContent">{cleanedBodyHtml ? <Fragment set:html={cleanedBodyHtml} /> : null}</div>
 
 				{prev || next ? (
 					<footer class="docPager" aria-label="Page navigation">
