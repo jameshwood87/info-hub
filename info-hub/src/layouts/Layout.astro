@@ -936,6 +936,21 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		color: #00ae9a;
 		letter-spacing: -0.01em;
 		list-style: none;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	:global(.docNavSummary::after) {
+		content: '›';
+		color: rgba(11, 18, 32, 0.55);
+		transform: rotate(0deg);
+		transition: transform 160ms ease;
+	}
+
+	:global(details[open].docNavGroup > summary.docNavSummary::after) {
+		transform: rotate(90deg);
 	}
 
 	:global(.docNavSummary::-webkit-details-marker) {

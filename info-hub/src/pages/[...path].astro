@@ -296,7 +296,7 @@ const renderDocNavHtml = (nodes: DocNode[], depth = 0): string =>
 	nodes
 		.map((n) => {
 			const isCurrent = n.path === page.path;
-			const isOpen = depth === 0 || openDocPaths.has(n.path);
+			const isOpen = openDocPaths.has(n.path);
 			const title = escapeHtml(n.title || '');
 			const label = escapeHtml((n.title || '').toLowerCase());
 			const href = escapeHtml(n.path);
@@ -544,6 +544,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const nodes = Array.from(document.querySelectorAll('[data-doc-nav-node]'));
   const groups = Array.from(document.querySelectorAll('details.docNavGroup'));
   const mobileMq = window.matchMedia('(max-width: 960px)');
+  const desktopNav = document.querySelector('.docNav');
+  const drawerBody = overlay?.querySelector('.docNavDrawerBody');
 
   const setOpen = (next) => {
     if (!(overlay instanceof HTMLElement)) return;
@@ -552,10 +554,19 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     document.documentElement.classList.toggle('docNavLock', next);
     if (next && drawer instanceof HTMLElement) drawer.focus?.();
     if (!next && openBtn instanceof HTMLElement) openBtn.focus?.();
+    if (next && drawerBody instanceof HTMLElement) {
+      const active = drawerBody.querySelector('.docNavLink.active');
+      if (active instanceof HTMLElement) active.scrollIntoView({ block: 'center' });
+    }
   };
 
   setOpen(false);
   mobileMq.addEventListener?.('change', () => setOpen(false));
+
+  if (desktopNav instanceof HTMLElement) {
+    const active = desktopNav.querySelector('.docNavLink.active');
+    if (active instanceof HTMLElement) active.scrollIntoView({ block: 'center' });
+  }
 
   const restoreDefaults = () => {
     for (const d of groups) {
