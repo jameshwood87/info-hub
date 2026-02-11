@@ -543,14 +543,19 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const inputs = Array.from(document.querySelectorAll('input[data-doc-nav-filter]')).filter((x) => x instanceof HTMLInputElement);
   const nodes = Array.from(document.querySelectorAll('[data-doc-nav-node]'));
   const groups = Array.from(document.querySelectorAll('details.docNavGroup'));
+  const mobileMq = window.matchMedia('(max-width: 960px)');
 
   const setOpen = (next) => {
     if (!(overlay instanceof HTMLElement)) return;
-    overlay.hidden = !next;
+    const canOpen = mobileMq.matches;
+    overlay.hidden = !(next && canOpen);
     document.documentElement.classList.toggle('docNavLock', next);
     if (next && drawer instanceof HTMLElement) drawer.focus?.();
     if (!next && openBtn instanceof HTMLElement) openBtn.focus?.();
   };
+
+  setOpen(false);
+  mobileMq.addEventListener?.('change', () => setOpen(false));
 
   const restoreDefaults = () => {
     for (const d of groups) {
