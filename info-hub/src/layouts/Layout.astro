@@ -820,6 +820,188 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		margin-top: 14px;
 	}
 
+	:global(.docGrid.withNav) {
+		grid-template-columns: 280px minmax(0, 1fr) 260px;
+	}
+
+	:global(.docBrowseBtn) {
+		margin-left: auto;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		border-radius: 999px;
+		padding: 8px 12px;
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		background: rgba(255, 255, 255, 0.8);
+		color: rgba(11, 18, 32, 0.86);
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+
+	:global(.docBrowseBtn:hover) {
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	:global(.docNav) {
+		position: sticky;
+		top: 86px;
+		background: rgba(255, 255, 255, 0.75);
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		max-height: calc(100vh - 110px);
+		overflow: auto;
+	}
+
+	:global(.docNavTitle) {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		margin-bottom: 10px;
+	}
+
+	:global(.docNavFilterRow) {
+		display: grid;
+		gap: 6px;
+		margin-bottom: 12px;
+	}
+
+	:global(.docNavFilterLabel) {
+		font-size: 13px;
+		color: rgba(11, 18, 32, 0.7);
+		font-weight: 800;
+	}
+
+	:global(.docNavFilterInput) {
+		width: 100%;
+		border: 1px solid rgba(11, 18, 32, 0.18);
+		border-radius: 10px;
+		padding: 8px 10px;
+		background: rgba(255, 255, 255, 0.9);
+		font-weight: 750;
+	}
+
+	:global(.docNavList) {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 6px;
+	}
+
+	:global(.docNavLink) {
+		display: block;
+		padding: 8px 10px;
+		border-radius: 12px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+		text-decoration: none;
+		color: rgba(11, 18, 32, 0.82);
+		font-weight: 850;
+		line-height: 1.2;
+	}
+
+	:global(.docNavLink:hover) {
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	:global(.docNavLink.active) {
+		border-color: rgba(0, 174, 154, 0.45);
+		background: rgba(0, 174, 154, 0.08);
+		color: rgba(0, 126, 112, 1);
+	}
+
+	:global(.docNavLabel) {
+		display: block;
+		padding: 8px 10px;
+		border-radius: 12px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.65);
+		color: rgba(11, 18, 32, 0.62);
+		font-weight: 850;
+	}
+
+	:global(.docNavGroup) {
+		border-radius: 14px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.65);
+		padding: 8px 8px;
+	}
+
+	:global(.docNavSummary) {
+		cursor: pointer;
+		font-weight: 900;
+		color: #00ae9a;
+		letter-spacing: -0.01em;
+		list-style: none;
+	}
+
+	:global(.docNavSummary::-webkit-details-marker) {
+		display: none;
+	}
+
+	:global(.docNavGroup > ul.docNavList) {
+		margin-top: 8px;
+		padding-left: 8px;
+		border-left: 1px solid rgba(11, 18, 32, 0.1);
+	}
+
+	:global(.docNavOverlay) {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.35);
+		display: grid;
+		place-items: end center;
+		padding: 14px;
+		z-index: 70;
+	}
+
+	:global(.docNavDrawer) {
+		width: min(520px, 100%);
+		max-height: 85vh;
+		overflow: auto;
+		background: rgba(255, 255, 255, 0.98);
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		border-radius: 18px;
+		padding: 14px;
+		box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+		outline: none;
+	}
+
+	:global(.docNavDrawerHeader) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 10px;
+	}
+
+	:global(.docNavDrawerTitle) {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+	}
+
+	:global(.docNavDrawerClose) {
+		border-radius: 999px;
+		padding: 8px 12px;
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		background: rgba(255, 255, 255, 0.9);
+		color: rgba(11, 18, 32, 0.86);
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	:global(.docNavDrawerClose:hover) {
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	:global(html.docNavLock),
+	:global(html.docNavLock body) {
+		overflow: hidden;
+	}
+
 	:global(.docMain) {
 		background: rgba(255, 255, 255, 0.75);
 		border: 1px solid rgba(11, 18, 32, 0.08);
@@ -1049,6 +1231,14 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 	@media (max-width: 960px) {
 		:global(.docGrid) {
 			grid-template-columns: 1fr;
+		}
+
+		:global(.docNav) {
+			display: none;
+		}
+
+		:global(.docBrowseBtn) {
+			display: inline-flex;
 		}
 
 		:global(.docToc) {

@@ -117,6 +117,109 @@ const currentIndex = siblingSorted.findIndex((p) => p.path === page.path);
 const prev = currentIndex > 0 ? siblingSorted[currentIndex - 1] : null;
 const next = currentIndex >= 0 && currentIndex < siblingSorted.length - 1 ? siblingSorted[currentIndex + 1] : null;
 
+const isDocs = page.path.startsWith('/es/docs/');
+const docsPrefix = '/es/docs/';
+const docsItems = isDocs ? await listKbPagesByPrefix({ prefix: docsPrefix, lang: 'es', limit: 2000 }) : [];
+
+type DocNode = {
+	key: string;
+	path: string;
+	seg: string;
+	title: string;
+	children: DocNode[];
+	hasPage: boolean;
+};
+
+const docsByPath = new Map(docsItems.map((p) => [p.path, p]));
+const docsRoot: DocNode = { key: docsPrefix, path: docsPrefix, seg: '', title: 'Docs', children: [], hasPage: docsByPath.has(docsPrefix) };
+
+const ensureDocChild = (parent: DocNode, seg: string, path: string) => {
+	let node = parent.children.find((c) => c.key === path) || null;
+	if (!node) {
+		node = { key: path, path, seg, title: '', children: [], hasPage: false };
+		parent.children.push(node);
+	}
+	return node;
+};
+
+for (const p of docsItems) {
+	if (!p.path.startsWith(docsPrefix)) continue;
+	const rest = p.path.slice(docsPrefix.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = docsPrefix;
+	let parent = docsRoot;
+	for (const seg of parts) {
+		acc += `${seg}/`;
+		parent = ensureDocChild(parent, seg, acc);
+		const pageHit = docsByPath.get(acc);
+		parent.hasPage = Boolean(pageHit);
+		if (pageHit?.title) parent.title = String(pageHit.title || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
+	}
+}
+
+const fillDocTitles = (node: DocNode) => {
+	if (!node.title) node.title = node.seg ? titleCase(node.seg) : 'Docs';
+	for (const c of node.children) fillDocTitles(c);
+};
+
+fillDocTitles(docsRoot);
+
+const sortDocTree = (node: DocNode) => {
+	node.children.sort((a, b) => a.title.localeCompare(b.title));
+	for (const c of node.children) sortDocTree(c);
+};
+
+sortDocTree(docsRoot);
+
+const openDocPaths = (() => {
+	const s = new Set<string>();
+	if (!isDocs) return s;
+	const rest = page.path.slice(docsPrefix.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = docsPrefix;
+	for (const seg of parts.slice(0, -1)) {
+		acc += `${seg}/`;
+		s.add(acc);
+	}
+	return s;
+})();
+
+const escapeHtml = (s: string) =>
+	String(s || '')
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&#39;');
+
+const renderDocNavHtml = (nodes: DocNode[], depth = 0): string =>
+	nodes
+		.map((n) => {
+			const isCurrent = n.path === page.path;
+			const isOpen = depth === 0 || openDocPaths.has(n.path);
+			const title = escapeHtml(n.title || '');
+			const label = escapeHtml((n.title || '').toLowerCase());
+			const href = escapeHtml(n.path);
+
+			if (n.children.length) {
+				const overview =
+					n.hasPage
+						? `<li class="docNavItem" data-doc-nav-node="1" data-label="${label}"><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">Resumen</a></li>`
+						: '';
+				const kids = renderDocNavHtml(n.children, depth + 1);
+				return `<li class="docNavNode" data-doc-nav-node="1" data-label="${label}"><details class="docNavGroup" ${
+					isOpen ? 'open' : ''
+				} data-default-open="${isOpen ? '1' : '0'}"><summary class="docNavSummary${isCurrent ? ' active' : ''}">${title}</summary><ul class="docNavList">${overview}${kids}</ul></details></li>`;
+			}
+
+			if (n.hasPage) {
+				return `<li class="docNavItem" data-doc-nav-node="1" data-label="${label}"><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">${title}</a></li>`;
+			}
+
+			return `<li class="docNavItem" data-doc-nav-node="1" data-label="${label}"><span class="docNavLabel">${title}</span></li>`;
+		})
+		.join('');
+
 const extractSteps = (html: string) => {
 	const m = html.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
 	if (!m) return [];
@@ -211,13 +314,46 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						</>
 					))}
 				</nav>
+				{isDocs ? (
+					<button class="docBrowseBtn" type="button" data-doc-nav-open>
+						Explorar manual
+					</button>
+				) : null}
 			</div>
 
 			{!bodyHasH1 ? <h1 class="docTitle">{h1}</h1> : null}
 			{!bodyHasH1 && page.description ? <p class="docLead">{page.description}</p> : null}
 		</header>
 
-		<div class="docGrid">
+		<div class:list={['docGrid', isDocs ? 'withNav' : null]}>
+			{isDocs ? (
+				<aside class="docNav" aria-label="Navegación de docs">
+					<div class="docNavTitle">En este manual</div>
+					<div class="docNavFilterRow">
+						<label class="docNavFilterLabel" for="doc-nav-filter-desktop">
+							Filtrar
+						</label>
+						<input
+							id="doc-nav-filter-desktop"
+							class="docNavFilterInput"
+							type="search"
+							autocomplete="off"
+							spellcheck="false"
+							placeholder="Filtrar este manual…"
+							data-doc-nav-filter="desktop"
+						/>
+					</div>
+					<ul class="docNavList">
+						<li class="docNavItem" data-doc-nav-node="1" data-label="docs">
+							<a class:list={['docNavLink', page.path === docsPrefix ? 'active' : null]} href={docsPrefix}>
+								Inicio de Docs
+							</a>
+						</li>
+						<Fragment set:html={renderDocNavHtml(docsRoot.children)} />
+					</ul>
+				</aside>
+			) : null}
+
 			<div class="docMain">
 				<div class="docContent">{cleanedBodyHtml ? <Fragment set:html={cleanedBodyHtml} /> : null}</div>
 
@@ -258,4 +394,117 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			) : null}
 		</div>
 	</article>
+
+	{isDocs ? (
+		<div class="docNavOverlay" data-doc-nav-overlay hidden>
+			<div class="docNavDrawer" role="dialog" aria-modal="true" aria-label="Explorar manual">
+				<div class="docNavDrawerHeader">
+					<div class="docNavDrawerTitle">Explorar manual</div>
+					<button class="docNavDrawerClose" type="button" data-doc-nav-close aria-label="Cerrar">
+						Cerrar
+					</button>
+				</div>
+				<div class="docNavFilterRow">
+					<label class="docNavFilterLabel" for="doc-nav-filter-mobile">
+						Filtrar
+					</label>
+					<input
+						id="doc-nav-filter-mobile"
+						class="docNavFilterInput"
+						type="search"
+						autocomplete="off"
+						spellcheck="false"
+						placeholder="Filtrar este manual…"
+						data-doc-nav-filter="mobile"
+					/>
+				</div>
+				<nav class="docNavDrawerBody" aria-label="Navegación de docs">
+					<ul class="docNavList">
+						<li class="docNavItem" data-doc-nav-node="1" data-label="docs">
+							<a class:list={['docNavLink', page.path === docsPrefix ? 'active' : null]} href={docsPrefix}>
+								Inicio de Docs
+							</a>
+						</li>
+						<Fragment set:html={renderDocNavHtml(docsRoot.children)} />
+					</ul>
+				</nav>
+			</div>
+		</div>
+	) : null}
 </Layout>
+
+{isDocs ? (
+	<script is:inline>
+		{String.raw`(() => {
+  const openBtn = document.querySelector('[data-doc-nav-open]');
+  const overlay = document.querySelector('[data-doc-nav-overlay]');
+  const drawer = overlay?.querySelector('.docNavDrawer');
+  const closeBtn = overlay?.querySelector('[data-doc-nav-close]');
+  const inputs = Array.from(document.querySelectorAll('input[data-doc-nav-filter]')).filter((x) => x instanceof HTMLInputElement);
+  const nodes = Array.from(document.querySelectorAll('[data-doc-nav-node]'));
+  const groups = Array.from(document.querySelectorAll('details.docNavGroup'));
+
+  const setOpen = (next) => {
+    if (!(overlay instanceof HTMLElement)) return;
+    overlay.hidden = !next;
+    document.documentElement.classList.toggle('docNavLock', next);
+    if (next && drawer instanceof HTMLElement) drawer.focus?.();
+    if (!next && openBtn instanceof HTMLElement) openBtn.focus?.();
+  };
+
+  const restoreDefaults = () => {
+    for (const d of groups) {
+      const val = d.getAttribute('data-default-open') || '0';
+      d.open = val === '1';
+    }
+  };
+
+  const apply = (qRaw) => {
+    const q = String(qRaw || '').trim().toLowerCase();
+    if (!q) {
+      for (const el of nodes) el.hidden = false;
+      restoreDefaults();
+      return;
+    }
+
+    for (const el of nodes) {
+      const label = (el.getAttribute('data-label') || '').toLowerCase();
+      el.hidden = !label.includes(q);
+    }
+
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const el = nodes[i];
+      const hasVisibleChild = Array.from(el.querySelectorAll('[data-doc-nav-node]')).some((c) => c !== el && !c.hidden);
+      if (hasVisibleChild) el.hidden = false;
+    }
+
+    for (const d of groups) {
+      const hasVisible = Array.from(d.querySelectorAll('[data-doc-nav-node]')).some((c) => !c.hidden);
+      d.open = hasVisible;
+    }
+  };
+
+  const onInput = (ev) => {
+    const src = ev?.target;
+    if (!(src instanceof HTMLInputElement)) return;
+    for (const other of inputs) {
+      if (other !== src) other.value = src.value;
+    }
+    apply(src.value);
+  };
+
+  for (const input of inputs) input.addEventListener('input', onInput, { passive: true });
+
+  if (openBtn instanceof HTMLElement) openBtn.addEventListener('click', () => setOpen(true));
+  if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
+  if (overlay instanceof HTMLElement) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) setOpen(false);
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+})();`}
+	</script>
+) : null}
