@@ -1003,6 +1003,11 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 	:global(li[data-depth='0'] summary.docNavSummary) {
 		font-weight: 900;
 		font-size: 18px;
+		color: rgba(11, 18, 32, 0.9);
+	}
+
+	:global(li[data-manual-root='1'][data-depth='0'] > a.docNavLink),
+	:global(li[data-manual-root='1'][data-depth='0'] summary.docNavSummary) {
 		color: #00ae9a;
 	}
 

@@ -120,6 +120,12 @@ const next = currentIndex >= 0 && currentIndex < siblingSorted.length - 1 ? sibl
 const isDocs = page.path.startsWith('/es/docs/');
 const docsPrefix = '/es/docs/';
 const docsItems = isDocs ? await listKbPagesByPrefix({ prefix: docsPrefix, lang: 'es', limit: 2000 }) : [];
+const currentManualRoot = (() => {
+	if (!isDocs) return null;
+	const rest = page.path.slice(docsPrefix.length);
+	const seg = rest.split('/').filter(Boolean)[0] || null;
+	return seg ? `${docsPrefix}${seg}/` : docsPrefix;
+})();
 
 type DocNode = {
 	key: string;
@@ -171,13 +177,34 @@ const sortDocTree = (node: DocNode) => {
 
 sortDocTree(docsRoot);
 
+const mlsManualPath = '/es/docs/propertylist-mls-manual-de-usuario/';
+const manualOrderWeight = (node: DocNode): number => {
+	const s = `${node.seg} ${node.title}`.toLowerCase();
+	if (node.path === mlsManualPath) return 0;
+	if (/\binicio\b|\bcomenz(ar|ando)\b|\bprimeros\b|\bconfiguraci(o|ó)n\b/.test(s)) return 10;
+	if (/\bpanel\b|\bresumen\b|\binicio\b/.test(s)) return 20;
+	if (/\bbuscar\b|\bb(us|ú)squeda\b|\bpropiedades\b/.test(s)) return 30;
+	if (/\banuncios?\b|\balertas?\b/.test(s)) return 40;
+	if (/\bleads?\b|\bcontactos?\b|\bpipeline\b|\bventas\b/.test(s)) return 50;
+	if (/\bcontactos?\b|\bclientes?\b/.test(s)) return 60;
+	if (/\bcalendario\b|\bcitas?\b|\btareas?\b/.test(s)) return 70;
+	if (/\binformes?\b|\bestad(i|í)sticas\b|\ban(a|á)lisis\b/.test(s)) return 80;
+	if (/\bsolicitudes?\b/.test(s)) return 90;
+	if (/\bseguridad\b|\bpermisos?\b|\busuarios?\b|\bagencia\b|\bempresa\b|\bpersonal\b|\bcuenta\b/.test(s)) return 100;
+	if (/\bai\b|\bautomatizaci(o|ó)n\b|\bintegraciones?\b/.test(s)) return 110;
+	if (/\bt(e|é)cnico\b|\bapi\b/.test(s)) return 120;
+	if (/\bvideo\b|\btutorial(es)?\b/.test(s)) return 130;
+	if (/\brecursos?\b|\badicional(es)?\b/.test(s)) return 140;
+	return 500;
+};
+
 const openDocPaths = (() => {
 	const s = new Set<string>();
 	if (!isDocs) return s;
 	const rest = page.path.slice(docsPrefix.length);
 	const parts = rest.split('/').filter(Boolean);
 	let acc = docsPrefix;
-	for (const seg of parts.slice(0, -1)) {
+	for (const seg of parts) {
 		acc += `${seg}/`;
 		s.add(acc);
 	}
@@ -193,29 +220,46 @@ const escapeHtml = (s: string) =>
 		.replaceAll("'", '&#39;');
 
 const renderDocNavHtml = (nodes: DocNode[], depth = 0): string =>
-	nodes
+	[...nodes]
+		.sort((a, b) => {
+			if (depth === 0 && currentManualRoot) {
+				const aIsCurrent = a.path === currentManualRoot;
+				const bIsCurrent = b.path === currentManualRoot;
+				if (aIsCurrent !== bIsCurrent) return aIsCurrent ? -1 : 1;
+			}
+			const aInMls = a.path.startsWith(mlsManualPath);
+			const bInMls = b.path.startsWith(mlsManualPath);
+			if (depth === 1 && aInMls && bInMls) {
+				const aw = manualOrderWeight(a);
+				const bw = manualOrderWeight(b);
+				if (aw !== bw) return aw - bw;
+			}
+			return a.title.localeCompare(b.title);
+		})
 		.map((n) => {
 			const isCurrent = n.path === page.path;
 			const isOpen = openDocPaths.has(n.path);
 			const title = escapeHtml(n.title || '');
 			const label = escapeHtml((n.title || '').toLowerCase());
 			const href = escapeHtml(n.path);
+			const pathAttr = escapeHtml(n.path.toLowerCase());
+			const manualRootAttr = n.path === mlsManualPath ? ' data-manual-root="1"' : '';
 
 			if (n.children.length) {
 				const kids = renderDocNavHtml(n.children, depth + 1);
 				const summaryInner = n.hasPage
 					? `<a class="docNavSummaryLink" href="${href}">${title}</a>`
 					: `<span class="docNavSummaryText">${title}</span>`;
-				return `<li class="docNavNode" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}"><details class="docNavGroup" ${
+				return `<li class="docNavNode" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><details class="docNavGroup" ${
 					isOpen ? 'open' : ''
 				} data-default-open="${isOpen ? '1' : '0'}"><summary class="docNavSummary${isCurrent ? ' active' : ''}">${summaryInner}</summary><ul class="docNavList">${kids}</ul></details></li>`;
 			}
 
 			if (n.hasPage) {
-				return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}"><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">${title}</a></li>`;
+				return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">${title}</a></li>`;
 			}
 
-			return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}"><span class="docNavLabel">${title}</span></li>`;
+			return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><span class="docNavLabel">${title}</span></li>`;
 		})
 		.join('');
 
@@ -353,11 +397,6 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						/>
 					</div>
 					<ul class="docNavList">
-						<li class="docNavItem" data-doc-nav-node="1" data-label="docs">
-							<a class:list={['docNavLink', page.path === docsPrefix ? 'active' : null]} href={docsPrefix}>
-								Inicio de Docs
-							</a>
-						</li>
 						<Fragment set:html={renderDocNavHtml(docsRoot.children)} />
 					</ul>
 				</aside>
@@ -429,11 +468,6 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 				</div>
 				<nav class="docNavDrawerBody" aria-label="Navegación de docs">
 					<ul class="docNavList">
-						<li class="docNavItem" data-doc-nav-node="1" data-label="docs">
-							<a class:list={['docNavLink', page.path === docsPrefix ? 'active' : null]} href={docsPrefix}>
-								Inicio de Docs
-							</a>
-						</li>
 						<Fragment set:html={renderDocNavHtml(docsRoot.children)} />
 					</ul>
 				</nav>
@@ -519,7 +553,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
     for (const el of nodes) {
       const label = (el.getAttribute('data-label') || '').toLowerCase();
-      el.hidden = !label.includes(q);
+      const path = (el.getAttribute('data-path') || '').toLowerCase();
+      el.hidden = !(label.includes(q) || path.includes(q));
     }
 
     for (let i = nodes.length - 1; i >= 0; i--) {
@@ -556,7 +591,12 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     requestAnimationFrame(() => scrollToFirstVisible(container));
   };
 
-  for (const input of inputs) input.addEventListener('input', onInput, { passive: true });
+  for (const input of inputs) {
+    input.addEventListener('input', onInput, { passive: true });
+    input.addEventListener('search', onInput, { passive: true });
+    input.addEventListener('keyup', onInput, { passive: true });
+  }
+  for (const input of inputs) if (input.value.trim()) apply(input.value);
 
   if (openBtn instanceof HTMLElement) openBtn.addEventListener('click', () => setOpen(true));
   if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
