@@ -859,6 +859,35 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		padding: 14px;
 		max-height: calc(100vh - 110px);
 		overflow: auto;
+		scrollbar-gutter: stable both-edges;
+	}
+
+	@media (min-width: 961px) {
+		:global(.docNav) {
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+		}
+
+		:global(.docNav::-webkit-scrollbar) {
+			width: 0;
+			height: 0;
+		}
+
+		:global(.docNav:hover) {
+			scrollbar-width: thin;
+		}
+
+		:global(.docNav:hover::-webkit-scrollbar) {
+			width: 10px;
+			height: 10px;
+		}
+
+		:global(.docNav:hover::-webkit-scrollbar-thumb) {
+			background: rgba(11, 18, 32, 0.22);
+			border-radius: 999px;
+			border: 3px solid rgba(0, 0, 0, 0);
+			background-clip: padding-box;
+		}
 	}
 
 	:global(.docNavTitle) {
@@ -903,8 +932,8 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		background: rgba(255, 255, 255, 0.85);
 		text-decoration: none;
-		color: rgba(11, 18, 32, 0.82);
-		font-weight: 850;
+		color: rgba(11, 18, 32, 0.84);
+		font-weight: 700;
 		line-height: 1.2;
 	}
 
@@ -913,6 +942,12 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 	}
 
 	:global(.docNavLink.active) {
+		border-color: rgba(0, 174, 154, 0.45);
+		background: rgba(0, 174, 154, 0.08);
+		color: rgba(0, 126, 112, 1);
+	}
+
+	:global(.docNavSummary.active) {
 		border-color: rgba(0, 174, 154, 0.45);
 		background: rgba(0, 174, 154, 0.08);
 		color: rgba(0, 126, 112, 1);
@@ -937,14 +972,52 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 
 	:global(.docNavSummary) {
 		cursor: pointer;
-		font-weight: 900;
-		color: #00ae9a;
+		font-weight: 700;
+		color: rgba(11, 18, 32, 0.84);
 		letter-spacing: -0.01em;
 		list-style: none;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 10px;
+		padding: 8px 10px;
+		border-radius: 12px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+	}
+
+	:global(.docNavSummaryLink) {
+		flex: 1;
+		min-width: 0;
+		color: inherit;
+		text-decoration: none;
+		font: inherit;
+	}
+
+	:global(.docNavSummaryText) {
+		flex: 1;
+		min-width: 0;
+	}
+
+	:global(li[data-depth='0'] > a.docNavLink),
+	:global(li[data-depth='0'] summary.docNavSummary) {
+		font-weight: 900;
+		font-size: 18px;
+		color: #00ae9a;
+	}
+
+	:global(li[data-depth='1'] a.docNavLink),
+	:global(li[data-depth='1'] summary.docNavSummary) {
+		font-weight: 700;
+		font-size: 15px;
+		color: rgba(11, 18, 32, 0.84);
+	}
+
+	:global(li[data-depth='2'] a.docNavLink),
+	:global(li[data-depth='2'] summary.docNavSummary) {
+		font-weight: 650;
+		font-size: 14px;
+		color: rgba(11, 18, 32, 0.82);
 	}
 
 	:global(.docNavSummary::after) {

@@ -202,21 +202,20 @@ const renderDocNavHtml = (nodes: DocNode[], depth = 0): string =>
 			const href = escapeHtml(n.path);
 
 			if (n.children.length) {
-				const overview =
-					n.hasPage
-						? `<li class="docNavItem" data-doc-nav-node="1" data-label="${label}"><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">Resumen</a></li>`
-						: '';
 				const kids = renderDocNavHtml(n.children, depth + 1);
-				return `<li class="docNavNode" data-doc-nav-node="1" data-label="${label}"><details class="docNavGroup" ${
+				const summaryInner = n.hasPage
+					? `<a class="docNavSummaryLink" href="${href}">${title}</a>`
+					: `<span class="docNavSummaryText">${title}</span>`;
+				return `<li class="docNavNode" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}"><details class="docNavGroup" ${
 					isOpen ? 'open' : ''
-				} data-default-open="${isOpen ? '1' : '0'}"><summary class="docNavSummary${isCurrent ? ' active' : ''}">${title}</summary><ul class="docNavList">${overview}${kids}</ul></details></li>`;
+				} data-default-open="${isOpen ? '1' : '0'}"><summary class="docNavSummary${isCurrent ? ' active' : ''}">${summaryInner}</summary><ul class="docNavList">${kids}</ul></details></li>`;
 			}
 
 			if (n.hasPage) {
-				return `<li class="docNavItem" data-doc-nav-node="1" data-label="${label}"><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">${title}</a></li>`;
+				return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}"><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}">${title}</a></li>`;
 			}
 
-			return `<li class="docNavItem" data-doc-nav-node="1" data-label="${label}"><span class="docNavLabel">${title}</span></li>`;
+			return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}"><span class="docNavLabel">${title}</span></li>`;
 		})
 		.join('');
 
@@ -460,7 +459,10 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const scrollToActive = (container) => {
     if (!(container instanceof HTMLElement)) return;
     if (container.scrollHeight <= container.clientHeight) return;
-    const active = container.querySelector('.docNavLink.active');
+    const active =
+      container.querySelector('.docNavLink.active') ||
+      container.querySelector('.docNavSummary.active') ||
+      container.querySelector('.docNavSummaryLink.active');
     if (!(active instanceof HTMLElement)) return;
     const c = container.getBoundingClientRect();
     const a = active.getBoundingClientRect();
@@ -532,6 +534,16 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     }
   };
 
+  const scrollToFirstVisible = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    const link = Array.from(container.querySelectorAll('a.docNavLink, a.docNavSummaryLink')).find((a) => a instanceof HTMLElement && !a.closest('[hidden]'));
+    if (!(link instanceof HTMLElement)) return;
+    const c = container.getBoundingClientRect();
+    const a = link.getBoundingClientRect();
+    const delta = a.top - c.top - container.clientHeight * 0.25;
+    container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
   const onInput = (ev) => {
     const src = ev?.target;
     if (!(src instanceof HTMLInputElement)) return;
@@ -539,12 +551,23 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
       if (other !== src) other.value = src.value;
     }
     apply(src.value);
+    const mode = src.getAttribute('data-doc-nav-filter');
+    const container = mode === 'mobile' ? drawerBody : desktopNav;
+    requestAnimationFrame(() => scrollToFirstVisible(container));
   };
 
   for (const input of inputs) input.addEventListener('input', onInput, { passive: true });
 
   if (openBtn instanceof HTMLElement) openBtn.addEventListener('click', () => setOpen(true));
   if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
+  if (drawerBody instanceof HTMLElement) {
+    drawerBody.addEventListener('click', (e) => {
+      const el = e.target;
+      if (!(el instanceof Element)) return;
+      const a = el.closest('a');
+      if (a) setOpen(false);
+    });
+  }
   if (overlay instanceof HTMLElement) {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) setOpen(false);
