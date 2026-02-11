@@ -1,0 +1,444 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Pricing • PropertyList Info Hub';
+const description =
+	'The MLS and CRM are free forever for estate agents. Use optional pay-as-you-go credits for featured listings and add-ons, only when you need them.';
+
+const sections: Array<{
+	title: string;
+	subtitle: string;
+	items: Array<{ feature: string; price: string; note?: string }>;
+}> = [
+	{
+		title: 'MLS',
+		subtitle: 'Multi-Listing Service',
+		items: [
+			{ feature: 'Unlimited Listings', price: 'Free' },
+			{ feature: 'Users/Staff', price: 'Free' },
+			{ feature: 'Branded MicroSite', price: 'Free' },
+			{ feature: 'Feature a Listing', price: '20 credits / 72h' },
+			{ feature: 'Property Alerts', price: '5 credits' },
+			{ feature: 'LeadBoard', price: 'Coming soon' },
+			{ feature: 'Import/Export', price: '1 credit' },
+			{ feature: 'Website Export', price: '30 credits / month' },
+			{ feature: 'Private Listings', price: '20 credits / property' },
+		],
+	},
+	{
+		title: 'CRM',
+		subtitle: 'Client Relationship Management',
+		items: [
+			{ feature: 'Unlimited Contacts', price: 'Free' },
+			{ feature: '+50 Calendar Events', price: '20 credits' },
+			{ feature: 'Sales Pipeline', price: '1 credit' },
+			{ feature: 'x5 Document Upload', price: '1 credit' },
+			{ feature: 'AI Utilities', price: 'Coming soon' },
+			{ feature: 'AI Funnels', price: 'Coming soon' },
+			{ feature: 'AI Chatbot', price: 'Coming soon' },
+			{ feature: 'AI Market Analysis', price: 'Coming soon' },
+		],
+	},
+	{
+		title: 'Public Portal',
+		subtitle: 'We advertise for you',
+		items: [
+			{ feature: 'Feature a Listing', price: 'Coming soon' },
+			{ feature: 'Open a Direct Lead', price: 'Coming soon' },
+			{ feature: 'Featured Estate Agents', price: 'Coming soon' },
+			{ feature: 'AI Virtual Tours', price: 'Coming soon' },
+			{ feature: 'Premium Homepage', price: 'Coming soon' },
+			{ feature: 'Property Services', price: 'Coming soon' },
+		],
+	},
+];
+---
+
+<Layout lang="en" title={title} description={description} canonical="https://info.propertylist.es/pricing/">
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Transparent pricing</div>
+			<h1>Free MLS + CRM. Pay only for upgrades.</h1>
+			<p class="lead">
+				PropertyList gives every estate agent free access to list properties, collaborate with staff, and manage contacts—without
+				subscriptions. When you want extra visibility or automation, use pay-as-you-go credits at your own pace.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="/mls/">Start with the MLS manual</a>
+				<a class="btnSecondary" href="/docs/">Browse documentation</a>
+			</div>
+			<div class="trustRow" aria-label="Key terms">
+				<div class="trustPill">No tied contracts</div>
+				<div class="trustPill">No setup fees</div>
+				<div class="trustPill">No cancellation fees</div>
+				<div class="trustPill">No hidden fees</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="twoCol">
+			<div class="panel">
+				<h2>Why the MLS is free</h2>
+				<p>
+					At PropertyList, we empower all real estate agents by providing free access to our platform. This lets agents showcase
+					their properties without any upfront costs, offering property seekers a wide range of choice.
+				</p>
+				<p>
+					We believe in an inclusive marketplace where every agent and listing can shine—so we keep the essentials free and make
+					money only on optional, value-added tools.
+				</p>
+			</div>
+			<div class="panel">
+				<h2>Credits &amp; pay-as-you-go</h2>
+				<p>
+					Our credit system gives maximum flexibility to feature properties and access additional services. It scales from solo
+					agents to large agencies, so you only pay for what you use—when you actually need it.
+				</p>
+				<div class="callout">
+					<div class="calloutTitle">1 credit = €1</div>
+					<div class="calloutBody">Bulk purchases include discounts. Credits do not expire.</div>
+				</div>
+				<div class="callout muted">
+					<div class="calloutTitle">Verified Agency bonus</div>
+					<div class="calloutBody">Each new Verified Agency receives 20 free credits.</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Monthly subscription credits</h2>
+		</div>
+		<div class="card">
+			<p class="cardLead">
+				With a monthly subscription, you receive credits for platform use, including access to features like opening direct leads
+				from the public property portal.
+			</p>
+			<p class="cardLead">
+				To keep things fair and prevent spam, featured listings are limited to 3 at a time. If you need more, you can purchase
+				additional credits.
+			</p>
+			<div class="ctaRow compact">
+				<a class="btnSecondary" href="/docs/">See how credits work</a>
+				<a class="btnSecondary" href="/search?q=credits">Search “credits”</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Paid extras (all features)</h2>
+			<div class="sectionMeta">Pay-as-you-go, at your own pace.</div>
+		</div>
+		<div class="grid">
+			{sections.map((s) => (
+				<section class="pricingCard">
+					<div class="pricingHead">
+						<div class="pricingTitle">{s.title}</div>
+						<div class="pricingSubtitle">{s.subtitle}</div>
+					</div>
+					<ul class="pricingList">
+						{s.items.map((it) => (
+							<li class="pricingRow">
+								<span class="pricingFeature">{it.feature}</span>
+								<span class={`pricingPrice ${it.price.toLowerCase().includes('free') ? 'isFree' : ''}`}>{it.price}</span>
+							</li>
+						))}
+					</ul>
+				</section>
+			))}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="final">
+			<h2>PropertyList.es — the 1st free MLS for estate agents</h2>
+			<p class="lead">
+				We’re building a smarter workflow with automation, AI, and better lead quality—while keeping the core platform free.
+				Explore what’s live now and what’s coming next.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="/docs/">Explore documentation</a>
+				<a class="btnSecondary" href="/general-information/">Latest updates</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	h2 {
+		margin: 0 0 10px;
+		letter-spacing: -0.02em;
+	}
+
+	.lead {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.section {
+		margin: 14px 0;
+	}
+
+	.sectionHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		margin: 0 0 10px;
+	}
+
+	.sectionMeta {
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 14px;
+	}
+
+	.ctaRow {
+		margin-top: 14px;
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.ctaRow.compact {
+		margin-top: 10px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		border-radius: 999px;
+		padding: 10px 14px;
+		text-decoration: none;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+	}
+
+	.btnPrimary {
+		background: #00ae9a;
+		color: #00100e;
+		border: 1px solid rgba(0, 0, 0, 0.12);
+	}
+
+	.btnPrimary:hover {
+		filter: brightness(0.98);
+		text-decoration: none;
+	}
+
+	.btnSecondary {
+		background: rgba(255, 255, 255, 0.85);
+		color: rgba(16, 24, 40, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+	}
+
+	.btnSecondary:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.trustRow {
+		margin-top: 12px;
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.trustPill {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.78);
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		padding: 6px 10px;
+		border-radius: 999px;
+	}
+
+	.twoCol {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.panel {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.panel p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.55;
+	}
+
+	.panel p:last-child {
+		margin-bottom: 0;
+	}
+
+	.callout {
+		margin-top: 12px;
+		border-radius: 14px;
+		padding: 12px 12px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+	}
+
+	.callout.muted {
+		background: rgba(255, 255, 255, 0.75);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+	}
+
+	.calloutTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+	}
+
+	.calloutBody {
+		margin-top: 6px;
+		color: rgba(16, 24, 40, 0.76);
+		line-height: 1.5;
+		font-size: 14px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.cardLead {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.55;
+	}
+
+	.cardLead:last-child {
+		margin-bottom: 0;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.pricingCard {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.pricingHead {
+		margin-bottom: 10px;
+	}
+
+	.pricingTitle {
+		font-weight: 900;
+		letter-spacing: -0.02em;
+		font-size: 16px;
+	}
+
+	.pricingSubtitle {
+		margin-top: 4px;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 13px;
+	}
+
+	.pricingList {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 10px;
+	}
+
+	.pricingRow {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 10px 12px;
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+	}
+
+	.pricingFeature {
+		color: rgba(16, 24, 40, 0.88);
+		line-height: 1.35;
+	}
+
+	.pricingPrice {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.86);
+		white-space: nowrap;
+	}
+
+	.pricingPrice.isFree {
+		color: rgba(0, 142, 126, 1);
+	}
+
+	.final {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 22px;
+		padding: 16px;
+	}
+
+	@media (max-width: 980px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+
+		.twoCol {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

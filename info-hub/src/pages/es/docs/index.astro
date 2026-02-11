@@ -1,85 +1,152 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { listKbPagesByPrefix } from '../../../lib/directus';
+import { listKbPagesByPrefix, type KbPageListItem } from '../../../lib/directus';
 
-const mls = await listKbPagesByPrefix({ prefix: '/es/docs/propertylist-mls-manual-de-usuario/', lang: 'es', limit: 200 });
-const laws = await listKbPagesByPrefix({ prefix: '/es/docs/leyes-procedimientos/', lang: 'es', limit: 200 });
-const latest = await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 30 });
+const mlsAll = await listKbPagesByPrefix({ prefix: '/es/docs/propertylist-mls-manual-de-usuario/', lang: 'es', limit: 250 });
+const lawsAll = await listKbPagesByPrefix({ prefix: '/es/docs/leyes-procedimientos/', lang: 'es', limit: 250 });
+const portalAll = await listKbPagesByPrefix({ prefix: '/es/docs/portal-publico/', lang: 'es', limit: 250 });
+const latestAll = await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 12 });
 
-const isIn = (p: { path: string }, prefix: string) => p.path.startsWith(prefix);
-const latestOther = latest.filter(
-	(p) =>
-		!isIn(p, '/es/docs/propertylist-mls-manual-de-usuario/') &&
-		!isIn(p, '/es/docs/leyes-procedimientos/')
-);
+const excludePrefixes = [
+	'/es/docs/propertylist-mls-manual-de-usuario/',
+	'/es/docs/leyes-procedimientos/',
+	'/es/docs/portal-publico/',
+];
+const isExcluded = (path: string) => excludePrefixes.some((p) => path.startsWith(p));
+const latestOther = latestAll.filter((p) => !isExcluded(p.path));
+
+const stripSuffix = (s: string) => s.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
+
+const pickByPathIncludes = (items: KbPageListItem[], needles: string[]) =>
+	items.find((p) => needles.some((n) => p.path.includes(n))) || null;
+
+const pickTopTasks = (items: KbPageListItem[], picks: string[][], fallbackCount = 4) => {
+	const chosen: KbPageListItem[] = [];
+	for (const needles of picks) {
+		const hit = pickByPathIncludes(items, needles);
+		if (hit && !chosen.some((c) => c.path === hit.path)) chosen.push(hit);
+	}
+	for (const item of items) {
+		if (chosen.length >= fallbackCount) break;
+		if (!chosen.some((c) => c.path === item.path)) chosen.push(item);
+	}
+	return chosen.slice(0, fallbackCount);
+};
+
+const mlsTop = pickTopTasks(mlsAll, [['/import', 'import'], ['/export', 'export'], ['/duplic', 'duplic']], 4);
+const lawsTop = pickTopTasks(lawsAll, [['/impuestos', 'impuestos'], ['/requisitos', 'requisitos']], 4);
+const portalTop = pickTopTasks(portalAll, [['/empezar', 'empez'], ['/buscar', 'busc']], 3);
 ---
 
 <Layout
 	lang="es"
 	title="Documentación • PropertyList Info Hub"
-	description="Explora la documentación y guías de PropertyList."
+	description="Encuentra documentación rápido — MLS, Portal Público, leyes y legal."
 	canonical="https://info.propertylist.es/es/docs/"
 >
 	<h1>Documentación</h1>
-	<p class="sub">Explora la base de conocimiento.</p>
+	<p class="sub">Elige una sección para llegar a la respuesta correcta.</p>
 
-	<div class="sections">
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Manual del MLS</h2>
-				<a class="link" href="/es/mls/">Ver</a>
-			</div>
-			{mls.length ? (
-				<div class="list">
-					{mls.slice(0, 24).map((p) => (
-						<a class="row" href={p.path}>
-							<div class="rowTitle">{p.title}</div>
-							{p.description ? <div class="rowDesc">{p.description}</div> : null}
-						</a>
-					))}
+	<div class="start">
+		<div class="startTitle">Empieza por tu rol</div>
+		<div class="chips">
+			<a class="chip" href="/es/docs/propertylist-mls-manual-de-usuario/?role=agentes">Agente inmobiliario</a>
+			<a class="chip" href="/es/docs/propertylist-mls-manual-de-usuario/?role=promotores">Promotor</a>
+			<a class="chip" href="/es/docs/portal-publico/">Público / comprador</a>
+			<a class="chip" href="/es/docs/leyes-procedimientos/?role=propietario">Propietario</a>
+		</div>
+	</div>
+
+	<div class="grid">
+		<section class="card">
+			<div class="cardHeader">
+				<div>
+					<h2>Docs MLS y CRM</h2>
+					<p class="cardSub">Cómo usar el MLS y CRM. Separado para agentes y promotores.</p>
 				</div>
-			) : (
-				<div class="empty">Aún no hay páginas del manual.</div>
-			)}
+			</div>
+			<div class="cardBody">
+				{mlsTop.length ? (
+					<div class="rows">
+						{mlsTop.map((p) => (
+							<a class="row" href={p.path}>
+								<div class="rowTitle">{stripSuffix(p.title)}</div>
+								{p.description ? <div class="rowDesc">{p.description}</div> : null}
+							</a>
+						))}
+					</div>
+				) : (
+					<div class="empty">Aún no hay documentación del MLS.</div>
+				)}
+			</div>
+			<a class="viewAll" href="/es/docs/propertylist-mls-manual-de-usuario/">Ver todo</a>
 		</section>
 
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Leyes y procedimientos</h2>
-				<a class="link" href="/es/leyes/">Ver</a>
-			</div>
-			{laws.length ? (
-				<div class="list">
-					{laws.slice(0, 24).map((p) => (
-						<a class="row" href={p.path}>
-							<div class="rowTitle">{p.title}</div>
-							{p.description ? <div class="rowDesc">{p.description}</div> : null}
-						</a>
-					))}
+		<section class="card">
+			<div class="cardHeader">
+				<div>
+					<h2>Docs Portal Público</h2>
+					<p class="cardSub">Cómo usar el portal público: buscar, guardar y consultar.</p>
 				</div>
-			) : (
-				<div class="empty">Aún no hay páginas.</div>
-			)}
+			</div>
+			<div class="cardBody">
+				{portalTop.length ? (
+					<div class="rows">
+						{portalTop.map((p) => (
+							<a class="row" href={p.path}>
+								<div class="rowTitle">{stripSuffix(p.title)}</div>
+								{p.description ? <div class="rowDesc">{p.description}</div> : null}
+							</a>
+						))}
+					</div>
+				) : (
+					<div class="empty">La documentación del portal público estará disponible pronto.</div>
+				)}
+			</div>
+			<a class="viewAll" href="/es/docs/portal-publico/">Ver todo</a>
 		</section>
 
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Últimas guías</h2>
-			</div>
-			{latestOther.length ? (
-				<div class="list">
-					{latestOther.map((p) => (
-						<a class="row" href={p.path}>
-							<div class="rowTitle">{p.title}</div>
-							{p.description ? <div class="rowDesc">{p.description}</div> : null}
-						</a>
-					))}
+		<section class="card">
+			<div class="cardHeader">
+				<div>
+					<h2>Docs Leyes y Procedimientos</h2>
+					<p class="cardSub">Compra, alquiler, impuestos y procedimientos inmobiliarios en España.</p>
 				</div>
-			) : (
-				<div class="empty">Aún no hay páginas.</div>
-			)}
+			</div>
+			<div class="cardBody">
+				{lawsTop.length ? (
+					<div class="rows">
+						{lawsTop.map((p) => (
+							<a class="row" href={p.path}>
+								<div class="rowTitle">{stripSuffix(p.title)}</div>
+								{p.description ? <div class="rowDesc">{p.description}</div> : null}
+							</a>
+						))}
+					</div>
+				) : (
+					<div class="empty">Aún no hay documentación.</div>
+				)}
+			</div>
+			<a class="viewAll" href="/es/docs/leyes-procedimientos/">Ver todo</a>
 		</section>
 	</div>
+
+	<section class="latest">
+		<div class="latestHeader">
+			<h2>Últimas actualizaciones</h2>
+		</div>
+		{latestOther.length ? (
+			<div class="rows">
+				{latestOther.map((p) => (
+					<a class="row" href={p.path}>
+						<div class="rowTitle">{p.title}</div>
+					</a>
+				))}
+			</div>
+		) : (
+			<div class="empty">Aún no hay actualizaciones.</div>
+		)}
+	</section>
 </Layout>
 
 <style>
@@ -93,43 +160,99 @@ const latestOther = latest.filter(
 		color: rgba(16, 24, 40, 0.7);
 	}
 
-	.sections {
-		display: grid;
-		gap: 18px;
+	.start {
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.7);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 16px;
 	}
 
-	.section {
+	.startTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		margin-bottom: 10px;
+	}
+
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 12px;
+		border-radius: 999px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 800;
+		color: rgba(16, 24, 40, 0.86);
+	}
+
+	.chip:hover {
+		border-color: rgba(var(--accent-rgb), 0.35);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 14px;
+	}
+
+	.card {
 		background: rgba(255, 255, 255, 0.7);
 		border: 1px solid rgba(16, 24, 40, 0.08);
 		border-radius: 18px;
 		padding: 14px;
+		display: flex;
+		flex-direction: column;
 	}
 
-	.sectionHeader {
+	.cardHeader {
 		display: flex;
-		align-items: baseline;
+		align-items: flex-start;
 		justify-content: space-between;
 		gap: 14px;
-		margin-bottom: 10px;
+		margin-bottom: 12px;
 	}
 
-	.sectionHeader h2 {
+	.cardHeader h2 {
 		margin: 0;
 		font-size: 18px;
 		letter-spacing: -0.01em;
 	}
 
-	.link {
-		color: rgba(14, 165, 233, 1);
-		font-weight: 700;
+	.cardSub {
+		margin: 6px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.4;
+		font-size: 14px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.cardBody {
+		flex: 1;
+	}
+
+	.viewAll {
+		margin-top: 12px;
+		font-weight: 900;
+		color: var(--accent);
 		text-decoration: none;
 	}
 
-	.link:hover {
+	.viewAll:hover {
 		text-decoration: underline;
 	}
 
-	.list {
+	.rows {
 		display: grid;
 		gap: 10px;
 	}
@@ -140,16 +263,18 @@ const latestOther = latest.filter(
 		border-radius: 14px;
 		padding: 12px 14px;
 		text-decoration: none;
+		color: rgba(11, 18, 32, 0.86);
 	}
 
 	.row:hover {
 		text-decoration: none;
-		border-color: rgba(14, 165, 233, 0.35);
+		border-color: rgba(var(--accent-rgb), 0.35);
 	}
 
 	.rowTitle {
 		font-weight: 800;
 		letter-spacing: -0.01em;
+		color: rgba(11, 18, 32, 0.92);
 	}
 
 	.rowDesc {
@@ -157,6 +282,10 @@ const latestOther = latest.filter(
 		color: rgba(16, 24, 40, 0.7);
 		font-size: 14px;
 		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.empty {
@@ -166,5 +295,24 @@ const latestOther = latest.filter(
 		border-radius: 16px;
 		color: rgba(16, 24, 40, 0.7);
 	}
-</style>
 
+	.latest {
+		margin-top: 16px;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.latestHeader h2 {
+		margin: 0 0 12px;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	@media (max-width: 860px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

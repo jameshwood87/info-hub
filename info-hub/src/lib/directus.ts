@@ -38,6 +38,69 @@ export type KbPage = {
 
 export type KbPageListItem = Pick<KbPage, 'id' | 'language' | 'path' | 'title' | 'description'>;
 
+const decodeHtmlEntities = (s: string) =>
+	s
+		.replaceAll('&amp;', '&')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'")
+		.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&nbsp;', ' ');
+
+const stripInfoHubSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
+
+const applyCase = (source: string, replacement: string) => {
+	if (source.toUpperCase() === source) return replacement.toUpperCase();
+	if (source[0]?.toUpperCase() === source[0]) return replacement[0]!.toUpperCase() + replacement.slice(1);
+	return replacement;
+};
+
+const toBritishEnglish = (s: string) => {
+	let out = String(s || '');
+
+	const rules: Array<[RegExp, string]> = [
+		[/\bmonetiz(e|es|ed|ing|ation|ations|er|ers)\b/gi, 'monetis$1'],
+		[/\boptimiz(e|es|ed|ing|ation|ations|er|ers)\b/gi, 'optimis$1'],
+		[/\bmaximiz(e|es|ed|ing|ation|ations)\b/gi, 'maximis$1'],
+		[/\bminimiz(e|es|ed|ing|ation|ations)\b/gi, 'minimis$1'],
+		[/\bprioritiz(e|es|ed|ing|ation|ations)\b/gi, 'prioritis$1'],
+		[/\bcustomiz(e|es|ed|ing|ation|ations|able)\b/gi, 'customis$1'],
+		[/\borganis(e|es|ed|ing|ation|ations|er|ers)\b/gi, 'organis$1'],
+		[/\borganiz(e|es|ed|ing|ation|ations|er|ers)\b/gi, 'organis$1'],
+		[/\banalyz(e|es|ed|ing|er|ers)\b/gi, 'analys$1'],
+		[/\bsynchroniz(e|es|ed|ing|ation|ations)\b/gi, 'synchronis$1'],
+	];
+
+	for (const [re, replacement] of rules) {
+		out = out.replace(re, (match, suffix) => applyCase(match, replacement.replace('$1', suffix)));
+	}
+
+	return out;
+};
+
+export const normaliseKbText = (s: string, lang: string | undefined, opts?: { stripSuffix?: boolean; decode?: boolean }) => {
+	const decoded = opts?.decode === false ? String(s || '') : decodeHtmlEntities(String(s || ''));
+	const stripped = opts?.stripSuffix === false ? decoded : stripInfoHubSuffix(decoded);
+	return lang === 'en' ? toBritishEnglish(stripped).trim() : stripped.trim();
+};
+
+const normaliseListItem = (p: KbPageListItem): KbPageListItem => ({
+	...p,
+	title: normaliseKbText(p.title, p.language, { stripSuffix: true, decode: true }),
+	description: p.description ? normaliseKbText(p.description, p.language, { stripSuffix: false, decode: true }) : p.description,
+});
+
+const normalisePage = (p: KbPage): KbPage => ({
+	...p,
+	title: normaliseKbText(p.title, p.language, { stripSuffix: true, decode: true }),
+	description: p.description ? normaliseKbText(p.description, p.language, { stripSuffix: false, decode: true }) : p.description,
+	seo_title: p.seo_title ? normaliseKbText(p.seo_title, p.language, { stripSuffix: true, decode: true }) : p.seo_title,
+	seo_description: p.seo_description
+		? normaliseKbText(p.seo_description, p.language, { stripSuffix: false, decode: true })
+		: p.seo_description,
+	body: p.body && p.language === 'en' ? toBritishEnglish(p.body) : p.body,
+});
+
 export async function getKbPageByPath(path: string): Promise<KbPage | null> {
 	const params = new URLSearchParams();
 	params.set('filter[path][_eq]', path);
@@ -58,7 +121,8 @@ export async function getKbPageByPath(path: string): Promise<KbPage | null> {
 	);
 
 	const json = await directusGet<DirectusItemResponse<KbPage>>(`/items/kb_pages?${params.toString()}`);
-	return json.data?.[0] ?? null;
+	const raw = json.data?.[0] ?? null;
+	return raw ? normalisePage(raw) : null;
 }
 
 export async function listKbPagesByPrefix(opts: {
@@ -77,5 +141,5 @@ export async function listKbPagesByPrefix(opts: {
 	params.set('fields', ['id', 'language', 'path', 'title', 'description'].join(','));
 
 	const json = await directusGet<DirectusItemResponse<KbPageListItem>>(`/items/kb_pages?${params.toString()}`);
-	return Array.isArray(json.data) ? json.data : [];
+	return Array.isArray(json.data) ? json.data.map(normaliseListItem) : [];
 }

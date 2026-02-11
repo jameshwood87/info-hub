@@ -3,19 +3,20 @@ import Layout from '../../layouts/Layout.astro';
 import { listKbPagesByPrefix } from '../../lib/directus';
 import background from '../../assets/background.svg';
 
-const latestDocs = await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 8 });
+const latestDocs = await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 5 });
 const latestGeneral = await listKbPagesByPrefix({ prefix: '/es/informacion-general/', lang: 'es', limit: 8 });
 
-const viewParam = Astro.url.searchParams.get('view') || '';
 const personaParam = Astro.url.searchParams.get('persona') || '';
 
-const view = viewParam === 'how-it-works' ? 'how-it-works' : 'what-is';
-const persona =
-	personaParam === 'agency' || personaParam === 'developer' || personaParam === 'service' ? personaParam : 'freelancer';
+const persona = (() => {
+	if (personaParam === 'developers' || personaParam === 'developer') return 'developers';
+	if (personaParam === 'services' || personaParam === 'service') return 'services';
+	if (personaParam === 'agents' || personaParam === 'freelancer' || personaParam === 'agency') return 'agents';
+	return 'agents';
+})();
 
-const hrefFor = (nextView: string, nextPersona: string) => {
+const hrefForPersona = (nextPersona: string) => {
 	const params = new URLSearchParams();
-	params.set('view', nextView);
 	params.set('persona', nextPersona);
 	return `/es/?${params.toString()}`;
 };
@@ -32,221 +33,96 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 			<img src={background.src} alt="" width="1600" height="900" fetchpriority="high" />
 		</div>
 		<div class="heroInner">
+			<a class="btnSecondary topCta" href="/es/docs/">Cómo usar PropertyList</a>
 			<div class="heroCopy">
-				<div class="viewTabs" role="tablist" aria-label="Portada">
-					<a
-						class={`viewTab ${view === 'what-is' ? 'isActive' : ''}`}
-						role="tab"
-						aria-selected={view === 'what-is' ? 'true' : 'false'}
-						href={hrefFor('what-is', persona)}
-						data-view="what-is"
-					>
-						¿Qué es PropertyList?
-					</a>
-					<a
-						class={`viewTab ${view === 'how-it-works' ? 'isActive' : ''}`}
-						role="tab"
-						aria-selected={view === 'how-it-works' ? 'true' : 'false'}
-						href={hrefFor('how-it-works', persona)}
-						data-view="how-it-works"
-					>
-						¿Cómo funciona PropertyList?
-					</a>
-				</div>
+				<h1>¿Qué es PropertyList?</h1>
+				<p class="lead">PropertyList es el primer Smart MLS, CRM y portal inmobiliario de Europa orientado a resultados.</p>
+				<p class="lead">
+					El MLS y el CRM son 100% gratis para siempre para agentes inmobiliarios. Sin suscripciones. Sin permanencias.
+					Hay funciones opcionales de pago para quienes quieren más visibilidad, automatización y rendimiento.
+				</p>
 
-				<div class={`viewPanel ${view === 'what-is' ? 'isActive' : ''}`} data-view-panel="what-is" role="tabpanel">
-					<h1>¿Qué es PropertyList?</h1>
-					<p class="lead">
-						PropertyList es una plataforma de colaboración para profesionales inmobiliarios: compartir listados,
-						ampliar alcance y convertir consultas en operaciones.
-					</p>
-					<div class="pillRow" role="tablist" aria-label="Audiencia">
-						<a
-							class={`pill ${persona === 'freelancer' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'freelancer' ? 'true' : 'false'}
-							href={hrefFor('what-is', 'freelancer')}
-							data-persona="freelancer"
-						>
-							Freelancer
-						</a>
-						<a
-							class={`pill ${persona === 'agency' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'agency' ? 'true' : 'false'}
-							href={hrefFor('what-is', 'agency')}
-							data-persona="agency"
-						>
-							Agencia
-						</a>
-						<a
-							class={`pill ${persona === 'developer' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'developer' ? 'true' : 'false'}
-							href={hrefFor('what-is', 'developer')}
-							data-persona="developer"
-						>
-							Promotor
-						</a>
-						<a
-							class={`pill ${persona === 'service' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'service' ? 'true' : 'false'}
-							href={hrefFor('what-is', 'service')}
-							data-persona="service"
-						>
-							Servicios
-						</a>
+				<div class="metaRow">
+					<div class="metaItem">
+						<div class="metaKpi">5.700+</div>
+						<div class="metaLabel">Listados activos</div>
 					</div>
-					<div class="ctaRow">
-						<a class="btnPrimary" href="/es/lo-que-ofrecemos/">Qué ofrecemos</a>
-						<a class="btnSecondary" href="/es/docs/empezar/">Cómo usar PropertyList</a>
+					<div class="metaItem">
+						<div class="metaKpi">1.350+</div>
+						<div class="metaLabel">Agentes activos</div>
 					</div>
-
-					<div class="metaRow">
-						<div class="metaItem">
-							<div class="metaKpi">316+</div>
-							<div class="metaLabel">Artículos importados</div>
-						</div>
-						<div class="metaItem">
-							<div class="metaKpi">EN/ES</div>
-							<div class="metaLabel">Bilingüe</div>
-						</div>
-						<div class="metaItem">
-							<div class="metaKpi">MLS</div>
-							<div class="metaLabel">Manual de usuario</div>
-						</div>
+					<div class="metaItem">
+						<div class="metaKpi">Multi-idioma</div>
+						<div class="metaLabel">Soporte</div>
 					</div>
-
-					<div class="personaBox" aria-label="Por audiencia">
-						<div class={`personaPanel ${persona === 'freelancer' ? 'isActive' : ''}`} data-persona-panel="freelancer">
-							<div class="personaTitle">Para freelancers</div>
-							<div class="personaSummary">Más visibilidad, colaboración con agencias y mejor organización.</div>
-							<div class="personaLinks">
-								<a href="/es/docs/empezar/">Empezar</a>
-								<a href="/es/mls/">Manual del MLS</a>
-								<a href="/es/search">Buscar</a>
-							</div>
-						</div>
-						<div class={`personaPanel ${persona === 'agency' ? 'isActive' : ''}`} data-persona-panel="agency">
-							<div class="personaTitle">Para agencias</div>
-							<div class="personaSummary">Centraliza inventario, comparte al instante y mide resultados.</div>
-							<div class="personaLinks">
-								<a href="/es/mls/">Manual del MLS</a>
-								<a href="/es/leyes/">Leyes y procedimientos</a>
-								<a href="/es/informacion-general/">Novedades</a>
-							</div>
-						</div>
-						<div class={`personaPanel ${persona === 'developer' ? 'isActive' : ''}`} data-persona-panel="developer">
-							<div class="personaTitle">Para promotores</div>
-							<div class="personaSummary">Distribuye nuevas promociones a una red de agentes.</div>
-							<div class="personaLinks">
-								<a href="/es/docs/">Documentación</a>
-								<a href="/es/search">Buscar</a>
-								<a href="/es/informacion-general/">Noticias</a>
-							</div>
-						</div>
-						<div class={`personaPanel ${persona === 'service' ? 'isActive' : ''}`} data-persona-panel="service">
-							<div class="personaTitle">Para servicios</div>
-							<div class="personaSummary">Conecta con agentes y gana visibilidad ante compradores y propietarios.</div>
-							<div class="personaLinks">
-								<a href="/es/informacion-general/">Información general</a>
-								<a href="/es/docs/">Documentación</a>
-								<a href="/es/search">Buscar</a>
-							</div>
-						</div>
+					<div class="metaItem">
+						<div class="metaKpi">Herramientas de IA</div>
+						<div class="metaLabel">Extras</div>
+					</div>
+					<div class="metaItem">
+						<div class="metaKpi">Automatización</div>
+						<div class="metaLabel">Flujos</div>
 					</div>
 				</div>
 
-				<div
-					class={`viewPanel ${view === 'how-it-works' ? 'isActive' : ''}`}
-					data-view-panel="how-it-works"
-					role="tabpanel"
-				>
-					<h1>Cómo funciona PropertyList</h1>
-					<p class="lead">
-						Configura tu cuenta, publica propiedades, comparte con la red y gestiona consultas. Usa la documentación
-						para aprender funciones, flujos y buenas prácticas.
-					</p>
-					<div class="pillRow" role="tablist" aria-label="Audiencia">
-						<a
-							class={`pill ${persona === 'freelancer' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'freelancer' ? 'true' : 'false'}
-							href={hrefFor('how-it-works', 'freelancer')}
-							data-persona="freelancer"
-						>
-							Freelancer
-						</a>
-						<a
-							class={`pill ${persona === 'agency' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'agency' ? 'true' : 'false'}
-							href={hrefFor('how-it-works', 'agency')}
-							data-persona="agency"
-						>
-							Agencia
-						</a>
-						<a
-							class={`pill ${persona === 'developer' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'developer' ? 'true' : 'false'}
-							href={hrefFor('how-it-works', 'developer')}
-							data-persona="developer"
-						>
-							Promotor
-						</a>
-						<a
-							class={`pill ${persona === 'service' ? 'isActive' : ''}`}
-							role="tab"
-							aria-selected={persona === 'service' ? 'true' : 'false'}
-							href={hrefFor('how-it-works', 'service')}
-							data-persona="service"
-						>
-							Servicios
-						</a>
-					</div>
-					<div class="ctaRow">
-						<a class="btnPrimary" href="/es/docs/">Ver documentación</a>
-						<a class="btnSecondary" href="/es/search">Buscar preguntas</a>
-					</div>
+				<div class="pillRow" role="tablist" aria-label="Audiencia">
+					<a
+						class={`pill ${persona === 'agents' ? 'isActive' : ''}`}
+						role="tab"
+						aria-selected={persona === 'agents' ? 'true' : 'false'}
+						data-persona="agents"
+						href={hrefForPersona('agents')}
+					>
+						Agentes inmobiliarios
+					</a>
+					<a
+						class={`pill ${persona === 'developers' ? 'isActive' : ''}`}
+						role="tab"
+						aria-selected={persona === 'developers' ? 'true' : 'false'}
+						data-persona="developers"
+						href={hrefForPersona('developers')}
+					>
+						Promotores
+					</a>
+					<a
+						class={`pill ${persona === 'services' ? 'isActive' : ''}`}
+						role="tab"
+						aria-selected={persona === 'services' ? 'true' : 'false'}
+						data-persona="services"
+						href={hrefForPersona('services')}
+					>
+						Servicios inmobiliarios
+					</a>
+				</div>
 
-					<div class="personaBox" aria-label="Cómo funciona por audiencia">
-						<div class={`personaPanel ${persona === 'freelancer' ? 'isActive' : ''}`} data-persona-panel="freelancer">
-							<div class="personaTitle">Flujo para freelancers</div>
-							<div class="personaSummary">Listar → compartir → gestionar leads → cerrar.</div>
-							<div class="personaLinks">
-								<a href="/es/docs/empezar/">Configurar</a>
-								<a href="/es/mls/">Flujos</a>
-								<a href="/es/search">Buscar</a>
-							</div>
+				<div class="personaBox" aria-label="Por audiencia">
+					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
+						<div class="personaTitle">Para agentes inmobiliarios</div>
+						<div class="personaSummary">
+							Publica, comparte, colabora y gestiona leads—sin otra cuota mensual.
 						</div>
-						<div class={`personaPanel ${persona === 'agency' ? 'isActive' : ''}`} data-persona-panel="agency">
-							<div class="personaTitle">Flujo para agencias</div>
-							<div class="personaSummary">Organizar → distribuir → medir resultados.</div>
-							<div class="personaLinks">
-								<a href="/es/mls/">Manual</a>
-								<a href="/es/docs/">Documentación</a>
-								<a href="/es/informacion-general/">Novedades</a>
-							</div>
+						<div class="personaLinks">
+							<a href="/es/docs/empezar/">Empezar</a>
+							<a href="/es/mls/">Manual del MLS</a>
+							<a href="/es/search">Buscar</a>
 						</div>
-						<div class={`personaPanel ${persona === 'developer' ? 'isActive' : ''}`} data-persona-panel="developer">
-							<div class="personaTitle">Flujo para promotores</div>
-							<div class="personaSummary">Publicar promoción → llegar a agentes → captar consultas.</div>
-							<div class="personaLinks">
-								<a href="/es/docs/">Docs</a>
-								<a href="/es/search">Buscar</a>
-								<a href="/es/informacion-general/">Anuncios</a>
-							</div>
+					</div>
+					<div class={`personaPanel ${persona === 'developers' ? 'isActive' : ''}`} data-persona-panel="developers">
+						<div class="personaTitle">Para promotores</div>
+						<div class="personaSummary">Distribuye nuevas promociones a una red de agentes.</div>
+						<div class="personaLinks">
+							<a href="/es/docs/">Documentación</a>
+							<a href="/es/search">Buscar</a>
+							<a href="/es/informacion-general/">Noticias</a>
 						</div>
-						<div class={`personaPanel ${persona === 'service' ? 'isActive' : ''}`} data-persona-panel="service">
-							<div class="personaTitle">Flujo para servicios</div>
-							<div class="personaSummary">Visibilidad → conexión → referidos.</div>
-							<div class="personaLinks">
-								<a href="/es/informacion-general/">Información general</a>
-								<a href="/es/docs/">Docs</a>
-								<a href="/es/search">Buscar</a>
-							</div>
+					</div>
+					<div class={`personaPanel ${persona === 'services' ? 'isActive' : ''}`} data-persona-panel="services">
+						<div class="personaTitle">Para servicios inmobiliarios</div>
+						<div class="personaSummary">Conecta con agentes y gana visibilidad ante compradores y propietarios.</div>
+						<div class="personaLinks">
+							<a href="/es/informacion-general/">Información general</a>
+							<a href="/es/docs/">Documentación</a>
+							<a href="/es/search">Buscar</a>
 						</div>
 					</div>
 				</div>
@@ -255,234 +131,233 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		</div>
 	</section>
 
-	<div class={`below ${view === 'what-is' ? 'isActive' : ''}`} data-below-panel="what-is">
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Qué ofrecemos</h2>
-				<a class="link" href="/es/lo-que-ofrecemos/">Ver más</a>
-			</div>
-			<p class="sectionLead">Conoce PropertyList, el primer MLS gratuito para agentes. Listados ilimitados gratis.</p>
-			<div class="grid">
-				<div class="tile">
-					<h3>MLS (comparte propiedades ilimitadas)</h3>
-					<p>Comparte listados en la red y mantén el inventario alineado.</p>
+	<section class="section">
+		<div class="sectionHeader">
+			<h2 class="offerTitle">Qué ofrecemos</h2>
+		</div>
+		<p class="sectionLead">
+			Mantén el motor funcionando gratis — para siempre. PropertyList te ofrece un MLS + CRM totalmente funcional sin
+			coste, para que puedas publicar propiedades, gestionar leads, coordinarte con tu equipo y cerrar operaciones sin
+			otra cuota mensual.
+		</p>
+		<p class="sectionLead">
+			Cuando quieras ir más rápido o destacar, utiliza nuestras herramientas opcionales activadas por créditos. Úsalas
+			sólo cuando realmente te ayuden: automatizaciones que ahorran horas, impulsos de marketing que consiguen
+			instrucciones y analíticas que te ayudan a valorar y presentar con confianza.
+		</p>
+		<div class="grid featureGrid">
+			<div class="tile pricingTile">
+				<div class="pricingMeta">
+					<div class="pricingBadge isFree">Gratis</div>
 				</div>
-				<div class="tile">
-					<h3>CRM</h3>
-					<p>Organiza relaciones y mantén cada operación en marcha.</p>
+				<h3 class="pricingTitle">Qué obtienes gratis</h3>
+				<ul class="featureList">
+					<li>MLS (comparte propiedades ilimitadas)</li>
+					<li>CRM</li>
+					<li>Mensajería y solicitudes de visita</li>
+					<li>Usuarios ilimitados</li>
+					<li>Contactos ilimitados</li>
+					<li>MicroSite (mini web de marca)</li>
+					<li>Agencias verificadas</li>
+					<li>Historial / timeline (contactos y propiedades)</li>
+					<li>Acceso al grupo de WhatsApp (comunidad) (3.000+ miembros)</li>
+					<li>Publicita en nuestras páginas y grupos de Facebook (40.000+ miembros)</li>
+				</ul>
+			</div>
+			<div class="tile mutedTile pricingTile">
+				<div class="pricingMeta">
+					<div class="pricingBadge isSoon">Próximamente</div>
 				</div>
-				<div class="tile">
-					<h3>Mensajería y solicitudes de visita</h3>
-					<p>Responde consultas y coordina visitas más rápido.</p>
+				<h3 class="pricingTitle">Extras opcionales de pago</h3>
+				<ul class="featureList">
+					<li>Listados MLS destacados</li>
+					<li>Listados privados</li>
+					<li>Informe CMA</li>
+					<li>Herramientas de IA</li>
+					<li>Listados destacados en el portal público</li>
+					<li>Leads directos abiertos (portal público)</li>
+					<li>Agentes destacados</li>
+					<li>Email directo de propiedades a clientes</li>
+					<li>Publicaciones potenciadas en redes sociales</li>
+					<li>Utilidades de IA</li>
+					<li>Y mucho más próximamente</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Documentación y búsqueda</h2>
+			<a class="link" href="/es/docs/">Ver todo</a>
+		</div>
+		<form class="searchBar" method="get" action="/es/search">
+			<input name="q" placeholder="Buscar preguntas, funciones y flujos" />
+			<button type="submit">Buscar</button>
+		</form>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Explorar documentación</h2>
+			<a class="link" href="/es/docs/">Ver todo</a>
+		</div>
+		<div class="grid">
+			<a class="tile" href="/es/barrios/">
+				<div class="tileIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+						<path
+							d="M9 22v-6.75c0-.69.56-1.25 1.25-1.25h3.5c.69 0 1.25.56 1.25 1.25V22"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+					</svg>
 				</div>
-				<div class="tile">
-					<h3>Usuarios ilimitados</h3>
-					<p>Añade a todo tu equipo sin preocuparte por licencias.</p>
+				<h3>Guías de barrios</h3>
+				<p>Información de zonas y estilo de vida.</p>
+			</a>
+			<a class="tile" href="/es/mls/">
+				<div class="tileIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+						<path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.6" />
+						<path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" />
+						<path d="M8.5 15.5h6" stroke="currentColor" stroke-width="1.6" />
+					</svg>
 				</div>
-				<div class="tile">
-					<h3>Contactos ilimitados</h3>
-					<p>Guarda compradores, propietarios y leads en un solo lugar.</p>
+				<h3>Manual del MLS</h3>
+				<p>Flujos, listados, exportaciones e informes.</p>
+			</a>
+			<a class="tile" href="/es/leyes/">
+				<div class="tileIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M12 3.75c3.2 2.47 5.5 2.47 8 2.75v8.5c0 3.9-3.1 6.6-8 8.25-4.9-1.65-8-4.35-8-8.25V6.5c2.5-.28 4.8-.28 8-2.75Z"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+						<path d="M9 12h6" stroke="currentColor" stroke-width="1.6" />
+						<path d="M12 9v6" stroke="currentColor" stroke-width="1.6" />
+					</svg>
 				</div>
-				<div class="tile">
-					<h3>MicroSite (mini web de marca)</h3>
-					<p>Presenta tus listados con una presencia web ligera y de marca.</p>
-				</div>
-				<div class="tile">
-					<h3>Agencias verificadas</h3>
-					<p>Genera confianza con verificación y perfiles profesionales.</p>
-				</div>
-				<div class="tile">
-					<h3>Historial / timeline</h3>
-					<p>Registra actividad y mantén trazabilidad de acciones clave.</p>
-				</div>
+				<h3>Leyes y procedimientos</h3>
+				<p>Alquileres, impuestos, herencias y más.</p>
+			</a>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Última documentación</h2>
+			<a class="link" href="/es/docs/">Ver todo</a>
+		</div>
+		<div class="list">
+			{latestDocs.length ? (
+				latestDocs.map((p) => (
+					<a class="row" href={p.path}>
+						<div class="rowTitle">{p.title}</div>
+						{p.description ? <div class="rowDesc">{p.description}</div> : null}
+					</a>
+				))
+			) : (
+				<div class="empty">Aún no hay páginas.</div>
+			)}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Información general</h2>
+			<a class="link" href="/es/informacion-general/">Ver todo</a>
+		</div>
+		<div class="cards">
+			{latestGeneral.length ? (
+				latestGeneral.map((p) => (
+					<a class="cardLink" href={p.path}>
+						<h3>{p.title}</h3>
+						{p.description ? <p>{p.description}</p> : null}
+					</a>
+				))
+			) : (
+				<div class="empty">Aún no hay artículos.</div>
+			)}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Sé parte de la comunidad</h2>
+			<a class="link" href="/es/comunidad/">Haz una pregunta</a>
+		</div>
+		<div class="grid">
+			<div class="tile mutedTile">
+				<h3>Últimos temas del foro</h3>
+				<p>Próximamente.</p>
 			</div>
-		</section>
-	</div>
-
-	<div class={`below ${view === 'how-it-works' ? 'isActive' : ''}`} data-below-panel="how-it-works">
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Documentación y búsqueda</h2>
-				<a class="link" href="/es/docs/">Ver todo</a>
+			<div class="tile mutedTile">
+				<h3>Tutoriales en vídeo</h3>
+				<p>Próximamente.</p>
 			</div>
-			<form class="searchBar" method="get" action="/es/search">
-				<input name="q" placeholder="Buscar preguntas, funciones y flujos" />
-				<button type="submit">Buscar</button>
-			</form>
-		</section>
+		</div>
+	</section>
+	<script is:inline>
+		const pillRow = document.querySelector('.pillRow');
+		const personaBox = document.querySelector('.personaBox');
 
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Explorar documentación</h2>
-				<a class="link" href="/es/docs/">Ver todo</a>
-			</div>
-			<div class="grid">
-				<a class="tile" href="/es/barrios/">
-					<div class="tileIcon" aria-hidden="true">
-						<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path
-								d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z"
-								stroke="currentColor"
-								stroke-width="1.6"
-							/>
-							<path
-								d="M9 22v-6.75c0-.69.56-1.25 1.25-1.25h3.5c.69 0 1.25.56 1.25 1.25V22"
-								stroke="currentColor"
-								stroke-width="1.6"
-							/>
-						</svg>
-					</div>
-					<h3>Guías de barrios</h3>
-					<p>Información de zonas y estilo de vida.</p>
-				</a>
-				<a class="tile" href="/es/mls/">
-					<div class="tileIcon" aria-hidden="true">
-						<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path
-								d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z"
-								stroke="currentColor"
-								stroke-width="1.6"
-							/>
-							<path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.6" />
-							<path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" />
-							<path d="M8.5 15.5h6" stroke="currentColor" stroke-width="1.6" />
-						</svg>
-					</div>
-					<h3>Manual del MLS</h3>
-					<p>Flujos, listados, exportaciones e informes.</p>
-				</a>
-				<a class="tile" href="/es/leyes/">
-					<div class="tileIcon" aria-hidden="true">
-						<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path
-								d="M12 3.75c3.2 2.47 5.5 2.47 8 2.75v8.5c0 3.9-3.1 6.6-8 8.25-4.9-1.65-8-4.35-8-8.25V6.5c2.5-.28 4.8-.28 8-2.75Z"
-								stroke="currentColor"
-								stroke-width="1.6"
-							/>
-							<path d="M9 12h6" stroke="currentColor" stroke-width="1.6" />
-							<path d="M12 9v6" stroke="currentColor" stroke-width="1.6" />
-						</svg>
-					</div>
-					<h3>Leyes y procedimientos</h3>
-					<p>Alquileres, impuestos, herencias y más.</p>
-				</a>
-			</div>
-		</section>
+		if (pillRow && personaBox) {
+			const pills = Array.from(pillRow.querySelectorAll('[data-persona]'));
+			const panels = Array.from(personaBox.querySelectorAll('[data-persona-panel]'));
 
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Última documentación</h2>
-				<a class="link" href="/es/docs/">Ver todo</a>
-			</div>
-			<div class="list">
-				{latestDocs.length ? (
-					latestDocs.map((p) => (
-						<a class="row" href={p.path}>
-							<div class="rowTitle">{p.title}</div>
-							{p.description ? <div class="rowDesc">{p.description}</div> : null}
-						</a>
-					))
-				) : (
-					<div class="empty">Aún no hay páginas.</div>
-				)}
-			</div>
-		</section>
+			const normalizePersona = (value) => {
+				if (value === 'developers' || value === 'developer') return 'developers';
+				if (value === 'services' || value === 'service') return 'services';
+				if (value === 'agents' || value === 'freelancer' || value === 'agency') return 'agents';
+				return '';
+			};
 
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Información general</h2>
-				<a class="link" href="/es/informacion-general/">Ver todo</a>
-			</div>
-			<div class="cards">
-				{latestGeneral.length ? (
-					latestGeneral.map((p) => (
-						<a class="cardLink" href={p.path}>
-							<h3>{p.title}</h3>
-							{p.description ? <p>{p.description}</p> : null}
-						</a>
-					))
-				) : (
-					<div class="empty">Aún no hay artículos.</div>
-				)}
-			</div>
-		</section>
+			const setPersona = (value, mode) => {
+				const persona = normalizePersona(value) || 'agents';
 
-		<section class="section">
-			<div class="sectionHeader">
-				<h2>Sé parte de la comunidad</h2>
-				<a class="link" href="/es/comunidad/">Haz una pregunta</a>
-			</div>
-			<div class="grid">
-				<div class="tile mutedTile">
-					<h3>Últimos temas del foro</h3>
-					<p>Próximamente.</p>
-				</div>
-				<div class="tile mutedTile">
-					<h3>Tutoriales en vídeo</h3>
-					<p>Próximamente.</p>
-				</div>
-			</div>
-		</section>
-	</div>
+				for (const pill of pills) {
+					const isActive = pill.getAttribute('data-persona') === persona;
+					pill.classList.toggle('isActive', isActive);
+					pill.setAttribute('aria-selected', isActive ? 'true' : 'false');
+				}
 
-	<script>
-		const viewTabs = Array.from(document.querySelectorAll('[data-view]'));
-		const viewPanels = Array.from(document.querySelectorAll('[data-view-panel]'));
-		const belowPanels = Array.from(document.querySelectorAll('[data-below-panel]'));
-		const personaTabs = Array.from(document.querySelectorAll('[data-persona]'));
+				for (const panel of panels) {
+					const isActive = panel.getAttribute('data-persona-panel') === persona;
+					panel.classList.toggle('isActive', isActive);
+				}
 
-		function setUrl(nextView, nextPersona) {
-			const url = new URL(window.location.href);
-			url.searchParams.set('view', nextView);
-			url.searchParams.set('persona', nextPersona);
-			window.history.replaceState({}, '', url);
-		}
+				const url = new URL(window.location.href);
+				url.searchParams.set('persona', persona);
+				if (mode === 'push') window.history.pushState(null, '', url.toString());
+				else window.history.replaceState(null, '', url.toString());
+			};
 
-		function setView(nextView) {
-			for (const t of viewTabs) t.classList.toggle('isActive', t.dataset.view === nextView);
-			for (const p of viewPanels) p.classList.toggle('isActive', p.dataset.viewPanel === nextView);
-			for (const p of belowPanels) p.classList.toggle('isActive', p.dataset.belowPanel === nextView);
-		}
+			const initialFromUrl = normalizePersona(new URL(window.location.href).searchParams.get('persona') || '');
+			const activePill = pillRow.querySelector('.pill.isActive') || pillRow.querySelector('[data-persona]');
+			const initialFromDom = normalizePersona(activePill ? activePill.getAttribute('data-persona') || '' : '');
+			setPersona(initialFromUrl || initialFromDom, 'replace');
 
-		function setPersona(nextPersona) {
-			for (const t of personaTabs) t.classList.toggle('isActive', t.dataset.persona === nextPersona);
-			const activePanel = document.querySelector('[data-view-panel].isActive');
-			const panels = activePanel ? Array.from(activePanel.querySelectorAll('[data-persona-panel]')) : [];
-			for (const p of panels) p.classList.toggle('isActive', p.dataset.personaPanel === nextPersona);
-		}
+			for (const pill of pills) {
+				pill.addEventListener('click', (e) => {
+					e.preventDefault();
+					setPersona(pill.getAttribute('data-persona') || '', 'push');
+				});
+			}
 
-		function current() {
-			const url = new URL(window.location.href);
-			const view = url.searchParams.get('view') === 'how-it-works' ? 'how-it-works' : 'what-is';
-			const persona = ['freelancer', 'agency', 'developer', 'service'].includes(url.searchParams.get('persona'))
-				? url.searchParams.get('persona')
-				: 'freelancer';
-			return { view, persona };
-		}
-
-		const start = current();
-		setView(start.view);
-		setPersona(start.persona);
-		setUrl(start.view, start.persona);
-
-		for (const t of viewTabs) {
-			t.addEventListener('click', (e) => {
-				e.preventDefault();
-				const nextView = t.dataset.view;
-				const { persona } = current();
-				setView(nextView);
-				setPersona(persona);
-				setUrl(nextView, persona);
-			});
-		}
-
-		for (const t of personaTabs) {
-			t.addEventListener('click', (e) => {
-				e.preventDefault();
-				const nextPersona = t.dataset.persona;
-				const { view } = current();
-				setPersona(nextPersona);
-				setUrl(view, nextPersona);
+			window.addEventListener('popstate', () => {
+				setPersona(new URL(window.location.href).searchParams.get('persona') || '', 'replace');
 			});
 		}
 	</script>
@@ -530,11 +405,17 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		align-items: start;
 	}
 
+	.topCta {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
 	.heroCopy {
 		padding: 8px;
 	}
 
-	.viewTabs {
+	.pillRow {
 		display: flex;
 		gap: 8px;
 		padding: 6px;
@@ -542,39 +423,7 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		border-radius: 999px;
 		width: fit-content;
-		margin: 0 auto;
-	}
-
-	.viewTab {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 9px 12px;
-		border-radius: 999px;
-		font-weight: 900;
-		color: rgba(11, 18, 32, 0.7);
-		text-decoration: none;
-		white-space: nowrap;
-	}
-
-	.viewTab:hover {
-		text-decoration: none;
-		background: rgba(11, 18, 32, 0.04);
-	}
-
-	.viewTab.isActive {
-		background: rgba(var(--accent-rgb), 0.14);
-		color: rgba(11, 18, 32, 0.92);
-	}
-
-	.pillRow {
-		display: inline-flex;
-		gap: 8px;
-		padding: 6px;
-		background: rgba(255, 255, 255, 0.8);
-		border: 1px solid rgba(11, 18, 32, 0.08);
-		border-radius: 999px;
-		margin-top: 12px;
+		margin: 14px auto 0;
 	}
 
 	.pill {
@@ -599,15 +448,6 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		background: rgba(11, 18, 32, 0.04);
 	}
 
-	.viewPanel {
-		display: none;
-		margin-top: 14px;
-	}
-
-	.viewPanel.isActive {
-		display: block;
-	}
-
 	h1 {
 		font-size: 42px;
 		line-height: 1.05;
@@ -620,6 +460,10 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		line-height: 1.55;
 		color: rgba(11, 18, 32, 0.72);
 		margin: 0 0 18px;
+	}
+
+	.lead + .lead {
+		margin-top: -10px;
 	}
 
 	.ctaRow {
@@ -662,16 +506,17 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 	.metaRow {
 		margin-top: 18px;
 		display: flex;
-		gap: 14px;
+		gap: 12px;
 		flex-wrap: wrap;
+		justify-content: center;
 	}
 
 	.metaItem {
 		background: rgba(255, 255, 255, 0.72);
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		border-radius: 14px;
-		padding: 10px 12px;
-		min-width: 140px;
+		padding: 12px 14px;
+		min-width: 160px;
 	}
 
 	.metaKpi {
@@ -786,6 +631,11 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		letter-spacing: -0.01em;
 	}
 
+	.offerTitle {
+		font-size: 28px;
+		letter-spacing: -0.02em;
+	}
+
 	.sectionLead {
 		margin: 0 0 12px;
 		color: rgba(16, 24, 40, 0.72);
@@ -806,6 +656,83 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 12px;
+	}
+
+	.featureGrid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.featureList {
+		margin: 0;
+		padding-left: 0;
+		color: rgba(16, 24, 40, 0.72);
+		list-style: none;
+		display: grid;
+		gap: 8px;
+	}
+
+	.featureList li {
+		margin: 0;
+		position: relative;
+		padding-left: 22px;
+		line-height: 1.4;
+	}
+
+	.featureList li::before {
+		content: '✓';
+		position: absolute;
+		left: 0;
+		top: 0;
+		color: var(--accent);
+		font-weight: 900;
+	}
+
+	.mutedTile .featureList li::before {
+		content: '+';
+		color: rgba(16, 24, 40, 0.65);
+	}
+
+	.pricingTile {
+		padding: 18px;
+	}
+
+	.pricingMeta {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 10px;
+	}
+
+	.pricingBadge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 6px 10px;
+		border-radius: 999px;
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: -0.01em;
+	}
+
+	.pricingBadge.isFree {
+		background: rgba(34, 197, 94, 0.14);
+		color: rgba(11, 18, 32, 0.85);
+		border: 1px solid rgba(34, 197, 94, 0.28);
+	}
+
+	.pricingBadge.isSoon {
+		background: rgba(16, 24, 40, 0.06);
+		color: rgba(11, 18, 32, 0.75);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+	}
+
+	.pricingTitle {
+		margin-top: 0;
+	}
+
+	@media (min-width: 980px) {
+		.featureList {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
 	.tile {
@@ -926,6 +853,10 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 			grid-template-columns: 1fr;
 		}
 
+		.featureGrid {
+			grid-template-columns: 1fr;
+		}
+
 		.cards {
 			grid-template-columns: 1fr;
 		}
@@ -937,14 +868,6 @@ const hrefFor = (nextView: string, nextPersona: string) => {
 		h1 {
 			font-size: 36px;
 		}
-	}
-
-	.below {
-		display: none;
-	}
-
-	.below.isActive {
-		display: block;
 	}
 
 	.searchBar {

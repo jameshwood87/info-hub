@@ -6,12 +6,8 @@ const q = (Astro.url.searchParams.get('q') || '').trim();
 
 <Layout lang="en" title="Search • PropertyList Info Hub">
 	<h1>Search</h1>
-	<form method="get" action="/search">
-		<input name="q" value={q} placeholder="Search the docs" />
-		<button type="submit">Search</button>
-	</form>
 	<div id="results"></div>
-	<script define:vars={{ q }}>
+	<script define:vars={{ q }} is:inline>
 		const resultsEl = document.getElementById('results');
 		const input = document.querySelector('input[name="q"]');
 
@@ -36,4 +32,3 @@ const q = (Astro.url.searchParams.get('q') || '').trim();
 		input?.addEventListener('input', (e) => runSearch(e.target.value.trim()));
 	</script>
 </Layout>
-

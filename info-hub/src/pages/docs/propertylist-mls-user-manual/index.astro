@@ -1,0 +1,241 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { listKbPagesByPrefix } from '../../../lib/directus';
+
+const base = '/docs/propertylist-mls-user-manual/';
+const items = await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 });
+
+const titleCase = (s: string) =>
+	s
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase())
+		.replace(/\bAnd\b/g, 'and');
+
+const labelFor = (seg: string) => {
+	const map: Record<string, string> = {
+		'getting-started': 'Getting Started',
+		'listing-a-property-what-to-know': 'Listing a Property (What to know)',
+		'listing-a-property': 'Listing a Property',
+		'microsite-share-properties-listings': 'MicroSite & sharing',
+		'managing-listings': 'Managing Listings',
+		'export-listings': 'Export Listings',
+		'marketing-and-promotion': 'Marketing and Promotion',
+		'tracking-listing-exposure': 'Tracking listing exposure',
+		'searching-for-properties': 'Searching for Properties',
+		'ai-ezd_ampersand-automation': 'AI & Automation',
+		'mls-property-alerts': 'MLS Property Alerts',
+		'managing-your-leads': 'Leads',
+		'reports-and-statistics': 'Reports and Statistics',
+		'security': 'Security',
+		'technical-documentation': 'Technical Documentation',
+		'new-features-roadmap': 'New Features & Roadmap',
+		'faq-mls': 'FAQ (MLS & CRM)',
+		'additional-resources': 'Additional Resources',
+		'documents': 'Documents',
+		'requests': 'ReQuests',
+	};
+	return map[seg] || titleCase(seg);
+};
+
+const segmentOrder = [
+	'getting-started',
+	'listing-a-property-what-to-know',
+	'managing-listings',
+	'export-listings',
+	'marketing-and-promotion',
+	'searching-for-properties',
+	'managing-your-leads',
+	'reports-and-statistics',
+	'documents',
+	'tracking-listing-exposure',
+	'mls-property-alerts',
+	'ai-ezd_ampersand-automation',
+	'technical-documentation',
+	'security',
+	'faq-mls',
+	'additional-resources',
+	'new-features-roadmap',
+];
+
+const decodeHtmlEntities = (s: string) =>
+	s
+		.replaceAll('&amp;', '&')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'")
+		.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&nbsp;', ' ');
+
+const stripSuffix = (t: string) => t.replace(/\s*•\s*PropertyList Info Hub\s*$/i, '').trim();
+const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
+
+type Node = {
+	key: string;
+	path: string;
+	seg: string;
+	title: string;
+	children: Node[];
+};
+
+const pagesByPath = new Map(items.map((p) => [p.path, p]));
+const root: Node = { key: base, path: base, seg: '', title: '', children: [] };
+
+const ensureChild = (parent: Node, seg: string, path: string) => {
+	let node = parent.children.find((c) => c.key === path) || null;
+	if (!node) {
+		node = { key: path, path, seg, title: '', children: [] };
+		parent.children.push(node);
+	}
+	return node;
+};
+
+for (const p of items) {
+	if (!p.path.startsWith(base)) continue;
+	const rest = p.path.slice(base.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = base;
+	let parent = root;
+	for (const seg of parts) {
+		acc += `${seg}/`;
+		parent = ensureChild(parent, seg, acc);
+		const page = pagesByPath.get(acc);
+		if (page?.title) parent.title = cleanTitle(page.title);
+	}
+}
+
+const depthFromBase = (path: string) => path.slice(base.length).split('/').filter(Boolean).length;
+
+const fillMissingTitles = (node: Node) => {
+	if (!node.title && node.seg) node.title = depthFromBase(node.path) === 1 ? labelFor(node.seg) : titleCase(node.seg);
+	for (const c of node.children) fillMissingTitles(c);
+};
+
+fillMissingTitles(root);
+
+const rank = new Map(segmentOrder.map((s, i) => [s, i]));
+const sortTree = (node: Node) => {
+	node.children.sort((a, b) => {
+		if (node === root) {
+			const ar = rank.has(a.seg) ? (rank.get(a.seg) as number) : 9999;
+			const br = rank.has(b.seg) ? (rank.get(b.seg) as number) : 9999;
+			if (ar !== br) return ar - br;
+		}
+		return a.title.localeCompare(b.title);
+	});
+	for (const c of node.children) {
+		sortTree(c);
+	}
+};
+
+sortTree(root);
+
+const escapeHtml = (s: string) =>
+	s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+
+const renderNodesHtml = (nodes: Node[]): string =>
+	nodes
+		.map((n) => {
+			const label = escapeHtml((n.title || '').toLowerCase());
+			const href = escapeHtml(n.path);
+			const title = escapeHtml(n.title);
+			const children = n.children.length ? `<ul>${renderNodesHtml(n.children)}</ul>` : '';
+			return `<li class="node" data-node="1" data-label="${label}"><a href="${href}">${title}</a>${children}</li>`;
+		})
+		.join('');
+---
+
+<Layout
+	lang="en"
+	title="MLS User Manual • PropertyList Info Hub"
+	description="Browse the PropertyList MLS user manual."
+	canonical="https://info.propertylist.es/docs/propertylist-mls-user-manual/"
+>
+	<h1>MLS USER MANUAL</h1>
+	<label class="filterLabel" for="doc-filter">Filter</label>
+	<input id="doc-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" />
+
+	{root.children.length ? <ul class="tree" set:html={renderNodesHtml(root.children)} /> : <div class="empty">No MLS docs yet.</div>}
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.02em;
+	}
+
+	.filterLabel {
+		display: block;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.7);
+		margin: 0 0 4px;
+	}
+
+	.filterInput {
+		width: min(360px, 100%);
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 8px;
+		padding: 8px 10px;
+		background: rgba(255, 255, 255, 0.9);
+		margin: 0 0 12px;
+	}
+
+	.tree,
+	.tree ul {
+		list-style: disc;
+		padding-left: 18px;
+		margin: 0;
+	}
+
+	.tree > .node {
+		margin-top: 6px;
+	}
+
+	.node a {
+		color: #0b57d0;
+		text-decoration: underline;
+	}
+
+	.node a:hover {
+		text-decoration-thickness: 2px;
+	}
+
+	.empty,
+	.emptySmall {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+</style>
+
+<script is:inline>
+	(() => {
+		const input = document.getElementById('doc-filter');
+		if (!(input instanceof HTMLInputElement)) return;
+		const nodes = Array.from(document.querySelectorAll('li[data-node]'));
+
+		const apply = () => {
+			const q = (input.value || '').trim().toLowerCase();
+			if (!q) {
+				for (const li of nodes) li.hidden = false;
+				return;
+			}
+
+			for (const li of nodes) {
+				const label = (li.getAttribute('data-label') || '').toLowerCase();
+				li.hidden = !label.includes(q);
+			}
+
+			for (let i = nodes.length - 1; i >= 0; i--) {
+				const li = nodes[i];
+				const child = li.querySelector('ul');
+				if (!child) continue;
+				const hasVisibleChild = Array.from(child.querySelectorAll(':scope > li[data-node]')).some((c) => !c.hidden);
+				if (hasVisibleChild) li.hidden = false;
+			}
+		};
+
+		input.addEventListener('input', apply, { passive: true });
+	})();
+</script>

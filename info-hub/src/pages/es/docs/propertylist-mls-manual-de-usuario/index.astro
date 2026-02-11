@@ -1,0 +1,394 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { listKbPagesByPrefix } from '../../../../lib/directus';
+
+const base = '/es/docs/propertylist-mls-manual-de-usuario/';
+const all = await listKbPagesByPrefix({ prefix: base, lang: 'es', limit: 500 });
+
+const roleRaw = (Astro.url.searchParams.get('role') || '').trim();
+const role = roleRaw === 'promotores' ? 'promotores' : 'agentes';
+
+const toSegment = (path: string) => {
+	const rest = path.startsWith(base) ? path.slice(base.length) : path;
+	const seg = rest.split('/').filter(Boolean)[0] || '';
+	return seg;
+};
+
+const titleCase = (s: string) =>
+	s
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase());
+
+const labelFor = (seg: string) => {
+	const map: Record<string, string> = {
+		'getting-started': 'Empezar',
+		'managing-listings': 'Gestionar anuncios',
+		'export-listings': 'Exportar anuncios',
+		'marketing-and-promotion': 'Marketing y promoción',
+		'searching-for-properties': 'Buscar propiedades',
+		'managing-your-leads': 'Leads',
+		'reports-and-statistics': 'Informes y estadísticas',
+		'security': 'Seguridad',
+		'technical-documentation': 'Documentación técnica',
+		'additional-resources': 'Recursos',
+	};
+	return map[seg] || titleCase(seg);
+};
+
+const groupBySegment = (items: typeof all) => {
+	const by = new Map<string, typeof all>();
+	for (const p of items) {
+		const seg = toSegment(p.path);
+		if (!seg) continue;
+		const list = by.get(seg) || [];
+		list.push(p);
+		by.set(seg, list);
+	}
+	return by;
+};
+
+const bySegAll = groupBySegment(all);
+const segsAll = [...bySegAll.keys()].sort((a, b) => a.localeCompare(b));
+
+const developerItems = all.filter((p) => {
+	const path = p.path.toLowerCase();
+	return path.includes('promotor') || path.includes('promotores') || path.includes('desarrollo') || path.includes('obra-nueva') || path.includes('development');
+});
+
+const bySegDevelopers = groupBySegment(developerItems);
+const segsDevelopers = [...bySegDevelopers.keys()].sort((a, b) => a.localeCompare(b));
+
+const decodeHtmlEntities = (s: string) =>
+	s
+		.replaceAll('&amp;', '&')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'")
+		.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&nbsp;', ' ');
+
+const stripSuffix = (t: string) => t.replace(/\s*•\s*PropertyList Info Hub\s*$/i, '').trim();
+const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
+---
+
+<Layout
+	lang="es"
+	title="Docs MLS • PropertyList Info Hub"
+	description="Cómo usar el MLS y CRM. Elige agente o promotor."
+	canonical="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
+>
+	<h1>Docs MLS</h1>
+	<p class="sub">Elige tu rol para ver las guías más relevantes.</p>
+
+	<div class="roleBar" role="tablist" aria-label="Rol">
+		<a
+			class:list={['roleTab', role === 'agentes' ? 'active' : null]}
+			href="/es/docs/propertylist-mls-manual-de-usuario/?role=agentes"
+			role="tab"
+			aria-selected={role === 'agentes' ? 'true' : 'false'}
+			data-role-tab="agentes"
+		>
+			Agentes
+		</a>
+		<a
+			class:list={['roleTab', role === 'promotores' ? 'active' : null]}
+			href="/es/docs/propertylist-mls-manual-de-usuario/?role=promotores"
+			role="tab"
+			aria-selected={role === 'promotores' ? 'true' : 'false'}
+			data-role-tab="promotores"
+		>
+			Promotores
+		</a>
+	</div>
+
+	<div class:list={['panel', role === 'agentes' ? 'active' : null]} data-role-panel="agentes">
+		{all.length ? (
+			<div class="grid">
+				{segsAll.map((seg) => {
+					const items = bySegAll.get(seg) || [];
+					const viewAllHref = `${base}${seg}/`;
+					const listItems = items.filter((p) => p.path !== viewAllHref).slice(0, 8);
+					return (
+						<section class="card">
+							<div class="cardHeader">
+								<h3>{labelFor(seg)}</h3>
+							</div>
+							{listItems.length ? (
+								<ul class="mini">
+									{listItems.map((p) => (
+										<li>
+											<a class="miniRow" href={p.path}>
+												<span class="miniRowTitle">{cleanTitle(p.title)}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<div class="emptySmall">Aún no hay páginas.</div>
+							)}
+							{items.length ? (
+								<div class="cardFooter">
+									<a class="cardAction" href={viewAllHref}>
+										Ver todo
+									</a>
+									<span class="cardMeta">{Math.max(0, items.length - 1)} guías</span>
+								</div>
+							) : null}
+						</section>
+					);
+				})}
+			</div>
+		) : (
+			<div class="empty">Aún no hay documentación del MLS.</div>
+		)}
+	</div>
+
+	<div class:list={['panel', role === 'promotores' ? 'active' : null]} data-role-panel="promotores">
+		{developerItems.length ? (
+			<div class="grid">
+				{segsDevelopers.map((seg) => {
+					const items = bySegDevelopers.get(seg) || [];
+					const viewAllHref = `${base}${seg}/`;
+					const listItems = items.filter((p) => p.path !== viewAllHref).slice(0, 8);
+					return (
+						<section class="card">
+							<div class="cardHeader">
+								<h3>{labelFor(seg)}</h3>
+							</div>
+							{listItems.length ? (
+								<ul class="mini">
+									{listItems.map((p) => (
+										<li>
+											<a class="miniRow" href={p.path}>
+												<span class="miniRowTitle">{cleanTitle(p.title)}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<div class="emptySmall">Aún no hay páginas.</div>
+							)}
+							{items.length ? (
+								<div class="cardFooter">
+									<a class="cardAction" href={viewAllHref}>
+										Ver todo
+									</a>
+									<span class="cardMeta">{Math.max(0, items.length - 1)} guías</span>
+								</div>
+							) : null}
+						</section>
+					);
+				})}
+			</div>
+		) : (
+			<div class="empty">La documentación específica para promotores estará disponible pronto.</div>
+		)}
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const tabs = Array.from(document.querySelectorAll('[data-role-tab]'));
+			const panels = Array.from(document.querySelectorAll('[data-role-panel]'));
+
+			const setActive = (next: string) => {
+				tabs.forEach((t) => {
+					const active = t.getAttribute('data-role-tab') === next;
+					t.classList.toggle('active', active);
+					t.setAttribute('aria-selected', active ? 'true' : 'false');
+				});
+				panels.forEach((p) => p.classList.toggle('active', p.getAttribute('data-role-panel') === next));
+			};
+
+			tabs.forEach((tab) => {
+				tab.addEventListener('click', (e) => {
+					e.preventDefault();
+					const next = tab.getAttribute('data-role-tab');
+					if (!next) return;
+					setActive(next);
+					const url = new URL(window.location.href);
+					url.searchParams.set('role', next);
+					history.pushState(null, '', url.toString());
+				});
+			});
+
+			window.addEventListener('popstate', () => {
+				const url = new URL(window.location.href);
+				const next = url.searchParams.get('role') === 'promotores' ? 'promotores' : 'agentes';
+				setActive(next);
+			});
+		});
+	</script>
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.roleBar {
+		display: inline-flex;
+		gap: 10px;
+		padding: 8px;
+		border-radius: 999px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		background: rgba(255, 255, 255, 0.7);
+		margin-bottom: 16px;
+	}
+
+	.roleTab {
+		padding: 10px 12px;
+		border-radius: 999px;
+		text-decoration: none;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.78);
+		border: 1px solid transparent;
+	}
+
+	.roleTab.active {
+		background: #fff;
+		border-color: rgba(0, 174, 154, 0.35);
+		color: rgba(16, 24, 40, 0.92);
+	}
+
+	.panel {
+		display: none;
+	}
+
+	.panel.active {
+		display: block;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.cardHeader h3 {
+		margin: 0;
+		font-size: 16px;
+		letter-spacing: -0.01em;
+	}
+
+	.mini {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 6px;
+	}
+
+	.miniRow {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 10px 10px;
+		border-radius: 14px;
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.82);
+		font-weight: 800;
+		line-height: 1.25;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	.miniRow::after {
+		content: '›';
+		flex: none;
+		color: rgba(16, 24, 40, 0.45);
+		font-weight: 900;
+		line-height: 1;
+		margin-top: 1px;
+	}
+
+	.miniRowTitle {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.miniRow:hover,
+	.miniRow:focus-visible {
+		outline: none;
+		border-color: rgba(0, 174, 154, 0.4);
+		background: rgba(0, 174, 154, 0.06);
+	}
+
+	.miniRow:hover::after,
+	.miniRow:focus-visible::after {
+		color: var(--accent);
+	}
+
+	.cardFooter {
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.cardAction {
+		color: var(--accent);
+		font-weight: 900;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.cardAction:hover {
+		text-decoration: underline;
+	}
+
+	.cardMeta {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 13px;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+	.empty,
+	.emptySmall {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.emptySmall {
+		padding: 10px 12px;
+		border-radius: 14px;
+	}
+
+	@media (max-width: 620px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

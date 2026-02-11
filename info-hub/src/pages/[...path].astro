@@ -1,11 +1,110 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getKbPageByPath } from '../lib/directus';
+import { getKbPageByPath, listKbPagesByPrefix } from '../lib/directus';
 
 const rawPath = Astro.params.path ?? '';
 const normalizedPath = `/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
 
-const page = await getKbPageByPath(normalizedPath);
+const legacyPageForPath = (path: string) => {
+	const base = '/docs/laws-procedures/listing-a-property-what-to-know/';
+	if (path !== base && path !== `${base}estate-agents/` && path !== `${base}owners/`) return null;
+
+	if (path === base) {
+		const title = 'Listing a Property (What to know)';
+		const description =
+			'What to know before listing a property in Andalusia: guidance for estate agents and owners, plus what to prepare before you publish your listing.';
+		const body = `
+<h2>Before you start</h2>
+<ul>
+  <li>Gather the key facts: location, size, bedroom/bathroom count, and price.</li>
+  <li>Prepare high-quality photos and a clear description of what makes the property stand out.</li>
+  <li>Check any legal/administrative requirements relevant to your listing type and situation.</li>
+</ul>
+
+<h2>Estate Agents</h2>
+<p>If you are listing on behalf of an owner, align on pricing strategy, marketing plan, and which documents you need before you publish.</p>
+<ul>
+  <li>Confirm the owner’s authorisation and agreed terms.</li>
+  <li>Verify key property details and any constraints that affect marketing.</li>
+  <li>Ensure your listing copy is accurate, consistent, and easy to scan.</li>
+</ul>
+<p><a href="${base}estate-agents/">Read: Estate Agents</a></p>
+
+<h2>Owners</h2>
+<p>If you are listing your own property, aim for clarity and completeness. Buyers move faster when the information is trustworthy and easy to verify.</p>
+<ul>
+  <li>Be transparent about condition, fees, and any restrictions.</li>
+  <li>Highlight practical details: parking, orientation, community rules, and nearby amenities.</li>
+  <li>Keep photos current and representative of the property.</li>
+</ul>
+<p><a href="${base}owners/">Read: Owners</a></p>
+`;
+
+		return {
+			id: 'legacy-laws-procedures-listing-a-property-what-to-know',
+			status: 'published',
+			language: 'en',
+			path,
+			title,
+			description,
+			body,
+			seo_title: title,
+			seo_description: description,
+		};
+	}
+
+	if (path === `${base}estate-agents/`) {
+		const title = 'Estate Agents';
+		const description = 'Guidance for agents listing on behalf of owners.';
+		const body = `
+<p><a href="${base}">← Back to Listing a Property</a></p>
+<h2>Estate Agents</h2>
+<p>If you are listing on behalf of an owner, align on pricing strategy, marketing plan, and which documents you need before you publish.</p>
+<ul>
+  <li>Confirm the owner’s authorisation and agreed terms.</li>
+  <li>Verify key property details and any constraints that affect marketing.</li>
+  <li>Ensure your listing copy is accurate, consistent, and easy to scan.</li>
+</ul>
+`;
+		return {
+			id: 'legacy-laws-procedures-listing-a-property-what-to-know-estate-agents',
+			status: 'published',
+			language: 'en',
+			path,
+			title,
+			description,
+			body,
+			seo_title: `${title} • Listing a Property`,
+			seo_description: description,
+		};
+	}
+
+	const title = 'Owners';
+	const description = 'What owners should prepare before publishing a listing.';
+	const body = `
+<p><a href="${base}">← Back to Listing a Property</a></p>
+<h2>Owners</h2>
+<p>If you are listing your own property, aim for clarity and completeness. Buyers move faster when the information is trustworthy and easy to verify.</p>
+<ul>
+  <li>Be transparent about condition, fees, and any restrictions.</li>
+  <li>Highlight practical details: parking, orientation, community rules, and nearby amenities.</li>
+  <li>Keep photos current and representative of the property.</li>
+</ul>
+`;
+	return {
+		id: 'legacy-laws-procedures-listing-a-property-what-to-know-owners',
+		status: 'published',
+		language: 'en',
+		path,
+		title,
+		description,
+		body,
+		seo_title: `${title} • Listing a Property`,
+		seo_description: description,
+	};
+};
+
+const page = legacyPageForPath(normalizedPath) ?? (await getKbPageByPath(normalizedPath));
 
 if (!page) {
 	return new Response('Not Found', { status: 404 });
@@ -13,18 +112,243 @@ if (!page) {
 
 const lang = page.language || 'en';
 const title = page.seo_title || page.title;
+const h1 = page.title;
 const description = page.seo_description || page.description || undefined;
 const canonical = `https://info.propertylist.es${page.path}`;
 const hreflangs = [
 	{ hreflang: 'en', href: `https://info.propertylist.es${page.path.replace(/^\/es\//, '/')}` },
 	{ hreflang: 'es', href: `https://info.propertylist.es${page.path.startsWith('/es/') ? page.path : `/es${page.path}`}` },
 ];
+
+const titleCase = (s: string) =>
+	String(s || '')
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase());
+
+const labelForCrumb = (seg: string) => {
+	const map: Record<string, string> = {
+		docs: 'Docs',
+		'general-information': 'News',
+		laws: 'Laws',
+		'laws-procedures': 'Laws & Procedures',
+		mls: 'MLS',
+		neighbourhood: 'Neighbourhood',
+		community: 'Community',
+	};
+	return map[seg] || titleCase(seg);
+};
+
+const stripTags = (html: string) => String(html || '').replace(/<[^>]+>/g, '');
+const slugify = (s: string) =>
+	stripTags(s)
+		.toLowerCase()
+		.normalize('NFKD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/&[a-z0-9#]+;/gi, '')
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+
+const withHeadingIdsAndToc = (html: string | null | undefined) => {
+	const body = String(html || '');
+	const used = new Map<string, number>();
+	const toc: Array<{ depth: 2 | 3; id: string; text: string }> = [];
+
+	const withIds = body.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi, (m, levelRaw, attrs, inner) => {
+		const depth = (Number(levelRaw) as 2 | 3) || 2;
+		const hasId = /\bid\s*=/.test(String(attrs || ''));
+		const text = stripTags(inner).replace(/\s+/g, ' ').trim();
+		const base = slugify(text) || `section-${toc.length + 1}`;
+		const n = (used.get(base) || 0) + 1;
+		used.set(base, n);
+		const id = n === 1 ? base : `${base}-${n}`;
+		toc.push({ depth, id, text });
+		if (hasId) return m;
+		return `<h${depth}${attrs} id="${id}">${inner}</h${depth}>`;
+	});
+
+	const withCallouts = withIds.replace(
+		/<blockquote([^>]*)>\s*(<p[^>]*>\s*)?(<strong[^>]*>\s*)?(Tip|Note|Warning|Consejo|Nota|Advertencia)\s*:?\s*(<\/strong>\s*)?/gi,
+		(_m, attrs, pOpen = '', strongOpen = '', kind, strongClose = '') => {
+			const raw = String(kind || '').toLowerCase();
+			const k = raw === 'consejo' ? 'tip' : raw === 'advertencia' ? 'warning' : raw === 'nota' ? 'note' : raw;
+			const hasClass = /\bclass\s*=/.test(String(attrs || ''));
+			const nextAttrs = hasClass
+				? String(attrs).replace(/\bclass\s*=\s*(['"])([\s\S]*?)\1/i, (_m: string, q: string, v: string) => {
+						const next = v.includes(k) ? v : `${v} ${k}`.trim();
+						return ` class=${q}${next}${q}`;
+					})
+				: `${attrs} class="${k}"`;
+			return `<blockquote${nextAttrs}>${pOpen}${strongOpen}${kind}${strongClose}`;
+		},
+	);
+
+	return { html: withCallouts, toc };
+};
+
+const { html: bodyHtml, toc } = withHeadingIdsAndToc(page.body);
+
+const crumbs = (() => {
+	const parts = page.path.split('/').filter(Boolean);
+	const acc: Array<{ href: string; label: string }> = [];
+	let current = '';
+	for (const seg of parts.slice(0, -1)) {
+		current += `/${seg}`;
+		acc.push({ href: `${current}/`, label: labelForCrumb(seg) });
+	}
+	return acc;
+})();
+
+const parentPrefix = page.path.replace(/[^/]+\/$/, '');
+const siblings = await listKbPagesByPrefix({
+	prefix: parentPrefix,
+	lang: lang === 'es' ? 'es' : 'en',
+	limit: 500,
+});
+const siblingSorted = [...siblings].sort((a, b) => a.path.localeCompare(b.path));
+const currentIndex = siblingSorted.findIndex((p) => p.path === page.path);
+const prev = currentIndex > 0 ? siblingSorted[currentIndex - 1] : null;
+const next = currentIndex >= 0 && currentIndex < siblingSorted.length - 1 ? siblingSorted[currentIndex + 1] : null;
+
+const extractSteps = (html: string) => {
+	const m = html.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+	if (!m) return [];
+	const olInner = m[1] || '';
+	const steps: string[] = [];
+	const liRe = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+	let hit: RegExpExecArray | null = null;
+	while ((hit = liRe.exec(olInner))) {
+		const text = stripTags(hit[1] || '').replace(/\s+/g, ' ').trim();
+		if (text) steps.push(text);
+		if (steps.length >= 10) break;
+	}
+	return steps;
+};
+
+const origin = 'https://info.propertylist.es';
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{
+			'@type': 'ListItem',
+			position: 1,
+			name: 'Home',
+			item: `${origin}${lang === 'es' ? '/es/' : '/'}`,
+		},
+		...crumbs.map((c, i) => ({
+			'@type': 'ListItem',
+			position: i + 2,
+			name: c.label,
+			item: `${origin}${c.href}`,
+		})),
+	],
+};
+
+const articleLd = {
+	'@context': 'https://schema.org',
+	'@type': 'TechArticle',
+	headline: h1,
+	description: description,
+	inLanguage: lang === 'en' ? 'en-GB' : lang,
+	mainEntityOfPage: canonical,
+	url: canonical,
+};
+
+const stepTexts = extractSteps(bodyHtml);
+const howToLd =
+	stepTexts.length >= 2
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'HowTo',
+				name: h1,
+				description: description,
+				inLanguage: lang === 'en' ? 'en-GB' : lang,
+				step: stepTexts.map((t, i) => ({
+					'@type': 'HowToStep',
+					position: i + 1,
+					name: t.length > 80 ? `${t.slice(0, 77)}...` : t,
+					text: t,
+				})),
+			}
+		: null;
+
+const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] : [])]);
 ---
 
 <Layout lang={lang} title={title} description={description} canonical={canonical} hreflangs={hreflangs}>
-	<article>
-		<h1>{page.title}</h1>
-		{page.description ? <p>{page.description}</p> : null}
-		{page.body ? <Fragment set:html={page.body} /> : null}
+	<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
+	<article class="doc">
+		<header class="docHeader">
+			<div class="docHeaderTop">
+				<div class="docIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M7.5 3.75h9a1.75 1.75 0 0 1 1.75 1.75v13A1.75 1.75 0 0 1 16.5 20.25h-9A1.75 1.75 0 0 1 5.75 18.5v-13A1.75 1.75 0 0 1 7.5 3.75Z"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+						<path d="M8.5 8h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						<path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						<path d="M8.5 16h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+					</svg>
+				</div>
+				<nav class="docCrumbs" aria-label="Breadcrumb">
+					<a href={lang === 'es' ? '/es/' : '/'}>Home</a>
+					{crumbs.map((c) => (
+						<>
+							<span class="docCrumbSep" aria-hidden="true">
+								/
+							</span>
+							<a href={c.href}>{c.label}</a>
+						</>
+					))}
+				</nav>
+			</div>
+
+			<h1 class="docTitle">{h1}</h1>
+			{page.description ? <p class="docLead">{page.description}</p> : null}
+		</header>
+
+		<div class="docGrid">
+			<div class="docMain">
+				<div class="docContent">{bodyHtml ? <Fragment set:html={bodyHtml} /> : null}</div>
+
+				{prev || next ? (
+					<footer class="docPager" aria-label="Page navigation">
+						{prev ? (
+							<a class="docPagerLink" href={prev.path}>
+								<span class="docPagerKicker">Previous</span>
+								<span class="docPagerTitle">{prev.title}</span>
+							</a>
+						) : (
+							<span />
+						)}
+						{next ? (
+							<a class="docPagerLink" href={next.path}>
+								<span class="docPagerKicker">Next</span>
+								<span class="docPagerTitle">{next.title}</span>
+							</a>
+						) : null}
+					</footer>
+				) : null}
+			</div>
+
+			{toc.filter((t) => t.depth === 2).length > 1 ? (
+				<aside class="docToc" aria-label="On this page">
+					<div class="docTocTitle">On this page</div>
+					<ol class="docTocList">
+						{toc
+							.filter((t) => t.depth === 2)
+							.slice(0, 12)
+							.map((t) => (
+								<li>
+									<a href={`#${t.id}`}>{t.text}</a>
+								</li>
+							))}
+					</ol>
+				</aside>
+			) : null}
+		</div>
 	</article>
 </Layout>

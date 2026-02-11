@@ -1,10 +1,12 @@
 import type { APIRoute } from 'astro';
+import { normaliseKbText } from '../../lib/directus';
 
 const DEFAULT_LIMIT = 20;
 
 export const GET: APIRoute = async ({ url }) => {
 	const q = (url.searchParams.get('q') || '').trim();
 	const lang = (url.searchParams.get('lang') || 'en').trim();
+	const prefix = (url.searchParams.get('prefix') || '').trim();
 	const limitRaw = url.searchParams.get('limit') || '';
 	const limit = Math.min(
 		Math.max(Number.parseInt(limitRaw || `${DEFAULT_LIMIT}`, 10) || DEFAULT_LIMIT, 1),
@@ -30,8 +32,10 @@ export const GET: APIRoute = async ({ url }) => {
 	params.set('fields', 'id,path,title,description,language');
 	params.set('filter[status][_eq]', 'published');
 	params.set('filter[language][_eq]', lang);
+	params.set('sort', '-id');
 	params.set('filter[_or][0][title][_icontains]', q);
 	params.set('filter[_or][1][body][_icontains]', q);
+	if (prefix) params.set('filter[path][_starts_with]', prefix);
 
 	const res = await fetch(`${directusUrl}/items/kb_pages?${params.toString()}`, {
 		headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -47,7 +51,26 @@ export const GET: APIRoute = async ({ url }) => {
 	const json = (await res.json()) as { data?: unknown[] };
 	const results = Array.isArray(json.data) ? json.data : [];
 
-	return new Response(JSON.stringify({ results }), {
+	const normalised = results.map((r) => {
+		const o = (r || {}) as {
+			id?: unknown;
+			path?: unknown;
+			title?: unknown;
+			description?: unknown;
+			language?: unknown;
+		};
+		const language = typeof o.language === 'string' ? o.language : undefined;
+		return {
+			...o,
+			title: normaliseKbText(typeof o.title === 'string' ? o.title : '', language, { stripSuffix: true, decode: true }),
+			description:
+				typeof o.description === 'string'
+					? normaliseKbText(o.description, language, { stripSuffix: false, decode: true })
+					: o.description,
+		};
+	});
+
+	return new Response(JSON.stringify({ results: normalised }), {
 		status: 200,
 		headers: { 'content-type': 'application/json; charset=utf-8' },
 	});
