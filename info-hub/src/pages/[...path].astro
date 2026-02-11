@@ -547,6 +547,16 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const desktopNav = document.querySelector('.docNav');
   const drawerBody = overlay?.querySelector('.docNavDrawerBody');
 
+  const scrollToActive = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    const active = container.querySelector('.docNavLink.active');
+    if (!(active instanceof HTMLElement)) return;
+    const c = container.getBoundingClientRect();
+    const a = active.getBoundingClientRect();
+    const delta = a.top - c.top - container.clientHeight * 0.35;
+    container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
   const setOpen = (next) => {
     if (!(overlay instanceof HTMLElement)) return;
     const canOpen = mobileMq.matches;
@@ -555,8 +565,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     if (next && drawer instanceof HTMLElement) drawer.focus?.();
     if (!next && openBtn instanceof HTMLElement) openBtn.focus?.();
     if (next && drawerBody instanceof HTMLElement) {
-      const active = drawerBody.querySelector('.docNavLink.active');
-      if (active instanceof HTMLElement) active.scrollIntoView({ block: 'center' });
+      requestAnimationFrame(() => scrollToActive(drawerBody));
     }
   };
 
@@ -564,8 +573,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   mobileMq.addEventListener?.('change', () => setOpen(false));
 
   if (desktopNav instanceof HTMLElement) {
-    const active = desktopNav.querySelector('.docNavLink.active');
-    if (active instanceof HTMLElement) active.scrollIntoView({ block: 'center' });
+    requestAnimationFrame(() => scrollToActive(desktopNav));
+    setTimeout(() => scrollToActive(desktopNav), 0);
   }
 
   const restoreDefaults = () => {
