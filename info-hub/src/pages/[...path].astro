@@ -285,8 +285,6 @@ const sortDocTree = (node: DocNode) => {
 sortDocTree(docsRoot);
 
 const mlsManualPath = '/docs/propertylist-mls-user-manual/';
-const gettingStartedHref =
-	isDocs && docsByPath.has(`${mlsManualPath}getting-started/`) ? `${mlsManualPath}getting-started/` : null;
 const manualOrderWeight = (node: DocNode): number => {
 	const s = `${node.seg} ${node.title}`.toLowerCase();
 	if (node.path === mlsManualPath) return 0;
@@ -489,7 +487,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
 		<div class:list={['docGrid', isDocs ? 'withNav' : null]}>
 			{isDocs ? (
-				<aside class="docNav" aria-label="Docs navigation">
+				<aside class="docNav" aria-label="Docs navigation" data-current-manual-root={currentManualRoot || ''}>
 					<div class="docNavTitle">In this manual</div>
 					<div class="docNavFilterRow">
 						<label class="docNavFilterLabel" for="doc-nav-filter-desktop">
@@ -506,19 +504,6 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						/>
 					</div>
 					<ul class="docNavList">
-						{gettingStartedHref ? (
-							<li
-								class="docNavItem"
-								data-doc-nav-node="1"
-								data-depth="0"
-								data-label="getting started"
-								data-path={gettingStartedHref.toLowerCase()}
-							>
-								<a class:list={['docNavLink', page.path === gettingStartedHref ? 'active' : null]} href={gettingStartedHref}>
-									Getting Started
-								</a>
-							</li>
-						) : null}
 						<Fragment set:html={renderDocNavHtml(docsRoot.children)} />
 					</ul>
 				</aside>
@@ -588,21 +573,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						data-doc-nav-filter="mobile"
 					/>
 				</div>
-				<nav class="docNavDrawerBody" aria-label="Docs navigation">
+				<nav class="docNavDrawerBody" aria-label="Docs navigation" data-current-manual-root={currentManualRoot || ''}>
 					<ul class="docNavList">
-						{gettingStartedHref ? (
-							<li
-								class="docNavItem"
-								data-doc-nav-node="1"
-								data-depth="0"
-								data-label="getting started"
-								data-path={gettingStartedHref.toLowerCase()}
-							>
-								<a class:list={['docNavLink', page.path === gettingStartedHref ? 'active' : null]} href={gettingStartedHref}>
-									Getting Started
-								</a>
-							</li>
-						) : null}
 						<Fragment set:html={renderDocNavHtml(docsRoot.children)} />
 					</ul>
 				</nav>
@@ -618,9 +590,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
   const overlay = document.querySelector('[data-doc-nav-overlay]');
   const drawer = overlay?.querySelector('.docNavDrawer');
   const closeBtn = overlay?.querySelector('[data-doc-nav-close]');
-  const inputs = Array.from(document.querySelectorAll('input[data-doc-nav-filter]')).filter((x) => x instanceof HTMLInputElement);
-  const nodes = Array.from(document.querySelectorAll('[data-doc-nav-node]'));
-  const groups = Array.from(document.querySelectorAll('details.docNavGroup'));
+  const inputs = Array.from(document.querySelectorAll('input[data-doc-nav-filter]'));
   const mobileMq = window.matchMedia('(max-width: 960px)');
   const desktopNav = document.querySelector('.docNav');
   const drawerBody = overlay?.querySelector('.docNavDrawerBody');
@@ -671,25 +641,39 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     window.addEventListener('load', () => ensureScrolledToActive(desktopNav, 0), { once: true });
   }
 
-  const restoreDefaults = () => {
+  const restoreDefaults = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    const groups = Array.from(container.querySelectorAll('details.docNavGroup'));
     for (const d of groups) {
       const val = d.getAttribute('data-default-open') || '0';
       d.open = val === '1';
     }
   };
 
-  const apply = (qRaw) => {
+  const applyTo = (container, qRaw) => {
+    if (!(container instanceof HTMLElement)) return;
+    const nodes = Array.from(container.querySelectorAll('[data-doc-nav-node]'));
+    const groups = Array.from(container.querySelectorAll('details.docNavGroup'));
+    const manualRoot = (container.getAttribute('data-current-manual-root') || '').toLowerCase();
     const q = String(qRaw || '').trim().toLowerCase();
     if (!q) {
-      for (const el of nodes) el.hidden = false;
-      restoreDefaults();
+      for (const el of nodes) {
+        el.hidden = false;
+        if (el instanceof HTMLElement) el.style.removeProperty('display');
+      }
+      restoreDefaults(container);
       return;
     }
 
     for (const el of nodes) {
       const label = (el.getAttribute('data-label') || '').toLowerCase();
       const path = (el.getAttribute('data-path') || '').toLowerCase();
-      el.hidden = !(label.includes(q) || path.includes(q));
+      const text = (el.textContent || '').toLowerCase();
+      const withinManual = !manualRoot || path.startsWith(manualRoot);
+      const matches = label.includes(q) || path.includes(q) || text.includes(q);
+      const hide = !withinManual || !matches;
+      el.hidden = hide;
+      if (el instanceof HTMLElement) el.style.display = hide ? 'none' : '';
     }
 
     for (let i = nodes.length - 1; i >= 0; i--) {
@@ -718,20 +702,29 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     const src = ev?.target;
     if (!(src instanceof HTMLInputElement)) return;
     for (const other of inputs) {
-      if (other !== src) other.value = src.value;
+      if (other instanceof HTMLInputElement && other !== src) other.value = src.value;
     }
-    apply(src.value);
+    applyTo(desktopNav, src.value);
+    applyTo(drawerBody, src.value);
     const mode = src.getAttribute('data-doc-nav-filter');
     const container = mode === 'mobile' ? drawerBody : desktopNav;
     requestAnimationFrame(() => scrollToFirstVisible(container));
   };
 
   for (const input of inputs) {
+    if (!(input instanceof HTMLInputElement)) continue;
     input.addEventListener('input', onInput, { passive: true });
     input.addEventListener('search', onInput, { passive: true });
     input.addEventListener('keyup', onInput, { passive: true });
   }
-  for (const input of inputs) if (input.value.trim()) apply(input.value);
+  for (const input of inputs) {
+    if (!(input instanceof HTMLInputElement)) continue;
+    if (input.value.trim()) {
+      applyTo(desktopNav, input.value);
+      applyTo(drawerBody, input.value);
+      break;
+    }
+  }
 
   if (openBtn instanceof HTMLElement) openBtn.addEventListener('click', () => setOpen(true));
   if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
