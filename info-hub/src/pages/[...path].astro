@@ -329,7 +329,83 @@ const legacyPageForPath = (path: string) => {
 	return null;
 };
 
-const page = legacyPageForPath(normalizedPath) ?? (await getKbPageByPath(normalizedPath));
+const legacyMlsPageForPath = (path: string) => {
+	const base = '/docs/propertylist-mls-user-manual/';
+	if (!path.startsWith(base)) return null;
+
+	const relative = path.slice(base.length);
+	const parts = relative.split('/').filter(Boolean);
+
+	if (parts.length === 0) return null; // Index is handled by the index page
+
+	const seg = parts[0];
+	const mlsMap: Record<string, { title: string; desc: string; body?: string }> = {
+		'getting-started': { title: 'Getting Started', desc: 'Set up your account, get the app, and learn the basics.' },
+		'your-account': { title: 'Your Account', desc: 'Manage your profile, company details, and preferences.' },
+		'listing-a-property': { title: 'Listing a Property', desc: 'Create, edit, and manage listings from start to finish.' },
+		'microsite-share': { title: 'MicroSite - Share', desc: 'Share properties with links, microsites, and clients.' },
+		'managing-listings': { title: 'Managing Listings', desc: 'Update status, edit listings, and track enquiries and activity.' },
+		'marketing-and-promotion': {
+			title: 'Marketing and Promotion',
+			desc: 'Promote listings across MLS, portals, and social channels.',
+			body: `
+<h2>Marketing and Promotion</h2>
+<p>Effortlessly boost your listing’s reach! Feature your property on the MLS or Public Property Portal (when launched), create marketing materials with a few clicks, share on social media in seconds, and sync it to other websites with ease.</p>
+<p>Find out more in the articles below.</p>
+<ul>
+    <li>Feature your listing on the MLS</li>
+    <li>Share on Social Media</li>
+    <li>Create Window Cards (PDF)</li>
+</ul>
+`,
+		},
+		'tracking-listing-exposure': { title: 'Tracking listing exposure', desc: 'Measure listing performance and visibility.' },
+		'searching-for-properties': { title: 'Searching for Properties', desc: 'Find listings fast with filters, saved searches, and alerts.' },
+		'ai-and-automation': { title: 'AI & Automation', desc: 'Automate workflows and use AI features where available.' },
+		'mls-property-alerts': { title: 'MLS Property Alerts', desc: 'Set up alerts to keep buyers and agents updated.' },
+		'leads': { title: 'LEADS', desc: 'Capture leads, qualify them, and follow up effectively.' },
+		'requests': { title: 'ReQuests', desc: 'Manage viewing and information requests from clients.' },
+		'contacts': { title: 'Contacts', desc: 'Manage your client database and relationships.' },
+		'documents': { title: 'Documents', desc: 'Upload, share, and manage documents for listings and clients.' },
+		'sales-pipeline-tracking': { title: 'Sales Pipeline - Tracking', desc: 'Track deals from initial contact to completion.' },
+		'calendar': { title: 'Calendar', desc: 'Manage appointments, viewings, and tasks.' },
+		'new-developments': { title: 'New Developments', desc: 'Information for developers and new build listings.' },
+		'credits': { title: 'Credits', desc: 'Understand and manage your credit balance.' },
+		'verified-agency': { title: 'Verified Agency', desc: 'Get verified to build trust with clients and agents.' },
+		'reports-and-statistics': { title: 'Reports & Statistics', desc: 'Create reports and track performance and trends.' },
+		'security': { title: 'Security', desc: 'Keep accounts secure and manage access.' },
+		'technical-documentation': { title: 'Technical Documentation', desc: 'Technical notes for integrations and advanced setup.' },
+		'new-features-roadmap': { title: 'New Features & Roadmap', desc: 'What’s new and what’s coming next.' },
+		'faq-mls-crm': { title: 'FAQ (MLS & CRM)', desc: 'Common questions, troubleshooting, and quick answers.' },
+		'additional-resources': { title: 'Additional Resources', desc: 'Templates, checklists, and supporting materials.' },
+	};
+
+	const def = mlsMap[seg];
+	if (!def) return null;
+
+	// Basic placeholder for now, unless body is defined
+	const body =
+		def.body ||
+		`
+<h2>${def.title}</h2>
+<p>${def.desc}</p>
+<p>Detailed documentation for ${def.title} is coming soon.</p>
+`;
+
+	return {
+		id: `legacy-mls-${seg}`,
+		status: 'published',
+		language: 'en',
+		path,
+		title: def.title,
+		description: def.desc,
+		body,
+		seo_title: `${def.title} • MLS User Manual`,
+		seo_description: def.desc,
+	};
+};
+
+const page = legacyPageForPath(normalizedPath) ?? legacyMlsPageForPath(normalizedPath) ?? (await getKbPageByPath(normalizedPath));
 
 if (!page) {
 	return new Response('Not Found', { status: 404 });

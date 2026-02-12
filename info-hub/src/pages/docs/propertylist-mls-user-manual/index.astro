@@ -3,7 +3,45 @@ import Layout from '../../../layouts/Layout.astro';
 import { listKbPagesByPrefix } from '../../../lib/directus';
 
 const base = '/docs/propertylist-mls-user-manual/';
-const itemsRaw = await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 });
+const seedLegacyMlsListing = () => {
+	const definitions = [
+		{ seg: 'getting-started', title: 'Getting Started', desc: 'Set up your account, get the app, and learn the basics.' },
+		{ seg: 'your-account', title: 'Your Account', desc: 'Manage your profile, company details, and preferences.' },
+		{ seg: 'listing-a-property', title: 'Listing a Property', desc: 'Create, edit, and manage listings from start to finish.' },
+		{ seg: 'microsite-share', title: 'MicroSite - Share', desc: 'Share properties with links, microsites, and clients.' },
+		{ seg: 'managing-listings', title: 'Managing Listings', desc: 'Update status, edit listings, and track enquiries and activity.' },
+		{ seg: 'marketing-and-promotion', title: 'Marketing and Promotion', desc: 'Promote listings across MLS, portals, and social channels.' },
+		{ seg: 'tracking-listing-exposure', title: 'Tracking listing exposure', desc: 'Measure listing performance and visibility.' },
+		{ seg: 'searching-for-properties', title: 'Searching for Properties', desc: 'Find listings fast with filters, saved searches, and alerts.' },
+		{ seg: 'ai-and-automation', title: 'AI & Automation', desc: 'Automate workflows and use AI features where available.' },
+		{ seg: 'mls-property-alerts', title: 'MLS Property Alerts', desc: 'Set up alerts to keep buyers and agents updated.' },
+		{ seg: 'leads', title: 'LEADS', desc: 'Capture leads, qualify them, and follow up effectively.' },
+		{ seg: 'requests', title: 'ReQuests', desc: 'Manage viewing and information requests from clients.' },
+		{ seg: 'contacts', title: 'Contacts', desc: 'Manage your client database and relationships.' },
+		{ seg: 'documents', title: 'Documents', desc: 'Upload, share, and manage documents for listings and clients.' },
+		{ seg: 'sales-pipeline-tracking', title: 'Sales Pipeline - Tracking', desc: 'Track deals from initial contact to completion.' },
+		{ seg: 'calendar', title: 'Calendar', desc: 'Manage appointments, viewings, and tasks.' },
+		{ seg: 'new-developments', title: 'New Developments', desc: 'Information for developers and new build listings.' },
+		{ seg: 'credits', title: 'Credits', desc: 'Understand and manage your credit balance.' },
+		{ seg: 'verified-agency', title: 'Verified Agency', desc: 'Get verified to build trust with clients and agents.' },
+		{ seg: 'reports-and-statistics', title: 'Reports & Statistics', desc: 'Create reports and track performance and trends.' },
+		{ seg: 'security', title: 'Security', desc: 'Keep accounts secure and manage access.' },
+		{ seg: 'technical-documentation', title: 'Technical Documentation', desc: 'Technical notes for integrations and advanced setup.' },
+		{ seg: 'new-features-roadmap', title: 'New Features & Roadmap', desc: 'What’s new and what’s coming next.' },
+		{ seg: 'faq-mls-crm', title: 'FAQ (MLS & CRM)', desc: 'Common questions, troubleshooting, and quick answers.' },
+		{ seg: 'additional-resources', title: 'Additional Resources', desc: 'Templates, checklists, and supporting materials.' },
+	];
+
+	return definitions.map((d) => ({
+		id: `legacy-mls-${d.seg}`,
+		language: 'en',
+		path: `/docs/propertylist-mls-user-manual/${d.seg}/`,
+		title: d.title,
+		description: d.desc,
+	}));
+};
+
+const itemsRaw = [...(await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 })), ...seedLegacyMlsListing()];
 
 const shouldHideFromManualIndex = (p: (typeof itemsRaw)[number]) => {
 	const title = String(p.title || '')
