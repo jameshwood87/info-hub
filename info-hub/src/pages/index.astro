@@ -680,6 +680,7 @@ const hrefForPersona = (nextPersona: string) => {
 		background: rgba(255, 255, 255, 0.8);
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		border-radius: 999px;
+		max-width: 100%;
 		width: fit-content;
 		margin: 50px auto 0;
 	}
@@ -886,14 +887,20 @@ const hrefForPersona = (nextPersona: string) => {
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
+		flex-wrap: wrap;
 		gap: 14px;
 		margin-bottom: 10px;
+	}
+
+	.sectionHeader > * {
+		min-width: 0;
 	}
 
 	.sectionHeader h2 {
 		margin: 0;
 		font-size: 20px;
 		letter-spacing: -0.01em;
+		overflow-wrap: anywhere;
 	}
 
 	.offerTitle {
@@ -905,6 +912,7 @@ const hrefForPersona = (nextPersona: string) => {
 		margin: 0 0 12px;
 		color: rgba(16, 24, 40, 0.72);
 		line-height: 1.55;
+		overflow-wrap: anywhere;
 	}
 
 	.link {

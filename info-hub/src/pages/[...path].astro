@@ -1078,6 +1078,10 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
   setOpen(false);
   mobileMq.addEventListener?.('change', () => setOpen(false));
+  window.addEventListener?.('pageshow', (e) => {
+    if (e?.persisted) setOpen(false);
+  });
+  window.addEventListener?.('hashchange', () => setOpen(false));
 
   if (desktopNav instanceof HTMLElement) {
     requestAnimationFrame(() => ensureScrolledToActive(desktopNav, 0));
@@ -1184,13 +1188,13 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
     drawerBody.addEventListener('click', (e) => {
       const el = e.target;
       if (!(el instanceof Element)) return;
-      const a = el.closest('a.docNavLink, a.docNavSummaryLink');
-      if (a instanceof HTMLAnchorElement) {
-        const next = normalisePath(a.getAttribute('href'));
-        if (next) sessionStorage.setItem(STORAGE_KEY, next);
-        setOpen(false);
-      }
-    });
+      const a = el.closest('a');
+      if (!(a instanceof HTMLAnchorElement)) return;
+      const isDocNavLink = a.matches('a.docNavLink, a.docNavSummaryLink');
+      const next = normalisePath(a.getAttribute('href'));
+      if (isDocNavLink && next) sessionStorage.setItem(STORAGE_KEY, next);
+      setOpen(false);
+    }, true);
   }
   if (overlay instanceof HTMLElement) {
     overlay.addEventListener('click', (e) => {
