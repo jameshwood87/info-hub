@@ -6,34 +6,160 @@ const base = '/docs/laws-procedures/';
 const items = await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 });
 
 const seedLegacyListing = () => {
-	const seg = 'listing-a-property-what-to-know';
-	const viewAllHref = `${base}${seg}/`;
-	const exists = items.some((p) => p.path === viewAllHref || p.path.startsWith(viewAllHref));
-	if (exists) return [];
-
-	return [
+	const definitions = [
 		{
-			id: 'legacy-laws-procedures-listing-a-property-what-to-know',
-			language: 'en',
-			path: viewAllHref,
+			seg: 'listing-a-property-what-to-know',
 			title: 'Listing a Property (What to know)',
-			description: 'What to know before listing a property in Andalusia.',
+			desc: 'What to know before listing a property in Andalusia.',
+			children: [
+				{ seg: 'estate-agents', title: 'Estate Agents' },
+				{ seg: 'owners', title: 'Owners' },
+			],
 		},
 		{
-			id: 'legacy-laws-procedures-listing-a-property-what-to-know-estate-agents',
-			language: 'en',
-			path: `${viewAllHref}estate-agents/`,
-			title: 'Estate Agents',
-			description: 'Guidance for agents listing on behalf of owners.',
+			seg: 'buying-a-property',
+			title: 'Buying a Property',
+			desc: 'Guides for buyers: checks, contracts, and timelines.',
+			children: [
+				{ seg: 'verifying-documents-and-debts', title: 'Verifying documents and debts' },
+				{ seg: 'legal-requirements', title: 'Legal requirements' },
+				{ seg: 'obtaining-a-nie', title: 'Obtaining a NIE' },
+				{ seg: 'paying-taxes', title: 'Paying taxes' },
+				{ seg: 'registering-the-property-in-the-land-registry', title: 'Registering the Property in the Land Registry' },
+			],
 		},
 		{
-			id: 'legacy-laws-procedures-listing-a-property-what-to-know-owners',
-			language: 'en',
-			path: `${viewAllHref}owners/`,
-			title: 'Owners',
-			description: 'What owners should prepare before publishing a listing.',
+			seg: 'selling-a-property',
+			title: 'Selling a Property',
+			desc: 'Guides for sellers: paperwork, process, and costs.',
+			children: [
+				{ seg: 'the-selling-process', title: 'The selling process' },
+				{ seg: 'marketing-the-property', title: 'Marketing the property' },
+				{ seg: 'signing-a-contract-and-reservation', title: 'Signing a contract & reservation' },
+				{ seg: 'costs', title: 'Costs' },
+				{ seg: 'taxes', title: 'Taxes' },
+			],
+		},
+		{
+			seg: 'renovating-a-property',
+			title: 'Renovating a Property',
+			desc: 'Renovations, rules, compliance, and practical steps.',
+			children: [
+				{ seg: 'planning-permission', title: 'Planning permission' },
+				{ seg: 'obtaining-a-licencia-de-obra', title: 'Obtaining a licencia de obra (building permit).' },
+				{ seg: 'cost-calculations', title: 'Cost Calculations' },
+				{ seg: 'hiring-a-contractor', title: 'Hiring a contractor' },
+				{ seg: 'taxes-for-renovating', title: 'Taxes for Renovating' },
+			],
+		},
+		{
+			seg: 'building-a-property',
+			title: 'Building a Property',
+			desc: 'New builds, permits, regulations, and project planning.',
+			children: [
+				{ seg: 'obtaining-permits-and-approvals', title: 'Obtaining permits and approvals' },
+				{ seg: 'inspections-and-compliance', title: 'Inspections and compliance' },
+				{ seg: 'planning-and-design', title: 'Planning and design' },
+				{ seg: 'construction-and-completion', title: 'Construction and completion' },
+				{ seg: 'construction-standards', title: 'Construction standards' },
+				{ seg: 'completion-and-final-inspections', title: 'Completion and final inspections' },
+			],
+		},
+		{
+			seg: 'renting-a-property',
+			title: 'Renting a Property',
+			desc: 'Rentals, landlord obligations, tenant rights, and taxes.',
+			children: [
+				{ seg: 'long-term', title: 'Long Term' },
+				{ seg: 'types-of-tenancies', title: 'Types of tenancies' },
+				{ seg: 'tenancy-agreements', title: 'Tenancy agreements' },
+				{ seg: 'evictions', title: 'Evictions' },
+				{ seg: 'short-term-holiday', title: 'Short Term/Holiday' },
+				{ seg: 'community-approval-law', title: 'Community Approval Law' },
+				{ seg: 'landlords', title: 'Landlords' },
+				{ seg: 'requirements-for-landlords', title: 'Requirements for Landlords' },
+				{ seg: 'taxes-for-landlords', title: 'Taxes for Landlords' },
+			],
+		},
+		{
+			seg: 'traspaso-business-transfer',
+			title: 'Traspaso (Business Transfer)',
+			desc: 'Business transfers (traspaso): how it works and what to check.',
+			children: [
+				{ seg: 'understanding-the-traspaso-concept', title: 'Understanding the Traspaso concept' },
+				{ seg: 'essentials-of-a-traspaso-agreement', title: 'Essentials of a Traspaso Agreement' },
+				{ seg: 'tax-implications-of-a-traspaso', title: 'Tax Implications of a Traspaso' },
+				{ seg: 'additional-considerations', title: 'Additional Considerations' },
+				{ seg: 'contractual-obligations', title: 'Contractual obligations' },
+			],
+		},
+		{
+			seg: 'property-taxes-in-andalucia',
+			title: 'Property Taxes in Andalucía',
+			desc: 'Taxes and ongoing costs for owning property.',
+			children: [
+				{ seg: 'impuesto-sobre-bienes-inmuebles-ibi', title: 'Impuesto sobre Bienes Inmuebles (IBI)' },
+				{ seg: 'impuesto-sobre-transmisiones-patrimoniales-itp', title: 'Impuesto sobre Transmisiones Patrimoniales (ITP)' },
+				{ seg: 'impuesto-sobre-el-valor-anadido-iva', title: 'Impuesto sobre el Valor Añadido (IVA)' },
+				{ seg: 'impuesto-sobre-construcciones-instalaciones-y-obras-icio', title: 'Impuesto sobre Construcciones, Instalaciones y Obras (ICIO)' },
+			],
+		},
+		{
+			seg: 'inheritance-laws-in-andalucia',
+			title: 'Inheritance Laws in Andalucía',
+			desc: 'Inheritance basics: legal steps and common pitfalls.',
+			children: [
+				{ seg: 'inheritance-tax-impuesto-sobre-sucesiones-y-donaciones', title: 'Inheritance Tax (Impuesto sobre Sucesiones y Donaciones)' },
+				{ seg: 'forced-heirship-rules-legitima', title: 'Forced Heirship Rules (Legítima)' },
+				{ seg: 'wills-and-testaments', title: 'Wills and Testaments' },
+				{ seg: 'intestate-succession-intestacy', title: 'Intestate Succession (Intestacy)' },
+			],
+		},
+		{
+			seg: 'property-insurance-in-andalucia',
+			title: 'Property Insurance in Andalucía',
+			desc: 'Insurance types, coverage, and what to ask for.',
+			children: [
+				{ seg: 'types-of-property-insurance', title: 'Types of Property Insurance' },
+				{ seg: 'factors-influencing-premiums', title: 'Factors Influencing Premiums' },
+				{ seg: 'shopping-for-insurance', title: 'Shopping for Insurance' },
+				{ seg: 'additional-considerations', title: 'Additional Considerations' },
+			],
 		},
 	];
+
+	const results = [];
+	const seenPaths = new Set(items.map((i) => i.path));
+
+	for (const def of definitions) {
+		const parentPath = `${base}${def.seg}/`;
+		if (!seenPaths.has(parentPath)) {
+			results.push({
+				id: `legacy-laws-${def.seg}`,
+				language: 'en',
+				path: parentPath,
+				title: def.title,
+				description: def.desc,
+			});
+			seenPaths.add(parentPath);
+		}
+
+		for (const child of def.children) {
+			const childPath = `${parentPath}${child.seg}/`;
+			if (!seenPaths.has(childPath)) {
+				results.push({
+					id: `legacy-laws-${def.seg}-${child.seg}`,
+					language: 'en',
+					path: childPath,
+					title: child.title,
+					description: `${child.title} - Guide.`,
+				});
+				seenPaths.add(childPath);
+			}
+		}
+	}
+
+	return results;
 };
 
 items.push(...seedLegacyListing());

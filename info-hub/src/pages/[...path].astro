@@ -6,14 +6,146 @@ const rawPath = Astro.params.path ?? '';
 const normalizedPath = `/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
 
 const legacyPageForPath = (path: string) => {
-	const base = '/docs/laws-procedures/listing-a-property-what-to-know/';
-	if (path !== base && path !== `${base}estate-agents/` && path !== `${base}owners/`) return null;
+	const base = '/docs/laws-procedures/';
+	if (!path.startsWith(base)) return null;
 
-	if (path === base) {
-		const title = 'Listing a Property (What to know)';
-		const description =
-			'What to know before listing a property in Andalusia: guidance for estate agents and owners, plus what to prepare before you publish your listing.';
-		const body = `
+	const definitions = [
+		{
+			seg: 'listing-a-property-what-to-know',
+			title: 'Listing a Property (What to know)',
+			desc: 'What to know before listing a property in Andalusia.',
+			children: [
+				{ seg: 'estate-agents', title: 'Estate Agents' },
+				{ seg: 'owners', title: 'Owners' },
+			],
+		},
+		{
+			seg: 'buying-a-property',
+			title: 'Buying a Property',
+			desc: 'Guides for buyers: checks, contracts, and timelines.',
+			children: [
+				{ seg: 'verifying-documents-and-debts', title: 'Verifying documents and debts' },
+				{ seg: 'legal-requirements', title: 'Legal requirements' },
+				{ seg: 'obtaining-a-nie', title: 'Obtaining a NIE' },
+				{ seg: 'paying-taxes', title: 'Paying taxes' },
+				{ seg: 'registering-the-property-in-the-land-registry', title: 'Registering the Property in the Land Registry' },
+			],
+		},
+		{
+			seg: 'selling-a-property',
+			title: 'Selling a Property',
+			desc: 'Guides for sellers: paperwork, process, and costs.',
+			children: [
+				{ seg: 'the-selling-process', title: 'The selling process' },
+				{ seg: 'marketing-the-property', title: 'Marketing the property' },
+				{ seg: 'signing-a-contract-and-reservation', title: 'Signing a contract & reservation' },
+				{ seg: 'costs', title: 'Costs' },
+				{ seg: 'taxes', title: 'Taxes' },
+			],
+		},
+		{
+			seg: 'renovating-a-property',
+			title: 'Renovating a Property',
+			desc: 'Renovations, rules, compliance, and practical steps.',
+			children: [
+				{ seg: 'planning-permission', title: 'Planning permission' },
+				{ seg: 'obtaining-a-licencia-de-obra', title: 'Obtaining a licencia de obra (building permit).' },
+				{ seg: 'cost-calculations', title: 'Cost Calculations' },
+				{ seg: 'hiring-a-contractor', title: 'Hiring a contractor' },
+				{ seg: 'taxes-for-renovating', title: 'Taxes for Renovating' },
+			],
+		},
+		{
+			seg: 'building-a-property',
+			title: 'Building a Property',
+			desc: 'New builds, permits, regulations, and project planning.',
+			children: [
+				{ seg: 'obtaining-permits-and-approvals', title: 'Obtaining permits and approvals' },
+				{ seg: 'inspections-and-compliance', title: 'Inspections and compliance' },
+				{ seg: 'planning-and-design', title: 'Planning and design' },
+				{ seg: 'construction-and-completion', title: 'Construction and completion' },
+				{ seg: 'construction-standards', title: 'Construction standards' },
+				{ seg: 'completion-and-final-inspections', title: 'Completion and final inspections' },
+			],
+		},
+		{
+			seg: 'renting-a-property',
+			title: 'Renting a Property',
+			desc: 'Rentals, landlord obligations, tenant rights, and taxes.',
+			children: [
+				{ seg: 'long-term', title: 'Long Term' },
+				{ seg: 'types-of-tenancies', title: 'Types of tenancies' },
+				{ seg: 'tenancy-agreements', title: 'Tenancy agreements' },
+				{ seg: 'evictions', title: 'Evictions' },
+				{ seg: 'short-term-holiday', title: 'Short Term/Holiday' },
+				{ seg: 'community-approval-law', title: 'Community Approval Law' },
+				{ seg: 'landlords', title: 'Landlords' },
+				{ seg: 'requirements-for-landlords', title: 'Requirements for Landlords' },
+				{ seg: 'taxes-for-landlords', title: 'Taxes for Landlords' },
+			],
+		},
+		{
+			seg: 'traspaso-business-transfer',
+			title: 'Traspaso (Business Transfer)',
+			desc: 'Business transfers (traspaso): how it works and what to check.',
+			children: [
+				{ seg: 'understanding-the-traspaso-concept', title: 'Understanding the Traspaso concept' },
+				{ seg: 'essentials-of-a-traspaso-agreement', title: 'Essentials of a Traspaso Agreement' },
+				{ seg: 'tax-implications-of-a-traspaso', title: 'Tax Implications of a Traspaso' },
+				{ seg: 'additional-considerations', title: 'Additional Considerations' },
+				{ seg: 'contractual-obligations', title: 'Contractual obligations' },
+			],
+		},
+		{
+			seg: 'property-taxes-in-andalucia',
+			title: 'Property Taxes in Andalucía',
+			desc: 'Taxes and ongoing costs for owning property.',
+			children: [
+				{ seg: 'impuesto-sobre-bienes-inmuebles-ibi', title: 'Impuesto sobre Bienes Inmuebles (IBI)' },
+				{ seg: 'impuesto-sobre-transmisiones-patrimoniales-itp', title: 'Impuesto sobre Transmisiones Patrimoniales (ITP)' },
+				{ seg: 'impuesto-sobre-el-valor-anadido-iva', title: 'Impuesto sobre el Valor Añadido (IVA)' },
+				{ seg: 'impuesto-sobre-construcciones-instalaciones-y-obras-icio', title: 'Impuesto sobre Construcciones, Instalaciones y Obras (ICIO)' },
+			],
+		},
+		{
+			seg: 'inheritance-laws-in-andalucia',
+			title: 'Inheritance Laws in Andalucía',
+			desc: 'Inheritance basics: legal steps and common pitfalls.',
+			children: [
+				{ seg: 'inheritance-tax-impuesto-sobre-sucesiones-y-donaciones', title: 'Inheritance Tax (Impuesto sobre Sucesiones y Donaciones)' },
+				{ seg: 'forced-heirship-rules-legitima', title: 'Forced Heirship Rules (Legítima)' },
+				{ seg: 'wills-and-testaments', title: 'Wills and Testaments' },
+				{ seg: 'intestate-succession-intestacy', title: 'Intestate Succession (Intestacy)' },
+			],
+		},
+		{
+			seg: 'property-insurance-in-andalucia',
+			title: 'Property Insurance in Andalucía',
+			desc: 'Insurance types, coverage, and what to ask for.',
+			children: [
+				{ seg: 'types-of-property-insurance', title: 'Types of Property Insurance' },
+				{ seg: 'factors-influencing-premiums', title: 'Factors Influencing Premiums' },
+				{ seg: 'shopping-for-insurance', title: 'Shopping for Insurance' },
+				{ seg: 'additional-considerations', title: 'Additional Considerations' },
+			],
+		},
+	];
+
+	const relative = path.slice(base.length);
+	const parts = relative.split('/').filter(Boolean);
+
+	if (parts.length === 0) return null;
+
+	const parentSeg = parts[0];
+	const def = definitions.find((d) => d.seg === parentSeg);
+
+	if (!def) return null;
+
+	if (parts.length === 1) {
+		// Parent page
+		let body = '';
+		if (def.seg === 'listing-a-property-what-to-know') {
+			body = `
 <h2>Before you start</h2>
 <ul>
   <li>Gather the key facts: location, size, bedroom/bathroom count, and price.</li>
@@ -28,7 +160,7 @@ const legacyPageForPath = (path: string) => {
   <li>Verify key property details and any constraints that affect marketing.</li>
   <li>Ensure your listing copy is accurate, consistent, and easy to scan.</li>
 </ul>
-<p><a href="${base}estate-agents/">Read: Estate Agents</a></p>
+<p><a href="${base}listing-a-property-what-to-know/estate-agents/">Read: Estate Agents</a></p>
 
 <h2>Owners</h2>
 <p>If you are listing your own property, aim for clarity and completeness. Buyers move faster when the information is trustworthy and easy to verify.</p>
@@ -37,27 +169,38 @@ const legacyPageForPath = (path: string) => {
   <li>Highlight practical details: parking, orientation, community rules, and nearby amenities.</li>
   <li>Keep photos current and representative of the property.</li>
 </ul>
-<p><a href="${base}owners/">Read: Owners</a></p>
+<p><a href="${base}listing-a-property-what-to-know/owners/">Read: Owners</a></p>
 `;
+		} else {
+			const childrenList = def.children.map((c) => `<li><a href="${base}${def.seg}/${c.seg}/">${c.title}</a></li>`).join('');
+			body = `
+            <h2>${def.title}</h2>
+            <p>${def.desc}</p>
+            <ul>${childrenList}</ul>
+        `;
+		}
 
 		return {
-			id: 'legacy-laws-procedures-listing-a-property-what-to-know',
+			id: `legacy-laws-${def.seg}`,
 			status: 'published',
 			language: 'en',
 			path,
-			title,
-			description,
+			title: def.title,
+			description: def.desc,
 			body,
-			seo_title: title,
-			seo_description: description,
+			seo_title: `${def.title} • Laws & Procedures`,
+			seo_description: def.desc,
 		};
-	}
+	} else if (parts.length === 2) {
+		// Child page
+		const childSeg = parts[1];
+		const child = def.children.find((c) => c.seg === childSeg);
+		if (!child) return null;
 
-	if (path === `${base}estate-agents/`) {
-		const title = 'Estate Agents';
-		const description = 'Guidance for agents listing on behalf of owners.';
-		const body = `
-<p><a href="${base}">← Back to Listing a Property</a></p>
+		let body = '';
+		if (def.seg === 'listing-a-property-what-to-know' && child.seg === 'estate-agents') {
+			body = `
+<p><a href="${base}${def.seg}/">← Back to ${def.title}</a></p>
 <h2>Estate Agents</h2>
 <p>If you are listing on behalf of an owner, align on pricing strategy, marketing plan, and which documents you need before you publish.</p>
 <ul>
@@ -66,23 +209,9 @@ const legacyPageForPath = (path: string) => {
   <li>Ensure your listing copy is accurate, consistent, and easy to scan.</li>
 </ul>
 `;
-		return {
-			id: 'legacy-laws-procedures-listing-a-property-what-to-know-estate-agents',
-			status: 'published',
-			language: 'en',
-			path,
-			title,
-			description,
-			body,
-			seo_title: `${title} • Listing a Property`,
-			seo_description: description,
-		};
-	}
-
-	const title = 'Owners';
-	const description = 'What owners should prepare before publishing a listing.';
-	const body = `
-<p><a href="${base}">← Back to Listing a Property</a></p>
+		} else if (def.seg === 'listing-a-property-what-to-know' && child.seg === 'owners') {
+			body = `
+<p><a href="${base}${def.seg}/">← Back to ${def.title}</a></p>
 <h2>Owners</h2>
 <p>If you are listing your own property, aim for clarity and completeness. Buyers move faster when the information is trustworthy and easy to verify.</p>
 <ul>
@@ -91,17 +220,28 @@ const legacyPageForPath = (path: string) => {
   <li>Keep photos current and representative of the property.</li>
 </ul>
 `;
-	return {
-		id: 'legacy-laws-procedures-listing-a-property-what-to-know-owners',
-		status: 'published',
-		language: 'en',
-		path,
-		title,
-		description,
-		body,
-		seo_title: `${title} • Listing a Property`,
-		seo_description: description,
-	};
+		} else {
+			body = `
+            <p><a href="${base}${def.seg}/">← Back to ${def.title}</a></p>
+            <h2>${child.title}</h2>
+            <p>Guide for ${child.title}.</p>
+        `;
+		}
+
+		return {
+			id: `legacy-laws-${def.seg}-${child.seg}`,
+			status: 'published',
+			language: 'en',
+			path,
+			title: child.title,
+			description: `${child.title} - Guide.`,
+			body,
+			seo_title: `${child.title} • ${def.title}`,
+			seo_description: `Guide for ${child.title}.`,
+		};
+	}
+
+	return null;
 };
 
 const page = legacyPageForPath(normalizedPath) ?? (await getKbPageByPath(normalizedPath));
