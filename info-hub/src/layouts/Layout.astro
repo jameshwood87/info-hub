@@ -846,8 +846,12 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		background: rgba(11, 18, 32, 0.35);
 		backdrop-filter: blur(6px);
 		z-index: 50;
-		display: flex;
+		display: none;
 		justify-content: flex-end;
+	}
+
+	.mobileMenuOverlay:not([hidden]) {
+		display: flex;
 	}
 
 	.mobileMenuDrawer {
