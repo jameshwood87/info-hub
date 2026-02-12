@@ -419,6 +419,25 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 				});
 			})();
 		</script>
+		<script is:inline>
+			(() => {
+				let lastScrollY = window.scrollY;
+				const header = document.querySelector('.header');
+				const threshold = 100;
+
+				if (header) {
+					window.addEventListener('scroll', () => {
+						const currentScrollY = window.scrollY;
+						if (currentScrollY > lastScrollY && currentScrollY > threshold) {
+							header.setAttribute('data-hidden', 'true');
+						} else {
+							header.setAttribute('data-hidden', 'false');
+						}
+						lastScrollY = currentScrollY;
+					}, { passive: true });
+				}
+			})();
+		</script>
 	</body>
 </html>
 
@@ -445,6 +464,11 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		backdrop-filter: blur(8px);
 		border-bottom: 1px solid rgba(11, 18, 32, 0.08);
 		z-index: 10;
+		transition: transform 0.3s ease-out;
+	}
+
+	.header[data-hidden="true"] {
+		transform: translateY(-100%);
 	}
 
 	.nav {
@@ -941,6 +965,12 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		max-height: calc(100vh - 110px);
 		overflow: auto;
 		scrollbar-gutter: stable both-edges;
+		transition: top 0.2s ease-out;
+	}
+
+	body:has(.header[data-hidden="true"]) :global(.docNav) {
+		top: 14px;
+		max-height: calc(100vh - 28px);
 	}
 
 	@media (min-width: 961px) {
@@ -1226,6 +1256,11 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		border-radius: 18px;
 		padding: 14px;
+		transition: top 0.2s ease-out;
+	}
+
+	body:has(.header[data-hidden="true"]) :global(.docToc) {
+		top: 14px;
 	}
 
 	:global(.docTocTitle) {
