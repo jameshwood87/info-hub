@@ -416,6 +416,7 @@ const labelForCrumb = (seg: string) => {
 };
 
 const stripTags = (html: string) => String(html || '').replace(/<[^>]+>/g, '');
+const normText = (s: string) => stripTags(s).replace(/\s+/g, ' ').trim().toLowerCase();
 const slugify = (s: string) =>
 	stripTags(s)
 		.toLowerCase()
@@ -463,10 +464,36 @@ const cleanImportedBody = (html: string | null | undefined, path: string) => {
 
 	out = out
 		.replace(
-			/<(h[1-6]|p|div)\b[^>]*>\s*(Leave a Comment|Recent Posts|Categories|Archives|Search)\b[\s\S]*?<\/\1>/gi,
+			/<(h[1-6]|p|div)\b[^>]*>\s*(Leave a Comment|Recent Posts|Related Posts|Related Articles|Categories|Archives|Search)\b[\s\S]*?<\/\1>/gi,
 			'',
 		)
 		.replace(/Powered\s+By\s+PropertyList[\s\S]*?®/gi, '');
+
+	if (isBlogLike) {
+		out = out
+			.replace(/<a\b[^>]*>\s*Sign\s*Up\s*FREE\s*<\/a>/gi, '')
+			.replace(/<button\b[^>]*>\s*Sign\s*Up\s*FREE\s*<\/button>/gi, '')
+			.replace(/<p\b[^>]*>\s*Or\s*copy\s*link\s*<\/p>\s*(?:<input\b[^>]*>[\s\S]*?)?/gi, '')
+			.replace(/<input\b[^>]*(?:value|placeholder)=["'][^"']*info\.propertylist\.es[^"']*["'][^>]*>/gi, '')
+			.replace(/<p\b[^>]*>\s*Share\s*<\/p>/gi, '')
+			.replace(/\b\d+\s*Views?\b/gi, '')
+			.replace(/<img\b[^>]*>/gi, '');
+
+		const hasAnyTags = /<\w[\s\S]*?>/.test(out);
+		if (!hasAnyTags) {
+			const blocks = out
+				.split(/\r?\n\s*\r?\n/g)
+				.map((x) => x.replace(/\s+/g, ' ').trim())
+				.filter(Boolean);
+
+			out = blocks
+				.map((b) => {
+					const isHeading = b.length <= 64 && !/[.?!:]$/.test(b) && /^[A-Z0-9]/.test(b);
+					return isHeading ? `<h2>${escapeHtml(b)}</h2>` : `<p>${escapeHtml(b)}</p>`;
+				})
+				.join('\n');
+		}
+	}
 
 	out = out.replace(/\n{3,}/g, '\n\n').trim();
 
@@ -521,6 +548,48 @@ const cleanedBodyHtml = bodyHtml.replace(
 const renamedBodyHtml = cleanedBodyHtml
 	.replace(/<h([23])([^>]*)>\s*MLS\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>')
 	.replace(/<h([23])([^>]*)>\s*Propertylist\s*Mls\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>');
+
+const isBlogLike = page.path.startsWith('/general-information/') || page.path.startsWith('/blog/');
+const heroSrc =
+	/\bcosta del sol\b/i.test(h1) ? '/blog/hero-costa-del-sol.svg' : /\bmarbella\b/i.test(h1) ? '/blog/hero-marbella.svg' : /\bandaluc[ií]a\b/i.test(h1) ? '/blog/hero-andalucia.svg' : '/blog/hero-default.svg';
+
+const escapeHtmlAttr = (s: string) =>
+	String(s || '')
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&#39;');
+
+const blogMetaDate = (() => {
+	const raw = (page as any).date_updated || (page as any).date_created || null;
+	const ms = raw ? Date.parse(String(raw)) : NaN;
+	return Number.isFinite(ms) ? new Date(ms) : null;
+})();
+
+const blogDateLabel = blogMetaDate
+	? new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' }).format(blogMetaDate)
+	: null;
+
+const words = stripTags(cleanedSourceBody).replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
+const readingMins = Math.max(1, Math.round(words / 220));
+
+const removeLeadingDuplicateHeading = (html: string, title: string) => {
+	const t = normText(title);
+	return String(html || '').replace(/^\s*<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>\s*/i, (m, _tag, inner) => {
+		const text = normText(inner);
+		return text && text === t ? '' : m;
+	});
+};
+
+const finalBodyHtml = (() => {
+	let out = renamedBodyHtml;
+	if (isBlogLike) {
+		out = removeLeadingDuplicateHeading(out, stripInfoHubSuffix(h1));
+		out = `<figure class="blogHero"><img src="${heroSrc}" alt="${escapeHtmlAttr(stripInfoHubSuffix(h1))}" loading="lazy" decoding="async" /></figure>${out}`;
+	}
+	return out;
+})();
 
 const crumbs = (() => {
 	const parts = page.path.split('/').filter(Boolean);
@@ -765,7 +834,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
 <Layout lang={lang} title={title} description={description} canonical={canonical} hreflangs={hreflangs}>
 	<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
-	<article class="doc">
+	<article class:list={['doc', isBlogLike ? 'blogPost' : null]}>
 		<header class="docHeader">
 			<div class="docHeaderTop">
 				<div class="docIcon" aria-hidden="true">
@@ -803,6 +872,17 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			</div>
 
 			{!bodyHasH1 ? <h1 class="docTitle">{h1}</h1> : null}
+			{!bodyHasH1 && isBlogLike ? (
+				<div class="blogMeta">
+					<span class="blogAuthor">PropertyList</span>
+					{blogMetaDate && blogDateLabel ? (
+						<time class="blogDate" datetime={blogMetaDate.toISOString()}>
+							{blogDateLabel}
+						</time>
+					) : null}
+					<span class="blogRead">{readingMins} min read</span>
+				</div>
+			) : null}
 			{!bodyHasH1 && page.description ? <p class="docLead">{page.description}</p> : null}
 		</header>
 
@@ -831,7 +911,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			) : null}
 
 			<div class="docMain">
-				<div class="docContent">{renamedBodyHtml ? <Fragment set:html={renamedBodyHtml} /> : null}</div>
+				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
 
 				{prev || next ? (
 					<footer class="docPager" aria-label="Page navigation">

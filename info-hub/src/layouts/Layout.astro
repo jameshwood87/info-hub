@@ -921,6 +921,45 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		max-width: 70ch;
 	}
 
+	:global(article.blogPost .docIcon) {
+		display: none;
+	}
+
+	:global(article.blogPost .docTitle) {
+		margin: 0 0 8px;
+		font-size: 38px;
+	}
+
+	:global(article.blogPost .blogMeta) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		align-items: center;
+		margin: 0 0 10px;
+		color: rgba(11, 18, 32, 0.62);
+		font-weight: 850;
+		font-size: 13px;
+	}
+
+	:global(article.blogPost .blogAuthor) {
+		color: rgba(11, 18, 32, 0.82);
+	}
+
+	:global(article.blogPost .blogHero) {
+		margin: 12px 0 0;
+	}
+
+	:global(article.blogPost .blogHero img) {
+		width: 100%;
+		border-radius: 18px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	:global(article.blogPost .docGrid) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
 	:global(.docGrid) {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 260px;

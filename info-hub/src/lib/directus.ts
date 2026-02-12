@@ -104,12 +104,20 @@ const normalisePage = (p: KbPage): KbPage => ({
 });
 
 export async function getKbPageByPath(path: string): Promise<KbPage | null> {
-	const params = new URLSearchParams();
-	params.set('filter[path][_eq]', path);
-	params.set('limit', '1');
-	params.set(
-		'fields',
-		[
+	const baseParams = new URLSearchParams();
+	baseParams.set('filter[path][_eq]', path);
+	baseParams.set('limit', '1');
+
+	const queryWithFields = async (fields: string[]) => {
+		const params = new URLSearchParams(baseParams);
+		params.set('fields', fields.join(','));
+		const json = await directusGet<DirectusItemResponse<KbPage>>(`/items/kb_pages?${params.toString()}`);
+		const raw = json.data?.[0] ?? null;
+		return raw ? normalisePage(raw) : null;
+	};
+
+	try {
+		return await queryWithFields([
 			'id',
 			'status',
 			'language',
@@ -119,12 +127,12 @@ export async function getKbPageByPath(path: string): Promise<KbPage | null> {
 			'body',
 			'seo_title',
 			'seo_description',
-		].join(',')
-	);
-
-	const json = await directusGet<DirectusItemResponse<KbPage>>(`/items/kb_pages?${params.toString()}`);
-	const raw = json.data?.[0] ?? null;
-	return raw ? normalisePage(raw) : null;
+			'date_created',
+			'date_updated',
+		]);
+	} catch {
+		return await queryWithFields(['id', 'status', 'language', 'path', 'title', 'description', 'body', 'seo_title', 'seo_description']);
+	}
 }
 
 export async function listKbPagesByPrefix(opts: {
