@@ -1415,10 +1415,14 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		position: fixed;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.35);
-		display: grid;
+		display: none;
 		place-items: end center;
 		padding: 14px;
 		z-index: 70;
+	}
+
+	:global(.docNavOverlay:not([hidden])) {
+		display: grid;
 	}
 
 	@media (min-width: 961px) {
