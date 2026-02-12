@@ -3,8 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import { listKbPagesByPrefix } from '../../lib/directus';
 import background from '../../assets/background.svg';
 
-let latestDocs = [];
-let latestGeneral = [];
+let latestDocs: any[] = [];
+let latestGeneral: any[] = [];
 try {
 	latestDocs = await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 5 });
 } catch {
@@ -964,7 +964,12 @@ const hrefForPersona = (nextPersona: string) => {
 		border-radius: 14px;
 		padding: 10px 12px;
 		font-weight: 800;
+		color: var(--accent);
 		text-decoration: none;
+	}
+
+	.personaLinks a:visited {
+		color: var(--accent);
 	}
 
 	.personaLinks a:hover {
