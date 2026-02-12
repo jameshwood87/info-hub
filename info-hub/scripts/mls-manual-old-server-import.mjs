@@ -100,8 +100,11 @@ const fetchAllWpPostContentsBase64 = async (wpIds) => {
 	const ids = Array.from(new Set(wpIds)).filter((n) => Number.isFinite(n)).sort((a, b) => a - b);
 	if (ids.length === 0) return new Map();
 
-	const sql = `SELECT ID, TO_BASE64(post_content) FROM ${WP_POSTS_TABLE} WHERE ID IN (${ids.join(',')});`;
-	const remoteCmd = `printf '${sql}\\n' | mysql -N ${WP_DB}`;
+	const sql = `SELECT ID, REPLACE(REPLACE(TO_BASE64(post_content), CHAR(10), ''), CHAR(13), '') FROM ${WP_POSTS_TABLE} WHERE ID IN (${ids.join(
+		',',
+	)});`;
+	const sqlEsc = sql.replaceAll('"', '\\"');
+	const remoteCmd = `printf \"%s\\n\" \"${sqlEsc}\" | mysql -N ${WP_DB}`;
 
 	let lastErr = null;
 	for (let i = 0; i < 4; i++) {
