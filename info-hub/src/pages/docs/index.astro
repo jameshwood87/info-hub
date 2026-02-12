@@ -5,11 +5,15 @@ import { listKbPagesByPrefix, type KbPageListItem } from '../../lib/directus';
 const mlsAll = await listKbPagesByPrefix({ prefix: '/docs/propertylist-mls-user-manual/', lang: 'en', limit: 250 });
 const lawsAll = await listKbPagesByPrefix({ prefix: '/docs/laws-procedures/', lang: 'en', limit: 250 });
 const portalAll = await listKbPagesByPrefix({ prefix: '/docs/public-portal/', lang: 'en', limit: 250 });
-const latestAll = await listKbPagesByPrefix({ prefix: '/docs/', lang: 'en', limit: 12 });
+const latestAll = await listKbPagesByPrefix({ prefix: '/docs/', lang: 'en', limit: 20 });
 
-const excludePrefixes = ['/docs/propertylist-mls-user-manual/', '/docs/laws-procedures/', '/docs/public-portal/'];
-const isExcluded = (path: string) => excludePrefixes.some((p) => path.startsWith(p));
-const latestOther = latestAll.filter((p) => !isExcluded(p.path));
+const excludeFromLatest = new Set([
+	'/docs/',
+	'/docs/propertylist-mls-user-manual/',
+	'/docs/laws-procedures/',
+	'/docs/public-portal/',
+]);
+const latestDocs = latestAll.filter((p) => !excludeFromLatest.has(p.path)).slice(0, 5);
 
 const stripSuffix = (s: string) => s.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
 
@@ -87,8 +91,8 @@ const paidToolsTop = [
 		<div class="chips">
 			<a class="chip" href="/docs/propertylist-mls-user-manual/?role=estate-agents">Estate agent</a>
 			<a class="chip" href="/docs/developers/">Developer</a>
-			<a class="chip" href="/docs/public-portal/">Public / buyer</a>
-			<a class="chip" href="/docs/laws-procedures/?role=owner">Owner</a>
+			<a class="chip" href="/search?q=Property%20Services">Property Service</a>
+			<a class="chip" href="/docs/public-portal/">Public</a>
 		</div>
 	</div>
 
@@ -96,19 +100,24 @@ const paidToolsTop = [
 		<details class="drop">
 			<summary class="dropSummary">
 				<div class="dropSummaryText">
-					<div class="dropTitle">Developer Docs</div>
-					<div class="dropSub">Integrations, CRM, listings, imports/exports, and upgrades.</div>
+					<div class="dropTitle">Public Portal Docs</div>
+					<div class="dropSub">How to use the public portal — search, save, and enquire.</div>
 				</div>
 			</summary>
 			<div class="dropBody">
-				<div class="rows">
-					{developerTop.map((it) => (
-						<a class="row" href={it.href}>
-							<div class="rowTitle">{it.title}</div>
-						</a>
-					))}
-				</div>
-				<a class="viewAll" href="/docs/developers/">View All</a>
+				{portalTop.length ? (
+					<div class="rows">
+						{portalTop.map((p) => (
+							<a class="row" href={p.path}>
+								<div class="rowTitle">{stripSuffix(p.title)}</div>
+								{p.description ? <div class="rowDesc">{p.description}</div> : null}
+							</a>
+						))}
+					</div>
+				) : (
+					<div class="empty">Public portal documentation is coming soon.</div>
+				)}
+				<a class="viewAll" href="/docs/public-portal/">View All</a>
 			</div>
 		</details>
 
@@ -139,30 +148,6 @@ const paidToolsTop = [
 		<details class="drop">
 			<summary class="dropSummary">
 				<div class="dropSummaryText">
-					<div class="dropTitle">Public Portal Docs</div>
-					<div class="dropSub">How to use the public portal — search, save, and enquire.</div>
-				</div>
-			</summary>
-			<div class="dropBody">
-				{portalTop.length ? (
-					<div class="rows">
-						{portalTop.map((p) => (
-							<a class="row" href={p.path}>
-								<div class="rowTitle">{stripSuffix(p.title)}</div>
-								{p.description ? <div class="rowDesc">{p.description}</div> : null}
-							</a>
-						))}
-					</div>
-				) : (
-					<div class="empty">Public portal documentation is coming soon.</div>
-				)}
-				<a class="viewAll" href="/docs/public-portal/">View All</a>
-			</div>
-		</details>
-
-		<details class="drop">
-			<summary class="dropSummary">
-				<div class="dropSummaryText">
 					<div class="dropTitle">Laws &amp; Procedures Docs</div>
 					<div class="dropSub">Buying, renting, taxes, and Spanish property procedures.</div>
 				</div>
@@ -187,8 +172,8 @@ const paidToolsTop = [
 		<details class="drop">
 			<summary class="dropSummary">
 				<div class="dropSummaryText">
-					<div class="dropTitle">Area Guides &amp; Paid Tools</div>
-					<div class="dropSub">Neighbourhood guides plus featured listings and credit tools.</div>
+					<div class="dropTitle">Area Guides</div>
+					<div class="dropSub">Neighbourhood guides and local area information.</div>
 				</div>
 			</summary>
 			<div class="dropBody">
@@ -198,6 +183,19 @@ const paidToolsTop = [
 							<div class="rowTitle">{it.title}</div>
 						</a>
 					))}
+				</div>
+			</div>
+		</details>
+
+		<details class="drop">
+			<summary class="dropSummary">
+				<div class="dropSummaryText">
+					<div class="dropTitle">Paid Tools</div>
+					<div class="dropSub">Featured listings, credits, and AI tools.</div>
+				</div>
+			</summary>
+			<div class="dropBody">
+				<div class="rows">
 					{paidToolsTop.map((it) => (
 						<a class="row" href={it.href}>
 							<div class="rowTitle">{it.title}</div>
@@ -210,25 +208,40 @@ const paidToolsTop = [
 		<details class="drop">
 			<summary class="dropSummary">
 				<div class="dropSummaryText">
-					<div class="dropTitle">Latest updates</div>
-					<div class="dropSub">Recently updated documentation pages.</div>
+					<div class="dropTitle">Developer Docs</div>
+					<div class="dropSub">Integrations, CRM, listings, imports/exports, and upgrades.</div>
 				</div>
 			</summary>
 			<div class="dropBody">
-				{latestOther.length ? (
-					<div class="rows">
-						{latestOther.map((p) => (
-							<a class="row" href={p.path}>
-								<div class="rowTitle">{p.title}</div>
-							</a>
-						))}
-					</div>
-				) : (
-					<div class="empty">No updates yet.</div>
-				)}
+				<div class="rows">
+					{developerTop.map((it) => (
+						<a class="row" href={it.href}>
+							<div class="rowTitle">{it.title}</div>
+						</a>
+					))}
+				</div>
+				<a class="viewAll" href="/docs/developers/">View All</a>
 			</div>
 		</details>
 	</div>
+
+	<section class="latest">
+		<div class="latestHeader">
+			<h2>Latest Docs</h2>
+			<p class="latestSub">Recently updated documentation pages.</p>
+		</div>
+		{latestDocs.length ? (
+			<div class="rows">
+				{latestDocs.map((p) => (
+					<a class="row" href={p.path}>
+						<div class="rowTitle">{p.title}</div>
+					</a>
+				))}
+			</div>
+		) : (
+			<div class="empty">No docs yet.</div>
+		)}
+	</section>
 </Layout>
 
 <style>
@@ -342,6 +355,27 @@ const paidToolsTop = [
 	.dropBody {
 		border-top: 1px solid rgba(16, 24, 40, 0.08);
 		padding: 14px;
+	}
+
+	.latest {
+		margin-top: 14px;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.latestHeader h2 {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.latestSub {
+		margin: 8px 0 12px;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.4;
+		font-size: 14px;
 	}
 
 	.viewAll {
