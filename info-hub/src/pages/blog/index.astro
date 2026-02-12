@@ -1,0 +1,347 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { listKbPagesByPrefix, type KbPageListItem } from '../../lib/directus';
+
+const blogPrefix = '/blog/';
+const newsPrefix = '/general-information/';
+
+const blogItems = await listKbPagesByPrefix({ prefix: blogPrefix, lang: 'en', limit: 500 });
+const newsItems = await listKbPagesByPrefix({ prefix: newsPrefix, lang: 'en', limit: 500 });
+
+const merged = (() => {
+	const byPath = new Map<string, KbPageListItem>();
+	for (const p of [...blogItems, ...newsItems]) {
+		if (!byPath.has(p.path)) byPath.set(p.path, p);
+	}
+	return [...byPath.values()];
+})();
+
+const asTime = (iso: string | null | undefined) => {
+	if (!iso) return null;
+	const ms = Date.parse(iso);
+	return Number.isFinite(ms) ? new Date(ms) : null;
+};
+
+const publishedFor = (p: KbPageListItem) => asTime(p.date_created) ?? asTime(p.date_updated);
+const updatedFor = (p: KbPageListItem) => asTime(p.date_updated) ?? asTime(p.date_created);
+
+const formatDate = (d: Date) =>
+	new Intl.DateTimeFormat('en-GB', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	}).format(d);
+
+const categoryFor = (p: KbPageListItem) => {
+	const path = String(p.path || '');
+	if (path.startsWith(blogPrefix)) {
+		const parts = path.slice(blogPrefix.length).split('/').filter(Boolean);
+		const cat = parts[0] || 'Blog';
+		return cat
+			.replace(/[-_]+/g, ' ')
+			.replace(/\b\w/g, (m) => m.toUpperCase())
+			.trim();
+	}
+	return 'General Information';
+};
+
+const sorted = merged
+	.filter((p) => p.path !== blogPrefix && p.path !== newsPrefix)
+	.sort((a, b) => {
+		const ad = updatedFor(a)?.getTime() ?? 0;
+		const bd = updatedFor(b)?.getTime() ?? 0;
+		if (ad !== bd) return bd - ad;
+		return String(b.id).localeCompare(String(a.id));
+	});
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/blog/`;
+
+const blogLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Blog',
+	name: 'PropertyList Blog',
+	url: canonical,
+};
+
+const postsLd = sorted.slice(0, 200).map((p) => {
+	const published = publishedFor(p);
+	const updated = updatedFor(p);
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'BlogPosting',
+		headline: p.title,
+		description: p.description || undefined,
+		url: `${origin}${p.path}`,
+		datePublished: published ? published.toISOString() : undefined,
+		dateModified: updated ? updated.toISOString() : undefined,
+		articleSection: categoryFor(p),
+	};
+});
+
+const ldJson = JSON.stringify([blogLd, ...postsLd]);
+---
+
+<Layout
+	lang="en"
+	title="Blog • PropertyList Info Hub"
+	description="News, insights, and updates for estate agents, buyers, and the PropertyList community."
+	canonical={canonical}
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
+
+	<header class="hero">
+		<div class="heroInner">
+			<div class="badge">Blog</div>
+			<h1>Blog</h1>
+			<p class="sub">News, insights, and updates from PropertyList.</p>
+			<div class="filterRow">
+				<label class="filterLabel" for="blog-filter">Filter</label>
+				<input id="blog-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search posts…" />
+			</div>
+		</div>
+	</header>
+
+	{sorted.length ? (
+		<section class="grid" aria-label="Blog posts">
+			{sorted.map((p) => {
+				const cat = categoryFor(p);
+				const published = publishedFor(p);
+				const updated = updatedFor(p);
+				const dateLabel = updated ? formatDate(updated) : null;
+				const dt = updated ? updated.toISOString() : null;
+				return (
+					<article class="card" data-post="1" data-label={`${p.title} ${cat}`.toLowerCase()}>
+						<div class="metaRow">
+							<span class="chip">{cat}</span>
+							{dateLabel && dt ? (
+								<time class="date" datetime={dt}>
+									{dateLabel}
+								</time>
+							) : null}
+						</div>
+						<h2 class="title">
+							<a class="link" href={p.path}>
+								{p.title}
+							</a>
+						</h2>
+						{p.description ? <p class="desc">{p.description}</p> : null}
+						<div class="footer">
+							<a class="readMore" href={p.path}>
+								Read
+							</a>
+							{published ? (
+								<span class="hint">
+									First published {formatDate(published)}
+								</span>
+							) : null}
+						</div>
+					</article>
+				);
+			})}
+		</section>
+	) : (
+		<div class="empty">No blog posts yet.</div>
+	)}
+</Layout>
+
+<style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 8px 0 8px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	.sub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.75);
+		font-size: 16px;
+		line-height: 1.55;
+		max-width: 78ch;
+	}
+
+	.filterRow {
+		margin-top: 12px;
+	}
+
+	.filterLabel {
+		display: block;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.7);
+		margin: 0 0 4px;
+	}
+
+	.filterInput {
+		width: min(420px, 100%);
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 10px;
+		padding: 9px 11px;
+		background: rgba(255, 255, 255, 0.9);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		align-items: start;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: grid;
+		gap: 10px;
+		min-width: 0;
+	}
+
+	.metaRow {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		min-width: 0;
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 8px;
+		border-radius: 999px;
+		background: rgba(var(--accent-rgb), 0.08);
+		border: 1px solid rgba(var(--accent-rgb), 0.18);
+		color: rgba(16, 24, 40, 0.8);
+		font-weight: 900;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.date {
+		color: rgba(16, 24, 40, 0.62);
+		font-weight: 800;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.title {
+		margin: 0;
+		font-size: 16px;
+		letter-spacing: -0.01em;
+		line-height: 1.22;
+	}
+
+	.link {
+		color: rgba(16, 24, 40, 0.92);
+		text-decoration: none;
+	}
+
+	.link:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-decoration-color: rgba(var(--accent-rgb), 0.55);
+	}
+
+	.desc {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+	}
+
+	.footer {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		padding-top: 10px;
+	}
+
+	.readMore {
+		color: var(--accent);
+		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.readMore:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+	}
+
+	.hint {
+		color: rgba(16, 24, 40, 0.55);
+		font-size: 12px;
+		font-weight: 700;
+	}
+
+	.empty {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (max-width: 980px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 620px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script is:inline>
+	{String.raw`(() => {
+  const input = document.getElementById('blog-filter');
+  if (!(input instanceof HTMLInputElement)) return;
+  const posts = Array.from(document.querySelectorAll('[data-post="1"]'));
+
+  const apply = () => {
+    const q = (input.value || '').trim().toLowerCase();
+    if (!q) {
+      for (const p of posts) p.hidden = false;
+      return;
+    }
+    for (const p of posts) {
+      const label = (p.getAttribute('data-label') || '').toLowerCase();
+      p.hidden = !label.includes(q);
+    }
+  };
+
+  input.addEventListener('input', apply, { passive: true });
+})();`}
+</script>

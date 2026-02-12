@@ -64,7 +64,7 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 				<div class="navLinks">
 					<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 					<a href={lang === 'es' ? '/es/leyes/' : '/laws/'}>Laws</a>
-					<a href={lang === 'es' ? '/es/informacion-general/' : '/general-information/'}>News</a>
+					<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'News' : 'Blog'}</a>
 					<a href="/pricing/">Pricing</a>
 				</div>
 				<form class="navSearch" method="get" action={lang === 'es' ? '/es/search' : '/search'} role="search">
@@ -114,7 +114,7 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 				<div class="footerLinks" aria-label="Footer">
 					<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 					<a href={lang === 'es' ? '/es/search' : '/search'}>Search</a>
-					<a href={lang === 'es' ? '/es/informacion-general/' : '/general-information/'}>News</a>
+					<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'News' : 'Blog'}</a>
 					<a href="/pricing/">Pricing</a>
 				</div>
 			</div>

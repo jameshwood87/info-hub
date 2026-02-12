@@ -34,9 +34,11 @@ export type KbPage = {
 	body?: string | null;
 	seo_title?: string | null;
 	seo_description?: string | null;
+	date_created?: string | null;
+	date_updated?: string | null;
 };
 
-export type KbPageListItem = Pick<KbPage, 'id' | 'language' | 'path' | 'title' | 'description'>;
+export type KbPageListItem = Pick<KbPage, 'id' | 'language' | 'path' | 'title' | 'description' | 'date_created' | 'date_updated'>;
 
 const decodeHtmlEntities = (s: string) =>
 	s
@@ -138,7 +140,7 @@ export async function listKbPagesByPrefix(opts: {
 	params.set('filter[path][_starts_with]', prefix);
 	params.set('sort', '-id');
 	params.set('limit', `${limit}`);
-	params.set('fields', ['id', 'language', 'path', 'title', 'description'].join(','));
+	params.set('fields', ['id', 'language', 'path', 'title', 'description', 'date_created', 'date_updated'].join(','));
 
 	const json = await directusGet<DirectusItemResponse<KbPageListItem>>(`/items/kb_pages?${params.toString()}`);
 	return Array.isArray(json.data) ? json.data.map(normaliseListItem) : [];
