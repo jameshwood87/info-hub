@@ -1,0 +1,179 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const title = 'Property Services Docs • PropertyList Info Hub';
+const description = 'Guides for service providers: photographers, legal, finance, insurance, and property professionals.';
+
+const sections: Array<{
+	title: string;
+	subtitle: string;
+	links: Array<{ title: string; href: string }>;
+}> = [
+	{
+		title: 'Get discovered',
+		subtitle: 'Be visible to agencies and buyers searching for trusted services.',
+		links: [
+			{ title: 'How services are listed', href: '/search?q=property%20services%20listing' },
+			{ title: 'Service categories', href: '/search?q=service%20categories' },
+			{ title: 'Best practices for profiles', href: '/search?q=service%20profile%20best%20practices' },
+		],
+	},
+	{
+		title: 'Work with agencies',
+		subtitle: 'Connect smoothly with MLS users and agencies.',
+		links: [
+			{ title: 'Receiving enquiries', href: '/search?q=service%20enquiries' },
+			{ title: 'Sharing documents', href: '/search?q=share%20documents' },
+			{ title: 'Messaging and requests', href: '/search?q=messaging%20requests' },
+		],
+	},
+	{
+		title: 'Popular services',
+		subtitle: 'Jump into the most common workflows.',
+		links: [
+			{ title: 'Photography & floorplans', href: '/search?q=photography%20floorplans' },
+			{ title: 'Legal & conveyancing', href: '/search?q=conveyancing%20lawyer' },
+			{ title: 'Mortgages & finance', href: '/search?q=mortgage%20finance' },
+			{ title: 'Insurance', href: '/search?q=property%20insurance' },
+			{ title: 'Renovations & building', href: '/search?q=renovation%20building%20contractor' },
+		],
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/docs/property-services/"
+>
+	<h1>Property Services</h1>
+	<p class="sub">Guides for service providers working with PropertyList.</p>
+
+	<div class="grid">
+		{sections.map((s) => (
+			<section class="card">
+				<div class="cardHeader">
+					<div>
+						<h2>{s.title}</h2>
+						<p class="cardSub">{s.subtitle}</p>
+					</div>
+				</div>
+				<ul class="mini">
+					{s.links.map((l) => (
+						<li>
+							<a class="miniRow" href={l.href}>
+								<span class="miniRowTitle">{l.title}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		))}
+	</div>
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.cardHeader h2 {
+		margin: 0;
+		font-size: 16px;
+		letter-spacing: -0.01em;
+	}
+
+	.cardSub {
+		margin: 6px 0 0;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	.mini {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 6px;
+	}
+
+	.miniRow {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 10px 10px;
+		border-radius: 14px;
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.82);
+		font-weight: 800;
+		line-height: 1.25;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	.miniRow::after {
+		content: '›';
+		flex: none;
+		color: rgba(16, 24, 40, 0.45);
+		font-weight: 900;
+		line-height: 1;
+		margin-top: 1px;
+	}
+
+	.miniRowTitle {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.miniRow:hover,
+	.miniRow:focus-visible {
+		outline: none;
+		border-color: rgba(0, 174, 154, 0.4);
+		background: rgba(0, 174, 154, 0.06);
+	}
+
+	.miniRow:hover::after,
+	.miniRow:focus-visible::after {
+		color: var(--accent);
+	}
+
+	@media (max-width: 620px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

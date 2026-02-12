@@ -2,6 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import { listKbPagesByPrefix, type KbPageListItem } from '../../lib/directus';
 
+const roleRaw = (Astro.url.searchParams.get('role') || '').trim().toLowerCase();
+const role = roleRaw === 'estate-agent' ? 'estate-agent' : 'all';
+
 const mlsAll = await listKbPagesByPrefix({ prefix: '/docs/propertylist-mls-user-manual/', lang: 'en', limit: 250 });
 const lawsAll = await listKbPagesByPrefix({ prefix: '/docs/laws-procedures/', lang: 'en', limit: 250 });
 const portalAll = await listKbPagesByPrefix({ prefix: '/docs/public-portal/', lang: 'en', limit: 250 });
@@ -68,13 +71,6 @@ const areaGuidesTop = [
 	{ title: 'Guías de barrios (Español)', href: '/es/barrios/' },
 	{ title: 'Search Area Guides', href: '/search?q=Area%20Guides' },
 ];
-
-const paidToolsTop = [
-	{ title: 'Pricing & credits', href: '/pricing/' },
-	{ title: 'Featured MLS Listings', href: '/search?q=Featured%20MLS%20Listings' },
-	{ title: 'Featured Public Portal Listings', href: '/search?q=Featured%20Public%20Portal%20Listings' },
-	{ title: 'AI Tools', href: '/search?q=AI%20Tools' },
-];
 ---
 
 <Layout
@@ -89,43 +85,45 @@ const paidToolsTop = [
 	<div class="start">
 		<div class="startTitle">Start with your role</div>
 		<div class="chips">
-			<a class="chip" href="/docs/propertylist-mls-user-manual/?role=estate-agents">Estate agent</a>
+			<a class="chip" href="/docs/?role=estate-agent">Estate agent</a>
 			<a class="chip" href="/docs/developers/">Developer</a>
-			<a class="chip" href="/search?q=Property%20Services">Property Service</a>
+			<a class="chip" href="/docs/property-services/">Property Service</a>
 			<a class="chip" href="/docs/public-portal/">Public</a>
 		</div>
 	</div>
 
 	<div class="dropList" aria-label="Documentation sections">
-		<details class="drop">
-			<summary class="dropSummary">
-				<div class="dropSummaryText">
-					<div class="dropTitle">Public Portal Docs</div>
-					<div class="dropSub">How to use the public portal — search, save, and enquire.</div>
-				</div>
-			</summary>
-			<div class="dropBody">
-				{portalTop.length ? (
-					<div class="rows">
-						{portalTop.map((p) => (
-							<a class="row" href={p.path}>
-								<div class="rowTitle">{stripSuffix(p.title)}</div>
-								{p.description ? <div class="rowDesc">{p.description}</div> : null}
-							</a>
-						))}
+		{role !== 'estate-agent' ? (
+			<details class="drop">
+				<summary class="dropSummary">
+					<div class="dropSummaryText">
+						<div class="dropTitle">Public Portal Docs</div>
+						<div class="dropSub">How to use the public portal — search, save, and enquire.</div>
 					</div>
-				) : (
-					<div class="empty">Public portal documentation is coming soon.</div>
-				)}
-				<a class="viewAll" href="/docs/public-portal/">View All</a>
-			</div>
-		</details>
+				</summary>
+				<div class="dropBody">
+					{portalTop.length ? (
+						<div class="rows">
+							{portalTop.map((p) => (
+								<a class="row" href={p.path}>
+									<div class="rowTitle">{stripSuffix(p.title)}</div>
+									{p.description ? <div class="rowDesc">{p.description}</div> : null}
+								</a>
+							))}
+						</div>
+					) : (
+						<div class="empty">Public portal documentation is coming soon.</div>
+					)}
+					<a class="viewAll" href="/docs/public-portal/">View All</a>
+				</div>
+			</details>
+		) : null}
 
 		<details class="drop">
 			<summary class="dropSummary">
 				<div class="dropSummaryText">
 					<div class="dropTitle">MLS &amp; CRM Docs</div>
-					<div class="dropSub">How to use the MLS and CRM. Split for estate agents and developers.</div>
+					<div class="dropSub">How to use the MLS and CRM.</div>
 				</div>
 			</summary>
 			<div class="dropBody">
@@ -187,61 +185,47 @@ const paidToolsTop = [
 			</div>
 		</details>
 
-		<details class="drop">
-			<summary class="dropSummary">
-				<div class="dropSummaryText">
-					<div class="dropTitle">Paid Tools</div>
-					<div class="dropSub">Featured listings, credits, and AI tools.</div>
+		{role !== 'estate-agent' ? (
+			<details class="drop">
+				<summary class="dropSummary">
+					<div class="dropSummaryText">
+						<div class="dropTitle">Developer Docs</div>
+						<div class="dropSub">Integrations, CRM, listings, imports/exports, and upgrades.</div>
+					</div>
+				</summary>
+				<div class="dropBody">
+					<div class="rows">
+						{developerTop.map((it) => (
+							<a class="row" href={it.href}>
+								<div class="rowTitle">{it.title}</div>
+							</a>
+						))}
+					</div>
+					<a class="viewAll" href="/docs/developers/">View All</a>
 				</div>
-			</summary>
-			<div class="dropBody">
-				<div class="rows">
-					{paidToolsTop.map((it) => (
-						<a class="row" href={it.href}>
-							<div class="rowTitle">{it.title}</div>
-						</a>
-					))}
-				</div>
-			</div>
-		</details>
-
-		<details class="drop">
-			<summary class="dropSummary">
-				<div class="dropSummaryText">
-					<div class="dropTitle">Developer Docs</div>
-					<div class="dropSub">Integrations, CRM, listings, imports/exports, and upgrades.</div>
-				</div>
-			</summary>
-			<div class="dropBody">
-				<div class="rows">
-					{developerTop.map((it) => (
-						<a class="row" href={it.href}>
-							<div class="rowTitle">{it.title}</div>
-						</a>
-					))}
-				</div>
-				<a class="viewAll" href="/docs/developers/">View All</a>
-			</div>
-		</details>
+			</details>
+		) : null}
 	</div>
 
-	<section class="latest">
-		<div class="latestHeader">
-			<h2>Latest Docs</h2>
-			<p class="latestSub">Recently updated documentation pages.</p>
-		</div>
-		{latestDocs.length ? (
-			<div class="rows">
-				{latestDocs.map((p) => (
-					<a class="row" href={p.path}>
-						<div class="rowTitle">{p.title}</div>
-					</a>
-				))}
+	{role !== 'estate-agent' ? (
+		<section class="latest">
+			<div class="latestHeader">
+				<h2>Latest Docs</h2>
+				<p class="latestSub">Recently updated documentation pages.</p>
 			</div>
-		) : (
-			<div class="empty">No docs yet.</div>
-		)}
-	</section>
+			{latestDocs.length ? (
+				<div class="rows">
+					{latestDocs.map((p) => (
+						<a class="row" href={p.path}>
+							<div class="rowTitle">{p.title}</div>
+						</a>
+					))}
+				</div>
+			) : (
+				<div class="empty">No docs yet.</div>
+			)}
+		</section>
+	) : null}
 </Layout>
 
 <style>
@@ -379,7 +363,8 @@ const paidToolsTop = [
 	}
 
 	.viewAll {
-		margin-top: 18px;
+		margin-top: 26px;
+		display: inline-block;
 		font-weight: 900;
 		color: var(--accent);
 		text-decoration: none;
