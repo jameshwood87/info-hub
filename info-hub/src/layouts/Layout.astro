@@ -513,11 +513,18 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		--accent-rgb: 0, 174, 154;
 	}
 
+	:global(*),
+	:global(*::before),
+	:global(*::after) {
+		box-sizing: border-box;
+	}
+
 	html,
 	body {
 		margin: 0;
 		width: 100%;
 		height: 100%;
+		overflow-x: clip;
 		background: #f6f8fc;
 		color: #0b1220;
 		font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
