@@ -5,6 +5,7 @@ import background from '../assets/background.svg';
 const personaParam = Astro.url.searchParams.get('persona') || '';
 
 const persona = (() => {
+	if (personaParam === 'public' || personaParam === 'portal' || personaParam === 'public-portal') return 'public';
 	if (personaParam === 'developers' || personaParam === 'developer') return 'developers';
 	if (personaParam === 'services' || personaParam === 'service') return 'services';
 	if (personaParam === 'agents' || personaParam === 'freelancer' || personaParam === 'agency') return 'agents';
@@ -63,6 +64,15 @@ const hrefForPersona = (nextPersona: string) => {
 
 				<div class="pillRow" role="tablist" aria-label="Audience">
 					<a
+						class={`pill ${persona === 'public' ? 'isActive' : ''}`}
+						role="tab"
+						aria-selected={persona === 'public' ? 'true' : 'false'}
+						data-persona="public"
+						href={hrefForPersona('public')}
+					>
+						Public
+					</a>
+					<a
 						class={`pill ${persona === 'agents' ? 'isActive' : ''}`}
 						role="tab"
 						aria-selected={persona === 'agents' ? 'true' : 'false'}
@@ -92,6 +102,21 @@ const hrefForPersona = (nextPersona: string) => {
 				</div>
 
 				<div class="personaBox" aria-label="By audience">
+					<div class={`personaPanel ${persona === 'public' ? 'isActive' : ''}`} data-persona-panel="public">
+						<div class="personaTitle">For the public</div>
+						<div class="personaSummary">
+							PropertyList is a free-to-browse public property portal where you can access all listings in one place.
+							<br />
+							<br />
+							Owners can list their property for free, and estate agents can advertise on the Public Portal for free too. When a
+							buyer enquiry comes in, you can choose to open the lead using a simple pay-per-lead credit system.
+						</div>
+						<div class="personaLinks">
+							<a href="/docs/public-portal/">Public Portal Guide</a>
+							<a href="/pricing/">Pricing</a>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</div>
 					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
 						<div class="personaTitle">For estate agents</div>
 						<div class="personaSummary">

@@ -9,6 +9,7 @@ const latestGeneral = await listKbPagesByPrefix({ prefix: '/es/informacion-gener
 const personaParam = Astro.url.searchParams.get('persona') || '';
 
 const persona = (() => {
+	if (personaParam === 'public' || personaParam === 'portal' || personaParam === 'public-portal') return 'public';
 	if (personaParam === 'developers' || personaParam === 'developer') return 'developers';
 	if (personaParam === 'services' || personaParam === 'service') return 'services';
 	if (personaParam === 'agents' || personaParam === 'freelancer' || personaParam === 'agency') return 'agents';
@@ -67,6 +68,15 @@ const hrefForPersona = (nextPersona: string) => {
 
 				<div class="pillRow" role="tablist" aria-label="Audiencia">
 					<a
+						class={`pill ${persona === 'public' ? 'isActive' : ''}`}
+						role="tab"
+						aria-selected={persona === 'public' ? 'true' : 'false'}
+						data-persona="public"
+						href={hrefForPersona('public')}
+					>
+						Público
+					</a>
+					<a
 						class={`pill ${persona === 'agents' ? 'isActive' : ''}`}
 						role="tab"
 						aria-selected={persona === 'agents' ? 'true' : 'false'}
@@ -96,6 +106,21 @@ const hrefForPersona = (nextPersona: string) => {
 				</div>
 
 				<div class="personaBox" aria-label="Por audiencia">
+					<div class={`personaPanel ${persona === 'public' ? 'isActive' : ''}`} data-persona-panel="public">
+						<div class="personaTitle">Para el público</div>
+						<div class="personaSummary">
+							PropertyList es un portal inmobiliario público: acceso a todos los inmuebles en un solo lugar.
+							<br />
+							<br />
+							Los propietarios pueden publicar gratis, y las agencias también pueden anunciar gratis en el Portal Público. Cuando
+							entra una consulta, puedes decidir si abrir el lead con un sistema simple de pago por lead con créditos.
+						</div>
+						<div class="personaLinks">
+							<a href="/es/docs/portal-publico/">Guía del Portal Público</a>
+							<a href="/pricing/">Pricing</a>
+							<a href="/es/docs/">Documentación</a>
+						</div>
+					</div>
 					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
 						<div class="personaTitle">Para agentes inmobiliarios</div>
 						<div class="personaSummary">
