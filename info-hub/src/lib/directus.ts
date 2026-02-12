@@ -134,14 +134,23 @@ export async function listKbPagesByPrefix(opts: {
 }): Promise<KbPageListItem[]> {
 	const { prefix, lang, limit = 24 } = opts;
 
-	const params = new URLSearchParams();
-	params.set('filter[status][_eq]', 'published');
-	params.set('filter[language][_eq]', lang);
-	params.set('filter[path][_starts_with]', prefix);
-	params.set('sort', '-id');
-	params.set('limit', `${limit}`);
-	params.set('fields', ['id', 'language', 'path', 'title', 'description', 'date_created', 'date_updated'].join(','));
+	const baseParams = new URLSearchParams();
+	baseParams.set('filter[status][_eq]', 'published');
+	baseParams.set('filter[language][_eq]', lang);
+	baseParams.set('filter[path][_starts_with]', prefix);
+	baseParams.set('sort', '-id');
+	baseParams.set('limit', `${limit}`);
 
-	const json = await directusGet<DirectusItemResponse<KbPageListItem>>(`/items/kb_pages?${params.toString()}`);
-	return Array.isArray(json.data) ? json.data.map(normaliseListItem) : [];
+	const queryWithFields = async (fields: string[]) => {
+		const params = new URLSearchParams(baseParams);
+		params.set('fields', fields.join(','));
+		const json = await directusGet<DirectusItemResponse<KbPageListItem>>(`/items/kb_pages?${params.toString()}`);
+		return Array.isArray(json.data) ? json.data.map(normaliseListItem) : [];
+	};
+
+	try {
+		return await queryWithFields(['id', 'language', 'path', 'title', 'description', 'date_created', 'date_updated']);
+	} catch {
+		return await queryWithFields(['id', 'language', 'path', 'title', 'description']);
+	}
 }
