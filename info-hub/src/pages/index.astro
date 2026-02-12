@@ -1,10 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { listKbPagesByPrefix } from '../lib/directus';
 import background from '../assets/background.svg';
-
-const latestDocs = await listKbPagesByPrefix({ prefix: '/docs/', lang: 'en', limit: 5 });
-const latestGeneral = await listKbPagesByPrefix({ prefix: '/general-information/', lang: 'en', limit: 8 });
 
 const personaParam = Astro.url.searchParams.get('persona') || '';
 
@@ -38,8 +34,8 @@ const hrefForPersona = (nextPersona: string) => {
 				<h1>What is PropertyList?</h1>
 				<p class="lead">PropertyList is Europe’s first results-driven Smart MLS, CRM &amp; Property Portal.</p>
 				<p class="lead">
-					The MLS and CRM are 100% free forever for estate agents. No subscriptions. No lock-ins. Optional paid features
-					are available for those who want more visibility, automation, and performance.
+					The MLS and CRM are 100% free forever for estate agents. No hidden fees, No Setup fees. No lock-ins. Optional paid
+					features are available for those who want more visibility, automation, and performance.
 				</p>
 
 				<div class="metaRow">
@@ -107,9 +103,9 @@ const hrefForPersona = (nextPersona: string) => {
 							only the value-added services that actually generate revenue for the agent.
 						</div>
 						<div class="personaLinks">
-							<a href="/docs/getting-started/">Getting started</a>
-							<a href="/mls/">MLS user manual</a>
-							<a href="/search">Search guides</a>
+							<a href="/docs/propertylist-mls-user-manual/">MLS &amp; CRM User Guide</a>
+							<a href="/docs/laws-procedures/">Laws &amp; Procedures</a>
+							<a href="/neighbourhood/">Area Guides</a>
 						</div>
 					</div>
 					<div class={`personaPanel ${persona === 'developers' ? 'isActive' : ''}`} data-persona-panel="developers">
@@ -165,168 +161,412 @@ const hrefForPersona = (nextPersona: string) => {
 		</p>
 		<div class="grid featureGrid">
 			<div class="tile pricingTile">
-				<div class="pricingMeta">
+				<div class="pricingHeader">
+					<h3 class="pricingTitle">What you get for free</h3>
 					<div class="pricingBadge isFree">Free</div>
 				</div>
-				<h3 class="pricingTitle">What you get for free</h3>
 				<ul class="featureList">
-					<li>MLS (share unlimited properties)</li>
-					<li>CRM</li>
-					<li>Messaging &amp; Request Viewings</li>
-					<li>Unlimited Users</li>
-					<li>Unlimited Contacts</li>
-					<li>MicroSite (branded mini-website)</li>
-					<li>Verified Agencies</li>
-					<li>History Timeline (Contacts &amp; Properties)</li>
-					<li>WhatsApp Community Group Access (3,000+ members)</li>
-					<li>Advertise on our Facebook Pages &amp; Groups (40,000+ members)</li>
+					<li>
+						<a class="featureLink" href="/docs/propertylist-mls-user-manual/">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+									<path d="M9 22v-6.75c0-.69.56-1.25 1.25-1.25h3.5c.69 0 1.25.56 1.25 1.25V22" stroke="currentColor" stroke-width="1.7" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">MLS</span>
+								<span class="featureHint">Share unlimited properties</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/docs/propertylist-mls-user-manual/">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M7 7.5h10v13H7v-13Z" stroke="currentColor" stroke-width="1.7" />
+									<path d="M9 7.5V6.4c0-1.6 1.3-2.9 3-2.9s3 1.3 3 2.9v1.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M9.2 12h5.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M9.2 15.5h5.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">CRM</span>
+								<span class="featureHint">Contacts, leads, and workflows</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Messaging">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M20 12c0 3.9-3.6 7-8 7-1 0-2-.1-3-.4L4.5 20l1.5-3.4C4.8 15.4 4 13.8 4 12c0-3.9 3.6-7 8-7s8 3.1 8 7Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linejoin="round"
+									/>
+									<path d="M8 12h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Messaging &amp; Request Viewings</span>
+								<span class="featureHint">Communicate and book viewings</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Users">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M16.8 20.5c0-2.7-2-4.4-4.8-4.4s-4.8 1.7-4.8 4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 13.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Unlimited Users</span>
+								<span class="featureHint">Add your whole team</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Contacts">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M7.5 20.5h9c1.1 0 2-.9 2-2v-13c0-1.1-.9-2-2-2h-9c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+									<path d="M9 8.5h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M9 12h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M9 15.5h4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Unlimited Contacts</span>
+								<span class="featureHint">No caps on your database</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/docs/propertylist-mls-user-manual/microsite-share-properties-listings/">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M10.2 13.8 7.5 16.5a3 3 0 1 1-4.2-4.2l2.7-2.7"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									/>
+									<path
+										d="M13.8 10.2 16.5 7.5a3 3 0 1 1 4.2 4.2l-2.7 2.7"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									/>
+									<path d="M9.5 14.5 14.5 9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">MicroSite</span>
+								<span class="featureHint">Branded mini-website &amp; sharing</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Verified%20Agencies">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12 3.75c3.2 2.47 5.5 2.47 8 2.75v8.5c0 3.9-3.1 6.6-8 8.25-4.9-1.65-8-4.35-8-8.25V6.5c2.5-.28 4.8-.28 8-2.75Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+									<path d="M8.7 12.2 11 14.5l4.8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Verified Agencies</span>
+								<span class="featureHint">Build trust with buyers and agents</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Timeline">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M6.5 7.5h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M6.5 12h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M6.5 16.5h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M4.5 7.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+									<path d="M4.5 12h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+									<path d="M4.5 16.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">History Timeline</span>
+								<span class="featureHint">Track activity for contacts &amp; properties</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/community/">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12 20c4.4 0 8-3 8-6.7 0-3.7-3.6-6.8-8-6.8S4 9.6 4 13.3c0 2 1.1 3.8 2.8 5L6 21l3.2-1.3c.9.2 1.8.3 2.8.3Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linejoin="round"
+									/>
+									<path d="M8.5 13.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+									<path d="M12 13.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+									<path d="M15.5 13.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">WhatsApp Community</span>
+								<span class="featureHint">Join 3,000+ members</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Facebook">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M4.5 9.5h15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M6.5 6.5h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M7.5 12.5h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M8.5 15.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M6 18.5h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Social distribution</span>
+								<span class="featureHint">Facebook Pages &amp; Groups (40,000+)</span>
+							</span>
+						</a>
+					</li>
 				</ul>
 			</div>
 			<div class="tile mutedTile pricingTile">
-				<div class="pricingMeta">
-					<div class="pricingBadge isSoon">Coming soon</div>
+				<div class="pricingHeader">
+					<h3 class="pricingTitle">Optional paid upgrades</h3>
 				</div>
-				<h3 class="pricingTitle">Optional paid upgrades</h3>
 				<ul class="featureList">
-					<li>Featured MLS Listings</li>
-					<li>Private Listings</li>
-					<li>CMA Report</li>
-					<li>AI Tools</li>
-					<li>Featured Public Portal Listings</li>
-					<li>Open Direct Leads (Public Portal)</li>
-					<li>Featured Estate Agents</li>
-					<li>Direct Client Property Email</li>
-					<li>Social Media Boost Posts</li>
-					<li>AI Utilities</li>
-					<li>Much more coming soon</li>
+					<li>
+						<a class="featureLink" href="/search?q=Featured%20MLS%20Listings">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12 3.5 14.7 9l6 .9-4.3 4.2 1 6-5.4-2.9-5.4 2.9 1-6-4.3-4.2 6-.9L12 3.5Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linejoin="round"
+									/>
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Featured MLS Listings</span>
+								<span class="featureHint">Boost visibility where agents browse</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Private%20Listings">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M7 11v-2.2c0-2.8 2.2-5 5-5s5 2.2 5 5V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path
+										d="M7.5 11h9c.8 0 1.5.7 1.5 1.5v6.5c0 .8-.7 1.5-1.5 1.5h-9c-.8 0-1.5-.7-1.5-1.5v-6.5c0-.8.7-1.5 1.5-1.5Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Private Listings</span>
+								<span class="featureHint">Control who sees what</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=CMA%20Report">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z" stroke="currentColor" stroke-width="1.7" />
+									<path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.7" />
+									<path d="M8.5 13.2 10.5 11l2 2.1 3-3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">CMA Report</span>
+								<span class="featureHint">Pricing support and comparables</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=AI%20Tools">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M12 3.5v3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 17.3v3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M3.5 12h3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M17.3 12h3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path
+										d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">AI Tools</span>
+								<span class="featureHint">Faster writing, workflows, and output</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Featured%20Public%20Portal%20Listings">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12 21c4.7 0 8.5-3.8 8.5-8.5S16.7 4 12 4 3.5 7.8 3.5 12.5 7.3 21 12 21Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+									<path d="M3.8 12.5h16.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 4c2.4 2.2 4 5.2 4 8.5S14.4 18.8 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 4c-2.4 2.2-4 5.2-4 8.5S9.6 18.8 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Featured Public Portal Listings</span>
+								<span class="featureHint">More exposure to buyers</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Open%20Direct%20Leads">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M7.5 13.5h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path
+										d="M12 3.5c4.7 0 8.5 3.8 8.5 8.5"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linecap="round"
+									/>
+									<path
+										d="M12 3.5c-4.7 0-8.5 3.8-8.5 8.5"
+										stroke="currentColor"
+										stroke-width="1.7"
+										stroke-linecap="round"
+									/>
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Open Direct Leads</span>
+								<span class="featureHint">Public Portal enquiries</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Featured%20Estate%20Agents">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M16.8 20.5c0-2.7-2-4.4-4.8-4.4s-4.8 1.7-4.8 4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 13.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" />
+									<path
+										d="M18.2 7.2 19.1 9l2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .4-2-1.4-1.4 2-.3.9-1.8Z"
+										stroke="currentColor"
+										stroke-width="1.2"
+										stroke-linejoin="round"
+									/>
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Featured Estate Agents</span>
+								<span class="featureHint">Stand out to sellers and buyers</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Direct%20Client%20Property%20Email">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M4.5 7.5h15v11c0 .8-.7 1.5-1.5 1.5h-12c-.8 0-1.5-.7-1.5-1.5v-11Z" stroke="currentColor" stroke-width="1.7" />
+									<path d="m5.3 8.3 6.7 5 6.7-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Direct Client Property Email</span>
+								<span class="featureHint">Send listings to clients faster</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=Social%20Media%20Boost">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M12 3.5c3 2.4 5.2 2.4 7.6 2.7v8.1c0 3.7-2.9 6.3-7.6 7.9-4.7-1.6-7.6-4.2-7.6-7.9V6.2c2.4-.3 4.6-.3 7.6-2.7Z"
+										stroke="currentColor"
+										stroke-width="1.7"
+									/>
+									<path d="M10 12.7 8.8 15.7l3-2.1 3 2.1-1.2-3 2.4-1.8h-3l-1-3-1 3H7.6l2.4 1.8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">Social Media Boost Posts</span>
+								<span class="featureHint">Extra reach when it matters</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/search?q=AI%20Utilities">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M8 4.5h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M7 7.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M9.5 20.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 7.5v13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">AI Utilities</span>
+								<span class="featureHint">Tools that speed up day-to-day work</span>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a class="featureLink" href="/pricing/">
+							<span class="featureIcon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M7 12h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M12 7v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+									<path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9 9 4 9 9Z" stroke="currentColor" stroke-width="1.7" />
+								</svg>
+							</span>
+							<span class="featureText">
+								<span class="featureName">More coming soon</span>
+								<span class="featureHint">See pricing and updates</span>
+							</span>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</div>
 	</section>
 
-	<section class="section">
-		<div class="sectionHeader">
-			<h2>Documentation &amp; Search</h2>
-			<a class="link" href="/docs/">Browse all</a>
-		</div>
-		<form class="searchBar" method="get" action="/search">
-			<input name="q" placeholder="Search questions, features, and workflows" />
-			<button type="submit">Search</button>
-		</form>
-	</section>
-
-	<section class="section">
-		<div class="sectionHeader">
-			<h2>Browse Documentation</h2>
-			<a class="link" href="/docs/">View all</a>
-		</div>
-		<div class="grid">
-			<a class="tile" href="/neighbourhood/">
-				<div class="tileIcon" aria-hidden="true">
-					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z"
-							stroke="currentColor"
-							stroke-width="1.6"
-						/>
-						<path
-							d="M9 22v-6.75c0-.69.56-1.25 1.25-1.25h3.5c.69 0 1.25.56 1.25 1.25V22"
-							stroke="currentColor"
-							stroke-width="1.6"
-						/>
-					</svg>
-				</div>
-				<h3>Neighbourhood Guides</h3>
-				<p>Area overviews and local knowledge.</p>
-			</a>
-			<a class="tile" href="/mls/">
-				<div class="tileIcon" aria-hidden="true">
-					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z"
-							stroke="currentColor"
-							stroke-width="1.6"
-						/>
-						<path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.6" />
-						<path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" />
-						<path d="M8.5 15.5h6" stroke="currentColor" stroke-width="1.6" />
-					</svg>
-				</div>
-				<h3>MLS User Manual</h3>
-				<p>Workflows, listings, exports, and reports.</p>
-			</a>
-			<a class="tile" href="/laws/">
-				<div class="tileIcon" aria-hidden="true">
-					<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M12 3.75c3.2 2.47 5.5 2.47 8 2.75v8.5c0 3.9-3.1 6.6-8 8.25-4.9-1.65-8-4.35-8-8.25V6.5c2.5-.28 4.8-.28 8-2.75Z"
-							stroke="currentColor"
-							stroke-width="1.6"
-						/>
-						<path d="M9 12h6" stroke="currentColor" stroke-width="1.6" />
-						<path d="M12 9v6" stroke="currentColor" stroke-width="1.6" />
-					</svg>
-				</div>
-				<h3>Laws &amp; Procedures</h3>
-				<p>Rentals, taxes, inheritance, and more.</p>
-			</a>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHeader">
-			<h2>Latest Documentation</h2>
-			<a class="link" href="/docs/">View all</a>
-		</div>
-		<div class="list">
-			{latestDocs.length ? (
-				latestDocs.map((p) => (
-					<a class="row" href={p.path}>
-						<div class="rowTitle">{p.title}</div>
-						{p.description ? <div class="rowDesc">{p.description}</div> : null}
-					</a>
-				))
-			) : (
-				<div class="empty">No documentation pages yet.</div>
-			)}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHeader">
-			<h2>General Information</h2>
-			<a class="link" href="/general-information/">View all</a>
-		</div>
-		<div class="cards">
-			{latestGeneral.length ? (
-				latestGeneral.map((p) => (
-					<a class="cardLink" href={p.path}>
-						<h3>{p.title}</h3>
-						{p.description ? <p>{p.description}</p> : null}
-					</a>
-				))
-			) : (
-				<div class="empty">No articles yet.</div>
-			)}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHeader">
-			<h2>Be a part of the community</h2>
-			<a class="link" href="/community/">Ask a question</a>
-		</div>
-		<div class="grid">
-			<div class="tile mutedTile">
-				<h3>Latest Forum Topics</h3>
-				<p>Coming soon.</p>
-			</div>
-			<div class="tile mutedTile">
-				<h3>Video Tutorials</h3>
-				<p>Coming soon.</p>
-			</div>
-		</div>
-	</section>
 	<script is:inline>
 		const pillRow = document.querySelector('.pillRow');
 		const personaBox = document.querySelector('.personaBox');
@@ -419,7 +659,7 @@ const hrefForPersona = (nextPersona: string) => {
 		position: relative;
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: 20px;
+		gap: 0;
 		align-items: start;
 	}
 
@@ -430,7 +670,7 @@ const hrefForPersona = (nextPersona: string) => {
 	}
 
 	.heroCopy {
-		padding: 8px;
+		padding: 14px 18px;
 	}
 
 	.pillRow {
@@ -441,7 +681,7 @@ const hrefForPersona = (nextPersona: string) => {
 		border: 1px solid rgba(11, 18, 32, 0.08);
 		border-radius: 999px;
 		width: fit-content;
-		margin: 14px auto 0;
+		margin: 50px auto 0;
 	}
 
 	.pill {
@@ -470,7 +710,7 @@ const hrefForPersona = (nextPersona: string) => {
 	h1 {
 		font-size: 42px;
 		line-height: 1.05;
-		margin: 14px 0 12px;
+		margin: 8px 0 20px;
 		letter-spacing: -0.03em;
 	}
 
@@ -525,7 +765,7 @@ const hrefForPersona = (nextPersona: string) => {
 	}
 
 	.metaRow {
-		margin-top: 18px;
+		margin-top: 30px;
 		display: flex;
 		gap: 12px;
 		flex-wrap: wrap;
@@ -687,10 +927,9 @@ const hrefForPersona = (nextPersona: string) => {
 	.featureList {
 		margin: 0;
 		padding-left: 0;
-		color: rgba(16, 24, 40, 0.72);
 		list-style: none;
 		display: grid;
-		gap: 8px;
+		gap: 10px;
 	}
 
 	@media (min-width: 980px) {
@@ -701,27 +940,86 @@ const hrefForPersona = (nextPersona: string) => {
 
 	.featureList li {
 		margin: 0;
-		position: relative;
-		padding-left: 22px;
-		line-height: 1.4;
+		display: flex;
 	}
 
-	.featureList li::before {
-		content: '✓';
-		position: absolute;
-		left: 0;
-		top: 0;
-		color: var(--accent);
+	.featureLink {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		padding: 10px 10px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.72);
+		color: rgba(11, 18, 32, 0.9);
+		text-decoration: none;
+		height: 100%;
+		min-height: 62px;
+		flex: 1;
+	}
+
+	.mutedTile .featureLink {
+		background: rgba(255, 255, 255, 0.55);
+		border-color: rgba(16, 24, 40, 0.07);
+	}
+
+	.featureLink:hover {
+		text-decoration: none;
+		border-color: rgba(var(--accent-rgb), 0.32);
+		box-shadow: 0 10px 26px rgba(11, 18, 32, 0.08);
+	}
+
+	.featureIcon {
+		width: 30px;
+		height: 30px;
+		border-radius: 12px;
+		display: grid;
+		place-items: center;
+		background: rgba(34, 197, 94, 0.14);
+		border: 1px solid rgba(34, 197, 94, 0.25);
+		color: rgba(11, 18, 32, 0.8);
+		flex: none;
+	}
+
+	.mutedTile .featureIcon {
+		background: rgba(0, 174, 154, 0.1);
+		border-color: rgba(0, 174, 154, 0.22);
+	}
+
+	.featureText {
+		min-width: 0;
+	}
+
+	.featureName {
 		font-weight: 900;
+		letter-spacing: -0.01em;
+		display: block;
+		line-height: 1.25;
 	}
 
-	.mutedTile .featureList li::before {
-		content: '+';
-		color: rgba(16, 24, 40, 0.65);
+	.featureHint {
+		display: block;
+		margin-top: 3px;
+		font-size: 12px;
+		line-height: 1.35;
+		color: rgba(16, 24, 40, 0.7);
 	}
 
 	.pricingTile {
 		padding: 18px;
+	}
+
+	.pricingHeader {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.pricingHeader .pricingTitle {
+		flex: 1;
+		min-width: 0;
 	}
 
 	.pricingMeta {
@@ -754,7 +1052,10 @@ const hrefForPersona = (nextPersona: string) => {
 	}
 
 	.pricingTitle {
-		margin-top: 0;
+		margin: 0;
+		font-size: 20px;
+		line-height: 1.15;
+		letter-spacing: -0.02em;
 	}
 
 	.tile {
