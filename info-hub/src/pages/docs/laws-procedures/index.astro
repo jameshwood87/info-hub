@@ -127,19 +127,33 @@ const sortTree = (node: Node) => {
 
 sortTree(root);
 
-const escapeHtml = (s: string) =>
-	s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+type PageLink = { path: string; title: string };
 
-const renderNodesHtml = (nodes: Node[]): string =>
-	nodes
-		.map((n) => {
-			const label = escapeHtml((n.title || '').toLowerCase());
-			const href = escapeHtml(n.path);
-			const title = escapeHtml(n.title);
-			const children = n.children.length ? `<ul>${renderNodesHtml(n.children)}</ul>` : '';
-			return `<li class="node" data-node="1" data-label="${label}"><a href="${href}">${title}</a>${children}</li>`;
-		})
-		.join('');
+const listDescendantPages = (node: Node): PageLink[] => {
+	const out: PageLink[] = [];
+	const visit = (n: Node) => {
+		for (const c of n.children) {
+			const page = pagesByPath.get(c.path);
+			if (page?.title) out.push({ path: c.path, title: cleanTitle(page.title) });
+			visit(c);
+		}
+	};
+	visit(node);
+	return out.filter((p) => p.path !== node.path).sort((a, b) => a.title.localeCompare(b.title));
+};
+
+const segmentDescriptions: Record<string, string> = {
+	'listing-a-property-what-to-know': 'What to prepare before listing a property in Spain.',
+	'buying-a-property': 'Guides for buyers: checks, contracts, and timelines.',
+	'selling-a-property': 'Guides for sellers: paperwork, process, and costs.',
+	'renovating-a-property': 'Renovations, rules, compliance, and practical steps.',
+	'building-a-property': 'New builds, permits, regulations, and project planning.',
+	'renting-a-property': 'Rentals, landlord obligations, tenant rights, and taxes.',
+	'traspaso-business-transfer': 'Business transfers (traspaso): how it works and what to check.',
+	'property-taxes-in-andalucia': 'Taxes and ongoing costs for owning property.',
+	'inheritance-laws-in-andalucia': 'Inheritance basics: legal steps and common pitfalls.',
+	'property-insurance-in-andalucia': 'Insurance types, coverage, and what to ask for.',
+};
 ---
 
 <Layout
@@ -148,17 +162,128 @@ const renderNodesHtml = (nodes: Node[]): string =>
 	description="Guides covering laws, procedures, taxes, rentals and property rules in Spain."
 	canonical="https://info.propertylist.es/docs/laws-procedures/"
 >
-	<h1>LAWS &amp; PROCEDURES</h1>
-	<label class="filterLabel" for="doc-filter">Filter</label>
-	<input id="doc-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" />
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Docs</div>
+			<h1>LAWS &amp; PROCEDURES</h1>
+			<p class="lead">Guides covering laws, procedures, taxes, rentals and property rules in Spain.</p>
+			<div class="filterRow">
+				<label class="filterLabel" for="doc-filter">Filter</label>
+				<input id="doc-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search within this manual…" />
+			</div>
+		</div>
+	</section>
 
-	{root.children.length ? <ul class="tree" set:html={renderNodesHtml(root.children)} /> : <div class="empty">No docs yet.</div>}
+	<section class="contents" aria-label="Manual contents">
+		<div class="contentsHeader">
+			<h2 class="contentsTitle">Browse by topic</h2>
+			<p class="contentsSub">Choose a topic, then pick a guide. Use the filter to search across all topics.</p>
+		</div>
+		{root.children.length ? (
+			<div class="grid" data-grid="1">
+				{root.children.map((seg) => {
+					const pages = listDescendantPages(seg);
+					const featured = pages.slice(0, 8);
+					const remaining = pages.slice(8);
+					const label = (seg.title || '').toLowerCase();
+					const desc = segmentDescriptions[seg.seg] || 'Guides and workflows for this topic.';
+					return (
+						<section class="card" data-card="1" data-label={label}>
+							<div class="cardHeader">
+								<a class="cardTitle" href={seg.path}>
+									{seg.title}
+								</a>
+								<span class="cardMeta">{pages.length} guides</span>
+							</div>
+							<p class="cardDesc">{desc}</p>
+							{featured.length ? (
+								<ul class="list">
+									{featured.map((p) => (
+										<li data-node="1" data-label={p.title.toLowerCase()}>
+											<a class="listRow" href={p.path}>
+												<span class="listRowTitle">{p.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<div class="emptySmall">No guides yet.</div>
+							)}
+							{remaining.length ? (
+								<details class="more" data-more="1">
+									<summary class="moreSummary">Show all ({pages.length})</summary>
+									<ul class="list moreList">
+										{remaining.map((p) => (
+											<li data-node="1" data-label={p.title.toLowerCase()}>
+												<a class="listRow" href={p.path}>
+													<span class="listRowTitle">{p.title}</span>
+												</a>
+											</li>
+										))}
+									</ul>
+								</details>
+							) : null}
+						</section>
+					);
+				})}
+			</div>
+		) : (
+			<div class="empty">No docs yet.</div>
+		)}
+	</section>
 </Layout>
 
 <style>
 	h1 {
 		margin: 0 0 8px;
-		letter-spacing: -0.02em;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	h2 {
+		margin: 0 0 12px;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	.lead {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.filterRow {
+		margin-top: 12px;
 	}
 
 	.filterLabel {
@@ -177,24 +302,144 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		margin: 0 0 12px;
 	}
 
-	.tree,
-	.tree ul {
-		list-style: disc;
-		padding-left: 18px;
+	.contents {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.contentsHeader {
+		display: grid;
+		gap: 6px;
+		margin-bottom: 12px;
+	}
+
+	.contentsTitle {
 		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
 	}
 
-	.tree > .node {
-		margin-top: 6px;
+	.contentsSub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+		max-width: 75ch;
 	}
 
-	.node a {
-		color: #0b57d0;
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+		align-items: start;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 16px;
+		padding: 12px 12px;
+		display: grid;
+		gap: 10px;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.cardTitle {
+		color: #00ae9a;
+		text-decoration: none;
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		line-height: 1.2;
+	}
+
+	.cardTitle:visited {
+		color: #00ae9a;
+	}
+
+	.cardTitle:hover {
 		text-decoration: underline;
 	}
 
-	.node a:hover {
-		text-decoration-thickness: 2px;
+	.cardMeta {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 13px;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+	.cardDesc {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.45;
+		font-size: 13px;
+	}
+
+	.list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 8px;
+	}
+
+	.listRow {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 10px 10px;
+		border-radius: 14px;
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.82);
+		font-weight: 800;
+		line-height: 1.25;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	.listRow::after {
+		content: '›';
+		flex: none;
+		color: rgba(16, 24, 40, 0.45);
+		font-weight: 900;
+		line-height: 1;
+		margin-top: 1px;
+	}
+
+	.listRowTitle {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.listRow:hover,
+	.listRow:focus-visible {
+		outline: none;
+		border-color: rgba(0, 174, 154, 0.4);
+		background: rgba(0, 174, 154, 0.06);
+	}
+
+	.listRow:hover::after,
+	.listRow:focus-visible::after {
+		color: var(--accent);
+	}
+
+	.moreSummary {
+		cursor: pointer;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.78);
+	}
+
+	.moreList {
+		margin-top: 10px;
 	}
 
 	.empty {
@@ -204,6 +449,20 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		border-radius: 16px;
 		color: rgba(16, 24, 40, 0.7);
 	}
+
+	.emptySmall {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (max-width: 980px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
 </style>
 
 <script is:inline>
@@ -211,11 +470,14 @@ const renderNodesHtml = (nodes: Node[]): string =>
 		const input = document.getElementById('doc-filter');
 		if (!(input instanceof HTMLInputElement)) return;
 		const nodes = Array.from(document.querySelectorAll('li[data-node]'));
+		const cards = Array.from(document.querySelectorAll('section[data-card]'));
 
 		const apply = () => {
 			const q = (input.value || '').trim().toLowerCase();
 			if (!q) {
 				for (const li of nodes) li.hidden = false;
+				for (const c of cards) c.hidden = false;
+				for (const d of Array.from(document.querySelectorAll('details[data-more]'))) d.open = false;
 				return;
 			}
 
@@ -224,12 +486,13 @@ const renderNodesHtml = (nodes: Node[]): string =>
 				li.hidden = !label.includes(q);
 			}
 
-			for (let i = nodes.length - 1; i >= 0; i--) {
-				const li = nodes[i];
-				const child = li.querySelector('ul');
-				if (!child) continue;
-				const hasVisibleChild = Array.from(child.querySelectorAll(':scope > li[data-node]')).some((c) => !c.hidden);
-				if (hasVisibleChild) li.hidden = false;
+			for (const c of cards) {
+				const hasVisibleChild = Array.from(c.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+				c.hidden = !hasVisibleChild;
+				for (const d of Array.from(c.querySelectorAll('details[data-more]'))) {
+					const hasVisible = Array.from(d.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+					d.open = hasVisible;
+				}
 			}
 		};
 

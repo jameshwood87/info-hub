@@ -3,7 +3,24 @@ import Layout from '../../../layouts/Layout.astro';
 import { listKbPagesByPrefix } from '../../../lib/directus';
 
 const base = '/docs/propertylist-mls-user-manual/';
-const items = await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 });
+const itemsRaw = await listKbPagesByPrefix({ prefix: base, lang: 'en', limit: 500 });
+
+const shouldHideFromManualIndex = (p: (typeof itemsRaw)[number]) => {
+	const title = String(p.title || '')
+		.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '')
+		.trim()
+		.toLowerCase();
+	const path = String(p.path || '').toLowerCase();
+
+	if (title.includes('wp plugin (customisable)')) return true;
+	if (title.includes('developers pre-sign up')) return true;
+	if (path.includes('wp-plugin')) return true;
+	if (path.includes('pre-sign')) return true;
+
+	return false;
+};
+
+const items = itemsRaw.filter((p) => !shouldHideFromManualIndex(p));
 
 const topTasks = (() => {
 	const picks: string[][] = [
@@ -619,9 +636,8 @@ const listDescendantPages = (node: Node): PageLink[] => {
 			}
 
 			for (const c of cards) {
-				const label = (c.getAttribute('data-label') || '').toLowerCase();
 				const hasVisibleChild = Array.from(c.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
-				c.hidden = !(label.includes(q) || hasVisibleChild);
+				c.hidden = !hasVisibleChild;
 				for (const d of Array.from(c.querySelectorAll('details[data-more]'))) {
 					const hasVisible = Array.from(d.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
 					d.open = hasVisible;

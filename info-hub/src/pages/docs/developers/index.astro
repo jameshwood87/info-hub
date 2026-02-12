@@ -1,0 +1,253 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const title = 'Developers Docs • PropertyList Info Hub';
+const description =
+	'Developer-focused documentation for integrating with PropertyList: CRM, listings, importing/exporting, and promotion.';
+
+const sections: Array<{
+	id: string;
+	title: string;
+	subtitle: string;
+	links: Array<{ title: string; href: string }>;
+	footerHref?: string;
+	footerLabel?: string;
+}> = [
+	{
+		id: 'crm',
+		title: 'CRM',
+		subtitle: 'Contacts, leads, and workflows for your organisation.',
+		links: [
+			{ title: 'CRM overview (what it does)', href: '/search?q=CRM%20overview' },
+			{ title: 'Create & manage contacts', href: '/search?q=contacts%20CRM' },
+			{ title: 'Capture and qualify leads', href: '/search?q=leads%20CRM' },
+			{ title: 'Messaging & viewing requests', href: '/search?q=messaging%20requests' },
+			{ title: 'Users, staff, and permissions', href: '/search?q=users%20permissions%20CRM' },
+			{ title: 'Export CRM data', href: '/search?q=export%20contacts%20CRM' },
+		],
+		footerHref: '/search?q=CRM',
+		footerLabel: 'View all CRM docs',
+	},
+	{
+		id: 'list-properties',
+		title: 'List properties',
+		subtitle: 'Create and publish listings, fast and correctly.',
+		links: [
+			{ title: 'Creating a new listing', href: '/search?q=creating%20a%20new%20listing' },
+			{ title: 'Required fields & best practices', href: '/search?q=required%20fields%20listing' },
+			{ title: 'Upload photos and documents', href: '/search?q=upload%20photos%20documents%20listing' },
+			{ title: 'Import properties (bulk)', href: '/search?q=import%20properties' },
+			{ title: 'Duplicate properties', href: '/search?q=duplicate%20properties' },
+			{ title: 'MicroSite & sharing links', href: '/search?q=microsite%20share%20properties' },
+		],
+		footerHref: '/docs/propertylist-mls-user-manual/',
+		footerLabel: 'Open MLS & CRM manual',
+	},
+	{
+		id: 'edit-properties',
+		title: 'Edit properties',
+		subtitle: 'Keep inventory accurate: prices, availability, and media.',
+		links: [
+			{ title: 'Edit listing details', href: '/search?q=edit%20listing' },
+			{ title: 'Change status (available, reserved, sold)', href: '/search?q=listing%20status%20sold%20reserved' },
+			{ title: 'Update pricing and metadata', href: '/search?q=update%20price%20listing' },
+			{ title: 'Manage media (photos, floorplans)', href: '/search?q=manage%20photos%20floorplans' },
+			{ title: 'Requests, notes, and timelines', href: '/search?q=timeline%20requests%20listing' },
+			{ title: 'Troubleshoot validation issues', href: '/search?q=listing%20validation' },
+		],
+		footerHref: '/search?q=managing%20listings',
+		footerLabel: 'View managing listings docs',
+	},
+	{
+		id: 'feature-properties',
+		title: 'Feature properties',
+		subtitle: 'Boost visibility with pay-as-you-go upgrades.',
+		links: [
+			{ title: 'How featured listings work', href: '/search?q=featured%20listing' },
+			{ title: 'Feature a listing (credits)', href: '/search?q=feature%20a%20listing%20credits' },
+			{ title: 'Featured MLS listings', href: '/search?q=Featured%20MLS%20Listings' },
+			{ title: 'Featured Public Portal listings', href: '/search?q=Featured%20Public%20Portal%20Listings' },
+			{ title: 'Limits, duration, and rules', href: '/search?q=featured%20listing%20duration%20limit' },
+			{ title: 'Pricing & credits', href: '/pricing/' },
+		],
+		footerHref: '/search?q=credits',
+		footerLabel: 'Search credits',
+	},
+	{
+		id: 'integrations-automation',
+		title: 'Integrations & automation',
+		subtitle: 'Connect portals, feeds, exports, and automations.',
+		links: [
+			{ title: 'Export listings (XML)', href: '/search?q=export%20listings%20xml' },
+			{ title: 'XML import / sync', href: '/search?q=xml%20import' },
+			{ title: 'Integrations and technical notes', href: '/search?q=technical%20documentation%20integrations' },
+			{ title: 'Reports and statistics', href: '/search?q=reports%20statistics' },
+			{ title: 'AI tools and utilities', href: '/search?q=AI%20tools' },
+			{ title: 'Security & access control', href: '/search?q=security%20permissions' },
+		],
+		footerHref: '/search?q=integrations',
+		footerLabel: 'Search integrations',
+	},
+];
+---
+
+<Layout lang="en" title={title} description={description} canonical="https://info.propertylist.es/docs/developers/">
+	<h1>Developers Docs</h1>
+	<p class="sub">Developer-focused guides for using and integrating with PropertyList.</p>
+
+	<div class="grid">
+		{sections.map((s) => (
+			<section class="card" id={s.id}>
+				<div class="cardHeader">
+					<div>
+						<h2>{s.title}</h2>
+						<p class="cardSub">{s.subtitle}</p>
+					</div>
+				</div>
+				<ul class="mini">
+					{s.links.map((l) => (
+						<li>
+							<a class="miniRow" href={l.href}>
+								<span class="miniRowTitle">{l.title}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+				{s.footerHref ? (
+					<div class="cardFooter">
+						<a class="cardAction" href={s.footerHref}>
+							{s.footerLabel || 'View all'}
+						</a>
+					</div>
+				) : null}
+			</section>
+		))}
+	</div>
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+		scroll-margin-top: 18px;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.cardHeader h2 {
+		margin: 0;
+		font-size: 16px;
+		letter-spacing: -0.01em;
+	}
+
+	.cardSub {
+		margin: 6px 0 0;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	.mini {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 6px;
+	}
+
+	.miniRow {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 10px 10px;
+		border-radius: 14px;
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.82);
+		font-weight: 800;
+		line-height: 1.25;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	.miniRow::after {
+		content: '›';
+		flex: none;
+		color: rgba(16, 24, 40, 0.45);
+		font-weight: 900;
+		line-height: 1;
+		margin-top: 1px;
+	}
+
+	.miniRowTitle {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.miniRow:hover,
+	.miniRow:focus-visible {
+		outline: none;
+		border-color: rgba(0, 174, 154, 0.4);
+		background: rgba(0, 174, 154, 0.06);
+	}
+
+	.miniRow:hover::after,
+	.miniRow:focus-visible::after {
+		color: var(--accent);
+	}
+
+	.cardFooter {
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.cardAction {
+		color: var(--accent);
+		font-weight: 900;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.cardAction:hover {
+		text-decoration: underline;
+	}
+
+	@media (max-width: 620px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
