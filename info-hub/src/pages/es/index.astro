@@ -403,6 +403,7 @@ const hrefForPersona = (nextPersona: string) => {
 		grid-template-columns: 1fr;
 		gap: 20px;
 		align-items: start;
+		min-width: 0;
 	}
 
 	.topCta {
@@ -413,6 +414,7 @@ const hrefForPersona = (nextPersona: string) => {
 
 	.heroCopy {
 		padding: 8px;
+		min-width: 0;
 	}
 
 	.pillRow {
@@ -460,6 +462,8 @@ const hrefForPersona = (nextPersona: string) => {
 		line-height: 1.55;
 		color: rgba(11, 18, 32, 0.72);
 		margin: 0 0 18px;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.lead + .lead {
