@@ -155,22 +155,67 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 					if (lang === 'es') {
 						if (path.startsWith('/es/docs/propertylist-mls-manual-de-usuario/')) return 'MLS y CRM';
 						if (path.startsWith('/es/docs/portal-publico/')) return 'Portal Público';
-						if (path.startsWith('/es/docs/leyes-procedimientos/')) return 'Propietarios';
+						if (path.startsWith('/es/docs/leyes-procedimientos/')) return 'Leyes y procedimientos';
+						if (path.startsWith('/es/docs/')) return 'Docs';
 						return 'Docs';
 					}
 					if (path.startsWith('/docs/propertylist-mls-user-manual/')) return 'MLS & CRM';
 					if (path.startsWith('/docs/public-portal/')) return 'Public Portal';
-					if (path.startsWith('/docs/laws-procedures/')) return 'Owners';
+					if (path.startsWith('/docs/laws-procedures/')) return 'Laws & Procedures';
+					if (path.startsWith('/docs/developers/')) return 'Developer Docs';
 					return 'Docs';
 				};
 
-				const toMeta = (path, prefix) => {
+				const toTitleCase = (s) => {
+					const out = String(s || '')
+						.split(' ')
+						.filter(Boolean)
+						.map((w) => {
+							if (/^(mls|crm|app|ai|api|xml|wp)$/i.test(w)) return w.toUpperCase();
+							if (/^(and|or|of|for|to|in|on|a|an|the)$/i.test(w)) return w.toLowerCase();
+							return w.slice(0, 1).toUpperCase() + w.slice(1).toLowerCase();
+						})
+						.join(' ');
+					return out.replace(/\bAnd\b/g, 'and').replace(/\bOf\b/g, 'of').replace(/\bFor\b/g, 'for').trim();
+				};
+
+				const prettySeg = (seg) => {
+					const raw = String(seg || '').replace(/\/+/g, '');
+					const decoded = (() => {
+						try {
+							return decodeURIComponent(raw);
+						} catch {
+							return raw;
+						}
+					})();
+					const cleaned = decoded
+						.replace(/[-_]+/g, ' ')
+						.replace(/\s+/g, ' ')
+						.replace(/\s*\d+\s*$/g, '')
+						.trim();
+					return cleaned ? toTitleCase(cleaned) : '';
+				};
+
+				const toMeta = (path, prefix, lang) => {
 					const p = String(path || '');
-					const base = prefix && p.startsWith(prefix) ? p.slice(prefix.length) : p.replace(/^\/+/, '');
+					const dropPrefix = prefix && p.startsWith(prefix) ? prefix : '/';
+					let base = p.startsWith(dropPrefix) ? p.slice(dropPrefix.length) : p.replace(/^\/+/, '');
+
+					const manualBases = lang === 'es'
+						? ['/es/docs/propertylist-mls-manual-de-usuario/', '/es/docs/portal-publico/', '/es/docs/leyes-procedimientos/', '/es/docs/']
+						: ['/docs/propertylist-mls-user-manual/', '/docs/public-portal/', '/docs/laws-procedures/', '/docs/developers/', '/docs/'];
+
+					for (const b of manualBases) {
+						if (p.startsWith(b)) {
+							base = p.slice(b.length);
+							break;
+						}
+					}
+
 					const parts = base.split('/').filter(Boolean);
-					if (!parts.length) return '';
-					const tail = parts.slice(0, 3).map((x) => x.replace(/[-_]+/g, ' '));
-					return tail.join(' • ');
+					const pretty = parts.map(prettySeg).filter(Boolean);
+					if (!pretty.length) return '';
+					return pretty.slice(0, 3).join(' • ');
 				};
 
 				const highlight = (text, q) => {
@@ -196,19 +241,24 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 					const lang = input.dataset.searchLang || 'en';
 					const prefix = input.dataset.searchPrefix || '/docs/';
 					const groups = new Map();
-					for (const r of items.slice(0, 8)) {
+					for (const r of items.slice(0, 10)) {
 						const section = toSection(r.path, lang);
 						const list = groups.get(section) || [];
 						list.push(r);
 						groups.set(section, list);
 					}
 
-					const sections = ['MLS & CRM', 'MLS y CRM', 'Owners', 'Propietarios', 'Public Portal', 'Portal Público', 'Laws & Procedures', 'Docs'].filter(
-						(s) => groups.has(s)
-					);
+					const sections =
+						lang === 'es'
+							? ['Portal Público', 'MLS y CRM', 'Leyes y procedimientos', 'Docs']
+							: ['Public Portal', 'MLS & CRM', 'Laws & Procedures', 'Developer Docs', 'Docs'];
 
 					const options = [];
 					let html = `<div class="navSearchMenuInner" role="presentation">`;
+
+					if (!items.length) {
+						html += `<div class="navSearchEmpty" role="presentation">${lang === 'es' ? 'Sin resultados.' : 'No results.'}</div>`;
+					}
 
 					for (const section of sections) {
 						const list = groups.get(section) || [];
@@ -217,7 +267,7 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 						html += `<div class="navSearchSectionTitle" role="presentation">${escapeHtml(section)}</div>`;
 						for (const r of list) {
 							const id = `hs-opt-${options.length}`;
-							const meta = toMeta(r.path, prefix);
+							const meta = toMeta(r.path, prefix, lang);
 							options.push({ id, path: r.path });
 							html +=
 								`<a class="navSearchItem" id="${id}" role="option" aria-selected="false" data-i="${options.length - 1}" href="${escapeHtml(
@@ -501,20 +551,23 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		top: calc(100% + 10px);
 		background: rgba(255, 255, 255, 0.98);
 		border: 1px solid rgba(11, 18, 32, 0.12);
-		border-radius: 16px;
+		border-radius: 18px;
 		box-shadow: 0 12px 40px rgba(11, 18, 32, 0.12);
-		padding: 8px;
+		padding: 10px;
+		max-height: min(70vh, 520px);
+		overflow: auto;
+		overscroll-behavior: contain;
 		z-index: 50;
 	}
 
 	.navSearchMenuInner {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 10px;
 	}
 
 	.navSearchSectionTitle {
-		padding: 6px 10px 2px;
+		padding: 6px 10px 0;
 		font-size: 12px;
 		font-weight: 900;
 		letter-spacing: 0.02em;
@@ -524,10 +577,16 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 
 	.navSearchItem {
 		display: block;
-		padding: 10px 12px;
+		padding: 11px 12px;
 		border-radius: 12px;
-		color: rgba(11, 18, 32, 0.86);
+		color: rgba(11, 18, 32, 0.88);
 		text-decoration: none;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	.navSearchItem:visited {
+		color: rgba(11, 18, 32, 0.88);
 	}
 
 	.navSearchItemTitle {
@@ -537,8 +596,11 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 
 	.navSearchItemMeta {
 		margin-top: 4px;
-		font-size: 13px;
+		font-size: 12px;
 		color: rgba(11, 18, 32, 0.6);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.navSearchItem mark {
@@ -551,14 +613,33 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 	.navSearchItem:hover,
 	.navSearchItem.active {
 		text-decoration: none;
-		background: rgba(var(--accent-rgb), 0.1);
+		background: rgba(var(--accent-rgb), 0.08);
+		border-color: rgba(var(--accent-rgb), 0.28);
 		color: rgba(11, 18, 32, 0.92);
 	}
 
+	.navSearchItem:focus-visible {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.22);
+		border-color: rgba(var(--accent-rgb), 0.35);
+	}
+
 	.navSearchQuery {
-		margin-top: 6px;
+		margin-top: 8px;
 		border-top: 1px solid rgba(11, 18, 32, 0.08);
-		color: var(--accent);
+		border-color: rgba(11, 18, 32, 0.08);
+		background: rgba(var(--accent-rgb), 0.06);
+		color: rgba(11, 18, 32, 0.92);
+		font-weight: 900;
+	}
+
+	.navSearchEmpty {
+		padding: 10px 12px;
+		border-radius: 12px;
+		border: 1px dashed rgba(11, 18, 32, 0.16);
+		background: rgba(255, 255, 255, 0.7);
+		color: rgba(11, 18, 32, 0.7);
+		font-weight: 700;
 	}
 
 	.navCtas {
