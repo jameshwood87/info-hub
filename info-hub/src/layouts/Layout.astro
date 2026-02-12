@@ -519,6 +519,10 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		box-sizing: border-box;
 	}
 
+	:global([hidden]) {
+		display: none !important;
+	}
+
 	html,
 	body {
 		margin: 0;
@@ -853,12 +857,8 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		background: rgba(11, 18, 32, 0.35);
 		backdrop-filter: blur(6px);
 		z-index: 50;
-		display: none;
-		justify-content: flex-end;
-	}
-
-	.mobileMenuOverlay:not([hidden]) {
 		display: flex;
+		justify-content: flex-end;
 	}
 
 	.mobileMenuDrawer {
@@ -1415,14 +1415,10 @@ const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 		position: fixed;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.35);
-		display: none;
+		display: grid;
 		place-items: end center;
 		padding: 14px;
 		z-index: 70;
-	}
-
-	:global(.docNavOverlay:not([hidden])) {
-		display: grid;
 	}
 
 	@media (min-width: 961px) {
