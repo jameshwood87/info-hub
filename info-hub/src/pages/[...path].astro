@@ -309,6 +309,7 @@ const legacyMlsPageForPath = (path: string) => {
 	const parts = relative.split('/').filter(Boolean);
 
 	if (parts.length === 0) return null; // Index is handled by the index page
+	if (parts.length > 1) return null;
 
 	const seg = parts[0];
 	const mlsMap: Record<string, { title: string; desc: string; body?: string }> = {
