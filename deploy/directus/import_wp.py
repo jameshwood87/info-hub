@@ -147,10 +147,57 @@ def detect_language(path: str) -> str:
         return "es"
     return "en"
 
+_RE_HREF = re.compile(r'href\s*=\s*["\']([^"\']+)["\']', re.IGNORECASE)
+
+
+def extract_links(html: str, *, origin: str) -> list[str]:
+    out: list[str] = []
+    for m in _RE_HREF.finditer(html or ""):
+        href = (m.group(1) or "").strip()
+        if not href:
+            continue
+        if href.startswith("#"):
+            continue
+        if href.startswith("mailto:") or href.startswith("tel:") or href.startswith("javascript:"):
+            continue
+        try:
+            u = urllib.parse.urljoin(origin, href)
+        except Exception:
+            continue
+        if not u.startswith(origin):
+            continue
+        out.append(u)
+    return out
+
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sitemap", default="https://info.propertylist.es/sitemap.xml")
+    ap.add_argument("--sitemap", default="")
+    ap.add_argument(
+        "--start-url",
+        default="",
+        help="If set, crawl links from this page to build an import list (useful when no sitemap exists).",
+    )
+    ap.add_argument(
+        "--origin",
+        default="https://info.propertylist.es",
+        help="Origin used to normalise and filter crawled links.",
+    )
+    ap.add_argument(
+        "--wayback-snapshot",
+        default="",
+        help="If set, fetch pages via Wayback snapshot (e.g. 20250621075840).",
+    )
+    ap.add_argument(
+        "--wayback-raw",
+        action="store_true",
+        help="Use the id_ (raw) Wayback endpoint for HTML fetches (recommended).",
+    )
+    ap.add_argument(
+        "--path-prefix",
+        default="",
+        help="Only import pages whose normalised path starts with this prefix (e.g. /docs/propertylist-mls-user-manual/).",
+    )
     ap.add_argument("--directus-url", default="http://127.0.0.1:8055")
     ap.add_argument("--admin-email", default=os.environ.get("DIRECTUS_ADMIN_EMAIL", ""))
     ap.add_argument("--admin-password", default=os.environ.get("DIRECTUS_ADMIN_PASSWORD", ""))
@@ -168,22 +215,35 @@ def main() -> int:
     if not token:
         raise SystemExit("Directus login failed")
 
-    sitemap_xml = fetch(args.sitemap, user_agent=args.user_agent)
-    parsed = parse_sitemap(sitemap_xml)
+    def wayback_url(u: str) -> str:
+        snap = (args.wayback_snapshot or "").strip()
+        if not snap:
+            return u
+        mode = "id_/" if args.wayback_raw else "/"
+        return f"https://web.archive.org/web/{snap}{mode}{u}"
+
     urls: list[str] = []
-    if parsed["type"] == "index":
-        for sm in parsed["sitemaps"]:
-            try:
-                child_xml = fetch(sm, user_agent=args.user_agent)
-            except Exception:
-                continue
-            child = parse_sitemap(child_xml)
-            if child["type"] == "urlset":
-                urls.extend(child["urls"])
-    elif parsed["type"] == "urlset":
-        urls = parsed["urls"]
+    if args.start_url:
+        start_html = fetch(args.start_url, user_agent=args.user_agent).decode("utf-8", "replace")
+        urls = sorted(set(extract_links(start_html, origin=args.origin.rstrip("/"))))
+    elif args.sitemap:
+        sitemap_xml = fetch(args.sitemap, user_agent=args.user_agent)
+        parsed = parse_sitemap(sitemap_xml)
+        if parsed["type"] == "index":
+            for sm in parsed["sitemaps"]:
+                try:
+                    child_xml = fetch(sm, user_agent=args.user_agent)
+                except Exception:
+                    continue
+                child = parse_sitemap(child_xml)
+                if child["type"] == "urlset":
+                    urls.extend(child["urls"])
+        elif parsed["type"] == "urlset":
+            urls = parsed["urls"]
+        else:
+            raise SystemExit("Unknown sitemap format")
     else:
-        raise SystemExit("Unknown sitemap format")
+        raise SystemExit("Provide --start-url or --sitemap")
 
     seen_paths: set[str] = set()
     state_path = os.path.abspath(args.state)
@@ -206,12 +266,14 @@ def main() -> int:
             lang = detect_language(path)
             if lang not in {"en", "es"}:
                 continue
+            if args.path_prefix and not path.startswith(args.path_prefix):
+                continue
             if path in seen_paths:
                 continue
 
             record = {"url": u, "path": path, "lang": lang, "ts": time.time()}
             try:
-                html = fetch(u, user_agent=args.user_agent).decode("utf-8", "replace")
+                html = fetch(wayback_url(u), user_agent=args.user_agent).decode("utf-8", "replace")
                 title = extract_title(html) or path
                 desc = extract_description(html)
                 body = extract_body(html)

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getKbPageByPath, listKbPagesByPrefix } from '../lib/directus';
+import mlsManualArchive from '../data/mls-manual-archive.json';
 
 const rawPath = Astro.params.path ?? '';
 const normalizedPath = `/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
@@ -378,7 +379,20 @@ const legacyMlsPageForPath = (path: string) => {
 	};
 };
 
-const page = legacyPageForPath(normalizedPath) ?? legacyMlsPageForPath(normalizedPath) ?? (await getKbPageByPath(normalizedPath));
+const stripTagsSimple = (html: string) => String(html || '').replace(/<[^>]+>/g, ' ');
+const isEmptyish = (html: string | null | undefined) => {
+	const text = stripTagsSimple(String(html || '')).replace(/\s+/g, ' ').trim();
+	return !text || text.length < 80 || /Detailed documentation for\b/i.test(text) || /\bcoming soon\b/i.test(text);
+};
+
+const archiveBody =
+	(normalizedPath.startsWith('/docs/propertylist-mls-user-manual/')
+		? (mlsManualArchive as any)?.pages?.[normalizedPath]?.body
+		: null) ?? null;
+
+const fetchedPage = legacyPageForPath(normalizedPath) ?? legacyMlsPageForPath(normalizedPath) ?? (await getKbPageByPath(normalizedPath));
+const page =
+	fetchedPage && archiveBody && isEmptyish(fetchedPage.body) ? { ...fetchedPage, body: archiveBody } : fetchedPage ?? null;
 
 if (!page) {
 	return new Response('Not Found', { status: 404 });
