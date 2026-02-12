@@ -941,7 +941,7 @@ const hrefForPersona = (nextPersona: string) => {
 
 	.featureList li {
 		margin: 0;
-		display: flex;
+		display: block;
 	}
 
 	.featureLink {
@@ -954,9 +954,9 @@ const hrefForPersona = (nextPersona: string) => {
 		background: rgba(255, 255, 255, 0.72);
 		color: rgba(11, 18, 32, 0.9);
 		text-decoration: none;
-		height: 100%;
-		min-height: 62px;
-		flex: 1;
+		width: 100%;
+		min-height: 70px;
+		box-sizing: border-box;
 	}
 
 	.mutedTile .featureLink {
