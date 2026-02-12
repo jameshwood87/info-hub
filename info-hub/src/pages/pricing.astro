@@ -151,20 +151,6 @@ const sections: Array<{
 			))}
 		</div>
 	</section>
-
-	<section class="section">
-		<div class="final">
-			<h2>PropertyList.es — the 1st free MLS for estate agents</h2>
-			<p class="lead">
-				We’re building a smarter workflow with automation, AI, and better lead quality—while keeping the core platform free.
-				Explore what’s live now and what’s coming next.
-			</p>
-			<div class="ctaRow">
-				<a class="btnPrimary" href="/docs/">Explore documentation</a>
-				<a class="btnSecondary" href="/general-information/">Latest updates</a>
-			</div>
-		</div>
-	</section>
 </Layout>
 
 <style>
@@ -372,6 +358,7 @@ const sections: Array<{
 		padding: 14px;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.pricingHead {
@@ -399,9 +386,9 @@ const sections: Array<{
 	}
 
 	.pricingRow {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: start;
 		gap: 10px;
 		padding: 10px 12px;
 		background: rgba(255, 255, 255, 0.85);
@@ -412,24 +399,20 @@ const sections: Array<{
 	.pricingFeature {
 		color: rgba(16, 24, 40, 0.88);
 		line-height: 1.35;
+		min-width: 0;
 	}
 
 	.pricingPrice {
 		font-weight: 900;
 		letter-spacing: -0.01em;
 		color: rgba(16, 24, 40, 0.86);
-		white-space: nowrap;
+		text-align: right;
+		white-space: normal;
+		max-width: 22ch;
 	}
 
 	.pricingPrice.isFree {
 		color: rgba(0, 142, 126, 1);
-	}
-
-	.final {
-		background: rgba(255, 255, 255, 0.7);
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 22px;
-		padding: 16px;
 	}
 
 	@media (max-width: 980px) {
