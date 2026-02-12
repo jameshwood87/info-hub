@@ -220,35 +220,7 @@ const legacyPageForPath = (path: string) => {
   <li>Keep photos current and representative of the property.</li>
 </ul>
 `;
-		} else if (def.seg === 'inheritance-laws-in-andalucia' && child.seg === 'inheritance-laws-in-andalucia') {
-			// This seems to be the one from the user request, but the seg name might be different in our map.
-			// Let's check the map: child seg is 'inheritance-tax-impuesto-sobre-sucesiones-y-donaciones' etc.
-			// The user provided URL ended with /inheritance-laws-in-andalucia/ which is the parent.
-			// The user provided CONTENT is for "Inheritance Laws in Andalucía" which matches our parent title.
-			// But the user said "get the body text" for "Laws and Procedures" like this one.
-			// The content provided describes "Who Inherits?", "Inheritance Tax", "Seeking Professional Guidance".
-			// This content seems general for the whole topic or maybe a specific sub-page.
-			// Given the structure, let's put this detailed content on the PARENT page if requested, or populate children.
-			// Wait, the user shared a link .../inheritance-laws-in-andalucia/ which is the PARENT page in our structure.
-			// But in our structure, the parent page shows a list of children.
-			// Let's see if we can enhance the parent page content or if this content maps to children.
-			// The content has sections: "Who Inherits?", "Inheritance Tax".
-			// Our children are: "Inheritance Tax", "Forced Heirship Rules", "Wills", "Intestate".
-			// "Who Inherits?" -> "Forced Heirship" / "Intestate"
-			// "Inheritance Tax" -> "Inheritance Tax"
-			// It seems the legacy page had all this info on one page.
-			// We should distribute it or put it on the parent.
-			// Let's put it on the parent page for now to match the "legacy" feel if that's what's wanted, OR populate the children.
-			// The user said "you have missed some text... make sure to get all... need to get the body text".
-			// Let's populate the children with relevant sections from this text where possible, and the rest on parent?
-			// Actually, looking at the user input, they want the TEXT.
-			// Let's populate the child pages with rich text based on the topic.
-			// Since I cannot browse the live web archive for ALL pages, I will use the provided text for the Inheritance section
-			// and reasonable placeholders/synthetic content for others to ensure "all docs" exist and look populated.
 		}
-
-		// General population for all children to avoid "Guide for X" placeholders where possible.
-		// I will inject specific content for the Inheritance ones based on the user provided text.
 
 		if (def.seg === 'inheritance-laws-in-andalucia') {
 			if (child.seg === 'inheritance-tax-impuesto-sobre-sucesiones-y-donaciones') {
@@ -454,6 +426,53 @@ const slugify = (s: string) =>
 		.replace(/^-+|-+$/g, '')
 		.slice(0, 80);
 
+const cleanImportedBody = (html: string | null | undefined, path: string) => {
+	let out = String(html || '');
+
+	const isBlogLike = path.startsWith('/general-information/') || path.startsWith('/blog/');
+
+	const pickFirstMatch = (re: RegExp) => {
+		const m = out.match(re);
+		return m ? m[1] || m[0] : null;
+	};
+
+	if (/<html\b/i.test(out) || /<body\b/i.test(out) || /<header\b/i.test(out) || /<nav\b/i.test(out)) {
+		const article = pickFirstMatch(/<article\b[\s\S]*?<\/article>/i);
+		if (article) out = article;
+		else {
+			const main = pickFirstMatch(/<main\b[\s\S]*?<\/main>/i);
+			if (main) out = main;
+		}
+	}
+
+	if (isBlogLike) {
+		const entryContent = pickFirstMatch(/<div\b[^>]*class=["'][^"']*\bentry-content\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+		if (entryContent) out = entryContent;
+		const postContent = pickFirstMatch(/<div\b[^>]*class=["'][^"']*\b(post-content|postContent|wp-block-post-content)\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+		if (postContent) out = postContent;
+	}
+
+	out = out
+		.replace(/<script\b[\s\S]*?<\/script>/gi, '')
+		.replace(/<style\b[\s\S]*?<\/style>/gi, '')
+		.replace(/<(meta|link)\b[^>]*>/gi, '')
+		.replace(/<(header|nav|footer|aside)\b[\s\S]*?<\/\1>/gi, '')
+		.replace(/<form\b[\s\S]*?<\/form>/gi, '')
+		.replace(/<div\b[^>]*class=["'][^"']*(sidebar|widget|comments-area|comment|comments|wp-block-comments)[^"']*["'][\s\S]*?<\/div>/gi, '')
+		.replace(/<section\b[^>]*id=["']comments?["'][\s\S]*?<\/section>/gi, '');
+
+	out = out
+		.replace(
+			/<(h[1-6]|p|div)\b[^>]*>\s*(Leave a Comment|Recent Posts|Categories|Archives|Search)\b[\s\S]*?<\/\1>/gi,
+			'',
+		)
+		.replace(/Powered\s+By\s+PropertyList[\s\S]*?®/gi, '');
+
+	out = out.replace(/\n{3,}/g, '\n\n').trim();
+
+	return out;
+};
+
 const withHeadingIdsAndToc = (html: string | null | undefined) => {
 	const body = String(html || '');
 	const used = new Map<string, number>();
@@ -491,7 +510,8 @@ const withHeadingIdsAndToc = (html: string | null | undefined) => {
 	return { html: withCallouts, toc };
 };
 
-const { html: bodyHtml, toc } = withHeadingIdsAndToc(page.body);
+const cleanedSourceBody = cleanImportedBody(page.body, page.path);
+const { html: bodyHtml, toc } = withHeadingIdsAndToc(cleanedSourceBody);
 const bodyHasH1 = /<h1\b/i.test(bodyHtml);
 const cleanedBodyHtml = bodyHtml.replace(
 	/<(p|h[1-6])\b[^>]*>\s*(?:<a\b[^>]*>\s*)?Managing Listings\s*-\s*Previous\s*Tracking property enquiries\/leads\s*(?:<\/a>\s*)?<\/\1>\s*/gi,
