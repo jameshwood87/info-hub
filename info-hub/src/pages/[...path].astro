@@ -6,6 +6,13 @@ import mlsManualArchive from '../data/mls-manual-archive.json';
 const rawPath = Astro.params.path ?? '';
 const normalizedPath = `/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
 
+if (normalizedPath === '/docs/propertylist-mls-user-manual/ai-and-automation/') {
+	return new Response(null, {
+		status: 301,
+		headers: { Location: '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/' },
+	});
+}
+
 const legacyPageForPath = (path: string) => {
 	const base = '/docs/laws-procedures/';
 	if (!path.startsWith(base)) return null;
