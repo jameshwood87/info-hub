@@ -104,34 +104,51 @@ const normalisePage = (p: KbPage): KbPage => ({
 });
 
 export async function getKbPageByPath(path: string): Promise<KbPage | null> {
-	const baseParams = new URLSearchParams();
-	baseParams.set('filter[path][_eq]', path);
-	baseParams.set('limit', '1');
-
-	const queryWithFields = async (fields: string[]) => {
-		const params = new URLSearchParams(baseParams);
+	const query = async (pathValue: string, fields: string[]) => {
+		const params = new URLSearchParams();
+		params.set('filter[path][_eq]', pathValue);
+		params.set('limit', '1');
 		params.set('fields', fields.join(','));
 		const json = await directusGet<DirectusItemResponse<KbPage>>(`/items/kb_pages?${params.toString()}`);
 		const raw = json.data?.[0] ?? null;
 		return raw ? normalisePage(raw) : null;
 	};
 
+	const pathsToTry = (() => {
+		const p = String(path || '');
+		if (!p) return [];
+		const alt = p.endsWith('/') ? p.slice(0, -1) : `${p}/`;
+		return alt && alt !== p ? [p, alt] : [p];
+	})();
+
+	const fieldsWithDates = [
+		'id',
+		'status',
+		'language',
+		'path',
+		'title',
+		'description',
+		'body',
+		'seo_title',
+		'seo_description',
+		'date_created',
+		'date_updated',
+	];
+
+	const fieldsMinimal = ['id', 'status', 'language', 'path', 'title', 'description', 'body', 'seo_title', 'seo_description'];
+
 	try {
-		return await queryWithFields([
-			'id',
-			'status',
-			'language',
-			'path',
-			'title',
-			'description',
-			'body',
-			'seo_title',
-			'seo_description',
-			'date_created',
-			'date_updated',
-		]);
+		for (const p of pathsToTry) {
+			const hit = await query(p, fieldsWithDates);
+			if (hit) return hit;
+		}
+		return null;
 	} catch {
-		return await queryWithFields(['id', 'status', 'language', 'path', 'title', 'description', 'body', 'seo_title', 'seo_description']);
+		for (const p of pathsToTry) {
+			const hit = await query(p, fieldsMinimal);
+			if (hit) return hit;
+		}
+		return null;
 	}
 }
 
