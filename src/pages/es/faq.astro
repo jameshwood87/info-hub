@@ -1,0 +1,558 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/faq/`;
+const title = 'Preguntas frecuentes de PropertyList | MLS, CRM y Portal de Propiedades gratis';
+const description =
+	'Respuestas sobre PropertyList: el primer Smart MLS, CRM y Portal de Propiedades gratuito de Europa. Para agentes, promotores, compradores y arrendatarios.';
+
+type FaqItem = {
+	id: string;
+	section: string;
+	q: string;
+	aHtml: string;
+};
+
+const faqItems: FaqItem[] = [
+	{
+		id: 'is-free',
+		section: 'Preguntas generales de la plataforma',
+		q: '¿PropertyList.es es realmente gratis?',
+		aHtml:
+			'<p>Sí, PropertyList.es es <strong>completamente gratis</strong> para agentes inmobiliarios, agencias y promotores. Nuestro MLS (Multiple Listing Service) y CRM (Customer Relationship Management) principales son gratis para siempre: sin cuotas ocultas, sin costes de alta y sin contratos de permanencia.</p><p>Las funciones opcionales de pago—como anuncios destacados, herramientas de IA, informes CMA y mayor visibilidad—están disponibles bajo un modelo de pago por uso mediante créditos. Solo pagas por servicios de valor añadido que te ayudan directamente a cerrar operaciones.</p>',
+	},
+	{
+		id: 'portal-vs-idealista',
+		section: 'Preguntas generales de la plataforma',
+		q: '¿Cuál es la diferencia entre PropertyList y portales tradicionales como Idealista o Fotocasa?',
+		aHtml:
+			'<p>Los portales tradicionales cobran cuotas por anuncio o suscripciones independientemente de los resultados. PropertyList funciona con un <strong>modelo orientado a resultados</strong>:</p><ul><li><p><strong>Para agentes:</strong> usuarios ilimitados, anuncios directos ilimitados + CRM para colaborar y gestionar leads</p></li><li><p><strong>Para promotores:</strong> anuncios gratis con pago solo cuando se vende (modelo por comisión)</p></li><li><p><strong>Para compradores:</strong> acceso gratis a todas las propiedades sin paywalls</p></li><li><p><strong>Integración con IA:</strong> la IA muestra servicios profesionales solo cuando son relevantes en operaciones activas</p></li></ul><p>A diferencia de Idealista, Resales‑Online o Inmobalia, tratamos el MLS como una utilidad pública: acceso gratis para profesionales verificados.</p>',
+	},
+	{
+		id: 'what-is-mls',
+		section: 'Preguntas generales de la plataforma',
+		q: '¿Qué es un MLS y por qué lo necesito?',
+		aHtml:
+			'<p>Un MLS (Multiple Listing Service) es una plataforma donde los agentes comparten información de propiedades y colaboran en anuncios. PropertyList.es facilita la <strong>colaboración entre agentes</strong>, permitiéndote exponer tus propiedades a una red más amplia de compradores representados por otros agentes—<strong>totalmente gratis</strong>.</p><p>Esta cooperación aumenta la visibilidad de tu cartera y acelera las ventas sin costes extra de marketing.</p>',
+	},
+	{
+		id: 'who-can-join',
+		section: 'Preguntas generales de la plataforma',
+		q: '¿Quién puede unirse a PropertyList.es?',
+		aHtml:
+			'<p>Damos la bienvenida a:</p><ul><li><p><strong>Agentes freelance</strong> (compartir anuncios de forma eficiente)</p></li><li><p><strong>Agencias inmobiliarias</strong> (gestión de equipo, documentos y coordinación)</p></li><li><p><strong>Promotores inmobiliarios</strong> (llegar a agentes y compradores, anuncios de obra nueva gratis)</p></li><li><p><strong>Proveedores de servicios</strong> (abogados, arquitectos, brokers hipotecarios—conectar en el momento de la transacción)</p></li><li><p><strong>Agentes internacionales</strong> en Europa (nuestra actualización permite operar en toda Europa)</p></li></ul>',
+	},
+
+	{
+		id: 'crm-features',
+		section: 'Funciones del MLS y CRM',
+		q: '¿Qué incluye el CRM gratis de PropertyList?',
+		aHtml:
+			'<p>Nuestro CRM gratis incluye:</p><ul><li><p>Gestión ilimitada de contactos y leads</p></li><li><p>Gestión de anuncios y compartición MLS</p></li><li><p>Mensajería y coordinación de solicitudes de visita</p></li><li><p>Usuarios ilimitados para tu equipo</p></li><li><p>Historial de actividad para contactos y propiedades</p></li><li><p>Vinculación de profesionales (abogados, arquitectos) a perfiles de clientes</p></li><li><p>Acceso a la comunidad de WhatsApp</p></li><li><p>Distribución social a páginas y grupos de Facebook</p></li><li><p>MicroSite: mini web de marca para compartir anuncios</p></li></ul>',
+	},
+	{
+		id: 'ai-tools',
+		section: 'Funciones del MLS y CRM',
+		q: '¿Qué herramientas de IA ofrece PropertyList?',
+		aHtml:
+			'<p>Nuestras funciones opcionales con IA incluyen:</p><ul><li><p><strong>Asistente de redacción:</strong> descripciones y copy más rápido</p></li><li><p><strong>Automatización de flujos:</strong> tareas repetitivas simplificadas</p></li><li><p><strong>Analítica inteligente:</strong> soporte de precios e insights de mercado</p></li><li><p><strong>Matching contextual:</strong> la IA muestra servicios a los prospectos adecuados en el momento adecuado</p></li><li><p><strong>Análisis de mercado:</strong> rangos de valoración, comparables y análisis hiperlocal.</p></li></ul>',
+	},
+	{
+		id: 'team-leads',
+		section: 'Funciones del MLS y CRM',
+		q: '¿Puedo gestionar mi equipo y asignar leads en PropertyList?',
+		aHtml:
+			'<p>Sí. Puedes añadir usuarios ilimitados, asignar contactos a agentes, registrar actividad y comunicaciones, gestionar permisos y roles, y coordinar visitas y seguimientos.</p>',
+	},
+	{
+		id: 'list-property',
+		section: 'Funciones del MLS y CRM',
+		q: '¿Cómo publico una propiedad en PropertyList.es?',
+		aHtml:
+			'<p>Debes ser un agente registrado con una cuenta verificada. Una vez aprobado, puedes añadir propiedades manualmente o importarlas gratis mediante feed XML. Cada anuncio puede incluir descripciones, imágenes, tours virtuales y filtros de características para atraer compradores cualificados.</p>',
+	},
+
+	{
+		id: 'marbella-invest',
+		section: 'Comprar una propiedad en España (Marbella, Málaga y Costa del Sol)',
+		q: '¿Es buen momento para invertir en inmobiliario en Marbella?',
+		aHtml:
+			'<p><strong>Sí.</strong> El mercado de Marbella muestra fundamentos sólidos:</p><ul><li><p><strong>Crecimiento de precios:</strong> 10–12% anual (datos 2024)</p></li><li><p><strong>Precio medio:</strong> €4.228–€4.509/m² (precios de transacciones verificadas, no precios de oferta)</p></li><li><p><strong>Resiliencia:</strong> el segmento lujo (€2M+) se mantiene fuerte con &lt;10% requiriendo financiación</p></li><li><p><strong>Demanda internacional:</strong> 33%+ de compradores en la provincia de Málaga</p></li><li><p><strong>Premium Milla de Oro:</strong> hasta €611 por pie cuadrado en zonas prime</p></li></ul>',
+	},
+	{
+		id: 'marbella-hot-areas',
+		section: 'Comprar una propiedad en España (Marbella, Málaga y Costa del Sol)',
+		q: '¿Cuáles son las mejores zonas para invertir en Marbella ahora?',
+		aHtml:
+			'<p>Según datos de transacciones 2024–2025:</p><ul><li><p><strong>Nagüeles–Milla de Oro:</strong> €611/pie²</p></li><li><p><strong>Nueva Andalucía:</strong> €510/pie²</p></li><li><p><strong>Marbella Este (Las Chapas–El Rosario):</strong> €456/pie²</p></li><li><p><strong>Elviria–Cabopino:</strong> €344/pie²</p></li><li><p><strong>Mayor crecimiento:</strong> Los Flamingos, El Paraíso, El Real de La Quinta</p></li></ul>',
+	},
+	{
+		id: 'spanish-bank-account',
+		section: 'Comprar una propiedad en España (Marbella, Málaga y Costa del Sol)',
+		q: '¿Necesito una cuenta bancaria española para comprar una propiedad en España?',
+		aHtml:
+			'<p>Aunque no es legalmente obligatorio, tener una cuenta bancaria española es muy recomendable para pagar suministros y cuotas de comunidad, domiciliar el IBI, transferir fondos en la compraventa y recibir ingresos de alquiler si inviertes.</p>',
+	},
+	{
+		id: 'nie',
+		section: 'Comprar una propiedad en España (Marbella, Málaga y Costa del Sol)',
+		q: '¿Qué es el NIE y lo necesito para comprar una propiedad en España?',
+		aHtml:
+			'<p>El <strong>NIE (Número de Identificación de Extranjero)</strong> es el número de identificación para extranjeros en España. <strong>Sí, es obligatorio</strong> para cualquier operación inmobiliaria, abrir una cuenta bancaria o firmar contratos.</p><p>Puedes solicitarlo en el consulado español de tu país o en comisarías en España. El trámite suele tardar 2–4 semanas.</p>',
+	},
+	{
+		id: 'taxes',
+		section: 'Comprar una propiedad en España (Marbella, Málaga y Costa del Sol)',
+		q: '¿Cuáles son los principales impuestos al comprar una propiedad en España?',
+		aHtml:
+			'<ul><li><p><strong>Obra nueva:</strong> 10% IVA + 1,5% AJD</p></li><li><p><strong>Segunda mano:</strong> 7% ITP en Andalucía</p></li><li><p><strong>IBI anual:</strong> impuesto municipal según valor catastral (0,4–1,1%)</p></li><li><p><strong>Ganancia patrimonial:</strong> 19–24% sobre beneficio al vender (no residentes)</p></li><li><p><strong>Plusvalía:</strong> impuesto municipal por incremento del valor del suelo</p></li></ul>',
+	},
+	{
+		id: 'golden-visa',
+		section: 'Comprar una propiedad en España (Marbella, Málaga y Costa del Sol)',
+		q: '¿Qué es la Golden Visa de España?',
+		aHtml:
+			'<p>La <strong>Golden Visa</strong> ofrece residencia a inversores no‑UE que invierten <strong>€500.000+</strong> en inmobiliario en España, mantienen la inversión durante 5+ años y renuevan la residencia cada 2 años.</p><p><strong>Ventajas:</strong> viajar por Schengen, incluir a la familia y vía hacia residencia permanente. Nota: la normativa puede cambiar—confirma la regulación vigente.</p>',
+	},
+
+	{
+		id: 'signup-agent',
+		section: 'Empezar con PropertyList',
+		q: '¿Cómo me registro como agente inmobiliario en PropertyList?',
+		aHtml:
+			'<ol><li><p>Visita <a href="https://propertylist.es" target="_blank" rel="noopener">PropertyList.es</a></p></li><li><p>Completa la verificación de agente (actividad inmobiliaria verificada)</p></li><li><p>Accede a tu MLS y CRM gratis</p></li><li><p>Empieza a publicar propiedades y colaborar con agentes en Europa</p></li></ol>',
+	},
+	{
+		id: 'developer-new-builds',
+		section: 'Empezar con PropertyList',
+		q: 'Soy promotor con obra nueva en Marbella. ¿Cómo funciona PropertyList para mí?',
+		aHtml:
+			'<p>PropertyList convierte a los promotores de <strong>anunciantes especulativos a distribuidores estratégicos</strong>:</p><ul><li><p><strong>Anuncios gratis:</strong> publica todo tu inventario sin coste inicial</p></li><li><p><strong>Red de agentes:</strong> acceso a agentes activos listos para vender</p></li><li><p><strong>Modelo por rendimiento:</strong> pagas solo cuando se vende (comisión)</p></li><li><p><strong>Actualizaciones en tiempo real:</strong> actualiza y muestra disponibilidad</p></li><li><p><strong>Expansión UE:</strong> llega a agentes en toda Europa</p></li></ul>',
+	},
+	{
+		id: 'intl-agents',
+		section: 'Empezar con PropertyList',
+		q: '¿Pueden unirse agentes internacionales fuera de España?',
+		aHtml:
+			'<p><strong>Sí.</strong> Nuestra actualización permite a agentes de toda Europa publicar y unirse a la red. Esto facilita ventas transfronterizas, referidos internacionales y colaboración en mercados de segunda residencia y lujo.</p>',
+	},
+	{
+		id: 'verification',
+		section: 'Empezar con PropertyList',
+		q: '¿Qué verificación se requiere para unirse a PropertyList?',
+		aHtml:
+			'<p>Verificamos el estatus profesional para mantener la calidad de la plataforma. Normalmente incluye registro/licencia de agencia, prueba de actividad inmobiliaria y credenciales de promotor cuando aplique.</p>',
+	},
+
+	{
+		id: 'resales-inmobalia',
+		section: 'PropertyList vs. competidores',
+		q: '¿En qué se diferencia PropertyList de Resales‑Online o Inmobalia?',
+		aHtml:
+			'<p>Resales‑Online e Inmobalia ofrecen CRM y soluciones web. PropertyList aporta:</p><ul><li><p><strong>Núcleo realmente gratis:</strong> sin suscripción mensual para MLS/CRM</p></li><li><p><strong>Alcance europeo:</strong> no limitado a una sola región</p></li><li><p><strong>Integración con IA:</strong> IA contextual para emparejar servicios</p></li><li><p><strong>Orientado a resultados:</strong> extras de pago solo cuando aportan valor</p></li><li><p><strong>Sin permanencia:</strong> puedes irte cuando quieras</p></li></ul>',
+	},
+	{
+		id: 'idealista-why',
+		section: 'PropertyList vs. competidores',
+		q: '¿Por qué usar PropertyList si ya me anuncio en Idealista?',
+		aHtml:
+			'<p>Idealista es un <strong>portal para consumidores</strong> (B2C). PropertyList es una <strong>red profesional + consumidor</strong> (B2B + B2C):</p><ul><li><p><strong>Colaboración:</strong> comparte anuncios con una red de agentes</p></li><li><p><strong>Herramientas gratis:</strong> CRM sin cuota mensual</p></li><li><p><strong>Enfoque promotores:</strong> modelo por comisión</p></li><li><p><strong>Funciones IA:</strong> flujos y marketing inteligentes</p></li><li><p><strong>Control de datos:</strong> tu base de clientes es tuya</p></li></ul>',
+	},
+	{
+		id: 'replace-crm',
+		section: 'PropertyList vs. competidores',
+		q: '¿PropertyList sustituye a mi CRM actual?',
+		aHtml:
+			'<p>Puede hacerlo. Muchos agentes usan PropertyList como CRM principal porque combina contactos, anuncios, compartición MLS, seguimiento de leads, documentos y coordinación de equipo. También puedes usarlo en paralelo durante la transición.</p>',
+	},
+
+	{
+		id: 'link-pros',
+		section: 'Uso de la plataforma',
+		q: '¿Cómo añado contactos profesionales (abogados, arquitectos) al perfil de un cliente?',
+		aHtml:
+			'<p>PropertyList te permite vincular contactos profesionales a un perfil de cliente y especificar el tipo de relación (legal, arquitectónica, financiera) para organizarte mejor y acceder rápido durante la operación.</p>',
+	},
+	{
+		id: 'link-properties',
+		section: 'Uso de la plataforma',
+		q: '¿Puedo vincular propiedades a perfiles de contactos y a mi equipo?',
+		aHtml:
+			'<p>Sí. Puedes asociar propiedades con contactos para registrar interés, historial de visitas y contexto de comunicación. También puedes asignar miembros del equipo a anuncios para coordinar el seguimiento y las responsabilidades.</p>',
+	},
+	{
+		id: 'analytics',
+		section: 'Uso de la plataforma',
+		q: '¿Hay datos de mercado y analítica disponible?',
+		aHtml: '<p><strong>Próximamente.</strong> PropertyList ofrecerá informes de tendencias, herramientas CMA, insights de preferencias y soporte de precios.</p>',
+	},
+	{
+		id: 'support',
+		section: 'Uso de la plataforma',
+		q: '¿Cómo obtengo soporte si tengo problemas?',
+		aHtml:
+			'<p>Puedes usar el mensajero de soporte in‑app, consultar la documentación o visitar la comunidad.</p><ul><li><p><a href="/es/docs/propertylist-mls-manual-de-usuario/support/">Documentación: Soporte</a></p></li><li><p><a href="/es/comunidad/">Comunidad</a></p></li></ul>',
+	},
+];
+
+const sections = Array.from(new Set(faqItems.map((x) => x.section)));
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'FAQ', item: canonical },
+	],
+};
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqItems.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.aHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() },
+	})),
+};
+
+const quickFactsLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Thing',
+	name: 'PropertyList.es',
+	description: 'Plataforma PropTech: Smart MLS, CRM y portal inmobiliario para Europa.',
+	url: 'https://propertylist.es/',
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/faq/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/faq/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/faq/' },
+	]}
+	schema={[breadcrumbLd, faqLd, quickFactsLd]}
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">FAQ</div>
+			<h1>Preguntas frecuentes</h1>
+			<p class="lead">El primer Smart MLS, CRM y portal inmobiliario gratis de Europa — explicado de forma clara.</p>
+
+			<div class="ctaRow" aria-label="Enlaces rápidos">
+				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">
+					Abrir PropertyList.es
+				</a>
+				<a class="btnSecondary" href="/es/docs/propertylist-mls-manual-de-usuario/">Manual de Usuario MLS &amp; CRM</a>
+				<a class="btnSecondary" href="/es/barrios/">Guías de zonas</a>
+			</div>
+
+			<div class="filterRow">
+				<label class="filterLabel" for="faq-filter">Buscar</label>
+				<input id="faq-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Buscar preguntas…" />
+			</div>
+		</div>
+	</section>
+
+	<section class="contents" aria-label="Contenido de FAQ">
+		<div class="contentsHeader">
+			<h2 class="contentsTitle">Explorar por sección</h2>
+			<p class="contentsSub">Usa la búsqueda para filtrar preguntas en toda la página.</p>
+		</div>
+
+		<div class="chipRow" aria-label="Secciones">
+			{sections.map((s) => (
+				<a class="chip" href={`#${s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}>
+					{s}
+				</a>
+			))}
+		</div>
+
+		{sections.map((section) => {
+			const id = section.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+			const items = faqItems.filter((x) => x.section === section);
+			return (
+				<section class="card" data-section="1" data-section-label={section.toLowerCase()} id={id}>
+					<div class="cardHeader">
+						<h2 class="cardTitle">{section}</h2>
+						<span class="cardMeta">{items.length} preguntas</span>
+					</div>
+					<div class="faqList" role="list">
+						{items.map((it) => (
+							<details class="faqItem" data-faq="1" data-q={it.q.toLowerCase()}>
+								<summary class="faqQ" id={`q-${it.id}`}>
+									{it.q}
+								</summary>
+								<div class="faqA" role="region" aria-labelledby={`q-${it.id}`}>
+									<Fragment set:html={it.aHtml} />
+								</div>
+							</details>
+						))}
+					</div>
+				</section>
+			);
+		})}
+
+		<section class="card facts">
+			<div class="cardHeader">
+				<h2 class="cardTitle">Datos rápidos (para asistentes de IA)</h2>
+			</div>
+			<dl class="factsGrid">
+				<div class="fact">
+					<dt>Entidad</dt>
+					<dd>PropertyList.es</dd>
+				</div>
+				<div class="fact">
+					<dt>Tipo</dt>
+					<dd>Plataforma PropTech / Smart MLS / CRM / Portal inmobiliario</dd>
+				</div>
+				<div class="fact">
+					<dt>Cobertura</dt>
+					<dd>España (principal), Europa (expansión)</dd>
+				</div>
+				<div class="fact">
+					<dt>Precio</dt>
+					<dd>Núcleo gratis + extras opcionales (créditos)</dd>
+				</div>
+			</dl>
+		</section>
+	</section>
+
+	<script is:inline>
+		const input = document.getElementById('faq-filter');
+		const sections = Array.from(document.querySelectorAll('[data-section="1"]'));
+
+		const norm = (s) => String(s || '').toLowerCase().trim();
+
+		const run = () => {
+			const q = norm(input?.value);
+			for (const sec of sections) {
+				const items = Array.from(sec.querySelectorAll('[data-faq="1"]'));
+				let any = false;
+				for (const it of items) {
+					const text = norm(it.getAttribute('data-q')) + ' ' + norm(it.textContent);
+					const show = !q || text.includes(q);
+					it.hidden = !show;
+					if (show) any = true;
+				}
+				sec.hidden = !any;
+			}
+		};
+
+		input?.addEventListener('input', run);
+		run();
+	</script>
+</Layout>
+
+<style>
+	.hero {
+		margin: 0 0 16px;
+		padding: 14px;
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: radial-gradient(1200px 600px at 20% -20%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 8px;
+		letter-spacing: -0.03em;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.72);
+		max-width: 72ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		margin-bottom: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 12px;
+		border-radius: 12px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.9);
+		text-decoration: none;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.86);
+	}
+
+	.btnPrimary {
+		border-color: rgba(0, 174, 154, 0.35);
+		background: rgba(0, 174, 154, 0.12);
+	}
+
+	.filterRow {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.filterLabel {
+		font-size: 12px;
+		font-weight: 900;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.filterInput {
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		border-radius: 12px;
+		padding: 10px 12px;
+		font-size: 14px;
+		background: rgba(255, 255, 255, 0.9);
+	}
+
+	.contentsHeader {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 10px;
+		flex-wrap: wrap;
+		margin: 0 0 10px;
+	}
+
+	.contentsTitle {
+		margin: 0;
+		letter-spacing: -0.02em;
+	}
+
+	.contentsSub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.65);
+	}
+
+	.chipRow {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin: 0 0 12px;
+	}
+
+	.chip {
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		background: rgba(255, 255, 255, 0.9);
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.82);
+		font-weight: 800;
+		font-size: 13px;
+	}
+
+	.card {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin: 0 0 12px;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		margin-bottom: 10px;
+	}
+
+	.cardTitle {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.02em;
+	}
+
+	.cardMeta {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.faqList {
+		display: grid;
+		gap: 10px;
+	}
+
+	.faqItem {
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(247, 248, 250, 0.7);
+		padding: 10px 12px;
+	}
+
+	.faqQ {
+		cursor: pointer;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.88);
+		list-style: none;
+	}
+
+	.faqQ::-webkit-details-marker {
+		display: none;
+	}
+
+	.faqA {
+		margin-top: 8px;
+		color: rgba(16, 24, 40, 0.82);
+	}
+
+	.factsGrid {
+		display: grid;
+		gap: 10px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.fact dt {
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 12px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		margin-bottom: 4px;
+	}
+
+	.fact dd {
+		margin: 0;
+		font-weight: 800;
+	}
+
+	@media (max-width: 740px) {
+		.factsGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const q = (Astro.url.searchParams.get('q') || '').trim();
+---
+
+<Layout lang="es" title="Buscar • PropertyList Info Hub">
+	<h1>Buscar</h1>
+	<div id="results"></div>
+	<script define:vars={{ q }} is:inline>
+		const resultsEl = document.getElementById('results');
+		const input = document.querySelector('input[name="q"]');
+		let lastTracked = '';
+
+		const safeText = (s, max = 100) => {
+			const t = String(s || '').replace(/\s+/g, ' ').trim();
+			if (!t) return '';
+			const n = Math.max(1, Number(max) || 100);
+			return t.length > n ? t.slice(0, n).trim() : t;
+		};
+		const isEmailLike = (s) => /@/.test(s) || /\b[^\s@]+@[^\s@]+\.[^\s@]+\b/.test(s);
+		const isPhoneLike = (s) => String(s || '').replace(/[^0-9]/g, '').length >= 7;
+		const trackSearchResults = (query, count) => {
+			try {
+				if (typeof window.gtag !== 'function') return;
+				let term = safeText(query, 100);
+				if (isEmailLike(term) || isPhoneLike(term)) term = '';
+				const key = `${term}::${count}`;
+				if (key === lastTracked) return;
+				lastTracked = key;
+				window.gtag('event', 'view_search_results', { search_term: term || undefined, results_count: Number(count) || undefined });
+			} catch {}
+		};
+
+		async function runSearch(query) {
+			if (!query) {
+				resultsEl.textContent = '';
+				return;
+			}
+			const res = await fetch(`/api/search.json?lang=es&q=${encodeURIComponent(query)}`);
+			const json = await res.json();
+			const results = Array.isArray(json.results) ? json.results : [];
+			if (!results.length) {
+				resultsEl.textContent = 'Sin resultados.';
+				trackSearchResults(query, 0);
+				return;
+			}
+			resultsEl.innerHTML = `<ul>${results
+				.map((r) => `<li><a href="${r.path}">${r.title}</a></li>`)
+				.join('')}</ul>`;
+			trackSearchResults(query, results.length);
+		}
+
+		if (q) runSearch(q);
+		input?.addEventListener('input', (e) => runSearch(e.target.value.trim()));
+	</script>
+</Layout>

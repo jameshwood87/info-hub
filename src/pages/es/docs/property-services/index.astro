@@ -1,0 +1,75 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+---
+
+<Layout
+	lang="es"
+	title="Docs de servicios inmobiliarios • PropertyList Info Hub"
+	description="Guías y documentación para profesionales de servicios inmobiliarios."
+	canonical="https://info.propertylist.es/es/docs/property-services/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/docs/property-services/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/docs/property-services/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/docs/property-services/' },
+	]}
+>
+	<h1>Docs de servicios inmobiliarios</h1>
+	<p class="sub">Guías y documentación para profesionales de servicios inmobiliarios.</p>
+
+	<div class="cta">
+		<a class="button" href="/es/docs/?role=property-service">Ver documentación</a>
+		<a class="link" href="/es/docs/">Volver a Docs</a>
+	</div>
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.cta {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 14px;
+		border-radius: 12px;
+		background: #00ae9a;
+		color: #fff;
+		text-decoration: none;
+		font-weight: 600;
+	}
+
+	.button:hover {
+		text-decoration: none;
+		background: #009c8a;
+	}
+
+	.link {
+		display: inline-flex;
+		align-items: center;
+		padding: 10px 12px;
+		border-radius: 12px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		color: rgba(16, 24, 40, 0.9);
+		text-decoration: none;
+	}
+
+	.link:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+</style>

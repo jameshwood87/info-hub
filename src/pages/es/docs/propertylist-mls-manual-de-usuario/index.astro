@@ -1,0 +1,765 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { listKbPagesByPrefixes, mapDocsEnglishToSpanishPath } from '../../../../lib/directus';
+import { getKbTreeOrderSnapshot, sortPathsWithOrder } from '../../../../lib/kbTreeOrder';
+
+const baseEn = '/docs/propertylist-mls-user-manual/';
+const base = mapDocsEnglishToSpanishPath(baseEn);
+const aiAgentExternalHref = 'https://ai.propertylist.es/how-it-works';
+const externalHrefForDocPath = (p: string) => {
+	const s = String(p || '');
+	if (s.includes('/property-research-agent/')) return aiAgentExternalHref;
+	if (s.includes('/ai-property-research-agent/')) return aiAgentExternalHref;
+	return null;
+};
+
+const titleCase = (s: string) =>
+	s
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase());
+
+const labelFor = (seg: string) => {
+	const map: Record<string, string> = {
+		'getting-started': 'Empezar',
+		'listing-a-property': 'Publicar una propiedad',
+		'managing-listings': 'Gestionar anuncios',
+		'marketing-and-promotion': 'Marketing y promoción',
+		'tracking-listing-exposure': 'Seguimiento de exposición',
+		'searching-for-properties': 'Buscar propiedades',
+		'managing-your-leads': 'Leads',
+		'reports-and-statistics': 'Informes y estadísticas',
+		'documents': 'Documentos',
+		'requests': 'Solicitudes',
+		'sales-pipeline-tracking': 'Pipeline de ventas',
+		'calendar': 'Calendario',
+		'how-to-use-the-calendar': 'Calendario',
+		'mls-property-alerts': 'Alertas de propiedades',
+		'mls-user-manual': 'Guía del MLS',
+		'ai-and-automation': 'IA y automatización',
+		'ai-ezd_ampersand-automation': 'IA y automatización',
+		'ai-automation': 'IA y automatización',
+		'technical-documentation': 'Documentación técnica',
+		'security': 'Seguridad',
+		'verified-agency': 'Agencia verificada',
+		'your-account': 'Tu cuenta',
+		'credits': 'Créditos',
+		'new-developments': 'Obra nueva',
+		'new-features-roadmap': 'Novedades y hoja de ruta',
+		'faq-mls': 'Preguntas frecuentes (MLS)',
+		'faq-mls-crm': 'Preguntas frecuentes (MLS y CRM)',
+		'additional-resources': 'Recursos adicionales',
+		'microsite-share': 'MicroSite y compartir',
+		'contacts-crm': 'Contactos',
+	};
+	return map[seg] || titleCase(seg);
+};
+
+const cleanTitle = (t: string) => String(t || '').trim();
+
+const topTaskIcons = {
+	listing:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z" stroke="currentColor" stroke-width="1.7" /><path d="M12 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M9 14h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	search:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 18.5a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="1.7" /><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	leads:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.8 20.5c0-2.7-2-4.4-4.8-4.4s-4.8 1.7-4.8 4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M12 13.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" /></svg>',
+	report:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z" stroke="currentColor" stroke-width="1.7" /><path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.7" /><path d="M8.5 12.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M8.5 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	app:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2.75h8A2.25 2.25 0 0 1 18.25 5v14A2.25 2.25 0 0 1 16 21.25H8A2.25 2.25 0 0 1 5.75 19V5A2.25 2.25 0 0 1 8 2.75Z" stroke="currentColor" stroke-width="1.7" /><path d="M10 18.5h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>',
+	defaultIcon:
+		'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z" stroke="currentColor" stroke-width="1.7" /><path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.7" /></svg>',
+};
+
+const iconForTopTask = (path: string) => {
+	const p = String(path || '');
+	if (p.includes('/listing-a-property')) return topTaskIcons.listing;
+	if (p.includes('/searching-for-properties')) return topTaskIcons.search;
+	if (p.includes('/portal-leads') || p.includes('/leads')) return topTaskIcons.leads;
+	if (p.includes('/reports') || p.includes('report') || p.includes('informe')) return topTaskIcons.report;
+	if (p.includes('/download-app')) return topTaskIcons.app;
+	return topTaskIcons.defaultIcon;
+};
+
+type Node = {
+	key: string;
+	path: string;
+	esPath: string;
+	seg: string;
+	title: string;
+	description: string | null;
+	children: Node[];
+	hasPage: boolean;
+};
+
+const normalisePath = (p: string) => {
+	const raw = String(p || '').trim();
+	if (!raw) return '';
+	const withSlash = raw.startsWith('/') ? raw : `/${raw}`;
+	const noQuery = withSlash.split('?')[0]!.split('#')[0]!;
+	const cleaned = noQuery.replace(/\/{2,}/g, '/');
+	return cleaned.endsWith('/') ? cleaned : `${cleaned}/`;
+};
+
+const shouldHideFromManualIndex = (p: { path: string; title: string }) => {
+	const title = String(p.title || '').toLowerCase();
+	const path = String(p.path || '').toLowerCase();
+	if (title.includes('wp plugin (customisable)')) return true;
+	if (title.includes('developers pre-sign up')) return true;
+	if (path.includes('wp-plugin')) return true;
+	if (path.includes('pre-sign')) return true;
+	return false;
+};
+
+type KbListItem = { path: string; title: string; description?: string | null };
+
+const itemsEnRaw = await listKbPagesByPrefixes({ prefixes: [baseEn], lang: 'en', limit: 2000 });
+const itemsEsRaw = await listKbPagesByPrefixes({ prefixes: [base], lang: 'es', limit: 2000 });
+
+const itemsEn: KbListItem[] = itemsEnRaw
+	.map((p) => ({ path: normalisePath(p.path), title: cleanTitle(p.title), description: p.description ?? null }))
+	.filter((p) => p.path.startsWith(baseEn))
+	.filter((p) => !shouldHideFromManualIndex(p));
+
+const itemsEs: KbListItem[] = itemsEsRaw
+	.map((p) => ({ path: normalisePath(p.path), title: cleanTitle(p.title), description: p.description ?? null }))
+	.filter((p) => p.path.startsWith(base))
+	.filter((p) => !shouldHideFromManualIndex(p));
+
+const esByPath = new Map(itemsEs.map((p) => [p.path, p]));
+
+const treeOrder = await getKbTreeOrderSnapshot();
+
+const addWithAncestors = (p: string, set: Set<string>) => {
+	const path = normalisePath(p);
+	if (!path.startsWith(baseEn)) return;
+	set.add(path);
+	const rest = path.slice(baseEn.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = baseEn;
+	for (const seg of parts.slice(0, -1)) {
+		acc += `${seg}/`;
+		set.add(acc);
+	}
+};
+
+const allPaths = (() => {
+	const s = new Set<string>();
+	s.add(baseEn);
+	for (const p of itemsEn) addWithAncestors(p.path, s);
+	for (const [parent, kids] of Object.entries(treeOrder.parentChildren || {})) {
+		if (!String(parent || '').startsWith(baseEn)) continue;
+		addWithAncestors(String(parent || ''), s);
+		for (const k of Array.isArray(kids) ? kids : []) addWithAncestors(String(k || ''), s);
+	}
+	for (const [child, parent] of Object.entries(treeOrder.parentOverride || {})) {
+		if (String(child || '').startsWith(baseEn)) addWithAncestors(String(child || ''), s);
+		if (String(parent || '').startsWith(baseEn)) addWithAncestors(String(parent || ''), s);
+	}
+	return s;
+})();
+
+const nodesByPath = new Map<string, Node>();
+const ensureNode = (enPath: string, seg: string) => {
+	const key = normalisePath(enPath);
+	if (!key || !key.startsWith(baseEn)) return null;
+	const existing = nodesByPath.get(key) || null;
+	if (existing) return existing;
+	const esPath = normalisePath(mapDocsEnglishToSpanishPath(key));
+	const node: Node = { key, path: key, esPath, seg, title: '', description: null, children: [], hasPage: false };
+	nodesByPath.set(key, node);
+	return node;
+};
+
+ensureNode(baseEn, '');
+for (const p of allPaths) {
+	const rest = p.slice(baseEn.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = baseEn;
+	let lastSeg = '';
+	for (const seg of parts) {
+		lastSeg = seg;
+		acc += `${seg}/`;
+		ensureNode(acc, seg);
+	}
+	ensureNode(p, lastSeg);
+}
+
+const pagesByEnPath = new Map(itemsEn.map((p) => [p.path, p]));
+
+const depthFromBase = (p: string) => normalisePath(p).slice(baseEn.length).split('/').filter(Boolean).length;
+
+for (const node of nodesByPath.values()) {
+	if (node.path === baseEn) {
+		node.title = 'Manual de Usuario MLS & CRM';
+		continue;
+	}
+	const es = esByPath.get(node.esPath) || null;
+	if (es) {
+		node.title = es.title;
+		node.description = es.description ? String(es.description) : null;
+		node.hasPage = true;
+		continue;
+	}
+	const hitEn = pagesByEnPath.get(node.path) || null;
+	const d = depthFromBase(node.path);
+	if (hitEn && d > 1) {
+		node.title = titleCase(node.seg);
+		continue;
+	}
+	if (!node.title && node.seg) node.title = d === 1 ? labelFor(node.seg) : titleCase(node.seg);
+	if (!node.title) node.title = 'Manual de Usuario MLS & CRM';
+}
+
+const derivedParent = (p: string) => {
+	const path = normalisePath(p);
+	if (path === baseEn) return '';
+	const rest = path.slice(baseEn.length);
+	const parts = rest.split('/').filter(Boolean);
+	if (!parts.length) return '';
+	if (parts.length === 1) return baseEn;
+	return `${baseEn}${parts.slice(0, -1).join('/')}/`;
+};
+
+const effectiveParent = (p: string) => {
+	const key = normalisePath(p);
+	const explicit = (treeOrder.parentOverride || {})[key] || '';
+	const explicitKey = explicit ? normalisePath(String(explicit)) : '';
+	if (explicitKey && explicitKey.startsWith(baseEn)) return explicitKey;
+	return derivedParent(key);
+};
+
+const kidsByParent = new Map<string, string[]>();
+for (const p of nodesByPath.keys()) {
+	if (p === baseEn) continue;
+	const parent = effectiveParent(p);
+	if (!parent || !parent.startsWith(baseEn)) continue;
+	const arr = kidsByParent.get(parent) || [];
+	arr.push(p);
+	kidsByParent.set(parent, arr);
+}
+
+const sortForParent = (parentPath: string, childPaths: string[]) => {
+	const orderList = (treeOrder.parentChildren?.[parentPath] || []).slice();
+	const fallbackCompare = (a: string, b: string) => {
+		const aNode = nodesByPath.get(a);
+		const bNode = nodesByPath.get(b);
+		return String(aNode?.title || '').localeCompare(String(bNode?.title || ''));
+	};
+	return sortPathsWithOrder({ parentPath, paths: childPaths, order: orderList, fallbackCompare }).ordered;
+};
+
+const buildChildren = (parentPath: string): Node[] => {
+	const childPaths = kidsByParent.get(parentPath) || [];
+	const sorted = sortForParent(parentPath, childPaths);
+	return sorted
+		.map((p) => nodesByPath.get(p) || null)
+		.filter(Boolean)
+		.map((n) => {
+			n!.children = buildChildren(n!.path);
+			return n!;
+		});
+};
+
+const manualRoot = nodesByPath.get(baseEn)!;
+manualRoot.children = buildChildren(baseEn);
+
+const topTasksResolved = (() => {
+	const picks: string[][] = [
+		['/empezar/', '/getting-started/'],
+		['/listing-a-property/'],
+		['/managing-listings/'],
+		['/portal-leads/', '/leads/'],
+		['/documents/'],
+		['/reports-and-statistics/'],
+	];
+	const pickByPathIncludes = (needles: string[]) => itemsEs.find((p) => needles.some((n) => p.path.includes(n))) || null;
+	const chosen: typeof itemsEs = [];
+	for (const needles of picks) {
+		const hit = pickByPathIncludes(needles);
+		if (hit && !chosen.some((c) => c.path === hit.path)) chosen.push(hit);
+	}
+	for (const item of itemsEs) {
+		if (chosen.length >= 6) break;
+		if (!chosen.some((c) => c.path === item.path)) chosen.push(item);
+	}
+	return chosen.slice(0, 6).map((p) => ({ path: p.path, title: p.title }));
+})();
+const topTasks = topTasksResolved;
+
+const root = manualRoot;
+
+const segmentDescriptions: Record<string, string> = {
+	'getting-started': 'Configura tu cuenta, instala la app y conoce lo básico.',
+	'listing-a-property': 'Publica anuncios, añade detalles y gestiona el anuncio.',
+	'managing-listings': 'Edita anuncios, actualiza estados y gestiona consultas.',
+	'marketing-and-promotion': 'Comparte y promociona anuncios en canales disponibles.',
+	'searching-for-properties': 'Encuentra propiedades con filtros, alertas y búsquedas guardadas.',
+	'managing-your-leads': 'Gestiona leads, cualifícalos y haz seguimiento.',
+	'contacts-crm': 'Organiza tu base de datos de contactos y relaciones.',
+	'requests': 'Gestiona solicitudes de información y visitas.',
+	'sales-pipeline-tracking': 'Haz seguimiento de operaciones de principio a fin.',
+	'calendar': 'Organiza citas, visitas y tareas.',
+	'how-to-use-the-calendar': 'Sincronización e integración del calendario.',
+	'reports-and-statistics': 'Crea informes y revisa rendimiento y tendencias.',
+	'documents': 'Sube, comparte y gestiona documentos.',
+	'tracking-listing-exposure': 'Mide visibilidad y rendimiento del anuncio.',
+	'mls-property-alerts': 'Configura alertas para compradores y agentes.',
+	'ai-and-automation': 'Automatiza flujos y usa funciones de IA.',
+	'ai-ezd_ampersand-automation': 'Automatiza flujos y usa funciones de IA.',
+	'ai-automation': 'Automatiza flujos y usa funciones de IA.',
+	'technical-documentation': 'Notas técnicas para integraciones y configuración.',
+	'security': 'Mantén las cuentas seguras y gestiona accesos.',
+	'verified-agency': 'Verifícate para generar confianza.',
+	'your-account': 'Gestiona perfil, empresa y preferencias.',
+	'credits': 'Entiende y gestiona el saldo de créditos.',
+	'new-developments': 'Información para obra nueva y promotores.',
+	'new-features-roadmap': 'Qué hay de nuevo y qué viene después.',
+	'faq-mls': 'Preguntas frecuentes y respuestas rápidas.',
+	'faq-mls-crm': 'Preguntas frecuentes sobre MLS y CRM.',
+	'microsite-share': 'Compartir propiedades con enlaces y microsites.',
+	'additional-resources': 'Materiales y recursos de apoyo.',
+	'mls-user-manual': 'Guías del panel e interfaz del MLS.',
+};
+
+type PageLink = { path: string; title: string };
+
+const listDescendantPages = (node: Node): PageLink[] => {
+	const out: PageLink[] = [];
+	const visit = (n: Node) => {
+		for (const c of n.children) {
+			if (c.hasPage) out.push({ path: c.esPath, title: c.title });
+			visit(c);
+		}
+	};
+	visit(node);
+	return out
+		.filter((p) => p.path !== node.esPath)
+		.sort((a, b) => a.title.localeCompare(b.title));
+};
+---
+
+<Layout
+	lang="es"
+	title="Manual de usuario MLS y CRM • PropertyList Info Hub"
+	description="Guías paso a paso para usar el MLS y el CRM de PropertyList."
+	canonical="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Manual</div>
+			<h1>MANUAL DE USUARIO MLS Y CRM</h1>
+			<p class="lead">
+				Guías paso a paso para usar PropertyList: anuncios, contactos, leads, documentos, informes y más. Usa el filtro para
+				encontrar rápidamente el flujo exacto que necesitas.
+			</p>
+			<div class="filterRow">
+				<label class="filterLabel" for="doc-filter">Filtrar</label>
+				<input
+					id="doc-filter"
+					class="filterInput"
+					type="search"
+					autocomplete="off"
+					spellcheck="false"
+					placeholder="Buscar en este manual…"
+				/>
+			</div>
+		</div>
+	</section>
+
+	{topTasks.length ? (
+		<section class="top">
+			<h2>Tareas populares</h2>
+			<div class="rows">
+				{topTasks.map((p) => (
+					<a
+						class="row"
+						href={externalHrefForDocPath(p.path) || p.path}
+						target={externalHrefForDocPath(p.path) ? '_blank' : undefined}
+						rel={externalHrefForDocPath(p.path) ? 'noopener' : undefined}
+					>
+						<div class="rowIcon" aria-hidden="true" set:html={iconForTopTask(p.path)} />
+						<div class="rowTitle">{cleanTitle(p.title)}</div>
+					</a>
+				))}
+			</div>
+		</section>
+	) : null}
+
+	<section class="contents" aria-label="Contenido del manual">
+		<div class="contentsHeader">
+			<h2 class="contentsTitle">Explorar por tema</h2>
+			<p class="contentsSub">Elige un tema y después una guía. Usa el filtro para buscar entre todos los temas.</p>
+		</div>
+		{root.children.length ? (
+			<div class="grid" data-grid="1">
+				{root.children.map((seg) => {
+					const pages = listDescendantPages(seg);
+					const featured = pages.slice(0, 8);
+					const remaining = pages.slice(8);
+					const label = (seg.title || '').toLowerCase();
+					const desc = segmentDescriptions[seg.seg] || 'Guías y flujos para este tema.';
+					const href = seg.hasPage ? seg.esPath : pages.length ? pages[0]!.path : base;
+					return (
+						<section class="card" data-card="1" data-label={label}>
+							<div class="cardHeader">
+								<a class="cardTitle" href={href}>
+									{seg.title}
+								</a>
+								<span class="cardMeta">{pages.length} guías</span>
+							</div>
+							<p class="cardDesc">{desc}</p>
+							{featured.length ? (
+								<ul class="list">
+									{featured.map((p) => (
+										<li data-node="1" data-label={p.title.toLowerCase()}>
+											<a
+												class="listRow"
+												href={externalHrefForDocPath(p.path) || p.path}
+												target={externalHrefForDocPath(p.path) ? '_blank' : undefined}
+												rel={externalHrefForDocPath(p.path) ? 'noopener' : undefined}
+											>
+												<span class="listRowTitle">{p.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<div class="emptySmall">Aún no hay guías.</div>
+							)}
+							{remaining.length ? (
+								<details class="more" data-more="1">
+									<summary class="moreSummary">Ver todo ({pages.length})</summary>
+									<ul class="list moreList">
+										{remaining.map((p) => (
+											<li data-node="1" data-label={p.title.toLowerCase()}>
+												<a
+													class="listRow"
+													href={externalHrefForDocPath(p.path) || p.path}
+													target={externalHrefForDocPath(p.path) ? '_blank' : undefined}
+													rel={externalHrefForDocPath(p.path) ? 'noopener' : undefined}
+												>
+													<span class="listRowTitle">{p.title}</span>
+												</a>
+											</li>
+										))}
+									</ul>
+								</details>
+							) : null}
+						</section>
+					);
+				})}
+			</div>
+		) : (
+			<div class="empty">Aún no hay documentación del MLS.</div>
+		)}
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	h2 {
+		margin: 0 0 12px;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.lead {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.filterRow {
+		margin-top: 12px;
+	}
+
+	.filterLabel {
+		display: block;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.7);
+		margin: 0 0 4px;
+	}
+
+	.filterInput {
+		width: min(360px, 100%);
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 8px;
+		padding: 8px 10px;
+		background: rgba(255, 255, 255, 0.9);
+		margin: 0 0 12px;
+	}
+
+	.top {
+		background: rgba(255, 255, 255, 0.7);
+		border-radius: 18px;
+		padding: 14px;
+		margin: 14px 0;
+	}
+
+	.rows {
+		display: grid;
+		gap: 10px;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.row {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 12px 14px;
+		text-decoration: none;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+		align-content: start;
+	}
+
+	.row:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.rowIcon {
+		width: 42px;
+		height: 42px;
+		border-radius: 14px;
+		display: grid;
+		place-items: center;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(0, 174, 154, 0.95);
+	}
+
+	.rowTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.92);
+	}
+
+	.contents {
+		background: rgba(255, 255, 255, 0.7);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.contentsHeader {
+		display: grid;
+		gap: 6px;
+		margin-bottom: 12px;
+	}
+
+	.contentsTitle {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.contentsSub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+		max-width: 75ch;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+		align-items: start;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 16px;
+		padding: 12px 12px;
+		display: grid;
+		gap: 10px;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.cardTitle {
+		color: #00ae9a;
+		text-decoration: none;
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		line-height: 1.2;
+	}
+
+	.cardTitle:visited {
+		color: #00ae9a;
+	}
+
+	.cardTitle:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+	}
+
+	.cardMeta {
+		font-size: 12px;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.6);
+		background: rgba(16, 24, 40, 0.05);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		padding: 4px 8px;
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+
+	.cardDesc {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.5;
+		font-weight: 650;
+	}
+
+	.list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 6px;
+	}
+
+	.listRow {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2px;
+		padding: 8px 10px;
+		border-radius: 12px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.9);
+		text-decoration: none;
+	}
+
+	.listRow:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.listRowTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.9);
+	}
+
+	.more {
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		padding-top: 10px;
+	}
+
+	.moreSummary {
+		cursor: pointer;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.78);
+	}
+
+	.moreList {
+		margin-top: 10px;
+	}
+
+	.empty,
+	.emptySmall {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (max-width: 980px) {
+		.rows {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 620px) {
+		.rows {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script is:inline>
+	(() => {
+		const input = document.getElementById('doc-filter');
+		if (!(input instanceof HTMLInputElement)) return;
+		const nodes = Array.from(document.querySelectorAll('li[data-node]'));
+		const cards = Array.from(document.querySelectorAll('section[data-card]'));
+		const top = document.querySelector('section.top');
+
+		const apply = () => {
+			const q = (input.value || '').trim().toLowerCase();
+			if (!q) {
+				for (const li of nodes) li.hidden = false;
+				for (const c of cards) c.hidden = false;
+				for (const d of Array.from(document.querySelectorAll('details[data-more]'))) d.open = false;
+				if (top instanceof HTMLElement) top.hidden = false;
+				return;
+			}
+
+			if (top instanceof HTMLElement) top.hidden = true;
+
+			for (const li of nodes) {
+				const label = (li.getAttribute('data-label') || '').toLowerCase();
+				li.hidden = !label.includes(q);
+			}
+
+			for (const c of cards) {
+				const hasVisibleChild = Array.from(c.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+				c.hidden = !hasVisibleChild;
+				for (const d of Array.from(c.querySelectorAll('details[data-more]'))) {
+					const hasVisible = Array.from(d.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+					d.open = hasVisible;
+				}
+			}
+		};
+
+		input.addEventListener('input', apply, { passive: true });
+	})();
+</script>

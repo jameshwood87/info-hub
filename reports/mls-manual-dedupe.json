@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "apply": true,
+  "generatedAt": "2026-02-26T01:53:15.715Z",
+  "origin": "https://info.propertylist.es",
+  "base": "/docs/propertylist-mls-user-manual/",
+  "counts": {
+    "totalPages": 127,
+    "duplicateGroups": 37,
+    "changes": 0,
+    "skipped": 0
+  },
+  "changes": [],
+  "skipped": []
+}

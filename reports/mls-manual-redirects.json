@@ -1,0 +1,601 @@
+{
+  "ok": true,
+  "apply": true,
+  "generatedAt": "2026-02-26T11:11:46.005Z",
+  "origin": "https://info.propertylist.es",
+  "fixes": {
+    "removedListingAPropertyRedirect": null
+  },
+  "counts": {
+    "totalUnderBase": 137,
+    "published": 83,
+    "candidateLegacyDrafts": 41,
+    "mappings": 38
+  },
+  "mappings": [
+    {
+      "from": "/docs/propertylist-mls-user-manual/calendar/managing-your-schedule-and-tasks/",
+      "to": "/docs/propertylist-mls-user-manual/how-to-use-the-calendar/managing-your-schedule-and-tasks/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/portal-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/mls-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/mls-leads/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/direct-microsite-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/convert-a-lead-into-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/convert-a-lead-into-a-contact/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/search/scheduling-appointments-and-meetings/",
+      "to": "/docs/propertylist-mls-user-manual/searching-for-properties/scheduling-appointments-and-meetings/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/search/filters/",
+      "to": "/docs/propertylist-mls-user-manual/searching-for-properties/filters/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/integrations/export-listings/export-listings-xml/",
+      "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/",
+      "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/search/property-alerts/",
+      "to": "/docs/propertylist-mls-user-manual/searching-for-properties/property-alerts/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/export-listings-xml/",
+      "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/tracking-listing-exposure/",
+      "to": "/docs/propertylist-mls-user-manual/tracking-listing-exposure/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/",
+      "to": "/docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/pipeline/generating-progress-reports/",
+      "to": "/docs/propertylist-mls-user-manual/sales-pipeline-tracking/generating-progress-reports/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/reports/identifying-market-trends/",
+      "to": "/docs/propertylist-mls-user-manual/reports-and-statistics/identifying-market-trends/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/reports/accessing-property-market-data/",
+      "to": "/docs/propertylist-mls-user-manual/reports-and-statistics/accessing-property-market-data/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/sync-listings-to-other-websites/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/sync-listings-to-other-websites/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/sync-all-mls-properties-to-your-website/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/sync-all-mls-properties-to-your-website/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/feature-your-property-on-the-public-property-portal/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/tracking-property-enquiries-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-listings/tracking-property-enquiries-leads/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/editing-existing-listings/",
+      "to": "/docs/propertylist-mls-user-manual/managing-listings/editing-existing-listings/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/changing-property-status/",
+      "to": "/docs/propertylist-mls-user-manual/managing-listings/changing-property-status/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/tips-for-creating-high-quality-property-listings/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/tips-for-creating-high-quality-property-listings/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/import-properties/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/import-properties/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/duplicate-properties/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/creating-a-new-listing/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/creating-a-new-listing/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/link-properties-to-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/link-properties-to-contact/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/link-documents-to-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/link-documents-to-a-contact/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/assign-contact-to-an-agent/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/assign-contact-to-an-agent/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/adding-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/adding-a-contact/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/add-professional-contacts-to-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/add-professional-contacts-to-a-contact/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/",
+      "to": "/docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/export-listings/",
+      "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/",
+      "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/"
+    }
+  ],
+  "sampleReasons": [
+    {
+      "from": "/docs/propertylist-mls-user-manual/calendar/managing-your-schedule-and-tasks/",
+      "to": "/docs/propertylist-mls-user-manual/how-to-use-the-calendar/managing-your-schedule-and-tasks/",
+      "title": "Managing your schedule and tasks",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/portal-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/",
+      "title": "Portal Leads (Direct)",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/mls-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/mls-leads/",
+      "title": "MLS Leads (from other agents)",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
+      "title": "Understanding the PropertyList lead generation model",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
+      "title": "Optimising your listings for maximum lead generation",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/",
+      "title": "How PropertyList generates direct leads for you?",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/direct-microsite-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/",
+      "title": "MicroSite Leads (Direct)",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/leads/convert-a-lead-into-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/convert-a-lead-into-a-contact/",
+      "title": "Convert a lead into a contact",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/search/scheduling-appointments-and-meetings/",
+      "to": "/docs/propertylist-mls-user-manual/searching-for-properties/scheduling-appointments-and-meetings/",
+      "title": "Check Availability",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/search/filters/",
+      "to": "/docs/propertylist-mls-user-manual/searching-for-properties/filters/",
+      "title": "Filtering is Key!",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/integrations/export-listings/export-listings-xml/",
+      "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/",
+      "title": "Export Listings XML",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/",
+      "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/",
+      "title": "AI Property Research Agent",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/search/property-alerts/",
+      "to": "/docs/propertylist-mls-user-manual/searching-for-properties/property-alerts/",
+      "title": "MLS Property Alerts",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/export-listings-xml/",
+      "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/",
+      "title": "Export Listings XML",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/tracking-listing-exposure/",
+      "to": "/docs/propertylist-mls-user-manual/tracking-listing-exposure/",
+      "title": "Tracking listing exposure",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/",
+      "to": "/docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/",
+      "title": "How to use Pipeline",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/pipeline/generating-progress-reports/",
+      "to": "/docs/propertylist-mls-user-manual/sales-pipeline-tracking/generating-progress-reports/",
+      "title": "Generating progress reports",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/reports/identifying-market-trends/",
+      "to": "/docs/propertylist-mls-user-manual/reports-and-statistics/identifying-market-trends/",
+      "title": "Identifying market trends",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/reports/accessing-property-market-data/",
+      "to": "/docs/propertylist-mls-user-manual/reports-and-statistics/accessing-property-market-data/",
+      "title": "Accessing property market data",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/sync-listings-to-other-websites/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/sync-listings-to-other-websites/",
+      "title": "Sync your listings to other websites",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/sync-all-mls-properties-to-your-website/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/sync-all-mls-properties-to-your-website/",
+      "title": "Sync ALL MLS Properties to your Website",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/feature-your-property-on-the-public-property-portal/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/",
+      "title": "Feature your property on the Public Property Portal",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/",
+      "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/",
+      "title": "Feature your properties on the MLS!",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/tracking-property-enquiries-leads/",
+      "to": "/docs/propertylist-mls-user-manual/managing-listings/tracking-property-enquiries-leads/",
+      "title": "Tracking property enquiries/leads",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/editing-existing-listings/",
+      "to": "/docs/propertylist-mls-user-manual/managing-listings/editing-existing-listings/",
+      "title": "Editing existing listings",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/changing-property-status/",
+      "to": "/docs/propertylist-mls-user-manual/managing-listings/changing-property-status/",
+      "title": "Changing property status",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/tips-for-creating-high-quality-property-listings/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/tips-for-creating-high-quality-property-listings/",
+      "title": "Tips for creating high-quality property listings",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/import-properties/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/import-properties/",
+      "title": "Import Properties",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/duplicate-properties/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/",
+      "title": "Duplicate Properties",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/creating-a-new-listing/",
+      "to": "/docs/propertylist-mls-user-manual/listing-a-property/creating-a-new-listing/",
+      "title": "Creating a new listing",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/link-properties-to-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/link-properties-to-contact/",
+      "title": "Link/add properties to a contact",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/link-documents-to-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/link-documents-to-a-contact/",
+      "title": "Link/add documents to a contact",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/assign-contact-to-an-agent/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/assign-contact-to-an-agent/",
+      "title": "Assign contact to an agent",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/adding-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/adding-a-contact/",
+      "title": "Adding a contact",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/add-professional-contacts-to-a-contact/",
+      "to": "/docs/propertylist-mls-user-manual/contacts/add-professional-contacts-to-a-contact/",
+      "title": "Add professional contacts to a contact",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/",
+      "to": "/docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/",
+      "title": "WP Plugin (Customisable)",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/listings/export-listings/",
+      "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/",
+      "title": "Export Listings XML",
+      "reason": "same_title_published"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/",
+      "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/",
+      "title": "AI Property Research Agent",
+      "reason": "same_title_published"
+    }
+  ],
+  "applied": {
+    "ok": true,
+    "counts": {
+      "requested": 38,
+      "applied": 38,
+      "changed": 38,
+      "skipped": 0
+    },
+    "applied": [
+      {
+        "from": "/docs/propertylist-mls-user-manual/calendar/managing-your-schedule-and-tasks/",
+        "to": "/docs/propertylist-mls-user-manual/how-to-use-the-calendar/managing-your-schedule-and-tasks/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/portal-leads/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/mls-leads/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/mls-leads/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/direct-microsite-leads/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/leads/convert-a-lead-into-a-contact/",
+        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/convert-a-lead-into-a-contact/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/search/scheduling-appointments-and-meetings/",
+        "to": "/docs/propertylist-mls-user-manual/searching-for-properties/scheduling-appointments-and-meetings/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/search/filters/",
+        "to": "/docs/propertylist-mls-user-manual/searching-for-properties/filters/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/integrations/export-listings/export-listings-xml/",
+        "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/",
+        "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/search/property-alerts/",
+        "to": "/docs/propertylist-mls-user-manual/searching-for-properties/property-alerts/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/export-listings-xml/",
+        "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/marketing/tracking-listing-exposure/",
+        "to": "/docs/propertylist-mls-user-manual/tracking-listing-exposure/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/",
+        "to": "/docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/pipeline/generating-progress-reports/",
+        "to": "/docs/propertylist-mls-user-manual/sales-pipeline-tracking/generating-progress-reports/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/reports/identifying-market-trends/",
+        "to": "/docs/propertylist-mls-user-manual/reports-and-statistics/identifying-market-trends/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/reports/accessing-property-market-data/",
+        "to": "/docs/propertylist-mls-user-manual/reports-and-statistics/accessing-property-market-data/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/marketing/sync-listings-to-other-websites/",
+        "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/sync-listings-to-other-websites/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/marketing/sync-all-mls-properties-to-your-website/",
+        "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/sync-all-mls-properties-to-your-website/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/marketing/feature-your-property-on-the-public-property-portal/",
+        "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/",
+        "to": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/tracking-property-enquiries-leads/",
+        "to": "/docs/propertylist-mls-user-manual/managing-listings/tracking-property-enquiries-leads/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/editing-existing-listings/",
+        "to": "/docs/propertylist-mls-user-manual/managing-listings/editing-existing-listings/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/changing-property-status/",
+        "to": "/docs/propertylist-mls-user-manual/managing-listings/changing-property-status/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/tips-for-creating-high-quality-property-listings/",
+        "to": "/docs/propertylist-mls-user-manual/listing-a-property/tips-for-creating-high-quality-property-listings/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/import-properties/",
+        "to": "/docs/propertylist-mls-user-manual/listing-a-property/import-properties/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/duplicate-properties/",
+        "to": "/docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/creating-a-new-listing/",
+        "to": "/docs/propertylist-mls-user-manual/listing-a-property/creating-a-new-listing/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/link-properties-to-contact/",
+        "to": "/docs/propertylist-mls-user-manual/contacts/link-properties-to-contact/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/link-documents-to-a-contact/",
+        "to": "/docs/propertylist-mls-user-manual/contacts/link-documents-to-a-contact/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/assign-contact-to-an-agent/",
+        "to": "/docs/propertylist-mls-user-manual/contacts/assign-contact-to-an-agent/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/adding-a-contact/",
+        "to": "/docs/propertylist-mls-user-manual/contacts/adding-a-contact/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/how-to-use-contacts/add-professional-contacts-to-a-contact/",
+        "to": "/docs/propertylist-mls-user-manual/contacts/add-professional-contacts-to-a-contact/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/",
+        "to": "/docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/listings/export-listings/",
+        "to": "/docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/",
+        "changed": true
+      },
+      {
+        "from": "/docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/",
+        "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/",
+        "changed": true
+      }
+    ],
+    "skipped": []
+  }
+}

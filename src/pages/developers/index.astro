@@ -1,0 +1,699 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const title = 'Developers • PropertyList Info Hub';
+const description =
+	'Distribute your new developments through registered estate agents. Receive confirmed viewings and a direct handoff to your sales team.';
+
+const stats: Array<{ value: string; label: string }> = [
+	{ value: '2,000+', label: 'Estate agents signed up' },
+	{ value: '5,777', label: 'Real estate listings' },
+];
+---
+
+<Layout lang="en" title={title} description={description} canonical="https://info.propertylist.es/developers/">
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">For property developers</div>
+			<h1>Reach 2,000+ agents and direct public buyers. Get the best of both worlds.</h1>
+			<p class="lead">
+				While our agent network markets your properties to their buyers, our automated system seamlessly books your public portal viewings. We hand the
+				buyer directly to your in-house sales team, giving you 100% control to manage the relationship and close the deal.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://developers.propertylist.es/login">Join as a developer</a>
+				<a class="btnSecondary" href="#get-updates">Get updates</a>
+			</div>
+			<div class="trustRow" aria-label="Platform stats">
+				{stats.map((s) => (
+					<div class="trustPill">
+						<div class="trustPillValue">{s.value}</div>
+						<div class="trustPillLabel">{s.label}</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="twoCol">
+			<div class="panel">
+				<h2>How it works</h2>
+				<ol class="steps" aria-label="How it works">
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">1</div>
+							<div class="stepTitle">List in your own CRM &amp; MLS (free)</div>
+						</div>
+						<div class="stepBody">
+							List your promotions at zero cost: no subscriptions, no hidden fees, and no setup costs.
+						</div>
+					</li>
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">2</div>
+							<div class="stepTitle">Give agents free access</div>
+						</div>
+						<div class="stepBody">
+							Every registered estate agent can access and share your promotions at no cost, giving you wider distribution than paywalled platforms.
+						</div>
+					</li>
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">3</div>
+							<div class="stepTitle">Stay in control of the buyer</div>
+						</div>
+						<div class="stepBody">
+							Agents bring their clients to you as normal.
+							<a href="https://propertylist.es/" target="_blank" rel="noopener">PropertyList.es</a>
+							also sends leads directly to your sales team so you control the relationship from day one.
+						</div>
+					</li>
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">4</div>
+							<div class="stepTitle">Pay only when you get paid</div>
+						</div>
+						<div class="stepBody">
+							You set the commission percentage per promotion when you list. You only pay that commission after you’ve been paid.
+						</div>
+					</li>
+				</ol>
+			</div>
+			<div class="panel">
+				<h2>Why developers use it</h2>
+				<ul class="bullets">
+					<li>Full CRM to organise leads, showings, and listings in one place.</li>
+					<li>A shared documents hub for floorplans, specs, brochures, and legal packs.</li>
+					<li>Agents can access and share your promotions at no cost to them.</li>
+					<li>Success-based pricing: pay only after you’ve been paid, so you’re never out of pocket.</li>
+				</ul>
+				<div class="callout">
+					<div class="calloutTitle">Built to reduce friction</div>
+					<div class="calloutBody">Remove paywalls, keep distribution simple, and let your sales team control the outcome.</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section alt">
+		<div class="sectionHeader">
+			<h2>Two channels, one direct handoff</h2>
+			<div class="sectionMeta">Agents bring buyers. The portal sends direct leads.</div>
+		</div>
+		<div class="twoCol">
+			<div class="panel channel">
+				<h3>The Agency Network</h3>
+				<p class="muted">
+					Our network of 2,000+ estate agents gets immediate free access to your developments. They act as an external distribution channel - sharing
+					your promotions with their buyer lists and bringing qualified clients to you for viewings.
+				</p>
+			</div>
+			<div class="panel channel">
+				<h3>The Direct Portal</h3>
+				<p class="muted">
+					When buyers discover your development on
+					<a class="inlineLink" href="https://propertylist.es/" target="_blank" rel="noopener">PropertyList.es</a>, we generate a platform lead and send
+					it directly to your sales team. For these direct leads, your team runs the viewing and manages the relationship from day one.
+				</p>
+			</div>
+		</div>
+		<div class="sectionFoot">
+			<div class="callout calloutWide">
+				<div class="calloutTitle">The best part: risk-free listing</div>
+				<div class="calloutBody">
+					Listing is free. You set the commission percentage on each promotion, and you only pay once a buyer pays the reservation deposit (as defined
+					in the agreement).
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section alt">
+		<div class="sectionHeader">
+			<h2>Commercials (simple summary)</h2>
+			<div class="sectionMeta">Keep it lightweight early, then review terms in full.</div>
+		</div>
+		<div class="grid">
+			<div class="card">
+				<div class="cardTitle">Listing</div>
+				<div class="cardBody">Publish your new development without upfront portal fees.</div>
+			</div>
+			<div class="card">
+				<div class="cardTitle">Success-based</div>
+				<div class="cardBody">Pay only when a reservation deposit is received and verified (as defined in the agreement).</div>
+			</div>
+			<div class="card">
+				<div class="cardTitle">Transparent</div>
+				<div class="cardBody">Clear audit trail from introduction to appointment confirmation.</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="get-updates">
+		<div class="twoCol">
+			<div class="panel">
+				<h2>Get updates</h2>
+				<p class="muted">Leave an email to receive developer onboarding updates and product releases. No spam, unsubscribe anytime.</p>
+				<form class="form" data-subscribe-form>
+					<label class="srOnly" for="dev-email">Email</label>
+					<input
+						id="dev-email"
+						class="input"
+						name="email"
+						type="email"
+						inputmode="email"
+						autocomplete="email"
+						placeholder="Email address"
+						required
+					/>
+					<button class="btnPrimary" type="submit">Subscribe</button>
+				</form>
+				<div class="formMsg" aria-live="polite" data-subscribe-msg></div>
+			</div>
+			<div class="panel">
+				<h2>FAQ</h2>
+				<div class="faq">
+					<details class="faqItem">
+						<summary class="faqQ">Is this exclusive?</summary>
+						<div class="faqA">No. Developers can continue marketing through any channels they choose.</div>
+					</details>
+					<details class="faqItem">
+						<summary class="faqQ">Who runs the viewings?</summary>
+						<div class="faqA">
+							Your sales team runs viewings for both agency-led enquiries and PropertyList.es portal leads. For portal leads, your team manages the buyer
+							relationship from day one.
+						</div>
+					</details>
+					<details class="faqItem">
+						<summary class="faqQ">What do I receive in a handoff?</summary>
+						<div class="faqA">A confirmed appointment time plus the buyer details needed to run the viewing (shared with consent).</div>
+					</details>
+					<details class="faqItem">
+						<summary class="faqQ">Where can I learn more?</summary>
+						<div class="faqA">Read the docs and guides at <a href="/docs/?role=developer">/docs/?role=developer</a>.</div>
+					</details>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="final">
+		<div class="finalInner">
+			<h2>Ready to list a new development?</h2>
+			<p class="finalSub">Join as a developer and start distributing your units through the agent network.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://developers.propertylist.es/login">Join as a developer</a>
+				<a class="btnSecondary" href="/docs/?role=developer">View developer docs</a>
+			</div>
+		</div>
+	</section>
+
+	<script is:inline>
+		(() => {
+			const form = document.querySelector('[data-subscribe-form]');
+			const msg = document.querySelector('[data-subscribe-msg]');
+			if (!(form instanceof HTMLFormElement) || !(msg instanceof HTMLElement)) return;
+			const input = form.querySelector('input[name="email"]');
+			const btn = form.querySelector('button[type="submit"]');
+			if (!(input instanceof HTMLInputElement) || !(btn instanceof HTMLButtonElement)) return;
+
+			const utm = (() => {
+				const out = {};
+				try {
+					const sp = new URLSearchParams(window.location.search);
+					for (const [k, v] of sp.entries()) {
+						if (!k.startsWith('utm_')) continue;
+						if (!v) continue;
+						out[k] = v;
+					}
+				} catch {}
+				return out;
+			})();
+
+			const setMsg = (text, tone) => {
+				msg.textContent = text || '';
+				msg.dataset.tone = tone || '';
+			};
+
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				setMsg('', '');
+				const email = String(input.value || '').trim();
+				if (!email || !email.includes('@')) {
+					setMsg('Please enter a valid email address.', 'bad');
+					return;
+				}
+
+				btn.disabled = true;
+				try {
+					const res = await fetch('/api/subscribe', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ email, lang: 'en', page: '/developers/', utm }),
+					});
+					const data = await res.json().catch(() => ({}));
+					if (!res.ok || !data?.ok) {
+						const code = String(data?.error || '').trim();
+						if (code === 'not_configured') setMsg('Subscriptions are not configured yet. Please try again later.', 'bad');
+						else if (code === 'invalid_email') setMsg('Please enter a valid email address.', 'bad');
+						else setMsg('Something went wrong. Please try again.', 'bad');
+						btn.disabled = false;
+						return;
+					}
+					setMsg('Subscribed. You will receive developer updates by email.', 'ok');
+					input.value = '';
+				} catch {
+					setMsg('Network error. Please try again.', 'bad');
+				} finally {
+					btn.disabled = false;
+				}
+			});
+		})();
+	</script>
+
+	<style>
+		.hero {
+			background: radial-gradient(1100px 680px at 20% 0%, rgba(34, 197, 94, 0.14), rgba(0, 0, 0, 0) 55%),
+				linear-gradient(180deg, rgba(7, 19, 33, 1), rgba(10, 26, 44, 1));
+			padding: 64px 0 42px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		}
+
+		.heroInner {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 12px;
+			font-weight: 800;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.75);
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.16);
+			padding: 8px 12px;
+			border-radius: 999px;
+		}
+
+		h1 {
+			margin: 16px 0 12px;
+			font-size: 44px;
+			line-height: 1.1;
+			letter-spacing: -0.02em;
+			color: white;
+		}
+
+		.lead {
+			margin: 0;
+			font-size: 18px;
+			line-height: 1.6;
+			color: rgba(255, 255, 255, 0.78);
+			max-width: 72ch;
+		}
+
+		.ctaRow {
+			margin-top: 18px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.btnPrimary,
+		.btnSecondary {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			padding: 12px 16px;
+			border-radius: 12px;
+			font-weight: 800;
+			text-decoration: none;
+			white-space: nowrap;
+		}
+
+		.btnPrimary {
+			background: rgba(16, 185, 129, 1);
+			color: rgba(7, 19, 33, 1);
+			border: 1px solid rgba(16, 185, 129, 1);
+		}
+
+		.btnPrimary:hover {
+			filter: brightness(0.98);
+		}
+
+		.btnSecondary {
+			background: rgba(255, 255, 255, 0.08);
+			color: white;
+			border: 1px solid rgba(255, 255, 255, 0.18);
+		}
+
+		.btnSecondary:hover {
+			background: rgba(255, 255, 255, 0.12);
+		}
+
+		.trustRow {
+			margin-top: 18px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.trustPill {
+			display: grid;
+			gap: 2px;
+			padding: 10px 12px;
+			border-radius: 14px;
+			background: rgba(255, 255, 255, 0.06);
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			min-width: 190px;
+		}
+
+		.trustPillValue {
+			font-weight: 900;
+			color: white;
+			font-size: 18px;
+			letter-spacing: -0.01em;
+		}
+
+		.trustPillLabel {
+			font-size: 13px;
+			color: rgba(255, 255, 255, 0.75);
+		}
+
+		.section {
+			padding: 46px 0;
+		}
+
+		.section.alt {
+			background: rgba(2, 6, 23, 0.03);
+			border-top: 1px solid rgba(15, 23, 42, 0.06);
+			border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+		}
+
+		.sectionHeader {
+			max-width: 1040px;
+			margin: 0 auto 18px;
+			padding: 0 24px;
+			display: flex;
+			align-items: baseline;
+			justify-content: space-between;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.sectionHeader h2 {
+			margin: 0;
+		}
+
+		.sectionMeta {
+			color: rgba(15, 23, 42, 0.7);
+			font-weight: 700;
+		}
+
+		.twoCol {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 18px;
+		}
+
+		.panel {
+			background: white;
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 16px;
+			padding: 18px;
+		}
+
+		.panel h2 {
+			margin: 0 0 10px;
+			font-size: 20px;
+			letter-spacing: -0.01em;
+		}
+
+		.panel h3 {
+			margin: 0 0 8px;
+			font-size: 16px;
+			letter-spacing: -0.01em;
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.92);
+		}
+
+		.steps {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: grid;
+			gap: 12px;
+		}
+
+		.step {
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 14px;
+			padding: 12px;
+			background: rgba(2, 6, 23, 0.02);
+		}
+
+		.stepTop {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 6px;
+		}
+
+		.stepNum {
+			width: 28px;
+			height: 28px;
+			border-radius: 999px;
+			display: grid;
+			place-items: center;
+			font-weight: 900;
+			background: rgba(16, 185, 129, 0.16);
+			color: rgba(16, 185, 129, 1);
+			border: 1px solid rgba(16, 185, 129, 0.22);
+		}
+
+		.stepTitle {
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.9);
+		}
+
+		.stepBody {
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.stepBody a,
+		.inlineLink {
+			color: rgba(2, 132, 199, 1);
+			font-weight: 900;
+			text-decoration: none;
+		}
+
+		.stepBody a:hover,
+		.inlineLink:hover {
+			text-decoration: underline;
+		}
+
+		.bullets {
+			margin: 12px 0 0;
+			padding-left: 18px;
+			display: grid;
+			gap: 10px;
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.sectionFoot {
+			max-width: 1040px;
+			margin: 18px auto 0;
+			padding: 0 24px;
+		}
+
+		.calloutWide {
+			margin-top: 0;
+		}
+
+		.callout {
+			margin-top: 14px;
+			border-radius: 14px;
+			padding: 12px;
+			border: 1px solid rgba(16, 185, 129, 0.22);
+			background: rgba(16, 185, 129, 0.08);
+		}
+
+		.calloutTitle {
+			font-weight: 900;
+			color: rgba(7, 19, 33, 0.95);
+		}
+
+		.calloutBody {
+			color: rgba(15, 23, 42, 0.78);
+			margin-top: 6px;
+			line-height: 1.5;
+		}
+
+		.grid {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 18px;
+		}
+
+		.card {
+			background: white;
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 16px;
+			padding: 16px;
+		}
+
+		.cardTitle {
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.92);
+			margin-bottom: 6px;
+		}
+
+		.cardBody {
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.muted {
+			color: rgba(15, 23, 42, 0.74);
+			margin: 0 0 12px;
+			line-height: 1.6;
+		}
+
+		.form {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 10px;
+			align-items: center;
+		}
+
+		.input {
+			width: 100%;
+			padding: 12px 12px;
+			border-radius: 12px;
+			border: 1px solid rgba(15, 23, 42, 0.12);
+			background: white;
+			font-weight: 700;
+		}
+
+		.formMsg {
+			margin-top: 10px;
+			font-weight: 800;
+			color: rgba(15, 23, 42, 0.8);
+		}
+
+		.formMsg[data-tone='ok'] {
+			color: rgba(16, 185, 129, 1);
+		}
+
+		.formMsg[data-tone='bad'] {
+			color: rgba(220, 38, 38, 1);
+		}
+
+		.faq {
+			display: grid;
+			gap: 10px;
+		}
+
+		.faqItem {
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 14px;
+			background: rgba(2, 6, 23, 0.02);
+			padding: 10px 12px;
+		}
+
+		.faqQ {
+			cursor: pointer;
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.92);
+		}
+
+		.faqA {
+			margin-top: 8px;
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.faqA a {
+			color: rgba(2, 132, 199, 1);
+			font-weight: 900;
+			text-decoration: none;
+		}
+
+		.faqA a:hover {
+			text-decoration: underline;
+		}
+
+		.final {
+			padding: 46px 0 60px;
+			background: linear-gradient(180deg, rgba(7, 19, 33, 1), rgba(10, 26, 44, 1));
+		}
+
+		.finalInner {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+			color: white;
+		}
+
+		.finalInner h2 {
+			margin: 0 0 10px;
+			font-size: 28px;
+			letter-spacing: -0.01em;
+		}
+
+		.finalSub {
+			margin: 0;
+			color: rgba(255, 255, 255, 0.78);
+			line-height: 1.6;
+		}
+
+		.srOnly {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border-width: 0;
+		}
+
+		@media (max-width: 980px) {
+			.twoCol {
+				grid-template-columns: 1fr;
+			}
+			.grid {
+				grid-template-columns: 1fr;
+			}
+			h1 {
+				font-size: 36px;
+			}
+			.trustPill {
+				min-width: unset;
+			}
+			.form {
+				grid-template-columns: 1fr;
+			}
+			.btnPrimary,
+			.btnSecondary {
+				width: 100%;
+			}
+		}
+	</style>
+</Layout>
+

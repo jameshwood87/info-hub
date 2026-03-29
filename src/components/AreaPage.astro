@@ -1,0 +1,993 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { listKbPagesByPrefix, type KbPage, type KbPageListItem } from '../lib/directus';
+
+type AreaStats = {
+	avgPrice?: number | null;
+	priceTrend?: string | null;
+	rentalYield?: number | null;
+	airportDistance?: number | null;
+	beachDistance?: number | null;
+	population?: number | null;
+	expatPercent?: number | null;
+	daysOnMarket?: number | null;
+	listingCount?: number | null;
+};
+
+type AreaFaqItem = { q: string; a: string };
+
+type AreaHeroImage = {
+	url?: string | null;
+	alt?: string | null;
+	source?: string | null;
+	pageUrl?: string | null;
+	creditName?: string | null;
+	creditUrl?: string | null;
+	licenseName?: string | null;
+	licenseUrl?: string | null;
+};
+
+type Props = {
+	lang: 'en' | 'es';
+	page: KbPage;
+	meta: {
+		areaStats?: AreaStats;
+		areaStatsUpdatedAt?: string;
+		areaStatsDueAt?: string;
+		areaFaq?: AreaFaqItem[];
+		areaHeroImage?: AreaHeroImage;
+	} | null;
+	canonical: string;
+	hreflangs: Array<{ hreflang: string; href: string }>;
+	clientMode: boolean;
+};
+
+const { lang, page, meta, canonical, hreflangs, clientMode } = Astro.props;
+
+const bodyHtml = String(page.body || '').trim();
+
+const stripTags = (html: string) => String(html || '').replace(/<[^>]+>/g, '');
+const decodeHtmlEntities = (s: string) =>
+	String(s || '').replace(/&(#x[0-9a-f]+|#\d+|[a-z0-9]+);/gi, (m: string, entRaw: string) => {
+		const ent = String(entRaw || '').toLowerCase();
+		if (ent === 'amp') return '&';
+		if (ent === 'lt') return '<';
+		if (ent === 'gt') return '>';
+		if (ent === 'quot') return '"';
+		if (ent === 'apos' || ent === '#39') return "'";
+		if (ent === 'nbsp') return ' ';
+		if (ent.startsWith('#x')) {
+			const cp = Number.parseInt(ent.slice(2), 16);
+			if (Number.isFinite(cp) && cp > 0) return String.fromCodePoint(cp);
+			return m;
+		}
+		if (ent.startsWith('#')) {
+			const cp = Number.parseInt(ent.slice(1), 10);
+			if (Number.isFinite(cp) && cp > 0) return String.fromCodePoint(cp);
+			return m;
+		}
+		return m;
+	});
+
+const toText = (html: string) => decodeHtmlEntities(stripTags(html)).replace(/\s+/g, ' ').trim();
+const takeWords = (s: string, maxWords: number) => {
+	const words = String(s || '').trim().split(/\s+/).filter(Boolean);
+	if (words.length <= maxWords) return words.join(' ');
+	return `${words.slice(0, maxWords).join(' ')}…`;
+};
+
+const introText = (() => {
+	if (!bodyHtml) return '';
+	const pMatch = bodyHtml.match(/<p\b[^>]*>([\s\S]*?)<\/p>/i);
+	const raw = pMatch ? pMatch[1] : bodyHtml;
+	return takeWords(toText(raw), 180);
+})();
+
+const sectionHtmlByKey = (keys: Array<{ key: string; label: string }>) => {
+	const out: Record<string, string> = {};
+	if (!bodyHtml) return out;
+	for (const k of keys) {
+		const re = new RegExp(`<h2\\b[^>]*>\\s*${k.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*<\\/h2>([\\s\\S]*?)(?=<h2\\b|$)`, 'i');
+		const m = bodyHtml.match(re);
+		if (m && m[0]) out[k.key] = m[0];
+	}
+	return out;
+};
+
+const guideSectionKeys =
+	lang === 'es'
+		? [
+				{ key: 'lifestyle', label: 'Estilo de vida' },
+				{ key: 'practical', label: 'Práctico' },
+				{ key: 'investment', label: 'Inversión' },
+				{ key: 'demographics', label: 'Demografía' },
+			]
+		: [
+				{ key: 'lifestyle', label: 'Lifestyle' },
+				{ key: 'practical', label: 'Practical' },
+				{ key: 'investment', label: 'Investment' },
+				{ key: 'demographics', label: 'Demographics' },
+			];
+
+const guideSections = sectionHtmlByKey(guideSectionKeys);
+
+const path = String(page.path || '/');
+const segs = path.split('/').filter(Boolean);
+const areaName = String(page.title || '').trim();
+
+const isEsPath = segs[0] === 'es';
+const segOffset = isEsPath ? 1 : 0;
+const regionSeg = segs[segOffset] || '';
+const provinceSeg = segs[segOffset + 1] || '';
+const isAndalucia = regionSeg === 'andalucia';
+const isMalagaProvince = isAndalucia && provinceSeg === 'malaga';
+const provinceLabel = 'Málaga';
+
+const areaStats = meta?.areaStats || {};
+const statsUpdatedAt = meta?.areaStatsUpdatedAt ? new Date(meta.areaStatsUpdatedAt) : null;
+const statsDue = (() => {
+	const dueAt = meta?.areaStatsDueAt ? Date.parse(meta.areaStatsDueAt) : NaN;
+	if (Number.isFinite(dueAt)) return true;
+	if (!statsUpdatedAt) return false;
+	return Date.now() - statsUpdatedAt.getTime() > 90 * 24 * 60 * 60 * 1000;
+})();
+
+const fmtNum = (n: number | null | undefined) => (typeof n === 'number' && Number.isFinite(n) ? n.toLocaleString() : '—');
+const fmtKm = (n: number | null | undefined) => (typeof n === 'number' && Number.isFinite(n) ? `${n.toFixed(0)} km` : '—');
+const fmtPct = (n: number | null | undefined) => (typeof n === 'number' && Number.isFinite(n) ? `${n.toFixed(0)}%` : '—');
+
+const searchBase = 'https://propertylist.es/search';
+const buildSearchUrl = (opts?: { q?: string; type?: string }) => {
+	const params = new URLSearchParams();
+	if (opts?.q) params.set('q', opts.q);
+	if (opts?.type) params.set('type', opts.type);
+	const qs = params.toString();
+	return qs ? `${searchBase}?${qs}` : searchBase;
+};
+
+const propertyTypes = [
+	{ key: 'apartments', label: lang === 'es' ? 'Apartamentos' : 'Apartments' },
+	{ key: 'villas', label: lang === 'es' ? 'Villas' : 'Villas' },
+	{ key: 'townhouses', label: lang === 'es' ? 'Adosados' : 'Townhouses' },
+	{ key: 'penthouses', label: lang === 'es' ? 'Áticos' : 'Penthouses' },
+];
+
+const malagaPrefix = isEsPath ? '/es/andalucia/malaga/' : '/andalucia/malaga/';
+
+const allAreas: KbPageListItem[] = isMalagaProvince
+	? await listKbPagesByPrefix({ prefix: malagaPrefix, lang, limit: 200 }).catch(() => [])
+	: [];
+
+const townDepth = segOffset + 3;
+const nearbyAreas = allAreas
+	.filter((p) => p.path !== page.path)
+	.filter((p) => {
+		const s = String(p.path || '').split('/').filter(Boolean);
+		return s.length === townDepth;
+	})
+	.slice(0, 10);
+
+const childAreas = await listKbPagesByPrefix({ prefix: page.path, lang, limit: 80 })
+	.catch(() => [])
+	.then((items) =>
+		items
+			.filter((p) => p.path !== page.path)
+			.filter((p) => {
+				const s = String(p.path || '').split('/').filter(Boolean);
+				return s.length === segs.length + 1;
+			})
+			.slice(0, 12)
+	);
+
+const origin = Astro.url ? `${Astro.url.protocol}//${Astro.url.host}` : 'https://info.propertylist.es';
+const sharePath = (() => {
+	if (path.startsWith('/es/')) return `/es/share${path.slice('/es'.length)}`;
+	return `/share${path}`;
+})();
+
+const crumbs = (() => {
+	const base = isEsPath ? '/es/' : '/';
+	const out: Array<{ name: string; href: string }> = [{ name: isEsPath ? 'Inicio' : 'Home', href: base }];
+	if (isAndalucia) out.push({ name: 'Andalucía', href: isEsPath ? '/es/andalucia/' : '/andalucia/' });
+	if (isMalagaProvince) out.push({ name: provinceLabel, href: isEsPath ? '/es/andalucia/malaga/' : '/andalucia/malaga/' });
+	out.push({ name: areaName, href: path });
+	return out;
+})();
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: crumbs.map((c, i) => ({
+		'@type': 'ListItem',
+		position: i + 1,
+		name: c.name,
+		item: `${origin}${c.href}`,
+	})),
+};
+
+const placeLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Place',
+	name: areaName,
+	url: canonical,
+};
+
+const listingLd = {
+	'@context': 'https://schema.org',
+	'@type': 'RealEstateListing',
+	name: `${areaName} ${lang === 'es' ? 'propiedades' : 'properties'}`,
+	url: canonical,
+};
+
+const faqItems = Array.isArray(meta?.areaFaq) ? meta!.areaFaq!.filter((x) => x && x.q && x.a).slice(0, 20) : [];
+const faqLd =
+	faqItems.length > 0
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'FAQPage',
+				mainEntity: faqItems.map((f) => ({
+					'@type': 'Question',
+					name: String(f.q),
+					acceptedAnswer: { '@type': 'Answer', text: String(f.a) },
+				})),
+			}
+		: null;
+
+const schema = [breadcrumbLd, placeLd, listingLd, ...(faqLd ? [faqLd] : [])];
+
+const hero = meta?.areaHeroImage || null;
+const heroUrl = hero?.url ? String(hero.url) : null;
+const heroAlt = hero?.alt ? String(hero.alt) : areaName;
+const heroAttribution = (() => {
+	const parts = [
+		hero?.source ? String(hero.source) : '',
+		hero?.creditName ? String(hero.creditName) : '',
+		hero?.licenseName ? String(hero.licenseName) : '',
+	]
+		.map((s) => s.trim())
+		.filter(Boolean);
+	return parts.length ? parts.join(' • ') : '';
+})();
+---
+
+<Layout
+	lang={lang}
+	title={page.seo_title || page.title}
+	description={page.seo_description || page.description || undefined}
+	canonical={canonical}
+	hreflangs={hreflangs}
+	robots={clientMode ? 'noindex,nofollow' : undefined}
+	ogImage={heroUrl || undefined}
+	twitterCard="summary_large_image"
+	schema={schema}
+	minimal={clientMode}
+>
+	<article class:list={['area', clientMode ? 'clientMode' : null]}>
+		<header class="hero">
+			{heroUrl ? (
+				<div class="heroImgWrap" aria-hidden="true">
+					<img class="heroImg" src={heroUrl} alt={heroAlt} loading="eager" decoding="async" width="1600" height="900" />
+				</div>
+			) : null}
+			<div class="heroInner">
+				<nav class="crumbs" aria-label={lang === 'es' ? 'Migas de pan' : 'Breadcrumb'}>
+					{crumbs.map((c, i) => (
+						<>
+							{i ? <span class="crumbSep" aria-hidden="true">/</span> : null}
+							{i === crumbs.length - 1 ? <span class="crumbCurrent">{c.name}</span> : <a href={c.href}>{c.name}</a>}
+						</>
+					))}
+				</nav>
+				<div class="heroTop">
+					<h1>{page.title}</h1>
+					{statsUpdatedAt ? (
+						<div class:list={['updated', statsDue ? 'due' : null]}>
+							{lang === 'es' ? 'Actualizado:' : 'Last updated:'} {statsUpdatedAt.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB')}
+						</div>
+					) : null}
+				</div>
+
+				<div class="heroKpis" aria-label={lang === 'es' ? 'Datos clave' : 'Key stats'}>
+					<div class="kpi">
+						<div class="kpiVal">{areaStats.avgPrice ? `€${fmtNum(areaStats.avgPrice)}` : '—'}</div>
+						<div class="kpiLab">{lang === 'es' ? 'Precio medio' : 'Avg price'}</div>
+					</div>
+					<div class="kpi">
+						<div class="kpiVal">{areaStats.rentalYield ? fmtPct(areaStats.rentalYield) : '—'}</div>
+						<div class="kpiLab">{lang === 'es' ? 'Rentabilidad' : 'Rental yield'}</div>
+					</div>
+					<div class="kpi">
+						<div class="kpiVal">{areaStats.airportDistance ? fmtKm(areaStats.airportDistance) : '—'}</div>
+						<div class="kpiLab">{lang === 'es' ? 'Aeropuerto' : 'Airport'}</div>
+					</div>
+					<div class="kpi">
+						<div class="kpiVal">{areaStats.beachDistance ? fmtKm(areaStats.beachDistance) : '—'}</div>
+						<div class="kpiLab">{lang === 'es' ? 'Playa' : 'Beach'}</div>
+					</div>
+				</div>
+
+				<div class="heroCtas">
+					{clientMode ? (
+						<div class="clientCta">{lang === 'es' ? 'Contacta con tu agente para organizar visitas.' : 'Contact your agent to arrange viewings.'}</div>
+					) : (
+						<>
+							<a class="btnPrimary" href={buildSearchUrl({ q: areaName })} target="_blank" rel="noopener">
+								{lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}
+							</a>
+							<button class="btnSecondary" type="button" data-share-open>
+								{lang === 'es' ? 'Compartir con cliente' : 'Share with Client'}
+							</button>
+						</>
+					)}
+				</div>
+
+				{heroAttribution ? (
+					<div class="heroCredit">
+						{hero?.pageUrl ? (
+							<a href={hero.pageUrl} target="_blank" rel="noopener">
+								{heroAttribution}
+							</a>
+						) : (
+							<span>{heroAttribution}</span>
+						)}
+					</div>
+				) : null}
+			</div>
+		</header>
+
+		<section class="intro">
+			<p>{introText || (lang === 'es' ? 'Añade una introducción en el cuerpo del KB.' : 'Add an intro paragraph in the KB body.')}</p>
+		</section>
+
+		<section class="stats">
+			<h2>{lang === 'es' ? 'Datos del mercado' : 'Market stats'}</h2>
+			<div class="statsGrid">
+				<div class="stat">
+					<div class="statK">{lang === 'es' ? 'Tendencia' : 'Trend'}</div>
+					<div class="statV">{areaStats.priceTrend ? String(areaStats.priceTrend) : '—'}</div>
+				</div>
+				<div class="stat">
+					<div class="statK">{lang === 'es' ? 'Población' : 'Population'}</div>
+					<div class="statV">{fmtNum(areaStats.population)}</div>
+				</div>
+				<div class="stat">
+					<div class="statK">{lang === 'es' ? '% Expat' : 'Expat %'}</div>
+					<div class="statV">{fmtPct(areaStats.expatPercent)}</div>
+				</div>
+				<div class="stat">
+					<div class="statK">{lang === 'es' ? 'Días en mercado' : 'Days on market'}</div>
+					<div class="statV">{fmtNum(areaStats.daysOnMarket)}</div>
+				</div>
+				<div class="stat">
+					<div class="statK">{lang === 'es' ? 'Listados' : 'Listings'}</div>
+					<div class="statV">{fmtNum(areaStats.listingCount)}</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="types">
+			<h2>{lang === 'es' ? 'Tipos de propiedad' : 'Property types'}</h2>
+			<div class="typeGrid">
+				{propertyTypes.map((t) => (
+					<a class="typeCard" href={buildSearchUrl({ q: areaName, type: t.key })} target="_blank" rel="noopener">
+						<div class="typeTitle">{t.label}</div>
+						<div class="typeLink">{lang === 'es' ? 'Ver ofertas' : 'View listings'}</div>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<section class="guide">
+			<h2>{lang === 'es' ? 'Guía del área' : 'Area guide'}</h2>
+			<div class="guideGrid">
+				{guideSectionKeys.map((k) => (
+					<div class="guideCard">
+						<div class="guideTitle">{k.label}</div>
+						<div class="guideBody">
+							{guideSections[k.key] ? <Fragment set:html={guideSections[k.key]} /> : <p>{lang === 'es' ? 'Añade una sección H2 en el cuerpo.' : 'Add an H2 section in the body.'}</p>}
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+
+		{childAreas.length ? (
+			<section class="children">
+				<h2>{lang === 'es' ? 'Barrios y subzonas' : 'Neighbourhoods & sub-areas'}</h2>
+				<div class="childGrid">
+					{childAreas.map((c) => (
+						<a class="childCard" href={c.path}>
+							<div class="childTitle">{c.title}</div>
+							{c.description ? <div class="childDesc">{c.description}</div> : null}
+						</a>
+					))}
+				</div>
+			</section>
+		) : null}
+
+		{nearbyAreas.length ? (
+			<section class="nearby">
+				<h2>{lang === 'es' ? 'Cerca de aquí' : 'Nearby areas'}</h2>
+				<div class="nearbyRow">
+					{nearbyAreas.map((c) => (
+						<a class="nearbyCard" href={c.path}>
+							<div class="nearbyTitle">{c.title}</div>
+						</a>
+					))}
+				</div>
+			</section>
+		) : null}
+
+		{faqItems.length ? (
+			<section class="faq">
+				<h2>{lang === 'es' ? 'Preguntas frecuentes' : 'FAQs'}</h2>
+				<div class="faqList">
+					{faqItems.map((f) => (
+						<details class="faqItem">
+							<summary class="faqQ">{f.q}</summary>
+							<div class="faqA">{f.a}</div>
+						</details>
+					))}
+				</div>
+			</section>
+		) : null}
+	</article>
+
+	{clientMode ? null : (
+		<div class="shareOverlay" data-share-overlay hidden>
+			<div class="shareModal" role="dialog" aria-modal="true" aria-label={lang === 'es' ? 'Compartir' : 'Share'}>
+				<div class="shareTop">
+					<div class="shareTitle">{lang === 'es' ? 'Compartir con cliente' : 'Share with client'}</div>
+					<button class="btnGhostSmall" type="button" data-share-close>
+						Close
+					</button>
+				</div>
+				<div class="shareBody">
+					<div class="shareRow">
+						<div class="shareLabel">{lang === 'es' ? 'Enlace' : 'Link'}</div>
+						<input class="shareInput" type="text" readonly value={`${origin}${sharePath}`} data-share-link />
+						<button class="btnSecondary" type="button" data-share-copy>
+							{lang === 'es' ? 'Copiar' : 'Copy'}
+						</button>
+					</div>
+					<div class="shareRow">
+						<div class="shareLabel">PDF</div>
+						<a class="btnPrimary" href={`/api/area-pdf?path=${encodeURIComponent(path)}`} target="_blank" rel="noopener">
+							{lang === 'es' ? 'Descargar PDF' : 'Download PDF'}
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	)}
+
+	<script is:inline>
+		(() => {
+			const openBtn = document.querySelector('[data-share-open]');
+			const overlay = document.querySelector('[data-share-overlay]');
+			const closeBtn = document.querySelector('[data-share-close]');
+			const copyBtn = document.querySelector('[data-share-copy]');
+			const linkInput = document.querySelector('[data-share-link]');
+			if (!(overlay instanceof HTMLElement)) return;
+
+			const setOpen = (v) => {
+				overlay.hidden = !v;
+				document.documentElement.classList.toggle('modalLock', v);
+			};
+
+			if (openBtn instanceof HTMLElement) openBtn.addEventListener('click', () => setOpen(true));
+			if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
+			overlay.addEventListener('click', (e) => {
+				if (e.target === overlay) setOpen(false);
+			});
+
+			if (copyBtn instanceof HTMLElement)
+				copyBtn.addEventListener('click', async () => {
+					try {
+						const v = linkInput instanceof HTMLInputElement ? linkInput.value : '';
+						if (!v) return;
+						await navigator.clipboard.writeText(v);
+					} catch {}
+				});
+		})();
+	</script>
+</Layout>
+
+<style>
+	.area {
+		max-width: 1140px;
+		margin: 0 auto;
+		display: grid;
+		gap: 18px;
+		padding-bottom: 22px;
+	}
+
+	.hero {
+		position: relative;
+		border-radius: 22px;
+		overflow: hidden;
+		border: 1px solid rgba(11, 18, 32, 0.1);
+		background: rgba(255, 255, 255, 0.8);
+	}
+
+	.heroImgWrap {
+		position: absolute;
+		inset: 0;
+	}
+
+	.heroImg {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: saturate(1.05) contrast(1.05);
+	}
+
+	.heroInner {
+		position: relative;
+		z-index: 1;
+		padding: 18px;
+		background: linear-gradient(180deg, rgba(11, 18, 32, 0.62), rgba(11, 18, 32, 0.12));
+		color: #fff;
+	}
+
+	.crumbs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		align-items: center;
+		font-weight: 800;
+		font-size: 13px;
+		color: rgba(255, 255, 255, 0.88);
+	}
+
+	.crumbs a {
+		color: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+	}
+
+	.crumbs a:hover {
+		text-decoration: underline;
+	}
+
+	.crumbSep {
+		opacity: 0.7;
+	}
+
+	.heroTop {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 10px;
+		margin-top: 12px;
+		align-items: baseline;
+	}
+
+	h1 {
+		margin: 0;
+		letter-spacing: -0.03em;
+		line-height: 1.06;
+		font-size: 38px;
+	}
+
+	.updated {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		border-radius: 999px;
+		padding: 7px 10px;
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		background: rgba(0, 0, 0, 0.18);
+		font-weight: 900;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.updated.due {
+		background: rgba(255, 153, 0, 0.16);
+		border-color: rgba(255, 153, 0, 0.35);
+	}
+
+	.heroKpis {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.kpi {
+		background: rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: 16px;
+		padding: 10px 12px;
+	}
+
+	.kpiVal {
+		font-weight: 900;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.kpiLab {
+		font-weight: 800;
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.82);
+		margin-top: 2px;
+	}
+
+	.heroCtas {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		margin-top: 14px;
+		align-items: center;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		padding: 10px 14px;
+		font-weight: 900;
+		text-decoration: none;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		cursor: pointer;
+		font: inherit;
+	}
+
+	.btnPrimary {
+		background: rgba(0, 174, 154, 0.9);
+		color: #0b1220;
+		border-color: rgba(0, 174, 154, 0.9);
+	}
+
+	.btnSecondary {
+		background: rgba(255, 255, 255, 0.12);
+		color: #fff;
+	}
+
+	.btnSecondary:hover {
+		background: rgba(255, 255, 255, 0.18);
+	}
+
+	.clientCta {
+		font-weight: 900;
+		background: rgba(255, 255, 255, 0.14);
+		border: 1px solid rgba(255, 255, 255, 0.22);
+		border-radius: 18px;
+		padding: 12px 14px;
+	}
+
+	.heroCredit {
+		margin-top: 10px;
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.82);
+	}
+
+	.heroCredit a {
+		color: rgba(255, 255, 255, 0.9);
+		text-decoration: none;
+	}
+
+	.heroCredit a:hover {
+		text-decoration: underline;
+	}
+
+	section {
+		background: rgba(255, 255, 255, 0.75);
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	section h2 {
+		margin: 0 0 10px;
+		letter-spacing: -0.02em;
+	}
+
+	.intro p {
+		margin: 0;
+		color: rgba(11, 18, 32, 0.78);
+		line-height: 1.7;
+		font-weight: 700;
+	}
+
+	.statsGrid {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.stat {
+		border-radius: 16px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.8);
+		padding: 12px;
+	}
+
+	.statK {
+		color: rgba(11, 18, 32, 0.62);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.statV {
+		margin-top: 6px;
+		font-weight: 900;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.typeGrid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.typeCard {
+		display: block;
+		border-radius: 16px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.9);
+		padding: 12px;
+		text-decoration: none;
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.typeCard:hover {
+		border-color: rgba(0, 174, 154, 0.4);
+	}
+
+	.typeTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+	}
+
+	.typeLink {
+		margin-top: 6px;
+		font-weight: 800;
+		color: rgba(0, 174, 154, 0.92);
+	}
+
+	.guideGrid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.guideCard {
+		border-radius: 16px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+		padding: 12px;
+	}
+
+	.guideTitle {
+		font-weight: 900;
+		margin-bottom: 8px;
+	}
+
+	.guideBody {
+		overflow-wrap: anywhere;
+	}
+
+	.guideBody :global(img),
+	.guideBody :global(video),
+	.guideBody :global(iframe) {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.guideBody :global(table) {
+		display: block;
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.guideBody :global(h2) {
+		display: none;
+	}
+
+	.childGrid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.childCard {
+		display: block;
+		border-radius: 16px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+		padding: 12px;
+		text-decoration: none;
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.childCard:hover {
+		border-color: rgba(0, 174, 154, 0.4);
+	}
+
+	.childTitle {
+		font-weight: 900;
+	}
+
+	.childDesc {
+		margin-top: 6px;
+		color: rgba(11, 18, 32, 0.7);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.nearbyRow {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.nearbyCard {
+		display: block;
+		border-radius: 999px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+		padding: 10px 12px;
+		text-decoration: none;
+		color: rgba(11, 18, 32, 0.92);
+		font-weight: 900;
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.nearbyCard:hover {
+		border-color: rgba(0, 174, 154, 0.4);
+	}
+
+	.faqList {
+		display: grid;
+		gap: 10px;
+	}
+
+	.faqItem {
+		border-radius: 16px;
+		border: 1px solid rgba(11, 18, 32, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+		padding: 10px 12px;
+	}
+
+	.faqQ {
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.faqA {
+		margin-top: 8px;
+		color: rgba(11, 18, 32, 0.78);
+		line-height: 1.65;
+		font-weight: 700;
+	}
+
+	.shareOverlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(11, 18, 32, 0.55);
+		z-index: 100;
+		display: grid;
+		place-items: center;
+		padding: 16px;
+	}
+
+	.shareModal {
+		width: min(720px, 100%);
+		background: rgba(255, 255, 255, 0.98);
+		border-radius: 18px;
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		box-shadow: 0 18px 80px rgba(0, 0, 0, 0.35);
+		padding: 14px;
+	}
+
+	.shareTop {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.shareTitle {
+		font-weight: 900;
+		letter-spacing: -0.02em;
+	}
+
+	.btnGhostSmall {
+		border: 1px solid rgba(11, 18, 32, 0.14);
+		background: rgba(11, 18, 32, 0.04);
+		border-radius: 999px;
+		padding: 8px 10px;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.shareBody {
+		display: grid;
+		gap: 12px;
+		margin-top: 12px;
+	}
+
+	.shareRow {
+		display: grid;
+		grid-template-columns: 90px 1fr auto;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.shareLabel {
+		font-weight: 900;
+		color: rgba(11, 18, 32, 0.7);
+	}
+
+	.shareInput {
+		width: 100%;
+		border-radius: 12px;
+		border: 1px solid rgba(11, 18, 32, 0.14);
+		padding: 10px 12px;
+		font: inherit;
+	}
+
+	@media (max-width: 900px) {
+		.heroKpis {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.statsGrid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.typeGrid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.childGrid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.nearbyRow {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.shareRow {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.guideGrid {
+			grid-template-columns: 1fr;
+		}
+
+		.heroKpis {
+			grid-template-columns: 1fr;
+		}
+
+		.statsGrid {
+			grid-template-columns: 1fr;
+		}
+
+		.typeGrid {
+			grid-template-columns: 1fr;
+		}
+
+		.childGrid {
+			grid-template-columns: 1fr;
+		}
+
+		.nearbyRow {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

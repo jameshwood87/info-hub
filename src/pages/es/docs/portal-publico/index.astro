@@ -1,0 +1,244 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { listKbPagesByPrefix } from '../../../../lib/directus';
+
+const base = '/es/docs/portal-publico/';
+const baseEn = '/docs/public-portal/';
+const strictEs = true;
+const itemsEs = await listKbPagesByPrefix({ prefix: base, lang: 'es', limit: 2000 });
+const itemsEn = strictEs ? [] : await listKbPagesByPrefix({ prefix: baseEn, lang: 'en', limit: 2000 });
+const esByRest = new Map(itemsEs.map((p) => [p.path.startsWith(base) ? p.path.slice(base.length) : p.path, p]));
+const items = strictEs
+	? itemsEs
+	: itemsEn.map((p) => {
+			const rest = p.path.startsWith(baseEn) ? p.path.slice(baseEn.length) : p.path;
+			const es = esByRest.get(rest);
+			return {
+				...p,
+				title: es?.title || p.title,
+				description: es?.description || p.description,
+				path: `${base}${rest}`,
+			};
+		});
+
+const toSeg = (path: string) => {
+	const rest = path.startsWith(base) ? path.slice(base.length) : path;
+	return rest.split('/').filter(Boolean)[0] || '';
+};
+
+const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+
+const grouped = new Map<string, typeof items>();
+for (const p of items) {
+	const seg = toSeg(p.path);
+	if (!seg) continue;
+	const list = grouped.get(seg) || [];
+	list.push(p);
+	grouped.set(seg, list);
+}
+const segs = [...grouped.keys()].sort((a, b) => a.localeCompare(b));
+
+const decodeHtmlEntities = (s: string) =>
+	s
+		.replaceAll('&amp;', '&')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'")
+		.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&nbsp;', ' ');
+
+const stripSuffix = (t: string) => t.replace(/\s*•\s*PropertyList Info Hub\s*$/i, '').trim();
+const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
+---
+
+<Layout
+	lang="es"
+	title="Docs Portal Público • PropertyList Info Hub"
+	description="Cómo usar el portal público: buscar, guardar propiedades y consultar."
+	canonical="https://info.propertylist.es/es/docs/portal-publico/"
+>
+	<h1>Docs Portal Público</h1>
+	<p class="sub">Guías para el uso del portal público.</p>
+
+	{items.length ? (
+		<div class="grid">
+			{segs.map((seg) => {
+				const list = grouped.get(seg) || [];
+				const viewAllHref = `${base}${seg}/`;
+				const listItems = list.filter((p) => p.path !== viewAllHref).slice(0, 8);
+				return (
+					<section class="card">
+						<div class="cardHeader">
+							<h2>{titleCase(seg)}</h2>
+						</div>
+						{listItems.length ? (
+							<ul class="mini">
+								{listItems.map((p) => (
+									<li>
+										<a class="miniRow" href={p.path}>
+											<span class="miniRowTitle">{cleanTitle(p.title)}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						) : (
+							<div class="emptySmall">Aún no hay páginas.</div>
+						)}
+						{list.length ? (
+							<div class="cardFooter">
+								<a class="cardAction" href={viewAllHref}>
+									Ver todo
+								</a>
+								<span class="cardMeta">{Math.max(0, list.length - 1)} guías</span>
+							</div>
+						) : null}
+					</section>
+				);
+			})}
+		</div>
+	) : (
+		<div class="empty">La documentación del portal público estará disponible pronto.</div>
+	)}
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.cardHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.cardHeader h2 {
+		margin: 0;
+		font-size: 16px;
+		letter-spacing: -0.01em;
+	}
+
+	.mini {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 6px;
+	}
+
+	.miniRow {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 10px 10px;
+		border-radius: 14px;
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.82);
+		font-weight: 800;
+		line-height: 1.25;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	.miniRow::after {
+		content: '›';
+		flex: none;
+		color: rgba(16, 24, 40, 0.45);
+		font-weight: 900;
+		line-height: 1;
+		margin-top: 1px;
+	}
+
+	.miniRowTitle {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.miniRow:hover,
+	.miniRow:focus-visible {
+		outline: none;
+		border-color: rgba(0, 174, 154, 0.4);
+		background: rgba(0, 174, 154, 0.06);
+	}
+
+	.miniRow:hover::after,
+	.miniRow:focus-visible::after {
+		color: var(--accent);
+	}
+
+	.cardFooter {
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.cardAction {
+		color: var(--accent);
+		font-weight: 900;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.cardAction:hover {
+		text-decoration: underline;
+	}
+
+	.cardMeta {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 13px;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+	.emptySmall {
+		padding: 10px 12px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 14px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.empty {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (max-width: 620px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

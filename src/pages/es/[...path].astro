@@ -1,0 +1,2802 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AreaPage from '../../components/AreaPage.astro';
+import { getKbPageByPath, listKbPagesByPrefix, listKbPagesByPrefixes } from '../../lib/directus';
+import { getKbMeta } from '../../lib/adminMeta';
+import { listPrefixRedirects } from '../../lib/kbRedirects';
+import { getTotalViewCounts } from '../../lib/weeklyViews';
+import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../lib/deepl';
+import mlsManualArchive from '../../data/mls-manual-archive.json';
+
+const rawPath = Astro.params.path ?? '';
+const requestUrl = new URL(Astro.request.url);
+const normalizedPathProp = typeof (Astro.props as any)?.normalizedPath === 'string' ? String((Astro.props as any).normalizedPath) : '';
+const defaultRawNormalizedPath = `/es/${rawPath.replace(/^\/+|\/+$/g, '')}/`;
+const rawNormalizedPath = (normalizedPathProp || defaultRawNormalizedPath).replace(/\/{2,}/g, '/').replace(/\/?$/, '/');
+const shareMode = rawNormalizedPath.startsWith('/es/share/');
+const normalizedPath = shareMode ? `/es/${rawNormalizedPath.slice('/es/share/'.length)}`.replace(/^\/+/, '/') : rawNormalizedPath;
+const clientMode = requestUrl.searchParams.get('client') === '1' || shareMode;
+const isArea = normalizedPath.startsWith('/es/andalucia/');
+
+const normaliseEsDocsPath = (p: string) => {
+	const path = String(p || '');
+	if (!path.startsWith('/es/docs/')) return path;
+	const parts = path.split('/').filter(Boolean);
+	if (parts[0] !== 'es' || parts[1] !== 'docs') return path;
+	const root = parts[2] || '';
+	const mappedRoot =
+		root === 'propertylist-mls-user-manual'
+			? 'propertylist-mls-manual-de-usuario'
+			: root === 'mls-manual-de-usuario'
+				? 'propertylist-mls-manual-de-usuario'
+			: root === 'laws-procedures'
+				? 'leyes-procedimientos'
+				: root === 'public-portal'
+					? 'portal-publico'
+					: root === 'getting-started'
+						? 'empezar'
+						: root;
+	parts[2] = mappedRoot;
+	if (mappedRoot === 'propertylist-mls-manual-de-usuario') {
+		const sub = parts[3] || '';
+		if (sub === 'getting-started') parts[3] = 'empezar';
+	}
+	return `/${parts.join('/')}/`;
+};
+
+const canonicalEsDocsPath = normaliseEsDocsPath(normalizedPath);
+if (canonicalEsDocsPath !== normalizedPath) {
+	return new Response(null, { status: 301, headers: { Location: `${canonicalEsDocsPath}${requestUrl.search}` } });
+}
+
+const mapPairs: Array<{ en: string; es: string }> = [
+	{ en: '/general-information/', es: '/es/informacion-general/' },
+	{ en: '/blog/', es: '/es/informacion-general/' },
+	{ en: '/community/', es: '/es/comunidad/' },
+	{ en: '/laws/', es: '/es/leyes/' },
+	{ en: '/neighbourhood/', es: '/es/barrios/' },
+	{ en: '/andalucia/', es: '/es/andalucia/' },
+	{ en: '/mls/', es: '/es/mls/' },
+	{ en: '/pricing/', es: '/es/pricing/' },
+	{ en: '/search', es: '/es/search' },
+];
+
+const toEnglishPath = (p: string) => {
+	const path = String(p || '');
+	if (!path.startsWith('/es/')) return path;
+	const withoutEs = path.replace(/^\/es\//, '/');
+	if (withoutEs.startsWith('/informacion-general/')) {
+		return withoutEs.replace(/^\/informacion-general\//, '/general-information/');
+	}
+	if (withoutEs.startsWith('/barrios/')) {
+		const parts = withoutEs.split('/').filter(Boolean);
+		if (parts.length === 2) {
+			const slug = parts[1] || '';
+			return slug ? `/neighbourhood/andalucia/malaga/${slug}/` : withoutEs;
+		}
+	}
+	if (withoutEs.startsWith('/docs/')) {
+		const parts = withoutEs.split('/').filter(Boolean);
+		if (parts[0] !== 'docs') return withoutEs;
+		const seg = parts[1] || '';
+		const mapped =
+			seg === 'propertylist-mls-manual-de-usuario'
+				? 'propertylist-mls-user-manual'
+				: seg === 'mls-manual-de-usuario'
+					? 'propertylist-mls-user-manual'
+				: seg === 'leyes-procedimientos'
+					? 'laws-procedures'
+					: seg === 'portal-publico'
+						? 'public-portal'
+						: seg === 'empezar'
+							? 'getting-started'
+							: seg;
+		parts[1] = mapped;
+		if (mapped === 'propertylist-mls-user-manual') {
+			const sub = parts[2] || '';
+			if (sub === 'empezar') parts[2] = 'getting-started';
+		}
+		return `/${parts.join('/')}/`;
+	}
+	for (const pair of mapPairs) {
+		if (path.startsWith(pair.es)) return `${pair.en}${path.slice(pair.es.length)}`;
+	}
+	return withoutEs;
+};
+
+const toSpanishPath = (p: string) => {
+	const path = String(p || '');
+	if (path.startsWith('/neighbourhood/')) {
+		const parts = path.split('/').filter(Boolean);
+		if (parts[0] === 'neighbourhood' && parts.length === 4) {
+			const slug = parts[3] || '';
+			if (slug) return `/es/barrios/${slug}/`;
+		}
+	}
+	for (const pair of mapPairs) {
+		if (path.startsWith(pair.en)) return `${pair.es}${path.slice(pair.en.length)}`;
+	}
+	if (!path.startsWith('/docs/')) return `/es${path.startsWith('/') ? path : `/${path}`}`;
+	const parts = path.split('/').filter(Boolean);
+	if (parts[0] !== 'docs') return `/es/${parts.join('/')}/`;
+	const seg = parts[1] || '';
+	const mapped =
+		seg === 'propertylist-mls-user-manual'
+			? 'propertylist-mls-manual-de-usuario'
+			: seg === 'mls-manual-de-usuario'
+				? 'propertylist-mls-manual-de-usuario'
+			: seg === 'laws-procedures'
+				? 'leyes-procedimientos'
+				: seg === 'public-portal'
+					? 'portal-publico'
+					: seg === 'getting-started'
+						? 'empezar'
+						: seg;
+	parts[1] = mapped;
+	if (mapped === 'propertylist-mls-manual-de-usuario') {
+		const sub = parts[2] || '';
+		if (sub === 'getting-started') parts[2] = 'empezar';
+	}
+	return `/es/${parts.join('/')}/`;
+};
+
+const strictEs = false;
+
+const esRuntimeTranslationCache: Map<string, any> = ((globalThis as any).__plEsRuntimeTranslationCache =
+	(globalThis as any).__plEsRuntimeTranslationCache || new Map());
+const esNeighbourhoodGuideCache: Map<string, string> = ((globalThis as any).__plEsNeighbourhoodGuideCache =
+	(globalThis as any).__plEsNeighbourhoodGuideCache || new Map());
+
+const translateEnKbPageToEs = async (pageEn: any, targetPath: string) => {
+	const cacheKey = `${String(pageEn?.id || '')}::${String(pageEn?.path || '')}::${String(targetPath || '')}`;
+	const cached = esRuntimeTranslationCache.get(cacheKey);
+	if (cached) return cached;
+	const titleSrc = String(pageEn?.seo_title || pageEn?.title || '');
+	const descSrc = String(pageEn?.seo_description || pageEn?.description || '');
+	const bodySrc = String(pageEn?.body || '');
+
+	let translatedTitle = '';
+	let translatedDesc = '';
+	let translatedBody = '';
+	try {
+		translatedTitle = titleSrc ? await deeplTranslate(titleSrc) : '';
+		translatedDesc = descSrc ? await deeplTranslate(descSrc) : '';
+		translatedBody = bodySrc ? await deeplTranslateHtml(bodySrc) : '';
+	} catch {
+		const enHref = toEnglishPath(String(targetPath || ''));
+		const safeHref = String(enHref || '')
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;')
+			.replaceAll('"', '&quot;')
+			.replaceAll("'", '&#39;');
+		translatedTitle = '';
+		translatedDesc = 'La traducción automática no está disponible temporalmente.';
+		translatedBody = `<p>La traducción automática no está disponible temporalmente.</p><p><a href="${safeHref}">Ver en inglés</a></p>`;
+	}
+
+	const pageEs = {
+		id: `runtime-es-${String(pageEn?.id || '') || String(targetPath || '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').slice(0, 80)}`,
+		status: 'published',
+		language: 'es',
+		path: targetPath,
+		title: translatedTitle || String(pageEn?.title || ''),
+		description: translatedDesc || null,
+		body: translatedBody || '',
+		seo_title: translatedTitle || null,
+		seo_description: translatedDesc || null,
+	} as any;
+	esRuntimeTranslationCache.set(cacheKey, pageEs);
+	return pageEs;
+};
+const prefixRedirects = (await listPrefixRedirects().catch(() => []))
+	.map((r) => ({ from: String(r?.from || ''), to: String(r?.to || '') }))
+	.filter((r) => r.from && r.to)
+	.sort((a, b) => b.from.length - a.from.length);
+const applyPrefixRedirect = (pRaw: string) => {
+	const raw = String(pRaw || '');
+	if (!raw.startsWith('/')) return raw;
+	const u = raw.split('#');
+	const beforeHash = u[0] || '';
+	const hash = u.length > 1 ? `#${u.slice(1).join('#')}` : '';
+	const q = beforeHash.split('?');
+	const pathOnly = q[0] || '';
+	const query = q.length > 1 ? `?${q.slice(1).join('?')}` : '';
+	const pn = pathOnly.replace(/\/{2,}/g, '/');
+	const withSlash = pn.endsWith('/') || /\/[^/]+\.[a-z0-9]{1,8}$/i.test(pn) ? pn : `${pn}/`;
+	for (const r of prefixRedirects) {
+		if (!withSlash.startsWith(r.from)) continue;
+		const rest = withSlash.slice(r.from.length);
+		const next = `${r.to}${rest}`;
+		return `${next}${query}${hash}`;
+	}
+	return `${withSlash}${query}${hash}`;
+};
+const isMlsManualEsPath = normalizedPath.startsWith('/es/docs/propertylist-mls-manual-de-usuario/');
+
+const looksLikeEnglish = (html: string | null | undefined) => {
+	const strip = (s: string) => String(s || '').replace(/<[^>]+>/g, ' ');
+	const decode = (s: string) =>
+		String(s || '').replace(/&(#x[0-9a-f]+|#\d+|[a-z0-9]+);/gi, (m: string, entRaw: string) => {
+			const ent = String(entRaw || '').toLowerCase();
+			if (ent === 'amp') return '&';
+			if (ent === 'lt') return '<';
+			if (ent === 'gt') return '>';
+			if (ent === 'quot') return '"';
+			if (ent === 'apos' || ent === '#39') return "'";
+			if (ent === 'nbsp') return ' ';
+			if (ent.startsWith('#x')) {
+				const cp = Number.parseInt(ent.slice(2), 16);
+				if (Number.isFinite(cp) && cp > 0) return String.fromCodePoint(cp);
+				return m;
+			}
+			if (ent.startsWith('#')) {
+				const cp = Number.parseInt(ent.slice(1), 10);
+				if (Number.isFinite(cp) && cp > 0) return String.fromCodePoint(cp);
+				return m;
+			}
+			return m;
+		});
+	const text = decode(strip(String(html || '')))
+		.toLowerCase()
+		.replace(/\s+/g, ' ')
+		.trim();
+	if (!text.trim()) return false;
+	const enWords = [
+		'the',
+		'and',
+		'for',
+		'with',
+		'this',
+		'that',
+		'you',
+		'your',
+		'how',
+		'what',
+		'where',
+		'when',
+		'click',
+		'account',
+		'create',
+		'import',
+		'add',
+		'adding',
+		'edit',
+		'manage',
+		'contact',
+		'listings',
+		'listing',
+		'properties',
+		'property',
+		'generate',
+		'report',
+		'reports',
+		'export',
+		'search',
+		'calendar',
+		'tasks',
+		'task',
+		'schedule',
+		'support',
+		'ticket',
+		'leads',
+		'contacts',
+	];
+	const esWords = [
+		'el',
+		'la',
+		'los',
+		'las',
+		'de',
+		'del',
+		'y',
+		'para',
+		'con',
+		'como',
+		'cómo',
+		'cuenta',
+		'anuncio',
+		'anuncios',
+		'propiedad',
+		'propiedades',
+		'contacto',
+		'contactos',
+		'calendario',
+		'tareas',
+		'soporte',
+		'ticket',
+		'leads',
+	];
+	const hasWord = (w: string) => text === w || text.includes(` ${w} `) || text.startsWith(`${w} `) || text.endsWith(` ${w}`);
+	const enHits = enWords.reduce((acc, w) => acc + (hasWord(w) ? 1 : 0), 0);
+	const esHits = esWords.reduce((acc, w) => acc + (hasWord(w) ? 1 : 0), 0);
+	return enHits >= 4 && enHits > esHits + 1;
+};
+
+const stripTagsForTitle = (html: string) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const titleFromHtml = (html: string | null | undefined) => {
+	const src = String(html || '');
+	const m = src.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+	if (!m) return '';
+	return stripTagsForTitle(m[1] || '');
+};
+
+const mlsManualEsBackfill: Record<string, { title: string; description: string; body: string }> = {
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/': {
+		title: 'Anuncios',
+		description: 'Crea, importa, edita y gestiona anuncios de principio a fin.',
+		body: `
+<h2>Anuncios</h2>
+<p>En esta sección encontrarás los flujos más habituales para publicar y gestionar anuncios en el MLS: creación, importación, edición, estados, duplicados e informes.</p>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/creating-a-new-listing/">Crear un anuncio nuevo</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/">Importar propiedades</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/editing-existing-listings/">Editar anuncios existentes</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/">Cambiar el estado del anuncio</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/">Propiedades duplicadas</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tracking-property-enquiries-leads/">Seguimiento de consultas y leads</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/generating-property-reports/">Generar informes de propiedad</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/export-listings-xml/">Exportar anuncios (XML)</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/">Consejos para anuncios de alta calidad</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/creating-a-new-listing/': {
+		title: 'Crear un anuncio nuevo',
+		description: 'Añade una propiedad al MLS con los campos clave y buenas prácticas.',
+		body: `
+<h2>Crear un anuncio nuevo</h2>
+<p>Crea un anuncio desde cero con la información mínima necesaria y complétalo con fotos y detalles para mejorar su rendimiento.</p>
+<h3>Pasos</h3>
+<ol>
+	<li>Abre <strong>Anuncios</strong> y selecciona <strong>Crear anuncio</strong>.</li>
+	<li>Rellena los datos básicos: tipo de propiedad, ubicación, precio y referencia.</li>
+	<li>Añade características y una descripción clara.</li>
+	<li>Sube fotos en buena resolución y en el orden correcto.</li>
+	<li>Revisa los datos y guarda el anuncio.</li>
+</ol>
+<p>Si ya tienes propiedades en otro sistema, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/">Importar propiedades</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/': {
+		title: 'Importar propiedades',
+		description: 'Trae anuncios a PropertyList usando los métodos disponibles.',
+		body: `
+<h2>Importar propiedades</h2>
+<p>Importa anuncios de forma masiva para ahorrar tiempo. Antes de empezar, revisa que tus datos estén limpios y que las referencias sean únicas.</p>
+<h3>Recomendaciones</h3>
+<ul>
+	<li>Usa referencias consistentes para evitar duplicados.</li>
+	<li>Normaliza municipios, zonas y tipos de propiedad.</li>
+	<li>Verifica precios, superficies y número de habitaciones/baños.</li>
+</ul>
+<p>Después de importar, revisa cada anuncio y completa fotos y descripciones. Consulta también <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/">Propiedades duplicadas</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/editing-existing-listings/': {
+		title: 'Editar anuncios existentes',
+		description: 'Actualiza precio, descripción, fotos y características sin perder trazabilidad.',
+		body: `
+<h2>Editar anuncios existentes</h2>
+<p>Actualizar un anuncio a tiempo mejora su visibilidad y reduce errores de datos compartidos con el equipo o con portales.</p>
+<h3>Qué revisar</h3>
+<ul>
+	<li>Precio y condiciones (venta/alquiler, gastos, comunidad).</li>
+	<li>Ubicación y datos de zona.</li>
+	<li>Características y superficies.</li>
+	<li>Fotos y orden de galería.</li>
+	<li>Descripción y puntos clave.</li>
+</ul>
+<p>Si necesitas marcar un cambio importante (p. ej., vendido o reservado), consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/">Cambiar el estado del anuncio</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/': {
+		title: 'Cambiar el estado del anuncio',
+		description: 'Gestiona estados como activo, reservado, vendido o retirado.',
+		body: `
+<h2>Cambiar el estado del anuncio</h2>
+<p>El estado indica si una propiedad está disponible y ayuda a mantener el inventario actualizado.</p>
+<h3>Buenas prácticas</h3>
+<ul>
+	<li>Actualiza el estado en cuanto cambie la disponibilidad.</li>
+	<li>Evita tener el mismo anuncio activo con varias referencias.</li>
+	<li>Revisa el historial de actividad para entender cambios recientes.</li>
+</ul>
+<p>Si detectas entradas repetidas del mismo inmueble, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/">Propiedades duplicadas</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/': {
+		title: 'Propiedades duplicadas',
+		description: 'Identifica y gestiona anuncios duplicados para evitar confusión.',
+		body: `
+<h2>Propiedades duplicadas</h2>
+<p>Los duplicados generan problemas de calidad de datos y pueden afectar a la experiencia del cliente.</p>
+<h3>Cómo evitarlos</h3>
+<ul>
+	<li>Mantén referencias únicas por inmueble.</li>
+	<li>Revisa importaciones antes de publicarlas.</li>
+	<li>Unifica fotos y descripciones en un único anuncio.</li>
+</ul>
+<p>Para mejorar la calidad general de tus anuncios, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/">Consejos para anuncios de alta calidad</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/tracking-property-enquiries-leads/': {
+		title: 'Seguimiento de consultas y leads',
+		description: 'Organiza solicitudes, preguntas y leads asociados a un anuncio.',
+		body: `
+<h2>Seguimiento de consultas y leads</h2>
+<p>Centraliza la actividad de cada anuncio para responder más rápido y medir interés real.</p>
+<h3>Sugerencias</h3>
+<ul>
+	<li>Registra llamadas y mensajes clave como actividad.</li>
+	<li>Asocia leads y contactos al anuncio correcto.</li>
+	<li>Actualiza el estado del lead según avance (nuevo, en seguimiento, cualificado, etc.).</li>
+</ul>
+<p>Si quieres preparar material para cliente, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/generating-property-reports/">Generar informes de propiedad</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/generating-property-reports/': {
+		title: 'Generar informes de propiedad',
+		description: 'Crea informes para cliente con comparables, tendencias y contexto de zona.',
+		body: `
+<h2>Generar informes de propiedad</h2>
+<p>Los informes te ayudan a explicar el precio y el contexto del mercado con datos: comparables, tendencias y puntos de interés cercanos.</p>
+<h3>Incluye normalmente</h3>
+<ul>
+	<li>Estimación de valor y rango orientativo</li>
+	<li>Análisis de comparables en la zona</li>
+	<li>Tendencias de mercado</li>
+	<li>Contexto de ubicación (servicios, transporte, colegios)</li>
+	<li>Gráficos y resúmenes visuales</li>
+</ul>
+<h3>Cómo usarlo</h3>
+<ol>
+	<li>Abre un anuncio.</li>
+	<li>Selecciona la opción de análisis/informe disponible en la ficha.</li>
+	<li>Revisa los datos y genera el informe.</li>
+	<li>Comparte el PDF o enlace con el cliente.</li>
+</ol>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/export-listings-xml/': {
+		title: 'Exportar anuncios (XML)',
+		description: 'Exporta anuncios a integraciones y canales compatibles.',
+		body: `
+<h2>Exportar anuncios (XML)</h2>
+<p>Usa la exportación para enviar anuncios a webs, portales o integraciones que consuman datos en formato XML.</p>
+<h3>Antes de exportar</h3>
+<ul>
+	<li>Revisa que tus anuncios tengan fotos y descripciones completas.</li>
+	<li>Comprueba el estado (activo) y los campos obligatorios.</li>
+	<li>Evita duplicados para no exportar el mismo inmueble varias veces.</li>
+</ul>
+<p>Para mejorar la calidad de salida, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/">Consejos para anuncios de alta calidad</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/': {
+		title: 'Consejos para anuncios de alta calidad',
+		description: 'Mejora el rendimiento del anuncio con fotos, textos y datos coherentes.',
+		body: `
+<h2>Consejos para anuncios de alta calidad</h2>
+<ul>
+	<li>Usa fotos luminosas, nítidas y ordenadas por recorrido.</li>
+	<li>Escribe una descripción clara con beneficios, no solo características.</li>
+	<li>Completa superficies, orientación, vistas y calidades.</li>
+	<li>Incluye detalles clave de ubicación y accesos.</li>
+	<li>Revisa precio y condiciones antes de publicar.</li>
+</ul>
+<p>Si necesitas actualizar disponibilidad, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/">Cambiar el estado del anuncio</a>.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/additional-resources/': {
+		title: 'Recursos adicionales',
+		description: 'Plantillas, soporte y recursos para sacar más partido al MLS.',
+		body: `
+<h2>Recursos adicionales</h2>
+<p>En esta sección encontrarás recursos para ayudarte a trabajar más rápido y con más confianza.</p>
+<ul>
+	<li>Foros y comunidad (próximamente)</li>
+	<li>Materiales y formación (próximamente)</li>
+	<li>Grupos de WhatsApp de la comunidad</li>
+	<li>Soporte de PropertyList</li>
+</ul>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/additional-resources/video-tutorials/">Tutoriales en vídeo</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/additional-resources/video-tutorials/': {
+		title: 'Tutoriales en vídeo',
+		description: 'Aprende con vídeos cortos (próximamente).',
+		body: `
+<h2>Tutoriales en vídeo</h2>
+<p>Estamos preparando tutoriales en vídeo para los flujos más habituales. Vuelve pronto.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/ai-property-research-agent/': {
+		title: 'Agente de investigación de propiedades (IA)',
+		description: 'Informes de mercado y zona con un clic para tus anuncios.',
+		body: `
+<h2>Agente de investigación de propiedades (IA)</h2>
+<p>El Agente de investigación con IA crea informes listos para cliente a partir de un anuncio: comparables, contexto de zona, puntos de interés y más.</p>
+<h3>Cómo usarlo</h3>
+<ol>
+	<li>Entra en un anuncio del MLS.</li>
+	<li>Haz clic en <strong>AI Analysis</strong>.</li>
+	<li>Añade detalles del entorno (calle, referencia, puntos clave).</li>
+	<li>Pulsa <strong>Analyse</strong> para generar el informe.</li>
+</ol>
+<p><a href="https://ai.propertylist.es/how-it-works" target="_blank" rel="noopener">Ver cómo funciona</a></p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/credits/': {
+		title: 'Créditos',
+		description: 'Entiende el sistema de créditos y cómo se usan.',
+		body: `
+<h2>Créditos</h2>
+<p>Compartir propiedades es gratis, pero algunas funciones avanzadas se desbloquean con créditos.</p>
+<h3>Cómo funciona</h3>
+<ul>
+	<li>1 crédito = 1 €</li>
+	<li>Sin cuotas mensuales</li>
+	<li>Paga solo por lo que necesites, cuando lo necesites</li>
+</ul>
+<h3>Comprar créditos</h3>
+<ol>
+	<li>Abre la pestaña <strong>Créditos</strong> en tu cuenta.</li>
+	<li>Elige el importe y sigue el proceso de pago.</li>
+	<li>Los créditos se añaden a tu saldo tras el pago.</li>
+</ol>
+<p><strong>Los créditos no caducan.</strong></p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/documents/': {
+		title: 'Documentos',
+		description: 'Sube, organiza y vincula documentos a propiedades y contactos.',
+		body: `
+<h2>Documentos</h2>
+<p>En esta área puedes subir y organizar documentos para tenerlos siempre a mano: contratos, planos, fotos, certificados, etc.</p>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/documents/share-documents/">Compartir documentos</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/documents/share-documents/': {
+		title: 'Compartir documentos',
+		description: 'Comparte documentos con clientes o equipo (próximamente).',
+		body: `
+<h2>Compartir documentos</h2>
+<p>La opción para compartir documentos desde la plataforma estará disponible pronto.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/faq-mls/': {
+		title: 'Preguntas frecuentes (MLS)',
+		description: 'Respuestas rápidas a las dudas más comunes.',
+		body: `
+<h2>Preguntas frecuentes (MLS)</h2>
+<p>Estamos recopilando las dudas más comunes para cubrirlas aquí. Si necesitas ayuda, abre un ticket de soporte.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/empezar/': {
+		title: 'Empezar',
+		description: 'Primeros pasos para usar el MLS y el CRM.',
+		body: `
+<h2>Empezar</h2>
+<p>Este manual cubre flujos principales del MLS y el CRM: anuncios, contactos, leads, documentos e informes.</p>
+<h3>Recomendado</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listing-a-property/">Publicar una propiedad</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/searching-for-properties/">Buscar propiedades</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/portal-leads/">Leads del portal</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/empezar/download-app/">Descargar la app</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/empezar/download-app/': {
+		title: 'Descargar la app',
+		description: 'Instala PropertyList como app en escritorio o móvil.',
+		body: `
+<h2>Descargar la app</h2>
+<h3>App de escritorio (Chrome)</h3>
+<ol>
+	<li>Abre Chrome e inicia sesión en <a href="https://agents.propertylist.es/" target="_blank" rel="noopener">agents.propertylist.es</a>.</li>
+	<li>Haz clic en los 3 puntos (arriba a la derecha).</li>
+	<li>Selecciona <strong>Instalar…</strong> (o <strong>Instalar página como app…</strong>).</li>
+	<li>Asigna un nombre y confirma.</li>
+	<li>Ancla la app a la barra de tareas si lo deseas.</li>
+</ol>
+<h3>Android</h3>
+<ol>
+	<li>Abre Chrome e inicia sesión.</li>
+	<li>Menú (3 puntos) → <strong>Añadir a pantalla de inicio</strong> / <strong>Instalar</strong>.</li>
+	<li>Confirma el acceso directo.</li>
+</ol>
+<h3>iPhone (iOS)</h3>
+<ol>
+	<li>Abre Safari e inicia sesión.</li>
+	<li>Pulsa <strong>Compartir</strong>.</li>
+	<li>Selecciona <strong>Añadir a pantalla de inicio</strong>.</li>
+</ol>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/listing-a-property/': {
+		title: 'Publicar una propiedad',
+		description: 'Crea, importa y gestiona anuncios en el MLS.',
+		body: `
+<h2>Publicar una propiedad</h2>
+<p>Publicar un anuncio en PropertyList MLS es rápido y puedes hacerlo desde cualquier dispositivo.</p>
+<h3>Opciones de carga</h3>
+<ul>
+	<li><strong>XML</strong>: ideal para subir un gran volumen de anuncios al inicio.</li>
+	<li><strong>Manual</strong>: recomendado para máximo control y calidad del anuncio.</li>
+</ul>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-listings/">Gestionar anuncios</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/managing-listings/': {
+		title: 'Gestionar anuncios',
+		description: 'Edita anuncios, actualiza estados y genera informes.',
+		body: `
+<h2>Gestionar anuncios</h2>
+<p>Edita tus anuncios, actualiza el estado para mantenerlo correcto en toda la red y crea informes para clientes.</p>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-listings/tracking-property-enquiries-leads/">Seguimiento de consultas y leads</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-listings/generating-property-reports/">Generar informes de propiedades</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/managing-listings/tracking-property-enquiries-leads/': {
+		title: 'Seguimiento de consultas y leads',
+		description: 'Sigue la actividad de tus anuncios y gestiona consultas.',
+		body: `
+<h2>Seguimiento de consultas y leads</h2>
+<p>Registra y gestiona consultas generadas por tus anuncios para no perder oportunidades.</p>
+<h3>Buenas prácticas</h3>
+<ul>
+	<li>Responde rápido y registra el resultado.</li>
+	<li>Asigna un responsable y una próxima acción.</li>
+	<li>Vincula la consulta al contacto y a la propiedad.</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/portal-leads/': {
+		title: 'Leads del portal',
+		description: 'Cómo llegan los leads del portal y cómo gestionarlos.',
+		body: `
+<h2>Leads del portal</h2>
+<p>Los leads del portal se generan cuando un usuario interesado contacta por una propiedad publicada. Gestiona el lead, asigna un agente y haz seguimiento.</p>
+<h3>Pasos</h3>
+<ol>
+	<li>Abre el lead desde la sección de <strong>Leads</strong>.</li>
+	<li>Revisa el interés y la propiedad relacionada.</li>
+	<li>Asigna un responsable y fija la próxima acción.</li>
+	<li>Cuando esté cualificado, conviértelo en contacto.</li>
+</ol>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/feature-your-property-on-the-public-property-portal/': {
+		title: 'Destacar tu propiedad en el portal público',
+		description: 'Aumenta visibilidad destacando anuncios (según disponibilidad).',
+		body: `
+<h2>Destacar tu propiedad en el portal público</h2>
+<p>Destacar un anuncio puede aumentar su visibilidad. Las opciones disponibles dependen del plan y de los créditos.</p>
+<p>Si no ves la opción en tu cuenta, contacta con soporte.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/mls-property-alerts/': {
+		title: 'Alertas de propiedades',
+		description: 'Configura alertas para no perder oportunidades.',
+		body: `
+<h2>Alertas de propiedades</h2>
+<p>Crea alertas para recibir notificaciones cuando haya propiedades nuevas o cambios que encajen con tus criterios.</p>
+<p>Esta sección se ampliará con capturas y pasos detallados.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/mls-user-manual/navigate-the-mls-dashboard-and-interface/': {
+		title: 'Navegar por el panel e interfaz del MLS',
+		description: 'Encuentra listados, filtros, y accesos rápidos del panel.',
+		body: `
+<h2>Navegar por el panel e interfaz del MLS</h2>
+<p>El panel del MLS te permite acceder rápidamente a tus anuncios, búsquedas guardadas, contactos y actividad reciente.</p>
+<h3>Consejos</h3>
+<ul>
+	<li>Usa filtros para acotar por zona, precio y tipo.</li>
+	<li>Guarda búsquedas para repetir flujos habituales.</li>
+	<li>Revisa notificaciones y tareas pendientes a diario.</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/new-developments/': {
+		title: 'Obra nueva',
+		description: 'Publica y promociona proyectos de obra nueva.',
+		body: `
+<h2>Obra nueva</h2>
+<p>La sección de obra nueva te ayuda a publicar promociones y conectar con agentes activos que trabajan con compradores directos.</p>
+<h3>Qué incluye</h3>
+<ul>
+	<li>Mayor visibilidad para proyectos y unidades</li>
+	<li>Conexión directa con agentes</li>
+	<li>Soporte para incorporar datos rápidamente</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/new-features-roadmap/': {
+		title: 'Novedades y hoja de ruta',
+		description: 'Qué hay de nuevo y qué viene después.',
+		body: `
+<h2>Novedades y hoja de ruta</h2>
+<p>Publicamos nuevas funciones con frecuencia. Si tienes sugerencias, puedes proponerlas o votar ideas.</p>
+<p><a href="https://info.propertylist.es/request-new-features/" target="_blank" rel="noopener">Solicitar nuevas funciones</a></p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/': {
+		title: 'Informes y estadísticas',
+		description: 'Crea informes y analiza rendimiento y tendencias.',
+		body: `
+<h2>Informes y estadísticas</h2>
+<p>Genera informes para clientes y analiza métricas para mejorar resultados.</p>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/accessing-property-market-data/">Acceder a datos de mercado</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/identifying-market-trends/">Identificar tendencias de mercado</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/generating-market-reports/">Generar informes de mercado</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/accessing-property-market-data/': {
+		title: 'Acceder a datos de mercado',
+		description: 'Consulta datos agregados y comparables del mercado.',
+		body: `
+<h2>Acceder a datos de mercado</h2>
+<p>Usa los datos de mercado para apoyar recomendaciones de precio y preparar informes con contexto.</p>
+<ul>
+	<li>Filtra por zona y tipo de propiedad</li>
+	<li>Revisa rangos de precio y evolución</li>
+	<li>Contrasta con propiedades comparables</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/identifying-market-trends/': {
+		title: 'Identificar tendencias de mercado',
+		description: 'Detecta cambios en demanda, precios y tiempos de venta.',
+		body: `
+<h2>Identificar tendencias de mercado</h2>
+<p>Analiza métricas para entender qué está funcionando y anticipar cambios.</p>
+<ul>
+	<li>Evolución de precios por zona</li>
+	<li>Tiempo medio en mercado</li>
+	<li>Interés y consultas por tipo de propiedad</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/requests/': {
+		title: 'Solicitudes',
+		description: 'Gestiona solicitudes de clientes y de otros agentes.',
+		body: `
+<h2>Solicitudes</h2>
+<p>Las solicitudes ayudan a centralizar necesidades: lo que busca un cliente o una colaboración con otro agente.</p>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/requests/agent-requests/">Solicitudes de agentes</a></li>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/requests/client-requests/">Solicitudes de clientes</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/': {
+		title: 'Pipeline de ventas',
+		description: 'Controla el estado de oportunidades y próximos pasos.',
+		body: `
+<h2>Pipeline de ventas</h2>
+<p>Utiliza el pipeline para llevar un seguimiento de oportunidades: contacto inicial, visitas, ofertas y cierre.</p>
+<ul>
+	<li>Asigna un responsable</li>
+	<li>Define la próxima acción</li>
+	<li>Actualiza el estado tras cada interacción</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/searching-for-properties/': {
+		title: 'Buscar propiedades',
+		description: 'Usa filtros y búsquedas guardadas para encontrar lo que necesitas.',
+		body: `
+<h2>Buscar propiedades</h2>
+<p>Filtra por ubicación, precio, tipo de propiedad y características para encontrar opciones rápidamente.</p>
+<h3>Consejos</h3>
+<ul>
+	<li>Guarda búsquedas frecuentes.</li>
+	<li>Comparte resultados con clientes desde el anuncio.</li>
+	<li>Activa alertas para novedades.</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/security/': {
+		title: 'Seguridad',
+		description: 'Protege tu cuenta y gestiona accesos.',
+		body: `
+<h2>Seguridad</h2>
+<ul>
+	<li>Usa contraseñas robustas y únicas.</li>
+	<li>Revisa permisos de usuarios y roles.</li>
+	<li>No compartas accesos entre personas.</li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/technical-documentation/': {
+		title: 'Documentación técnica',
+		description: 'Notas para integraciones y configuraciones avanzadas.',
+		body: `
+<h2>Documentación técnica</h2>
+<p>Información para integraciones (por ejemplo, XML import/export) y aspectos técnicos.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/tracking-listing-exposure/': {
+		title: 'Seguimiento de exposición del anuncio',
+		description: 'Mide visibilidad, vistas y actividad relacionada.',
+		body: `
+<h2>Seguimiento de exposición del anuncio</h2>
+<p>Revisa métricas de exposición para entender qué anuncios generan más interés.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/verified-agency/': {
+		title: 'Agencia verificada',
+		description: 'Verificación para generar confianza con clientes y agentes.',
+		body: `
+<h2>Agencia verificada</h2>
+<p>La verificación ayuda a aumentar confianza y visibilidad. Contacta con soporte para el proceso de verificación.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/your-account/': {
+		title: 'Tu cuenta',
+		description: 'Preferencias, equipo y datos de la cuenta.',
+		body: `
+<h2>Tu cuenta</h2>
+<p>Gestiona la información de la empresa, usuarios, permisos y preferencias.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/your-account/managing-user-permissions-and-access-levels/': {
+		title: 'Gestionar permisos y niveles de acceso',
+		description: 'Controla lo que cada usuario puede ver y hacer dentro del MLS.',
+		body: `
+<h2>Gestionar permisos y niveles de acceso</h2>
+<p>Configura usuarios y permisos para que cada miembro del equipo tenga el acceso adecuado.</p>
+<h3>Recomendaciones</h3>
+<ul>
+	<li>Asigna el mínimo acceso necesario para cada rol.</li>
+	<li>Revisa permisos al incorporar o dar de baja usuarios.</li>
+	<li>Evita compartir credenciales entre personas.</li>
+</ul>
+<p>Si necesitas ajustar permisos específicos para tu agencia, contacta con soporte indicando el correo del usuario y el acceso deseado.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/microsite-share/': {
+		title: 'MicroSite y compartir',
+		description: 'Comparte propiedades y crea páginas para clientes.',
+		body: `
+<h2>MicroSite y compartir</h2>
+<p>Comparte anuncios con clientes con enlaces y páginas personalizadas.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/contacts/': {
+		title: 'Contactos',
+		description: 'Crea y gestiona contactos para seguimiento.',
+		body: `
+<h2>Contactos</h2>
+<p>Guarda contactos, añade notas, vincula propiedades y registra actividad.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/leads/': {
+		title: 'Leads',
+		description: 'Gestiona leads y conviértelos en contactos.',
+		body: `
+<h2>Leads</h2>
+<p>Centraliza los leads entrantes, asigna responsables y define próximos pasos.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/calendar/': {
+		title: 'Calendario',
+		description: 'Organiza citas, recordatorios y tareas.',
+		body: `
+<h2>Calendario</h2>
+<p>Gestiona tu agenda: citas con clientes, tareas internas y recordatorios.</p>
+<h3>Guías</h3>
+<ul>
+	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/how-to-use-the-calendar/syncing-your-calendar-with-other-apps/">Sincronizar el calendario con otras apps</a></li>
+</ul>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/faq-mls-crm/': {
+		title: 'Preguntas frecuentes (MLS y CRM)',
+		description: 'Respuestas rápidas sobre MLS, CRM y la plataforma.',
+		body: `
+<h2>Preguntas frecuentes (MLS y CRM)</h2>
+<p>Estamos consolidando preguntas frecuentes sobre MLS y CRM. Si necesitas ayuda, abre un ticket.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/how-to-use-the-calendar/syncing-your-calendar-with-other-apps/': {
+		title: 'Sincronizar el calendario con otras apps',
+		description: 'Integra tu calendario con otras aplicaciones (según disponibilidad).',
+		body: `
+<h2>Sincronizar el calendario con otras apps</h2>
+<p>La sincronización con calendarios externos estará disponible pronto. Mientras tanto, crea eventos y recordatorios dentro de PropertyList.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/requests/agent-requests/': {
+		title: 'Solicitudes de agentes',
+		description: 'Colabora con otros agentes a través de solicitudes.',
+		body: `
+<h2>Solicitudes de agentes</h2>
+<p>Usa solicitudes para coordinar colaboraciones con otros agentes: necesidades de clientes, captación, visitas y seguimiento.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/requests/client-requests/': {
+		title: 'Solicitudes de clientes',
+		description: 'Define lo que busca un cliente y haz seguimiento.',
+		body: `
+<h2>Solicitudes de clientes</h2>
+<p>Registra los criterios del cliente (zona, presupuesto, tipo, extras) y actualiza el estado a medida que avanzas.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/sharing-listings-social-media/': {
+		title: 'Compartir anuncios en redes sociales',
+		description: 'Comparte propiedades en redes para generar interés.',
+		body: `
+<h2>Compartir anuncios en redes sociales</h2>
+<p>Comparte anuncios desde la plataforma en redes sociales o por mensajería para aumentar el alcance.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/managing-listings/generating-property-reports/': {
+		title: 'Generar informes de propiedades',
+		description: 'Crea informes listos para enviar a clientes.',
+		body: `
+<h2>Generar informes de propiedades</h2>
+<p>Genera informes con información clave del anuncio para enviar a clientes, guardar en el expediente o compartir con el equipo.</p>
+`,
+	},
+	'/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/generating-market-reports/': {
+		title: 'Generar informes de mercado',
+		description: 'Crea informes de mercado para apoyar precio y estrategia.',
+		body: `
+<h2>Generar informes de mercado</h2>
+<p>Usa datos de mercado y comparables para preparar informes que ayuden a explicar precio y tendencias.</p>
+`,
+	},
+};
+
+const mlsManualBackfillEsForPath = (path: string) => {
+	const def =
+		mlsManualEsBackfill[path] ||
+		(path.startsWith('/es/docs/mls-manual-de-usuario/')
+			? mlsManualEsBackfill[path.replace('/es/docs/mls-manual-de-usuario/', '/es/docs/propertylist-mls-manual-de-usuario/')]
+			: null);
+	if (!def) return null;
+	const safeId = path
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+	return {
+		id: `legacy-es-mls-${safeId}`,
+		status: 'published',
+		language: 'es',
+		path,
+		title: def.title,
+		description: def.description,
+		body: String(def.body || '').replaceAll('/es/docs/propertylist-mls-manual-de-usuario/', '/es/docs/mls-manual-de-usuario/'),
+		seo_title: `${def.title} • Manual de usuario MLS`,
+		seo_description: def.description,
+	};
+};
+
+const mlsManualBackfillEsNavItems = Object.entries(mlsManualEsBackfill).map(([path, def]) => {
+	const safeId = path
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+	return {
+		id: `legacy-es-mls-nav-${safeId}`,
+		status: 'published',
+		language: 'es',
+		path,
+		title: def.title,
+		description: def.description,
+		body: null,
+		seo_title: null,
+		seo_description: null,
+	};
+});
+
+const containsEsPlaceholderMarkers = (body: string | null | undefined) => {
+	const src = String(body || '');
+	if (!src) return false;
+	return (
+		/traducci[oó]n en curso/i.test(src) ||
+		/gu[ií]a en espa[nñ]ol pr[oó]ximamente/i.test(src) ||
+		/contenido en espa[nñ]ol pr[oó]ximamente/i.test(src) ||
+		/abrir en ingl[eé]s/i.test(src)
+	);
+};
+
+const looksEnglishForEsGate = (html: string | null | undefined) => {
+	const text = String(html || '').replace(/<[^>]*>/g, ' ').toLowerCase();
+	const enWords = [
+		'the',
+		'and',
+		'for',
+		'with',
+		'to',
+		'from',
+		'this',
+		'that',
+		'you',
+		'your',
+		'are',
+		'not',
+		'guide',
+		'neighbourhood',
+		'market',
+		'buyers',
+		'renters',
+	];
+	const esWords = ['de', 'la', 'el', 'y', 'para', 'con', 'este', 'esta', 'que', 'tu', 'tus', 'guía', 'barrio', 'mercado', 'compradores', 'inquilinos'];
+
+	const count = (words: string[]) => {
+		let n = 0;
+		for (const w of words) {
+			const re = new RegExp(`\\b${w.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}\\b`, 'g');
+			const m = text.match(re);
+			if (m) n += m.length;
+		}
+		return n;
+	};
+
+	const en = count(enWords);
+	const es = count(esWords);
+	if (es === 0 && en > 0) return true;
+	return en >= es * 1.8 && en >= 25;
+};
+
+let pageEsRaw = await getKbPageByPath(normalizedPath, { lang: 'es' });
+const englishPathRaw = toEnglishPath(normalizedPath);
+const pageEnRawByEsPath = await getKbPageByPath(normalizedPath, { lang: 'en' });
+const barriosSlugForLookup =
+	normalizedPath.startsWith('/es/barrios/') && normalizedPath.split('/').filter(Boolean).length === 3 ? normalizedPath.split('/').filter(Boolean)[2] || '' : '';
+const englishCandidates = barriosSlugForLookup ? [englishPathRaw, `/neighbourhood/${barriosSlugForLookup}/`] : [englishPathRaw];
+let pageEnRaw = null as any;
+for (const p of englishCandidates) {
+	pageEnRaw = await getKbPageByPath(p, { lang: 'en' });
+	if (pageEnRaw) break;
+}
+const englishPath = pageEnRaw ? englishPathRaw : englishPathRaw.startsWith('/docs/') ? applyPrefixRedirect(englishPathRaw) : englishPathRaw;
+const pageEnDirect = pageEnRawByEsPath || pageEnRaw || (englishPath !== englishPathRaw ? await getKbPageByPath(englishPath, { lang: 'en' }) : null);
+const pageEnArchiveBody =
+	!pageEnDirect && (mlsManualArchive as any)?.pages && (englishPath.startsWith('/docs/') ? ((mlsManualArchive as any).pages[englishPath] || (mlsManualArchive as any).pages[englishPathRaw])?.body : null);
+const pageEnArchive = pageEnArchiveBody
+	? ({
+			id: `archive:${englishPath}`,
+			status: 'published',
+			language: 'en',
+			path: englishPath,
+			title: titleFromHtml(pageEnArchiveBody) || stripTagsForTitle(englishPath.split('/').filter(Boolean).slice(-1)[0] || ''),
+			description: null,
+			body: String(pageEnArchiveBody || ''),
+			seo_title: null,
+			seo_description: null,
+		} as any)
+	: null;
+const pageEn = pageEnDirect || pageEnArchive;
+const mlsBackfillEs = isMlsManualEsPath ? mlsManualBackfillEsForPath(normalizedPath) : null;
+const isEsDocsPath = normalizedPath.startsWith('/es/docs/');
+const pageEsLooksEnglish = Boolean(pageEsRaw && (looksLikeEnglish(pageEsRaw.body) || looksEnglishForEsGate(pageEsRaw.body)));
+const pageEsIsPlaceholder = Boolean(pageEsRaw && containsEsPlaceholderMarkers(pageEsRaw.body));
+if (pageEsIsPlaceholder || pageEsLooksEnglish) pageEsRaw = null;
+const isLawsEsPath = normalizedPath.startsWith('/es/docs/leyes-procedimientos/');
+const lawsBackfillEs = (() => {
+	if (!isLawsEsPath) return null;
+	if (!pageEsRaw) return null;
+	if (!looksLikeEnglish(pageEsRaw.body)) return null;
+	const safeId = normalizedPath
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+	return {
+		id: `legacy-es-laws-${safeId}`,
+		status: 'published',
+		language: 'es',
+		path: normalizedPath,
+		title: 'Contenido en español próximamente',
+		description: 'Estamos preparando la versión en español de esta guía.',
+		body: `
+<h2>Contenido en español próximamente</h2>
+<p>Estamos preparando la versión en español de esta guía.</p>
+<p>Mientras tanto, puedes ver la versión en inglés: <a href="${englishPath}">Abrir en inglés</a>.</p>
+`,
+		seo_title: `Contenido en español próximamente • PropertyList Info Hub`,
+		seo_description: 'Estamos preparando la versión en español de esta guía.',
+	};
+})();
+const docsEnglishBackfillEs = (() => {
+	if (!normalizedPath.startsWith('/es/docs/')) return null;
+	if (!pageEsRaw) return null;
+	if (!looksLikeEnglish(pageEsRaw.body)) return null;
+	if (isLawsEsPath) return null;
+	const safeId = normalizedPath
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+	return {
+		id: `legacy-es-docs-${safeId}`,
+		status: 'published',
+		language: 'es',
+		path: normalizedPath,
+		title: 'Guía en español próximamente',
+		description: 'Estamos preparando la versión en español de esta guía.',
+		body: `
+<h2>Guía en español próximamente</h2>
+<p>Estamos preparando la versión en español de esta guía.</p>
+<p>Mientras tanto, puedes ver la versión en inglés: <a href="${englishPath}">Abrir en inglés</a>.</p>
+`,
+		seo_title: `Guía en español próximamente • PropertyList Info Hub`,
+		seo_description: 'Estamos preparando la versión en español de esta guía.',
+	};
+})();
+const pageEs = pageEsRaw || mlsBackfillEs;
+const isBarriosDetail =
+	normalizedPath.startsWith('/es/barrios/') &&
+	normalizedPath !== '/es/barrios/' &&
+	normalizedPath.split('/').filter(Boolean).length === 3;
+
+let pageEsResolved: any = pageEs;
+if (!pageEsResolved && pageEn && canTranslateWithDeepL()) {
+	pageEsResolved = await translateEnKbPageToEs(pageEn, normalizedPath);
+}
+if (!pageEsResolved && pageEn && isBarriosDetail) {
+	const base = String(pageEn?.title || '')
+		.replace(/\s*(?:neighbourhood\s+guide|area\s+guide)\s*$/i, '')
+		.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '')
+		.trim();
+	const place = base || barriosSlugForLookup.replace(/[-_]+/g, ' ').trim();
+	const titleEs = `${place} — guía del barrio`;
+	pageEsResolved = {
+		id: `runtime-es-barrios-${barriosSlugForLookup || 'page'}`,
+		status: 'published',
+		language: 'es',
+		path: normalizedPath,
+		title: titleEs,
+		description: null,
+		body: '',
+		seo_title: `${titleEs} • PropertyList Info Hub`,
+		seo_description: null,
+	} as any;
+}
+
+const pageResolved = pageEsResolved || (!strictEs ? pageEn || pageEsRaw : null);
+const notFound = !pageResolved;
+if (notFound) Astro.response.status = 404;
+const page =
+	pageResolved ||
+	({
+		id: '',
+		status: 'published',
+		language: 'es',
+		path: normalizedPath,
+		title: '',
+		description: null,
+		body: null,
+		seo_title: null,
+		seo_description: null,
+	} as any);
+
+const renderPath = normalizedPath;
+const title = page.seo_title || page.title;
+const h1 = page.title;
+const description = page.seo_description || page.description || undefined;
+const isFallback = !pageEsResolved && !strictEs;
+const canonical = `https://info.propertylist.es${isFallback ? englishPath : renderPath}`;
+const viewCount = Number((await getTotalViewCounts([renderPath]).catch(() => ({} as any)))[renderPath] || 0);
+const viewCountLabel = new Intl.NumberFormat('es-ES').format(viewCount);
+const hreflangs = isFallback
+	? [
+			{ hreflang: 'en', href: `https://info.propertylist.es${englishPath}` },
+			{ hreflang: 'x-default', href: `https://info.propertylist.es${englishPath}` },
+		]
+	: [
+			{ hreflang: 'en', href: `https://info.propertylist.es${englishPath}` },
+			{ hreflang: 'es', href: `https://info.propertylist.es${renderPath}` },
+			{ hreflang: 'x-default', href: `https://info.propertylist.es${englishPath}` },
+		];
+const robots = isFallback ? 'noindex,follow' : undefined;
+
+const notFoundTitle = 'Página no encontrada • PropertyList Info Hub';
+const notFoundDescription = 'No pudimos encontrar esta página. Usa la búsqueda o vuelve al inicio.';
+const notFoundCanonical = `https://info.propertylist.es${normalizedPath}`;
+const notFoundHomeHref = '/es/';
+const notFoundDocsHref = '/es/docs/';
+const notFoundSearchAction = '/es/search';
+
+const kbMetaById = await getKbMeta(String((page as any)?.id || ''));
+const kbMetaByPath = await getKbMeta(renderPath);
+const kbMetaByEnglishPath = await getKbMeta(englishPath);
+const kbMetaByEnId = await getKbMeta(String((pageEn as any)?.id || ''));
+const kbMeta =
+	Object.keys(kbMetaById || {}).length ? kbMetaById : Object.keys(kbMetaByPath || {}).length ? kbMetaByPath : ({} as Record<string, unknown>);
+const kbMetaEnglish =
+	Object.keys(kbMetaByEnId || {}).length
+		? kbMetaByEnId
+		: Object.keys(kbMetaByEnglishPath || {}).length
+			? kbMetaByEnglishPath
+			: ({} as Record<string, unknown>);
+
+const featuredImageUrl =
+	typeof (kbMetaEnglish as any).featuredImageUrl === 'string' && String((kbMetaEnglish as any).featuredImageUrl).trim()
+		? String((kbMetaEnglish as any).featuredImageUrl).trim()
+		: null;
+const featuredImageAlt =
+	typeof (kbMetaEnglish as any).featuredImageAlt === 'string' && String((kbMetaEnglish as any).featuredImageAlt).trim()
+		? String((kbMetaEnglish as any).featuredImageAlt).trim()
+		: null;
+const featuredImageTitle =
+	typeof (kbMetaEnglish as any).featuredImageTitle === 'string' && String((kbMetaEnglish as any).featuredImageTitle).trim()
+		? String((kbMetaEnglish as any).featuredImageTitle).trim()
+		: null;
+const featuredImageCaption =
+	typeof (kbMetaEnglish as any).featuredImageCaption === 'string' && String((kbMetaEnglish as any).featuredImageCaption).trim()
+		? String((kbMetaEnglish as any).featuredImageCaption).trim()
+		: null;
+const featuredImageCredit =
+	typeof (kbMetaEnglish as any).featuredImageCredit === 'string' && String((kbMetaEnglish as any).featuredImageCredit).trim()
+		? String((kbMetaEnglish as any).featuredImageCredit).trim()
+		: null;
+
+const areaMeta = (() => {
+	if (!isArea) return null;
+	const rawStats = (kbMeta as any).areaStats;
+	const areaStats = rawStats && typeof rawStats === 'object' ? rawStats : undefined;
+	const areaStatsUpdatedAt = typeof (kbMeta as any).areaStatsUpdatedAt === 'string' ? String((kbMeta as any).areaStatsUpdatedAt) : undefined;
+	const areaStatsDueAt = typeof (kbMeta as any).areaStatsDueAt === 'string' ? String((kbMeta as any).areaStatsDueAt) : undefined;
+	const rawFaq = Array.isArray((kbMeta as any).areaFaq) ? (kbMeta as any).areaFaq : undefined;
+	const areaFaq = rawFaq
+		? rawFaq
+				.map((f: any) => ({ q: String(f?.q || '').trim(), a: String(f?.a || '').trim() }))
+				.filter((f: any) => f.q && f.a)
+		: undefined;
+	const rawHero = (kbMeta as any).areaHeroImage;
+	const areaHeroImage = rawHero && typeof rawHero === 'object' ? rawHero : undefined;
+	return { areaStats, areaStatsUpdatedAt, areaStatsDueAt, areaFaq, areaHeroImage };
+})();
+
+const isNeighbourhood = normalizedPath.startsWith('/es/barrios/') && normalizedPath !== '/es/barrios/';
+const neighbourhoodMeta = (() => {
+	if (!isNeighbourhood) return null;
+	const rawStats = (kbMetaEnglish as any).neighbourhoodStats;
+	const neighbourhoodStats = rawStats && typeof rawStats === 'object' ? rawStats : undefined;
+	const neighbourhoodStatsUpdatedAt =
+		typeof (kbMetaEnglish as any).neighbourhoodStatsUpdatedAt === 'string' ? String((kbMetaEnglish as any).neighbourhoodStatsUpdatedAt) : undefined;
+	const rawGeo = (kbMetaEnglish as any).neighbourhoodGeo;
+	const neighbourhoodGeo = rawGeo && typeof rawGeo === 'object' ? rawGeo : undefined;
+	return { neighbourhoodStats, neighbourhoodStatsUpdatedAt, neighbourhoodGeo };
+})();
+
+const titleCase = (s: string) =>
+	String(s || '')
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase());
+
+const labelForCrumb = (seg: string) => {
+	const map: Record<string, string> = {
+		es: 'Inicio',
+		docs: 'Docs',
+		'informacion-general': 'Noticias',
+		leyes: 'Leyes',
+		'leyes-procedimientos': 'Leyes y procedimientos',
+		mls: 'MLS',
+		barrios: 'Barrios',
+		comunidad: 'Comunidad',
+	};
+	return map[seg] || titleCase(seg);
+};
+
+const stripTags = (html: string) => String(html || '').replace(/<[^>]+>/g, '');
+const decodeHtmlEntities = (s: string) =>
+	String(s || '').replace(/&(#x[0-9a-f]+|#\d+|[a-z0-9]+);/gi, (m: string, entRaw: string) => {
+		const ent = String(entRaw || '').toLowerCase();
+		if (ent === 'amp') return '&';
+		if (ent === 'lt') return '<';
+		if (ent === 'gt') return '>';
+		if (ent === 'quot') return '"';
+		if (ent === 'apos' || ent === '#39') return "'";
+		if (ent === 'nbsp') return ' ';
+		if (ent.startsWith('#x')) {
+			const cp = Number.parseInt(ent.slice(2), 16);
+			if (Number.isFinite(cp) && cp > 0) return String.fromCodePoint(cp);
+			return m;
+		}
+		if (ent.startsWith('#')) {
+			const cp = Number.parseInt(ent.slice(1), 10);
+			if (Number.isFinite(cp) && cp > 0) return String.fromCodePoint(cp);
+			return m;
+		}
+		return m;
+	});
+const slugify = (s: string) =>
+	stripTags(s)
+		.toLowerCase()
+		.normalize('NFKD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/&[a-z0-9#]+;/gi, '')
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.slice(0, 80);
+
+const escapeHtml = (s: string) =>
+	String(s || '')
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&#39;');
+
+const externalDocLinkForPath = (p: string) => {
+	if (p === '/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/agente-de-investigacion-de-propiedades/')
+		return { href: 'https://ai.propertylist.es/how-it-works', target: '_blank' as const, rel: 'noopener' };
+	if (p === '/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/ai-property-research-agent/')
+		return { href: 'https://ai.propertylist.es/how-it-works', target: '_blank' as const, rel: 'noopener' };
+	if (p === '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/')
+		return { href: 'https://ai.propertylist.es/how-it-works', target: '_blank' as const, rel: 'noopener' };
+	return null;
+};
+
+const rewriteDocsLinksToSpanish = (html: string) => {
+	const src = String(html || '');
+	if (!src || !/href\s*=\s*(['"])?(https?:\/\/info\.propertylist\.es\.?)?\/docs\//i.test(src)) return src;
+	return src
+		.replace(/href=(['"])(https?:\/\/info\.propertylist\.es\.?)?(\/docs\/[^'"]*?)\1/gi, (_m, q, _origin, href) => {
+			const canon = applyPrefixRedirect(String(href || ''));
+			const next = toSpanishPath(canon);
+			return `href=${q}${next}${q}`;
+		})
+		.replace(/href=(https?:\/\/info\.propertylist\.es\.?)?(\/docs\/[^\s>]+)/gi, (_m, _origin, href) => {
+			const canon = applyPrefixRedirect(String(href || ''));
+			const next = toSpanishPath(canon);
+			return `href=${next}`;
+		});
+};
+
+const withHeadingIdsAndToc = (html: string | null | undefined) => {
+	const body = String(html || '');
+	const used = new Map<string, number>();
+	const toc: Array<{ depth: 2 | 3; id: string; text: string }> = [];
+
+	const withIds = body.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi, (m, levelRaw, attrs, inner) => {
+		const depth = (Number(levelRaw) as 2 | 3) || 2;
+		const hasId = /\bid\s*=/.test(String(attrs || ''));
+		const text = decodeHtmlEntities(stripTags(inner)).replace(/\s+/g, ' ').trim();
+		const base = slugify(text) || `section-${toc.length + 1}`;
+		const n = (used.get(base) || 0) + 1;
+		used.set(base, n);
+		const id = n === 1 ? base : `${base}-${n}`;
+		toc.push({ depth, id, text });
+		if (hasId) return m;
+		return `<h${depth}${attrs} id="${id}">${inner}</h${depth}>`;
+	});
+
+	const withCallouts = withIds.replace(
+		/<blockquote([^>]*)>\s*(<p[^>]*>\s*)?(<strong[^>]*>\s*)?(Tip|Note|Warning|Consejo|Nota|Advertencia)\s*:?\s*(<\/strong>\s*)?/gi,
+		(_m, attrs, pOpen = '', strongOpen = '', kind, strongClose = '') => {
+			const raw = String(kind || '').toLowerCase();
+			const k = raw === 'consejo' ? 'tip' : raw === 'advertencia' ? 'warning' : raw === 'nota' ? 'note' : raw;
+			const hasClass = /\bclass\s*=/.test(String(attrs || ''));
+			const nextAttrs = hasClass
+				? String(attrs).replace(/\bclass\s*=\s*(['"])([\s\S]*?)\1/i, (_m: string, q: string, v: string) => {
+						const next = v.includes(k) ? v : `${v} ${k}`.trim();
+						return ` class=${q}${next}${q}`;
+					})
+				: `${attrs} class="${k}"`;
+			return `<blockquote${nextAttrs}>${pOpen}${strongOpen}${kind}${strongClose}`;
+		},
+	);
+
+	return { html: withCallouts, toc };
+};
+
+const escapeHtmlAttr = escapeHtml;
+
+const buildNeighbourhoodAutoHtml = (slug: string, name: string, stats: any, portalUrl: string, geo: any, updatedAtIso?: string) => {
+	const slugKey = slugify(String(slug || '')) || slugify(String(name || ''));
+	const n = escapeHtmlAttr(String(name || '').trim() || 'esta zona');
+	const muni = typeof stats?.municipality === 'string' ? String(stats.municipality).trim() : '';
+	const listingCount = typeof stats?.listingCount === 'number' ? stats.listingCount : null;
+	const sampleSize = typeof stats?.sampleSize === 'number' ? stats.sampleSize : null;
+	const medPrice = typeof stats?.avgPriceEur === 'number' ? stats.avgPriceEur : null;
+	const medPerM2 = typeof stats?.pricePerM2Eur === 'number' ? stats.pricePerM2Eur : null;
+	const minPrice = typeof stats?.priceMinEur === 'number' ? stats.priceMinEur : null;
+	const maxPrice = typeof stats?.priceMaxEur === 'number' ? stats.priceMaxEur : null;
+	const recentAvgMaxC = typeof stats?.recentAvgMaxC === 'number' ? stats.recentAvgMaxC : null;
+	const recentAvgMinC = typeof stats?.recentAvgMinC === 'number' ? stats.recentAvgMinC : null;
+	const annualRainMm = typeof stats?.annualRainMm === 'number' ? stats.annualRainMm : null;
+	const driveAirport = typeof stats?.driveToMalagaAirportMin === 'number' ? stats.driveToMalagaAirportMin : null;
+	const driveMarbella = typeof stats?.driveToMarbellaMin === 'number' ? stats.driveToMarbellaMin : null;
+	const driveBanus = typeof stats?.driveToPuertoBanusMin === 'number' ? stats.driveToPuertoBanusMin : null;
+	const beachName = typeof stats?.nearestBeachName === 'string' ? String(stats.nearestBeachName).trim() : '';
+	const driveBeach = typeof stats?.driveToBeachMin === 'number' ? stats.driveToBeachMin : null;
+	const subareasRaw: string[] = Array.isArray(stats?.topSubareas)
+		? stats.topSubareas
+				.map((x: any) => String(x || '').trim())
+				.filter(Boolean)
+				.slice(0, 6)
+		: [];
+	const subareas = subareasRaw.filter((s) => slugify(s) !== slugKey && slugify(s) !== slugify(name) && (!muni || slugify(s) !== slugify(muni)));
+	const types = stats?.propertyTypeBreakdown && typeof stats.propertyTypeBreakdown === 'object' ? stats.propertyTypeBreakdown : null;
+	const updatedAtMs = updatedAtIso ? Date.parse(String(updatedAtIso)) : NaN;
+	const updatedAtLabel = Number.isFinite(updatedAtMs)
+		? new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(updatedAtMs))
+		: '';
+
+	const fmtEur = (v: number) => `€${Math.round(v).toLocaleString('es-ES')}`;
+	const marketBits = [
+		typeof listingCount === 'number' && listingCount > 0 ? `${listingCount.toLocaleString('es-ES')} anuncios` : null,
+		typeof medPrice === 'number' ? `precio mediano ${fmtEur(medPrice)}` : null,
+		typeof medPerM2 === 'number' ? `mediana ${fmtEur(medPerM2)}/m²` : null,
+		typeof minPrice === 'number' && typeof maxPrice === 'number' ? `rango ${fmtEur(minPrice)} a ${fmtEur(maxPrice)}` : null,
+		typeof sampleSize === 'number' && sampleSize > 0 ? `muestra ${sampleSize}` : null,
+	].filter(Boolean);
+	const hasMarket = typeof listingCount === 'number' && listingCount > 0 && marketBits.length > 1;
+
+	const topType = types
+		? (() => {
+				const entries = Object.entries(types as Record<string, number>)
+					.map(([k, v]) => ({ k: String(k || '').trim(), v: Number(v) }))
+					.filter((x) => x.k && Number.isFinite(x.v) && x.v > 0)
+					.sort((a, b) => b.v - a.v);
+				const first = entries[0];
+				return first?.k ? String(first.k) : '';
+		  })()
+		: '';
+
+	const isCityLike = ['malaga-centre', 'el-limonar', 'pedregalejo'].includes(slugKey);
+	const isLuxuryLike = ['la-zagaleta', 'sierra-blanca', 'golden-mile', 'la-zagaleta'].includes(slugKey) || (typeof medPerM2 === 'number' && medPerM2 >= 6500);
+
+	const hasBeach = Boolean(beachName) && typeof driveBeach === 'number' && driveBeach > 0;
+	const proximityNamed = [
+		typeof driveMarbella === 'number' ? `~${Math.round(driveMarbella)} min a Marbella` : null,
+		typeof driveBanus === 'number' ? `~${Math.round(driveBanus)} min a Puerto Banús` : null,
+		hasBeach ? `~${Math.round(driveBeach)} min a ${escapeHtmlAttr(beachName)}` : null,
+	].filter(Boolean);
+
+	const subareaInline = subareas.length ? subareas.slice(0, 3).map((s: string) => escapeHtmlAttr(s)).join(', ') : '';
+	const keyFacts = [
+		typeof driveAirport === 'number' ? `<li><strong>Aeropuerto de Málaga:</strong> ~${Math.round(driveAirport)} min en coche</li>` : '',
+		typeof medPerM2 === 'number' ? `<li><strong>Precio típico:</strong> ~${fmtEur(medPerM2)}/m² (mediana, PropertyList${updatedAtLabel ? `, ${escapeHtmlAttr(updatedAtLabel)}` : ''})</li>` : '',
+		hasBeach ? `<li><strong>Playa más cercana:</strong> ~${Math.round(driveBeach)} min</li>` : '',
+		typeof listingCount === 'number' && listingCount > 0 ? `<li><strong>Stock en vivo:</strong> ${Math.round(listingCount).toLocaleString('es-ES')} anuncios (PropertyList)</li>` : '',
+		typeof recentAvgMaxC === 'number' || typeof annualRainMm === 'number'
+			? `<li><strong>Clima:</strong> ${
+					typeof recentAvgMaxC === 'number'
+						? `promedio reciente ~${recentAvgMaxC}°C máx${typeof recentAvgMinC === 'number' ? ` / ~${recentAvgMinC}°C mín` : ''}`
+						: ''
+				}${(typeof recentAvgMaxC === 'number' || typeof recentAvgMinC === 'number') && typeof annualRainMm === 'number' ? '; ' : ''}${
+					typeof annualRainMm === 'number' ? `lluvia anual ~${Math.round(annualRainMm)} mm` : ''
+				} (Open-Meteo)</li>`
+			: '',
+	]
+		.filter(Boolean)
+		.join('');
+
+	const buyersPriorities = 'Micro-ubicación, calidad de comunidad y fundamentos de reventa';
+	const rentersPriorities = 'Comodidad diaria, ruido/confort invernal e internet/aparcamiento fiables';
+
+	const identityLine = (() => {
+		const bits = [isLuxuryLike ? 'en zonas premium, la privacidad, la seguridad y la comunidad suelen mandar' : '', isCityLike ? 'en ciudad, el ruido, el edificio y el aparcamiento cambian por manzana' : ''].filter(
+			Boolean,
+		);
+		return bits.length ? bits.join('; ') : '';
+	})();
+
+	return `
+<section class="nbAuto" aria-label="Guía del barrio">
+<h2>De un vistazo</h2>
+<p>${n} ${muni && slugKey !== slugify(muni) ? `está dentro de ${escapeHtmlAttr(muni)}. ` : ''}${
+		proximityNamed.length ? `Toma los tiempos de conducción como mapa mental: ${escapeHtmlAttr(proximityNamed.join(', '))}.` : ''
+	}</p>
+<p>${identityLine ? `${escapeHtmlAttr(identityLine)}. ` : ''}Esta guía se centra en lo que importa en la práctica: micro-zonas, valor y verificaciones antes de decidir.</p>
+${keyFacts ? `<ul>${keyFacts}</ul>` : ''}
+
+<h2>Resumen</h2>
+<p>Puede haber diferencias importantes de una calle a otra. ${
+		subareas.length
+			? `La mayoría de comparativas acaban en unos pocos bolsillos (por ejemplo ${subareaInline}) porque cambian rápido las vistas, el ruido, la caminabilidad y la calidad de comunidad.`
+			: 'Dos calles pueden sentirse como mercados distintos cuando consideras privacidad, orientación y comodidad diaria.'
+	}</p>
+<p>${topType ? `En la muestra actual, ${escapeHtmlAttr(topType)} aparece con frecuencia en los anuncios visibles.` : 'Usa el mix de stock como comprobación: condiciona precios, visitas y demanda.'}</p>
+
+<h2>Insights de mercado</h2>
+${hasMarket ? `<p>${escapeHtmlAttr(marketBits.join(' • '))}.</p>` : ''}
+${hasMarket ? `<p><a href="${escapeHtmlAttr(portalUrl)}" target="_blank" rel="noopener">Ver viviendas en venta en ${n}</a></p>` : ''}
+<p>${typeof medPrice === 'number' ? `En la foto actual de ${n}, el precio mediano es ~${fmtEur(medPrice)};` : `En ${n},`} el precio suele moverse por posicionamiento: caminabilidad, vistas, privacidad, aparcamiento y calidad del edificio/comunidad. Prioriza lo que no puedes cambiar: entorno inmediato, sol y gobernanza de comunidad.</p>
+
+<h2>Transporte y conectividad</h2>
+<p>Planifica con tiempos reales. Estimaciones de conducción:</p>
+<ul>
+	${typeof driveBanus === 'number' ? `<li>Puerto Banús — ~${Math.round(driveBanus)} min</li>` : ''}
+	${typeof driveMarbella === 'number' ? `<li>Marbella — ~${Math.round(driveMarbella)} min</li>` : ''}
+	${typeof driveAirport === 'number' ? `<li>Aeropuerto de Málaga — ~${Math.round(driveAirport)} min</li>` : ''}
+	${hasBeach ? `<li>Playa más cercana — ~${Math.round(driveBeach)} min</li>` : ''}
+</ul>
+
+<h2>Consejos locales</h2>
+<ul>
+	<li>💡 Visita dos veces (entre semana y fin de semana) y compara ruido y aparcamiento en las calles exactas.</li>
+	<li>💡 ${isCityLike ? 'Pasea a distintas horas y anota ruido, luz y realidad de aparcamiento/permiso.' : 'Prueba las rutas que harás cada semana, no las que esperas hacer.'}</li>
+	<li>💡 ${
+		isLuxuryLike
+			? 'En urbanizaciones premium, revisa normas, accesos/seguridad y expectativas de cuotas/mantenimiento pronto.'
+			: subareas.length
+				? `Si estás entre bolsillos como ${subareaInline}, prioriza fundamentales (luz, vistas, mantenimiento) sobre metros.`
+				: 'Prioriza fundamentales (luz, vistas, mantenimiento) sobre metros.'
+	}</li>
+</ul>
+
+<h2>Compradores vs inquilinos</h2>
+<div class="nbCompareWrap" role="region" aria-label="Comparativa compradores vs inquilinos">
+<table class="nbCompare">
+	<thead>
+		<tr>
+			<th scope="col">Qué importa</th>
+			<th scope="col">Compradores</th>
+			<th scope="col">Inquilinos</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Prioridades</th>
+			<td>${escapeHtmlAttr(buyersPriorities)}</td>
+			<td>${escapeHtmlAttr(rentersPriorities)}</td>
+		</tr>
+		<tr>
+			<th scope="row">Impedimentos</th>
+			<td>Normas poco claras, mantenimiento débil y problemas que no salen en fotos</td>
+			<td>Ruido/aparcamiento inesperado, mal confort invernal y fricción diaria en tu rutina</td>
+		</tr>
+		<tr>
+			<th scope="row">Mejor estrategia</th>
+			<td>Elige fundamentos con demanda y verifica salud de la comunidad</td>
+			<td>Elige la calle y prueba tu rutina antes de decidir</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<h2>Conclusión</h2>
+<p>${n} merece estar en la lista si quieres comparabilidad entre micro-zonas${typeof medPerM2 === 'number' ? `, con una mediana actual ~${fmtEur(medPerM2)}/m²` : ''}. Explora PropertyList para comparar opciones.</p>
+</section>
+`;
+};
+
+const barrioSlug = isNeighbourhood ? normalizedPath.split('/').filter(Boolean)[2] || '' : '';
+const neighbourhoodPortalUrl = barrioSlug ? `https://propertylist.es/portal/for-sale/${encodeURIComponent(barrioSlug)}` : 'https://propertylist.es';
+const neighbourhoodName = stripTags(h1)
+	.replace(/\s*(?:gu[ií]a\s+de\s+(?:barrio|zona)|neighbourhood\s+guide|area\s+guide)\s*$/i, '')
+	.replace(/\s+/g, ' ')
+	.trim();
+const neighbourhoodAutoSource =
+	isNeighbourhood && barrioSlug
+		? (() => {
+				const key = `${barrioSlug}::${String((neighbourhoodMeta as any)?.neighbourhoodStatsUpdatedAt || '')}`;
+				const cached = esNeighbourhoodGuideCache.get(key);
+				if (cached) return cached;
+				const html = buildNeighbourhoodAutoHtml(
+					barrioSlug,
+					neighbourhoodName || barrioSlug,
+					(neighbourhoodMeta as any)?.neighbourhoodStats,
+					neighbourhoodPortalUrl,
+					(neighbourhoodMeta as any)?.neighbourhoodGeo,
+					(neighbourhoodMeta as any)?.neighbourhoodStatsUpdatedAt,
+				);
+				esNeighbourhoodGuideCache.set(key, html);
+				return html;
+		  })()
+		: '';
+
+const cleanedSourceBody = (() => {
+	let out = isNeighbourhood && neighbourhoodAutoSource ? String(neighbourhoodAutoSource) : String(page.body || '');
+	if (renderPath.startsWith('/es/docs/')) {
+		out = out
+			.replace(/<script\b[\s\S]*?<\/script>/gi, '')
+			.replace(/<style\b[\s\S]*?<\/style>/gi, '')
+			.replace(/<(meta|link)\b[^>]*>/gi, '')
+			.replace(/<(header|nav|footer|aside)\b[\s\S]*?<\/\1>/gi, '')
+			.replace(/<form\b[\s\S]*?<\/form>/gi, '')
+			.replace(
+				/<div\b[^>]*class=["'][^"']*(sidebar|comments-area|comment|comments|wp-block-comments|(?<!elementor-)widget)[^"']*["'][\s\S]*?<\/div>/gi,
+				'',
+			)
+			.replace(/<div\b[^>]*class=["'][^"']*\bdetails_cont\b[^"']*["'][\s\S]*?<\/div>/gi, '')
+			.replace(/<div\b[^>]*class=["'][^"']*\bdoc-btm\b[^"']*["'][\s\S]*?<\/div>/gi, '')
+			.replace(/<div\b[^>]*class=["'][^"']*\beazydocs-next-prev-wrap\b[^"']*["'][\s\S]*?<\/div>/gi, '')
+			.replace(/<section\b[^>]*id=["']comments?["'][\s\S]*?<\/section>/gi, '');
+
+		out = out.replace(
+			/<div\b[^>]*class=["'][^"']*\bshortcode_title\b[^"']*["'][\s\S]*?(?=<div\b[^>]*class=["'][^"']*\bdoc-scrollable\b)/i,
+			'',
+		);
+		out = out.replace(/<div\b[^>]*class=["'][^"']*\bshortcode_title\b[^"']*["'][\s\S]*?<\/div>/i, '');
+		out = rewriteDocsLinksToSpanish(out);
+	}
+	return out;
+})();
+
+const { html: bodyHtml, toc } = withHeadingIdsAndToc(cleanedSourceBody);
+const bodyHasH1 = /<h1\b/i.test(bodyHtml);
+const cleanedBodyHtml = bodyHtml.replace(
+	/<(p|h[1-6])\b[^>]*>\s*(?:<a\b[^>]*>\s*)?Managing Listings\s*-\s*Previous\s*Tracking property enquiries\/leads\s*(?:<\/a>\s*)?<\/\1>\s*/gi,
+	'',
+);
+
+const crumbs = (() => {
+	const parts = renderPath.split('/').filter(Boolean);
+	const usable = parts[0] === 'es' ? parts.slice(1) : parts;
+	const acc: Array<{ href: string; label: string }> = [];
+	let current = '';
+	for (const seg of usable.slice(0, -1)) {
+		current += `/${seg}`;
+		acc.push({ href: `/es${current}/`, label: labelForCrumb(seg) });
+	}
+	return acc;
+})();
+
+const usingMlsBackfill = Boolean(isMlsManualEsPath && mlsBackfillEs && pageEs === mlsBackfillEs);
+
+const siblings = (() => {
+	if (usingMlsBackfill) {
+		const prefix = renderPath.replace(/[^/]+\/$/, '');
+		return Promise.resolve(mlsManualBackfillEsNavItems.filter((p) => p.path.startsWith(prefix)));
+	}
+	if (pageEsRaw) {
+		return listKbPagesByPrefix({
+			prefix: renderPath.replace(/[^/]+\/$/, ''),
+			lang: 'es',
+			limit: 500,
+		});
+	}
+	return listKbPagesByPrefix({
+		prefix: englishPath.replace(/[^/]+\/$/, ''),
+		lang: 'en',
+		limit: 500,
+	});
+})();
+const siblingSorted = [...(await siblings)].sort((a, b) => a.path.localeCompare(b.path));
+const currentIndex = siblingSorted.findIndex((p) => ((usingMlsBackfill || pageEsRaw) ? p.path === renderPath : p.path === englishPath));
+const prevRaw = currentIndex > 0 ? siblingSorted[currentIndex - 1] : null;
+const nextRaw = currentIndex >= 0 && currentIndex < siblingSorted.length - 1 ? siblingSorted[currentIndex + 1] : null;
+const siblingPrev = prevRaw ? { ...prevRaw, path: usingMlsBackfill || pageEsRaw ? prevRaw.path : toSpanishPath(prevRaw.path) } : null;
+const siblingNext = nextRaw ? { ...nextRaw, path: usingMlsBackfill || pageEsRaw ? nextRaw.path : toSpanishPath(nextRaw.path) } : null;
+
+const isDocs = renderPath.startsWith('/es/docs/');
+const isBlogLike = renderPath.startsWith('/es/informacion-general/') || renderPath.startsWith('/es/blog/');
+const moveDocHeaderIntoBody = isDocs && !isBlogLike && !bodyHasH1;
+const fallbackHeroSrc =
+	/\bcosta del sol\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-costa-del-sol.svg' : /\bmarbella\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-marbella.svg' : /\bandaluc[ií]a\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-andalucia.svg' : '/blog/hero-default.svg';
+const heroSrc = featuredImageUrl || fallbackHeroSrc;
+const blogMetaDate = (() => {
+	const raw = (page as any).date_updated || (page as any).date_created || null;
+	const ms = raw ? Date.parse(String(raw)) : NaN;
+	return Number.isFinite(ms) ? new Date(ms) : null;
+})();
+const blogDateLabel = blogMetaDate
+	? new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }).format(blogMetaDate)
+	: null;
+const blogWordCount = stripTags(cleanedBodyHtml).replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
+const readingMins = Math.max(1, Math.round(blogWordCount / 220));
+const normText = (s: string) => decodeHtmlEntities(stripTags(s)).replace(/\s+/g, ' ').trim().toLowerCase();
+const removeLeadingDuplicateHeading = (html: string, title: string) => {
+	const t = normText(title);
+	return String(html || '').replace(/^\s*<(h2|h3|h4)\b[^>]*>([\s\S]*?)<\/\1>\s*/i, (m, _tag, inner) => {
+		const text = normText(inner);
+		return text && text === t ? '' : m;
+	});
+};
+const translationNoticeHtml =
+	isDocs && isFallback
+		? `<blockquote class="note"><p><strong>Nota:</strong> Esta guía aún no está traducida al español. Mostrando la versión en inglés. <a href="${englishPath}">Ver en inglés</a>.</p></blockquote>`
+		: '';
+const finalBodyHtmlBase = moveDocHeaderIntoBody
+	? `<h1 class="docTitle">${escapeHtml(h1)}</h1>${page.description ? `<p class="docLead">${escapeHtml(page.description)}</p>` : ''}${cleanedBodyHtml}`
+	: cleanedBodyHtml;
+const finalBodyHtml = (() => {
+	let out = finalBodyHtmlBase;
+	if (isBlogLike) {
+		out = out.replace(/<img\b[^>]*>/gi, '');
+		out = removeLeadingDuplicateHeading(out, h1);
+		const alt = featuredImageAlt || h1;
+		const titleAttr = featuredImageTitle ? ` title="${escapeHtml(featuredImageTitle)}"` : '';
+		const captionText = featuredImageCaption || '';
+		const creditText = featuredImageCredit || '';
+		const figcaption =
+			captionText || creditText
+				? `<figcaption class="blogHeroCaption">${escapeHtml(captionText)}${captionText && creditText ? ' — ' : ''}${escapeHtml(creditText)}</figcaption>`
+				: '';
+		const isUnsplash = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.unsplash\.com/i.test(heroSrc);
+		const isPexels = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.pexels\.com/i.test(heroSrc);
+		if (isUnsplash || isPexels) {
+			const u = new URL(heroSrc);
+			const sizes = [640, 960, 1200];
+			const mk = (w: number, fm: 'avif' | 'webp' | 'jpg') => {
+				const h = Math.round((w * 630) / 1200);
+				const next = new URL(u.toString());
+				next.searchParams.set('fit', 'crop');
+				next.searchParams.set('w', String(w));
+				next.searchParams.set('h', String(h));
+				if (isPexels) {
+					next.searchParams.set('auto', 'compress');
+					next.searchParams.set('cs', 'tinysrgb');
+					next.searchParams.set('q', '65');
+					next.searchParams.set('fm', fm === 'jpg' ? 'jpg' : fm);
+				} else {
+					next.searchParams.set('q', '70');
+					next.searchParams.set('fm', fm === 'jpg' ? 'jpg' : fm);
+				}
+				return next.toString();
+			};
+			const avif = sizes.map((w) => `${mk(w, 'avif')} ${w}w`).join(', ');
+			const webp = sizes.map((w) => `${mk(w, 'webp')} ${w}w`).join(', ');
+			const jpg = sizes.map((w) => `${mk(w, 'jpg')} ${w}w`).join(', ');
+			out = `<figure class="blogHero"><picture><source type="image/avif" srcset="${escapeHtml(avif)}" sizes="(max-width: 900px) 100vw, 900px" /><source type="image/webp" srcset="${escapeHtml(webp)}" sizes="(max-width: 900px) 100vw, 900px" /><img src="${escapeHtml(mk(1200, 'jpg'))}" srcset="${escapeHtml(jpg)}" sizes="(max-width: 900px) 100vw, 900px" alt="${escapeHtml(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" /></picture>${figcaption}</figure>${out}`;
+		} else {
+			out = `<figure class="blogHero"><img src="${escapeHtml(heroSrc)}" alt="${escapeHtml(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" />${figcaption}</figure>${out}`;
+		}
+	}
+	return `${translationNoticeHtml}${out}`;
+})();
+const docsPrefix = strictEs ? '/es/docs/' : '/docs/';
+const docsItemsEnRaw =
+	!strictEs && isDocs ? await listKbPagesByPrefixes({ prefixes: ['/docs/', '/es/docs/'], lang: 'en', limit: 2000 }) : [];
+const docsItemsEn = docsItemsEnRaw.map((p) => ({ ...p, path: toEnglishPath(p.path) }));
+const docsItemsEsRaw = isDocs ? await listKbPagesByPrefix({ prefix: '/es/docs/', lang: 'es', limit: 2000 }) : [];
+const docsItemsEs =
+	isDocs && strictEs
+		? [...docsItemsEsRaw, ...mlsManualBackfillEsNavItems].filter((p, i, arr) => arr.findIndex((x) => x.path === p.path) === i)
+		: docsItemsEsRaw;
+const navDocsItems = strictEs ? docsItemsEs : docsItemsEn;
+const currentManualRoot = (() => {
+	if (!isDocs) return null;
+	const currentPath = strictEs ? renderPath : englishPath;
+	const rest = currentPath.slice(docsPrefix.length);
+	const seg = rest.split('/').filter(Boolean)[0] || null;
+	return seg ? `${docsPrefix}${seg}/` : docsPrefix;
+})();
+const navFilter = (requestUrl.searchParams.get('filter') || '').trim();
+
+type DocNode = {
+	key: string;
+	path: string;
+	seg: string;
+	title: string;
+	children: DocNode[];
+	hasPage: boolean;
+};
+
+const docsByPath = new Map(navDocsItems.map((p) => [p.path, p]));
+const docsEsByEnPath = strictEs ? new Map<string, (typeof docsItemsEs)[number]>() : new Map(docsItemsEs.map((p) => [toEnglishPath(p.path), p]));
+const docsRoot: DocNode = { key: docsPrefix, path: docsPrefix, seg: '', title: 'Docs', children: [], hasPage: docsByPath.has(docsPrefix) };
+
+const ensureDocChild = (parent: DocNode, seg: string, path: string) => {
+	let node = parent.children.find((c) => c.key === path) || null;
+	if (!node) {
+		node = { key: path, path, seg, title: '', children: [], hasPage: false };
+		parent.children.push(node);
+	}
+	return node;
+};
+
+for (const p of navDocsItems) {
+	if (!p.path.startsWith(docsPrefix)) continue;
+	const rest = p.path.slice(docsPrefix.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = docsPrefix;
+	let parent = docsRoot;
+	for (const seg of parts) {
+		acc += `${seg}/`;
+		parent = ensureDocChild(parent, seg, acc);
+		const pageHit = docsByPath.get(acc);
+		parent.hasPage = Boolean(pageHit);
+		if (strictEs) {
+			if (pageHit?.title) parent.title = pageHit.title;
+		} else {
+			const esHit = docsEsByEnPath.get(acc);
+			if (esHit?.title) parent.title = esHit.title;
+			else if (pageHit?.title) parent.title = pageHit.title;
+		}
+	}
+}
+
+const fillDocTitles = (node: DocNode) => {
+	if (!node.title) node.title = node.seg ? titleCase(node.seg) : 'Docs';
+	for (const c of node.children) fillDocTitles(c);
+};
+
+fillDocTitles(docsRoot);
+
+const sortDocTree = (node: DocNode) => {
+	node.children.sort((a, b) => a.title.localeCompare(b.title));
+	for (const c of node.children) sortDocTree(c);
+};
+
+sortDocTree(docsRoot);
+
+const findDocNode = (node: DocNode, target: string): DocNode | null => {
+	if (node.path === target) return node;
+	for (const c of node.children) {
+		const hit = findDocNode(c, target);
+		if (hit) return hit;
+	}
+	return null;
+};
+
+const manualTitleForHref = (hrefRaw: string, fallback: string) => {
+	const raw = String(hrefRaw || '').trim();
+	const path = raw.startsWith('http') ? String(new URL(raw).pathname || '') : raw;
+	const clean = `/${String(path || '').replace(/^\/+/, '')}`.replace(/\/{2,}/g, '/').replace(/\/?$/, '/');
+	const map: Record<string, string> = {
+		'/es/docs/propertylist-mls-manual-de-usuario/': 'Manual de Usuario MLS & CRM',
+		'/es/docs/leyes-procedimientos/': 'Leyes y procedimientos',
+		'/es/docs/portal-publico/': 'Portal público',
+		'/es/docs/developers/': 'Promotores',
+		'/es/docs/property-services/': 'Servicios inmobiliarios',
+	};
+	return map[clean] || String(fallback || 'Docs');
+};
+
+const docsManualOptions = (() => {
+	if (!isDocs) return [] as Array<{ title: string; href: string }>;
+	const out: Array<{ title: string; href: string }> = [];
+	const seen = new Set<string>();
+	for (const n of docsRoot.children.filter((n) => n.hasPage)) {
+		const ext = externalDocLinkForPath(n.path);
+		const href = String(ext?.href || (strictEs ? n.path : toSpanishPath(n.path)));
+		if (seen.has(href)) continue;
+		seen.add(href);
+		out.push({ title: manualTitleForHref(href, String(n.title || 'Docs')), href });
+	}
+	const pref = new Map(
+		[
+			'/es/docs/propertylist-mls-manual-de-usuario/',
+			'/es/docs/leyes-procedimientos/',
+			'/es/docs/portal-publico/',
+			'/es/docs/developers/',
+			'/es/docs/property-services/',
+		].map((p, i) => [p, i] as const),
+	);
+	return out.sort((a, b) => {
+		const ai = pref.has(a.href) ? (pref.get(a.href) as number) : Infinity;
+		const bi = pref.has(b.href) ? (pref.get(b.href) as number) : Infinity;
+		if (ai !== bi) return ai - bi;
+		return a.title.localeCompare(b.title);
+	});
+})();
+
+const currentManualHref = (() => {
+	if (!isDocs) return '';
+	if (!currentManualRoot) return '';
+	const ext = externalDocLinkForPath(currentManualRoot);
+	return String(ext?.href || (strictEs ? currentManualRoot : toSpanishPath(currentManualRoot)));
+})();
+
+const currentManualTitle = (() => {
+	if (!isDocs) return '';
+	if (!currentManualRoot) return 'Docs';
+	const node = findDocNode(docsRoot, currentManualRoot);
+	return manualTitleForHref(currentManualHref, String(node?.title || 'Docs'));
+})();
+
+const mlsManualPath = strictEs ? '/es/docs/mls-manual-de-usuario/' : '/docs/propertylist-mls-user-manual/';
+const manualOrderWeight = (node: DocNode): number => {
+	const s = `${node.seg} ${node.title}`.toLowerCase();
+	if (node.path === mlsManualPath) return 0;
+	if (/\binicio\b|\bcomenz(ar|ando)\b|\bprimeros\b|\bconfiguraci(o|ó)n\b/.test(s)) return 10;
+	if (/\bpanel\b|\bresumen\b|\binicio\b/.test(s)) return 20;
+	if (/\bbuscar\b|\bb(us|ú)squeda\b|\bpropiedades\b/.test(s)) return 30;
+	if (/\banuncios?\b|\balertas?\b/.test(s)) return 40;
+	if (/\bleads?\b|\bcontactos?\b|\bpipeline\b|\bventas\b/.test(s)) return 50;
+	if (/\bcontactos?\b|\bclientes?\b/.test(s)) return 60;
+	if (/\bcalendario\b|\bcitas?\b|\btareas?\b/.test(s)) return 70;
+	if (/\binformes?\b|\bestad(i|í)sticas\b|\ban(a|á)lisis\b/.test(s)) return 80;
+	if (/\bsolicitudes?\b/.test(s)) return 90;
+	if (/\bseguridad\b|\bpermisos?\b|\busuarios?\b|\bagencia\b|\bempresa\b|\bpersonal\b|\bcuenta\b/.test(s)) return 100;
+	if (/\bai\b|\bautomatizaci(o|ó)n\b|\bintegraciones?\b/.test(s)) return 110;
+	if (/\bt(e|é)cnico\b|\bapi\b/.test(s)) return 120;
+	if (/\bvideo\b|\btutorial(es)?\b/.test(s)) return 130;
+	if (/\brecursos?\b|\badicional(es)?\b/.test(s)) return 140;
+	return 500;
+};
+
+const openDocPaths = (() => {
+	const s = new Set<string>();
+	if (!isDocs) return s;
+	const currentPath = strictEs ? renderPath : englishPath;
+	const rest = currentPath.slice(docsPrefix.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = docsPrefix;
+	for (const seg of parts) {
+		acc += `${seg}/`;
+		s.add(acc);
+	}
+	return s;
+})();
+
+const filteredDocsChildren = (() => {
+	if (!isDocs) return docsRoot.children;
+	const q = navFilter.toLowerCase().trim();
+	const manualNode = currentManualRoot ? findDocNode(docsRoot, currentManualRoot) : null;
+	const base = manualNode?.children?.length ? manualNode.children : docsRoot.children;
+	if (!q) return base;
+
+	const filterTree = (nodes: DocNode[]): DocNode[] => {
+		const out: DocNode[] = [];
+		for (const n of nodes) {
+			const label = `${n.seg} ${n.title}`.toLowerCase();
+			const path = n.path.toLowerCase();
+			const selfMatches = label.includes(q) || path.includes(q);
+			const kids = filterTree(n.children);
+			if (selfMatches || kids.length) out.push({ ...n, children: kids });
+		}
+		return out;
+	};
+
+	return filterTree(base);
+})();
+
+const currentTreePath = strictEs ? renderPath : englishPath;
+const manualDepth = isDocs ? currentTreePath.slice(docsPrefix.length).split('/').filter(Boolean).length : 0;
+const isMlsManualMainFolder = isDocs && currentTreePath.startsWith(mlsManualPath) && currentTreePath !== mlsManualPath && manualDepth === 2;
+const folderArticles = (() => {
+	if (!isMlsManualMainFolder) return [] as Array<{ href: string; title: string; description?: string | null; external: boolean }>;
+	const findNode = (node: DocNode, target: string): DocNode | null => {
+		if (node.path === target) return node;
+		for (const c of node.children) {
+			const hit = findNode(c, target);
+			if (hit) return hit;
+		}
+		return null;
+	};
+	const node = findNode(docsRoot, currentTreePath);
+	const children = node?.children || [];
+	const out: Array<{ href: string; title: string; description?: string | null; external: boolean }> = [];
+	for (const c of [...children].sort((a, b) => a.title.localeCompare(b.title))) {
+		if (!c.hasPage) continue;
+		const ext = externalDocLinkForPath(c.path);
+		const href = ext?.href || (strictEs ? c.path : toSpanishPath(c.path));
+		const title = String(c.title || '');
+		const desc = strictEs ? (docsByPath.get(c.path)?.description ?? null) : (docsEsByEnPath.get(c.path)?.description ?? docsByPath.get(c.path)?.description ?? null);
+		out.push({ href, title, description: desc, external: Boolean(ext) });
+	}
+	return out;
+})();
+
+const docPager = (() => {
+	if (!isDocs) {
+		return {
+			prev: siblingPrev ? { path: siblingPrev.path, title: siblingPrev.title, href: siblingPrev.path, external: false } : null,
+			next: siblingNext ? { path: siblingNext.path, title: siblingNext.title, href: siblingNext.path, external: false } : null,
+		};
+	}
+
+	const compare = (a: DocNode, b: DocNode, depth: number) => {
+		if (depth === 0 && currentManualRoot) {
+			const aIsCurrent = a.path === currentManualRoot;
+			const bIsCurrent = b.path === currentManualRoot;
+			if (aIsCurrent !== bIsCurrent) return aIsCurrent ? -1 : 1;
+		}
+		const aInMls = a.path.startsWith(mlsManualPath);
+		const bInMls = b.path.startsWith(mlsManualPath);
+		if (depth === 1 && aInMls && bInMls) {
+			const aw = manualOrderWeight(a);
+			const bw = manualOrderWeight(b);
+			if (aw !== bw) return aw - bw;
+		}
+		return a.title.localeCompare(b.title);
+	};
+
+	const sortNodes = (nodes: DocNode[], depth: number) => [...nodes].sort((a, b) => compare(a, b, depth));
+
+	const manualNode = currentManualRoot ? findDocNode(docsRoot, currentManualRoot) : null;
+	const base = manualNode?.children?.length ? manualNode.children : docsRoot.children;
+	const currentTreePath = strictEs ? renderPath : englishPath;
+	const seq: Array<{ nodePath: string; title: string; href: string; external: boolean }> = [];
+
+	const walk = (nodes: DocNode[], depth: number) => {
+		for (const n of sortNodes(nodes, depth)) {
+			if (n.hasPage) {
+				const ext = externalDocLinkForPath(n.path);
+				const href = String(ext?.href || (strictEs ? n.path : toSpanishPath(n.path)));
+				seq.push({ nodePath: n.path, title: String(n.title || ''), href, external: Boolean(ext) });
+			}
+			if (n.children?.length) walk(n.children, depth + 1);
+		}
+	};
+	walk(base, 0);
+
+	const idx = seq.findIndex((p) => p.nodePath === currentTreePath);
+	return {
+		prev: idx > 0 ? seq[idx - 1] : null,
+		next: idx >= 0 && idx < seq.length - 1 ? seq[idx + 1] : null,
+	};
+})();
+
+const prev = docPager.prev;
+const next = docPager.next;
+
+const renderDocNavHtml = (nodes: DocNode[], depth = 0, forceOpen = false): string =>
+	[...nodes]
+		.sort((a, b) => {
+			if (depth === 0 && currentManualRoot) {
+				const aIsCurrent = a.path === currentManualRoot;
+				const bIsCurrent = b.path === currentManualRoot;
+				if (aIsCurrent !== bIsCurrent) return aIsCurrent ? -1 : 1;
+			}
+			const aInMls = a.path.startsWith(mlsManualPath);
+			const bInMls = b.path.startsWith(mlsManualPath);
+			if (depth === 1 && aInMls && bInMls) {
+				const aw = manualOrderWeight(a);
+				const bw = manualOrderWeight(b);
+				if (aw !== bw) return aw - bw;
+			}
+			return a.title.localeCompare(b.title);
+		})
+		.map((n) => {
+			const isCurrent = strictEs ? n.path === renderPath : n.path === englishPath;
+			const isOpen = forceOpen || openDocPaths.has(n.path);
+			const title = escapeHtml(n.title || '');
+			const label = escapeHtml((n.title || '').toLowerCase());
+			const ext = externalDocLinkForPath(n.path);
+			const href = escapeHtml(ext?.href || (strictEs ? n.path : toSpanishPath(n.path)));
+			const pathAttr = escapeHtml(n.path.toLowerCase());
+			const manualRootAttr = n.path === mlsManualPath ? ' data-manual-root="1"' : '';
+			const externalAttrs = ext ? ` target="${ext.target}" rel="${ext.rel}"` : '';
+
+			if (n.children.length) {
+				const kids = renderDocNavHtml(n.children, depth + 1, forceOpen);
+				const summaryInner = n.hasPage
+					? `<a class="docNavSummaryLink" href="${href}"${externalAttrs}>${title}</a>`
+					: `<span class="docNavSummaryText">${title}</span>`;
+				return `<li class="docNavNode" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><details class="docNavGroup" ${
+					isOpen ? 'open' : ''
+				} data-default-open="${isOpen ? '1' : '0'}"><summary class="docNavSummary${isCurrent ? ' active' : ''}">${summaryInner}</summary><ul class="docNavList">${kids}</ul></details></li>`;
+			}
+
+			if (n.hasPage) {
+				return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><a class="docNavLink${isCurrent ? ' active' : ''}" href="${href}"${externalAttrs}>${title}</a></li>`;
+			}
+
+			return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><span class="docNavLabel">${title}</span></li>`;
+		})
+		.join('');
+
+const extractSteps = (html: string) => {
+	const m = html.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+	if (!m) return [];
+	const olInner = m[1] || '';
+	const steps: string[] = [];
+	const liRe = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+	let hit: RegExpExecArray | null = null;
+	while ((hit = liRe.exec(olInner))) {
+		const text = stripTags(hit[1] || '').replace(/\s+/g, ' ').trim();
+		if (text) steps.push(text);
+		if (steps.length >= 10) break;
+	}
+	return steps;
+};
+
+const origin = 'https://info.propertylist.es';
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{
+			'@type': 'ListItem',
+			position: 1,
+			name: 'Inicio',
+			item: `${origin}/es/`,
+		},
+		...crumbs.map((c, i) => ({
+			'@type': 'ListItem',
+			position: i + 2,
+			name: c.label,
+			item: `${origin}${c.href}`,
+		})),
+		{
+			'@type': 'ListItem',
+			position: crumbs.length + 2,
+			name: h1,
+			item: canonical,
+		},
+	],
+};
+
+const toIso = (value: unknown) => {
+	if (!value) return null;
+	const d = value instanceof Date ? value : new Date(String(value));
+	if (Number.isNaN(d.getTime())) return null;
+	return d.toISOString();
+};
+
+const datePublished = isBlogLike ? toIso((page as any).date_created) : null;
+const dateModified = isBlogLike ? toIso((page as any).date_updated ?? (page as any).date_created) : null;
+
+const articleLd = {
+	'@context': 'https://schema.org',
+	'@type': isBlogLike ? 'BlogPosting' : isDocs ? 'TechArticle' : 'Article',
+	headline: h1,
+	description: description,
+	inLanguage: 'es',
+	mainEntityOfPage: canonical,
+	url: canonical,
+	...(datePublished ? { datePublished } : {}),
+	...(dateModified ? { dateModified } : {}),
+};
+
+const stepTexts = extractSteps(bodyHtml);
+const howToLd =
+	stepTexts.length >= 2
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'HowTo',
+				name: h1,
+				description: description,
+				inLanguage: 'es',
+				step: stepTexts.map((t, i) => ({
+					'@type': 'HowToStep',
+					position: i + 1,
+					name: t.length > 80 ? `${t.slice(0, 77)}...` : t,
+					text: t,
+				})),
+			}
+		: null;
+
+const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] : [])]);
+---
+
+{notFound ? (
+	<>
+		<Layout lang="es" title={notFoundTitle} description={notFoundDescription} canonical={notFoundCanonical} robots="noindex,follow">
+			<section class="wrap">
+				<div class="card">
+					<div class="badge">404</div>
+					<h1>Página no encontrada</h1>
+					<p class="lead">Puede que el enlace esté desactualizado o que la página se haya movido.</p>
+
+					<form class="searchForm" method="get" action={notFoundSearchAction} role="search">
+						<input
+							class="searchInput"
+							type="search"
+							name="q"
+							placeholder="Buscar en la documentación…"
+							aria-label="Buscar"
+							autocomplete="off"
+							spellcheck="false"
+						/>
+						<button class="searchBtn" type="submit">Buscar</button>
+					</form>
+
+					<div class="links">
+						<a class="btnPrimary" href={notFoundHomeHref}>Ir al inicio</a>
+						<a class="btnSecondary" href={notFoundDocsHref}>Ver documentación</a>
+					</div>
+				</div>
+			</section>
+		</Layout>
+
+		<style>
+			.wrap {
+				display: flex;
+				justify-content: center;
+				padding: 18px 0;
+			}
+
+			.card {
+				width: min(680px, 100%);
+				background: rgba(255, 255, 255, 0.7);
+				border: 1px solid rgba(16, 24, 40, 0.08);
+				border-radius: 22px;
+				padding: 18px;
+			}
+
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 6px 10px;
+				border-radius: 999px;
+				background: rgba(0, 174, 154, 0.12);
+				border: 1px solid rgba(0, 174, 154, 0.22);
+				color: rgba(16, 24, 40, 0.86);
+				font-weight: 900;
+				font-size: 12px;
+				letter-spacing: 0.06em;
+			}
+
+			h1 {
+				margin: 10px 0 10px;
+				letter-spacing: -0.04em;
+				line-height: 1.06;
+			}
+
+			.lead {
+				margin: 0 0 14px;
+				color: rgba(16, 24, 40, 0.72);
+				line-height: 1.55;
+			}
+
+			.searchForm {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				align-items: center;
+			}
+
+			.searchInput {
+				flex: 1;
+				min-width: min(360px, 100%);
+				border-radius: 999px;
+				padding: 10px 14px;
+				border: 1px solid rgba(16, 24, 40, 0.12);
+				background: rgba(255, 255, 255, 0.85);
+				font: inherit;
+			}
+
+			.searchInput:focus-visible {
+				outline: 2px solid rgba(0, 174, 154, 0.35);
+				outline-offset: 2px;
+			}
+
+			.searchBtn {
+				border-radius: 999px;
+				padding: 10px 14px;
+				border: 1px solid rgba(0, 0, 0, 0.12);
+				background: #00ae9a;
+				color: #00100e;
+				font-weight: 900;
+				cursor: pointer;
+			}
+
+			.links {
+				margin-top: 14px;
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+			}
+
+			.btnPrimary,
+			.btnSecondary {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 999px;
+				padding: 10px 14px;
+				text-decoration: none;
+				font-weight: 900;
+				letter-spacing: -0.01em;
+			}
+
+			.btnPrimary {
+				background: #00ae9a;
+				color: #00100e;
+				border: 1px solid rgba(0, 0, 0, 0.12);
+			}
+
+			.btnSecondary {
+				background: rgba(255, 255, 255, 0.85);
+				color: rgba(16, 24, 40, 0.9);
+				border: 1px solid rgba(16, 24, 40, 0.12);
+			}
+		</style>
+	</>
+) : isArea ? (
+	<AreaPage lang="es" page={pageResolved} meta={areaMeta} canonical={canonical} hreflangs={hreflangs} clientMode={clientMode} />
+) : (
+	<Layout
+		lang="es"
+		title={title}
+		description={description}
+		canonical={canonical}
+		hreflangs={hreflangs}
+		robots={robots}
+		ogImage={isBlogLike ? heroSrc : undefined}
+		twitterCard="summary_large_image"
+	>
+		<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
+		<article class:list={['doc', isBlogLike ? 'blogPost' : null]}>
+		<header class="docHeader">
+			<div class="docHeaderTop">
+				<div class="docIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M7.5 3.75h9a1.75 1.75 0 0 1 1.75 1.75v13A1.75 1.75 0 0 1 16.5 20.25h-9A1.75 1.75 0 0 1 5.75 18.5v-13A1.75 1.75 0 0 1 7.5 3.75Z"
+							stroke="currentColor"
+							stroke-width="1.6"
+						/>
+						<path d="M8.5 8h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						<path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						<path d="M8.5 16h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+					</svg>
+				</div>
+				<nav class="docCrumbs" aria-label="Breadcrumb">
+					<a href="/es/">Inicio</a>
+					{crumbs.map((c) => (
+						<>
+							<span class="docCrumbSep" aria-hidden="true">
+								/
+							</span>
+							<a href={c.href}>{c.label}</a>
+						</>
+					))}
+					<span class="docCrumbSep" aria-hidden="true">
+						/
+					</span>
+					<span class="docCrumbCurrent">{h1}</span>
+				</nav>
+				{isDocs ? (
+					<div class="docHeaderActions">
+						<select class="docManualSelect" data-doc-manual-select aria-label="Seleccionar manual">
+							{docsManualOptions.map((m) => (
+								<option value={m.href} selected={Boolean(currentManualHref && m.href === currentManualHref)}>
+									{m.title}
+								</option>
+							))}
+						</select>
+						<button class="docBrowseBtn" type="button" data-doc-nav-open>
+							Explorar manual
+						</button>
+					</div>
+				) : null}
+			</div>
+
+			{!bodyHasH1 && !moveDocHeaderIntoBody ? <h1 class="docTitle">{h1}</h1> : null}
+			{!bodyHasH1 && !moveDocHeaderIntoBody && isBlogLike ? (
+				<div class="blogMeta">
+					<span class="blogAuthor">PropertyList</span>
+					{blogMetaDate && blogDateLabel ? (
+						<time class="blogDate" datetime={blogMetaDate.toISOString()}>
+							{blogDateLabel}
+						</time>
+					) : null}
+					<span class="blogRead">{readingMins} min de lectura</span>
+					<span class="blogRead" data-view-count data-view-locale="es-ES" data-view-suffix=" vistas">
+						{viewCountLabel} vistas
+					</span>
+				</div>
+			) : null}
+			{!bodyHasH1 && !moveDocHeaderIntoBody && !isBlogLike && (isDocs || isNeighbourhood) ? (
+				<div class="pageMeta" data-view-count data-view-locale="es-ES" data-view-suffix=" vistas">
+					{viewCountLabel} vistas
+				</div>
+			) : null}
+			{!bodyHasH1 && !moveDocHeaderIntoBody && page.description ? <p class="docLead">{page.description}</p> : null}
+		</header>
+
+		<div class:list={['docGrid', isDocs ? 'withNav' : null]}>
+			{isDocs ? (
+				<aside class="docNav" aria-label="Navegación de docs" data-current-manual-root={currentManualRoot || ''}>
+					<div class="docNavHeader">
+						<div class="docNavTitle">{currentManualTitle || 'Docs'}</div>
+						<form class="docNavFilterRow" method="get">
+							<input
+								id="doc-nav-filter-desktop"
+								class="docNavFilterInput"
+								type="search"
+								autocomplete="off"
+								spellcheck="false"
+								placeholder="Filtrar este manual…"
+								aria-label="Filtrar este manual"
+								data-doc-nav-filter="desktop"
+								name="filter"
+								value={navFilter}
+							/>
+							<button type="submit" hidden>
+								Aplicar
+							</button>
+						</form>
+					</div>
+					<ul class="docNavList">
+						<Fragment set:html={renderDocNavHtml(filteredDocsChildren, 0, Boolean(navFilter))} />
+					</ul>
+				</aside>
+			) : null}
+
+			<div class="docMain">
+				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+
+				{folderArticles.length ? (
+					<section class="docArticles" aria-label="Artículos">
+						<div class="docArticlesTitle">Artículos</div>
+						<ul class="docArticlesList">
+							{folderArticles.map((a) => (
+								<li>
+									<a class="docArticlesLink" href={a.href} target={a.external ? '_blank' : undefined} rel={a.external ? 'noopener' : undefined}>
+										<span class="docArticlesLinkTitle">{a.title}</span>
+										{a.description ? <span class="docArticlesLinkDesc">{a.description}</span> : null}
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				) : null}
+
+				{prev || next ? (
+					<footer class="docPager" aria-label="Page navigation">
+						{prev ? (
+									<a class="docPagerLink" href={prev.href} target={prev.external ? '_blank' : undefined} rel={prev.external ? 'noopener' : undefined}>
+								<span class="docPagerKicker">Anterior</span>
+								<span class="docPagerTitle">{prev.title}</span>
+							</a>
+						) : (
+							<span />
+						)}
+						{next ? (
+									<a class="docPagerLink" href={next.href} target={next.external ? '_blank' : undefined} rel={next.external ? 'noopener' : undefined}>
+								<span class="docPagerKicker">Siguiente</span>
+								<span class="docPagerTitle">{next.title}</span>
+							</a>
+						) : null}
+					</footer>
+				) : null}
+			</div>
+
+			{toc.filter((t) => t.depth === 2).length > 1 ? (
+				<aside class="docToc" aria-label="En esta página">
+					<div class="docTocTitle">En esta página</div>
+					<ol class="docTocList">
+						{toc
+							.filter((t) => t.depth === 2)
+							.slice(0, 12)
+							.map((t) => (
+								<li>
+									<a href={`#${t.id}`}>{t.text}</a>
+								</li>
+							))}
+					</ol>
+				</aside>
+			) : null}
+		</div>
+	</article>
+
+	{isDocs ? (
+		<button class="docNavStickyTag" type="button" data-doc-nav-open aria-label="Abrir filtros">
+			<span class="docNavStickyIcon" aria-hidden="true">≡</span>
+			<span class="docNavStickyText">Filtros</span>
+		</button>
+	) : null}
+	{isDocs ? (
+		<div class="docNavOverlay" data-doc-nav-overlay hidden>
+			<div class="docNavDrawer" role="dialog" aria-modal="true" aria-label="Explorar manual">
+				<div class="docNavDrawerTop">
+					<div class="docNavDrawerHeader">
+						<div class="docNavDrawerTitle">{currentManualTitle || 'Docs'}</div>
+						<button class="docNavDrawerClose" type="button" data-doc-nav-close aria-label="Cerrar">
+							Cerrar
+						</button>
+					</div>
+					<form class="docNavFilterRow" method="get">
+						<input
+							id="doc-nav-filter-mobile"
+							class="docNavFilterInput"
+							type="search"
+							autocomplete="off"
+							spellcheck="false"
+							placeholder="Filtrar este manual…"
+							aria-label="Filtrar este manual"
+							data-doc-nav-filter="mobile"
+							name="filter"
+							value={navFilter}
+						/>
+						<button type="submit" hidden>
+							Aplicar
+						</button>
+					</form>
+				</div>
+				<nav class="docNavDrawerBody" aria-label="Navegación de docs" data-current-manual-root={currentManualRoot || ''}>
+					<ul class="docNavList">
+						<Fragment set:html={renderDocNavHtml(filteredDocsChildren, 0, Boolean(navFilter))} />
+					</ul>
+				</nav>
+			</div>
+		</div>
+	) : null}
+	{isDocs ? (
+		<script
+			is:inline
+			set:html={String.raw`(() => {
+  const openBtns = Array.from(document.querySelectorAll('[data-doc-nav-open]'));
+  let lastOpenBtn = openBtns.find((x) => x instanceof HTMLElement) || null;
+  const overlay = document.querySelector('[data-doc-nav-overlay]');
+  const drawer = overlay?.querySelector('.docNavDrawer');
+  const drawerScroll = drawer instanceof HTMLElement ? drawer : null;
+  const closeBtn = overlay?.querySelector('[data-doc-nav-close]');
+  const mobileMq = window.matchMedia('(max-width: 960px)');
+  const desktopNav = document.querySelector('.docNav');
+  const drawerBody = overlay?.querySelector('.docNavDrawerBody');
+  const manualSelect = document.querySelector('[data-doc-manual-select]');
+  const getInputs = () => Array.from(document.querySelectorAll('input[data-doc-nav-filter]')).filter((x) => x instanceof HTMLInputElement);
+
+  const getActiveEl = (container) => {
+    if (!(container instanceof HTMLElement)) return null;
+    const hits = Array.from(container.querySelectorAll('.docNavLink.active, .docNavSummary.active, .docNavSummaryLink.active')).filter(
+      (x) => x instanceof HTMLElement,
+    );
+    if (!hits.length) return null;
+    let best = hits[0];
+    let bestDepth = -1;
+    for (const el of hits) {
+      const node = el.closest('[data-depth]');
+      const d = node ? Number.parseInt(node.getAttribute('data-depth') || '0', 10) : 0;
+      if (d > bestDepth) {
+        bestDepth = d;
+        best = el;
+      } else if (d === bestDepth) {
+        best = el;
+      }
+    }
+    return best;
+  };
+
+  const scrollToActive = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    const active = getActiveEl(container);
+    if (!(active instanceof HTMLElement)) return;
+    const parentGroups = [];
+    let d = active.closest('details.docNavGroup');
+    while (d instanceof HTMLDetailsElement) {
+      parentGroups.push(d);
+      d = d.parentElement?.closest('details.docNavGroup');
+    }
+    for (const g of parentGroups) g.open = true;
+    const c = container.getBoundingClientRect();
+    const a = active.getBoundingClientRect();
+    const header = container.querySelector('.docNavHeader');
+    const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+    const delta = a.top - c.top - headerHeight - container.clientHeight * 0.35;
+    container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
+  const STORAGE_KEY = 'docNavScrollTargetV1';
+  const normalisePath = (href) => {
+    try {
+      const u = new URL(String(href || ''), window.location.origin);
+      const p = u.pathname || '/';
+      return p.endsWith('/') ? p : p + '/';
+    } catch {
+      return null;
+    }
+  };
+
+  const scrollElementToTop = (container, el) => {
+    if (!(container instanceof HTMLElement)) return;
+    if (!(el instanceof HTMLElement)) return;
+    const c = container.getBoundingClientRect();
+    const a = el.getBoundingClientRect();
+    const header = container.querySelector('.docNavHeader');
+    const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+    const delta = a.top - c.top - headerHeight - 8;
+    container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
+  const scrollToStoredTarget = (container) => {
+    if (!(container instanceof HTMLElement)) return false;
+    const target = sessionStorage.getItem(STORAGE_KEY);
+    if (!target) return false;
+    const current = normalisePath(window.location.pathname);
+    if (!current || current !== target) return false;
+    sessionStorage.removeItem(STORAGE_KEY);
+    const links = Array.from(container.querySelectorAll('a.docNavLink, a.docNavSummaryLink'));
+    const hit = links.find((a) => normalisePath(a.getAttribute('href')) === target);
+    if (hit instanceof HTMLElement) {
+      scrollElementToTop(container, hit);
+      return true;
+    }
+    const active = getActiveEl(container);
+    if (active instanceof HTMLElement) {
+      scrollElementToTop(container, active);
+      return true;
+    }
+    return false;
+  };
+
+  const ensureScrolledToActive = (container, tries = 0) => {
+    if (!(container instanceof HTMLElement)) return;
+    if (tries === 0 && scrollToStoredTarget(container)) return;
+    scrollToActive(container);
+    const active = getActiveEl(container);
+    if (active instanceof HTMLElement) {
+      const c = container.getBoundingClientRect();
+      const a = active.getBoundingClientRect();
+      const header = container.querySelector('.docNavHeader');
+      const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+      const visible = a.top >= c.top + headerHeight + 10 && a.bottom <= c.bottom - 10;
+      if (visible) return;
+    }
+    if (tries >= 10) return;
+    setTimeout(() => ensureScrolledToActive(container, tries + 1), 60);
+  };
+
+  const setOpen = (next) => {
+    if (!(overlay instanceof HTMLElement)) return;
+    const canOpen = mobileMq.matches;
+    const effective = Boolean(next && canOpen);
+    overlay.hidden = !effective;
+    document.documentElement.classList.toggle('docNavLock', effective);
+    if (next && drawer instanceof HTMLElement) drawer.focus?.();
+    if (!next && lastOpenBtn instanceof HTMLElement) lastOpenBtn.focus?.();
+    if (next && drawerScroll instanceof HTMLElement) requestAnimationFrame(() => ensureScrolledToActive(drawerScroll, 0));
+  };
+
+  setOpen(false);
+  mobileMq.addEventListener?.('change', () => setOpen(false));
+  window.addEventListener?.('pageshow', (e) => {
+    if (e?.persisted) setOpen(false);
+  });
+  window.addEventListener?.('hashchange', () => setOpen(false));
+
+  if (desktopNav instanceof HTMLElement) {
+    requestAnimationFrame(() => ensureScrolledToActive(desktopNav, 0));
+    window.addEventListener('load', () => ensureScrolledToActive(desktopNav, 0), { once: true });
+  }
+
+  if (manualSelect instanceof HTMLSelectElement) {
+    manualSelect.addEventListener('change', () => {
+      const href = String(manualSelect.value || '');
+      if (!href) return;
+      const next = normalisePath(href);
+      if (next) sessionStorage.setItem(STORAGE_KEY, next);
+      window.location.assign(href);
+    });
+  }
+
+  const restoreDefaults = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    const groups = Array.from(container.querySelectorAll('details.docNavGroup'));
+    for (const d of groups) {
+      const val = d.getAttribute('data-default-open') || '0';
+      d.open = val === '1';
+    }
+  };
+
+  const applyTo = (container, qRaw) => {
+    if (!(container instanceof HTMLElement)) return;
+    const nodes = Array.from(container.querySelectorAll('[data-doc-nav-node]'));
+    const groups = Array.from(container.querySelectorAll('details.docNavGroup'));
+    const manualRoot = (container.getAttribute('data-current-manual-root') || '').toLowerCase();
+    const q = String(qRaw || '').trim().toLowerCase();
+    if (!q) {
+      for (const el of nodes) {
+        el.hidden = false;
+        if (el instanceof HTMLElement) el.style.removeProperty('display');
+      }
+      restoreDefaults(container);
+      return;
+    }
+
+    for (const el of nodes) {
+      const label = (el.getAttribute('data-label') || '').toLowerCase();
+      const path = (el.getAttribute('data-path') || '').toLowerCase();
+      const text = (el.textContent || '').toLowerCase();
+      const withinManual = !manualRoot || path.startsWith(manualRoot);
+      const matches = label.includes(q) || path.includes(q) || text.includes(q);
+      const hide = !withinManual || !matches;
+      el.hidden = hide;
+      if (el instanceof HTMLElement) el.style.display = hide ? 'none' : '';
+    }
+
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const el = nodes[i];
+      const hasVisibleChild = Array.from(el.querySelectorAll('[data-doc-nav-node]')).some((c) => c !== el && !c.hidden);
+      if (hasVisibleChild) el.hidden = false;
+    }
+
+    for (const d of groups) {
+      const hasVisible = Array.from(d.querySelectorAll('[data-doc-nav-node]')).some((c) => !c.hidden);
+      d.open = hasVisible;
+    }
+  };
+
+  const scrollToFirstVisible = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    const link = Array.from(container.querySelectorAll('a.docNavLink, a.docNavSummaryLink')).find((a) => a instanceof HTMLElement && !a.closest('[hidden]'));
+    if (!(link instanceof HTMLElement)) return;
+    const c = container.getBoundingClientRect();
+    const a = link.getBoundingClientRect();
+    const delta = a.top - c.top - container.clientHeight * 0.25;
+    container.scrollTop = Math.max(0, container.scrollTop + delta);
+  };
+
+  const onInput = (ev) => {
+    const src = ev?.target;
+    if (!(src instanceof HTMLInputElement)) return;
+    if (!src.matches('input[data-doc-nav-filter]')) return;
+    const inputs = getInputs();
+    for (const other of inputs) {
+      if (other instanceof HTMLInputElement && other !== src) other.value = src.value;
+    }
+    applyTo(desktopNav, src.value);
+    applyTo(drawerBody, src.value);
+    const mode = src.getAttribute('data-doc-nav-filter');
+    const container = mode === 'mobile' ? drawerScroll || drawerBody : desktopNav;
+    requestAnimationFrame(() => scrollToFirstVisible(container));
+  };
+
+  document.addEventListener('input', onInput, true);
+  document.addEventListener('search', onInput, true);
+  document.addEventListener('keyup', onInput, true);
+  const initialInputs = getInputs();
+  for (const input of initialInputs) {
+    if (input.value.trim()) {
+      applyTo(desktopNav, input.value);
+      applyTo(drawerBody, input.value);
+      break;
+    }
+  }
+
+  let lastFilterValue = null;
+  window.setInterval(() => {
+    const inputs = getInputs();
+    const active =
+      inputs.find((i) => i.getAttribute('data-doc-nav-filter') === (mobileMq.matches ? 'mobile' : 'desktop')) || inputs[0];
+    const value = active instanceof HTMLInputElement ? active.value : '';
+    if (value === lastFilterValue) return;
+    lastFilterValue = value;
+    applyTo(desktopNav, value);
+    applyTo(drawerBody, value);
+  }, 250);
+
+  for (const btn of openBtns) {
+    if (!(btn instanceof HTMLElement)) continue;
+    btn.addEventListener('click', (e) => {
+      if (!mobileMq.matches) return;
+      e.preventDefault?.();
+      lastOpenBtn = btn;
+      setOpen(true);
+    });
+  }
+  if (closeBtn instanceof HTMLElement) closeBtn.addEventListener('click', () => setOpen(false));
+  if (desktopNav instanceof HTMLElement) {
+    desktopNav.addEventListener('click', (e) => {
+      const el = e.target;
+      if (!(el instanceof Element)) return;
+      const a = el.closest('a.docNavLink, a.docNavSummaryLink');
+      if (!(a instanceof HTMLAnchorElement)) return;
+      const next = normalisePath(a.getAttribute('href'));
+      if (next) sessionStorage.setItem(STORAGE_KEY, next);
+    });
+  }
+  if (drawerBody instanceof HTMLElement) {
+    drawerBody.addEventListener('click', (e) => {
+      const el = e.target;
+      if (!(el instanceof Element)) return;
+      const a = el.closest('a');
+      if (!(a instanceof HTMLAnchorElement)) return;
+      const isDocNavLink = a.matches('a.docNavLink, a.docNavSummaryLink');
+      const next = normalisePath(a.getAttribute('href'));
+      if (isDocNavLink && next) sessionStorage.setItem(STORAGE_KEY, next);
+      setOpen(false);
+    }, true);
+  }
+  if (overlay instanceof HTMLElement) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) setOpen(false);
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+})();`}
+		></script>
+	) : null}
+	</Layout>
+)}

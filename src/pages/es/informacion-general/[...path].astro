@@ -1,0 +1,8 @@
+---
+import EsCatchAll from '../[...path].astro';
+
+const sub = String(Astro.params.path ?? '').replace(/^\/+|\/+$/g, '');
+const normalizedPath = `/es/informacion-general/${sub}`.replace(/\/{2,}/g, '/').replace(/\/?$/, '/');
+---
+
+<EsCatchAll normalizedPath={normalizedPath} />

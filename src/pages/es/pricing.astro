@@ -1,0 +1,389 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const title = 'Precios • PropertyList Info Hub';
+const description =
+	'El MLS y el CRM son gratis para siempre para agencias y agentes. Usa créditos opcionales de pago por uso para destacar anuncios y extras, solo cuando lo necesites.';
+
+const sections: Array<{
+	title: string;
+	subtitle: string;
+	items: Array<{ feature: string; price: string; note?: string }>;
+}> = [
+	{
+		title: 'MLS',
+		subtitle: 'Multi‑Listing Service',
+		items: [
+			{ feature: 'Anuncios ilimitados', price: 'Gratis' },
+			{ feature: 'Usuarios / equipo', price: 'Gratis' },
+			{ feature: 'MicroSite con marca', price: 'Gratis' },
+			{ feature: 'Destacar un anuncio', price: '10 créditos / 72h' },
+			{ feature: 'Alertas de propiedades', price: '5 créditos' },
+			{ feature: 'LeadBoard', price: 'Próximamente' },
+			{ feature: 'Importación XML', price: 'Gratis' },
+			{ feature: 'Exportación XML', price: '35 créditos / mes o 250 créditos / año' },
+			{ feature: 'Anuncios privados', price: 'Próximamente' },
+		],
+	},
+	{
+		title: 'CRM',
+		subtitle: 'Gestión de relaciones con clientes',
+		items: [
+			{ feature: 'Contactos ilimitados', price: 'Gratis' },
+			{ feature: 'Eventos del calendario', price: 'Gratis' },
+			{ feature: 'Pipeline de ventas', price: 'Gratis' },
+			{ feature: 'Subida de documentos', price: 'Gratis' },
+			{ feature: 'Utilidades de IA', price: 'Próximamente' },
+			{ feature: 'Funnels de IA', price: 'Próximamente' },
+			{ feature: 'Chatbot de IA', price: 'Próximamente' },
+			{ feature: 'Análisis de mercado con IA', price: '5 créditos por análisis (oferta por tiempo limitado)' },
+		],
+	},
+	{
+		title: 'Portal Público',
+		subtitle: 'Nosotros hacemos publicidad por ti',
+		items: [
+			{ feature: 'Destacar un anuncio', price: 'Próximamente' },
+			{ feature: 'Abrir un lead directo', price: 'Próximamente' },
+			{ feature: 'Agentes destacados', price: 'Próximamente' },
+			{ feature: 'Tours virtuales con IA', price: 'Próximamente' },
+			{ feature: 'Homepage premium', price: 'Próximamente' },
+			{ feature: 'Servicios inmobiliarios', price: 'Próximamente' },
+		],
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/es/pricing/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/pricing/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/pricing/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/pricing/' },
+	]}
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Precios transparentes</div>
+			<h1>MLS + CRM gratis. Paga solo por mejoras.</h1>
+			<p class="lead">
+				PropertyList ofrece a cada agente acceso gratuito para publicar propiedades, colaborar con el equipo y gestionar contactos—sin
+				suscripciones. Cuando quieras más visibilidad o automatización, usa créditos de pago por uso a tu ritmo.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="/es/mls/">Empieza con el manual del MLS</a>
+				<a class="btnSecondary" href="/es/docs/">Ver documentación</a>
+			</div>
+			<div class="trustRow" aria-label="Términos clave">
+				<div class="trustPill">Sin permanencia</div>
+				<div class="trustPill">Sin costes de alta</div>
+				<div class="trustPill">Sin costes de cancelación</div>
+				<div class="trustPill">Sin cargos ocultos</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="twoCol">
+			<div class="panel">
+				<h2>Por qué el MLS es gratis</h2>
+				<p>
+					En PropertyList damos acceso gratuito a la plataforma para impulsar a todos los agentes. Esto permite mostrar propiedades sin
+					costes iniciales, ofreciendo a los compradores y arrendatarios más opciones.
+				</p>
+				<p>
+					Creemos en un mercado inclusivo donde cada agente y cada anuncio pueda destacar—por eso lo esencial es gratis y solo cobramos
+					por herramientas opcionales de valor añadido.
+				</p>
+			</div>
+			<div class="panel">
+				<h2>Créditos y pago por uso</h2>
+				<p>
+					Nuestro sistema de créditos ofrece máxima flexibilidad para destacar propiedades y acceder a servicios adicionales. Escala desde
+					agentes independientes hasta grandes agencias, así que solo pagas por lo que usas—cuando de verdad lo necesitas.
+				</p>
+				<div class="callout">
+					<div class="calloutTitle">1 crédito = 1 €</div>
+					<div class="calloutBody">Las compras en volumen incluyen descuentos. Los créditos no caducan.</div>
+				</div>
+				<div class="callout muted">
+					<div class="calloutTitle">Bonificación de Agencia Verificada</div>
+					<div class="calloutBody">Cada nueva Agencia Verificada recibe 20 créditos gratis.</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Extras de pago (todas las funciones)</h2>
+			<div class="sectionMeta">Pago por uso, a tu ritmo.</div>
+		</div>
+		<div class="grid">
+			{sections.map((s) => (
+				<section class="pricingCard">
+					<div class="pricingHead">
+						<div class="pricingTitle">{s.title}</div>
+						<div class="pricingSubtitle">{s.subtitle}</div>
+					</div>
+					<ul class="pricingList">
+						{s.items.map((it) => (
+							<li class="pricingRow">
+								<span class="pricingFeature">{it.feature}</span>
+								<span class={`pricingPrice ${it.price.toLowerCase().includes('gratis') ? 'isFree' : ''}`}>{it.price}</span>
+							</li>
+						))}
+					</ul>
+				</section>
+			))}
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	h2 {
+		margin: 0 0 10px;
+		letter-spacing: -0.02em;
+	}
+
+	.lead {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.section {
+		margin: 14px 0;
+	}
+
+	.sectionHeader {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		margin: 0 0 10px;
+	}
+
+	.sectionMeta {
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 14px;
+	}
+
+	.ctaRow {
+		margin-top: 14px;
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		border-radius: 999px;
+		padding: 10px 14px;
+		text-decoration: none;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+	}
+
+	.btnPrimary {
+		background: #00ae9a;
+		color: #00100e;
+		border: 1px solid rgba(0, 0, 0, 0.12);
+	}
+
+	.btnPrimary:hover {
+		filter: brightness(0.98);
+		text-decoration: none;
+	}
+
+	.btnSecondary {
+		background: rgba(255, 255, 255, 0.85);
+		color: rgba(16, 24, 40, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+	}
+
+	.btnSecondary:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.trustRow {
+		margin-top: 12px;
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.trustPill {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.78);
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		padding: 6px 10px;
+		border-radius: 999px;
+	}
+
+	.twoCol {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.panel {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.callout {
+		margin-top: 12px;
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		background: rgba(0, 174, 154, 0.08);
+		border-radius: 14px;
+		padding: 12px;
+	}
+
+	.callout.muted {
+		border-color: rgba(16, 24, 40, 0.12);
+		background: rgba(255, 255, 255, 0.6);
+	}
+
+	.calloutTitle {
+		font-weight: 900;
+		letter-spacing: -0.02em;
+	}
+
+	.calloutBody {
+		color: rgba(16, 24, 40, 0.74);
+		margin-top: 4px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.pricingCard {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.pricingHead {
+		margin-bottom: 12px;
+	}
+
+	.pricingTitle {
+		font-weight: 900;
+		letter-spacing: -0.02em;
+		font-size: 16px;
+	}
+
+	.pricingSubtitle {
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 13px;
+		margin-top: 4px;
+	}
+
+	.pricingList {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 10px;
+	}
+
+	.pricingRow {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: start;
+		gap: 10px;
+		padding: 10px 12px;
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+	}
+
+	.pricingRow:first-child {
+		margin-top: 0;
+	}
+
+	.pricingFeature {
+		color: rgba(16, 24, 40, 0.86);
+		line-height: 1.35;
+		min-width: 0;
+	}
+
+	.pricingPrice {
+		font-weight: 800;
+		color: rgba(16, 24, 40, 0.85);
+		text-align: right;
+		white-space: normal;
+		max-width: 22ch;
+		overflow-wrap: anywhere;
+		min-width: 0;
+	}
+
+	.pricingPrice.isFree {
+		color: rgba(0, 174, 154, 1);
+	}
+
+	@media (max-width: 980px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+
+		.twoCol {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

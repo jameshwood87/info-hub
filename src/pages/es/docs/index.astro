@@ -1,0 +1,665 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getKbMetaSnapshot } from '../../../lib/adminMeta';
+import { adminGetKbPageByPath, listKbMainDocs, type KbPageListItem } from '../../../lib/directus';
+
+const roleRaw = (Astro.url.searchParams.get('role') || '').trim().toLowerCase();
+const role =
+	roleRaw === 'estate-agent' || roleRaw === 'developer' || roleRaw === 'property-service' || roleRaw === 'public' ? roleRaw : 'all';
+
+const stripSuffix = (s: string) => s.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
+const cleanDesc = (s: string) => String(s || '').replace(/^\s*\d+\s+/, '').trim();
+
+const areaGuidesTop = [
+	{ title: 'Guías de zonas (inglés)', href: '/neighbourhood/' },
+	{ title: 'Buscar guías de zonas', href: '/search?q=Area%20Guides' },
+];
+
+type DocCategory = 'estate-agent' | 'developer' | 'property-service' | 'public';
+const fetchedMainDocsBase = await listKbMainDocs({ lang: 'es', limit: 200 }).catch(() => []);
+const fallbackMainDocs: KbPageListItem[] = [
+	{
+		id: 'static-mls-manual-es',
+		language: 'es',
+		path: '/es/docs/propertylist-mls-manual-de-usuario/',
+		title: 'Manual de usuario (MLS y CRM)',
+		description: 'MLS, CRM, inmuebles, leads y flujos de trabajo.',
+		date_created: null,
+		date_updated: null,
+	},
+	{
+		id: 'static-laws-procedures-es',
+		language: 'es',
+		path: '/es/docs/leyes-procedimientos/',
+		title: 'Leyes y procedimientos',
+		description: 'Compra, alquiler, leyes y guías para el portal público.',
+		date_created: null,
+		date_updated: null,
+	},
+	{
+		id: 'static-public-portal-es',
+		language: 'es',
+		path: '/es/docs/portal-publico/',
+		title: 'Portal público',
+		description: 'Documentación y guías del portal público.',
+		date_created: null,
+		date_updated: null,
+	},
+	{
+		id: 'static-developers-es',
+		language: 'es',
+		path: '/es/docs/developers/',
+		title: 'Promotores',
+		description: 'Integraciones, listados, importaciones/exportaciones y CRM.',
+		date_created: null,
+		date_updated: null,
+	},
+	{
+		id: 'static-property-services-es',
+		language: 'es',
+		path: '/es/docs/property-services/',
+		title: 'Servicios inmobiliarios',
+		description: 'Mantenimiento, inspecciones, entregas y flujos de servicio.',
+		date_created: null,
+		date_updated: null,
+	},
+];
+
+const fetchedMainDocs = await (async () => {
+	const byPath = new Map(fetchedMainDocsBase.map((p) => [String(p.path || ''), p] as const));
+	const extras: KbPageListItem[] = [];
+	for (const p of fallbackMainDocs) {
+		const path = String(p.path || '');
+		if (!path || byPath.has(path)) continue;
+		try {
+			const hit = await adminGetKbPageByPath(path);
+			if (!hit) continue;
+			if (String(hit.status || '') !== 'published') continue;
+			if (String(hit.language || '') !== 'es') continue;
+			extras.push({
+				id: String(hit.id || ''),
+				language: 'es',
+				path: String(hit.path || ''),
+				title: String(hit.title || ''),
+				description: hit.description ?? null,
+				date_created: hit.date_created ?? null,
+				date_updated: hit.date_updated ?? null,
+			});
+		} catch {}
+	}
+	return [...fetchedMainDocsBase, ...extras].filter((p) => String(p.path || ''));
+})();
+
+const allDocs = (() => {
+	const out: KbPageListItem[] = [];
+	const byPath = new Map<string, KbPageListItem>();
+	for (const p of [...fallbackMainDocs, ...fetchedMainDocs]) {
+		const path = String(p?.path || '');
+		if (!path || path === '/es/docs/') continue;
+		const prev = byPath.get(path) || null;
+		if (!prev) byPath.set(path, p);
+		else if (String(p.id || '').startsWith('static-') && !String(prev.id || '').startsWith('static-')) continue;
+		else if (!String(p.id || '').startsWith('static-') && String(prev.id || '').startsWith('static-')) byPath.set(path, p);
+	}
+	for (const p of byPath.values()) out.push(p);
+	return out;
+})();
+
+const forcedTopLevelDisplay = new Map<string, { title: string; description: string | null }>([
+	[
+		'/es/docs/propertylist-mls-manual-de-usuario/',
+		{
+			title: 'Manual de Usuario MLS & CRM',
+			description:
+				'Una guía completa para usar el sistema MLS & CRM, que cubre listados de propiedades, gestión de contactos, seguimiento de clientes potenciales y herramientas para el flujo de trabajo diario.',
+		},
+	],
+	[
+		'/es/docs/leyes-procedimientos/',
+		{
+			title: 'Leyes y procedimientos',
+			description: 'Compra, alquiler, leyes y guías para el portal público.',
+		},
+	],
+	[
+		'/es/docs/portal-publico/',
+		{
+			title: 'Portal público',
+			description: 'Documentación y guías del portal público.',
+		},
+	],
+	[
+		'/es/docs/developers/',
+		{
+			title: 'Promotores',
+			description: 'Integraciones, listados, importaciones/exportaciones y CRM.',
+		},
+	],
+	[
+		'/es/docs/property-services/',
+		{
+			title: 'Servicios inmobiliarios',
+			description: 'Mantenimiento, inspecciones, entregas y flujos de servicio.',
+		},
+	],
+]);
+
+const withDisplay = (p: KbPageListItem) => {
+	const key = String(p?.path || '');
+	const forced = forcedTopLevelDisplay.get(key) || null;
+	if (!forced) return { title: stripSuffix(p.title), description: p.description ? cleanDesc(p.description) : null };
+	return { title: forced.title, description: forced.description ? cleanDesc(forced.description) : null };
+};
+
+const metaById = await getKbMetaSnapshot().catch(() => ({} as any));
+const inferredCategoryForPath = (p: string): DocCategory => {
+	if (p.startsWith('/es/docs/developers/')) return 'developer';
+	if (p.startsWith('/es/docs/property-services/')) return 'property-service';
+	if (p.startsWith('/es/docs/portal-publico/')) return 'public';
+	if (p.startsWith('/es/docs/propertylist-mls-manual-de-usuario/')) return 'estate-agent';
+	if (p.startsWith('/es/docs/leyes-procedimientos/')) return 'public';
+	return 'estate-agent';
+};
+
+const isDocCategory = (v: any): v is DocCategory => v === 'estate-agent' || v === 'developer' || v === 'property-service' || v === 'public';
+
+const categoriesForDoc = (p: KbPageListItem): DocCategory[] => {
+	const rawMeta = metaById?.[String(p.id || '')] || {};
+	const rawArr = Array.isArray(rawMeta?.docCategories)
+		? rawMeta.docCategories
+		: typeof rawMeta?.docCategory === 'string'
+			? [rawMeta.docCategory]
+			: [];
+	const picked = rawArr.map((v: any) => String(v || '').trim()).filter(isDocCategory);
+	if (picked.length) return Array.from(new Set(picked));
+	return [inferredCategoryForPath(p.path)];
+};
+
+const categorized = {
+	'estate-agent': [] as KbPageListItem[],
+	developer: [] as KbPageListItem[],
+	'property-service': [] as KbPageListItem[],
+	public: [] as KbPageListItem[],
+} satisfies Record<DocCategory, KbPageListItem[]>;
+
+for (const p of allDocs) {
+	for (const c of categoriesForDoc(p)) categorized[c].push(p);
+}
+
+const categorizedMain = categorized;
+
+const mainItemsForRole = (r: DocCategory) => {
+	const preferred = {
+		public: ['/es/docs/leyes-procedimientos/', '/es/docs/portal-publico/'],
+		'estate-agent': ['/es/docs/propertylist-mls-manual-de-usuario/'],
+		developer: ['/es/docs/developers/'],
+		'property-service': ['/es/docs/property-services/'],
+	} satisfies Record<DocCategory, string[]>;
+	const pref = new Map(preferred[r].map((p, i) => [p, i] as const));
+	const base = [...categorizedMain[r]].sort((a, b) => {
+		const ai = pref.has(a.path) ? (pref.get(a.path) as number) : Infinity;
+		const bi = pref.has(b.path) ? (pref.get(b.path) as number) : Infinity;
+		if (ai !== bi) return ai - bi;
+		return stripSuffix(a.title).localeCompare(stripSuffix(b.title));
+	});
+
+	if (r !== 'estate-agent') return base;
+	const shared = new Set(['/es/docs/leyes-procedimientos/']);
+	const extras = allDocs.filter((p) => shared.has(p.path));
+	const merged = new Map<string, KbPageListItem>();
+	for (const it of [...base, ...extras]) merged.set(it.path, it);
+	return Array.from(merged.values()).sort((a, b) => {
+		const ai = pref.has(a.path) ? (pref.get(a.path) as number) : Infinity;
+		const bi = pref.has(b.path) ? (pref.get(b.path) as number) : Infinity;
+		if (ai !== bi) return ai - bi;
+		return stripSuffix(a.title).localeCompare(stripSuffix(b.title));
+	});
+};
+
+const showEstateAgent = role === 'all' || role === 'estate-agent';
+const showDeveloper = role === 'all' || role === 'developer';
+const showPropertyService = role === 'all' || role === 'property-service';
+const showPublic = role === 'all' || role === 'public';
+
+const landingCards = (() => {
+	const preferred = [
+		'/es/docs/propertylist-mls-manual-de-usuario/',
+		'/es/docs/leyes-procedimientos/',
+		'/es/docs/portal-publico/',
+		'/es/docs/developers/',
+		'/es/docs/property-services/',
+	];
+	const pref = new Map(preferred.map((p, i) => [p, i] as const));
+	return [...allDocs].sort((a, b) => {
+		const ai = pref.has(a.path) ? (pref.get(a.path) as number) : Infinity;
+		const bi = pref.has(b.path) ? (pref.get(b.path) as number) : Infinity;
+		if (ai !== bi) return ai - bi;
+		return withDisplay(a).title.localeCompare(withDisplay(b).title);
+	});
+})();
+---
+
+<Layout
+	lang="es"
+	title="Documentación • PropertyList Info Hub"
+	description="Encuentra la documentación correcta rápido — agentes, público, promotores y servicios."
+	canonical="https://info.propertylist.es/es/docs/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/docs/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/docs/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/docs/' },
+	]}
+>
+	<h1>Documentación</h1>
+	<p class="sub">Elige tu rol para ver la documentación que importa.</p>
+
+	<div class="start">
+		<div class="startTitle">Empieza por tu rol</div>
+		<div class="chips">
+			<a class="chip" href="/es/docs/?role=estate-agent">Agente inmobiliario</a>
+			<a class="chip" href="/es/docs/?role=developer">Promotor</a>
+			<a class="chip" href="/es/docs/?role=property-service">Servicios</a>
+			<a class="chip" href="/es/docs/?role=public">Público</a>
+		</div>
+	</div>
+
+	{role === 'all' ? (
+		<div class="cards" aria-label="Documentación">
+			{landingCards.map((p) => (
+				<a class="card" href={p.path}>
+					<div class="cardTitle">{withDisplay(p).title}</div>
+					{withDisplay(p).description ? <div class="cardDesc">{withDisplay(p).description}</div> : null}
+				</a>
+			))}
+			<a class="card" href="/neighbourhood/">
+				<div class="cardTitle">Guías de zonas</div>
+				<div class="cardDesc">Guías de barrios y zona local.</div>
+			</a>
+		</div>
+	) : (
+		<div class="dropList" aria-label="Secciones de documentación">
+			{showPublic ? (
+				<details class="drop" open>
+					<summary class="dropSummary">
+						<div class="dropSummaryText">
+							<div class="dropTitle">Docs para el público</div>
+							<div class="dropSub">Compra, alquiler, leyes y guías del portal público.</div>
+						</div>
+					</summary>
+					<div class="dropBody">
+						{mainItemsForRole('public').length ? (
+							<div class="cards">
+								{mainItemsForRole('public').map((p) => (
+									<a class="card" href={p.path}>
+										<div class="cardTitle">{withDisplay(p).title}</div>
+										{withDisplay(p).description ? <div class="cardDesc">{withDisplay(p).description}</div> : null}
+									</a>
+								))}
+							</div>
+						) : (
+							<div class="empty">La documentación para el público estará disponible pronto.</div>
+						)}
+						<a class="viewAll" href="/es/docs/">Volver</a>
+					</div>
+				</details>
+			) : null}
+
+			{showEstateAgent ? (
+				<details class="drop" open>
+					<summary class="dropSummary">
+						<div class="dropSummaryText">
+							<div class="dropTitle">Docs para agentes</div>
+							<div class="dropSub">MLS, CRM, inmuebles, leads y flujos de trabajo.</div>
+						</div>
+					</summary>
+					<div class="dropBody">
+						{mainItemsForRole('estate-agent').length ? (
+							<div class="cards">
+								{mainItemsForRole('estate-agent').map((p) => (
+									<a class="card" href={p.path}>
+										<div class="cardTitle">{withDisplay(p).title}</div>
+										{withDisplay(p).description ? <div class="cardDesc">{withDisplay(p).description}</div> : null}
+									</a>
+								))}
+							</div>
+						) : (
+							<div class="empty">Aún no hay documentación del MLS.</div>
+						)}
+						<a class="viewAll" href="/es/docs/">Volver</a>
+					</div>
+				</details>
+			) : null}
+
+			{showDeveloper ? (
+				<details class="drop" open>
+					<summary class="dropSummary">
+						<div class="dropSummaryText">
+							<div class="dropTitle">Docs para promotores</div>
+							<div class="dropSub">Integraciones, listados, importaciones/exportaciones y CRM.</div>
+						</div>
+					</summary>
+					<div class="dropBody">
+						{mainItemsForRole('developer').length ? (
+							<div class="cards">
+								{mainItemsForRole('developer').map((p) => (
+									<a class="card" href={p.path}>
+										<div class="cardTitle">{withDisplay(p).title}</div>
+										{withDisplay(p).description ? <div class="cardDesc">{withDisplay(p).description}</div> : null}
+									</a>
+								))}
+							</div>
+						) : (
+							<div class="empty">La documentación para promotores estará disponible pronto.</div>
+						)}
+						<a class="viewAll" href="/es/docs/">Volver</a>
+					</div>
+				</details>
+			) : null}
+
+			{showPropertyService ? (
+				<details class="drop" open>
+					<summary class="dropSummary">
+						<div class="dropSummaryText">
+							<div class="dropTitle">Docs de servicios</div>
+							<div class="dropSub">Mantenimiento, inspecciones, entregas y flujos de servicio.</div>
+						</div>
+					</summary>
+					<div class="dropBody">
+						{mainItemsForRole('property-service').length ? (
+							<div class="cards">
+								{mainItemsForRole('property-service').map((p) => (
+									<a class="card" href={p.path}>
+										<div class="cardTitle">{withDisplay(p).title}</div>
+										{withDisplay(p).description ? <div class="cardDesc">{withDisplay(p).description}</div> : null}
+									</a>
+								))}
+							</div>
+						) : (
+							<div class="empty">La documentación de servicios estará disponible pronto.</div>
+						)}
+						<a class="viewAll" href="/es/docs/">Volver</a>
+					</div>
+				</details>
+			) : null}
+
+			<details class="drop">
+				<summary class="dropSummary">
+					<div class="dropSummaryText">
+						<div class="dropTitle">Guías de zonas</div>
+						<div class="dropSub">Guías de barrios y zona local.</div>
+					</div>
+				</summary>
+				<div class="dropBody">
+					<div class="rows">
+						{areaGuidesTop.map((it) => (
+							<a class="row" href={it.href}>
+								<div class="rowTitle">{it.title}</div>
+							</a>
+						))}
+					</div>
+				</div>
+			</details>
+		</div>
+	)}
+</Layout>
+
+<style>
+	h1 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+
+	.sub {
+		margin: 0 0 18px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.start {
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.7);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 16px;
+	}
+
+	.startTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		margin-bottom: 10px;
+	}
+
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 12px;
+		border-radius: 999px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 800;
+		color: rgba(16, 24, 40, 0.86);
+	}
+
+	.chip:hover {
+		border-color: rgba(var(--accent-rgb), 0.35);
+	}
+
+	.dropList {
+		display: grid;
+		gap: 12px;
+	}
+
+	.drop {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		overflow: hidden;
+	}
+
+	.dropSummary {
+		list-style: none;
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 14px;
+		padding: 14px;
+		cursor: pointer;
+	}
+
+	.dropSummary::-webkit-details-marker {
+		display: none;
+	}
+
+	.dropTitle {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+		font-weight: 900;
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.dropSub {
+		margin: 6px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.4;
+		font-size: 14px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.dropSummary::after {
+		content: '›';
+		flex: none;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.55);
+		transform: rotate(90deg);
+		transition: transform 180ms ease, color 180ms ease;
+		margin-top: 2px;
+	}
+
+	.drop[open] > .dropSummary::after {
+		transform: rotate(-90deg);
+		color: var(--accent);
+	}
+
+	.dropBody {
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		padding: 14px;
+	}
+
+	.latest {
+		margin-top: 14px;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.latestHeader h2 {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.latestSub {
+		margin: 8px 0 12px;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.4;
+		font-size: 14px;
+	}
+
+	.viewAll {
+		margin-top: 26px;
+		display: inline-block;
+		font-weight: 900;
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.viewAll:hover {
+		text-decoration: underline;
+	}
+
+	.rows {
+		display: grid;
+		gap: 10px;
+	}
+
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	@media (max-width: 760px) {
+		.cards {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.card {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px 14px;
+		text-decoration: none;
+		color: rgba(11, 18, 32, 0.86);
+		display: grid;
+		gap: 8px;
+	}
+
+	.card:hover {
+		border-color: rgba(var(--accent-rgb), 0.35);
+		background: rgba(0, 174, 154, 0.04);
+	}
+
+	.cardTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.cardDesc {
+		color: rgba(16, 24, 40, 0.72);
+		font-size: 14px;
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.rowsHead {
+		font-size: 12px;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(16, 24, 40, 0.55);
+		margin: -2px 0 4px;
+	}
+
+	.row {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 12px 14px;
+		text-decoration: none;
+		color: rgba(11, 18, 32, 0.86);
+	}
+
+	.row:hover {
+		text-decoration: none;
+		border-color: rgba(var(--accent-rgb), 0.35);
+	}
+
+	.rowTitle {
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.rowMeta {
+		margin-top: 4px;
+		color: rgba(16, 24, 40, 0.62);
+		font-size: 12px;
+		line-height: 1.25;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.rowDesc {
+		margin-top: 6px;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 14px;
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.empty {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dropSummary::after {
+			transition: none;
+		}
+	}
+</style>

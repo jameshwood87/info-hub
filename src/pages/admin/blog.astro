@@ -1,0 +1,2143 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout lang="en" title="Admin • Blog" description="Manage blog posts" canonical="https://info.propertylist.es/admin/blog">
+	<meta name="robots" content="noindex,nofollow" slot="head" />
+
+	<div class="shell">
+		<header class="topbar">
+			<div class="left">
+				<a class="back" href="/admin/">← Dashboard</a>
+				<div class="badge">Blog</div>
+			</div>
+			<div class="right">
+				<button class="btnGhost" id="reloadBtn" type="button">Reload</button>
+				<button class="btnGhost" id="recoverBtn" type="button">Recover</button>
+				<button class="btn" id="newBtn" type="button">New post</button>
+			</div>
+		</header>
+
+		<section class="controls">
+			<div class="control">
+				<label class="label" for="q">Search</label>
+				<input id="q" class="input" type="search" autocomplete="off" placeholder="Title or path…" />
+			</div>
+			<div class="control">
+				<label class="label" for="bucket">View</label>
+				<select id="bucket" class="select">
+					<option value="active" selected>Active</option>
+					<option value="archived">Archived</option>
+					<option value="trash">Trash</option>
+					<option value="all">All</option>
+				</select>
+			</div>
+			<div class="control">
+				<label class="label" for="status">Status</label>
+				<select id="status" class="select">
+					<option value="any">Any</option>
+					<option value="published">Published</option>
+					<option value="draft">Draft</option>
+				</select>
+			</div>
+			<div class="control">
+				<label class="label" for="lang">Language</label>
+				<select id="lang" class="select">
+					<option value="">All</option>
+					<option value="en" selected>English</option>
+					<option value="es">Español</option>
+				</select>
+			</div>
+			<div class="bulk">
+				<button class="btnGhost" id="bulkPublish" type="button" disabled>Publish</button>
+				<button class="btnGhost" id="bulkDraft" type="button" disabled>Draft</button>
+				<button class="btnGhost" id="bulkArchive" type="button" disabled>Archive</button>
+				<button class="btnDanger" id="bulkTrash" type="button" disabled>Trash</button>
+				<button class="btnGhost" id="bulkRestore" type="button" disabled>Restore</button>
+				<button class="btnDanger" id="bulkPurge" type="button" disabled>Purge</button>
+			</div>
+		</section>
+
+		<div id="err" class="err" role="status" aria-live="polite"></div>
+		<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+		<section class="split">
+			<aside class="treePane">
+				<div class="treeTop">
+					<div class="label">Structure</div>
+				</div>
+				<div id="tree" class="tree" role="tree"></div>
+			</aside>
+
+			<div class="listPane">
+				<div class="listTop">
+					<div class="label">Posts</div>
+					<div class="hint" id="listHint"></div>
+				</div>
+				<div class="tableWrap">
+					<table class="table" aria-label="Blog posts">
+						<thead>
+							<tr>
+								<th class="cbox">
+									<input id="checkAll" type="checkbox" />
+								</th>
+								<th>Title</th>
+								<th>Path</th>
+								<th>Status</th>
+								<th>Views</th>
+								<th>Updated</th>
+								<th class="actionsCol">Actions</th>
+							</tr>
+						</thead>
+						<tbody id="rows"></tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<dialog id="editor" class="dialog">
+		<form method="dialog" class="dialogCard" id="editorForm">
+			<div class="dialogTop">
+				<div class="dialogTitle" id="dialogTitle">Edit post</div>
+				<button class="btnGhost" value="cancel" type="submit" formnovalidate>Close</button>
+			</div>
+
+			<div class="formGrid">
+				<div class="field">
+					<label class="label" for="f_path">Path</label>
+					<input id="f_path" class="input" type="text" required placeholder="/blog/category/slug/" />
+					<div class="help">Must start with /blog/, /general-information/, or /estate-agents/ and end with /</div>
+				</div>
+				<div class="field">
+					<label class="label" for="f_title">Title</label>
+					<input id="f_title" class="input" type="text" required />
+				</div>
+				<div class="field">
+					<label class="label" for="f_desc">Description</label>
+					<textarea id="f_desc" class="textarea" rows="2" placeholder="Used for listings and snippets"></textarea>
+				</div>
+				<div class="field">
+					<label class="label" for="f_status">Status</label>
+					<select id="f_status" class="select">
+						<option value="draft">Draft</option>
+						<option value="published">Published</option>
+					</select>
+				</div>
+				<div class="field">
+					<label class="label" for="f_lang">Language</label>
+					<select id="f_lang" class="select">
+						<option value="en">English</option>
+						<option value="es">Español</option>
+					</select>
+				</div>
+				<div class="field">
+					<label class="label" for="f_seo_title">SEO title</label>
+					<input id="f_seo_title" class="input" type="text" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_seo_desc">SEO description</label>
+					<textarea id="f_seo_desc" class="textarea" rows="2"></textarea>
+				</div>
+				<div class="field">
+					<label class="label" for="f_tags">Tags</label>
+					<input id="f_tags" class="input" type="text" placeholder="comma,separated,tags" />
+					<div class="help">Used in admin search/filter and scheduling.</div>
+				</div>
+				<div class="field">
+					<label class="label" for="f_featured">Featured image URL</label>
+					<div class="row">
+						<input id="f_featured" class="input" type="url" placeholder="https://…" />
+						<button class="btnGhostSmall" id="uploadFeaturedBtn" type="button">Upload</button>
+					</div>
+				</div>
+				<div class="field">
+					<label class="label" for="f_featured_alt">Featured image ALT</label>
+					<input id="f_featured_alt" class="input" type="text" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_featured_title">Featured image title</label>
+					<input id="f_featured_title" class="input" type="text" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_featured_caption">Featured image caption</label>
+					<textarea id="f_featured_caption" class="textarea" rows="2"></textarea>
+				</div>
+				<div class="field">
+					<label class="label" for="f_featured_credit">Featured image credit</label>
+					<input id="f_featured_credit" class="input" type="text" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_scheduled">Schedule publish</label>
+					<input id="f_scheduled" class="input" type="datetime-local" />
+					<div class="help">Keeps draft until the scheduled time is reached.</div>
+				</div>
+			</div>
+
+			<div class="editorBlock">
+				<div class="editorTop">
+					<div class="label">Body</div>
+					<div class="toolbar">
+						<button class="tool" type="button" data-cmd="bold">B</button>
+						<button class="tool" type="button" data-cmd="italic">I</button>
+						<button class="tool" type="button" data-cmd="insertUnorderedList">• List</button>
+						<button class="tool" type="button" data-cmd="insertOrderedList">1. List</button>
+						<button class="tool" type="button" data-cmd="formatBlock" data-arg="p">Body</button>
+						<button class="tool" type="button" data-cmd="formatBlock" data-arg="h1">H1</button>
+						<button class="tool" type="button" data-cmd="formatBlock" data-arg="h2">H2</button>
+						<select class="toolSel" data-action="fontSize">
+							<option value="">Size</option>
+							<option value="0.875rem">Small</option>
+							<option value="1rem">Normal</option>
+							<option value="1.25rem">Large</option>
+							<option value="1.5rem">XL</option>
+						</select>
+						<input class="toolColor" type="color" value="#000000" data-action="color" />
+						<button class="tool" type="button" data-action="link">Link</button>
+						<button class="tool" type="button" data-action="image">Image</button>
+						<button class="tool" type="button" data-action="video">Video</button>
+					</div>
+				</div>
+				<div id="f_body" class="rte" contenteditable="true" spellcheck="true"></div>
+			</div>
+
+			<div class="dialogBottom">
+				<div class="saveErr" id="saveErr" role="status" aria-live="polite"></div>
+				<div class="dialogBtns">
+					<button class="btnDanger" id="deleteBtn" type="button">Delete</button>
+					<button class="btn" id="saveBtn" type="button">Save</button>
+				</div>
+			</div>
+		</form>
+	</dialog>
+
+	<script is:inline>
+		const state = {
+			items: [],
+			filtered: [],
+			views: {},
+			selected: new Set(),
+			open: new Set(),
+			csrf: '',
+			role: 'admin',
+			edit: { id: null, mode: 'edit' },
+			activePath: '',
+		};
+
+		const $ = (id) => document.getElementById(id);
+		const rows = $('rows');
+		const err = $('err');
+		const toast = $('toast');
+		const q = $('q');
+		const bucketSel = $('bucket');
+		const statusSel = $('status');
+		const langSel = $('lang');
+		const reloadBtn = $('reloadBtn');
+		const recoverBtn = $('recoverBtn');
+		const newBtn = $('newBtn');
+		const checkAll = $('checkAll');
+		const bulkPublish = $('bulkPublish');
+		const bulkDraft = $('bulkDraft');
+		const bulkArchive = $('bulkArchive');
+		const bulkTrash = $('bulkTrash');
+		const bulkRestore = $('bulkRestore');
+		const bulkPurge = $('bulkPurge');
+		const tree = $('tree');
+		const listHint = $('listHint');
+
+		const dlg = $('editor');
+		const dlgTitle = $('dialogTitle');
+		const saveErr = $('saveErr');
+		const saveBtn = $('saveBtn');
+		const deleteBtn = $('deleteBtn');
+
+		const f_path = $('f_path');
+		const f_title = $('f_title');
+		const f_desc = $('f_desc');
+		const f_status = $('f_status');
+		const f_lang = $('f_lang');
+		const f_seo_title = $('f_seo_title');
+		const f_seo_desc = $('f_seo_desc');
+		const f_tags = $('f_tags');
+		const f_featured = $('f_featured');
+		const f_featured_alt = $('f_featured_alt');
+		const f_featured_title = $('f_featured_title');
+		const f_featured_caption = $('f_featured_caption');
+		const f_featured_credit = $('f_featured_credit');
+		const uploadFeaturedBtn = $('uploadFeaturedBtn');
+		const f_scheduled = $('f_scheduled');
+		const f_body = $('f_body');
+
+		const setError = (m) => {
+			err.textContent = m || '';
+			err.style.display = m ? 'block' : 'none';
+		};
+
+		const setSaveError = (m) => {
+			saveErr.textContent = m || '';
+			saveErr.style.display = m ? 'block' : 'none';
+		};
+
+		const setToast = (node) => {
+			toast.replaceChildren();
+			if (!node) {
+				toast.style.display = 'none';
+				return;
+			}
+			toast.appendChild(node);
+			toast.style.display = 'block';
+		};
+
+		const readCsrfCookie = () => {
+			const m = document.cookie.match(/(?:^|;\s*)pl_admin_csrf=([^;]+)/);
+			return m ? decodeURIComponent(m[1]) : '';
+		};
+
+		const fetchMe = async () => {
+			const res = await fetch('/api/admin/me').catch(() => null);
+			const data = res ? await res.json().catch(() => null) : null;
+			state.csrf = data?.csrfToken || readCsrfCookie() || '';
+			state.role = data?.role === 'editor' ? 'editor' : 'admin';
+		};
+
+		const api = async (path, init = {}) => {
+			const headers = new Headers(init.headers || {});
+			if (init.method && init.method !== 'GET') {
+				if (state.csrf) headers.set('x-csrf-token', state.csrf);
+				headers.set('content-type', 'application/json');
+			}
+			const res = await fetch(path, { ...init, headers }).catch(() => null);
+			if (!res) return { ok: false, status: 0, data: null };
+			if (res.status === 401) {
+				window.location.href = '/admin/login';
+				return { ok: false, status: 401, data: null };
+			}
+			const data = await res.json().catch(() => null);
+			return { ok: res.ok, status: res.status, data };
+		};
+
+		const fmtDate = (iso) => {
+			if (!iso) return '';
+			const d = new Date(iso);
+			return Number.isFinite(d.getTime()) ? d.toLocaleString() : '';
+		};
+
+		const normalisePath = (p) => {
+			const s = String(p || '');
+			if (!s) return '';
+			return s.endsWith('/') ? s : `${s}/`;
+		};
+
+		const titleFromSeg = (seg) => {
+			const s = String(seg || '')
+				.replace(/[_-]+/g, ' ')
+				.replace(/\s+/g, ' ')
+				.trim();
+			if (!s) return '';
+			return s
+				.split(' ')
+				.map((w) => (w ? w[0].toUpperCase() + w.slice(1) : ''))
+				.join(' ');
+		};
+
+		const matches = (item, query) => {
+			if (!query) return true;
+			const hay = `${item.title || ''} ${item.path || ''}`.toLowerCase();
+			return hay.includes(query);
+		};
+
+		const applyFilter = () => {
+			const query = (q.value || '').trim().toLowerCase();
+			const st = statusSel.value || 'any';
+			const lg = langSel.value || '';
+			state.filtered = state.items.filter((it) => {
+				if (st !== 'any' && String(it.status || '') !== st) return false;
+				if (lg && String(it.language || '') !== lg) return false;
+				if (state.activePath && !String(it.path || '').startsWith(state.activePath)) return false;
+				return matches(it, query);
+			});
+			render();
+		};
+
+		const treeState = {
+			prefixes: ['/blog/', '/general-information/', '/estate-agents/'],
+			roots: ['/blog/', '/general-information/', '/estate-agents/'],
+			nodes: new Map(),
+			kids: new Map(),
+			loading: new Set(),
+		};
+
+		const treeLabelForRoot = (p) => {
+			if (p === '/blog/') return 'Blog';
+			if (p === '/general-information/') return 'General Information';
+			if (p === '/estate-agents/') return 'Estate Agents';
+			return titleFromSeg(String(p || '').split('/').filter(Boolean).slice(-1)[0] || '') || p;
+		};
+
+		const loadTreeChildren = async (parentPath, opts = {}) => {
+			const p = normalisePath(parentPath);
+			if (!p) return;
+			if (treeState.loading.has(p)) return;
+			if (opts.force) {
+				treeState.kids.delete(p);
+			}
+			treeState.loading.add(p);
+
+			const st = statusSel.value || 'any';
+			const lg = (langSel.value || '').trim();
+			const bucket = (bucketSel.value || 'active').trim();
+			const qs = new URLSearchParams();
+			qs.set('prefixes', treeState.prefixes.join(','));
+			qs.set('parent', p);
+			qs.set('status', st);
+			qs.set('bucket', bucket);
+			qs.set('cap', '5000');
+			if (lg === 'en' || lg === 'es') qs.set('lang', lg);
+
+			const res = await api(`/api/admin/kb-tree?${qs.toString()}`, { method: 'GET' });
+			treeState.loading.delete(p);
+			if (!res.ok) return;
+
+			const nodes = Array.isArray(res.data?.nodes) ? res.data.nodes : [];
+			treeState.kids.set(p, nodes.map((n) => normalisePath(n.path)).filter(Boolean));
+			for (const n of nodes) {
+				const path = normalisePath(n.path);
+				if (!path) continue;
+				treeState.nodes.set(path, {
+					path,
+					seg: String(n.seg || ''),
+					title: String(n.title || ''),
+					hasPage: Boolean(n.hasPage),
+					pageId: n.pageId ? String(n.pageId) : '',
+					hasChildren: Boolean(n.hasChildren),
+				});
+			}
+		};
+
+		const ensureTreeRoots = async () => {
+			if (treeState.roots.length && treeState.nodes.size) return;
+			treeState.nodes.clear();
+			treeState.kids.clear();
+			treeState.loading.clear();
+			for (const p of treeState.roots) {
+				const path = normalisePath(p);
+				treeState.nodes.set(path, {
+					path,
+					seg: String(path.split('/').filter(Boolean).slice(-1)[0] || ''),
+					title: treeLabelForRoot(path),
+					hasPage: false,
+					pageId: '',
+					hasChildren: true,
+				});
+			}
+			state.open = new Set(treeState.roots.map((p) => normalisePath(p)));
+			await Promise.all(treeState.roots.map((p) => loadTreeChildren(p)));
+		};
+
+		const dnd = {
+			draggingPath: '',
+			dropBtn: null,
+			dropPos: '',
+			touchTimer: 0,
+			touchDragging: false,
+			suppressClick: false,
+		};
+
+		const clearDrop = () => {
+			if (dnd.dropBtn) dnd.dropBtn.removeAttribute('data-drop');
+			dnd.dropBtn = null;
+			dnd.dropPos = '';
+		};
+
+		const computeDropPos = (btn, clientY) => {
+			const rect = btn.getBoundingClientRect();
+			const y = Number(clientY);
+			if (!Number.isFinite(y)) return 'inside';
+			const t = rect.top + rect.height * 0.25;
+			const b = rect.top + rect.height * 0.75;
+			if (y <= t) return 'before';
+			if (y >= b) return 'after';
+			return 'inside';
+		};
+
+		const setDrop = (btn, pos) => {
+			if (!btn) return;
+			if (dnd.dropBtn && dnd.dropBtn !== btn) dnd.dropBtn.removeAttribute('data-drop');
+			dnd.dropBtn = btn;
+			dnd.dropPos = pos || '';
+			if (pos) btn.setAttribute('data-drop', pos);
+			else btn.removeAttribute('data-drop');
+		};
+
+		const derivedParentForPath = (p) => {
+			const path = normalisePath(p);
+			if (!path) return '';
+			const parts = path.split('/').filter(Boolean);
+			if (parts.length <= 1) return '';
+			return `/${parts.slice(0, -1).join('/')}/`;
+		};
+
+		const findCurrentParent = (nodePath) => {
+			const p = normalisePath(nodePath);
+			if (!p) return '';
+			for (const [parent, kids] of treeState.kids.entries()) {
+				if ((kids || []).includes(p)) return parent;
+			}
+			return derivedParentForPath(p);
+		};
+
+		const applyLocalReorder = (nodePath, toParentPath, toIndex) => {
+			const node = normalisePath(nodePath);
+			const toParent = normalisePath(toParentPath);
+			if (!node || !toParent) return;
+			const fromParent = findCurrentParent(node);
+
+			if (fromParent) {
+				const fromKids = (treeState.kids.get(fromParent) || []).filter((p) => p !== node);
+				if (fromKids.length) treeState.kids.set(fromParent, fromKids);
+				else treeState.kids.delete(fromParent);
+				const fromNode = treeState.nodes.get(fromParent);
+				if (fromNode) fromNode.hasChildren = fromKids.length > 0;
+			}
+
+			const toKids = (treeState.kids.get(toParent) || []).filter((p) => p !== node);
+			const idx = Math.max(0, Math.min(Math.floor(Number(toIndex) || 0), toKids.length));
+			toKids.splice(idx, 0, node);
+			treeState.kids.set(toParent, toKids);
+			const toNode = treeState.nodes.get(toParent);
+			if (toNode) toNode.hasChildren = true;
+		};
+
+		const computeReorder = async (dragPath, targetBtn, pos) => {
+			const nodePath = normalisePath(dragPath);
+			const targetPath = normalisePath(targetBtn.getAttribute('data-path') || '');
+			const targetParent = normalisePath(targetBtn.getAttribute('data-parent') || '');
+			if (!nodePath || !targetPath) return null;
+			if (nodePath === targetPath) return null;
+
+			if (pos === 'inside') {
+				const toParentPath = targetPath;
+				await loadTreeChildren(toParentPath);
+				const kids = treeState.kids.get(toParentPath) || [];
+				const fromParentPath = findCurrentParent(nodePath);
+				let toIndex = kids.length;
+				if (fromParentPath && fromParentPath === toParentPath) {
+					const fromIdx = kids.indexOf(nodePath);
+					if (fromIdx >= 0 && fromIdx < toIndex) toIndex -= 1;
+				}
+				if (fromParentPath) await loadTreeChildren(fromParentPath);
+				return {
+					nodePath,
+					toParentPath,
+					toIndex,
+					seed: {
+						[toParentPath]: treeState.kids.get(toParentPath) || [],
+						...(fromParentPath ? { [fromParentPath]: treeState.kids.get(fromParentPath) || [] } : {}),
+					},
+				};
+			}
+
+			const toParentPath = targetParent;
+			if (!toParentPath) return null;
+			await loadTreeChildren(toParentPath);
+			const kids = treeState.kids.get(toParentPath) || [];
+			const idx = kids.indexOf(targetPath);
+			if (idx < 0) return null;
+			const fromParentPath = findCurrentParent(nodePath);
+			let toIndex = pos === 'after' ? idx + 1 : idx;
+			if (fromParentPath && fromParentPath === toParentPath) {
+				const fromIdx = kids.indexOf(nodePath);
+				if (fromIdx >= 0 && fromIdx < toIndex) toIndex -= 1;
+			}
+			if (fromParentPath) await loadTreeChildren(fromParentPath);
+			return {
+				nodePath,
+				toParentPath,
+				toIndex,
+				seed: {
+					[toParentPath]: treeState.kids.get(toParentPath) || [],
+					...(fromParentPath ? { [fromParentPath]: treeState.kids.get(fromParentPath) || [] } : {}),
+				},
+			};
+		};
+
+		const submitReorder = async (payload) => {
+			setError('');
+			const res = await api('/api/admin/kb-tree/reorder', { method: 'POST', body: JSON.stringify(payload) });
+			if (!res.ok) {
+				const e = String(res.data?.error || 'reorder_failed');
+				setError(`Reorder failed. ${e}`.trim());
+				return null;
+			}
+			return { result: res.data?.result || null, rename: res.data?.rename || null };
+		};
+
+		const applyReorder = async (payload) => {
+			const fromParent = findCurrentParent(payload.nodePath);
+			const isMove = normalisePath(fromParent || '') !== normalisePath(payload.toParentPath || '');
+			if (!isMove) applyLocalReorder(payload.nodePath, payload.toParentPath, payload.toIndex);
+			state.open.add(normalisePath(payload.toParentPath));
+			renderTree();
+			const submit = await submitReorder(payload);
+			if (!submit?.result) return;
+			const result = submit.result;
+			const rename = submit.rename;
+			const from = normalisePath(result.fromParentPath || '');
+			const to = normalisePath(result.toParentPath || '');
+			if (from) await loadTreeChildren(from, { force: true });
+			if (to) await loadTreeChildren(to, { force: true });
+			state.open.add(to);
+			if (rename?.fromPrefix && rename?.toPrefix) {
+				if (state.activePath && state.activePath.startsWith(rename.fromPrefix)) {
+					state.activePath = `${rename.toPrefix}${state.activePath.slice(rename.fromPrefix.length)}`;
+				}
+				treeState.prefixes = [];
+				treeState.roots = [];
+				treeState.nodes.clear();
+				treeState.kids.clear();
+				treeState.loading.clear();
+			}
+			renderTree();
+			await load();
+		};
+
+		const renderTree = () => {
+			const expandAncestors = (p) => {
+				const segs = String(p || '')
+					.split('/')
+					.filter(Boolean);
+				let acc = '';
+				for (const seg of segs) {
+					acc += `/${seg}`;
+					state.open.add(`${acc}/`);
+				}
+			};
+			if (state.activePath) expandAncestors(state.activePath);
+
+			const renderPath = (path, depth, parentPath) => {
+				const node = treeState.nodes.get(path) || null;
+				const label = node?.title ? String(node.title) : titleFromSeg(node?.seg || '') || String(node?.seg || '') || path;
+				const hasChildren = Boolean(node?.hasChildren) || (treeState.kids.get(path) || []).length > 0;
+				const isOpen = state.open.has(path);
+				const kids = treeState.kids.get(path) || [];
+				const active = state.activePath === path ? 'active' : '';
+				const canOpen = Boolean(node?.hasPage) && Boolean(node?.pageId);
+				const pill = canOpen ? '<span class="dot"></span>' : '<span class="dot dotGhost"></span>';
+				const pad = `padding-left:${Math.min(28, 10 + depth * 12)}px`;
+				const expandedAttr = hasChildren ? `aria-expanded="${isOpen ? 'true' : 'false'}"` : '';
+				const selectedAttr = state.activePath === path ? 'aria-selected="true"' : 'aria-selected="false"';
+				const toggleAttr = hasChildren ? `data-toggle="${path}"` : '';
+				const draggableAttr = parentPath ? 'draggable="true"' : 'draggable="false"';
+
+				return `
+					<div class="node">
+						<button type="button" class="nodeBtn ${active}" style="${pad}" data-path="${path}" data-parent="${escapeHtml(parentPath || '')}" data-id="${canOpen ? escapeHtml(String(node.pageId || '')) : ''}" role="treeitem" aria-level="${depth + 1}" ${expandedAttr} ${selectedAttr} ${draggableAttr}>
+							<span class="twisty ${hasChildren ? '' : 'twistyOff'}" ${toggleAttr} aria-hidden="true"></span>
+							${pill}<span class="nodeName">${escapeHtml(label)}</span>
+						</button>
+						${
+							hasChildren
+								? `<div class="nodeKids" role="group" ${isOpen ? '' : 'hidden'}>${kids.map((k) => renderPath(k, depth + 1, path)).join('')}</div>`
+								: ''
+						}
+					</div>
+				`;
+			};
+
+			tree.innerHTML = treeState.roots.map((r) => renderPath(normalisePath(r), 0, '')).join('');
+		};
+
+		const render = () => {
+			const html = state.filtered
+				.map((it) => {
+					const checked = state.selected.has(String(it.id)) ? 'checked' : '';
+					const isArchived = Boolean(it.archivedAt);
+					const isTrashed = Boolean(it.trashedAt);
+					const status = isTrashed ? 'trash' : isArchived ? 'archived' : String(it.status || '');
+					const chip = status === 'trash' ? 'chipTrash' : status === 'archived' ? 'chipArchived' : status === 'published' ? 'chipPub' : 'chipDraft';
+					const actions = (() => {
+						const id = String(it.id || '');
+						if (!id) return '';
+						if (isTrashed) {
+							const purge = state.role === 'admin' ? `<button class="btnDangerSmall" type="button" data-action="purge" data-id="${id}">Purge</button>` : '';
+							return `<button class="btnGhostSmall" type="button" data-action="restore" data-id="${id}">Restore</button>${purge}`;
+						}
+						if (isArchived) {
+							return `
+								<button class="btnGhostSmall" type="button" data-edit="${id}">Edit</button>
+								<button class="btnGhostSmall" type="button" data-action="unarchive" data-id="${id}">Unarchive</button>
+							`;
+						}
+						return `
+							<button class="btnGhostSmall" type="button" data-edit="${id}">Edit</button>
+							<button class="btnGhostSmall" type="button" data-action="archive" data-id="${id}">Archive</button>
+							<button class="btnDangerSmall" type="button" data-action="trash" data-id="${id}">Trash</button>
+						`;
+					})();
+					const lifecycleHint = isTrashed ? `Until ${fmtDate(it.trashUntil || '')}` : isArchived ? `Archived ${fmtDate(it.archivedAt || '')}` : '';
+					return `
+						<tr>
+							<td class="cbox"><input data-check="${String(it.id)}" type="checkbox" ${checked}></td>
+							<td class="tTitle">${escapeHtml(it.title || '')}</td>
+							<td class="tPath"><a href="${it.path}" target="_blank" rel="noreferrer">${escapeHtml(it.path || '')}</a></td>
+							<td><span class="chip ${chip}">${escapeHtml(status)}</span></td>
+							<td class="tSmall">${escapeHtml(String(state.views[it.path] || 0))}</td>
+							<td class="tSmall">${escapeHtml(fmtDate(it.date_updated || it.date_created || ''))}</td>
+							<td class="actionsCol">
+								<div class="actions">
+									${actions}
+									${lifecycleHint ? `<span class="lifecycleHint">${escapeHtml(lifecycleHint)}</span>` : ''}
+								</div>
+							</td>
+						</tr>
+					`;
+				})
+				.join('');
+			rows.innerHTML = html;
+
+			const count = state.selected.size;
+			bulkPublish.disabled = count === 0;
+			bulkDraft.disabled = count === 0;
+			bulkArchive.disabled = count === 0;
+			bulkTrash.disabled = count === 0;
+			bulkRestore.disabled = count === 0;
+			bulkPurge.disabled = count === 0 || state.role !== 'admin';
+			checkAll.indeterminate = count > 0 && count < state.filtered.length;
+			checkAll.checked = state.filtered.length > 0 && count === state.filtered.length;
+			listHint.textContent = state.activePath ? `Filtering to ${state.activePath}` : `${state.filtered.length} posts`;
+		};
+
+		const escapeHtml = (s) =>
+			String(s || '')
+				.replaceAll('&', '&amp;')
+				.replaceAll('<', '&lt;')
+				.replaceAll('>', '&gt;')
+				.replaceAll('"', '&quot;')
+				.replaceAll("'", '&#39;');
+
+		const load = async () => {
+			setError('');
+			setToast(null);
+			state.selected.clear();
+			const st = statusSel.value || 'any';
+			const lg = langSel.value || '';
+			const bucket = (bucketSel.value || 'active').trim();
+			await ensureTreeRoots();
+			const qs = new URLSearchParams();
+			const prefixes = state.activePath ? [state.activePath] : treeState.prefixes;
+			qs.set('prefixes', prefixes.join(','));
+			if (lg) qs.set('lang', lg);
+			qs.set('status', st);
+			qs.set('bucket', bucket);
+			qs.set('limit', '20000');
+
+			const res = await api(`/api/admin/kb-pages?${qs.toString()}`, { method: 'GET' });
+			if (!res.ok) {
+				const e = String(res.data?.error || '');
+				if (e === 'directus_admin_token_missing') {
+					setError('Directus admin token is not configured on the server (DIRECTUS_ADMIN_TOKEN).');
+				} else if (e === 'server_error') {
+					setError('Server error.');
+				} else {
+					setError(`Failed to load. ${e}`.trim());
+				}
+				state.items = [];
+				state.filtered = [];
+				render();
+				return;
+			}
+			state.items = Array.isArray(res.data?.items) ? res.data.items : [];
+			const viewRes = await api('/api/admin/analytics/views', {
+				method: 'POST',
+				body: JSON.stringify({ paths: state.items.slice(0, 2000).map((x) => x.path).filter(Boolean) }),
+			});
+			state.views = viewRes.ok && viewRes.data?.counts ? viewRes.data.counts : {};
+			state.filtered = state.items.slice();
+			applyFilter();
+			renderTree();
+		};
+
+		const openEditorForId = async (id) => {
+			setSaveError('');
+			const res = await api(`/api/admin/kb-pages/${encodeURIComponent(id)}`, { method: 'GET' });
+			if (!res.ok) return setError('Failed to load item.');
+			const it = res.data?.item;
+			state.edit = { id: String(it.id || ''), mode: 'edit' };
+			dlgTitle.textContent = 'Edit post';
+			deleteBtn.style.display = 'inline-flex';
+			fillForm(it);
+			const metaRes = await api(`/api/admin/meta/${encodeURIComponent(String(it.id || ''))}`, { method: 'GET' });
+			if (metaRes.ok) fillMeta(metaRes.data?.meta || {});
+			dlg.showModal();
+		};
+
+		const openNew = () => {
+			setSaveError('');
+			state.edit = { id: null, mode: 'new' };
+			dlgTitle.textContent = 'New post';
+			deleteBtn.style.display = 'none';
+			fillForm({
+				id: '',
+				status: 'draft',
+				language: 'en',
+				path: '/blog/',
+				title: '',
+				description: '',
+				body: '<h2>Overview</h2><p></p>',
+				seo_title: '',
+				seo_description: '',
+			});
+			fillMeta({});
+			dlg.showModal();
+		};
+
+		const recoverByPath = async () => {
+			const p = prompt('Path to recover (e.g. /blog/.../ or /general-information/.../ or /estate-agents/.../)');
+			if (!p) return;
+			setError('');
+			const res = await api('/api/admin/kb-pages/recover', { method: 'POST', body: JSON.stringify({ path: p }) });
+			if (!res.ok) {
+				const e = String(res.data?.error || 'recover_failed');
+				setError(`Recover failed. ${e}`.trim());
+				return;
+			}
+			const id = String(res.data?.item?.id || '');
+			const toastEl = document.createElement('div');
+			toastEl.className = 'toastInner';
+			const msg = document.createElement('div');
+			msg.className = 'toastMsg';
+			msg.textContent = 'Recovered as draft.';
+			toastEl.appendChild(msg);
+			if (id) {
+				const btn = document.createElement('button');
+				btn.className = 'btnGhostSmall';
+				btn.type = 'button';
+				btn.textContent = 'Open';
+				btn.addEventListener('click', () => openEditorForId(id));
+				toastEl.appendChild(btn);
+			}
+			setToast(toastEl);
+			await load();
+		};
+
+		const fillForm = (it) => {
+			f_path.value = it.path || '';
+			f_title.value = it.title || '';
+			f_desc.value = it.description || '';
+			f_status.value = it.status === 'published' ? 'published' : 'draft';
+			f_lang.value = it.language === 'es' ? 'es' : 'en';
+			f_seo_title.value = it.seo_title || '';
+			f_seo_desc.value = it.seo_description || '';
+			f_tags.value = '';
+			f_featured.value = '';
+			f_featured_alt.value = '';
+			f_featured_title.value = '';
+			f_featured_caption.value = '';
+			f_featured_credit.value = '';
+			f_scheduled.value = '';
+			f_body.innerHTML = it.body || '';
+		};
+
+		const fillMeta = (meta) => {
+			const tags = Array.isArray(meta?.tags) ? meta.tags : [];
+			f_tags.value = tags.join(', ');
+			f_featured.value = meta?.featuredImageUrl || '';
+			f_featured_alt.value = meta?.featuredImageAlt || '';
+			f_featured_title.value = meta?.featuredImageTitle || '';
+			f_featured_caption.value = meta?.featuredImageCaption || '';
+			f_featured_credit.value = meta?.featuredImageCredit || '';
+			if (meta?.scheduledAt) {
+				const ms = Date.parse(meta.scheduledAt);
+				if (Number.isFinite(ms)) f_scheduled.value = new Date(ms).toISOString().slice(0, 16);
+			}
+		};
+
+		const normaliseBodyHtml = (html) => {
+			const root = document.createElement('div');
+			root.innerHTML = String(html || '');
+
+			root.querySelectorAll('b').forEach((n) => {
+				const el = document.createElement('strong');
+				for (const attr of n.attributes) el.setAttribute(attr.name, attr.value);
+				el.innerHTML = n.innerHTML;
+				n.replaceWith(el);
+			});
+			root.querySelectorAll('i').forEach((n) => {
+				const el = document.createElement('em');
+				for (const attr of n.attributes) el.setAttribute(attr.name, attr.value);
+				el.innerHTML = n.innerHTML;
+				n.replaceWith(el);
+			});
+			root.querySelectorAll('img').forEach((img) => {
+				if (!img.hasAttribute('alt')) img.setAttribute('alt', '');
+				if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+				if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+			});
+			root.querySelectorAll('video').forEach((v) => {
+				if (!v.hasAttribute('controls')) v.setAttribute('controls', '');
+				if (!v.hasAttribute('preload')) v.setAttribute('preload', 'metadata');
+			});
+			root.querySelectorAll('a').forEach((a) => {
+				const target = String(a.getAttribute('target') || '').trim().toLowerCase();
+				if (target !== '_blank') return;
+				const parts = String(a.getAttribute('rel') || '')
+					.split(/\s+/g)
+					.map((p) => p.trim().toLowerCase())
+					.filter(Boolean);
+				if (!parts.includes('noopener')) parts.push('noopener');
+				if (!parts.includes('noreferrer')) parts.push('noreferrer');
+				a.setAttribute('rel', parts.join(' '));
+			});
+			root.querySelectorAll('font').forEach((n) => {
+				const el = document.createElement('span');
+				const styleParts = [];
+				const s = String(n.getAttribute('style') || '').trim();
+				if (s) styleParts.push(s);
+				const color = String(n.getAttribute('color') || '').trim();
+				if (color) styleParts.push(`color:${color}`);
+				const size = String(n.getAttribute('size') || '').trim();
+				const map = { '1': '0.75rem', '2': '0.875rem', '3': '1rem', '4': '1.125rem', '5': '1.25rem', '6': '1.5rem', '7': '2rem' };
+				if (size && map[size]) styleParts.push(`font-size:${map[size]}`);
+				if (styleParts.length) el.setAttribute('style', styleParts.join(';'));
+				el.innerHTML = n.innerHTML;
+				n.replaceWith(el);
+			});
+
+			return root.innerHTML.trim();
+		};
+
+		const readForm = () => {
+			const path = String(f_path.value || '').trim();
+			if (!(path.startsWith('/blog/') || path.startsWith('/general-information/') || path.startsWith('/estate-agents/')))
+				throw new Error('Path must start with /blog/, /general-information/, or /estate-agents/.');
+			if (!path.endsWith('/')) throw new Error('Path must end with /.');
+			const title = String(f_title.value || '').trim();
+			if (!title) throw new Error('Title is required.');
+			return {
+				status: f_status.value === 'published' ? 'published' : 'draft',
+				language: f_lang.value === 'es' ? 'es' : 'en',
+				path,
+				title,
+				description: String(f_desc.value || '').trim() || null,
+				body: normaliseBodyHtml(f_body.innerHTML) || null,
+				seo_title: String(f_seo_title.value || '').trim() || null,
+				seo_description: String(f_seo_desc.value || '').trim() || null,
+			};
+		};
+
+		const readMetaForm = () => {
+			const tags = String(f_tags.value || '')
+				.split(',')
+				.map((t) => t.trim())
+				.filter(Boolean)
+				.slice(0, 40);
+			const featuredImageUrl = String(f_featured.value || '').trim();
+			const featuredImageAlt = String(f_featured_alt.value || '').trim();
+			const featuredImageTitle = String(f_featured_title.value || '').trim();
+			const featuredImageCaption = String(f_featured_caption.value || '').trim();
+			const featuredImageCredit = String(f_featured_credit.value || '').trim();
+			const scheduledLocal = String(f_scheduled.value || '').trim();
+			const scheduledAt = scheduledLocal ? new Date(scheduledLocal).toISOString() : null;
+			return {
+				tags,
+				featuredImageUrl: featuredImageUrl || null,
+				featuredImageAlt: featuredImageAlt || null,
+				featuredImageTitle: featuredImageTitle || null,
+				featuredImageCaption: featuredImageCaption || null,
+				featuredImageCredit: featuredImageCredit || null,
+				scheduledAt,
+			};
+		};
+
+		const save = async () => {
+			setSaveError('');
+			let page;
+			try {
+				page = readForm();
+			} catch (e) {
+				return setSaveError(e.message || 'Invalid form.');
+			}
+			const meta = readMetaForm();
+			if (meta.scheduledAt) {
+				const t = Date.parse(meta.scheduledAt);
+				if (Number.isFinite(t) && t > Date.now()) page.status = 'draft';
+			}
+
+			saveBtn.disabled = true;
+			const mode = state.edit.mode;
+			const id = state.edit.id;
+
+			const res =
+				mode === 'new'
+					? await api('/api/admin/kb-pages', { method: 'POST', body: JSON.stringify({ scope: 'blog', page }) })
+					: await api(`/api/admin/kb-pages/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ patch: page }) });
+
+			if (!res.ok) {
+				saveBtn.disabled = false;
+				return setSaveError(res.data?.error ? String(res.data.error) : 'Save failed.');
+			}
+
+			const savedId = String(res.data?.item?.id || id || '');
+			if (savedId) {
+				const metaRes = await api(`/api/admin/meta/${encodeURIComponent(savedId)}`, {
+					method: 'PATCH',
+					body: JSON.stringify(meta),
+				});
+				if (!metaRes.ok) {
+					saveBtn.disabled = false;
+					return setSaveError('Saved content, but failed to save metadata.');
+				}
+			}
+
+			saveBtn.disabled = false;
+			dlg.close();
+			await load();
+		};
+
+		const del = async () => {
+			if (!state.edit.id) return;
+			if (!confirm('Move this post to Trash?')) return;
+			deleteBtn.disabled = true;
+			const res = await api(`/api/admin/kb-pages/${encodeURIComponent(state.edit.id)}`, { method: 'DELETE' });
+			deleteBtn.disabled = false;
+			if (!res.ok) return setSaveError('Trash failed.');
+			dlg.close();
+			const trashedId = state.edit.id;
+			const undo = document.createElement('div');
+			undo.className = 'toastInner';
+			const msg = document.createElement('div');
+			msg.className = 'toastMsg';
+			msg.textContent = 'Moved to Trash.';
+			const btn = document.createElement('button');
+			btn.className = 'btnGhostSmall';
+			btn.type = 'button';
+			btn.textContent = 'Undo';
+			btn.addEventListener('click', async () => {
+				btn.disabled = true;
+				await bulkAction('restore', [trashedId], { quiet: true });
+				setToast(null);
+				await load();
+			});
+			undo.appendChild(msg);
+			undo.appendChild(btn);
+			setToast(undo);
+			await load();
+		};
+
+		const bulkAction = async (action, ids, opts = {}) => {
+			if (!ids.length) return;
+			const safeAction = action === 'delete' ? 'trash' : action;
+			if (safeAction === 'trash' && !confirm(`Move ${ids.length} posts to Trash?`)) return;
+			if (safeAction === 'purge' && !confirm(`Permanently delete ${ids.length} posts? This cannot be undone.`)) return;
+			if (safeAction === 'archive' && !confirm(`Archive ${ids.length} posts?`)) return;
+			if (safeAction === 'unarchive' && !confirm(`Restore ${ids.length} posts from Archive?`)) return;
+			const res = await api('/api/admin/kb-pages/bulk', { method: 'POST', body: JSON.stringify({ action: safeAction, ids }) });
+			if (!res.ok) {
+				if (!opts.quiet) setError('Bulk operation failed.');
+				return;
+			}
+			if (safeAction === 'trash' && ids.length === 1) {
+				const undo = document.createElement('div');
+				undo.className = 'toastInner';
+				const msg = document.createElement('div');
+				msg.className = 'toastMsg';
+				msg.textContent = 'Moved to Trash.';
+				const btn = document.createElement('button');
+				btn.className = 'btnGhostSmall';
+				btn.type = 'button';
+				btn.textContent = 'Undo';
+				btn.addEventListener('click', async () => {
+					btn.disabled = true;
+					await bulkAction('restore', ids, { quiet: true });
+					setToast(null);
+					await load();
+				});
+				undo.appendChild(msg);
+				undo.appendChild(btn);
+				setToast(undo);
+			} else if (!opts.quiet) {
+				setToast(null);
+			}
+			await load();
+		};
+
+		let lastRange = null;
+		const saveSelection = () => {
+			const sel = window.getSelection();
+			if (!sel || sel.rangeCount === 0) return;
+			const r = sel.getRangeAt(0);
+			const node = r.commonAncestorContainer;
+			const el = node && node.nodeType === 3 ? node.parentNode : node;
+			if (!el || el === f_body || f_body.contains(el)) lastRange = r.cloneRange();
+		};
+		const restoreSelection = () => {
+			if (!lastRange) return;
+			const sel = window.getSelection();
+			if (!sel) return;
+			sel.removeAllRanges();
+			sel.addRange(lastRange);
+		};
+
+		const exec = (cmd, arg) => {
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			if (cmd === 'formatBlock') {
+				const raw = String(arg || 'p').trim().toLowerCase();
+				const block = raw.startsWith('<') ? raw : `<${raw}>`;
+				document.execCommand(cmd, false, block);
+			} else {
+				document.execCommand(cmd, false, arg || null);
+			}
+			saveSelection();
+		};
+
+		const insertHtml = (html) => {
+			const raw = String(html || '');
+			if (!raw) return;
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			document.execCommand('insertHTML', false, raw);
+			saveSelection();
+		};
+
+		const applyInlineStyle = (style) => {
+			const raw = String(style || '').trim();
+			if (!raw) return;
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			const sel = window.getSelection();
+			if (!sel || sel.rangeCount === 0) return;
+			const r = sel.getRangeAt(0);
+			if (r.collapsed) {
+				const span = document.createElement('span');
+				span.setAttribute('style', raw);
+				const t = document.createTextNode('\u200B');
+				span.appendChild(t);
+				r.insertNode(span);
+				r.setStart(t, 1);
+				r.setEnd(t, 1);
+				sel.removeAllRanges();
+				sel.addRange(r);
+				saveSelection();
+				return;
+			}
+			const frag = r.extractContents();
+			const span = document.createElement('span');
+			span.setAttribute('style', raw);
+			span.appendChild(frag);
+			r.insertNode(span);
+			r.selectNodeContents(span);
+			r.collapse(false);
+			sel.removeAllRanges();
+			sel.addRange(r);
+			saveSelection();
+		};
+
+		const applyLinkAttrsInSelection = (openNewWindow) => {
+			const sel = window.getSelection();
+			if (!sel || sel.rangeCount === 0) return;
+			let node = sel.anchorNode;
+			if (node && node.nodeType === 3) node = node.parentNode;
+			const el = node && node.closest ? node.closest('a') : null;
+			if (!el) return;
+			if (openNewWindow) {
+				el.setAttribute('target', '_blank');
+				el.setAttribute('rel', 'noopener noreferrer');
+			} else {
+				el.removeAttribute('target');
+				el.removeAttribute('rel');
+			}
+		};
+
+		const insertLink = (url, openNewWindow) => {
+			const href = String(url || '').trim();
+			if (!href) return;
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			const sel = window.getSelection();
+			const collapsed = !sel || sel.rangeCount === 0 || sel.getRangeAt(0).collapsed;
+			if (collapsed) {
+				const attrs = openNewWindow ? ' target="_blank" rel="noopener noreferrer"' : '';
+				insertHtml(`<a href="${escapeHtml(href)}"${attrs}>${escapeHtml(href)}</a>`);
+			} else {
+				document.execCommand('createLink', false, href);
+				applyLinkAttrsInSelection(openNewWindow);
+				saveSelection();
+			}
+			saveSelection();
+		};
+
+		const insertImage = (url) => {
+			const src = String(url || '').trim();
+			if (!src) return;
+			insertHtml(`<img src="${escapeHtml(src)}" alt="" loading="lazy" decoding="async" />`);
+		};
+
+		const insertVideo = (url) => {
+			const src = String(url || '').trim();
+			if (!src) return;
+			insertHtml(`<video src="${escapeHtml(src)}" controls preload="metadata" style="max-width:100%;height:auto"></video>`);
+		};
+
+		const uploadFile = async (file) => {
+			const fd = new FormData();
+			fd.set('file', file);
+			const headers = new Headers();
+			if (state.csrf) headers.set('x-csrf-token', state.csrf);
+			const res = await fetch('/api/admin/upload', { method: 'POST', headers, body: fd }).catch(() => null);
+			const data = res ? await res.json().catch(() => null) : null;
+			if (!res || !res.ok || !data?.url) throw new Error('upload_failed');
+			return { url: String(data.url || ''), name: String(file?.name || ''), type: String(file?.type || '') };
+		};
+
+		const insertUploaded = async (file) => {
+			const up = await uploadFile(file);
+			if (up.type.startsWith('image/')) return insertImage(up.url);
+			if (up.type.startsWith('video/')) return insertVideo(up.url);
+			insertHtml(
+				`<a href="${escapeHtml(up.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(up.name || up.url)}</a>`,
+			);
+		};
+
+		document.addEventListener('selectionchange', saveSelection);
+		f_body.addEventListener('keyup', saveSelection);
+		f_body.addEventListener('mouseup', saveSelection);
+		f_body.addEventListener('keydown', (e) => {
+			const mod = e.ctrlKey || e.metaKey;
+			if (!mod) return;
+			const k = String(e.key || '').toLowerCase();
+			if (k === 'b') {
+				e.preventDefault();
+				exec('bold');
+			} else if (k === 'i') {
+				e.preventDefault();
+				exec('italic');
+			} else if (k === 'k') {
+				e.preventDefault();
+				const url = prompt('Link URL');
+				if (url) insertLink(url, confirm('Open link in new window?'));
+			}
+		});
+
+		document.querySelectorAll('.toolSel').forEach((sel) => {
+			sel.addEventListener('mousedown', () => saveSelection());
+			sel.addEventListener('change', () => {
+				const v = String(sel.value || '').trim();
+				if (!v) return;
+				applyInlineStyle(`font-size:${v}`);
+				sel.value = '';
+			});
+		});
+
+		document.querySelectorAll('.toolColor').forEach((inp) => {
+			inp.addEventListener('mousedown', () => saveSelection());
+			inp.addEventListener('change', () => {
+				const v = String(inp.value || '').trim();
+				if (!v) return;
+				applyInlineStyle(`color:${v}`);
+			});
+		});
+
+		document.querySelectorAll('.tool').forEach((btn) => {
+			btn.addEventListener('mousedown', (e) => e.preventDefault());
+			btn.addEventListener('click', () => {
+				const cmd = btn.getAttribute('data-cmd');
+				const action = btn.getAttribute('data-action');
+				if (action === 'link') {
+					const url = prompt('Link URL');
+					if (url) insertLink(url, confirm('Open link in new window?'));
+					return;
+				}
+				if (action === 'image') {
+					const input = document.createElement('input');
+					input.type = 'file';
+					input.accept = 'image/*';
+					input.onchange = async () => {
+						const file = input.files && input.files[0];
+						if (!file) return;
+						try {
+							await insertUploaded(file);
+						} catch {
+							setSaveError('Image upload failed.');
+						}
+					};
+					input.click();
+					return;
+				}
+				if (action === 'video') {
+					const input = document.createElement('input');
+					input.type = 'file';
+					input.accept = 'video/*';
+					input.onchange = async () => {
+						const file = input.files && input.files[0];
+						if (!file) return;
+						try {
+							await insertUploaded(file);
+						} catch {
+							setSaveError('Video upload failed.');
+						}
+					};
+					input.click();
+					return;
+				}
+				if (cmd) exec(cmd, btn.getAttribute('data-arg'));
+			});
+		});
+
+		f_body.addEventListener('dragover', (e) => {
+			const dt = e.dataTransfer;
+			if (!dt || !dt.types || !Array.from(dt.types).includes('Files')) return;
+			e.preventDefault();
+			try {
+				dt.dropEffect = 'copy';
+			} catch {}
+		});
+
+		f_body.addEventListener('drop', async (e) => {
+			const files = (e.dataTransfer && e.dataTransfer.files && Array.from(e.dataTransfer.files)) || [];
+			if (!files.length) return;
+			e.preventDefault();
+			const r = document.caretRangeFromPoint
+				? document.caretRangeFromPoint(e.clientX, e.clientY)
+				: document.caretPositionFromPoint
+					? (() => {
+							const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+							if (!pos) return null;
+							const rr = document.createRange();
+							rr.setStart(pos.offsetNode, pos.offset);
+							rr.collapse(true);
+							return rr;
+						})()
+					: null;
+			if (r) {
+				const sel = window.getSelection();
+				if (sel) {
+					sel.removeAllRanges();
+					sel.addRange(r);
+					saveSelection();
+				}
+			}
+			for (const f of files) {
+				try {
+					await insertUploaded(f);
+				} catch {
+					setSaveError('Upload failed.');
+					break;
+				}
+			}
+		});
+
+		f_body.addEventListener('paste', async (e) => {
+			const items = (e.clipboardData && e.clipboardData.items && Array.from(e.clipboardData.items)) || [];
+			const files = items.map((it) => (it.kind === 'file' ? it.getAsFile() : null)).filter(Boolean);
+			if (!files.length) return;
+			const media = files.filter((f) => String(f.type || '').startsWith('image/') || String(f.type || '').startsWith('video/'));
+			if (!media.length) return;
+			e.preventDefault();
+			for (const f of media) {
+				try {
+					await insertUploaded(f);
+				} catch {
+					setSaveError('Upload failed.');
+					break;
+				}
+			}
+		});
+
+		rows.addEventListener('click', (e) => {
+			const btn = e.target.closest('button[data-edit]');
+			if (btn) return openEditorForId(btn.getAttribute('data-edit'));
+			const act = e.target.closest('button[data-action]');
+			if (act) {
+				const action = act.getAttribute('data-action') || '';
+				const id = act.getAttribute('data-id') || '';
+				if (!action || !id) return;
+				bulkAction(action, [id]);
+			}
+		});
+
+		rows.addEventListener('change', (e) => {
+			const box = e.target.closest('input[data-check]');
+			if (!box) return;
+			const id = box.getAttribute('data-check');
+			if (!id) return;
+			if (box.checked) state.selected.add(id);
+			else state.selected.delete(id);
+			render();
+		});
+
+		checkAll.addEventListener('change', () => {
+			state.selected.clear();
+			if (checkAll.checked) {
+				for (const it of state.filtered) state.selected.add(String(it.id));
+			}
+			render();
+		});
+
+		tree.addEventListener('dragstart', (e) => {
+			const btn = e.target.closest('button[data-path]');
+			if (!btn) return;
+			if (btn.getAttribute('draggable') !== 'true') return;
+			const p = btn.getAttribute('data-path') || '';
+			if (!p) return;
+			dnd.draggingPath = p;
+			tree.classList.add('dragging');
+			clearDrop();
+			try {
+				e.dataTransfer.effectAllowed = 'move';
+				e.dataTransfer.setData('text/plain', p);
+			} catch {}
+		});
+
+		tree.addEventListener('dragover', (e) => {
+			if (!dnd.draggingPath) return;
+			e.preventDefault();
+			const btn = e.target.closest('button[data-path]');
+			if (!btn) return;
+			const pos = computeDropPos(btn, e.clientY);
+			setDrop(btn, pos);
+			try {
+				e.dataTransfer.dropEffect = 'move';
+			} catch {}
+		});
+
+		tree.addEventListener('drop', async (e) => {
+			if (!dnd.draggingPath) return;
+			e.preventDefault();
+			const btn = e.target.closest('button[data-path]');
+			const pos = dnd.dropPos || '';
+			const dragPath = dnd.draggingPath;
+			dnd.draggingPath = '';
+			tree.classList.remove('dragging');
+			if (!btn || !pos) return clearDrop();
+			const payload = await computeReorder(dragPath, btn, pos);
+			clearDrop();
+			if (!payload) return;
+			await applyReorder(payload);
+		});
+
+		tree.addEventListener('dragend', () => {
+			dnd.draggingPath = '';
+			tree.classList.remove('dragging');
+			clearDrop();
+		});
+
+		const touchStart = { x: 0, y: 0, pointerId: 0 };
+		tree.addEventListener('pointerdown', (e) => {
+			if (e.pointerType !== 'touch') return;
+			const btn = e.target.closest('button[data-path]');
+			if (!btn) return;
+			if (btn.getAttribute('draggable') !== 'true') return;
+			touchStart.x = e.clientX;
+			touchStart.y = e.clientY;
+			touchStart.pointerId = e.pointerId;
+			if (dnd.touchTimer) window.clearTimeout(dnd.touchTimer);
+			dnd.touchTimer = window.setTimeout(() => {
+				dnd.touchDragging = true;
+				dnd.draggingPath = btn.getAttribute('data-path') || '';
+				tree.classList.add('dragging');
+				try {
+					tree.setPointerCapture(touchStart.pointerId);
+				} catch {}
+			}, 260);
+		});
+
+		tree.addEventListener('pointermove', (e) => {
+			if (e.pointerType !== 'touch') return;
+			const dx = Math.abs(e.clientX - touchStart.x);
+			const dy = Math.abs(e.clientY - touchStart.y);
+			if (!dnd.touchDragging) {
+				if ((dx > 6 || dy > 6) && dnd.touchTimer) {
+					window.clearTimeout(dnd.touchTimer);
+					dnd.touchTimer = 0;
+				}
+				return;
+			}
+			e.preventDefault();
+			const el = document.elementFromPoint(e.clientX, e.clientY);
+			const btn = el ? el.closest('button[data-path]') : null;
+			if (!btn) return;
+			const pos = computeDropPos(btn, e.clientY);
+			setDrop(btn, pos);
+		});
+
+		tree.addEventListener('pointerup', async (e) => {
+			if (e.pointerType !== 'touch') return;
+			if (dnd.touchTimer) {
+				window.clearTimeout(dnd.touchTimer);
+				dnd.touchTimer = 0;
+			}
+			if (!dnd.touchDragging) return;
+			e.preventDefault();
+			const el = document.elementFromPoint(e.clientX, e.clientY);
+			const btn = el ? el.closest('button[data-path]') : null;
+			const pos = dnd.dropPos || '';
+			const dragPath = dnd.draggingPath;
+			dnd.touchDragging = false;
+			dnd.draggingPath = '';
+			tree.classList.remove('dragging');
+			if (!btn || !pos) return clearDrop();
+			const payload = await computeReorder(dragPath, btn, pos);
+			clearDrop();
+			if (!payload) return;
+			dnd.suppressClick = true;
+			await applyReorder(payload);
+		});
+
+		tree.addEventListener('click', async (e) => {
+			if (dnd.suppressClick) {
+				dnd.suppressClick = false;
+				return;
+			}
+			if (dnd.draggingPath || dnd.touchDragging) return;
+			const toggle = e.target.closest('[data-toggle]');
+			if (toggle) {
+				const p = toggle.getAttribute('data-toggle') || '';
+				if (p) {
+					if (state.open.has(p)) {
+						state.open.delete(p);
+						renderTree();
+					} else {
+						state.open.add(p);
+						if (!treeState.kids.has(p)) await loadTreeChildren(p);
+						renderTree();
+					}
+				}
+				return;
+			}
+			const btn = e.target.closest('button[data-path]');
+			if (!btn) return;
+			const p = btn.getAttribute('data-path') || '';
+			const id = btn.getAttribute('data-id') || '';
+			state.activePath = state.activePath === p ? '' : p;
+			if (p) {
+				state.open.add(p);
+				if (!treeState.kids.has(p)) await loadTreeChildren(p);
+			}
+			if (id) openEditorForId(id);
+			await load();
+		});
+
+		q.addEventListener('input', applyFilter);
+		bucketSel.addEventListener('change', load);
+		statusSel.addEventListener('change', load);
+		langSel.addEventListener('change', load);
+		reloadBtn.addEventListener('click', load);
+		recoverBtn.addEventListener('click', recoverByPath);
+		newBtn.addEventListener('click', openNew);
+		saveBtn.addEventListener('click', save);
+		deleteBtn.addEventListener('click', del);
+		bulkPublish.addEventListener('click', () => bulkAction('publish', Array.from(state.selected)));
+		bulkDraft.addEventListener('click', () => bulkAction('draft', Array.from(state.selected)));
+		bulkArchive.addEventListener('click', () => bulkAction('archive', Array.from(state.selected)));
+		bulkTrash.addEventListener('click', () => bulkAction('trash', Array.from(state.selected)));
+		bulkRestore.addEventListener('click', () => bulkAction('restore', Array.from(state.selected)));
+		bulkPurge.addEventListener('click', () => bulkAction('purge', Array.from(state.selected)));
+		uploadFeaturedBtn.addEventListener('click', async () => {
+			const input = document.createElement('input');
+			input.type = 'file';
+			input.accept = 'image/*';
+			input.onchange = async () => {
+				const file = input.files && input.files[0];
+				if (!file) return;
+				const fd = new FormData();
+				fd.set('file', file);
+				const headers = new Headers();
+				if (state.csrf) headers.set('x-csrf-token', state.csrf);
+				const res = await fetch('/api/admin/upload', { method: 'POST', headers, body: fd }).catch(() => null);
+				const data = res ? await res.json().catch(() => null) : null;
+				if (!res || !res.ok || !data?.url) return setSaveError('Image upload failed.');
+				f_featured.value = data.url;
+			};
+			input.click();
+		});
+
+		(async () => {
+			await fetchMe();
+			await load();
+		})();
+	</script>
+</Layout>
+
+<style is:global>
+	.shell {
+		display: grid;
+		gap: 12px;
+		padding: 10px 0 26px;
+	}
+
+	.topbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		padding: 14px;
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: radial-gradient(1200px 600px at 20% -20%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.left {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.back {
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.75);
+		font-weight: 900;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	.right {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.controls {
+		display: grid;
+		grid-template-columns: 1fr 140px 160px 160px auto;
+		gap: 12px;
+		align-items: end;
+		padding: 14px;
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.control {
+		display: grid;
+		gap: 4px;
+	}
+
+	.label {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.75);
+		font-weight: 800;
+	}
+
+	.input,
+	.select,
+	.textarea {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 10px;
+		padding: 9px 11px;
+		background: rgba(255, 255, 255, 0.95);
+		width: 100%;
+	}
+
+	.row {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.row .input {
+		flex: 1;
+	}
+
+	.textarea {
+		resize: vertical;
+	}
+
+	.bulk {
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.btn,
+	.btnGhost,
+	.btnDanger {
+		border-radius: 12px;
+		padding: 9px 11px;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.btn {
+		border: 0;
+		background: rgba(var(--accent-rgb), 1);
+		color: white;
+	}
+
+	.btnGhost {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.8);
+		color: rgba(16, 24, 40, 0.9);
+	}
+
+	.btnDanger {
+		border: 1px solid rgba(220, 38, 38, 0.28);
+		background: rgba(220, 38, 38, 0.08);
+		color: rgba(127, 29, 29, 0.95);
+	}
+
+	.btn:disabled,
+	.btnGhost:disabled,
+	.btnDanger:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.err {
+		display: none;
+		padding: 12px 14px;
+		border-radius: 18px;
+		background: rgba(220, 38, 38, 0.08);
+		border: 1px solid rgba(220, 38, 38, 0.18);
+		color: rgba(127, 29, 29, 0.95);
+		font-weight: 800;
+	}
+
+	.toast {
+		display: none;
+		padding: 12px 14px;
+		border-radius: 18px;
+		background: rgba(34, 197, 94, 0.1);
+		border: 1px solid rgba(34, 197, 94, 0.18);
+		color: rgba(20, 83, 45, 0.95);
+		font-weight: 900;
+	}
+
+	.toastInner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	.toastMsg {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.split {
+		display: grid;
+		grid-template-columns: 320px minmax(0, 1fr);
+		gap: 12px;
+		align-items: start;
+	}
+
+	.treePane,
+	.listPane {
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.85);
+		overflow: hidden;
+	}
+
+	.treeTop,
+	.listTop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 12px 14px;
+		background: rgba(16, 24, 40, 0.03);
+		border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.tree {
+		padding: 10px 8px;
+		max-height: 70vh;
+		overflow: auto;
+	}
+
+	.nodeBtn {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		border: 0;
+		background: transparent;
+		padding: 7px 8px;
+		border-radius: 12px;
+		cursor: pointer;
+		text-align: left;
+		color: rgba(16, 24, 40, 0.88);
+		font-weight: 800;
+	}
+
+	.nodeBtn:focus-visible {
+		outline: 2px solid rgba(0, 174, 154, 0.55);
+		outline-offset: 2px;
+	}
+
+	.nodeBtn:hover {
+		background: rgba(0, 174, 154, 0.08);
+	}
+
+	.nodeBtn.active {
+		background: rgba(0, 174, 154, 0.14);
+		border: 1px solid rgba(0, 174, 154, 0.18);
+	}
+
+	.tree.dragging {
+		cursor: grabbing;
+		user-select: none;
+		touch-action: none;
+	}
+
+	.tree.dragging .nodeBtn {
+		cursor: grabbing;
+	}
+
+	.nodeBtn[data-drop='inside'] {
+		outline: 2px dashed rgba(0, 174, 154, 0.55);
+		outline-offset: 2px;
+		background: rgba(0, 174, 154, 0.08);
+	}
+
+	.nodeBtn[data-drop='before'] {
+		box-shadow: inset 0 2px 0 rgba(0, 174, 154, 0.8);
+	}
+
+	.nodeBtn[data-drop='after'] {
+		box-shadow: inset 0 -2px 0 rgba(0, 174, 154, 0.8);
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 999px;
+		background: rgba(34, 197, 94, 0.75);
+		flex: none;
+	}
+
+	.dotGhost {
+		background: rgba(148, 163, 184, 0.7);
+	}
+
+	.twisty {
+		width: 16px;
+		height: 16px;
+		display: inline-block;
+		flex: none;
+		border-radius: 6px;
+		position: relative;
+		opacity: 0.9;
+	}
+
+	.twisty::before {
+		content: '';
+		position: absolute;
+		left: 5px;
+		top: 3px;
+		width: 0;
+		height: 0;
+		border-top: 5px solid transparent;
+		border-bottom: 5px solid transparent;
+		border-left: 6px solid rgba(16, 24, 40, 0.55);
+		transform-origin: 40% 50%;
+		transform: rotate(0deg);
+	}
+
+	.nodeBtn[aria-expanded='true'] .twisty::before {
+		transform: rotate(90deg);
+	}
+
+	.twistyOff {
+		opacity: 0.35;
+	}
+
+	.twistyOff::before {
+		border-left-color: rgba(16, 24, 40, 0.28);
+	}
+
+	.nodeKids {
+		margin-left: 10px;
+		border-left: 1px solid rgba(16, 24, 40, 0.08);
+		padding-left: 6px;
+	}
+
+	.tableWrap {
+		overflow: hidden;
+	}
+
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.table th,
+	.table td {
+		text-align: left;
+		padding: 10px 12px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		vertical-align: top;
+	}
+
+	.table thead th {
+		border-top: 0;
+		background: rgba(16, 24, 40, 0.03);
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.cbox {
+		width: 44px;
+	}
+
+	.actionsCol {
+		width: 120px;
+		text-align: right;
+	}
+
+	.tTitle {
+		font-weight: 900;
+	}
+
+	.tPath a {
+		color: rgba(16, 24, 40, 0.85);
+		text-decoration: none;
+	}
+
+	.tSmall {
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 13px;
+		white-space: nowrap;
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 8px;
+		border-radius: 999px;
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		font-weight: 900;
+		font-size: 12px;
+	}
+
+	.chipPub {
+		background: rgba(34, 197, 94, 0.1);
+		border-color: rgba(34, 197, 94, 0.18);
+	}
+
+	.chipDraft {
+		background: rgba(245, 158, 11, 0.1);
+		border-color: rgba(245, 158, 11, 0.2);
+	}
+
+	.chipArchived {
+		background: rgba(59, 130, 246, 0.1);
+		border-color: rgba(59, 130, 246, 0.2);
+	}
+
+	.chipTrash {
+		background: rgba(220, 38, 38, 0.08);
+		border-color: rgba(220, 38, 38, 0.18);
+	}
+
+	.btnGhostSmall {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.8);
+		border-radius: 10px;
+		padding: 7px 9px;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.btnDangerSmall {
+		border: 1px solid rgba(220, 38, 38, 0.28);
+		background: rgba(220, 38, 38, 0.08);
+		color: rgba(127, 29, 29, 0.95);
+		border-radius: 10px;
+		padding: 7px 9px;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.btnGhostSmall:disabled,
+	.btnDangerSmall:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.dialog::backdrop {
+		background: rgba(15, 23, 42, 0.55);
+	}
+
+	.dialog {
+		border: 0;
+		padding: 0;
+		background: transparent;
+	}
+
+	.dialogCard {
+		width: min(920px, 96vw);
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		background: rgba(255, 255, 255, 0.95);
+		box-shadow: 0 18px 60px rgba(16, 24, 40, 0.18);
+		padding: 14px;
+		display: grid;
+		gap: 12px;
+	}
+
+	.dialogTop,
+	.dialogBottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.dialogTitle {
+		font-weight: 950;
+		letter-spacing: -0.02em;
+	}
+
+	.formGrid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.field {
+		display: grid;
+		gap: 4px;
+	}
+
+	.help {
+		font-size: 12px;
+		color: rgba(16, 24, 40, 0.6);
+	}
+
+	.editorBlock {
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 16px;
+		overflow: hidden;
+	}
+
+	.editorTop {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 12px;
+		background: rgba(16, 24, 40, 0.03);
+		border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.toolbar {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.tool {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 10px;
+		padding: 7px 9px;
+		font-weight: 950;
+		cursor: pointer;
+	}
+
+	.toolSel {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 10px;
+		padding: 7px 9px;
+		font-weight: 800;
+	}
+
+	.toolColor {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 10px;
+		padding: 4px 6px;
+		height: 36px;
+		width: 44px;
+	}
+
+	.rte {
+		min-height: 280px;
+		padding: 12px;
+		outline: none;
+		font-family: inherit !important;
+		font-size: 16px;
+		line-height: 1.6;
+	}
+
+	.rte * {
+		font-family: inherit !important;
+	}
+
+	.rte h1,
+	.rte h2 {
+		margin: 12px 0 8px;
+		line-height: 1.2;
+	}
+
+	.rte h1 {
+		font-size: 28px;
+	}
+
+	.rte h2 {
+		font-size: 20px;
+	}
+
+	.rte p,
+	.rte ul,
+	.rte ol {
+		margin: 0 0 10px;
+	}
+
+	.rte li {
+		margin: 4px 0;
+	}
+
+	.saveErr {
+		display: none;
+		padding: 9px 11px;
+		border-radius: 12px;
+		background: rgba(220, 38, 38, 0.08);
+		border: 1px solid rgba(220, 38, 38, 0.18);
+		color: rgba(127, 29, 29, 0.95);
+		font-weight: 800;
+	}
+
+	.dialogBtns {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	@media (max-width: 920px) {
+		.controls {
+			grid-template-columns: 1fr 1fr;
+		}
+		.split {
+			grid-template-columns: 1fr;
+		}
+		.bulk {
+			justify-content: flex-start;
+		}
+		.formGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

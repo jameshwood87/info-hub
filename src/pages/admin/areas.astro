@@ -1,0 +1,1223 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout lang="en" title="Admin • Andalucía Areas" description="Manage Andalucía area pages" canonical="https://info.propertylist.es/admin/areas">
+	<meta name="robots" content="noindex,nofollow" slot="head" />
+
+	<div class="shell">
+		<header class="topbar">
+			<div class="left">
+				<a class="back" href="/admin/">← Dashboard</a>
+				<div class="badge">Andalucía</div>
+			</div>
+			<div class="right">
+				<button class="btnGhost" id="reloadBtn" type="button">Reload</button>
+				<button class="btnGhost" id="recoverBtn" type="button">Recover</button>
+				<button class="btn" id="newBtn" type="button">New page</button>
+			</div>
+		</header>
+
+		<section class="controls">
+			<div class="control">
+				<label class="label" for="q">Search</label>
+				<input id="q" class="input" type="search" autocomplete="off" placeholder="Title or path…" />
+			</div>
+			<div class="control">
+				<label class="label" for="bucket">View</label>
+				<select id="bucket" class="select">
+					<option value="active" selected>Active</option>
+					<option value="archived">Archived</option>
+					<option value="trash">Trash</option>
+					<option value="all">All</option>
+				</select>
+			</div>
+			<div class="control">
+				<label class="label" for="status">Status</label>
+				<select id="status" class="select">
+					<option value="any">Any</option>
+					<option value="published">Published</option>
+					<option value="draft">Draft</option>
+				</select>
+			</div>
+			<div class="control">
+				<label class="label" for="lang">Language</label>
+				<select id="lang" class="select">
+					<option value="">All</option>
+					<option value="en" selected>English</option>
+					<option value="es">Español</option>
+				</select>
+			</div>
+		</section>
+
+		<div id="err" class="err" role="status" aria-live="polite"></div>
+		<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+		<section class="list">
+			<div class="listTop">
+				<div class="label">Pages</div>
+				<div class="hint" id="listHint"></div>
+			</div>
+			<div class="tableWrap">
+				<table class="table" aria-label="Andalucía area pages">
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>Path</th>
+							<th>Status</th>
+							<th>Updated</th>
+							<th class="actionsCol">Actions</th>
+						</tr>
+					</thead>
+					<tbody id="rows"></tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+
+	<dialog id="editor" class="dialog">
+		<form method="dialog" class="dialogCard" id="editorForm">
+			<div class="dialogTop">
+				<div class="dialogTitle" id="dialogTitle">Edit page</div>
+				<button class="btnGhost" value="cancel" type="submit" formnovalidate>Close</button>
+			</div>
+
+			<div class="formGrid">
+				<div class="field">
+					<label class="label" for="f_path">Path</label>
+					<input id="f_path" class="input" type="text" required placeholder="/andalucia/malaga/marbella/" />
+					<div class="help">Must start with /andalucia/ (EN) or /es/andalucia/ (ES) and end with /</div>
+				</div>
+				<div class="field">
+					<label class="label" for="f_title">Title</label>
+					<input id="f_title" class="input" type="text" required />
+				</div>
+				<div class="field">
+					<label class="label" for="f_desc">Description</label>
+					<textarea id="f_desc" class="textarea" rows="2" placeholder="Used for listings and snippets"></textarea>
+				</div>
+				<div class="field">
+					<label class="label" for="f_status">Status</label>
+					<select id="f_status" class="select">
+						<option value="draft">Draft</option>
+						<option value="published">Published</option>
+					</select>
+				</div>
+				<div class="field">
+					<label class="label" for="f_lang">Language</label>
+					<select id="f_lang" class="select">
+						<option value="en">English</option>
+						<option value="es">Español</option>
+					</select>
+				</div>
+				<div class="field">
+					<label class="label" for="f_seo_title">SEO title</label>
+					<input id="f_seo_title" class="input" type="text" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_seo_desc">SEO description</label>
+					<textarea id="f_seo_desc" class="textarea" rows="2"></textarea>
+				</div>
+				<div class="field">
+					<label class="label" for="f_tags">Tags</label>
+					<input id="f_tags" class="input" type="text" placeholder="comma,separated,tags" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_avgPrice">Avg price (€)</label>
+					<input id="f_area_avgPrice" class="input" type="number" step="1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_rentalYield">Rental yield (%)</label>
+					<input id="f_area_rentalYield" class="input" type="number" step="0.1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_airportDistance">Airport (km)</label>
+					<input id="f_area_airportDistance" class="input" type="number" step="0.1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_beachDistance">Beach (km)</label>
+					<input id="f_area_beachDistance" class="input" type="number" step="0.1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_priceTrend">Trend</label>
+					<input id="f_area_priceTrend" class="input" type="text" placeholder="Rising / Stable / Volatile" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_population">Population</label>
+					<input id="f_area_population" class="input" type="number" step="1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_expatPercent">Expat (%)</label>
+					<input id="f_area_expatPercent" class="input" type="number" step="0.1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_daysOnMarket">Days on market</label>
+					<input id="f_area_daysOnMarket" class="input" type="number" step="1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_area_listingCount">Listings</label>
+					<input id="f_area_listingCount" class="input" type="number" step="1" min="0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_url">Hero image URL</label>
+					<input id="f_hero_url" class="input" type="url" placeholder="https://…" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_alt">Hero image ALT</label>
+					<input id="f_hero_alt" class="input" type="text" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_source">Hero source</label>
+					<input id="f_hero_source" class="input" type="text" placeholder="Wikimedia Commons" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_pageUrl">Hero page URL</label>
+					<input id="f_hero_pageUrl" class="input" type="url" placeholder="https://…" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_creditName">Hero credit</label>
+					<input id="f_hero_creditName" class="input" type="text" placeholder="Photographer name" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_creditUrl">Hero credit URL</label>
+					<input id="f_hero_creditUrl" class="input" type="url" placeholder="https://…" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_licenseName">Hero licence</label>
+					<input id="f_hero_licenseName" class="input" type="text" placeholder="CC BY-SA 4.0" />
+				</div>
+				<div class="field">
+					<label class="label" for="f_hero_licenseUrl">Hero licence URL</label>
+					<input id="f_hero_licenseUrl" class="input" type="url" placeholder="https://…" />
+				</div>
+			</div>
+
+			<div class="editorBlock">
+				<div class="editorTop">
+					<div class="label">Body</div>
+					<div class="toolbar">
+						<button class="tool" type="button" data-cmd="bold">B</button>
+						<button class="tool" type="button" data-cmd="italic">I</button>
+						<button class="tool" type="button" data-cmd="insertUnorderedList">• List</button>
+						<button class="tool" type="button" data-cmd="insertOrderedList">1. List</button>
+						<button class="tool" type="button" data-cmd="formatBlock" data-arg="p">Body</button>
+						<button class="tool" type="button" data-cmd="formatBlock" data-arg="h2">H2</button>
+						<button class="tool" type="button" data-cmd="formatBlock" data-arg="h3">H3</button>
+						<select class="toolSel" data-action="fontSize">
+							<option value="">Size</option>
+							<option value="0.875rem">Small</option>
+							<option value="1rem">Normal</option>
+							<option value="1.25rem">Large</option>
+							<option value="1.5rem">XL</option>
+						</select>
+						<input class="toolColor" type="color" value="#000000" data-action="color" />
+						<button class="tool" type="button" data-action="link">Link</button>
+						<button class="tool" type="button" data-action="image">Image</button>
+						<button class="tool" type="button" data-action="video">Video</button>
+					</div>
+				</div>
+				<div id="f_body" class="rte" contenteditable="true" spellcheck="true"></div>
+			</div>
+
+			<div class="dialogBottom">
+				<div class="saveErr" id="saveErr" role="status" aria-live="polite"></div>
+				<div class="dialogBtns">
+					<button class="btnDanger" id="deleteBtn" type="button">Trash</button>
+					<button class="btn" id="saveBtn" type="button">Save</button>
+				</div>
+			</div>
+		</form>
+	</dialog>
+
+	<script is:inline>
+		const state = { items: [], filtered: [], csrf: '', role: 'admin', edit: { id: null, mode: 'edit' } };
+
+		const $ = (id) => document.getElementById(id);
+		const rows = $('rows');
+		const err = $('err');
+		const toast = $('toast');
+		const q = $('q');
+		const bucketSel = $('bucket');
+		const statusSel = $('status');
+		const langSel = $('lang');
+		const listHint = $('listHint');
+
+		const dlg = $('editor');
+		const dialogTitle = $('dialogTitle');
+		const saveErr = $('saveErr');
+		const deleteBtn = $('deleteBtn');
+		const saveBtn = $('saveBtn');
+
+		const f_path = $('f_path');
+		const f_title = $('f_title');
+		const f_desc = $('f_desc');
+		const f_status = $('f_status');
+		const f_lang = $('f_lang');
+		const f_seo_title = $('f_seo_title');
+		const f_seo_desc = $('f_seo_desc');
+		const f_body = $('f_body');
+		const f_tags = $('f_tags');
+
+		const f_area_avgPrice = $('f_area_avgPrice');
+		const f_area_rentalYield = $('f_area_rentalYield');
+		const f_area_airportDistance = $('f_area_airportDistance');
+		const f_area_beachDistance = $('f_area_beachDistance');
+		const f_area_priceTrend = $('f_area_priceTrend');
+		const f_area_population = $('f_area_population');
+		const f_area_expatPercent = $('f_area_expatPercent');
+		const f_area_daysOnMarket = $('f_area_daysOnMarket');
+		const f_area_listingCount = $('f_area_listingCount');
+
+		const f_hero_url = $('f_hero_url');
+		const f_hero_alt = $('f_hero_alt');
+		const f_hero_source = $('f_hero_source');
+		const f_hero_pageUrl = $('f_hero_pageUrl');
+		const f_hero_creditName = $('f_hero_creditName');
+		const f_hero_creditUrl = $('f_hero_creditUrl');
+		const f_hero_licenseName = $('f_hero_licenseName');
+		const f_hero_licenseUrl = $('f_hero_licenseUrl');
+
+		const setErr = (m) => (err.textContent = m || '');
+		const setToast = (m) => {
+			toast.textContent = m || '';
+			if (!m) return;
+			window.setTimeout(() => {
+				if (toast.textContent === m) toast.textContent = '';
+			}, 2400);
+		};
+		const setSaveError = (m) => (saveErr.textContent = m || '');
+
+		const normalisePath = (p) => {
+			const v = String(p || '').trim();
+			if (!v) return '';
+			const withSlash = v.startsWith('/') ? v : `/${v}`;
+			const norm = withSlash.replace(/\/+/g, '/');
+			return norm.endsWith('/') ? norm : `${norm}/`;
+		};
+
+		const fmtDate = (iso) => {
+			const ms = Date.parse(String(iso || ''));
+			if (!Number.isFinite(ms)) return '';
+			return new Date(ms).toLocaleString();
+		};
+
+		const api = async (path, init) => {
+			const headers = new Headers((init && init.headers) || {});
+			headers.set('content-type', 'application/json; charset=utf-8');
+			if (!state.csrf && window.__PL_ADMIN__ && window.__PL_ADMIN__.csrfToken) state.csrf = window.__PL_ADMIN__.csrfToken;
+			if (state.csrf) headers.set('x-csrf-token', state.csrf);
+			const res = await fetch(path, { ...(init || {}), headers }).catch(() => null);
+			const data = res ? await res.json().catch(() => null) : null;
+			return { ok: Boolean(res && res.ok), status: res ? res.status : 0, data };
+		};
+
+		const fetchMe = async () => {
+			const res = await fetch('/api/admin/me').catch(() => null);
+			const data = res ? await res.json().catch(() => null) : null;
+			if (!data?.authenticated) return;
+			state.csrf = data.csrfToken || '';
+			state.role = data.role || 'admin';
+		};
+
+		const applyFilter = () => {
+			const query = String(q.value || '').trim().toLowerCase();
+			state.filtered = state.items.filter((it) => {
+				if (!query) return true;
+				return String(it.title || '').toLowerCase().includes(query) || String(it.path || '').toLowerCase().includes(query);
+			});
+			render();
+		};
+
+		const render = () => {
+			rows.innerHTML = '';
+			listHint.textContent = `${state.filtered.length} items`;
+			for (const it of state.filtered) {
+				const tr = document.createElement('tr');
+				const tdTitle = document.createElement('td');
+				tdTitle.textContent = String(it.title || '');
+				const tdPath = document.createElement('td');
+				const a = document.createElement('a');
+				a.href = String(it.path || '');
+				a.textContent = String(it.path || '');
+				a.target = '_blank';
+				a.rel = 'noreferrer';
+				tdPath.appendChild(a);
+				const tdStatus = document.createElement('td');
+				tdStatus.textContent = String(it.status || '');
+				const tdUpdated = document.createElement('td');
+				tdUpdated.textContent = fmtDate(it.date_updated || it.date_created);
+				const tdActions = document.createElement('td');
+				tdActions.className = 'actionsCol';
+				const editBtn = document.createElement('button');
+				editBtn.type = 'button';
+				editBtn.className = 'btnGhostSmall';
+				editBtn.textContent = 'Edit';
+				editBtn.addEventListener('click', () => openEditor(String(it.id || '')));
+				tdActions.appendChild(editBtn);
+				tr.appendChild(tdTitle);
+				tr.appendChild(tdPath);
+				tr.appendChild(tdStatus);
+				tr.appendChild(tdUpdated);
+				tr.appendChild(tdActions);
+				rows.appendChild(tr);
+			}
+		};
+
+		const load = async () => {
+			setErr('');
+			const st = statusSel.value || 'any';
+			const lg = (langSel.value || '').trim();
+			const bucket = (bucketSel.value || 'active').trim();
+			const qs = new URLSearchParams();
+			const prefixes = lg === 'es' ? ['/es/andalucia/'] : lg === 'en' ? ['/andalucia/'] : ['/andalucia/', '/es/andalucia/'];
+			qs.set('prefixes', prefixes.join(','));
+			qs.set('status', st);
+			qs.set('bucket', bucket);
+			qs.set('limit', '2000');
+			if (lg === 'en' || lg === 'es') qs.set('lang', lg);
+			const res = await api(`/api/admin/kb-pages?${qs.toString()}`, { method: 'GET' });
+			if (!res.ok) {
+				setErr(res.data?.error ? String(res.data.error) : 'Load failed.');
+				state.items = [];
+				state.filtered = [];
+				return render();
+			}
+			const items = Array.isArray(res.data?.items) ? res.data.items : [];
+			state.items = items
+				.map((x) => ({
+					id: String(x.id || ''),
+					title: String(x.title || ''),
+					path: String(x.path || ''),
+					status: String(x.status || ''),
+					date_created: x.date_created || null,
+					date_updated: x.date_updated || null,
+				}))
+				.filter((x) => x.id && x.path);
+			state.items.sort((a, b) => String(b.date_updated || b.date_created || '').localeCompare(String(a.date_updated || a.date_created || '')));
+			applyFilter();
+		};
+
+		const normaliseBodyHtml = (html) => {
+			const root = document.createElement('div');
+			root.innerHTML = String(html || '');
+			root.querySelectorAll('b').forEach((n) => {
+				const el = document.createElement('strong');
+				for (const attr of n.attributes) el.setAttribute(attr.name, attr.value);
+				el.innerHTML = n.innerHTML;
+				n.replaceWith(el);
+			});
+			root.querySelectorAll('i').forEach((n) => {
+				const el = document.createElement('em');
+				for (const attr of n.attributes) el.setAttribute(attr.name, attr.value);
+				el.innerHTML = n.innerHTML;
+				n.replaceWith(el);
+			});
+			root.querySelectorAll('img').forEach((img) => {
+				if (!img.hasAttribute('alt')) img.setAttribute('alt', '');
+				if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+				if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+			});
+			root.querySelectorAll('video').forEach((v) => {
+				if (!v.hasAttribute('controls')) v.setAttribute('controls', '');
+				if (!v.hasAttribute('preload')) v.setAttribute('preload', 'metadata');
+			});
+			root.querySelectorAll('a').forEach((a) => {
+				const target = String(a.getAttribute('target') || '').trim().toLowerCase();
+				if (target !== '_blank') return;
+				const parts = String(a.getAttribute('rel') || '')
+					.split(/\s+/g)
+					.map((p) => p.trim().toLowerCase())
+					.filter(Boolean);
+				if (!parts.includes('noopener')) parts.push('noopener');
+				if (!parts.includes('noreferrer')) parts.push('noreferrer');
+				a.setAttribute('rel', parts.join(' '));
+			});
+			root.querySelectorAll('font').forEach((n) => {
+				const el = document.createElement('span');
+				const styleParts = [];
+				const s = String(n.getAttribute('style') || '').trim();
+				if (s) styleParts.push(s);
+				const color = String(n.getAttribute('color') || '').trim();
+				if (color) styleParts.push(`color:${color}`);
+				const size = String(n.getAttribute('size') || '').trim();
+				const map = { '1': '0.75rem', '2': '0.875rem', '3': '1rem', '4': '1.125rem', '5': '1.25rem', '6': '1.5rem', '7': '2rem' };
+				if (size && map[size]) styleParts.push(`font-size:${map[size]}`);
+				if (styleParts.length) el.setAttribute('style', styleParts.join(';'));
+				el.innerHTML = n.innerHTML;
+				n.replaceWith(el);
+			});
+			return root.innerHTML.trim();
+		};
+
+		const readForm = () => {
+			const path = normalisePath(String(f_path.value || '').trim());
+			if (!path.startsWith('/andalucia/') && !path.startsWith('/es/andalucia/')) throw new Error('Path must start with /andalucia/ or /es/andalucia/.');
+			if (path === '/andalucia/' || path === '/es/andalucia/') throw new Error('Path must include an area slug.');
+			const title = String(f_title.value || '').trim();
+			if (!title) throw new Error('Title is required.');
+			return {
+				path,
+				title,
+				description: String(f_desc.value || '').trim() || null,
+				status: String(f_status.value || 'draft') === 'published' ? 'published' : 'draft',
+				language: String(f_lang.value || 'en') === 'es' ? 'es' : 'en',
+				body: normaliseBodyHtml(f_body.innerHTML) || null,
+				seo_title: String(f_seo_title.value || '').trim() || null,
+				seo_description: String(f_seo_desc.value || '').trim() || null,
+			};
+		};
+
+		const toNumOrNull = (v) => {
+			const n = typeof v === 'number' ? v : Number(String(v || '').trim());
+			return Number.isFinite(n) ? n : null;
+		};
+
+		const readMetaForm = () => {
+			const tags = String(f_tags.value || '')
+				.split(',')
+				.map((t) => t.trim())
+				.filter(Boolean)
+				.slice(0, 40);
+
+			const areaStats = {
+				avgPrice: toNumOrNull(f_area_avgPrice.value),
+				rentalYield: toNumOrNull(f_area_rentalYield.value),
+				airportDistance: toNumOrNull(f_area_airportDistance.value),
+				beachDistance: toNumOrNull(f_area_beachDistance.value),
+				priceTrend: String(f_area_priceTrend.value || '').trim() || null,
+				population: toNumOrNull(f_area_population.value),
+				expatPercent: toNumOrNull(f_area_expatPercent.value),
+				daysOnMarket: toNumOrNull(f_area_daysOnMarket.value),
+				listingCount: toNumOrNull(f_area_listingCount.value),
+			};
+
+			const areaHeroImage = {
+				url: String(f_hero_url.value || '').trim() || null,
+				alt: String(f_hero_alt.value || '').trim() || null,
+				source: String(f_hero_source.value || '').trim() || null,
+				pageUrl: String(f_hero_pageUrl.value || '').trim() || null,
+				creditName: String(f_hero_creditName.value || '').trim() || null,
+				creditUrl: String(f_hero_creditUrl.value || '').trim() || null,
+				licenseName: String(f_hero_licenseName.value || '').trim() || null,
+				licenseUrl: String(f_hero_licenseUrl.value || '').trim() || null,
+			};
+
+			return { tags, areaStats, areaHeroImage };
+		};
+
+		const openEditor = async (id) => {
+			setSaveError('');
+			state.edit = { id, mode: 'edit' };
+			dialogTitle.textContent = 'Edit page';
+			deleteBtn.disabled = false;
+			saveBtn.disabled = false;
+			const itemRes = await api(`/api/admin/kb-pages/${encodeURIComponent(id)}`, { method: 'GET' });
+			if (!itemRes.ok) return setErr(itemRes.data?.error ? String(itemRes.data.error) : 'Load failed.');
+			const it = itemRes.data?.item || {};
+			f_path.value = String(it.path || '');
+			f_title.value = String(it.title || '');
+			f_desc.value = String(it.description || '');
+			f_status.value = String(it.status || 'draft') === 'published' ? 'published' : 'draft';
+			f_lang.value = String(it.language || 'en') === 'es' ? 'es' : 'en';
+			f_seo_title.value = String(it.seo_title || '');
+			f_seo_desc.value = String(it.seo_description || '');
+			f_body.innerHTML = String(it.body || '');
+			const metaRes = await api(`/api/admin/meta/${encodeURIComponent(id)}`, { method: 'GET' });
+			const meta = metaRes.ok && metaRes.data?.meta ? metaRes.data.meta : {};
+			f_tags.value = Array.isArray(meta.tags) ? meta.tags.join(',') : '';
+			const stats = meta.areaStats && typeof meta.areaStats === 'object' ? meta.areaStats : {};
+			f_area_avgPrice.value = stats.avgPrice ?? '';
+			f_area_rentalYield.value = stats.rentalYield ?? '';
+			f_area_airportDistance.value = stats.airportDistance ?? '';
+			f_area_beachDistance.value = stats.beachDistance ?? '';
+			f_area_priceTrend.value = stats.priceTrend ?? '';
+			f_area_population.value = stats.population ?? '';
+			f_area_expatPercent.value = stats.expatPercent ?? '';
+			f_area_daysOnMarket.value = stats.daysOnMarket ?? '';
+			f_area_listingCount.value = stats.listingCount ?? '';
+			const hero = meta.areaHeroImage && typeof meta.areaHeroImage === 'object' ? meta.areaHeroImage : {};
+			f_hero_url.value = hero.url ?? '';
+			f_hero_alt.value = hero.alt ?? '';
+			f_hero_source.value = hero.source ?? '';
+			f_hero_pageUrl.value = hero.pageUrl ?? '';
+			f_hero_creditName.value = hero.creditName ?? '';
+			f_hero_creditUrl.value = hero.creditUrl ?? '';
+			f_hero_licenseName.value = hero.licenseName ?? '';
+			f_hero_licenseUrl.value = hero.licenseUrl ?? '';
+			dlg.showModal();
+		};
+
+		const openNew = () => {
+			setSaveError('');
+			state.edit = { id: null, mode: 'new' };
+			dialogTitle.textContent = 'New page';
+			deleteBtn.disabled = true;
+			f_path.value = '';
+			f_title.value = '';
+			f_desc.value = '';
+			f_status.value = 'draft';
+			f_lang.value = 'en';
+			f_seo_title.value = '';
+			f_seo_desc.value = '';
+			f_tags.value = '';
+			f_area_avgPrice.value = '';
+			f_area_rentalYield.value = '';
+			f_area_airportDistance.value = '';
+			f_area_beachDistance.value = '';
+			f_area_priceTrend.value = '';
+			f_area_population.value = '';
+			f_area_expatPercent.value = '';
+			f_area_daysOnMarket.value = '';
+			f_area_listingCount.value = '';
+			f_hero_url.value = '';
+			f_hero_alt.value = '';
+			f_hero_source.value = '';
+			f_hero_pageUrl.value = '';
+			f_hero_creditName.value = '';
+			f_hero_creditUrl.value = '';
+			f_hero_licenseName.value = '';
+			f_hero_licenseUrl.value = '';
+			f_body.innerHTML = '';
+			dlg.showModal();
+		};
+
+		const save = async () => {
+			setSaveError('');
+			let page;
+			try {
+				page = readForm();
+			} catch (e) {
+				return setSaveError(e.message || 'Invalid form.');
+			}
+			const meta = readMetaForm();
+			saveBtn.disabled = true;
+			const mode = state.edit.mode;
+			const id = state.edit.id;
+			const res =
+				mode === 'new'
+					? await api('/api/admin/kb-pages', { method: 'POST', body: JSON.stringify({ scope: 'area', page }) })
+					: await api(`/api/admin/kb-pages/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ patch: page }) });
+			if (!res.ok) {
+				saveBtn.disabled = false;
+				return setSaveError(res.data?.error ? String(res.data.error) : 'Save failed.');
+			}
+			const savedId = String(res.data?.item?.id || id || '');
+			if (savedId) {
+				const metaRes = await api(`/api/admin/meta/${encodeURIComponent(savedId)}`, { method: 'PATCH', body: JSON.stringify(meta) });
+				if (!metaRes.ok) {
+					saveBtn.disabled = false;
+					return setSaveError('Saved content, but failed to save metadata.');
+				}
+			}
+			saveBtn.disabled = false;
+			dlg.close();
+			await load();
+		};
+
+		const trash = async () => {
+			if (!state.edit.id) return;
+			if (!confirm('Move this page to Trash?')) return;
+			deleteBtn.disabled = true;
+			const res = await api(`/api/admin/kb-pages/${encodeURIComponent(state.edit.id)}`, { method: 'DELETE' });
+			deleteBtn.disabled = false;
+			if (!res.ok) return setSaveError(res.data?.error ? String(res.data.error) : 'Trash failed.');
+			dlg.close();
+			setToast('Moved to Trash.');
+			await load();
+		};
+
+		const recover = async () => {
+			const p = prompt('Path to recover (e.g. /andalucia/malaga/marbella/)');
+			const path = normalisePath(p || '');
+			if (!path) return;
+			if (!path.startsWith('/andalucia/') && !path.startsWith('/es/andalucia/')) return setErr('Path must start with /andalucia/ or /es/andalucia/.');
+			const res = await api('/api/admin/kb-pages/recover', { method: 'POST', body: JSON.stringify({ path }) });
+			if (!res.ok) return setErr(res.data?.error ? String(res.data.error) : 'Recover failed.');
+			setToast('Recovered as draft.');
+			await load();
+		};
+
+		const execCmd = (cmd, arg) => {
+			try {
+				document.execCommand(cmd, false, arg || null);
+			} catch {}
+		};
+
+		const escapeHtml = (s) =>
+			String(s || '')
+				.replaceAll('&', '&amp;')
+				.replaceAll('<', '&lt;')
+				.replaceAll('>', '&gt;')
+				.replaceAll('"', '&quot;')
+				.replaceAll("'", '&#39;');
+
+		let lastRange = null;
+		const saveSelection = () => {
+			const sel = window.getSelection();
+			if (!sel || sel.rangeCount === 0) return;
+			const r = sel.getRangeAt(0);
+			const node = r.commonAncestorContainer;
+			const el = node && node.nodeType === 3 ? node.parentNode : node;
+			if (!el || el === f_body || f_body.contains(el)) lastRange = r.cloneRange();
+		};
+		const restoreSelection = () => {
+			if (!lastRange) return;
+			const sel = window.getSelection();
+			if (!sel) return;
+			sel.removeAllRanges();
+			sel.addRange(lastRange);
+		};
+
+		const insertHtml = (html) => {
+			const raw = String(html || '');
+			if (!raw) return;
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			execCmd('insertHTML', raw);
+			saveSelection();
+		};
+
+		const applyInlineStyle = (style) => {
+			const raw = String(style || '').trim();
+			if (!raw) return;
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			const sel = window.getSelection();
+			if (!sel || sel.rangeCount === 0) return;
+			const r = sel.getRangeAt(0);
+			if (r.collapsed) {
+				const span = document.createElement('span');
+				span.setAttribute('style', raw);
+				const t = document.createTextNode('\u200B');
+				span.appendChild(t);
+				r.insertNode(span);
+				r.setStart(t, 1);
+				r.setEnd(t, 1);
+				sel.removeAllRanges();
+				sel.addRange(r);
+				saveSelection();
+				return;
+			}
+			const frag = r.extractContents();
+			const span = document.createElement('span');
+			span.setAttribute('style', raw);
+			span.appendChild(frag);
+			r.insertNode(span);
+			r.selectNodeContents(span);
+			r.collapse(false);
+			sel.removeAllRanges();
+			sel.addRange(r);
+			saveSelection();
+		};
+
+		const applyLinkAttrsInSelection = (openNewWindow) => {
+			const sel = window.getSelection();
+			if (!sel || sel.rangeCount === 0) return;
+			let node = sel.anchorNode;
+			if (node && node.nodeType === 3) node = node.parentNode;
+			const el = node && node.closest ? node.closest('a') : null;
+			if (!el) return;
+			if (openNewWindow) {
+				el.setAttribute('target', '_blank');
+				el.setAttribute('rel', 'noopener noreferrer');
+			} else {
+				el.removeAttribute('target');
+				el.removeAttribute('rel');
+			}
+		};
+
+		const insertLink = (url, openNewWindow) => {
+			const href = String(url || '').trim();
+			if (!href) return;
+			f_body.focus({ preventScroll: true });
+			restoreSelection();
+			const sel = window.getSelection();
+			const collapsed = !sel || sel.rangeCount === 0 || sel.getRangeAt(0).collapsed;
+			if (collapsed) {
+				const attrs = openNewWindow ? ' target="_blank" rel="noopener noreferrer"' : '';
+				insertHtml(`<a href="${escapeHtml(href)}"${attrs}>${escapeHtml(href)}</a>`);
+			} else {
+				execCmd('createLink', href);
+				applyLinkAttrsInSelection(openNewWindow);
+				saveSelection();
+			}
+		};
+
+		const uploadFile = async (file) => {
+			const fd = new FormData();
+			fd.set('file', file);
+			const headers = new Headers();
+			if (state.csrf) headers.set('x-csrf-token', state.csrf);
+			const res = await fetch('/api/admin/upload', { method: 'POST', headers, body: fd }).catch(() => null);
+			const data = res ? await res.json().catch(() => null) : null;
+			if (!res || !res.ok || !data?.url) throw new Error('upload_failed');
+			return { url: String(data.url || ''), name: String(file?.name || ''), type: String(file?.type || '') };
+		};
+
+		const insertUploaded = async (file) => {
+			const up = await uploadFile(file);
+			if (up.type.startsWith('image/')) {
+				insertHtml(`<img src="${escapeHtml(up.url)}" alt="" loading="lazy" decoding="async" />`);
+				return;
+			}
+			if (up.type.startsWith('video/')) {
+				insertHtml(`<video src="${escapeHtml(up.url)}" controls preload="metadata" style="max-width:100%;height:auto"></video>`);
+				return;
+			}
+			insertHtml(`<a href="${escapeHtml(up.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(up.name || up.url)}</a>`);
+		};
+
+		document.addEventListener('selectionchange', saveSelection);
+		f_body.addEventListener('keyup', saveSelection);
+		f_body.addEventListener('mouseup', saveSelection);
+		f_body.addEventListener('keydown', (e) => {
+			const mod = e.ctrlKey || e.metaKey;
+			if (!mod) return;
+			const k = String(e.key || '').toLowerCase();
+			if (k === 'b') {
+				e.preventDefault();
+				execCmd('bold');
+				saveSelection();
+			} else if (k === 'i') {
+				e.preventDefault();
+				execCmd('italic');
+				saveSelection();
+			} else if (k === 'k') {
+				e.preventDefault();
+				const url = prompt('Link URL');
+				if (url) insertLink(url, confirm('Open link in new window?'));
+			}
+		});
+
+		document.querySelectorAll('.toolSel').forEach((sel) => {
+			sel.addEventListener('mousedown', () => saveSelection());
+			sel.addEventListener('change', () => {
+				const v = String(sel.value || '').trim();
+				if (!v) return;
+				applyInlineStyle(`font-size:${v}`);
+				sel.value = '';
+			});
+		});
+
+		document.querySelectorAll('.toolColor').forEach((inp) => {
+			inp.addEventListener('mousedown', () => saveSelection());
+			inp.addEventListener('change', () => {
+				const v = String(inp.value || '').trim();
+				if (!v) return;
+				applyInlineStyle(`color:${v}`);
+			});
+		});
+
+		document.querySelectorAll('.tool').forEach((btn) => {
+			btn.addEventListener('mousedown', (e) => e.preventDefault());
+			btn.addEventListener('click', () => {
+				const cmd = btn.getAttribute('data-cmd');
+				const action = btn.getAttribute('data-action');
+				if (action === 'link') {
+					const url = prompt('Link URL');
+					if (url) insertLink(url, confirm('Open link in new window?'));
+					return;
+				}
+				if (action === 'image' || action === 'video') {
+					const input = document.createElement('input');
+					input.type = 'file';
+					input.accept = action === 'video' ? 'video/*' : 'image/*';
+					input.onchange = async () => {
+						const file = input.files && input.files[0];
+						if (!file) return;
+						try {
+							await insertUploaded(file);
+						} catch {
+							setSaveError('Upload failed.');
+						}
+					};
+					input.click();
+					return;
+				}
+				if (!cmd) return;
+				f_body.focus({ preventScroll: true });
+				restoreSelection();
+				execCmd(cmd, btn.getAttribute('data-arg'));
+				saveSelection();
+			});
+		});
+
+		f_body.addEventListener('dragover', (e) => {
+			const dt = e.dataTransfer;
+			if (!dt || !dt.types || !Array.from(dt.types).includes('Files')) return;
+			e.preventDefault();
+			try {
+				dt.dropEffect = 'copy';
+			} catch {}
+		});
+
+		f_body.addEventListener('drop', async (e) => {
+			const files = (e.dataTransfer && e.dataTransfer.files && Array.from(e.dataTransfer.files)) || [];
+			if (!files.length) return;
+			e.preventDefault();
+			const r = document.caretRangeFromPoint
+				? document.caretRangeFromPoint(e.clientX, e.clientY)
+				: document.caretPositionFromPoint
+					? (() => {
+							const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+							if (!pos) return null;
+							const rr = document.createRange();
+							rr.setStart(pos.offsetNode, pos.offset);
+							rr.collapse(true);
+							return rr;
+						})()
+					: null;
+			if (r) {
+				const sel = window.getSelection();
+				if (sel) {
+					sel.removeAllRanges();
+					sel.addRange(r);
+					saveSelection();
+				}
+			}
+			for (const f of files) {
+				try {
+					await insertUploaded(f);
+				} catch {
+					setSaveError('Upload failed.');
+					break;
+				}
+			}
+		});
+
+		f_body.addEventListener('paste', async (e) => {
+			const items = (e.clipboardData && e.clipboardData.items && Array.from(e.clipboardData.items)) || [];
+			const files = items.map((it) => (it.kind === 'file' ? it.getAsFile() : null)).filter(Boolean);
+			if (!files.length) return;
+			const media = files.filter((f) => String(f.type || '').startsWith('image/') || String(f.type || '').startsWith('video/'));
+			if (!media.length) return;
+			e.preventDefault();
+			for (const f of media) {
+				try {
+					await insertUploaded(f);
+				} catch {
+					setSaveError('Upload failed.');
+					break;
+				}
+			}
+		});
+
+		$('reloadBtn').addEventListener('click', () => load());
+		$('newBtn').addEventListener('click', () => openNew());
+		$('recoverBtn').addEventListener('click', () => recover());
+		q.addEventListener('input', () => applyFilter());
+		saveBtn.addEventListener('click', () => save());
+		deleteBtn.addEventListener('click', () => trash());
+
+		fetchMe().then(() => load());
+	</script>
+</Layout>
+
+<style>
+	.shell {
+		display: grid;
+		gap: 14px;
+		padding: 10px 0 26px;
+	}
+
+	.topbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		padding: 14px;
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: radial-gradient(1100px 700px at 20% -20%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.left {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.back {
+		text-decoration: none;
+		color: rgba(16, 24, 40, 0.78);
+		font-weight: 900;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.right {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.controls {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.control {
+		display: grid;
+		gap: 6px;
+	}
+
+	.label {
+		font-size: 12px;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(16, 24, 40, 0.72);
+	}
+
+	.input,
+	.select,
+	.textarea {
+		width: 100%;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		border-radius: 12px;
+		padding: 10px 12px;
+		font: inherit;
+		background: rgba(255, 255, 255, 0.85);
+	}
+
+	.textarea {
+		resize: vertical;
+	}
+
+	.help {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 12px;
+	}
+
+	.err {
+		color: rgba(220, 38, 38, 0.92);
+		font-weight: 800;
+		min-height: 20px;
+	}
+
+	.toast {
+		color: rgba(16, 24, 40, 0.7);
+		min-height: 18px;
+	}
+
+	.list {
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.75);
+		padding: 14px;
+	}
+
+	.listTop {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 10px;
+	}
+
+	.hint {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 13px;
+	}
+
+	.tableWrap {
+		overflow: auto;
+	}
+
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+		min-width: 720px;
+	}
+
+	.table th,
+	.table td {
+		padding: 10px 10px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		text-align: left;
+		vertical-align: top;
+	}
+
+	.table th {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 12px;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.actionsCol {
+		width: 120px;
+	}
+
+	.btn,
+	.btnGhost,
+	.btnGhostSmall,
+	.btnDanger {
+		border-radius: 12px;
+		padding: 9px 11px;
+		font-weight: 900;
+		cursor: pointer;
+		border: 1px solid rgba(16, 24, 40, 0.16);
+		background: rgba(255, 255, 255, 0.85);
+	}
+
+	.btn {
+		background: rgba(0, 174, 154, 0.12);
+		border-color: rgba(0, 174, 154, 0.22);
+	}
+
+	.btnDanger {
+		background: rgba(220, 38, 38, 0.08);
+		border-color: rgba(220, 38, 38, 0.2);
+	}
+
+	.btnGhostSmall {
+		padding: 7px 9px;
+		font-size: 12px;
+	}
+
+	.dialog::backdrop {
+		background: rgba(11, 18, 32, 0.45);
+	}
+
+	.dialogCard {
+		border: 0;
+		border-radius: 18px;
+		padding: 0;
+		width: min(1100px, calc(100vw - 24px));
+		background: rgba(255, 255, 255, 0.97);
+		overflow: hidden;
+	}
+
+	.dialogTop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 14px;
+		border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.dialogTitle {
+		font-weight: 950;
+		letter-spacing: -0.02em;
+	}
+
+	.formGrid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		padding: 14px;
+	}
+
+	.field {
+		display: grid;
+		gap: 6px;
+	}
+
+	.editorBlock {
+		padding: 0 14px 14px;
+	}
+
+	.editorTop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 8px;
+	}
+
+	.toolbar {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.tool {
+		border-radius: 10px;
+		padding: 8px 10px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.9);
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.toolSel {
+		border-radius: 10px;
+		padding: 8px 10px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.9);
+		font-weight: 800;
+	}
+
+	.toolColor {
+		border-radius: 10px;
+		padding: 4px 6px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.9);
+		height: 38px;
+		width: 44px;
+	}
+
+	.rte {
+		min-height: 240px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		border-radius: 12px;
+		padding: 12px;
+		background: rgba(255, 255, 255, 0.9);
+	}
+
+	.dialogBottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 14px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.saveErr {
+		color: rgba(220, 38, 38, 0.92);
+		font-weight: 800;
+		min-height: 18px;
+	}
+
+	.dialogBtns {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	@media (max-width: 920px) {
+		.controls {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.formGrid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 620px) {
+		.controls {
+			grid-template-columns: 1fr;
+		}
+		.formGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

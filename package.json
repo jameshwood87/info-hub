@@ -1,0 +1,32 @@
+{
+  "name": "info-hub",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "astro check",
+    "test": "vitest run --coverage",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "audit:dupe-subheadings": "node ./scripts/audit-duplicate-subheadings.mjs",
+    "qa:docs": "node ./scripts/audit-docs-urls.mjs --fail",
+    "sync:es": "node ./scripts/sync-es-from-en.mjs",
+    "translate:es:batch": "node ./scripts/translate-es-openai-batch.mjs",
+    "repair:en-docs": "node ./scripts/repair-en-docs-from-es-misfiled.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/node": "^9.5.2",
+    "@types/node": "^22.13.5",
+    "astro": "^5.17.1",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "vitest": "^2.1.8"
+  }
+}

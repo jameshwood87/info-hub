@@ -1,0 +1,918 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { listKbPagesByPrefix, type KbPageListItem } from '../../lib/directus';
+import { getKbTreeOrderSnapshot, sortPathsWithOrder } from '../../lib/kbTreeOrder';
+import { getKbMetaSnapshot } from '../../lib/adminMeta';
+
+const blogPrefix = '/blog/';
+const newsPrefix = '/general-information/';
+const estateAgentsPrefix = '/estate-agents/';
+
+const blogItems = await listKbPagesByPrefix({ prefix: blogPrefix, lang: 'en', limit: 500 });
+const newsItems = await listKbPagesByPrefix({ prefix: newsPrefix, lang: 'en', limit: 500 });
+const estateAgentItems = await listKbPagesByPrefix({ prefix: estateAgentsPrefix, lang: 'en', limit: 500 });
+const treeOrder = await getKbTreeOrderSnapshot();
+const metaById = await getKbMetaSnapshot();
+
+const merged = (() => {
+	const byPath = new Map<string, KbPageListItem>();
+	for (const p of [...blogItems, ...newsItems, ...estateAgentItems]) {
+		if (!byPath.has(p.path)) byPath.set(p.path, p);
+	}
+	return [...byPath.values()];
+})();
+
+const asTime = (iso: string | null | undefined) => {
+	if (!iso) return null;
+	const ms = Date.parse(iso);
+	return Number.isFinite(ms) ? new Date(ms) : null;
+};
+
+const publishedFor = (p: KbPageListItem) => asTime(p.date_created) ?? asTime(p.date_updated);
+const updatedFor = (p: KbPageListItem) => asTime(p.date_updated) ?? asTime(p.date_created);
+
+const formatDate = (d: Date) =>
+	new Intl.DateTimeFormat('en-GB', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	}).format(d);
+
+const categoryFor = (p: KbPageListItem) => {
+	const path = String(p.path || '');
+	if (path.startsWith(blogPrefix)) {
+		const parts = path.slice(blogPrefix.length).split('/').filter(Boolean);
+		const cat = parts[0] || 'Blog';
+		return cat
+			.replace(/[-_]+/g, ' ')
+			.replace(/\b\w/g, (m) => m.toUpperCase())
+			.trim();
+	}
+	if (path.startsWith(estateAgentsPrefix)) return 'Estate Agents';
+	return 'General Information';
+};
+
+const normalisePath = (p: string) => {
+	const raw = String(p || '').trim();
+	if (!raw) return '';
+	const withSlash = raw.startsWith('/') ? raw : `/${raw}`;
+	const noQuery = withSlash.split('?')[0]!.split('#')[0]!;
+	const cleaned = noQuery.replace(/\/{2,}/g, '/');
+	return cleaned.endsWith('/') ? cleaned : `${cleaned}/`;
+};
+
+const roots = [blogPrefix, newsPrefix, estateAgentsPrefix].map(normalisePath);
+
+const titleFromSeg = (seg: string) =>
+	String(seg || '')
+		.replace(/[-_]+/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim()
+		.split(' ')
+		.filter(Boolean)
+		.map((w) => w[0]!.toUpperCase() + w.slice(1))
+		.join(' ');
+
+const rootForPath = (p: string) => {
+	const path = normalisePath(p);
+	if (!path) return '';
+	let best = '';
+	for (const r of roots) {
+		if (path.startsWith(r) && r.length > best.length) best = r;
+	}
+	return best;
+};
+
+const derivedParentForPath = (p: string, rootPrefix: string) => {
+	const path = normalisePath(p);
+	const root = normalisePath(rootPrefix);
+	if (!path || !root || !path.startsWith(root)) return '';
+	if (path === root) return '';
+	const rest = path.slice(root.length);
+	const parts = rest.split('/').filter(Boolean);
+	if (!parts.length) return '';
+	if (parts.length === 1) return root;
+	return `${root}${parts.slice(0, -1).join('/')}/`;
+};
+
+const allItems = merged.filter((p) => p.path !== blogPrefix && p.path !== newsPrefix);
+const itemByPath = new Map(allItems.map((p) => [normalisePath(p.path), p]));
+
+type NodeInfo = { path: string; title: string; updatedMs: number; isPage: boolean };
+const nodes = new Map<string, NodeInfo>();
+
+for (const r of roots) {
+	const title = r === blogPrefix ? 'Blog' : r === estateAgentsPrefix ? 'Estate Agents' : 'General Information';
+	nodes.set(r, { path: r, title, updatedMs: 0, isPage: false });
+}
+
+for (const it of allItems) {
+	const p = normalisePath(it.path);
+	const root = rootForPath(p);
+	if (!root) continue;
+	const rest = p.slice(root.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = root;
+	for (const seg of parts) {
+		acc = `${acc}${seg}/`;
+		if (!nodes.has(acc)) nodes.set(acc, { path: acc, title: titleFromSeg(seg), updatedMs: 0, isPage: false });
+	}
+	const updated = updatedFor(it)?.getTime() ?? 0;
+	const existing = nodes.get(p);
+	if (existing) {
+		nodes.set(p, { ...existing, title: String(it.title || existing.title || ''), updatedMs: updated, isPage: true });
+	} else {
+		nodes.set(p, { path: p, title: String(it.title || ''), updatedMs: updated, isPage: true });
+	}
+}
+
+const effectiveParent = (p: string) => {
+	const path = normalisePath(p);
+	const explicit = treeOrder.parentOverride?.[path] ? normalisePath(treeOrder.parentOverride[path]!) : '';
+	if (explicit) return explicit;
+	const root = rootForPath(path);
+	return root ? derivedParentForPath(path, root) : '';
+};
+
+const kidsByParent = new Map<string, string[]>();
+for (const p of nodes.keys()) {
+	const parent = effectiveParent(p);
+	if (!parent) continue;
+	const arr = kidsByParent.get(parent) || [];
+	arr.push(p);
+	kidsByParent.set(parent, arr);
+}
+
+const hasChildren = (p: string) => (kidsByParent.get(normalisePath(p)) || []).length > 0;
+
+const fallbackCompare = (parentPath: string) => (a: string, b: string) => {
+	const ah = hasChildren(a);
+	const bh = hasChildren(b);
+	if (ah !== bh) return ah ? -1 : 1;
+
+	const an = nodes.get(normalisePath(a));
+	const bn = nodes.get(normalisePath(b));
+
+	if (!ah && !bh) {
+		const ad = an?.updatedMs ?? 0;
+		const bd = bn?.updatedMs ?? 0;
+		if (ad !== bd) return bd - ad;
+		return String(a).localeCompare(String(b));
+	}
+	return String(an?.title || '').localeCompare(String(bn?.title || ''));
+};
+
+const walk = (parentPath: string, out: KbPageListItem[]) => {
+	const p = normalisePath(parentPath);
+	const kids = kidsByParent.get(p) || [];
+	const orderList = Array.isArray(treeOrder.parentChildren?.[p]) ? treeOrder.parentChildren[p]! : [];
+	const sorted = sortPathsWithOrder({ parentPath: p, paths: kids, order: orderList, fallbackCompare: fallbackCompare(p) }).ordered;
+	for (const child of sorted) {
+		if (itemByPath.has(child)) out.push(itemByPath.get(child)!);
+		if (hasChildren(child)) walk(child, out);
+	}
+};
+
+const ordered: KbPageListItem[] = [];
+for (const r of roots) walk(r, ordered);
+
+const seen = new Set(ordered.map((p) => normalisePath(p.path)));
+const remaining = allItems
+	.filter((p) => !seen.has(normalisePath(p.path)))
+	.sort((a, b) => {
+		const ad = updatedFor(a)?.getTime() ?? 0;
+		const bd = updatedFor(b)?.getTime() ?? 0;
+		if (ad !== bd) return bd - ad;
+		return String(b.id).localeCompare(String(a.id));
+	});
+
+const sorted = [...ordered, ...remaining];
+
+const defaultThumb = '/blog/hero-default.svg';
+const metaFor = (p: KbPageListItem) => metaById[String(p.id || '')] || metaById[normalisePath(p.path)] || null;
+const featuredFor = (p: KbPageListItem) => {
+	const url = metaFor(p)?.featuredImageUrl;
+	return typeof url === 'string' && url.trim() ? url.trim() : null;
+};
+const thumbFor = (p: KbPageListItem) =>
+	featuredFor(p) ?? (String(p.path || '').startsWith(newsPrefix) ? '/blog/hero-andalucia.svg' : '/blog/hero-costa-del-sol.svg');
+
+const responsiveFor = (src: string) => {
+	if (!/^https?:\/\//i.test(src)) return null;
+	const isUnsplash = /images\.unsplash\.com/i.test(src);
+	const isPexels = /images\.pexels\.com/i.test(src);
+	if (!isUnsplash && !isPexels) return null;
+	const u = new URL(src);
+	const widths = [480, 760, 1200];
+	const mk = (w: number, fm: 'avif' | 'webp' | 'jpg') => {
+		const h = Math.round((w * 630) / 1200);
+		const next = new URL(u.toString());
+		next.searchParams.set('fit', 'crop');
+		next.searchParams.set('w', String(w));
+		next.searchParams.set('h', String(h));
+		if (isPexels) {
+			next.searchParams.set('auto', 'compress');
+			next.searchParams.set('cs', 'tinysrgb');
+			next.searchParams.set('q', '65');
+			next.searchParams.set('fm', fm === 'jpg' ? 'jpg' : fm);
+		} else {
+			next.searchParams.set('q', '70');
+			next.searchParams.set('fm', fm === 'jpg' ? 'jpg' : fm);
+		}
+		return next.toString();
+	};
+	return {
+		sizes: '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 33vw',
+		avifSrcset: widths.map((w) => `${mk(w, 'avif')} ${w}w`).join(', '),
+		webpSrcset: widths.map((w) => `${mk(w, 'webp')} ${w}w`).join(', '),
+		jpgSrcset: widths.map((w) => `${mk(w, 'jpg')} ${w}w`).join(', '),
+		src: mk(760, 'jpg'),
+	};
+};
+
+const effectiveCategoryFor = (p: KbPageListItem) => {
+	const path = normalisePath(p.path);
+	let cur = path;
+	let parent = effectiveParent(cur);
+	while (parent && parent !== blogPrefix && parent !== newsPrefix) {
+		const next = effectiveParent(parent);
+		if (next === blogPrefix || next === newsPrefix) {
+			const t = nodes.get(parent)?.title;
+			return t ? String(t) : categoryFor(p);
+		}
+		cur = parent;
+		parent = next;
+	}
+	if (parent === newsPrefix) return 'General Information';
+	if (parent === blogPrefix) return 'Blog';
+	return categoryFor(p);
+};
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/blog/`;
+const pageDescription = 'News, insights, and updates for estate agents, buyers, and the PropertyList community.';
+const absUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : `${origin}${u.startsWith('/') ? u : `/${u}`}`);
+
+const categories = (() => {
+	const counts = new Map<string, number>();
+	for (const p of sorted) {
+		const c = effectiveCategoryFor(p);
+		counts.set(c, (counts.get(c) || 0) + 1);
+	}
+	const order = (c: string) => {
+		if (c === 'Blog') return 0;
+		if (c === 'General Information') return 1;
+		return 2;
+	};
+	return Array.from(counts.entries())
+		.sort((a, b) => {
+			const ao = order(a[0]);
+			const bo = order(b[0]);
+			if (ao !== bo) return ao - bo;
+			if (a[1] !== b[1]) return b[1] - a[1];
+			return a[0].localeCompare(b[0]);
+		})
+		.map(([label, count]) => ({ label, count }));
+})();
+
+const orgId = `${origin}/#organization`;
+const blogId = `${canonical}#blog`;
+const ldJson = JSON.stringify({
+	'@context': 'https://schema.org',
+	'@graph': [
+		{
+			'@type': 'Organization',
+			'@id': orgId,
+			name: 'PropertyList',
+			url: origin,
+			logo: {
+				'@type': 'ImageObject',
+				url: `${origin}/logo-black.png`,
+			},
+		},
+		{
+			'@type': 'WebSite',
+			'@id': `${origin}/#website`,
+			name: 'PropertyList Info Hub',
+			url: origin,
+			publisher: { '@id': orgId },
+			inLanguage: 'en-GB',
+		},
+		{
+			'@type': 'Blog',
+			'@id': blogId,
+			name: 'Blog',
+			url: canonical,
+			isPartOf: { '@id': `${origin}/#website` },
+			publisher: { '@id': orgId },
+			inLanguage: 'en-GB',
+		},
+		{
+			'@type': 'CollectionPage',
+			'@id': `${canonical}#webpage`,
+			name: 'Blog',
+			description: pageDescription,
+			url: canonical,
+			isPartOf: { '@id': `${origin}/#website` },
+			mainEntity: { '@id': `${canonical}#itemlist` },
+			inLanguage: 'en-GB',
+		},
+		{
+			'@type': 'BreadcrumbList',
+			'@id': `${canonical}#breadcrumbs`,
+			itemListElement: [
+				{
+					'@type': 'ListItem',
+					position: 1,
+					name: 'Home',
+					item: origin,
+				},
+				{
+					'@type': 'ListItem',
+					position: 2,
+					name: 'Blog',
+					item: canonical,
+				},
+			],
+		},
+		{
+			'@type': 'ItemList',
+			'@id': `${canonical}#itemlist`,
+			itemListOrder: 'https://schema.org/ItemListOrderDescending',
+			numberOfItems: Math.min(sorted.length, 200),
+			itemListElement: sorted.slice(0, 200).map((p, idx) => ({
+				'@type': 'ListItem',
+				position: idx + 1,
+				url: `${origin}${p.path}`,
+				name: p.title,
+			})),
+		},
+		...sorted.slice(0, 200).map((p) => {
+			const url = `${origin}${p.path}`;
+			const published = publishedFor(p);
+			const updated = updatedFor(p);
+			const section = effectiveCategoryFor(p);
+			return {
+				'@type': 'BlogPosting',
+				'@id': `${url}#blogposting`,
+				mainEntityOfPage: { '@id': url },
+				isPartOf: { '@id': blogId },
+				headline: p.title,
+				description: p.description || undefined,
+				url,
+				datePublished: published ? published.toISOString() : undefined,
+				dateModified: updated ? updated.toISOString() : undefined,
+				articleSection: section,
+				author: { '@id': orgId },
+				publisher: { '@id': orgId },
+				inLanguage: 'en-GB',
+				image: absUrl(thumbFor(p)),
+				keywords: section,
+			};
+		}),
+	],
+});
+---
+
+<Layout
+	lang="en"
+	title="Blog • PropertyList Info Hub"
+	description={pageDescription}
+	canonical={canonical}
+	ogImage={defaultThumb}
+	ogType="website"
+	twitterCard="summary_large_image"
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />
+
+	<header class="hero">
+		<div class="heroInner">
+			<div class="heroGrid">
+				<div class="heroText">
+					<div class="badge">Blog</div>
+					<h1>Blog</h1>
+					<p class="sub">News, insights, and updates from PropertyList.</p>
+					<div class="controls" aria-label="Blog filters">
+						<div class="filterRow">
+							<label class="filterLabel" for="blog-filter">Filter</label>
+							<div class="filterInputRow">
+								<input
+									id="blog-filter"
+									class="filterInput"
+									type="search"
+									autocomplete="off"
+									spellcheck="false"
+									placeholder="Search posts…"
+									aria-describedby="blog-results"
+								/>
+								<button class="clearBtn" type="button" data-clear hidden>Clear</button>
+							</div>
+						</div>
+						{categories.length ? (
+							<div class="catRow" aria-label="Categories">
+								<button class="catBtn" type="button" data-cat="all" aria-pressed="true">
+									All <span class="catCount">{sorted.length}</span>
+								</button>
+								{categories.map((c) => (
+									<button class="catBtn" type="button" data-cat={c.label.toLowerCase()} aria-pressed="false">
+										{c.label} <span class="catCount">{c.count}</span>
+									</button>
+								))}
+							</div>
+						) : null}
+						<p class="results" id="blog-results" aria-live="polite">
+							Showing {sorted.length} posts
+						</p>
+					</div>
+				</div>
+				<div class="heroMedia" aria-hidden="true">
+					<img
+						class="heroImg"
+						src={defaultThumb}
+						alt="PropertyList Blog cover image"
+						width="1200"
+						height="630"
+						loading="eager"
+						decoding="async"
+						fetchpriority="high"
+					/>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	{sorted.length ? (
+		<section aria-label="Blog posts">
+			<ul class="grid" role="list">
+				{sorted.map((p) => {
+					const cat = effectiveCategoryFor(p);
+					const published = publishedFor(p);
+					const updated = updatedFor(p);
+					const dateLabel = updated ? formatDate(updated) : null;
+					const dt = updated ? updated.toISOString() : null;
+					const thumb = thumbFor(p);
+					const responsive = responsiveFor(thumb);
+					const meta = metaFor(p);
+					const alt = (typeof meta?.featuredImageAlt === 'string' && meta.featuredImageAlt.trim() ? meta.featuredImageAlt.trim() : '') || `${cat} cover image`;
+					return (
+						<li>
+							<article
+								class="card"
+								data-post="1"
+								data-cat={cat.toLowerCase()}
+								data-label={`${p.title} ${cat}`.toLowerCase()}
+							>
+								<a class="thumbLink" href={p.path} aria-label={`Read: ${p.title}`}>
+									{responsive ? (
+										<picture>
+											<source type="image/avif" srcset={responsive.avifSrcset} sizes={responsive.sizes} />
+											<source type="image/webp" srcset={responsive.webpSrcset} sizes={responsive.sizes} />
+											<img
+												class="thumbImg"
+												src={responsive.src}
+												srcset={responsive.jpgSrcset}
+												sizes={responsive.sizes}
+												alt={alt}
+												width="1200"
+												height="630"
+												loading="lazy"
+												decoding="async"
+											/>
+										</picture>
+									) : (
+										<img
+											class="thumbImg"
+											src={thumb}
+											alt={alt}
+											width="1200"
+											height="630"
+											loading="lazy"
+											decoding="async"
+										/>
+									)}
+								</a>
+								<div class="cardBody">
+									<div class="metaRow">
+										<span class="chip">{cat}</span>
+										{dateLabel && dt ? (
+											<time class="date" datetime={dt}>
+												{dateLabel}
+											</time>
+										) : null}
+									</div>
+									<h2 class="title">
+										<a class="link" href={p.path}>
+											{p.title}
+										</a>
+									</h2>
+									{p.description ? <p class="desc">{p.description}</p> : null}
+									<div class="footer">
+										<a class="readMore" href={p.path}>
+											Read article
+										</a>
+										{published ? (
+											<span class="hint">
+												First published {formatDate(published)}
+											</span>
+										) : null}
+									</div>
+								</div>
+							</article>
+						</li>
+					);
+				})}
+			</ul>
+		</section>
+	) : (
+		<div class="empty">No blog posts yet.</div>
+	)}
+</Layout>
+
+<style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.heroGrid {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+		gap: 16px;
+		align-items: start;
+	}
+
+	.heroMedia {
+		display: grid;
+		border-radius: 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: rgba(255, 255, 255, 0.6);
+		overflow: hidden;
+		min-height: 180px;
+	}
+
+	.heroImg {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		aspect-ratio: 1200 / 630;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 8px 0 8px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	.sub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.75);
+		font-size: 16px;
+		line-height: 1.55;
+		max-width: 78ch;
+	}
+
+	.controls {
+		margin-top: 14px;
+		display: grid;
+		gap: 10px;
+		max-width: 74ch;
+	}
+
+	.filterLabel {
+		display: block;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.7);
+		margin: 0 0 4px;
+	}
+
+	.filterInputRow {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.filterInput {
+		width: min(520px, 100%);
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 10px;
+		padding: 9px 11px;
+		background: rgba(255, 255, 255, 0.9);
+	}
+
+	.filterInput:focus-visible {
+		outline: 3px solid rgba(var(--accent-rgb), 0.35);
+		outline-offset: 2px;
+	}
+
+	.clearBtn {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 10px;
+		padding: 9px 12px;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.82);
+	}
+
+	.clearBtn:focus-visible {
+		outline: 3px solid rgba(var(--accent-rgb), 0.35);
+		outline-offset: 2px;
+	}
+
+	.catRow {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.catBtn {
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.8);
+		border-radius: 999px;
+		padding: 7px 10px;
+		font-weight: 900;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.86);
+	}
+
+	.catBtn[aria-pressed='true'] {
+		border-color: rgba(var(--accent-rgb), 0.34);
+		background: rgba(var(--accent-rgb), 0.1);
+	}
+
+	.catBtn:focus-visible {
+		outline: 3px solid rgba(var(--accent-rgb), 0.35);
+		outline-offset: 2px;
+	}
+
+	.catCount {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 22px;
+		height: 18px;
+		padding: 0 6px;
+		border-radius: 999px;
+		background: rgba(16, 24, 40, 0.08);
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 12px;
+		font-weight: 900;
+	}
+
+	.results {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 13px;
+		font-weight: 800;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 12px;
+		align-items: start;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		display: grid;
+		min-width: 0;
+		overflow: hidden;
+		box-shadow: 0 1px 0 rgba(16, 24, 40, 0.03);
+		transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+	}
+
+	.card:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+		border-color: rgba(var(--accent-rgb), 0.22);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card {
+			transition: none;
+		}
+		.card:hover {
+			transform: none;
+		}
+	}
+
+	.thumbLink {
+		display: block;
+		background: rgba(16, 24, 40, 0.04);
+	}
+	.thumbLink picture {
+		display: block;
+	}
+
+	.thumbLink:focus-visible {
+		outline: 3px solid rgba(var(--accent-rgb), 0.35);
+		outline-offset: 3px;
+	}
+
+	.thumbImg {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 1200 / 630;
+		object-fit: cover;
+	}
+
+	.cardBody {
+		padding: 14px;
+		display: grid;
+		gap: 10px;
+	}
+
+	.metaRow {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		min-width: 0;
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 8px;
+		border-radius: 999px;
+		background: rgba(var(--accent-rgb), 0.08);
+		border: 1px solid rgba(var(--accent-rgb), 0.18);
+		color: rgba(16, 24, 40, 0.8);
+		font-weight: 900;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.date {
+		color: rgba(16, 24, 40, 0.62);
+		font-weight: 800;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.title {
+		margin: 0;
+		font-size: 16px;
+		letter-spacing: -0.01em;
+		line-height: 1.22;
+	}
+
+	.link {
+		color: rgba(16, 24, 40, 0.92);
+		text-decoration: none;
+	}
+
+	.link:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-decoration-color: rgba(var(--accent-rgb), 0.55);
+	}
+
+	.link:focus-visible {
+		outline: 3px solid rgba(var(--accent-rgb), 0.35);
+		outline-offset: 2px;
+		border-radius: 6px;
+	}
+
+	.desc {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+	}
+
+	.footer {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		padding-top: 10px;
+	}
+
+	.readMore {
+		color: var(--accent);
+		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.readMore:hover {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+	}
+
+	.hint {
+		color: rgba(16, 24, 40, 0.55);
+		font-size: 12px;
+		font-weight: 700;
+	}
+
+	.empty {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (max-width: 620px) {
+		.heroGrid {
+			grid-template-columns: 1fr;
+		}
+		.heroMedia {
+			order: -1;
+		}
+	}
+</style>
+
+<script is:inline>
+	(() => {
+		const init = () => {
+			const input = document.getElementById('blog-filter');
+			if (!(input instanceof HTMLInputElement)) return;
+			const posts = Array.from(document.querySelectorAll('[data-post="1"]'));
+			const results = document.getElementById('blog-results');
+			const clearBtn = document.querySelector('[data-clear]');
+			const catButtons = Array.from(document.querySelectorAll('[data-cat]'));
+			let activeCat = 'all';
+
+			const apply = () => {
+				const q = (input.value || '').trim().toLowerCase();
+				const wantsCat = (activeCat || 'all').toLowerCase();
+				let shown = 0;
+				if (!q) {
+					for (const p of posts) {
+						const cat = (p.getAttribute('data-cat') || '').toLowerCase();
+						const okCat = wantsCat === 'all' || cat === wantsCat;
+						p.hidden = !okCat;
+						if (okCat) shown++;
+					}
+				} else {
+					for (const p of posts) {
+						const label = (p.getAttribute('data-label') || '').toLowerCase();
+						const cat = (p.getAttribute('data-cat') || '').toLowerCase();
+						const okCat = wantsCat === 'all' || cat === wantsCat;
+						const okQ = label.includes(q);
+						p.hidden = !(okCat && okQ);
+						if (okCat && okQ) shown++;
+					}
+				}
+				if (results) results.textContent = 'Showing ' + shown + ' ' + (shown === 1 ? 'post' : 'posts');
+				if (clearBtn) clearBtn.hidden = !q;
+			};
+
+			input.addEventListener('input', apply, { passive: true });
+			if (clearBtn instanceof HTMLButtonElement) {
+				clearBtn.addEventListener('click', () => {
+					input.value = '';
+					input.focus();
+					apply();
+				});
+			}
+			for (const btn of catButtons) {
+				if (!(btn instanceof HTMLButtonElement)) continue;
+				btn.addEventListener('click', () => {
+					activeCat = String(btn.getAttribute('data-cat') || 'all');
+					for (const other of catButtons) {
+						if (other instanceof HTMLButtonElement) other.setAttribute('aria-pressed', other === btn ? 'true' : 'false');
+					}
+					apply();
+				});
+			}
+			apply();
+		};
+
+		if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+		else init();
+	})();
+</script>

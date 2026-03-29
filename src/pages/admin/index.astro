@@ -1,0 +1,173 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout lang="en" title="Admin • PropertyList Info Hub" description="Admin dashboard" canonical="https://info.propertylist.es/admin/">
+	<meta name="robots" content="noindex,nofollow" slot="head" />
+
+	<div class="shell">
+		<header class="topbar">
+			<div class="title">
+				<div class="badge">Admin</div>
+				<h1>Dashboard</h1>
+			</div>
+			<div class="actions">
+				<button id="logoutBtn" class="btnGhost" type="button">Sign out</button>
+			</div>
+		</header>
+
+		<section class="grid">
+			<a class="panel" href="/admin/blog">
+				<div class="panelTitle">Blog Posts</div>
+				<div class="panelSub">Create, edit, publish, and delete posts.</div>
+			</a>
+			<a class="panel" href="/admin/areas">
+				<div class="panelTitle">Andalucía Areas</div>
+				<div class="panelSub">Create and publish area pages under /andalucia/.</div>
+			</a>
+			<a class="panel" href="/admin/neighbourhood">
+				<div class="panelTitle">Neighbourhood Guides</div>
+				<div class="panelSub">Create and publish area guides under /neighbourhood/.</div>
+			</a>
+			<a class="panel" href="/admin/docs">
+				<div class="panelTitle">Documentation</div>
+				<div class="panelSub">Manage docs pages while preserving hierarchy.</div>
+			</a>
+			<a class="panel" href="/admin/audit">
+				<div class="panelTitle">Audit Trail</div>
+				<div class="panelSub">Review admin actions with timestamps.</div>
+			</a>
+		</section>
+
+		<section class="foot">
+			<div class="hint" id="sessionHint"></div>
+		</section>
+	</div>
+
+	<script is:inline>
+		const logoutBtn = document.getElementById('logoutBtn');
+		const hint = document.getElementById('sessionHint');
+
+		const fetchMe = async () => {
+			const res = await fetch('/api/admin/me').catch(() => null);
+			const data = res ? await res.json().catch(() => null) : null;
+			if (!data?.authenticated) return;
+			const exp = data.expiresAtMs ? new Date(data.expiresAtMs) : null;
+			hint.textContent = exp ? `Signed in as ${data.userId}. Session expires ${exp.toLocaleString()}.` : `Signed in as ${data.userId}.`;
+			window.__PL_ADMIN__ = { csrfToken: data.csrfToken || '' };
+		};
+
+		logoutBtn.addEventListener('click', async () => {
+			await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
+			location.href = '/admin/login';
+		});
+
+		fetchMe();
+	</script>
+</Layout>
+
+<style>
+	.shell {
+		display: grid;
+		gap: 14px;
+		padding: 10px 0 26px;
+	}
+
+	.topbar {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		padding: 14px;
+		border-radius: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: radial-gradient(1200px 600px at 20% -20%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.title h1 {
+		margin: 8px 0 0;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	.actions {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.btnGhost {
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		background: rgba(255, 255, 255, 0.8);
+		border-radius: 12px;
+		padding: 9px 11px;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		align-items: stretch;
+	}
+
+	.panel {
+		display: grid;
+		gap: 6px;
+		text-decoration: none;
+		color: inherit;
+		padding: 14px;
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.1);
+	}
+
+	.panelTitle {
+		font-weight: 950;
+		letter-spacing: -0.02em;
+	}
+
+	.panelSub {
+		color: rgba(16, 24, 40, 0.7);
+		line-height: 1.45;
+	}
+
+	.panel:hover {
+		border-color: rgba(0, 174, 154, 0.35);
+		box-shadow: 0 14px 40px rgba(16, 24, 40, 0.08);
+	}
+
+	.foot .hint {
+		color: rgba(16, 24, 40, 0.65);
+		font-size: 13px;
+	}
+
+	@media (max-width: 920px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 620px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

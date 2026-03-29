@@ -1,0 +1,162 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+export const prerender = false;
+
+const pathname = Astro.url?.pathname || '/';
+const isEs = pathname.startsWith('/es/');
+const lang = isEs ? 'es' : 'en';
+
+const title = isEs ? 'Página no encontrada • PropertyList Info Hub' : 'Page not found • PropertyList Info Hub';
+const description = isEs
+	? 'No pudimos encontrar esta página. Usa la búsqueda o vuelve al inicio.'
+	: 'We couldn’t find this page. Use search or go back home.';
+
+const canonical = `https://info.propertylist.es${pathname}`;
+const homeHref = isEs ? '/es/' : '/';
+const docsHref = isEs ? '/es/docs/' : '/docs/';
+const searchAction = isEs ? '/es/search' : '/search';
+---
+
+<Layout lang={lang} title={title} description={description} canonical={canonical} robots="noindex,follow">
+	<section class="wrap">
+		<div class="card">
+			<div class="badge">404</div>
+			<h1>{isEs ? 'Página no encontrada' : 'Page not found'}</h1>
+			<p class="lead">
+				{isEs
+					? 'Puede que el enlace esté desactualizado o que la página se haya movido.'
+					: 'The link may be outdated, or the page may have moved.'}
+			</p>
+
+			<form class="searchForm" method="get" action={searchAction} role="search">
+				<input
+					class="searchInput"
+					type="search"
+					name="q"
+					placeholder={isEs ? 'Buscar en la documentación…' : 'Search documentation…'}
+					aria-label={isEs ? 'Buscar' : 'Search'}
+					autocomplete="off"
+					spellcheck="false"
+				/>
+				<button class="searchBtn" type="submit">
+					{isEs ? 'Buscar' : 'Search'}
+				</button>
+			</form>
+
+			<div class="links">
+				<a class="btnPrimary" href={homeHref}>
+					{isEs ? 'Ir al inicio' : 'Go to home'}
+				</a>
+				<a class="btnSecondary" href={docsHref}>
+					{isEs ? 'Ver documentación' : 'Browse docs'}
+				</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.wrap {
+		display: flex;
+		justify-content: center;
+		padding: 18px 0;
+	}
+
+	.card {
+		width: min(680px, 100%);
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 22px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.06em;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+	}
+
+	.searchForm {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.searchInput {
+		flex: 1;
+		min-width: min(360px, 100%);
+		border-radius: 999px;
+		padding: 10px 14px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		background: rgba(255, 255, 255, 0.85);
+		font: inherit;
+	}
+
+	.searchInput:focus-visible {
+		outline: 2px solid rgba(0, 174, 154, 0.35);
+		outline-offset: 2px;
+	}
+
+	.searchBtn {
+		border-radius: 999px;
+		padding: 10px 14px;
+		border: 1px solid rgba(0, 0, 0, 0.12);
+		background: #00ae9a;
+		color: #00100e;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.links {
+		margin-top: 14px;
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		padding: 10px 14px;
+		text-decoration: none;
+		font-weight: 900;
+		letter-spacing: -0.01em;
+	}
+
+	.btnPrimary {
+		background: #00ae9a;
+		color: #00100e;
+		border: 1px solid rgba(0, 0, 0, 0.12);
+	}
+
+	.btnSecondary {
+		background: rgba(255, 255, 255, 0.85);
+		color: rgba(16, 24, 40, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+	}
+</style>
