@@ -158,6 +158,9 @@ const getSeasonalOgImage = () => {
 	// Easter: approximate (late March to mid April)
 	if (month === 3 && day >= 20) return "/og/og-easter.png";
 	if (month === 4 && day <= 15) return "/og/og-easter.png";
+	// Halloween: Oct 15 - Nov 2
+	if (month === 10 && day >= 15) return "/og/og-halloween.png";
+	if (month === 11 && day <= 2) return "/og/og-halloween.png";
 	return "/og/og-default.png";
 };
 const defaultOgImage = siteOrigin ? `${siteOrigin}${getSeasonalOgImage()}` : null;
