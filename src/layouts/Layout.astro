@@ -163,6 +163,20 @@ const getSeasonalOgImage = () => {
 	if (month === 11 && day <= 2) return "/og/og-halloween.png";
 	return "/og/og-default.png";
 };
+// Seasonal logo selection for header
+const getSeasonalLogo = () => {
+	const now = new Date();
+	const month = now.getMonth() + 1;
+	const day = now.getDate();
+	if ((month === 12 && day >= 1) || (month === 1 && day <= 6)) return "/og/logo-christmas.png";
+	if (month === 3 && day >= 15 && day <= 18) return "/og/logo-stpatricks.png";
+	if (month === 3 && day >= 20) return "/og/logo-easter.png";
+	if (month === 4 && day <= 15) return "/og/logo-easter.png";
+	if (month === 10 && day >= 15) return "/og/logo-halloween.png";
+	if (month === 11 && day <= 2) return "/og/logo-halloween.png";
+	return "/logo-black.png";
+};
+const seasonalLogo = getSeasonalLogo();
 const defaultOgImage = siteOrigin ? `${siteOrigin}${getSeasonalOgImage()}` : null;
 const effectiveOgImage = toAbsoluteUrl(ogImage) ?? defaultOgImage;
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
@@ -311,7 +325,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a class="brandLogoLink" href="https://propertylist.es/">
 								<img
 									class="brandLogo"
-									src="/logo-black.png"
+									src={seasonalLogo}
 									alt="PropertyList"
 									width="200"
 									height="40"
