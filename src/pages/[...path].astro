@@ -1457,7 +1457,7 @@ const fetchedPage =
 				title: manualBackfill.title,
 				description: manualBackfill.description,
 				body: manualBackfill.body,
-				seo_title: `${manualBackfill.title} • ${manualBackfill.seoTitleSuffix || 'PropertyList Info Hub'}`,
+				seo_title: `${manualBackfill.title} • ${manualBackfill.seoTitleSuffix || 'PropertyList'}`,
 				seo_description: manualBackfill.description,
 			}
 		: null);
@@ -1470,7 +1470,7 @@ const page = (() => {
 		return {
 			...fetchedPage,
 			title: fetchedPage.title || manualBackfill.title,
-			seo_title: (fetchedPage as any).seo_title || `${manualBackfill.title} • ${manualBackfill.seoTitleSuffix || 'PropertyList Info Hub'}`,
+			seo_title: (fetchedPage as any).seo_title || `${manualBackfill.title} • ${manualBackfill.seoTitleSuffix || 'PropertyList'}`,
 			body: fetchedFromDirectus ? fetchedPage.body : isEmptyish(fetchedPage.body) ? manualBackfill.body : fetchedPage.body,
 			description: fetchedPage.description || manualBackfill.description,
 			seo_description: (fetchedPage as any).seo_description || manualBackfill.description,
@@ -1619,7 +1619,11 @@ const cleanImportedBody = (html: string | null | undefined, path: string) => {
 		.replace(/<div\b[^>]*class=["'][^"']*\bdetails_cont\b[^"']*["'][\s\S]*?<\/div>/gi, '')
 		.replace(/<div\b[^>]*class=["'][^"']*\bdoc-btm\b[^"']*["'][\s\S]*?<\/div>/gi, '')
 		.replace(/<div\b[^>]*class=["'][^"']*\beazydocs-next-prev-wrap\b[^"']*["'][\s\S]*?<\/div>/gi, '')
-		.replace(/<section\b[^>]*id=["']comments?["'][\s\S]*?<\/section>/gi, '');
+		.replace(/<section\b[^>]*id=["']comments?["'][\s\S]*?<\/section>/gi, '')
+		// Strip WordPress AIO SEO / Yoast artifacts from imported body
+		.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '')
+		.replace(/<!--[\s\S]*?(?:All in One SEO|Yoast|Rank Math)[\s\S]*?-->/gi, '')
+		.replace(/<!--[\s\S]*?For Responsive Device[\s\S]*?-->/gi, '');
 
 	if (isDocsLike && !isBlogLike) {
 		out = out.replace(
