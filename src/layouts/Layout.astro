@@ -183,6 +183,23 @@ const getSeasonalLogo = () => {
 	if (month === 9 && day <= 15) return "/og/logo-summer.png";
 	return "/logo-black.png";
 };
+// Seasonal square icon for mobile header
+const getSeasonalIcon = () => {
+	const now = new Date();
+	const month = now.getMonth() + 1;
+	const day = now.getDate();
+	if ((month === 12 && day >= 1) || (month === 1 && day <= 6)) return "/og/icon-christmas.png";
+	if (month === 3 && day >= 15 && day <= 18) return "/og/icon-stpatricks.png";
+	if (month === 3 && day >= 20) return "/og/icon-easter.png";
+	if (month === 4 && day <= 15) return "/og/icon-easter.png";
+	if (month === 10 && day >= 15) return "/og/icon-halloween.png";
+	if (month === 11 && day <= 2) return "/og/icon-halloween.png";
+	if (month >= 6 && month <= 8) return "/og/icon-summer.png";
+	if (month === 6 && day >= 15) return "/og/icon-summer.png";
+	if (month === 9 && day <= 15) return "/og/icon-summer.png";
+	return "/og/icon-default.png";
+};
+const seasonalIcon = getSeasonalIcon();
 const seasonalLogo = getSeasonalLogo();
 const defaultOgImage = siteOrigin ? `${siteOrigin}${getSeasonalOgImage()}` : null;
 const effectiveOgImage = toAbsoluteUrl(ogImage) ?? defaultOgImage;
@@ -357,10 +374,19 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						<div class="brand">
 							<a class="brandLogoLink" href="https://propertylist.es/">
 								<img
-									class="brandLogo"
+									class="brandLogo brandLogo--wide"
 									src={seasonalLogo}
 									alt="PropertyList"
 									width="200"
+									height="40"
+									loading="eager"
+									decoding="async"
+								/>
+								<img
+									class="brandLogo brandLogo--icon"
+									src={seasonalIcon}
+									alt="PropertyList"
+									width="40"
 									height="40"
 									loading="eager"
 									decoding="async"
@@ -1571,9 +1597,15 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 	}
 
 	.brandLogo {
-		height: 70px;
 		width: auto;
 		display: block;
+	}
+	.brandLogo--wide {
+		height: 70px;
+	}
+	.brandLogo--icon {
+		height: 44px;
+		display: none;
 	}
 
 	.brandText {
@@ -1936,11 +1968,13 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		}
 	}
 
-	@media (max-width: 420px) {
-		.brandLogo {
-			height: 56px;
+	@media (max-width: 560px) {
+		.brandLogo--wide {
+			display: none;
 		}
-
+		.brandLogo--icon {
+			display: block;
+		}
 		.brandText {
 			display: none;
 		}
