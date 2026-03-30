@@ -294,7 +294,9 @@ gtag('consent', 'default', {
   analytics_storage: 'denied',
   ad_user_data: 'denied',
   ad_personalization: 'denied',
-  wait_for_update: 750
+  ads_data_redaction: true,
+  wait_for_update: 750,
+  region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','GB','IS','LI','NO']
 });
 try {
   var v = localStorage.getItem('pl_ga_consent') || '';
@@ -316,7 +318,31 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<script async src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`}></script>
 			</>
 		) : null}
-		{isAdminPath ? null : <script is:inline src="//code.tidio.co/4pmcnp7kmt1ew2g0x5rgmhiopejtxvv6.js" async></script>}
+		{isAdminPath ? null : <script is:inline>
+(function(){
+  function loadTidio(){
+    if (window.__tidioLoaded) return;
+    window.__tidioLoaded = true;
+    var s = document.createElement('script');
+    s.src = '//code.tidio.co/4pmcnp7kmt1ew2g0x5rgmhiopejtxvv6.js';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  try {
+    var c = localStorage.getItem('pl_ga_consent');
+    if (c === 'granted') { loadTidio(); return; }
+    if (!c) {
+      var orig = window.__origSetItem || localStorage.setItem;
+      var handler = function(key, val){
+        if (key === 'pl_ga_consent' && val === 'granted') loadTidio();
+        orig.call(localStorage, key, val);
+      };
+      window.__origSetItem = orig;
+      localStorage.setItem = handler;
+    }
+  } catch(e){}
+})();
+</script>}
 		<slot name="head" />
 		{hreflangLinks.map((h) => (
 			<link rel="alternate" hreflang={h.hreflang} href={h.href} />
