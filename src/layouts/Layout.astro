@@ -146,7 +146,22 @@ const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'in
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
 const effectiveOgType = String(ogType || '').trim() || 'website';
-const effectiveOgImage = toAbsoluteUrl(ogImage) ?? (siteOrigin ? `${siteOrigin}/logo-black.png` : null);
+// Seasonal OG image selection based on date
+const getSeasonalOgImage = () => {
+	const now = new Date();
+	const month = now.getMonth() + 1; // 1-12
+	const day = now.getDate();
+	// Christmas: Dec 1 - Jan 6
+	if ((month === 12 && day >= 1) || (month === 1 && day <= 6)) return "/og/og-christmas.png";
+	// St. Patrick's: Mar 15-18
+	if (month === 3 && day >= 15 && day <= 18) return "/og/og-stpatricks.png";
+	// Easter: approximate (late March to mid April)
+	if (month === 3 && day >= 20) return "/og/og-easter.png";
+	if (month === 4 && day <= 15) return "/og/og-easter.png";
+	return "/og/og-default.png";
+};
+const defaultOgImage = siteOrigin ? `${siteOrigin}${getSeasonalOgImage()}` : null;
+const effectiveOgImage = toAbsoluteUrl(ogImage) ?? defaultOgImage;
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
 	? twitterCard
 	: effectiveOgImage
