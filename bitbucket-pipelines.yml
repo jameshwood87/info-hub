@@ -1,0 +1,24 @@
+
+# This is a sample build configuration for JavaScript.
+# Check our docs at: https://confluence.atlassian.com/x/IYfoLQ for more examples.
+# A complete reference to all possible configuration options can be found at:
+# https://confluence.atlassian.com/x/ehO4DQ
+
+image: node:18.16.0
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Build and Deploy
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run build
+            # Deploy to the server via SSH (requires SSH key setup in Bitbucket repository settings)
+            # You'll need to configure an SSH key in Bitbucket Pipelines settings
+            # and add the public key to your 'propertylist' server's authorized_keys.
+            # Example rsync for deployment:
+            # - rsync -avz -e "ssh -i ~/.ssh/id_rsa_pipelines -o StrictHostKeyChecking=no" build/ user@your-server-ip:/path/to/app/
+            - echo "Deployment step placeholder. Please configure SSH keys in Bitbucket Pipelines settings."
