@@ -406,46 +406,51 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							</a>
 							<a class="brandText" href="https://propertylist.es/">{lang === 'es' ? 'Buscar Propiedades' : 'Search Properties'}</a>
 						</div>
-						<div class="navLinks">
-							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
-							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
-							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
+						<div class="navCenter">
+							<div class="navLinks">
+								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
+								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
+								<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
+							</div>
 						</div>
-						<button class="navSearchToggle" type="button" data-search-toggle aria-label={lang === 'es' ? 'Buscar' : 'Search'}>
-							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-						</button>
-						<form class="navSearch" method="get" action={lang === 'es' ? '/es/search' : '/search'} role="search" data-search-form hidden>
-							<svg class="navSearchIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-							<input
-								class="navSearchInput"
-								type="search"
-								name="q"
-								value={searchQ}
-								placeholder={lang === 'es' ? 'Buscar en la documentación' : 'Search documentation'}
-								aria-label={lang === 'es' ? 'Buscar' : 'Search'}
-								autocomplete="off"
-								spellcheck="false"
-								data-header-search
-								data-search-lang={lang === 'es' ? 'es' : 'en'}
-								data-search-prefix={lang === 'es' ? '/es/docs/' : '/docs/'}
-								data-search-page={lang === 'es' ? '/es/search' : '/search'}
-								role="combobox"
-								aria-autocomplete="list"
-								aria-expanded="false"
-								aria-controls="header-search-listbox"
-							/>
-							<button class="navSearchClose" type="button" data-search-close aria-label={lang === 'es' ? 'Cerrar' : 'Close'}>&times;</button>
-							<div class="navSearchMenu" data-header-search-menu hidden></div>
-						</form>
-						<div class="navLang" aria-label={lang === 'es' ? 'Idioma' : 'Language'}>
-							<button class="navLangToggle" type="button" data-lang-toggle>
-								<span class="navLangCurrent">{lang === 'es' ? 'ES' : 'EN'}</span>
-								<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 4.5L6 7.5L9 4.5"/></svg>
+						<div class="navRight">
+							<button class="navSearchToggle" type="button" data-search-toggle aria-label={lang === 'es' ? 'Buscar' : 'Search'}>
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 							</button>
-							<div class="navLangMenu" data-lang-menu hidden>
-								<a class:list={['navLangOption', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">EN</a>
-								<a class:list={['navLangOption', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">ES</a>
+							<form class="navSearch" method="get" action={lang === 'es' ? '/es/search' : '/search'} role="search" data-search-form hidden>
+								<svg class="navSearchIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+								<input
+									class="navSearchInput"
+									type="search"
+									name="q"
+									value={searchQ}
+									placeholder={lang === 'es' ? 'Buscar en la documentación' : 'Search documentation'}
+									aria-label={lang === 'es' ? 'Buscar' : 'Search'}
+									autocomplete="off"
+									spellcheck="false"
+									data-header-search
+									data-search-lang={lang === 'es' ? 'es' : 'en'}
+									data-search-prefix={lang === 'es' ? '/es/docs/' : '/docs/'}
+									data-search-page={lang === 'es' ? '/es/search' : '/search'}
+									role="combobox"
+									aria-autocomplete="list"
+									aria-expanded="false"
+									aria-controls="header-search-listbox"
+								/>
+								<button class="navSearchClose" type="button" data-search-close aria-label={lang === 'es' ? 'Cerrar' : 'Close'}>&times;</button>
+								<div class="navSearchMenu" data-header-search-menu hidden></div>
+							</form>
+							<a class="navSignup" href="https://agents.propertylist.es/register">{lang === 'es' ? 'Registrarse' : 'Sign Up'}</a>
+							<div class="navLang" aria-label={lang === 'es' ? 'Idioma' : 'Language'}>
+								<button class="navLangToggle" type="button" data-lang-toggle>
+									<span class="navLangCurrent">{lang === 'es' ? 'ES' : 'EN'}</span>
+									<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 4.5L6 7.5L9 4.5"/></svg>
+								</button>
+								<div class="navLangMenu" data-lang-menu hidden>
+									<a class:list={['navLangOption', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">EN</a>
+									<a class:list={['navLangOption', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">ES</a>
+								</div>
 							</div>
 						</div>
 							</a>
@@ -1554,9 +1559,98 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		margin: 0 auto;
 		padding: 8px max(18px, env(safe-area-inset-right)) 8px max(18px, env(safe-area-inset-left));
 		display: flex;
-		gap: 16px;
 		align-items: center;
-		justify-content: space-between;
+	}
+
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
+	}
+
+	.brandLogoLink {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.brandLogo {
+		width: auto;
+		display: block;
+	}
+
+	.brandLogo--wide {
+		height: 70px;
+	}
+
+	.brandLogo--icon {
+		height: 44px;
+		display: none;
+	}
+
+	.brandText {
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		color: rgba(11, 18, 32, 0.55);
+		font-size: 13px;
+		white-space: nowrap;
+		text-decoration: none;
+	}
+
+	.brandText:hover {
+		color: rgba(11, 18, 32, 0.8);
+		text-decoration: none;
+	}
+
+	.navCenter {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+	}
+
+	.navLinks {
+		display: flex;
+		gap: 24px;
+		font-weight: 700;
+		font-size: 14px;
+		color: rgba(11, 18, 32, 0.72);
+	}
+
+	.navLinks a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.navLinks a:hover {
+		color: rgba(11, 18, 32, 0.95);
+		text-decoration: none;
+	}
+
+	.navRight {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
+	}
+
+	.navSignup {
+		display: inline-flex;
+		align-items: center;
+		padding: 8px 16px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.9);
+		color: #fff;
+		font-weight: 800;
+		font-size: 13px;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: background 0.15s;
+	}
+
+	.navSignup:hover {
+		background: rgba(0, 174, 154, 1);
+		text-decoration: none;
+		color: #fff;
 	}
 
 	.main {
@@ -2101,6 +2195,16 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		}
 		.brandText {
 			display: none;
+		}
+		.navCenter {
+			display: none;
+		}
+		.navRight {
+			gap: 8px;
+		}
+		.navSignup {
+			font-size: 12px;
+			padding: 6px 12px;
 		}
 	}
 
