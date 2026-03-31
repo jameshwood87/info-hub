@@ -384,7 +384,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<header class="header">
 					<nav class="nav" aria-label="Primary">
 						<div class="brand">
-							<a class="brandLogoLink" href="https://propertylist.es/">
+							<a class="brandLogoLink" href={lang === 'es' ? '/es/' : '/'}>
 								<img
 									class="brandLogo brandLogo--wide"
 									src={seasonalLogo}
@@ -404,7 +404,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 									decoding="async"
 								/>
 							</a>
-							<a class="brandText" href={lang === 'es' ? '/es/' : '/'}>Info Hub</a>
+							<a class="brandText" href="https://propertylist.es/">{lang === 'es' ? 'Buscar Propiedades' : 'Search Properties'}</a>
 						</div>
 						<div class="navLinks">
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
