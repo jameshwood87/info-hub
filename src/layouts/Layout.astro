@@ -2024,6 +2024,89 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		font-weight: 700;
 	}
 
+	.authOverlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(11, 18, 32, 0.45);
+		backdrop-filter: blur(10px);
+		z-index: 60;
+		display: none !important;
+		place-items: center;
+		padding: 18px;
+		overflow-y: auto;
+	}
+
+	.authOverlay[data-open='1'] {
+		display: grid !important;
+	}
+
+	.authModal {
+		width: min(520px, 100%);
+		background: rgba(246, 248, 252, 0.92);
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		border-radius: 22px;
+		box-shadow: 0 18px 60px rgba(11, 18, 32, 0.18);
+		padding: 16px;
+		outline: none;
+		max-height: calc(100vh - 36px);
+		max-height: calc(100dvh - 36px);
+		overflow: auto;
+	}
+
+	.authModalHead {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.authModalTitle {
+		font-weight: 900;
+		letter-spacing: -0.02em;
+	}
+
+	.authModalClose {
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 999px;
+		padding: 8px 10px;
+		font-weight: 800;
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.authModalBody {
+		display: grid;
+		gap: 10px;
+	}
+
+	.authChoice {
+		display: grid;
+		gap: 4px;
+		padding: 14px 14px;
+		border-radius: 18px;
+		text-decoration: none;
+		border: 1px solid rgba(11, 18, 32, 0.1);
+		background: rgba(255, 255, 255, 0.75);
+		color: rgba(11, 18, 32, 0.92);
+	}
+
+	.authChoice:hover {
+		border-color: rgba(var(--accent-rgb), 0.35);
+		background: rgba(var(--accent-rgb), 0.06);
+	}
+
+	.authChoiceTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+	}
+
+	.authChoiceDesc {
+		color: rgba(11, 18, 32, 0.68);
+		font-weight: 700;
+	}
+
 	.lang {
 		display: inline-flex;
 		align-items: center;
