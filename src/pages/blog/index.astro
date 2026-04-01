@@ -22,6 +22,11 @@ const merged = (() => {
 	return [...byPath.values()];
 })();
 
+const stripSuffix = (s: string) =>
+	String(s || '')
+		.replace(/\s*(?:•|\||-|–)\s*PropertyList(?:\s+Info\s+Hub)?\s*$/i, '')
+		.trim();
+
 const asTime = (iso: string | null | undefined) => {
 	if (!iso) return null;
 	const ms = Date.parse(iso);
@@ -460,9 +465,9 @@ const ldJson = JSON.stringify({
 								class="card"
 								data-post="1"
 								data-cat={cat.toLowerCase()}
-								data-label={`${p.title} ${cat}`.toLowerCase()}
+								data-label={`${stripSuffix(p.title)} ${cat}`.toLowerCase()}
 							>
-								<a class="thumbLink" href={p.path} aria-label={`Read: ${p.title}`}>
+								<a class="thumbLink" href={p.path} aria-label={`Read: ${stripSuffix(p.title)}`}>
 									{responsive ? (
 										<picture>
 											<source type="image/avif" srcset={responsive.avifSrcset} sizes={responsive.sizes} />
@@ -502,7 +507,7 @@ const ldJson = JSON.stringify({
 									</div>
 									<h2 class="title">
 										<a class="link" href={p.path}>
-											{p.title}
+											{stripSuffix(p.title)}
 										</a>
 									</h2>
 									{p.description ? <p class="desc">{p.description}</p> : null}
