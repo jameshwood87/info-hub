@@ -692,8 +692,8 @@ const ldJson = JSON.stringify({
 
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 12px;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 16px;
 		align-items: start;
 		padding: 0;
 		margin: 0;
@@ -703,12 +703,12 @@ const ldJson = JSON.stringify({
 	.card {
 		background: rgba(255, 255, 255, 0.82);
 		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 18px;
+		border-radius: 16px;
 		display: grid;
 		min-width: 0;
 		overflow: hidden;
 		box-shadow: 0 1px 0 rgba(16, 24, 40, 0.03);
-		transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+		transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 	}
 
 	.card:hover {
@@ -748,9 +748,9 @@ const ldJson = JSON.stringify({
 	}
 
 	.cardBody {
-		padding: 14px;
+		padding: 16px;
 		display: grid;
-		gap: 10px;
+		gap: 12px;
 	}
 
 	.metaRow {
@@ -783,9 +783,9 @@ const ldJson = JSON.stringify({
 
 	.title {
 		margin: 0;
-		font-size: 16px;
+		font-size: 17px;
 		letter-spacing: -0.01em;
-		line-height: 1.22;
+		line-height: 1.25;
 	}
 
 	.link {
@@ -809,15 +809,21 @@ const ldJson = JSON.stringify({
 		margin: 0;
 		color: rgba(16, 24, 40, 0.72);
 		line-height: 1.55;
+		font-size: 14px;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.footer {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		justify-content: space-between;
 		gap: 10px;
-		border-top: 1px solid rgba(16, 24, 40, 0.08);
-		padding-top: 10px;
+		border-top: 1px solid rgba(16, 24, 40, 0.06);
+		padding-top: 12px;
+		margin-top: 4px;
 	}
 
 	.readMore {
