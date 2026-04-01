@@ -2892,6 +2892,10 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		text-decoration: underline;
 	}
 
+	.docTocList a:empty {
+		display: none;
+	}
+
 	.docContent {
 		font-size: 1rem;
 		line-height: 1.75;
@@ -3044,6 +3048,31 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		padding: 0;
 		font-size: inherit;
 		color: inherit;
+	}
+
+	.docContent table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 1.25em 0;
+		font-size: 0.95em;
+		line-height: 1.6;
+	}
+
+	.docContent th,
+	.docContent td {
+		padding: 0.75em 1em;
+		text-align: left;
+		border-bottom: 1px solid rgba(11, 18, 32, 0.1);
+	}
+
+	.docContent th {
+		font-weight: 800;
+		background: rgba(11, 18, 32, 0.04);
+		border-bottom-width: 2px;
+	}
+
+	.docContent tr:hover td {
+		background: rgba(11, 18, 32, 0.02);
 	}
 
 	.docArticles {
