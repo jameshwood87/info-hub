@@ -292,10 +292,19 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						<div class="brand">
 							<a class="brandLogoLink" href="https://propertylist.es/">
 								<img
-									class="brandLogo"
+									class="brandLogo brandLogo--wide"
 									src="/og/logo-easter.png"
 									alt="PropertyList"
 									width="200"
+									height="40"
+									loading="eager"
+									decoding="async"
+								/>
+								<img
+									class="brandLogo brandLogo--icon"
+									src="/og/icon-easter.png"
+									alt="PropertyList"
+									width="40"
 									height="40"
 									loading="eager"
 									decoding="async"
@@ -1511,6 +1520,11 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		display: block;
 	}
 
+	.brandLogo--icon {
+		height: 44px;
+		display: none;
+	}
+
 	.brandText {
 		font-weight: 900;
 		letter-spacing: -0.02em;
@@ -1895,8 +1909,12 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 	}
 
 	@media (max-width: 420px) {
-		.brandLogo {
-			height: 56px;
+		.brandLogo--wide {
+			display: none;
+		}
+
+		.brandLogo--icon {
+			display: block;
 		}
 
 		.brandText {
