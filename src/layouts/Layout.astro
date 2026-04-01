@@ -146,7 +146,7 @@ const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'in
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
 const effectiveOgType = String(ogType || '').trim() || 'website';
-const effectiveOgImage = toAbsoluteUrl(ogImage) ?? (siteOrigin ? `${siteOrigin}/logo-black.png` : null);
+const effectiveOgImage = toAbsoluteUrl(ogImage) ?? (siteOrigin ? `${siteOrigin}/og/logo-easter.png` : null);
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
 	? twitterCard
 	: effectiveOgImage
@@ -162,7 +162,7 @@ const organizationLd = siteOrigin
 			'@type': 'Organization',
 			name: 'PropertyList',
 			url: 'https://propertylist.es/',
-			logo: `${siteOrigin}/logo-black.png`,
+			logo: `${siteOrigin}/og/logo-easter.png`,
 		}
 	: null;
 
@@ -293,7 +293,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a class="brandLogoLink" href="https://propertylist.es/">
 								<img
 									class="brandLogo"
-									src="/logo-black.png"
+									src="/og/logo-easter.png"
 									alt="PropertyList"
 									width="200"
 									height="40"
@@ -1519,11 +1519,34 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 
 	.navLinks {
 		display: flex;
-		gap: 14px;
-		align-items: center;
-		flex-shrink: 0;
-		color: rgba(11, 18, 32, 0.76);
-		font-weight: 600;
+		gap: 36px;
+		font-weight: 700;
+		font-size: 14px;
+		color: rgba(11, 18, 32, 0.72);
+		white-space: nowrap;
+		margin-left: auto;
+	}
+
+	.navLinks a {
+		color: inherit;
+		text-decoration: none;
+		padding: 0 4px;
+	}
+
+	.navLinks a:hover {
+		color: rgba(11, 18, 32, 0.95);
+		text-decoration: none;
+	}
+
+	.navExternal {
+		color: rgba(0, 150, 136, 0.85) !important;
+		border-right: 1px solid rgba(11, 18, 32, 0.12);
+		padding-right: 18px !important;
+		margin-right: 8px;
+	}
+
+	.navExternal:hover {
+		color: rgba(0, 150, 136, 1) !important;
 	}
 
 	.navLang {
