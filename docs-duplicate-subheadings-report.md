@@ -1,0 +1,486 @@
+# Duplicate Subheading Audit (en)
+Generated: 2026-04-01T18:09:57.608Z
+Sources scanned:
+- src/data/mls-manual-archive.json
+- var/admin/versions/** (en docs only)
+
+## Findings (Within Page)
+
+### /docs/
+- Source: var/admin/versions/105/2026-02-16T23-56-44.827Z.json
+- Duplicate subheading: "' + noresult + '" (h5) — severity: high
+  - Occurrences: #7, #8
+
+### /docs/
+- Source: var/admin/versions/105/2026-02-18T15-32-02.167Z.json
+- Duplicate subheading: "' + noresult + '" (h5) — severity: high
+  - Occurrences: #7, #8
+
+### /docs/propertylist-mls-user-manual/contacts-crm/documents/upload-and-link-documents/
+- Source: var/admin/versions/559/2026-02-27T20-55-49.419Z.json
+- Duplicate paragraph text (exact) — severity: medium
+  - Snippet: "Efficient document management is crucial in high-level real estate. Whether you are handling confidential property details, legal contracts, or technical inspec…"
+  - Occurrences: #1, #2
+
+### /docs/propertylist-mls-user-manual/contacts-crm/documents/upload-and-link-documents/
+- Source: var/admin/versions/559/2026-02-27T20-56-20.400Z.json
+- Duplicate paragraph text (exact) — severity: medium
+  - Snippet: "Efficient document management is crucial in high-level real estate. Whether you are handling confidential property details, legal contracts, or technical inspec…"
+  - Occurrences: #1, #2
+
+### /docs/propertylist-mls-user-manual/privacy-policy/
+- Source: var/admin/versions/1160/2026-02-18T22-24-55.403Z.json
+- Duplicate subheading: "Legal Basis" (strong) — severity: high
+  - Occurrences: #2, #3
+
+### /docs/propertylist-mls-user-manual/privacy-policy/
+- Source: var/admin/versions/1160/2026-02-18T22-26-09.004Z.json
+- Duplicate subheading: "Legal Basis" (strong) — severity: high
+  - Occurrences: #2, #3
+
+### /docs/propertylist-mls-user-manual/privacy-policy/
+- Source: var/admin/versions/1160/2026-02-18T22-28-18.913Z.json
+- Duplicate subheading: "Legal Basis" (strong) — severity: high
+  - Occurrences: #2, #3
+
+## Findings (Across Pages)
+- Duplicate subheading: "Articles" (h4) — pages: 36 — severity: medium
+  - Pages: /docs/laws-procedures/building-a-property/, /docs/laws-procedures/building-a-property/construction-and-completion-10016/, /docs/laws-procedures/inheritance-laws-in-andalucia/, /docs/laws-procedures/property-insurance-in-andalucia/, /docs/laws-procedures/property-taxes-in-andalucia/, /docs/laws-procedures/renting-a-property-9964/, /docs/laws-procedures/renting-a-property-9964/landlords/, /docs/laws-procedures/renting-a-property-9964/short-term-holiday/, /docs/laws-procedures/traspaso-business-transfer/, /docs/propertylist-mls-manual-de-usuario/managing-listings/, /docs/propertylist-mls-user-manual/additional-resources/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/, /docs/propertylist-mls-user-manual/documents/, /docs/propertylist-mls-user-manual/export-listings/, /docs/propertylist-mls-user-manual/getting-started/, /docs/propertylist-mls-user-manual/how-to-use-contacts/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/integrations/export-listings/, /docs/propertylist-mls-user-manual/integrations/technical-documentation/, /docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/, /docs/propertylist-mls-user-manual/listing-a-property/, /docs/propertylist-mls-user-manual/managing-listings/, /docs/propertylist-mls-user-manual/managing-your-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/, /docs/propertylist-mls-user-manual/marketing-and-promotion/, /docs/propertylist-mls-user-manual/marketing/, /docs/propertylist-mls-user-manual/mls-user-manual/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/, /docs/propertylist-mls-user-manual/reports-and-statistics/, /docs/propertylist-mls-user-manual/requests/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/, /docs/propertylist-mls-user-manual/search/, /docs/propertylist-mls-user-manual/searching-for-properties/, /docs/propertylist-mls-user-manual/security/, /docs/propertylist-mls-user-manual/technical-documentation/, /docs/propertylist-mls-user-manual/your-account/
+- Duplicate subheading: "Guía en español próximamente" (h2) — pages: 53 — severity: medium
+  - Pages: /docs/propertylist-mls-user-manual/additional-resources/mls-support/, /docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/calendar/managing-your-schedule-and-tasks/, /docs/propertylist-mls-user-manual/contacts/add-professional-contacts-to-a-contact/, /docs/propertylist-mls-user-manual/contacts/adding-a-contact/, /docs/propertylist-mls-user-manual/contacts/assign-contact-to-an-agent/, /docs/propertylist-mls-user-manual/contacts/link-documents-to-a-contact/, /docs/propertylist-mls-user-manual/contacts/link-properties-to-contact/, /docs/propertylist-mls-user-manual/core-workflow/creating-a-new-listing/, /docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/, /docs/propertylist-mls-user-manual/core-workflow/import-properties/, /docs/propertylist-mls-user-manual/export-listings/export-listings-xml/, /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/export-listings-xml/, /docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/integrations/technical-docs/, /docs/propertylist-mls-user-manual/integrations/technical-documentation/, /docs/propertylist-mls-user-manual/integrations/technical-documentation/xml-export-structure/, /docs/propertylist-mls-user-manual/leads/convert-a-lead-into-a-contact/, /docs/propertylist-mls-user-manual/leads/direct-microsite-leads/, /docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/, /docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/, /docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/, /docs/propertylist-mls-user-manual/leads/mls-leads/, /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/listing-a-property/tips-for-creating-high-quality-property-listings/, /docs/propertylist-mls-user-manual/managing-listings/changing-property-status/, /docs/propertylist-mls-user-manual/managing-listings/editing-existing-listings/, /docs/propertylist-mls-user-manual/managing-listings/tracking-property-enquiries-leads/, /docs/propertylist-mls-user-manual/managing-your-schedule-and-tasks/, /docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-property-on-the-public-property-portal/, /docs/propertylist-mls-user-manual/marketing-and-portals/sync-all-mls-properties-to-your-website/, /docs/propertylist-mls-user-manual/marketing-and-portals/sync-listings-to-other-websites/, /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/, /docs/propertylist-mls-user-manual/marketing/microsite-share/, /docs/propertylist-mls-user-manual/mls-property-alerts/, /docs/propertylist-mls-user-manual/referrals/, …
+- Duplicate subheading: "Artículos" (h4) — pages: 30 — severity: medium
+  - Pages: /docs/laws-procedures/alquilar-una-vivienda-9964/, /docs/laws-procedures/construir-una-propiedad/, /docs/laws-procedures/derecho-de-sucesiones-en-andalucia/, /docs/laws-procedures/impuestos-de-bienes-inmuebles-en-andalucia/, /docs/laws-procedures/traspaso-de-empresas/, /docs/leyes-procedimientos/alquilar-una-vivienda-9964/, /docs/leyes-procedimientos/construir-una-propiedad/construccion-y-finalizacion-10016/, /docs/leyes-procedimientos/derecho-de-sucesiones-en-andalucia/, /docs/leyes-procedimientos/impuestos-de-bienes-inmuebles-en-andalucia/, /docs/leyes-procedimientos/traspaso-de-empresas/, /docs/propertylist-mls-manual-de-usuario/busqueda-de-propiedades/, /docs/propertylist-mls-manual-de-usuario/como-empezar/, /docs/propertylist-mls-manual-de-usuario/como-utilizar-el-calendario/, /docs/propertylist-mls-manual-de-usuario/documentos/, /docs/propertylist-mls-manual-de-usuario/gestionar-tus-clientes-potenciales/, /docs/propertylist-mls-manual-de-usuario/informes-y-estadisticas/, /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/, /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/, /docs/propertylist-mls-manual-de-usuario/publicar-una-propiedad/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automatizacion/, /docs/propertylist-mls-user-manual/como-empezar/, /docs/propertylist-mls-user-manual/como-utilizar-los-contactos/, /docs/propertylist-mls-user-manual/documentos/, /docs/propertylist-mls-user-manual/gestion-de-listados/, /docs/propertylist-mls-user-manual/gestionar-tus-clientes-potenciales/, /docs/propertylist-mls-user-manual/listados-de-exportacion/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/, /docs/propertylist-mls-user-manual/publicar-una-propiedad/, /docs/propertylist-mls-user-manual/seguimiento-de-la-cartera-de-ventas/, /docs/propertylist-mls-user-manual/seguridad/
+- Duplicate subheading: "PLEAE NOTE" (strong) — pages: 7 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts/link-documents-to-a-contact/, /docs/propertylist-mls-user-manual/how-to-use-contacts/link-documents-to-a-contact/, /docs/propertylist-mls-user-manual/how-to-use-contacts/link-properties-to-contact/, /docs/propertylist-mls-user-manual/security-and-compliance/, /docs/propertylist-mls-user-manual/security-and-compliance/data-protection-and-gdpr/, /docs/propertylist-mls-user-manual/security/, /docs/propertylist-mls-user-manual/security/complying-with-data-protection-regulations/
+- Duplicate subheading: "Overview" (h2) — pages: 23 — severity: medium
+  - Pages: /docs/developer/, /docs/getting-started/, /docs/legal/, /docs/propertylist-mls-user-manual/ai-automation/automations/, /docs/propertylist-mls-user-manual/contacts-crm/add-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/notes-and-history/, /docs/propertylist-mls-user-manual/credits/how-referrals-work/, /docs/propertylist-mls-user-manual/credits/how-to-use-and-earn-credits/, /docs/propertylist-mls-user-manual/credits/new-page/, /docs/propertylist-mls-user-manual/how-to-use-contacts/add-contact/, /docs/propertylist-mls-user-manual/how-to-use-contacts/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/how-to-use-contacts/assign-contact-to-agent/, /docs/propertylist-mls-user-manual/how-to-use-contacts/new-page/, /docs/propertylist-mls-user-manual/how-to-use-contacts/new-page/add-documents-to-contact/, /docs/propertylist-mls-user-manual/legal/, /docs/propertylist-mls-user-manual/managing-your-leads/managing-enquires/, /docs/propertylist-mls-user-manual/managing-your-leads/new-page/, /docs/propertylist-mls-user-manual/marketing-and-portals/featured-agency-homepage/, /docs/propertylist-mls-user-manual/microsite/, /docs/propertylist-mls-user-manual/new-page/, /docs/propertylist-mls-user-manual/realease-notes-and-roadmap/, /docs/propertylist-mls-user-manual/searching-and-alerts/
+- Duplicate subheading: "COMING SOON" (h3) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/managing-listings/generating-property-reports/, /docs/propertylist-mls-user-manual/reports-and-statistics/accessing-property-market-data/, /docs/propertylist-mls-user-manual/reports-and-statistics/identifying-market-trends/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/generating-progress-reports/
+- Duplicate subheading: "What are Portal Leads?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "The Pay-Per-Enquiry Advantage" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Meticulously Screened Leads" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "How to Leverage Portal Leads" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "– Coming Soon" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/requests/, /docs/propertylist-mls-user-manual/requests/agent-requests/, /docs/propertylist-mls-user-manual/requests/client-requests/
+- Duplicate subheading: "Easy Management of Portal Leads" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Regular Updates" (strong) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/export-listings-xml/, /docs/propertylist-mls-user-manual/integrations/export-listings/export-listings-xml/, /docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/listings/export-listings/
+- Duplicate subheading: "Backup" (strong) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/export-listings-xml/, /docs/propertylist-mls-user-manual/integrations/export-listings/export-listings-xml/, /docs/propertylist-mls-user-manual/integrations/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/listings/export-listings/
+- Duplicate subheading: "How Duplicate Properties Work on PropertyList.es" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/, /docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/, /docs/propertylist-mls-user-manual/listings/duplicate-properties/
+- Duplicate subheading: "1. Identifying Duplicates" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/, /docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/, /docs/propertylist-mls-user-manual/listings/duplicate-properties/
+- Duplicate subheading: "2. Selecting the Main Listing" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/, /docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/, /docs/propertylist-mls-user-manual/listings/duplicate-properties/
+- Duplicate subheading: "3. Reporting Duplicates" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/, /docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/, /docs/propertylist-mls-user-manual/listings/duplicate-properties/
+- Duplicate subheading: "4. MLS Duplicate Section" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/, /docs/propertylist-mls-user-manual/listing-a-property/duplicate-properties/, /docs/propertylist-mls-user-manual/listings/duplicate-properties/
+- Duplicate subheading: "Optimise Your Listings" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Respond Promptly" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Professional Communication" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Coming Soon" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/sharing-listings-social-media/, /docs/propertylist-mls-user-manual/microsite/sharing-listings-social-media/, /docs/propertylist-mls-user-manual/reports-and-statistics/
+- Duplicate subheading: "-COMING SOON-" (h3) — pages: 9 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/listings/generating-property-reports/, /docs/propertylist-mls-user-manual/managing-listings/generating-property-reports/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/generating-progress-reports/, /docs/propertylist-mls-user-manual/pipeline/generating-progress-reports/, /docs/propertylist-mls-user-manual/reports-and-statistics/accessing-property-market-data/, /docs/propertylist-mls-user-manual/reports-and-statistics/identifying-market-trends/, /docs/propertylist-mls-user-manual/reports/accessing-property-market-data/, /docs/propertylist-mls-user-manual/reports/identifying-market-trends/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/generating-progress-reports/
+- Duplicate subheading: "Powerful Reporting & Insights to Fuel Your Real Estate Success on PropertyList.es" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/reports-and-statistics/, /docs/propertylist-mls-user-manual/reports-statistics/, /docs/propertylist-mls-user-manual/reports/
+- Duplicate subheading: "COMING SOON" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/how-to-use-the-calendar/syncing-your-calendar-with-other-apps/, /docs/propertylist-mls-user-manual/reports-and-statistics/generating-market-reports/
+- Duplicate subheading: "How It Works" (h2) — pages: 5 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/documents/upload-ezd_ampersand-link-documents/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/, /docs/propertylist-mls-user-manual/documents/upload-ezd_ampersand-link-documents/, /docs/propertylist-mls-user-manual/reports-statistics/generating-property-reports/
+- Duplicate subheading: "Mastering Your Search on PropertyList.es" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/search/filters/, /docs/propertylist-mls-user-manual/searching-and-alerts/filters/, /docs/propertylist-mls-user-manual/searching-for-properties/filters/
+- Duplicate subheading: "Experiment with Filters" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/search/filters/, /docs/propertylist-mls-user-manual/searching-and-alerts/filters/, /docs/propertylist-mls-user-manual/searching-for-properties/filters/
+- Duplicate subheading: "Save Your Searches" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/search/filters/, /docs/propertylist-mls-user-manual/searching-and-alerts/filters/, /docs/propertylist-mls-user-manual/searching-for-properties/filters/
+- Duplicate subheading: "What if a client fills in the MicroSite Contact Form?" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/direct-microsite-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/new-page/direct-microsite-leads/
+- Duplicate subheading: "Learn what the MicroSite is and how to share MLS properties with clients here." (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/direct-microsite-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/new-page/direct-microsite-leads/
+- Duplicate subheading: "Targeted Audience" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Cost-Effective" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Qualified Leads" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Increased Lead Generation" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Get Noticed! Global Reach, Local Focus" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/, /docs/propertylist-mls-user-manual/marketing/feature-your-property-on-the-public-property-portal/
+- Duplicate subheading: "Here’s what you’ll enjoy:" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-property-alerts/, /docs/propertylist-mls-user-manual/search/property-alerts/, /docs/propertylist-mls-user-manual/searching-and-alerts/property-alerts/
+- Duplicate subheading: "Pipeline Tracking: Your Roadmap to Real Estate Success on PropertyList.es" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/
+- Duplicate subheading: "Smart Lead Management" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/microsite-share-properties-listings/, /docs/propertylist-mls-user-manual/microsite-share/, /docs/propertylist-mls-user-manual/microsite/microsite-share/
+- Duplicate subheading: "MicroSite Options:" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/microsite-share-properties-listings/, /docs/propertylist-mls-user-manual/microsite-share/, /docs/propertylist-mls-user-manual/microsite/microsite-share/
+- Duplicate subheading: "How to share properties:" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/microsite-share-properties-listings/, /docs/propertylist-mls-user-manual/microsite-share/, /docs/propertylist-mls-user-manual/microsite/microsite-share/
+- Duplicate subheading: "Show It First, Sell It Fast:" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Simple Steps to Featuring:" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "ONLY 20 SPOTS AVAILABLE PER TOWN!" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Enable Property Featuring for Staff Accounts" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Featured Listings" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Target Like a Pro" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Notifications" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Benefits of Featuring" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Increased Agent Visibility" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Psychological Recall" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Faster Sales" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Enhanced Reputation" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Bonus Tip" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Remember" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "Subscription Model Limitations" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing/feature-your-properties-on-the-mls/
+- Duplicate subheading: "How It Works:" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-automation/property-research-agent/
+- Duplicate subheading: "Elevate Your Agency with AI-Driven Property Reports" (h2) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/
+- Duplicate subheading: "Why Top Agents Can’t Do Without It" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/
+- Duplicate subheading: "Step-by-Step: From Click to Close" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/
+- Duplicate subheading: "Designed to Help You Sell" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/new-developments/, /docs/propertylist-mls-user-manual/searching-and-alerts/new-developments/
+- Duplicate subheading: "Free Access for Agents" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/new-developments/, /docs/propertylist-mls-user-manual/searching-and-alerts/new-developments/
+- Duplicate subheading: "Why Use PropertyList.es?" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/new-developments/, /docs/propertylist-mls-user-manual/searching-and-alerts/new-developments/
+- Duplicate subheading: "Export Listings XML" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/managing-listings/export-listings-xml/
+- Duplicate subheading: "Requirements" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/managing-listings/export-listings-xml/
+- Duplicate subheading: "Steps" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/managing-listings/export-listings-xml/
+- Duplicate subheading: "Notes" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/listings/export-listings-xml/, /docs/propertylist-mls-user-manual/managing-listings/export-listings-xml/
+- Duplicate subheading: "Stay in the loop with complete contact history!" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts/adding-a-contact/, /docs/propertylist-mls-user-manual/how-to-use-contacts/adding-a-contact/
+- Duplicate subheading: "– COMING SOON" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/, /docs/propertylist-mls-user-manual/marketing/feature-your-property-on-the-public-property-portal/
+- Duplicate subheading: "Benefits of Portal Leads" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "Never Miss the Perfect Property Again!" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-property-alerts/, /docs/propertylist-mls-user-manual/search/property-alerts/, /docs/propertylist-mls-user-manual/searching-and-alerts/property-alerts/
+- Duplicate subheading: "🚀 Step 1: Copy Your Unique Referral Link" (h2) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/credits/how-referrals-work/, /docs/propertylist-mls-user-manual/credits/referrals/, /docs/propertylist-mls-user-manual/referral-program-and-credits/, /docs/propertylist-mls-user-manual/referrals/
+- Duplicate subheading: "✅ Step 3: Approval & Tracking" (h2) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/credits/how-referrals-work/, /docs/propertylist-mls-user-manual/credits/referrals/, /docs/propertylist-mls-user-manual/referral-program-and-credits/, /docs/propertylist-mls-user-manual/referrals/
+- Duplicate subheading: "🎁 Step 4: Get Rewarded (Win-Win)" (h2) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/credits/how-referrals-work/, /docs/propertylist-mls-user-manual/credits/referrals/, /docs/propertylist-mls-user-manual/referral-program-and-credits/, /docs/propertylist-mls-user-manual/referrals/
+- Duplicate subheading: "Building Strong Client Relationships" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Using The Client Pipeline:" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Identify Engagement Opportunities" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Prioritise High-Value Clients" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Optimise Client Onboarding" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Stages" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Contacted" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Qualified" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Viewing" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Deposit Paid" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "WON" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "LOST" (strong) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/pipeline/how-to-use-pipeline/, /docs/propertylist-mls-user-manual/sales-pipeline-tracking/how-to-use-pipeline/
+- Duplicate subheading: "Checking Availability and Registering Your Client" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/search/scheduling-appointments-and-meetings/, /docs/propertylist-mls-user-manual/searching-and-alerts/scheduling-appointments-and-meetings/, /docs/propertylist-mls-user-manual/searching-for-properties/scheduling-appointments-and-meetings/
+- Duplicate subheading: "Unlock High-Quality Leads with PropertyList" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/portal-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/portal-leads/
+- Duplicate subheading: "PropertyList.es MLS & CRM: Frequently Asked Questions" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "Does Propertylist.es require a credit card to join?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "Is PropertyList.es free to use?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "What are the benefits of using PropertyList.es?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "What is an MLS & CRM?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "What is PropertyList.es?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "How can I access property market data on PropertyList.es?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "Can I link/add properties to a contact’s profile?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "How do I list a property on PropertyList.es?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "How can I assign a contact to a specific agent?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "Can I add professional contacts to a client’s profile?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "How do I sign up for PropertyList.es?" (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "Not signed up yet? Get a FREE account and connect with agents throughout Andalucía. Streamline collaboration and close more deals." (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/faq-mls-crm/, /docs/propertylist-mls-user-manual/faq-mls/
+- Duplicate subheading: "💬 Step 2: Share With the Right Agents" (h2) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/credits/how-referrals-work/, /docs/propertylist-mls-user-manual/credits/referrals/, /docs/propertylist-mls-user-manual/referral-program-and-credits/, /docs/propertylist-mls-user-manual/referrals/
+- Duplicate subheading: "Our Commitment to Your Privacy" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/security-and-compliance/data-protection-and-gdpr/, /docs/propertylist-mls-user-manual/security/complying-with-data-protection-regulations/
+- Duplicate subheading: "Changing your Password & Platform Language" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/mls-user-preferences/, /docs/propertylist-mls-user-manual/your-account/mls-user-preferences/
+- Duplicate subheading: "Notification Settings" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/mls-user-preferences/, /docs/propertylist-mls-user-manual/your-account/mls-user-preferences/
+- Duplicate subheading: "Creating Staff/Employee Accounts" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/how-to-setup-company-staff-accounts/, /docs/propertylist-mls-user-manual/your-account/how-to-setup-company-staff-accounts/
+- Duplicate subheading: "Staff Accounts" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/how-to-setup-company-staff-accounts/, /docs/propertylist-mls-user-manual/your-account/how-to-setup-company-staff-accounts/
+- Duplicate subheading: "Admin Accounts" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/how-to-setup-company-staff-accounts/, /docs/propertylist-mls-user-manual/your-account/how-to-setup-company-staff-accounts/
+- Duplicate subheading: "How to Set Up Property Alerts on PropertyList.es:" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-property-alerts/, /docs/propertylist-mls-user-manual/search/property-alerts/, /docs/propertylist-mls-user-manual/searching-and-alerts/property-alerts/
+- Duplicate subheading: "How PropertyList.es Can Fuel Your Lead Generation Engine" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/, /docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/
+- Duplicate subheading: "3 Tips to Turn Your PropertyList Listings into Lead Magnets" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/, /docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/
+- Duplicate subheading: "Click here to see video tutorials – COMING SOON" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/additional-resources/video-tutorials/, /docs/propertylist-mls-user-manual/support/video-tutorials/
+- Duplicate subheading: "How to Use the Calendar on PropertyList.es" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "Key Features" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "✅ Team Collaboration" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "✅ In-App Scheduling" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "✅ Centralised Schedule" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "✅ Admin Oversight" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "✅ Automated Reminders" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "✅ Calendar Sync (Coming Soon!)" (h4) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "Pro Tips" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "How to Create an Event:" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "Why Use It?" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/, /docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/
+- Duplicate subheading: "Navigating the MLS Dashboard" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/navigate-the-mls-dashboard-and-interface/, /docs/propertylist-mls-user-manual/your-account/navigate-the-mls-dashboard-and-interface/
+- Duplicate subheading: "Navigating the MLS Interface" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/navigate-the-mls-dashboard-and-interface/, /docs/propertylist-mls-user-manual/your-account/navigate-the-mls-dashboard-and-interface/
+- Duplicate subheading: "Edit Contact Info" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/update-account-information/, /docs/propertylist-mls-user-manual/your-account/update-account-information/
+- Duplicate subheading: "When an agent messages you about a specific property: (Check Availability)" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/leads/mls-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/mls-leads/
+- Duplicate subheading: "How accounts work?" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/how-to-setup-company-staff-accounts/, /docs/propertylist-mls-user-manual/your-account/how-to-setup-company-staff-accounts/
+- Duplicate subheading: "Revoking Access for an Individual Agent" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/how-to-setup-company-staff-accounts/, /docs/propertylist-mls-user-manual/your-account/how-to-setup-company-staff-accounts/
+- Duplicate subheading: "The PropertyList WP Plugin is all setup for you and automatically optimises every property for search engines, so your listings rank higher and attract more buyers—without any technical SEO work." (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "Quick Summary" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "1) Install the plugin" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "2) Add your XML feed" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "3) How imported properties behave" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "4) Use the premade page (fastest setup)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "5) Filtering & Shortcodes — show specific properties anywhere" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "6) Customisation (Settings tab)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "7) Analytics (click tracking)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "8) Recommended workflows (marketing-friendly)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "9) Troubleshooting & FAQs" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "Want to list high-quality properties instantly on your site?" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "11) Support & contact" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/export-listings/wp-plugin-customisable/, /docs/propertylist-mls-user-manual/integrations/export-listings/wp-plugin-customisable/
+- Duplicate subheading: "Tailor Communication Preferences:" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/mls-user-preferences/, /docs/propertylist-mls-user-manual/your-account/mls-user-preferences/
+- Duplicate subheading: "Configure Listing Preferences:" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/mls-user-preferences/, /docs/propertylist-mls-user-manual/your-account/mls-user-preferences/
+- Duplicate subheading: "Manage Lead Preferences:" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/mls-user-preferences/, /docs/propertylist-mls-user-manual/your-account/mls-user-preferences/
+- Duplicate subheading: "DASHBOARD - Coming Soon" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/navigate-the-mls-dashboard-and-interface/, /docs/propertylist-mls-user-manual/your-account/navigate-the-mls-dashboard-and-interface/
+- Duplicate subheading: "Muy pronto" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/informes-y-estadisticas/, /docs/propertylist-mls-user-manual/marketing-y-promocion/compartir-listas-redes-sociales/
+- Duplicate subheading: "-COMING SOON-" (h2) — pages: 5 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/calendar/syncing-your-calendar-with-other-apps/, /docs/propertylist-mls-user-manual/how-to-use-the-calendar/syncing-your-calendar-with-other-apps/, /docs/propertylist-mls-user-manual/reports-and-statistics/generating-market-reports/, /docs/propertylist-mls-user-manual/reports-statistics/generating-market-reports/, /docs/propertylist-mls-user-manual/reports/generating-market-reports/
+- Duplicate subheading: "-Coming Soon-" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/reports-and-statistics/, /docs/propertylist-mls-user-manual/reports-statistics/, /docs/propertylist-mls-user-manual/reports/
+- Duplicate subheading: "Our Referral Program is designed to be simple, transparent, and rewarding for everyone involved." (h3) — pages: 4 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/credits/how-referrals-work/, /docs/propertylist-mls-user-manual/credits/referrals/, /docs/propertylist-mls-user-manual/referral-program-and-credits/, /docs/propertylist-mls-user-manual/referrals/
+- Duplicate subheading: "Simple Steps to Featuring:" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-properties-on-the-mls/, /docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-property-on-the-public-property-portal/
+- Duplicate subheading: "-coming soon-" (h2) — pages: 3 — severity: low
+  - Pages: /docs/developers/, /docs/property-services/, /docs/public-portal/
+- Duplicate subheading: "Optimise Calendar Settings:" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/mls-user-manual/mls-user-preferences/, /docs/propertylist-mls-user-manual/your-account/mls-user-preferences/
+- Duplicate subheading: "PRÓXIMAMENTE" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/seguimiento-de-la-cartera-de-ventas/generar-informes-de-progreso/, /docs/propertylist-mls-user-manual/gestion-de-listados/generar-informes-de-propiedad/
+- Duplicate subheading: "Impuestos de Bienes Inmuebles en Andalucía: Guía rápida" (h3) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/impuestos-de-bienes-inmuebles-en-andalucia/, /docs/leyes-procedimientos/impuestos-de-bienes-inmuebles-en-andalucia/
+- Duplicate subheading: "¿Cómo funcionan las cuentas?" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/
+- Duplicate subheading: "Creando Cuentas de Personal/Empleados" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/
+- Duplicate subheading: "Revocar el acceso a un agente individual" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/
+- Duplicate subheading: "Cuentas del personal" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/
+- Duplicate subheading: "Admin Cuentas" (strong) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/como-crear-cuentas-de-personal-de-empresa/
+- Duplicate subheading: "Cambiar tu contraseña y el idioma de la plataforma" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/preferencias-del-usuario-mls/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/preferencias-del-usuario-mls/
+- Duplicate subheading: "Configuración de Notificaciones" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/preferencias-del-usuario-mls/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/preferencias-del-usuario-mls/
+- Duplicate subheading: "Personaliza tus Preferencias de Comunicación" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/preferencias-del-usuario-mls/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/preferencias-del-usuario-mls/
+- Duplicate subheading: "Configura tus Preferencias de Listado" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/preferencias-del-usuario-mls/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/preferencias-del-usuario-mls/
+- Duplicate subheading: "Gestiona tus Preferencias de Leads" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/preferencias-del-usuario-mls/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/preferencias-del-usuario-mls/
+- Duplicate subheading: "Optimizar la configuración del Calendario:" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/mls-manual-de-usuario/preferencias-del-usuario-mls/, /docs/propertylist-mls-user-manual/mls-manual-de-usuario/preferencias-del-usuario-mls/
+- Duplicate subheading: "¿Qué es PropertyList?" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/como-empezar/, /docs/propertylist-mls-user-manual/como-empezar/
+- Duplicate subheading: "Guía meticulosa del arrendador para alquilar una vivienda en España" (h3) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/alquilar-una-vivienda-9964/caseros/requisitos-para-los-caseros/, /docs/leyes-procedimientos/alquilar-una-vivienda-9964/caseros/requisitos-para-los-caseros/
+- Duplicate subheading: "El plugin WP PropertyList se configura por ti y optimiza automáticamente cada propiedad para los motores de búsqueda, de modo que tus anuncios se posicionan mejor y atraen a más compradores, sin ningún trabajo técnico de SEO." (h4) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "Resumen rápido" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "1) Instala el plugin" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "2) Añade tu feed XML" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "3) Cómo se comportan las propiedades importadas" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "4) Utiliza la página prefabricada (configuración más rápida)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "5) Filtrado y códigos cortos: muestra propiedades específicas en cualquier lugar" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "6) Personalización (pestaña Configuración)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "7) Analítica (seguimiento de clics)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "8) Flujos de trabajo recomendados (marketing-friendly)" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "9) Solución de problemas y preguntas frecuentes" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "¿Quieres publicar propiedades de alta calidad al instante en tu sitio web?" (h3) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "11) Asistencia y contacto" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/listados-de-exportacion/plugin-wp-personalizable/, /docs/propertylist-mls-user-manual/listados-de-exportacion/plugin-wp-personalizable/
+- Duplicate subheading: "Cómo funciona" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-manual-de-usuario/documentos/subir-ezd_ampersy-enlazar-documentos/, /docs/propertylist-mls-user-manual/documentos/subir-ezd_ampersy-enlazar-documentos/
+- Duplicate subheading: "See how it works here" (h3) — pages: 3 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/, /docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/
+- Duplicate subheading: "Estate Agents" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/listing-a-property-what-to-know/, /docs/laws-procedures/listing-a-property-what-to-know/estate-agents/
+- Duplicate subheading: "Owners" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/listing-a-property-what-to-know/, /docs/laws-procedures/listing-a-property-what-to-know/owners/
+- Duplicate subheading: "Obtaining a NIE" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/buying-a-property/legal-requirements/obtaining-a-nie/, /docs/laws-procedures/buying-a-property/obtaining-a-nie/
+- Duplicate subheading: "Paying taxes" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/buying-a-property/legal-requirements/paying-taxes/, /docs/laws-procedures/buying-a-property/paying-taxes/
+- Duplicate subheading: "Registering the Property in the Land Registry" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/buying-a-property/legal-requirements/registering-the-property-in-the-land-registry/, /docs/laws-procedures/buying-a-property/registering-the-property-in-the-land-registry/
+- Duplicate subheading: "Construction standards" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/building-a-property/construction-and-completion/construction-standards/, /docs/laws-procedures/building-a-property/construction-standards/
+- Duplicate subheading: "Additional Considerations" (h2) — pages: 3 — severity: low
+  - Pages: /docs/laws-procedures/inheritance-laws-in-andalucia/wills-and-testaments/, /docs/laws-procedures/property-insurance-in-andalucia/additional-considerations/, /docs/laws-procedures/traspaso-business-transfer/additional-considerations/
+- Duplicate subheading: "MLS LEADS" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/managing-listings/tracking-property-enquiries-leads/, /docs/propertylist-mls-user-manual/managing-your-leads/
+- Duplicate subheading: "You can connect a document to both properties and contacts to make organisation easy." (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "Listing a Property – Admin Tab:" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "When you’re listing a property, head over to the “Admin” tab. There, you’ll discover an option to upload documents related to that specific property. This is a convenient way to keep all relevant paperwork organised and accessible." (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "Contact Profiles – Attached Documents:" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "If you’re dealing with a specific contact (like a potential buyer or seller), you can find attached documents directly within their contact profile. Look for the “Attached Documents” section. It’s like having a virtual filing cabinet for each contact!" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "Remember, efficient document management is crucial in real estate. Whether it’s property details, contracts, or inspection reports, having everything neatly stored can save you time and headaches down the road." (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "Find out how to share your document easily here." (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/, /docs/propertylist-mls-user-manual/contacts-crm/link-properties-and-docs-to-a-contact/
+- Duplicate subheading: "Core Strategic Insights: What is Included?" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/reports-statistics/area-market-reports/, /docs/propertylist-mls-user-manual/reports-statistics/historical-trend-reports/
+- Duplicate subheading: "Additional Tips:" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/buying-a-property/, /docs/laws-procedures/property-insurance-in-andalucia/additional-considerations/
+- Duplicate subheading: "Marketing the property" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/selling-a-property/marketing-the-property/, /docs/laws-procedures/selling-a-property/the-selling-process/marketing-the-property/
+- Duplicate subheading: "Signing a contract & reservation" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/selling-a-property/signing-a-contract-and-reservation/, /docs/laws-procedures/selling-a-property/the-selling-process/signing-a-contract-and-reservation/
+- Duplicate subheading: "Taxes" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/selling-a-property/costs/taxes/, /docs/laws-procedures/selling-a-property/taxes/
+- Duplicate subheading: "Obtaining a licencia de obra (building permit)." (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renovating-a-property/obtaining-a-licencia-de-obra/, /docs/laws-procedures/renovating-a-property/planning-permission/obtaining-a-licencia-de-obra/
+- Duplicate subheading: "Inspections and compliance" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/building-a-property/inspections-and-compliance/, /docs/laws-procedures/building-a-property/obtaining-permits-and-approvals/inspections-and-compliance/
+- Duplicate subheading: "Completion and final inspections" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/building-a-property/completion-and-final-inspections/, /docs/laws-procedures/building-a-property/construction-and-completion/completion-and-final-inspections/
+- Duplicate subheading: "Types of tenancies" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renting-a-property/long-term/types-of-tenancies/, /docs/laws-procedures/renting-a-property/types-of-tenancies/
+- Duplicate subheading: "Tenancy agreements" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renting-a-property/long-term/tenancy-agreements/, /docs/laws-procedures/renting-a-property/tenancy-agreements/
+- Duplicate subheading: "Evictions" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renting-a-property/evictions/, /docs/laws-procedures/renting-a-property/long-term/evictions/
+- Duplicate subheading: "Community Approval Law" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renting-a-property/community-approval-law/, /docs/laws-procedures/renting-a-property/short-term-holiday/community-approval-law/
+- Duplicate subheading: "Requirements for Landlords" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renting-a-property/landlords/requirements-for-landlords/, /docs/laws-procedures/renting-a-property/requirements-for-landlords/
+- Duplicate subheading: "Taxes for Landlords" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/renting-a-property/landlords/taxes-for-landlords/, /docs/laws-procedures/renting-a-property/taxes-for-landlords/
+- Duplicate subheading: "Contractual obligations" (h2) — pages: 2 — severity: low
+  - Pages: /docs/laws-procedures/traspaso-business-transfer/additional-considerations/contractual-obligations/, /docs/laws-procedures/traspaso-business-transfer/contractual-obligations/
+- Duplicate subheading: "Ecosystem Access & The Malaga Waitlist" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-portals/new-page/, /docs/propertylist-mls-user-manual/marketing-and-portals/whatsapp-community-groups/
+- Duplicate subheading: "How to Bypass the Waitlist: \"Priority Access\"" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-portals/new-page/, /docs/propertylist-mls-user-manual/marketing-and-portals/whatsapp-community-groups/
+- Duplicate subheading: "Expanding the Grid: Request a New Area" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-portals/new-page/, /docs/propertylist-mls-user-manual/marketing-and-portals/whatsapp-community-groups/
+- Duplicate subheading: "Why Active Participation is Your Best Strategy" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-portals/new-page/, /docs/propertylist-mls-user-manual/marketing-and-portals/whatsapp-community-groups/
+- Duplicate subheading: "How to Get Started" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/marketing-and-portals/new-page/, /docs/propertylist-mls-user-manual/marketing-and-portals/whatsapp-community-groups/
+- Duplicate subheading: "PropertyList AI Property Reports is Live" (h2) — pages: 2 — severity: low
+  - Pages: /docs/propertylist-mls-user-manual/reports-statistics/generating-market-reports/, /docs/propertylist-mls-user-manual/reports/generating-market-reports/

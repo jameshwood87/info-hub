@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-27T20:05:06.966Z",
+  "generatedAt": "2026-04-01T18:09:52.242Z",
   "origin": "https://info.propertylist.es",
   "sitemap": {
     "url": "https://info.propertylist.es/sitemap.xml",
@@ -10,76 +10,27 @@
     "adminDocsUrls": 0
   },
   "counts": {
-    "sitemapDocsUrls": 317,
+    "sitemapDocsUrls": 307,
     "sitemapDuplicateGroups": 0,
-    "crawledPages": 395,
-    "reachableDocsPages": 395,
-    "orphanDocsPages": 57,
-    "redirectsSeen": 46,
+    "crawledPages": 400,
+    "reachableDocsPages": 400,
+    "orphanDocsPages": 3,
+    "redirectsSeen": 34,
     "brokenPagesSeen": 0,
     "brokenLinksSeen": 0
   },
   "sitemapDuplicates": [],
   "orphanDocsPages": [
     "/docs/mls-manual-de-usuario/",
-    "/es/docs/developers/",
-    "/es/docs/leyes-procedimientos/renting-a-property/taxes-for-landlords/",
-    "/es/docs/mls-manual-de-usuario/",
-    "/es/docs/property-services/",
-    "/es/docs/propertylist-mls-manual-de-usuario/ai-and-automation/ai-property-research-agent/",
-    "/es/docs/propertylist-mls-manual-de-usuario/calendar/managing-your-schedule-and-tasks/",
-    "/es/docs/propertylist-mls-manual-de-usuario/contacts/add-professional-contacts-to-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/contacts/adding-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/contacts/assign-contact-to-an-agent/",
-    "/es/docs/propertylist-mls-manual-de-usuario/contacts/link-documents-to-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/contacts/link-properties-to-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/export-listings/export-listings-xml/",
-    "/es/docs/propertylist-mls-manual-de-usuario/export-listings/wp-plugin-customisable/",
-    "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/add-professional-contacts-to-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/adding-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/assign-contact-to-agent/",
-    "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/assign-contact-to-an-agent/",
-    "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/link-documents-to-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/link-properties-to-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/integrations/",
-    "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/",
-    "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/export-listings-xml/",
-    "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/wp-plugin-customisable/",
-    "/es/docs/propertylist-mls-manual-de-usuario/integrations/listings/export-listings-xml/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/convert-a-lead-into-a-contact/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/direct-microsite-leads/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/how-propertylist-generates-direct-leads-for-you/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/mls-leads/",
-    "/es/docs/propertylist-mls-manual-de-usuario/leads/portal-leads/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/creating-a-new-listing/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/editing-existing-listings/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/export-listings-xml/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/export-listings/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/",
-    "/es/docs/propertylist-mls-manual-de-usuario/listings/tracking-property-enquiries-leads/",
-    "/es/docs/propertylist-mls-manual-de-usuario/managing-your-schedule-and-tasks/",
-    "/es/docs/propertylist-mls-manual-de-usuario/marketing/feature-your-properties-on-the-mls/",
-    "/es/docs/propertylist-mls-manual-de-usuario/marketing/feature-your-property-on-the-public-property-portal/",
-    "/es/docs/propertylist-mls-manual-de-usuario/marketing/microsite-share/",
-    "/es/docs/propertylist-mls-manual-de-usuario/marketing/sync-all-mls-properties-to-your-website/",
-    "/es/docs/propertylist-mls-manual-de-usuario/marketing/sync-listings-to-other-websites/",
-    "/es/docs/propertylist-mls-manual-de-usuario/marketing/tracking-listing-exposure/",
-    "/es/docs/propertylist-mls-manual-de-usuario/referrals/",
-    "/es/docs/propertylist-mls-manual-de-usuario/reports/accessing-property-market-data/",
-    "/es/docs/propertylist-mls-manual-de-usuario/reports/identifying-market-trends/",
-    "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/generating-progress-reports/",
-    "/es/docs/propertylist-mls-manual-de-usuario/search/",
-    "/es/docs/propertylist-mls-manual-de-usuario/search/filters/",
-    "/es/docs/propertylist-mls-manual-de-usuario/search/property-alerts/",
-    "/es/docs/propertylist-mls-manual-de-usuario/search/scheduling-appointments-and-meetings/"
+    "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/mls-leads/",
+    "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/portal-leads/"
   ],
   "redirects": [
+    {
+      "from": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/",
+      "status": 301,
+      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/direct-microsite-leads/"
+    },
     {
       "from": "/docs/laws-procedures/buying-a-property/obtaining-a-nie/",
       "status": 301,
@@ -166,14 +117,19 @@
       "to": "/docs/laws-procedures/traspaso-business-transfer/additional-considerations/contractual-obligations/"
     },
     {
-      "from": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/",
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/export-listings-xml/",
       "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/direct-microsite-leads/"
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/"
     },
     {
-      "from": "/docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/",
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/",
       "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/"
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/export-listings-xml/"
+    },
+    {
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/integrations/",
+      "status": 301,
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/export-listings-xml/"
     },
     {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/",
@@ -181,39 +137,19 @@
       "to": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/"
     },
     {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/sharing-listings-social-media/",
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/search/",
       "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/sharing-listings-social-media/"
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/search/filters/"
     },
     {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/feature-your-property-on-the-public-property-portal/",
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-and-automation/ai-property-research-agent/",
       "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/feature-your-property-on-the-public-property-portal/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/mls-user-manual/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/"
-    },
-    {
-      "from": "/docs/laws-procedures/traspaso-business-transfer/additional-considerations/contractual-obligations/",
-      "status": 301,
-      "to": "/docs/laws-procedures/traspaso-business-transfer/additional-considerations/"
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/"
     },
     {
       "from": "/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/import-properties/",
       "status": 301,
       "to": "/docs/propertylist-mls-user-manual/core-workflow/import-properties/"
-    },
-    {
-      "from": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/"
     },
     {
       "from": "/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/duplicate-properties/",
@@ -236,64 +172,9 @@
       "to": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/"
     },
     {
-      "from": "/docs/propertylist-mls-user-manual/reports-and-statistics/accessing-property-market-data/",
+      "from": "/docs/laws-procedures/traspaso-business-transfer/additional-considerations/contractual-obligations/",
       "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/reports-statistics/accessing-property-market-data/"
-    },
-    {
-      "from": "/docs/propertylist-mls-user-manual/reports-and-statistics/identifying-market-trends/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/reports-statistics/identifying-market-trends/"
-    },
-    {
-      "from": "/docs/propertylist-mls-user-manual/additional-resources/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/support/"
-    },
-    {
-      "from": "/docs/propertylist-mls-user-manual/marketing-and-promotion/feature-your-property-on-the-public-property-portal/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-property-on-the-public-property-portal/"
-    },
-    {
-      "from": "/docs/propertylist-mls-user-manual/integrations/technical-documentation/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/technical-documentation/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/export-listings-xml/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/sharing-listings-social-media/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/microsite/sharing-listings-social-media/"
-    },
-    {
-      "from": "/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/how-to-use-pipeline/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/creating-a-new-listing/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/new-page/direct-microsite-leads/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/direct-microsite-leads/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/ai-property-research-agent/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/"
+      "to": "/docs/laws-procedures/traspaso-business-transfer/additional-considerations/"
     },
     {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/additional-resources/mls-support/",
@@ -301,871 +182,27 @@
       "to": "/es/docs/propertylist-mls-manual-de-usuario/support/mls-support/"
     },
     {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/integrations/technical-documentation/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/technical-documentation/"
-    },
-    {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/feature-your-properties-on-the-mls/",
       "status": 301,
       "to": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/feature-your-properties-on-the-mls/"
+    },
+    {
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/creating-a-new-listing/",
+      "status": 301,
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/"
+    },
+    {
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/",
+      "status": 301,
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/property-research-agent/"
     }
   ],
   "brokenPages": [],
   "brokenLinks": [],
   "qa": {
-    "esLocaleLinkViolations": [
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-the-calendar/",
-        "to": "/docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/building-a-property/construction-and-completion/completion-and-final-inspections/",
-        "to": "/docs/laws-procedures/building-a-property/construction-and-completion/completion-and-final-inspections/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/building-a-property/construction-and-completion/construction-standards/",
-        "to": "/docs/laws-procedures/building-a-property/construction-and-completion/construction-standards/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/building-a-property/construction-and-completion/",
-        "to": "/docs/laws-procedures/building-a-property/construction-and-completion/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/building-a-property/obtaining-permits-and-approvals/inspections-and-compliance/",
-        "to": "/docs/laws-procedures/building-a-property/obtaining-permits-and-approvals/inspections-and-compliance/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/building-a-property/planning-and-design/",
-        "to": "/docs/laws-procedures/building-a-property/planning-and-design/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/registering-the-property-in-the-land-registry/",
-        "to": "/docs/laws-procedures/buying-a-property/legal-requirements/registering-the-property-in-the-land-registry/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/obtaining-a-nie/",
-        "to": "/docs/laws-procedures/buying-a-property/legal-requirements/obtaining-a-nie/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/paying-taxes/",
-        "to": "/docs/laws-procedures/buying-a-property/legal-requirements/paying-taxes/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/",
-        "to": "/docs/laws-procedures/buying-a-property/legal-requirements/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/buying-a-property/verifying-documents-and-debts/",
-        "to": "/docs/laws-procedures/buying-a-property/verifying-documents-and-debts/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/buying-a-property/",
-        "to": "/docs/laws-procedures/buying-a-property/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/inheritance-laws-in-andalucia/inheritance-tax-impuesto-sobre-sucesiones-y-donaciones/",
-        "to": "/docs/laws-procedures/inheritance-laws-in-andalucia/inheritance-tax-impuesto-sobre-sucesiones-y-donaciones/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/inheritance-laws-in-andalucia/forced-heirship-rules-legitima/",
-        "to": "/docs/laws-procedures/inheritance-laws-in-andalucia/forced-heirship-rules-legitima/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/inheritance-laws-in-andalucia/wills-and-testaments/",
-        "to": "/docs/laws-procedures/inheritance-laws-in-andalucia/wills-and-testaments/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/listing-a-property-what-to-know/owners/",
-        "to": "/docs/laws-procedures/listing-a-property-what-to-know/owners/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/listing-a-property-what-to-know/estate-agents/",
-        "to": "/docs/laws-procedures/listing-a-property-what-to-know/estate-agents/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/listing-a-property-what-to-know/",
-        "to": "/docs/laws-procedures/listing-a-property-what-to-know/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/shopping-for-insurance/",
-        "to": "/docs/laws-procedures/property-insurance-in-andalucia/shopping-for-insurance/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/factors-influencing-premiums/",
-        "to": "/docs/laws-procedures/property-insurance-in-andalucia/factors-influencing-premiums/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/additional-considerations/",
-        "to": "/docs/laws-procedures/property-insurance-in-andalucia/additional-considerations/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/types-of-property-insurance/",
-        "to": "/docs/laws-procedures/property-insurance-in-andalucia/types-of-property-insurance/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/",
-        "to": "/docs/laws-procedures/property-insurance-in-andalucia/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-el-valor-anadido-iva/",
-        "to": "/docs/laws-procedures/property-taxes-in-andalucia/impuesto-sobre-el-valor-anadido-iva/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-transmisiones-patrimoniales-itp/",
-        "to": "/docs/laws-procedures/property-taxes-in-andalucia/impuesto-sobre-transmisiones-patrimoniales-itp/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-construcciones-instalaciones-y-obras-icio/",
-        "to": "/docs/laws-procedures/property-taxes-in-andalucia/impuesto-sobre-construcciones-instalaciones-y-obras-icio/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renovating-a-property/taxes-for-renovating/",
-        "to": "/docs/laws-procedures/renovating-a-property/taxes-for-renovating/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renovating-a-property/hiring-a-contractor/",
-        "to": "/docs/laws-procedures/renovating-a-property/hiring-a-contractor/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renovating-a-property/cost-calculations/",
-        "to": "/docs/laws-procedures/renovating-a-property/cost-calculations/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renovating-a-property/planning-permission/obtaining-a-licencia-de-obra/",
-        "to": "/docs/laws-procedures/renovating-a-property/planning-permission/obtaining-a-licencia-de-obra/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renovating-a-property/planning-permission/",
-        "to": "/docs/laws-procedures/renovating-a-property/planning-permission/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renovating-a-property/",
-        "to": "/docs/laws-procedures/renovating-a-property/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/landlords/requirements-for-landlords/",
-        "to": "/docs/laws-procedures/renting-a-property/landlords/requirements-for-landlords/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/landlords/taxes-for-landlords/",
-        "to": "/docs/laws-procedures/renting-a-property/landlords/taxes-for-landlords/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/landlords/",
-        "to": "/docs/laws-procedures/renting-a-property/landlords/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/",
-        "to": "/docs/laws-procedures/renting-a-property/short-term-holiday/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/community-approval-law/",
-        "to": "/docs/laws-procedures/renting-a-property/short-term-holiday/community-approval-law/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/long-term/evictions/",
-        "to": "/docs/laws-procedures/renting-a-property/long-term/evictions/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/long-term/tenancy-agreements/",
-        "to": "/docs/laws-procedures/renting-a-property/long-term/tenancy-agreements/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/renting-a-property/long-term/types-of-tenancies/",
-        "to": "/docs/laws-procedures/renting-a-property/long-term/types-of-tenancies/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/selling-a-property/costs/taxes/",
-        "to": "/docs/laws-procedures/selling-a-property/costs/taxes/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/selling-a-property/the-selling-process/signing-a-contract-and-reservation/",
-        "to": "/docs/laws-procedures/selling-a-property/the-selling-process/signing-a-contract-and-reservation/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/selling-a-property/",
-        "to": "/docs/laws-procedures/selling-a-property/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/traspaso-business-transfer/essentials-of-a-traspaso-agreement/",
-        "to": "/docs/laws-procedures/traspaso-business-transfer/essentials-of-a-traspaso-agreement/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/traspaso-business-transfer/understanding-the-traspaso-concept/",
-        "to": "/docs/laws-procedures/traspaso-business-transfer/understanding-the-traspaso-concept/"
-      },
-      {
-        "from": "/es/docs/leyes-procedimientos/traspaso-business-transfer/",
-        "to": "/docs/laws-procedures/traspaso-business-transfer/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/automations/",
-        "to": "/docs/propertylist-mls-user-manual/ai-automation/automations/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/",
-        "to": "/docs/propertylist-mls-user-manual/ai-automation/ai-property-research-agent/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/add-contact/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/add-contact/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/notes-and-history/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/notes-and-history/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/documents/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/documents/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/documents/share-documents/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/documents/share-documents/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/documents/upload-ezd_ampersand-link-documents/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/documents/upload-ezd_ampersand-link-documents/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/add-professional-contact-to-contact/",
-        "to": "/docs/propertylist-mls-user-manual/contacts-crm/add-professional-contact-to-contact/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/",
-        "to": "/docs/propertylist-mls-user-manual/core-workflow/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/duplicate-properties/",
-        "to": "/docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/import-properties/",
-        "to": "/docs/propertylist-mls-user-manual/core-workflow/import-properties/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/",
-        "to": "/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/tips-for-creating-high-quality-property-listings/",
-        "to": "/docs/propertylist-mls-user-manual/core-workflow/tips-for-creating-high-quality-property-listings/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/credits/how-referrals-work/",
-        "to": "/docs/propertylist-mls-user-manual/credits/how-referrals-work/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/credits/how-to-use-and-earn-credits/",
-        "to": "/docs/propertylist-mls-user-manual/credits/how-to-use-and-earn-credits/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/getting-started/video-tour/",
-        "to": "/docs/propertylist-mls-user-manual/getting-started/video-tour/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/getting-started/5-things-to-do-first/",
-        "to": "/docs/propertylist-mls-user-manual/getting-started/5-things-to-do-first/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/getting-started/desktop-and-mobile-friendly/",
-        "to": "/docs/propertylist-mls-user-manual/getting-started/desktop-and-mobile-friendly/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/getting-started/sign-up-first-steps/",
-        "to": "/docs/propertylist-mls-user-manual/getting-started/sign-up-first-steps/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/getting-started/what-is-propertylist/",
-        "to": "/docs/propertylist-mls-user-manual/getting-started/what-is-propertylist/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/convert-a-lead-into-a-contact/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/convert-a-lead-into-a-contact/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/how-propertylist-generates-direct-leads-for-you/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/direct-microsite-leads/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/direct-microsite-leads/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/mls-leads/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/mls-leads/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/managing-enquires/",
-        "to": "/docs/propertylist-mls-user-manual/managing-your-leads/managing-enquires/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/legal/",
-        "to": "/docs/propertylist-mls-user-manual/legal/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/",
-        "to": "/docs/propertylist-mls-user-manual/legal/privacy-policy/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/",
-        "to": "/docs/propertylist-mls-user-manual/legal/terms-conditions/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/changing-property-status/",
-        "to": "/docs/propertylist-mls-user-manual/managing-listings/changing-property-status/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/editing-existing-listings/",
-        "to": "/docs/propertylist-mls-user-manual/managing-listings/editing-existing-listings/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/managing-listings/private-listings/",
-        "to": "/docs/propertylist-mls-user-manual/managing-listings/private-listings/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/feature-your-properties-on-the-mls/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-properties-on-the-mls/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/feature-your-property-on-the-public-property-portal/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/feature-your-property-on-the-public-property-portal/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/featured-agency-homepage/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/featured-agency-homepage/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/sync-all-mls-properties-to-your-website/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/sync-all-mls-properties-to-your-website/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/sync-listings-to-other-websites/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/sync-listings-to-other-websites/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/whatsapp-community-groups/",
-        "to": "/docs/propertylist-mls-user-manual/marketing-and-portals/whatsapp-community-groups/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/microsite/",
-        "to": "/docs/propertylist-mls-user-manual/microsite/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/microsite/microsite-share/",
-        "to": "/docs/propertylist-mls-user-manual/microsite/microsite-share/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/microsite/sharing-listings-social-media/",
-        "to": "/docs/propertylist-mls-user-manual/microsite/sharing-listings-social-media/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/realease-notes-and-roadmap/",
-        "to": "/docs/propertylist-mls-user-manual/realease-notes-and-roadmap/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/realease-notes-and-roadmap/new-features-roadmap/",
-        "to": "/docs/propertylist-mls-user-manual/realease-notes-and-roadmap/new-features-roadmap/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/",
-        "to": "/docs/propertylist-mls-user-manual/reports-statistics/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/accessing-property-market-data/",
-        "to": "/docs/propertylist-mls-user-manual/reports-statistics/accessing-property-market-data/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/generating-market-reports/",
-        "to": "/docs/propertylist-mls-user-manual/reports-statistics/generating-market-reports/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/generating-property-reports/",
-        "to": "/docs/propertylist-mls-user-manual/reports-statistics/generating-property-reports/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/identifying-market-trends/",
-        "to": "/docs/propertylist-mls-user-manual/reports-statistics/identifying-market-trends/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/",
-        "to": "/docs/propertylist-mls-user-manual/pipeline-and-tasks/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/pipeline/",
-        "to": "/docs/propertylist-mls-user-manual/pipeline-and-tasks/pipeline/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/how-to-use-the-calendar/",
-        "to": "/docs/propertylist-mls-user-manual/pipeline-and-tasks/how-to-use-the-calendar/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/managing-your-schedule-and-tasks/",
-        "to": "/docs/propertylist-mls-user-manual/pipeline-and-tasks/managing-your-schedule-and-tasks/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/syncing-your-calendar-with-other-apps/",
-        "to": "/docs/propertylist-mls-user-manual/pipeline-and-tasks/syncing-your-calendar-with-other-apps/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/searching-and-alerts/",
-        "to": "/docs/propertylist-mls-user-manual/searching-and-alerts/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/searching-and-alerts/scheduling-appointments-and-meetings/",
-        "to": "/docs/propertylist-mls-user-manual/searching-and-alerts/scheduling-appointments-and-meetings/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/searching-and-alerts/filters/",
-        "to": "/docs/propertylist-mls-user-manual/searching-and-alerts/filters/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/searching-and-alerts/property-alerts/",
-        "to": "/docs/propertylist-mls-user-manual/searching-and-alerts/property-alerts/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/searching-and-alerts/new-developments/",
-        "to": "/docs/propertylist-mls-user-manual/searching-and-alerts/new-developments/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/security-and-compliance/",
-        "to": "/docs/propertylist-mls-user-manual/security-and-compliance/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/security-and-compliance/data-protection-and-gdpr/",
-        "to": "/docs/propertylist-mls-user-manual/security-and-compliance/data-protection-and-gdpr/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/security-and-compliance/incident-response/",
-        "to": "/docs/propertylist-mls-user-manual/security-and-compliance/incident-response/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/support/",
-        "to": "/docs/propertylist-mls-user-manual/support/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/support/community-forums/",
-        "to": "/docs/propertylist-mls-user-manual/support/community-forums/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/technical-docs/",
-        "to": "/docs/propertylist-mls-user-manual/technical-docs/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/support/mls-support/",
-        "to": "/docs/propertylist-mls-user-manual/support/mls-support/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/technical-docs/xml-export-structure/",
-        "to": "/docs/propertylist-mls-user-manual/technical-docs/xml-export-structure/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/verified-agencies/",
-        "to": "/docs/propertylist-mls-user-manual/verified-agencies/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/your-account/how-to-setup-company-staff-accounts/",
-        "to": "/docs/propertylist-mls-user-manual/your-account/how-to-setup-company-staff-accounts/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/your-account/creating-an-account/",
-        "to": "/docs/propertylist-mls-user-manual/your-account/creating-an-account/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/your-account/navigate-the-mls-dashboard-and-interface/",
-        "to": "/docs/propertylist-mls-user-manual/your-account/navigate-the-mls-dashboard-and-interface/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/your-account/mls-user-preferences/",
-        "to": "/docs/propertylist-mls-user-manual/your-account/mls-user-preferences/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/your-account/update-account-information/",
-        "to": "/docs/propertylist-mls-user-manual/your-account/update-account-information/"
-      },
-      {
-        "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/duplicate-properties/",
-        "to": "/docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/"
-      }
-    ],
+    "esLocaleLinkViolations": [],
     "esMissingListings": [],
-    "esEnglishPages": [
-      {
-        "path": "/es/docs/developers/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/building-a-property/construction-and-completion/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/building-a-property/construction-and-completion/construction-standards/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/building-a-property/obtaining-permits-and-approvals/inspections-and-compliance/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/building-a-property/planning-and-design/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/buying-a-property/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/obtaining-a-nie/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/buying-a-property/legal-requirements/paying-taxes/",
-        "headingEnglish": true,
-        "bodyEnglish": false
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/inheritance-laws-in-andalucia/forced-heirship-rules-legitima/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/inheritance-laws-in-andalucia/wills-and-testaments/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/listing-a-property-what-to-know/estate-agents/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/listing-a-property-what-to-know/owners/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/additional-considerations/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/factors-influencing-premiums/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/shopping-for-insurance/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-insurance-in-andalucia/types-of-property-insurance/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-construcciones-instalaciones-y-obras-icio/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-el-valor-anadido-iva/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-transmisiones-patrimoniales-itp/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renovating-a-property/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renovating-a-property/cost-calculations/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renovating-a-property/hiring-a-contractor/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renovating-a-property/planning-permission/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renovating-a-property/planning-permission/obtaining-a-licencia-de-obra/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renovating-a-property/taxes-for-renovating/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renting-a-property/landlords/requirements-for-landlords/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renting-a-property/long-term/evictions/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renting-a-property/long-term/tenancy-agreements/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/community-approval-law/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/selling-a-property/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/selling-a-property/costs/taxes/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/selling-a-property/the-selling-process/signing-a-contract-and-reservation/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/leyes-procedimientos/traspaso-business-transfer/understanding-the-traspaso-concept/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/property-services/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/getting-started/desktop-and-mobile-friendly/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/how-to-use-contacts/assign-contact-to-agent/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/convert-a-lead-into-a-contact/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/direct-microsite-leads/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/how-propertylist-generates-direct-leads-for-you/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/mls-leads/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/leads/portal-leads/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/convert-a-lead-into-a-contact/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/how-propertylist-generates-direct-leads-for-you/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/how-propertylist-generates-direct-leads-for-you/optimising-your-listings-for-maximum-lead-generation/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/how-propertylist-generates-direct-leads-for-you/understanding-the-propertylist-lead-generation-model/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/marketing/feature-your-property-on-the-public-property-portal/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/marketing/tracking-listing-exposure/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/reports-and-statistics/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/reports/accessing-property-market-data/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/reports/identifying-market-trends/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/requests/agent-requests/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/requests/client-requests/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/support/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/support/mls-support/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/support/video-tutorials/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/technical-documentation/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/verified-agencies/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/your-account/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/your-account/creating-an-account/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/your-account/how-to-setup-company-staff-accounts/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/your-account/mls-user-preferences/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/your-account/navigate-the-mls-dashboard-and-interface/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      },
-      {
-        "path": "/es/docs/propertylist-mls-manual-de-usuario/your-account/update-account-information/",
-        "headingEnglish": false,
-        "bodyEnglish": true
-      }
-    ],
+    "esEnglishPages": [],
     "admin": null,
     "esBackendEnglishPages": []
   }
