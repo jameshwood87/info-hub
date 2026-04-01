@@ -193,7 +193,7 @@ const remaining = allItems
 
 const sorted = [...ordered, ...remaining];
 
-const defaultThumb = '/blog/hero-default.svg';
+const defaultThumb = '/blog/hero-blog.png';
 const metaFor = (p: KbPageListItem) => metaById[String(p.id || '')] || metaById[normalisePath(p.path)] || null;
 const featuredFor = (p: KbPageListItem) => {
 	const url = metaFor(p)?.featuredImageUrl;
