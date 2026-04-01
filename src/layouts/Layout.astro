@@ -2036,6 +2036,341 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		margin-top: 10px;
 	}
 
+	/* Docs Navigation Sidebar */
+	.docNav {
+		display: none;
+	}
+
+	@media (min-width: 1180px) {
+		.docNav {
+			display: block;
+			position: sticky;
+			top: 80px;
+			max-height: calc(100vh - 100px);
+			overflow-y: auto;
+			overflow-x: hidden;
+			overflow-x: hidden;
+			overflow-x: hidden;
+			box-overscroll-behavior: contain;
+			padding: 14px 0;
+			border-right: 1px solid rgba(11, 18, 32, 0.08);
+		}
+	}
+
+	.docNavHeader {
+		padding: 0 14px 12px;
+		border-bottom: 1px solid rgba(11, 18, 32, 0.08);
+		margin-bottom: 12px;
+	}
+
+	.docNavTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(11, 18, 32, 0.9);
+		font-size: 15px;
+	}
+
+	.docNavFilterRow {
+		margin-top: 10px;
+	}
+
+	.docNavFilterInput {
+		width: 100%;
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		border-radius: 8px;
+		padding: 8px 10px;
+		font-size: 13px;
+		font-weight: 600;
+		background: rgba(255, 255, 255, 0.8);
+		color: rgba(11, 18, 32, 0.85);
+	}
+
+	.docNavFilterInput::placeholder {
+		color: rgba(11, 18, 32, 0.45);
+	}
+
+	.docNavList {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.docNavItem {
+		margin: 0;
+	}
+
+	.docNavLink {
+		display: block;
+		padding: 8px 14px;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(11, 18, 32, 0.72);
+		text-decoration: none;
+		border-radius: 8px;
+		transition: background 0.12s, color 0.12s;
+	}
+
+	.docNavLink:hover {
+		background: rgba(0, 174, 154, 0.08);
+		color: rgba(11, 18, 32, 0.9);
+		text-decoration: none;
+	}
+
+	.docNavLink.active {
+		background: rgba(0, 174, 154, 0.12);
+		color: #00ae9a;
+		font-weight: 800;
+	}
+
+	.docNavGroup {
+		margin: 0;
+	}
+
+	.docNavSummary {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 14px;
+		font-size: 13px;
+		font-weight: 800;
+		color: rgba(11, 18, 32, 0.85);
+		cursor: pointer;
+		border-radius: 8px;
+		transition: background 0.12s;
+		list-style: none;
+	}
+
+	.docNavSummary::-webkit-details-marker {
+		display: none;
+	}
+
+	.docNavSummary::before {
+		content: '›';
+		display: inline-block;
+		font-size: 12px;
+		font-weight: 900;
+		color: rgba(11, 18, 32, 0.4);
+		transition: transform 0.15s;
+		flex-shrink: 0;
+		width: 12px;
+		text-align: center;
+	}
+
+	.docNavGroup[open] > .docNavSummary::before {
+		transform: rotate(90deg);
+	}
+
+	.docNavSummary:hover {
+		background: rgba(0, 174, 154, 0.08);
+	}
+
+	.docNavSummary.active {
+		color: #00ae9a;
+	}
+
+	.docNavSummaryLink {
+		font-weight: 800;
+		color: rgba(11, 18, 32, 0.85);
+		text-decoration: none;
+	}
+
+	.docNavSummaryLink:hover {
+		color: #00ae9a;
+		text-decoration: none;
+	}
+
+	.docNavSummaryLink.active {
+		color: #00ae9a;
+	}
+
+	.docNavSummaryText {
+		font-weight: 800;
+		color: rgba(11, 18, 32, 0.85);
+	}
+
+	.docNavNode {
+		margin: 0;
+	}
+
+	.docNavNode .docNavList {
+		padding-left: 16px;
+		border-left: 1px solid rgba(11, 18, 32, 0.06);
+		margin-left: 14px;
+	}
+
+	.docNavLabel {
+		display: block;
+		padding: 8px 14px;
+		font-size: 13px;
+		font-weight: 800;
+		color: rgba(11, 18, 32, 0.5);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	/* Mobile drawer */
+	.docNavOverlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(11, 18, 32, 0.35);
+		backdrop-filter: blur(6px);
+		z-index: 50;
+		display: none;
+	}
+
+	.docNavOverlay[data-open='1'] {
+		display: block;
+	}
+
+	.docNavDrawer {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: min(360px, 100%);
+		background: rgba(255, 255, 255, 0.96);
+		border-right: 1px solid rgba(11, 18, 32, 0.08);
+		z-index: 51;
+		display: grid;
+		grid-template-rows: auto 1fr;
+		overflow: hidden;
+	}
+
+	.docNavDrawerHeader {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 14px;
+		border-bottom: 1px solid rgba(11, 18, 32, 0.08);
+	}
+
+	.docNavDrawerTitle {
+		font-weight: 900;
+		letter-spacing: -0.01em;
+	}
+
+	.docNavDrawerClose {
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 999px;
+		padding: 8px 12px;
+		font-weight: 800;
+		cursor: pointer;
+		font-size: 13px;
+	}
+
+	.docNavDrawerTop {
+		padding: 0 14px 12px;
+	}
+
+	.docNavDrawerBody {
+		overflow-y: auto;
+		overflow-x: hidden;
+		overflow-x: hidden;
+		overflow-x: hidden;
+		box-overscroll-behavior: contain;
+		padding: 14px;
+	}
+
+	/* Browse button */
+	.docBrowseBtn {
+		display: none;
+	}
+
+	@media (max-width: 1179px) {
+		.docBrowseBtn {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 8px 12px;
+			border-radius: 10px;
+			border: 1px solid rgba(11, 18, 32, 0.12);
+			background: rgba(255, 255, 255, 0.9);
+			font-weight: 800;
+			font-size: 13px;
+			color: rgba(11, 18, 32, 0.75);
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.docBrowseBtn:hover {
+			background: rgba(0, 174, 154, 0.08);
+			text-decoration: none;
+		}
+	}
+
+	/* Sticky tag */
+	.docNavStickyIcon {
+		display: none;
+	}
+
+	@media (max-width: 1179px) {
+		.docNavStickyIcon {
+			display: block;
+		}
+	}
+
+	.docNavStickyTag {
+		display: none;
+	}
+
+	@media (max-width: 1179px) {
+		.docNavStickyTag {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 14px;
+			background: rgba(255, 255, 255, 0.95);
+			border-bottom: 1px solid rgba(11, 18, 32, 0.08);
+			font-weight: 800;
+			font-size: 13px;
+			color: rgba(11, 18, 32, 0.85);
+			cursor: pointer;
+		}
+
+		.docNavStickyTag:hover {
+			background: rgba(0, 174, 154, 0.08);
+		}
+	}
+
+	.docNavStickyText {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	/* Document grid layout */
+	.docGrid {
+		display: grid;
+		gap: 28px;
+	}
+
+	.docGrid.withNav {
+		grid-template-columns: 260px 1fr;
+	}
+
+	@media (max-width: 1179px) {
+		.docGrid.withNav {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Manual select dropdown */
+	.docManualSelect {
+		width: 100%;
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		border-radius: 8px;
+		padding: 8px 10px;
+		font-size: 13px;
+		font-weight: 700;
+		background: rgba(255, 255, 255, 0.9);
+		color: rgba(11, 18, 32, 0.85);
+		cursor: pointer;
+	}
+
 	html.mobileMenuLock,
 	html.mobileMenuLock body {
 		overflow: hidden;
