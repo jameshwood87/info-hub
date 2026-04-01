@@ -3210,4 +3210,35 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 	.link:hover {
 		text-decoration: underline;
 	}
+
+	.footerLogo {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 18px 0;
+		margin-top: 18px;
+		border-top: 1px solid rgba(11, 18, 32, 0.08);
+	}
+
+	.footerLogo img {
+		width: 32px;
+		height: 32px;
+		border-radius: 8px;
+		flex-shrink: 0;
+	}
+
+	.footerLogo span {
+		color: rgba(11, 18, 32, 0.6);
+		font-size: 13px;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+
+	@media (max-width: 520px) {
+		.footerLogo {
+			flex-direction: column;
+			text-align: center;
+			gap: 8px;
+		}
+	}
 </style>
