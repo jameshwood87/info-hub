@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AreaPage from '../components/AreaPage.astro';
+import PropertyCard from '../components/PropertyCard.astro';
 import {
 	adminCreateKbPage,
 	adminGetKbPageByPath,
@@ -3286,7 +3287,71 @@ const ldJson = JSON.stringify([
 					</style>
 				) : null}
 
+				<style>
+					.blogPropertySection {
+						margin: 32px 0;
+						padding: 24px;
+						border: 1px solid rgba(16, 24, 40, 0.08);
+						border-radius: 18px;
+						background: rgba(0, 174, 154, 0.04);
+					}
+					.blogPropertyTitle {
+						margin: 0 0 16px;
+						font-size: 20px;
+						font-weight: 900;
+						letter-spacing: -0.01em;
+					}
+					.blogPropertyGrid {
+						display: grid;
+						grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+						gap: 16px;
+					}
+					.blogPropertyCta {
+						margin: 16px 0 0;
+						text-align: center;
+					}
+					.blogPropertyCta a {
+						color: var(--accent, #00ae9a);
+						font-weight: 900;
+						text-decoration: none;
+					}
+					.blogPropertyCta a:hover {
+						text-decoration: underline;
+					}
+				</style>
+
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+
+				{isBlogLike ? (
+					<section class="blogPropertySection" aria-label="Featured properties">
+						<h2 class="blogPropertyTitle">Featured Properties</h2>
+						<div class="blogPropertyGrid">
+							<PropertyCard
+								title="Stunning Sea View Apartment"
+								price="€650,000"
+								location="Estepona, Málaga"
+								beds={2}
+								baths={2}
+								area="90 m²"
+								image="/blog/hero-marbella-property.jpg"
+								url="https://propertylist.es/"
+							/>
+							<PropertyCard
+								title="Luxury Villa with Pool"
+								price="€1,200,000"
+								location="Marbella, Málaga"
+								beds={4}
+								baths={3}
+								area="250 m²"
+								image="/blog/hero-villa-spain.jpg"
+								url="https://propertylist.es/"
+							/>
+						</div>
+						<p class="blogPropertyCta">
+							<a href="https://propertylist.es/" target="_blank" rel="noopener">Browse all listings on PropertyList →</a>
+						</p>
+					</section>
+				) : null}
 
 				{folderArticles.length ? (
 					<section class="docArticles" aria-label="Articles">

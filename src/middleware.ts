@@ -104,6 +104,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			return new Response(null, { status: 301, headers: { Location: `${dynamicRedirect}${url.search}` } });
 		}
 
+		// Blog redirects — duplicate/filler posts → canonical versions
+		const blogRedirects: Array<{ from: string; to: string }> = [
+			{ from: '/blog/itp-tax-in-spain-complete-guide-for-property-buyers-2026/', to: '/blog/itp-tax-spain-complete-guide-2026/' },
+			{ from: '/es/informacion-general/itp-tax-in-spain-complete-guide-for-property-buyers-2026/', to: '/blog/itp-tax-spain-complete-guide-2026/' },
+		];
+		for (const r of blogRedirects) {
+			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
+				return new Response(null, { status: 301, headers: { Location: `${r.to}${url.search}` } });
+			}
+		}
+
 		const prefixRedirects: Array<{ from: string; to: string }> = [
 			{ from: '/docs/propertylist-mls-user-manual/mls-user-manual/', to: '/docs/propertylist-mls-user-manual/your-account/' },
 			{ from: '/docs/propertylist-mls-user-manual/how-to-use-contacts/', to: '/docs/propertylist-mls-user-manual/contacts/' },
