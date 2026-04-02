@@ -1894,7 +1894,15 @@ const featuredImageCredit =
 		: null;
 
 const fallbackHeroSrc =
-	/\bcosta del sol\b/i.test(h1) ? '/blog/hero-costa-del-sol.svg' : /\bmarbella\b/i.test(h1) ? '/blog/hero-marbella-property.png' : /\bandaluc[ií]a\b/i.test(h1) ? '/blog/hero-andalucia.svg' : '/blog/hero-blog.png';
+	/\bcosta del sol\b/i.test(h1) ? '/blog/hero-costa-del-sol.jpg' :
+	/\bmarbella\b/i.test(h1) ? '/blog/hero-marbella-property.jpg' :
+	/\bfuengirola\b/i.test(h1) ? '/blog/hero-fuengirola.jpg' :
+	/\bmalaga\b/i.test(h1) ? /\bbarrio\b/i.test(h1) ? '/blog/hero-malaga-barrio.jpg' : '/blog/hero-malaga-barrio.jpg' :
+	/\b(itp|tax|impuesto)\b/i.test(h1) ? '/blog/hero-tax-spain.jpg' :
+	/\b(agente|agent|mls|crm)\b/i.test(h1) ? '/blog/hero-agent-meeting.jpg' :
+	/\b(villa|luxury|luj[oa])\b/i.test(h1) ? '/blog/hero-villa-spain.jpg' :
+	/\bandaluc[ií]a\b/i.test(h1) ? '/blog/hero-andalucia.svg' :
+	'/blog/hero-blog.jpg';
 const heroSrc = featuredImageUrl || fallbackHeroSrc;
 
 const escapeHtmlAttr = (s: string) =>

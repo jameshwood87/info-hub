@@ -199,8 +199,21 @@ const featuredFor = (p: KbPageListItem) => {
 	const url = metaFor(p)?.featuredImageUrl;
 	return typeof url === 'string' && url.trim() ? url.trim() : null;
 };
-const thumbFor = (p: KbPageListItem) =>
-	featuredFor(p) ?? (String(p.path || '').startsWith(newsPrefix) ? '/blog/hero-andalucia.svg' : '/blog/hero-costa-del-sol.svg');
+const thumbFor = (p: KbPageListItem) => {
+	if (featuredFor(p)) return featuredFor(p);
+	const title = (p.title || '').toLowerCase();
+	const path = (p.path || '').toLowerCase();
+	const text = `${title} ${path}`;
+	if (/\bmarbella\b/.test(text)) return '/blog/hero-marbella-property.jpg';
+	if (/\bfuengirola\b/.test(text)) return '/blog/hero-fuengirola.jpg';
+	if (/\bmalaga\b/.test(text)) return '/blog/hero-malaga-barrio.jpg';
+	if (/\b(itp|tax|impuesto)\b/.test(text)) return '/blog/hero-tax-spain.jpg';
+	if (/\b(agente|agent|mls|crm)\b/.test(text)) return '/blog/hero-agent-meeting.jpg';
+	if (/\b(villa|luxury|luj[oa])\b/.test(text)) return '/blog/hero-villa-spain.jpg';
+	if (/\bcosta del sol\b/.test(text)) return '/blog/hero-costa-del-sol.jpg';
+	if (/\bandaluc[ií]a\b/.test(text)) return '/blog/hero-andalucia.svg';
+	return defaultThumb;
+};
 
 const responsiveFor = (src: string) => {
 	if (!/^https?:\/\//i.test(src)) return null;
