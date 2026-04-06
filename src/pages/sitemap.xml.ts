@@ -210,6 +210,7 @@ export async function GET() {
 		await addPrefix('/general-information/', 'en');
 		await addPrefix('/neighbourhood/', 'en');
 		await addPrefix('/andalucia/', 'en');
+		await addPrefix('/es/docs/', 'es');
 	} catch {}
 
 	const body = urls
