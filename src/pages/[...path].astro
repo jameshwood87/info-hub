@@ -1871,7 +1871,7 @@ const neighbourhoodPortalUrl = (() => {
 		}
 		return s;
 	};
-	return `https://propertylist.es/portal/for-sale/${encodeURIComponent(canonicalPortalMunicipalitySlug(muni))}/${encodeURIComponent(neighbourhoodSlug)}`;
+	return `https://propertylist.es/portal/for-sale/${encodeURIComponent(canonicalPortalMunicipalitySlug(muni))}/`;
 })();
 const featuredImageUrl =
 	typeof (kbMeta as any).featuredImageUrl === 'string' && String((kbMeta as any).featuredImageUrl).trim()
