@@ -298,81 +298,85 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		{minimal ? null : (
 			<>
 				<header class="header">
-					<nav class="nav" aria-label="Primary">
-						<div class="brand">
-							<a class="brandLogoLink" href="https://info.propertylist.es/">
-								<img
-									class="brandLogo brandLogo--wide"
-									src="/og/logo-easter.png"
-									alt="PropertyList"
-									width="200"
-									height="40"
-									loading="eager"
-									decoding="async"
+					<div class="headerInner">
+						<nav class="nav" aria-label="Primary">
+							<div class="brand">
+								<a class="brandLogoLink" href="https://info.propertylist.es/">
+									<img
+										class="brandLogo brandLogo--wide"
+										src="/og/logo-easter.png"
+										alt="PropertyList"
+										width="200"
+										height="40"
+										loading="eager"
+										decoding="async"
+									/>
+									<img
+										class="brandLogo brandLogo--icon"
+										src="/og/icon-easter.png"
+										alt="PropertyList"
+										width="40"
+										height="40"
+										loading="eager"
+										decoding="async"
+									/>
+								</a>
+								<a class="brandText" href={lang === 'es' ? '/es/' : '/'}>Info Hub</a>
+							</div>
+							<div class="navLinks">
+								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
+								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
+								<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
+							</div>
+							<div class="navLang" aria-label={lang === 'es' ? 'Idioma' : 'Language'}>
+								<a class:list={['navLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
+									EN
+								</a>
+								<a class:list={['navLangLink', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">
+									ES
+								</a>
+							</div>
+							<div class="navCtas">
+								<button class="navAuthBtn" type="button" data-auth-open>
+									{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
+								</button>
+								<button class="navMenuBtn" type="button" data-mobile-menu-open aria-label={lang === 'es' ? 'Abrir menú' : 'Open menu'}>
+									<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+										<path d="M5 7h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+										<path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+										<path d="M5 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+									</svg>
+								</button>
+							</div>
+						</nav>
+						<div class="searchRow">
+							<form class="navSearch" method="get" action={lang === 'es' ? '/es/search' : '/search'} role="search">
+								<input
+									class="navSearchInput"
+									type="search"
+									name="q"
+									value={searchQ}
+									placeholder={lang === 'es' ? 'Buscar en la documentación' : 'Search documentation'}
+									aria-label={lang === 'es' ? 'Buscar' : 'Search'}
+									autocomplete="off"
+									spellcheck="false"
+									data-header-search
+									data-search-lang={lang === 'es' ? 'es' : 'en'}
+									data-search-prefix={lang === 'es' ? '/es/docs/' : '/docs/'}
+									data-search-page={lang === 'es' ? '/es/search' : '/search'}
+									role="combobox"
+									aria-autocomplete="list"
+									aria-expanded="false"
+									aria-controls="header-search-listbox"
 								/>
-								<img
-									class="brandLogo brandLogo--icon"
-									src="/og/icon-easter.png"
-									alt="PropertyList"
-									width="40"
-									height="40"
-									loading="eager"
-									decoding="async"
-								/>
-							</a>
-							<a class="brandText" href={lang === 'es' ? '/es/' : '/'}>Info Hub</a>
+								<button class="navSearchBtn" type="submit">
+									{lang === 'es' ? 'Buscar' : 'Search'}
+								</button>
+								<div class="navSearchMenu" data-header-search-menu hidden></div>
+							</form>
 						</div>
-						<div class="navLinks">
-							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
-							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
-							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
-						</div>
-						<form class="navSearch" method="get" action={lang === 'es' ? '/es/search' : '/search'} role="search">
-							<input
-								class="navSearchInput"
-								type="search"
-								name="q"
-								value={searchQ}
-								placeholder={lang === 'es' ? 'Buscar en la documentación' : 'Search documentation'}
-								aria-label={lang === 'es' ? 'Buscar' : 'Search'}
-								autocomplete="off"
-								spellcheck="false"
-								data-header-search
-								data-search-lang={lang === 'es' ? 'es' : 'en'}
-								data-search-prefix={lang === 'es' ? '/es/docs/' : '/docs/'}
-								data-search-page={lang === 'es' ? '/es/search' : '/search'}
-								role="combobox"
-								aria-autocomplete="list"
-								aria-expanded="false"
-								aria-controls="header-search-listbox"
-							/>
-							<button class="navSearchBtn" type="submit">
-								{lang === 'es' ? 'Buscar' : 'Search'}
-							</button>
-							<div class="navSearchMenu" data-header-search-menu hidden></div>
-						</form>
-						<div class="navLang" aria-label={lang === 'es' ? 'Idioma' : 'Language'}>
-							<a class:list={['navLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
-								EN
-							</a>
-							<a class:list={['navLangLink', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">
-								ES
-							</a>
-						</div>
-						<div class="navCtas">
-							<button class="navAuthBtn" type="button" data-auth-open>
-								{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
-							</button>
-							<button class="navMenuBtn" type="button" data-mobile-menu-open aria-label={lang === 'es' ? 'Abrir menú' : 'Open menu'}>
-								<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-									<path d="M5 7h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-									<path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-									<path d="M5 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-								</svg>
-							</button>
-						</div>
-					</nav>
+					</div>
 				</header>
 				<div class="mobileMenuOverlay" data-mobile-menu-overlay hidden>
 					<div class="mobileMenuDrawer" role="dialog" aria-modal="true" aria-label={lang === 'es' ? 'Menú' : 'Menu'} tabindex="-1">
@@ -1433,8 +1437,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 	.header {
 		position: sticky;
 		top: 0;
-		background: rgba(246, 248, 252, 0.8);
-		backdrop-filter: blur(8px);
+		background: rgba(246, 248, 252, 0.92);
+		backdrop-filter: blur(12px);
 		border-bottom: 1px solid rgba(11, 18, 32, 0.08);
 		z-index: 10;
 		transition: transform 0.3s ease-out;
@@ -1444,14 +1448,36 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		transform: translateY(-100%);
 	}
 
-	.nav {
+	.headerInner {
 		max-width: 1120px;
 		margin: 0 auto;
-		padding: 8px max(18px, env(safe-area-inset-right)) 8px max(18px, env(safe-area-inset-left));
+		padding: 6px max(18px, env(safe-area-inset-right)) 10px max(18px, env(safe-area-inset-left));
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.nav {
 		display: flex;
 		gap: 16px;
 		align-items: center;
 		justify-content: space-between;
+	}
+
+	.searchRow {
+		display: flex;
+		align-items: center;
+		max-width: 100%;
+	}
+
+	.searchRow .navSearch {
+		flex: 1;
+		max-width: none;
+		margin: 0;
+	}
+
+	.searchRow .navSearchMenu {
+		top: calc(100% + 8px);
 	}
 
 	.main {
@@ -1900,16 +1926,10 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		.navMenuBtn {
 			display: inline-flex;
 		}
-
-		.navSearch {
-			max-width: 520px;
-		}
 	}
 
 	@media (max-width: 560px) {
 		.nav {
-			padding: 10px max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left));
-			flex-wrap: wrap;
 			gap: 10px;
 		}
 
@@ -1922,9 +1942,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 			flex-shrink: 0;
 		}
 
-		.navSearch {
-			order: 3;
-			flex-basis: 100%;
+		.searchRow .navSearch {
 			max-width: none;
 		}
 
