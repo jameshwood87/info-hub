@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/about/`;
+const title = 'About PropertyList • PropertyList Info Hub';
+const description = 'Built for agents — not to compete with them. PropertyList combines MLS efficiency, CRM workflows, and public portal visibility.';
+---
+
+<!-- Permanent redirect to /about-us/ for backwards compatibility -->
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="robots" content="noindex, follow" />
+	<link rel="canonical" href="/about-us/" />
+	<meta http-equiv="refresh" content="0;url=/about-us/" />
+	<title>{title}</title>
+</head>
+<body>
+	<p>Redirecting to <a href="/about-us/">About PropertyList</a>...</p>
+	<script>
+		window.location.replace('/about-us/');
+	</script>
+</body>
+</html>

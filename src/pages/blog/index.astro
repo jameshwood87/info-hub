@@ -204,9 +204,10 @@ const thumbFor = (p: KbPageListItem) => {
 	const title = (p.title || '').toLowerCase();
 	const path = (p.path || '').toLowerCase();
 	const text = `${title} ${path}`;
-	if (/\bmarbella\b/.test(text)) return '/blog/hero-marbella-property.jpg';
+	if (/\bmarbella\b/.test(text)) return '/blog/hero-marbella-property.png';
 	if (/\bfuengirola\b/.test(text)) return '/blog/hero-fuengirola.jpg';
 	if (/\bmalaga\b/.test(text)) return '/blog/hero-malaga-barrio.jpg';
+	if (/\b(marabella|puerto banus|puerto ban\u00fas)\b/.test(text)) return '/blog/hero-marbella-property.png';
 	if (/\b(itp|tax|impuesto)\b/.test(text)) return '/blog/hero-tax-spain.jpg';
 	if (/\b(agente|agent|mls|crm)\b/.test(text)) return '/blog/hero-agent-meeting.jpg';
 	if (/\b(villa|luxury|luj[oa])\b/.test(text)) return '/blog/hero-villa-spain.jpg';
