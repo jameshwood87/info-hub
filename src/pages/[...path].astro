@@ -1900,6 +1900,9 @@ const fallbackHeroSrc =
 	/\bfuengirola\b/i.test(h1) ? '/blog/hero-fuengirola.jpg' :
 	/\bmalaga\b/i.test(h1) ? /\bbarrio\b/i.test(h1) ? '/blog/hero-malaga-barrio.jpg' : '/blog/hero-malaga-barrio.jpg' :
 	/\b(itp|tax|impuesto)\b/i.test(h1) ? '/blog/hero-tax-spain.jpg' :
+	/\b(rent cap|rent control|rdl\b|landlord)\b/i.test(h1) ? '/blog/hero-villa-spain.jpg' :
+	/\b(rental|abandon|landlord|portal)\b/i.test(h1) ? '/blog/hero-agent-meeting.jpg' :
+	/\b(property market|market guide|spanish property)\b/i.test(h1) ? '/blog/hero-malaga-barrio.jpg' :
 	/\b(agente|agent|mls|crm)\b/i.test(h1) ? '/blog/hero-agent-meeting.jpg' :
 	/\b(villa|luxury|luj[oa])\b/i.test(h1) ? '/blog/hero-villa-spain.jpg' :
 	/\bandaluc[ií]a\b/i.test(h1) ? '/blog/hero-andalucia.svg' :
