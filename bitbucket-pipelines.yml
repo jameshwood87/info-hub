@@ -1,24 +1,33 @@
-
-# This is a sample build configuration for JavaScript.
-# Check our docs at: https://confluence.atlassian.com/x/IYfoLQ for more examples.
-# A complete reference to all possible configuration options can be found at:
-# https://confluence.atlassian.com/x/ehO4DQ
-
-image: node:18.16.0
+# .bitbucket-pipelines.yml  (place this at the repo root)
+image: atlassian/default-image:2          # base Docker image with ssh & git
 
 pipelines:
   branches:
-    main:
+    main:                                 # runs only on pushes to `main`
       - step:
-          name: Build and Deploy
-          caches:
-            - node
+          name: Deploy to Production
+          deployment: production          # optional – shows in UI
           script:
-            - npm install
-            - npm run build
-            # Deploy to the server via SSH (requires SSH key setup in Bitbucket repository settings)
-            # You'll need to configure an SSH key in Bitbucket Pipelines settings
-            # and add the public key to your 'propertylist' server's authorized_keys.
-            # Example rsync for deployment:
-            # - rsync -avz -e "ssh -i ~/.ssh/id_rsa_pipelines -o StrictHostKeyChecking=no" build/ user@your-server-ip:/path/to/app/
-            - echo "Deployment step placeholder. Please configure SSH keys in Bitbucket Pipelines settings."
+            # 1️⃣ Export the repo variables so the ssh‑run pipe can see them
+            - export SSH_KEY="${PROD_SSH_KEY}"
+            - export SERVER="${PROD_HOST}"
+            - export USER="${PROD_USER}"
+            - export DEPLOY_PATH="${PROD_DEPLOY_PATH}"
+            # 2️⃣ Use the official Bitbucket ssh‑run pipe
+            - pipe: atlassian/ssh-run:0.4.1
+              variables:
+                SSH_USER: $USER                # expands to the value of PROD_USER
+                SERVER: $SERVER                # expands to PROD_HOST
+                SSH_KEY: $SSH_KEY              # expands to the private key
+                # The actual commands run on the remote host:
+                COMMAND: |
+                  set -e                     # fail fast on any error
+                  cd "$DEPLOY_PATH"
+                  echo "🔧 Pulling latest code..."
+                  git pull origin main
+                  echo "📦 Installing dependencies..."
+                  npm ci
+                  echo "🏗️ Building site..."
+                  npm run build
+                  echo "🚀 Restarting service..."
+                  sudo systemctl restart nginx   # or the service you use
