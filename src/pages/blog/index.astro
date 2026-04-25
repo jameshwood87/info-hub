@@ -193,7 +193,7 @@ const remaining = allItems
 
 const sorted = [...ordered, ...remaining];
 
-const defaultThumb = '/blog/hero-blog.jpg';
+const defaultThumb = '/blog/hero-blog.png';
 const metaFor = (p: KbPageListItem) => metaById[String(p.id || '')] || metaById[normalisePath(p.path)] || null;
 const featuredFor = (p: KbPageListItem) => {
 	const url = metaFor(p)?.featuredImageUrl;
@@ -205,13 +205,13 @@ const thumbFor = (p: KbPageListItem) => {
 	const path = (p.path || '').toLowerCase();
 	const text = `${title} ${path}`;
 	if (/\bmarbella\b/.test(text)) return '/blog/hero-marbella-property.png';
-	if (/\bfuengirola\b/.test(text)) return '/blog/hero-fuengirola.jpg';
-	if (/\bmalaga\b/.test(text)) return '/blog/hero-malaga-barrio.jpg';
+	if (/\bfuengirola\b/.test(text)) return '/blog/hero-fuengirola.png';
+	if (/\bmalaga\b/.test(text)) return '/blog/hero-malaga-barrio.png';
 	if (/\b(marabella|puerto banus|puerto ban\u00fas)\b/.test(text)) return '/blog/hero-marbella-property.png';
 	if (/\b(itp|tax|impuesto)\b/.test(text)) return '/blog/hero-tax-spain.jpg';
 	if (/\b(rent cap|rent control|rdl)\b/.test(text)) return '/blog/hero-villa-spain.jpg';
 	if (/\b(rental|landlord|abandon|portal)\b/.test(text)) return '/blog/hero-agent-meeting.jpg';
-	if (/\b(property market|market guide)\b/.test(text)) return '/blog/hero-malaga-barrio.jpg';
+	if (/\b(property market|market guide)\b/.test(text)) return '/blog/hero-malaga-barrio.png';
 	if (/\b(agente|agent|mls|crm)\b/.test(text)) return '/blog/hero-agent-meeting.jpg';
 	if (/\b(villa|luxury|luj[oa])\b/.test(text)) return '/blog/hero-villa-spain.jpg';
 	if (/\bcosta del sol\b/.test(text)) return '/blog/hero-costa-del-sol.jpg';

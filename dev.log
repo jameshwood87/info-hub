@@ -1,0 +1,17 @@
+
+> info-hub@0.0.1 dev
+> astro dev
+
+16:47:43 [@astrojs/node] Enabling sessions with filesystem storage
+16:47:43 [types] Generated 1ms
+16:47:43 [content] Syncing content
+16:47:43 [content] Synced content
+
+ astro  v5.18.1 ready in 759 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+16:47:43 watching for file changes...
+16:48:41 [200] / 640ms
+16:49:23 [200] / 18ms

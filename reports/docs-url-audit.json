@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-01T18:09:52.242Z",
+  "generatedAt": "2026-04-24T23:59:14.093Z",
   "origin": "https://info.propertylist.es",
   "sitemap": {
     "url": "https://info.propertylist.es/sitemap.xml",
@@ -10,12 +10,12 @@
     "adminDocsUrls": 0
   },
   "counts": {
-    "sitemapDocsUrls": 307,
+    "sitemapDocsUrls": 309,
     "sitemapDuplicateGroups": 0,
-    "crawledPages": 400,
-    "reachableDocsPages": 400,
-    "orphanDocsPages": 3,
-    "redirectsSeen": 34,
+    "crawledPages": 397,
+    "reachableDocsPages": 397,
+    "orphanDocsPages": 4,
+    "redirectsSeen": 32,
     "brokenPagesSeen": 0,
     "brokenLinksSeen": 0
   },
@@ -23,7 +23,8 @@
   "orphanDocsPages": [
     "/docs/mls-manual-de-usuario/",
     "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/mls-leads/",
-    "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/portal-leads/"
+    "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/portal-leads/",
+    "/es/docs/leyes-procedimientos/traspaso-business-transfer/additional-considerations/contractual-obligations/"
   ],
   "redirects": [
     {
@@ -132,11 +133,6 @@
       "to": "/es/docs/propertylist-mls-manual-de-usuario/integrations/export-listings/export-listings-xml/"
     },
     {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/"
-    },
-    {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/search/",
       "status": 301,
       "to": "/es/docs/propertylist-mls-manual-de-usuario/search/filters/"
@@ -180,11 +176,6 @@
       "from": "/es/docs/propertylist-mls-manual-de-usuario/additional-resources/mls-support/",
       "status": 301,
       "to": "/es/docs/propertylist-mls-manual-de-usuario/support/mls-support/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/feature-your-properties-on-the-mls/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/marketing-and-portals/feature-your-properties-on-the-mls/"
     },
     {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/creating-a-new-listing/",

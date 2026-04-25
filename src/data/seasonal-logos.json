@@ -1,0 +1,48 @@
+{
+  "default": {
+    "logo": "logo-default.png",
+    "og": "og-default.png"
+  },
+  "valentines": {
+    "start": "02-01",
+    "end": "02-14",
+    "logo": "logo-valentines.png",
+    "og": "og-valentines.png"
+  },
+  "easter": {
+    "start": "2026-04-02",
+    "end": "2026-04-06",
+    "logo": "logo-easter.png",
+    "og": "og-easter.png"
+  },
+  "halloween": {
+    "start": "10-24",
+    "end": "10-31",
+    "logo": "logo-halloween.png",
+    "og": "og-halloween.png"
+  },
+  "stpatricks": {
+    "start": "03-15",
+    "end": "03-18",
+    "logo": "logo-stpatricks.png",
+    "og": "og-stpatricks.png"
+  },
+  "summer": {
+    "start": "06-01",
+    "end": "08-31",
+    "logo": "logo-summer.png",
+    "og": "og-summer.png"
+  },
+  "christmas": {
+    "start": "12-01",
+    "end": "12-23",
+    "logo": "logo-christmas.png",
+    "og": "og-christmas.png"
+  },
+  "christmas-santa": {
+    "start": "12-24",
+    "end": "12-26",
+    "logo": "logo-christmas-santa.png",
+    "og": "og-christmas-santa.png"
+  }
+}
