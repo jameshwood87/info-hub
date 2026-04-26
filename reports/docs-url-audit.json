@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-24T23:59:14.093Z",
+  "generatedAt": "2026-04-26T11:29:36.807Z",
   "origin": "https://info.propertylist.es",
   "sitemap": {
     "url": "https://info.propertylist.es/sitemap.xml",
@@ -148,11 +148,6 @@
       "to": "/docs/propertylist-mls-user-manual/core-workflow/import-properties/"
     },
     {
-      "from": "/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/duplicate-properties/",
-      "status": 301,
-      "to": "/docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/"
-    },
-    {
       "from": "/docs/propertylist-mls-user-manual/additional-resources/mls-support/",
       "status": 301,
       "to": "/docs/propertylist-mls-user-manual/support/mls-support/"
@@ -161,6 +156,11 @@
       "from": "/docs/propertylist-mls-user-manual/core-workflow/creating-a-new-listing/",
       "status": 301,
       "to": "/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/"
+    },
+    {
+      "from": "/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/duplicate-properties/",
+      "status": 301,
+      "to": "/docs/propertylist-mls-user-manual/core-workflow/duplicate-properties/"
     },
     {
       "from": "/docs/propertylist-mls-user-manual/managing-your-leads/new-page/direct-microsite-leads/",
