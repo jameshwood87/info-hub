@@ -150,10 +150,6 @@ const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'in
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
 const effectiveOgType = String(ogType || '').trim() || 'website';
-// Seasonal assets import – placed at top of script
-import { getSeasonalAssets } from "../lib/seasonalLogo";
-const { logo, og } = getSeasonalAssets();
-const effectiveOgImage = toAbsoluteUrl(og) ?? (siteOrigin ? `${siteOrigin}${logo}` : null);
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
 	? twitterCard
 	: effectiveOgImage
