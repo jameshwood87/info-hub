@@ -1,0 +1,78 @@
+[2026-04-30T21:07:03.605Z] Starting first outreach cycle...
+[2026-04-30T21:07:03.609Z] === Starting Outreach Cycle ===
+[2026-04-30T21:07:03.609Z] [Outreach] Error: initMailchimp is not defined
+[2026-04-30T21:07:03.646Z] PropertyList Outreach started on port 3210
+[2026-04-30T21:09:22.860Z] Starting first outreach cycle...
+[2026-04-30T21:09:22.863Z] === Starting Outreach Cycle ===
+[2026-04-30T21:09:22.916Z] PropertyList Outreach started on port 3210
+[2026-04-30T21:09:23.894Z] [Outreach] Running scraper...
+[2026-04-30T21:09:23.894Z] [Scraper] Searching region: Andalusia
+[2026-04-30T21:09:23.895Z] [Scraper] Searching: agencia inmobiliaria Andalusia Spain
+[2026-04-30T21:09:34.878Z] [Scraper] Searching region: Madrid
+[2026-04-30T21:09:34.878Z] [Scraper] Searching: agencia inmobiliaria Madrid Spain
+[2026-04-30T21:09:47.240Z] [Scraper] Searching region: Valencia
+[2026-04-30T21:09:47.243Z] [Scraper] Searching: agencia inmobiliaria Valencia Spain
+[2026-04-30T21:09:59.411Z] [Scraper] Searching region: Cataluna
+[2026-04-30T21:09:59.412Z] [Scraper] Searching: agencia inmobiliaria Cataluna Spain
+[2026-04-30T21:10:10.842Z] [Scraper] Searching region: Baleares
+[2026-04-30T21:10:10.842Z] [Scraper] Searching: agencia inmobiliaria Baleares Spain
+[2026-04-30T21:10:21.068Z] [Scraper] Searching region: Canarias
+[2026-04-30T21:10:21.069Z] [Scraper] Searching: agencia inmobiliaria Canarias Spain
+[2026-04-30T21:10:30.904Z] Starting first outreach cycle...
+[2026-04-30T21:10:30.907Z] === Starting Outreach Cycle ===
+[2026-04-30T21:10:30.938Z] PropertyList Outreach started on port 3210
+[2026-04-30T21:10:31.376Z] [Outreach] Running scraper...
+[2026-04-30T21:10:31.377Z] [Scraper] Searching region: Andalusia
+[2026-04-30T21:10:31.378Z] [Scraper] Searching: agencia inmobiliaria Andalusia Spain
+[2026-04-30T21:10:32.539Z] === Starting Outreach Cycle ===
+[2026-04-30T21:10:32.884Z] [Outreach] Running scraper...
+[2026-04-30T21:10:32.884Z] [Scraper] Searching region: Andalusia
+[2026-04-30T21:10:32.884Z] [Scraper] Searching: agencia inmobiliaria Andalusia Spain
+[2026-04-30T21:10:42.665Z] [Scraper] Searching region: Madrid
+[2026-04-30T21:10:42.665Z] [Scraper] Searching: agencia inmobiliaria Madrid Spain
+[2026-04-30T21:10:50.109Z] [Scraper] Searching region: Madrid
+[2026-04-30T21:10:50.110Z] [Scraper] Searching: agencia inmobiliaria Madrid Spain
+[2026-04-30T21:10:57.346Z] [Scraper] Searching region: Valencia
+[2026-04-30T21:10:57.347Z] [Scraper] Searching: agencia inmobiliaria Valencia Spain
+[2026-04-30T21:11:09.892Z] [Scraper] Searching region: Cataluna
+[2026-04-30T21:11:09.894Z] [Scraper] Searching: agencia inmobiliaria Cataluna Spain
+[2026-04-30T21:11:17.229Z] [Scraper] Searching region: Valencia
+[2026-04-30T21:11:17.229Z] [Scraper] Searching: agencia inmobiliaria Valencia Spain
+[2026-04-30T21:11:24.784Z] [Scraper] Searching region: Baleares
+[2026-04-30T21:11:24.784Z] [Scraper] Searching: agencia inmobiliaria Baleares Spain
+[2026-04-30T21:11:32.096Z] [Scraper] Searching region: Cataluna
+[2026-04-30T21:11:32.097Z] [Scraper] Searching: agencia inmobiliaria Cataluna Spain
+[2026-04-30T21:11:39.391Z] [Scraper] Searching region: Canarias
+[2026-04-30T21:11:39.392Z] [Scraper] Searching: agencia inmobiliaria Canarias Spain
+[2026-04-30T21:11:46.754Z] [Scraper] Searching region: Baleares
+[2026-04-30T21:11:46.755Z] [Scraper] Searching: agencia inmobiliaria Baleares Spain
+[2026-04-30T21:11:54.050Z] [Outreach] Found 0 new agencies
+[2026-04-30T21:12:01.754Z] [Scraper] Searching region: Canarias
+[2026-04-30T21:12:01.755Z] [Scraper] Searching: agencia inmobiliaria Canarias Spain
+[2026-04-30T21:12:01.761Z] === Outreach Cycle Complete: 0 new agencies ===
+[2026-04-30T21:12:12.458Z] [Outreach] Found 0 new agencies
+[2026-04-30T21:12:12.760Z] === Outreach Cycle Complete: 0 new agencies ===
+[2026-04-30T23:18:42.722Z] Starting first outreach cycle...
+[2026-04-30T23:18:42.727Z] === Starting Outreach Cycle ===
+[2026-04-30T23:18:42.774Z] PropertyList Outreach started on port 3210
+[2026-04-30T23:18:43.872Z] [Outreach] Running scraper...
+[2026-04-30T23:18:43.873Z] [Scraper] Starting improved scraper...
+[2026-04-30T23:18:43.873Z] [Scraper] Trying source: kyero
+[2026-04-30T23:18:43.874Z] [Scraper] Fetching: https://www.kyero.com/en/agents/spain/malaga
+[2026-04-30T23:18:44.046Z] [Scraper] Failed: Request failed with status code 404
+[2026-04-30T23:18:48.105Z] [Scraper] Fetching: https://www.kyero.com/en/agents/spain/madrid
+[2026-04-30T23:18:48.218Z] [Scraper] Failed: Request failed with status code 404
+[2026-04-30T23:18:52.240Z] [Scraper] Fetching: https://www.kyero.com/en/agents/spain/valencia
+[2026-04-30T23:18:52.347Z] [Scraper] Failed: Request failed with status code 404
+[2026-04-30T23:18:57.166Z] [Scraper] Fetching: https://www.kyero.com/en/agents/spain/barcelona
+[2026-04-30T23:18:57.274Z] [Scraper] Failed: Request failed with status code 404
+[2026-04-30T23:19:02.170Z] [Scraper] Trying source: thinkspain
+[2026-04-30T23:19:02.170Z] [Scraper] Fetching: https://www.thinkspain.com/directory-spain/estate-agents
+[2026-04-30T23:19:02.961Z] [Scraper] New: app getsentry (67aaa3c8b47a4a6392335974383ffd9a@app.getsentry.com)
+[2026-04-30T23:19:06.475Z] [Scraper] Trying source: estateagentsespana
+[2026-04-30T23:19:06.476Z] [Scraper] Fetching: https://www.estateagentsespana.com
+[2026-04-30T23:19:09.511Z] [Scraper] Total found: 1
+[2026-04-30T23:19:09.512Z] [Outreach] Found 1 new agencies
+[2026-04-30T23:19:09.826Z] [Mailchimp] Error: Request failed with status code 400
+[2026-04-30T23:19:10.061Z] [Outreach] Processed: app getsentry (67aaa3c8b47a4a6392335974383ffd9a@app.getsentry.com)
+[2026-04-30T23:19:10.278Z] === Outreach Cycle Complete: 1 new agencies ===

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-26T13:10:38.653Z",
+  "generatedAt": "2026-05-01T06:01:38.514Z",
   "origin": "https://info.propertylist.es",
   "sitemap": {
     "url": "https://info.propertylist.es/sitemap.xml",
@@ -12,10 +12,10 @@
   "counts": {
     "sitemapDocsUrls": 309,
     "sitemapDuplicateGroups": 0,
-    "crawledPages": 397,
-    "reachableDocsPages": 397,
+    "crawledPages": 399,
+    "reachableDocsPages": 399,
     "orphanDocsPages": 4,
-    "redirectsSeen": 32,
+    "redirectsSeen": 33,
     "brokenPagesSeen": 0,
     "brokenLinksSeen": 0
   },
@@ -181,6 +181,11 @@
       "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/creating-a-new-listing/",
       "status": 301,
       "to": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/"
+    },
+    {
+      "from": "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/how-to-use-pipeline/",
+      "status": 301,
+      "to": "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/"
     },
     {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/",
