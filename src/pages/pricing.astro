@@ -18,10 +18,10 @@ const sections: Array<{
 			{ feature: 'Users/Staff', price: 'Free' },
 			{ feature: 'Branded MicroSite', price: 'Free' },
 			{ feature: 'Feature a Listing', price: 'from €10 / 72h' },
-			{ feature: 'Property Alerts', price: '5 credits' },
+			{ feature: 'Property Alerts', price: 'Free' },
 			{ feature: 'LeadBoard', price: 'Coming soon' },
 			{ feature: 'XML Import', price: 'Free' },
-			{ feature: 'XML Export', price: '35 credits / month or 250 credits per year' },
+			{ feature: 'XML Export', price: '35 credits / month or €350 per year' },
 			{ feature: 'Private Listings', price: 'Coming soon' },
 		],
 	},
@@ -44,7 +44,7 @@ const sections: Array<{
 		subtitle: 'We advertise for you',
 		items: [
 			{ feature: 'Feature a Listing', price: 'Coming soon' },
-			{ feature: 'Open a Direct Lead', price: 'Coming soon' },
+			{ feature: 'Open a Direct Lead', price: 'Free for limited time' },
 			{ feature: 'Featured Estate Agents', price: 'Coming soon' },
 			{ feature: 'AI Virtual Tours', price: 'Coming soon' },
 			{ feature: 'Premium Homepage', price: 'Coming soon' },
@@ -120,62 +120,61 @@ const sections: Array<{
 	<section class="section">
 		<div class="sectionHeader">
 			<h2>Website Builder</h2>
-			<div class="sectionMeta">From €50/month · No credit system required</div>
+			<div class="sectionMeta">From €50/month · No tied contracts</div>
 		</div>
-		<div class="twoCol">
-			<div class="panel">
-				<h3>Your own agency website - live in minutes</h3>
-				<p>
-					Build a fully branded property website without writing a single line of code. Drag-and-drop your listings, gallery, contact forms, and SEO
-					into place - then preview exactly how a client would see it before committing.
-				</p>
-				<p>No developers. No monthly retainers. No templates that all look the same.</p>
-				<div class="callout">
-					<div class="calloutTitle">€50/month</div>
-					<div class="calloutBody">
-						Or €450/year (save €150). Cancel anytime. No tie-in.
+		<div class="wbPricing">
+			<div class="wbBase">
+				<div class="wbBaseBadge">Base plan</div>
+				<div class="wbBasePrice">€50<span>/mo</span></div>
+				<div class="wbBaseNote">or €450/year &mdash; cancel anytime</div>
+				<ul class="wbBaseList">
+					<li>Drag-and-drop page builder</li>
+					<li>All MLS properties auto-loaded</li>
+					<li>Your own agency branding</li>
+					<li>Mobile-friendly layouts</li>
+					<li>Contact forms &amp; lead capture</li>
+					<li>Google Analytics integration</li>
+					<li>Free hosting &amp; SSL</li>
+					<li>Build &amp; preview before you pay</li>
+				</ul>
+				<a class="btnPrimary" href="/website-builder">See how it works</a>
+			</div>
+			<div class="wbAddons">
+				<div class="wbAddonsTitle">Power-ups &mdash; add as you grow</div>
+				<div class="wbAddonsNote">Billed monthly. Cancel anytime.</div>
+				<div class="wbAddonGrid">
+					<div class="wbAddonCard">
+						<div class="wbAddonName">AI keyword &amp; meta</div>
+						<div class="wbAddonDesc">Auto-writes SEO titles and descriptions for every listing</div>
+						<div class="wbAddonPrice">€5<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Monthly property digest</div>
+						<div class="wbAddonDesc">AI-powered email of new listings to your database</div>
+						<div class="wbAddonPrice">€5<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Popup lead capture</div>
+						<div class="wbAddonDesc">Smart exit-intent and scroll popups on your site</div>
+						<div class="wbAddonPrice">€8<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">AI FAQ auto-generator</div>
+						<div class="wbAddonDesc">Generates buyer Q&amp;A for each listing automatically</div>
+						<div class="wbAddonPrice">€8<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Custom domain</div>
+						<div class="wbAddonDesc">Connect your own domain (your-agency.com)</div>
+						<div class="wbAddonPrice">€20<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Extra pages</div>
+						<div class="wbAddonDesc">Landings, area guides, promos &mdash; pay per page</div>
+						<div class="wbAddonPrice">from €2<span>/page</span></div>
 					</div>
 				</div>
-				<div class="ctaRow">
-					<a class="btnPrimary" href="/website-builder">See how it works</a>
-				</div>
-			</div>
-			<div class="panel">
-				<h3>What you get</h3>
-				<ul class="pricingList">
-					<li class="pricingRow">
-						<span class="pricingFeature">Drag-and-drop page builder</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">Live MLS property listings</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">Your own domain &amp; branding</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">SEO optimisation</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">Mobile-friendly layouts</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">Free preview before you pay</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">Contact forms &amp; lead capture</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-					<li class="pricingRow">
-						<span class="pricingFeature">Google Analytics integration</span>
-						<span class="pricingPrice isFree">Included</span>
-					</li>
-				</ul>
+				<div class="wbAddonsFooter">More add-ons released regularly &mdash; AI tools, integrations, area pages</div>
 			</div>
 		</div>
 	</section>
@@ -477,4 +476,168 @@ const sections: Array<{
 			grid-template-columns: 1fr;
 		}
 	}
+
+	.wbPricing {
+		display: grid;
+		grid-template-columns: 340px 1fr;
+		gap: 14px;
+		align-items: start;
+	}
+
+	.wbBase {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 20px;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.wbBaseBadge {
+		display: inline-block;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.25);
+		color: rgba(0, 142, 126, 1);
+		font-size: 11px;
+		font-weight: 800;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		padding: 4px 10px;
+		border-radius: 999px;
+		margin-bottom: 12px;
+		align-self: flex-start;
+	}
+
+	.wbBasePrice {
+		font-size: 38px;
+		font-weight: 900;
+		letter-spacing: -0.03em;
+		color: #00100e;
+		line-height: 1;
+	}
+
+	.wbBasePrice span {
+		font-size: 18px;
+		font-weight: 700;
+		color: rgba(16, 24, 40, 0.6);
+	}
+
+	.wbBaseNote {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.6);
+		margin-top: 4px;
+		margin-bottom: 16px;
+	}
+
+	.wbBaseList {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 18px;
+		display: grid;
+		gap: 8px;
+	}
+
+	.wbBaseList li {
+		font-size: 14px;
+		color: rgba(16, 24, 40, 0.82);
+		padding: 6px 0;
+		border-bottom: 1px solid rgba(16, 24, 40, 0.06);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.wbBaseList li::before {
+		content: "✓";
+		color: #00ae9a;
+		font-weight: 700;
+		font-size: 12px;
+		flex-shrink: 0;
+	}
+
+	.wbAddons {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 20px;
+		padding: 20px;
+	}
+
+	.wbAddonsTitle {
+		font-size: 15px;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.88);
+		margin-bottom: 4px;
+	}
+
+	.wbAddonsNote {
+		font-size: 12px;
+		color: rgba(16, 24, 40, 0.55);
+		margin-bottom: 16px;
+	}
+
+	.wbAddonGrid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 10px;
+		margin-bottom: 14px;
+	}
+
+	.wbAddonCard {
+		background: rgba(255, 255, 255, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 14px;
+	}
+
+	.wbAddonName {
+		font-size: 13px;
+		font-weight: 800;
+		color: rgba(16, 24, 40, 0.88);
+		margin-bottom: 4px;
+	}
+
+	.wbAddonDesc {
+		font-size: 11px;
+		color: rgba(16, 24, 40, 0.6);
+		line-height: 1.45;
+		margin-bottom: 10px;
+	}
+
+	.wbAddonPrice {
+		font-size: 16px;
+		font-weight: 900;
+		letter-spacing: -0.02em;
+		color: #00ae9a;
+	}
+
+	.wbAddonPrice span {
+		font-size: 11px;
+		font-weight: 700;
+		color: rgba(16, 24, 40, 0.5);
+	}
+
+	.wbAddonsFooter {
+		font-size: 12px;
+		color: rgba(16, 24, 40, 0.5);
+		text-align: center;
+		padding-top: 10px;
+		border-top: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	@media (max-width: 900px) {
+		.wbPricing {
+			grid-template-columns: 1fr;
+		}
+		.wbAddonGrid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 580px) {
+		.wbAddonGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+
 </style>
