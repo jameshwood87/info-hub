@@ -149,6 +149,8 @@ const hreflangLinks = hreflangs.map((h) => ({ ...h, href: normalizeCanonical(h.h
 const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
+const effectiveOgImage = ogImage;
+
 const effectiveOgType = String(ogType || '').trim() || 'website';
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
 	? twitterCard
@@ -307,7 +309,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								<a class="brandLogoLink" href="https://info.propertylist.es/">
 									<img
 										class="brandLogo brandLogo--wide"
-										src="/og/logo-default.png?v=20260426-02"
+										src="/og/logo-default.png?v=20260514"
 										alt="PropertyList"
 										width="200"
 										height="40"
@@ -316,7 +318,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 									/>
 									<img
 										class="brandLogo brandLogo--icon"
-										src="/og/icon-easter.png"
+										src="/og/icon-default.png"
 										alt="PropertyList"
 										width="40"
 										height="40"
@@ -324,10 +326,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 										decoding="async"
 									/>
 								</a>
-								<a class="brandText" href={lang === 'es' ? '/es/' : '/'}>Info Hub</a>
 							</div>
+							<a class="brandText brandText--centered" href="/">Info Hub</a>
 							<div class="navLinks">
-								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
 								<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
@@ -439,7 +440,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<div class="footerInner">
 					<div class="footerBrand">
 						<a href="https://propertylist.es/" class="footerLogoLink">
-							<img src="/og/icon-easter.png" alt="PropertyList" width="36" height="36" loading="lazy" decoding="async" />
+							<img src="/og/icon-default.png" alt="PropertyList" width="36" height="36" loading="lazy" decoding="async" />
 							<span>PropertyList</span>
 						</a>
 						<p class="footerTagline">
@@ -1600,6 +1601,10 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		font-weight: 900;
 		letter-spacing: -0.02em;
 		color: rgba(11, 18, 32, 0.82);
+	}
+
+	.brandText--centered {
+		margin-right: auto;
 	}
 
 	.navLinks {
