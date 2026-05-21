@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 
 const title = 'Precios • PropertyList Info Hub';
 const description =
-	'El MLS y el CRM son gratis para siempre para agencias y agentes. Usa créditos opcionales de pago por uso para destacar anuncios y extras, solo cuando lo necesites.';
+	'El MLS y el CRM son gratis para siempre para agencias y agentes. Usa créditos opcionales para destacar anuncios y extras, solo cuando los necesites.';
 
 const sections: Array<{
 	title: string;
@@ -19,10 +19,10 @@ const sections: Array<{
 			{ feature: 'MicroSite con marca', price: 'Gratis' },
 			{ feature: 'Destacar un anuncio', price: '10 créditos / 72h' },
 			{ feature: 'Alertas de propiedades', price: '5 créditos' },
-			{ feature: 'LeadBoard', price: 'Próximamente' },
+			{ feature: 'LeadBoard', price: 'Herramientas de pago' },
 			{ feature: 'Importación XML', price: 'Gratis' },
 			{ feature: 'Exportación XML', price: '35 créditos / mes o 250 créditos / año' },
-			{ feature: 'Anuncios privados', price: 'Próximamente' },
+			{ feature: 'Anuncios privados', price: 'Herramientas de pago' },
 		],
 	},
 	{
@@ -33,9 +33,9 @@ const sections: Array<{
 			{ feature: 'Eventos del calendario', price: 'Gratis' },
 			{ feature: 'Pipeline de ventas', price: 'Gratis' },
 			{ feature: 'Subida de documentos', price: 'Gratis' },
-			{ feature: 'Utilidades de IA', price: 'Próximamente' },
-			{ feature: 'Funnels de IA', price: 'Próximamente' },
-			{ feature: 'Chatbot de IA', price: 'Próximamente' },
+			{ feature: 'Utilidades de IA', price: 'Herramientas de pago' },
+			{ feature: 'Funnels de IA', price: 'Herramientas de pago' },
+			{ feature: 'Chatbot de IA', price: 'Herramientas de pago' },
 			{ feature: 'Análisis de mercado con IA', price: '5 créditos por análisis (oferta por tiempo limitado)' },
 		],
 	},
@@ -43,15 +43,53 @@ const sections: Array<{
 		title: 'Portal Público',
 		subtitle: 'Nosotros hacemos publicidad por ti',
 		items: [
-			{ feature: 'Destacar un anuncio', price: 'Próximamente' },
-			{ feature: 'Abrir un lead directo', price: 'Próximamente' },
-			{ feature: 'Agentes destacados', price: 'Próximamente' },
-			{ feature: 'Tours virtuales con IA', price: 'Próximamente' },
-			{ feature: 'Homepage premium', price: 'Próximamente' },
-			{ feature: 'Servicios inmobiliarios', price: 'Próximamente' },
+			{ feature: 'Destacar un anuncio', price: 'Herramientas de pago' },
+			{ feature: 'Abrir un lead directo', price: 'Herramientas de pago' },
+			{ feature: 'Agentes destacados', price: 'Herramientas de pago' },
+			{ feature: 'Tours virtuales con IA', price: 'Herramientas de pago' },
+			{ feature: 'Homepage premium', price: 'Herramientas de pago' },
+			{ feature: 'Servicios inmobiliarios', price: 'Herramientas de pago' },
 		],
 	},
 ];
+
+
+const pricingFaqItems = [
+	{
+		q: '¿PropertyList es realmente gratis para las agencias?',
+		a: 'Sí. El MLS, CRM, anuncios ilimitados, cuentas de equipo y gestión de contactos son 100% gratis para siempre. Solo pagas por mejoras opcionales como destacar anuncios (desde 10 créditos) o el Website Builder (desde 50€/mes).',
+	},
+	{
+		q: '¿Cómo funcionan los créditos?',
+		a: '1 crédito = 1€. Las compras en volumen incluyen descuentos y los créditos nunca caducan. Usa créditos para destacar anuncios, exportar XML, acceder al Análisis de Mercado con IA u otras funciones premium.',
+	},
+	{
+		q: '¿Puedo cancelar mi suscripción al Website Builder en cualquier momento?',
+		a: 'Sí. No hay contratos vinculados ni tasas de cancelación. Cancela mensualmente o anualmente sin penalizaciones.',
+	},
+	{
+		q: '¿Qué incluye el plan gratuito?',
+		a: 'Anuncios ilimitados, cuentas de personal ilimitadas, un MicroSite con marca para tu agencia, CRM completo con gestión de contactos y leads, eventos de calendario, pipeline de ventas, subida de documentos, acceso a la Comunidad de WhatsApp y distribución social a Facebook — todo gratis.',
+	},
+	{
+		q: '¿Cuánto cuesta el Website Builder?',
+		a: 'Desde 50€/mes (o 450€/año). Añade extras opcionales: SEO con IA (+5€/mes), captura de leads con popups (+8€/mes), dominio personalizado (+20€/mes). Todos los planes incluyen hosting gratuito, SSL y carga automática de anuncios del MLS.',
+	},
+	{
+		q: '¿Hay prueba gratuita para las funciones de pago?',
+		a: 'Abrir un Lead Directo es gratis actualmente por tiempo limitado — sin necesidad de créditos. Los anuncios destacados empiezan desde 10 créditos por anuncio. Las agencias verificadas también reciben 20 créditos gratis al registrarse.',
+	},
+];
+
+const pricingFaqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: pricingFaqItems.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
 ---
 
 <Layout
@@ -64,6 +102,7 @@ const sections: Array<{
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/pricing/' },
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/pricing/' },
 	]}
+	schema={pricingFaqLd}
 >
 	<section class="hero">
 		<div class="heroInner">
@@ -138,6 +177,20 @@ const sections: Array<{
 						))}
 					</ul>
 				</section>
+			))}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Preguntas frecuentes</h2>
+		</div>
+		<div class="faqGrid">
+			{pricingFaqItems.map((f) => (
+				<div class="faqCard">
+					<div class="faqQ">{f.q}</div>
+					<div class="faqA">{f.a}</div>
+				</div>
 			))}
 		</div>
 	</section>
