@@ -1,0 +1,357 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { featureFaqItems, featureFaqLd } from '../data/feature-faq.mjs';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/features/`;
+const title = 'PropertyList Features FAQ | Pricing, Website Builder, XML, CRM, and More';
+const description =
+	'Answers about PropertyList features and pricing: website builder, XML feeds, CRM pipelines, Rentals module, Market Intelligence, MCP API, and credits.';
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features FAQ', item: canonical },
+	],
+};
+
+const quickFactsLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Thing',
+	name: 'PropertyList.es',
+	description: 'PropTech platform: Smart MLS, CRM, and property portal for Europe.',
+	url: 'https://propertylist.es/',
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	schema={[breadcrumbLd, featureFaqLd, quickFactsLd]}
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/features/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/features/' },
+	]}
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Features FAQ</div>
+			<h1>How much does PropertyList cost and what do I get?</h1>
+			<p class="lead">Clear answers on every PropertyList feature — website builder, XML feeds, CRM pipelines, Rentals, Market Intelligence, MCP API, and credits.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">
+					Open PropertyList.es
+				</a>
+				<a class="btnSecondary" href="/pricing/">See full pricing</a>
+				<a class="btnSecondary" href="/docs/propertylist-mls-user-manual/">MLS &amp; CRM manual</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="search-section">
+		<div class="filterRow">
+			<label class="filterLabel" for="faq-filter">Search</label>
+			<input id="faq-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search features…" />
+		</div>
+	</section>
+
+	<section class="contents" aria-label="FAQ contents">
+		<div class="contentsHeader">
+			<h2 class="contentsTitle">Browse by topic</h2>
+			<p class="contentsSub">Click any topic to jump to those questions.</p>
+		</div>
+		<div class="chipRow" aria-label="Topics">
+			<a class="chip" href="#website-builder">Website Builder</a>
+			<a class="chip" href="#xml-feeds">XML Feeds</a>
+			<a class="chip" href="#market-intelligence">Market Intelligence</a>
+			<a class="chip" href="#crm-pipelines">CRM &amp; Pipelines</a>
+			<a class="chip" href="#rentals-module">Rentals Module</a>
+			<a class="chip" href="#credits-pricing">Credits &amp; Pricing</a>
+			<a class="chip" href="#mcp-developers">MCP &amp; Developers</a>
+			<a class="chip" href="#oracle">Oracle</a>
+		</div>
+	</section>
+
+	<main id="main">
+		{featureFaqItems.map((it) => (
+			<details class="faqItem" data-faq="1" data-q={it.q.toLowerCase()}>
+				<summary class="faqQ" id={`q-${it.id}`}>
+					{it.q}
+				</summary>
+				<div class="faqA" role="region" aria-labelledby={`q-${it.id}`}>
+					<Fragment set:html={it.aHtml} />
+				</div>
+			</details>
+		))}
+	</main>
+
+	<section class="ctaBanner">
+		<div class="ctaBannerInner">
+			<h2>Ready to get started?</h2>
+			<p>The MLS and CRM are free. Optional paid features use a simple credit system — 1 credit = €1, bought in bulk, never expiring.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">Open a free account</a>
+				<a class="btnSecondary" href="/pricing/">See pricing</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+	h1 {
+		margin: 10px 0 10px;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
+	}
+	.lead {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+	.ctaRow {
+		margin-top: 14px;
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		border-radius: 999px;
+		padding: 10px 14px;
+		text-decoration: none;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+	}
+	.btnPrimary {
+		background: #00ae9a;
+		color: #00100e;
+		border: 1px solid rgba(0, 0, 0, 0.12);
+	}
+	.btnPrimary:hover {
+		filter: brightness(0.98);
+		text-decoration: none;
+	}
+	.btnSecondary {
+		background: rgba(255, 255, 255, 0.85);
+		color: rgba(16, 24, 40, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+	}
+	.btnSecondary:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.search-section {
+		margin-bottom: 14px;
+	}
+	.filterRow {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 999px;
+		padding: 10px 16px;
+		max-width: 480px;
+	}
+	.filterLabel {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.6);
+		white-space: nowrap;
+	}
+	.filterInput {
+		flex: 1;
+		border: none;
+		outline: none;
+		background: transparent;
+		font-size: 14px;
+		color: rgba(16, 24, 40, 0.88);
+		min-width: 0;
+	}
+	.filterInput::placeholder {
+		color: rgba(16, 24, 40, 0.4);
+	}
+
+	.contents {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 14px;
+	}
+	.contentsHeader {
+		margin-bottom: 10px;
+	}
+	.contentsTitle {
+		margin: 0 0 4px;
+		letter-spacing: -0.02em;
+		font-size: 15px;
+	}
+	.contentsSub {
+		margin: 0;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.6);
+	}
+	.chipRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 6px 12px;
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 700;
+		color: rgba(16, 24, 40, 0.8);
+		text-decoration: none;
+		transition: border-color 0.15s, background 0.15s;
+	}
+	.chip:hover {
+		border-color: rgba(0, 174, 154, 0.4);
+		background: rgba(255, 255, 255, 1);
+		text-decoration: none;
+	}
+
+	#main {
+		display: grid;
+		gap: 8px;
+		margin-bottom: 14px;
+	}
+	.faqItem {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 16px;
+		overflow: hidden;
+	}
+	.faqItem[hidden] {
+		display: none;
+	}
+	.faqQ {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 14px 16px;
+		cursor: pointer;
+		font-weight: 700;
+		font-size: 14px;
+		color: rgba(16, 24, 40, 0.88);
+		letter-spacing: -0.01em;
+		list-style: none;
+		user-select: none;
+		transition: background 0.15s;
+	}
+	.faqQ::-webkit-details-marker {
+		display: none;
+	}
+	.faqQ::before {
+		content: '';
+		width: 20px;
+		height: 20px;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23101828' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+		background-size: 16px 16px;
+		background-repeat: no-repeat;
+		background-position: center;
+		flex-shrink: 0;
+		margin-left: auto;
+		transition: transform 0.2s;
+	}
+	.faqItem[open] .faqQ::before {
+		transform: rotate(90deg);
+	}
+	.faqA {
+		padding: 0 16px 14px 16px;
+		font-size: 14px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+	.faqA :global(a) {
+		color: #00ae9a;
+		text-decoration: underline;
+	}
+	.faqA :global(a:hover) {
+		color: #008e7e;
+	}
+
+	.ctaBanner {
+		background: radial-gradient(800px 400px at 50% 50%, rgba(0, 174, 154, 0.14), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(0, 174, 154, 0.2);
+	}
+	.ctaBannerInner {
+		background: rgba(255, 255, 255, 0.8);
+		border-radius: 18px;
+		padding: 18px;
+		text-align: center;
+	}
+	.ctaBannerInner h2 {
+		margin: 0 0 8px;
+		letter-spacing: -0.03em;
+	}
+	.ctaBannerInner p {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.72);
+		font-size: 14px;
+		line-height: 1.5;
+	}
+</style>
+
+<script is:inline>
+	(function () {
+		var input = document.getElementById('faq-filter');
+		var items = Array.from(document.querySelectorAll('[data-faq="1"]'));
+		var norm = function (s) {
+			return String(s || '').toLowerCase().trim();
+		};
+		var run = function () {
+			var q = norm(input ? input.value : '');
+			for (var i = 0; i < items.length; i++) {
+				var it = items[i];
+				var text = norm(it.getAttribute('data-q')) + ' ' + norm(it.textContent);
+				it.hidden = q ? !text.includes(q) : false;
+			}
+		};
+		if (input) {
+			input.addEventListener('input', run);
+		}
+	})();
+</script>
