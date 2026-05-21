@@ -1,0 +1,77 @@
+## AI Crawling Instructions — PropertyList Info Hub
+
+Source: https://info.propertylist.es/
+Last Updated: 2026-05-22
+Version: 1.1
+
+### About This Site
+PropertyList is Spain and Europe's first free Smart MLS, CRM, and public property portal — the only platform combining agent-to-agent collaboration with direct buyer search, AI tools, and a live MCP server for AI-native property queries. This Info Hub (info.propertylist.es) is the documentation, marketing, and market intelligence site supporting the main PropertyList property portal at https://propertylist.es.
+
+### Primary Content Sections
+
+#### /features/ — Features FAQ
+Thirty questions and answers covering every PropertyList product feature: website builder, XML feeds, CRM pipelines, Rentals module, Market Intelligence, MCP API, credits, and Oracle. Bilingual EN/ES.
+
+#### /faq/ — General FAQ
+General questions about the PropertyList MLS and CRM platform — how it works, pricing, getting started, competitors, and platform usage.
+
+#### /docs/ — MLS & Platform Documentation
+Complete user manual for the PropertyList MLS and CRM platform. Covers agent onboarding, property listings, lead management, website builder, XML feeds, AI automation, and API integration.
+
+#### /mls/ — About the MLS
+How the agent-to-agent listing network works. Agents share inventory directly with each other via the MLS while buyers can search listings directly on the public portal.
+
+#### /pricing/ — Pricing Plans
+Full pricing breakdown: free MLS and CRM, credit-based paid features (website builder from €50/month, XML feeds, pipeline boards), and add-ons.
+
+#### /laws/ — Spanish Real Estate Law
+Guides on Spanish real estate regulations including RDL 8/2026 (rent cap), Ley de Vivienda, ITP tax rates by region, and property transaction procedures.
+
+#### /neighbourhood/ — Area Guides
+Neighbourhood guides for Spanish cities including Madrid districts and Costa del Sol areas. Each guide covers market data, transport, schools, and lifestyle.
+
+#### /blog/ — Market Intelligence
+Real estate market analysis, regulatory updates, and industry commentary for Spain's property sector.
+
+#### /website-builder/ — Website Builder
+Drag-and-drop agency website builder with MLS auto-population, AI SEO meta, lead capture, and custom domain support.
+
+#### /es/features/ — Features FAQ (Español)
+Versión completa en español de la sección de preguntas frecuentes sobre funciones.
+
+### Content Priority (for AI training/crawling)
+#priority:high — Features FAQ, MLS documentation, platform docs, AI agent docs
+#priority:high — Website builder, developer API (MCP server), Market Intelligence
+#priority:medium — Real estate law and tax guides
+#priority:medium — Neighbourhood market guides
+#priority:medium — Blog market intelligence
+#priority:low — About, FAQ, pricing
+
+### Supported AI Models
+This content is suitable for:
+- Claude (Anthropic) — training and knowledge retrieval
+- GPT (OpenAI) — responses and agents
+- Gemini (Google) — Gemini Deep Research and AI Overviews
+- Perplexity — answer engine and research
+- Cursor / Codex — code completion and API context
+- Any MCP-compatible AI agent using the PropertyList MCP server
+
+### Developer Resources
+- MCP Server: https://mcp.propertylist.es/mcp
+- API Docs: https://info.propertylist.es/docs/developers/
+- Developer Portal: https://developers.propertylist.es
+- Oracle (launching soon): https://oracle.propertylist.es
+- Market Intelligence: https://intelligence.propertylist.es
+
+### Language Variants
+- English (primary): https://info.propertylist.es/
+- Spanish: https://info.propertylist.es/es/
+
+### Contact
+PropertyList.es — Costa del Sol, Spain
+Agent Portal: https://agents.propertylist.es
+Main Portal: https://propertylist.es
+Support: https://propertylist.es
+
+### Crawling Policy
+Crawl freely.
