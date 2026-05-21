@@ -17,7 +17,7 @@ const sections: Array<{
 			{ feature: 'Unlimited Listings', price: 'Free' },
 			{ feature: 'Users/Staff', price: 'Free' },
 			{ feature: 'Branded MicroSite', price: 'Free' },
-			{ feature: 'Feature a Listing', price: 'from €10 / 72h' },
+			{ feature: 'Feature a Listing', price: 'from €10' },
 			{ feature: 'Property Alerts', price: 'Free' },
 			{ feature: 'LeadBoard', price: 'Coming soon' },
 			{ feature: 'XML Import', price: 'Free' },
@@ -43,7 +43,7 @@ const sections: Array<{
 		title: 'Public Portal',
 		subtitle: 'We advertise for you',
 		items: [
-			{ feature: 'Feature a Listing', price: 'Coming soon' },
+				{ feature: 'Feature a Listing', price: 'from €10' },
 			{ feature: 'Open a Direct Lead', price: 'Free for limited time' },
 			{ feature: 'Featured Estate Agents', price: 'Coming soon' },
 			{ feature: 'AI Virtual Tours', price: 'Coming soon' },
@@ -51,7 +51,56 @@ const sections: Array<{
 			{ feature: 'Property Services', price: 'Coming soon' },
 		],
 	},
+	{
+		title: 'Website Builder',
+		subtitle: 'Your own agency website',
+		items: [
+			{ feature: 'Drag-and-drop builder', price: 'from €50/mo' },
+			{ feature: 'AI SEO & meta', price: '+€5/mo' },
+			{ feature: 'Popup lead capture', price: '+€8/mo' },
+			{ feature: 'Custom domain', price: '+€20/mo' },
+			{ feature: 'All MLS listings auto-loaded', price: 'Included' },
+			{ feature: 'Free hosting & SSL', price: 'Included' },
+		],
+	},
 ];
+
+const pricingFaqItems = [
+	{
+		q: 'Is PropertyList really free for estate agents?',
+		a: 'Yes. The MLS, CRM, unlimited listings, team accounts, and contact management are 100% free forever. You only pay for optional upgrades such as featured listings (from €10) or the Website Builder (from €50/mo).',
+	},
+	{
+		q: 'How do credits work?',
+		a: '1 credit = €1. Bulk purchases include discounts and credits never expire. Use credits to feature listings, run XML exports, access AI Market Analysis, or unlock other premium features.',
+	},
+	{
+		q: 'Can I cancel my website builder subscription anytime?',
+		a: 'Yes. There are no tied contracts and no cancellation fees. Cancel monthly or yearly at any time with no penalties.',
+	},
+	{
+		q: 'What do I get with the free plan?',
+		a: 'Unlimited property listings, unlimited staff accounts, a branded MicroSite for your agency, full CRM with contacts and leads management, calendar events, sales pipeline, document upload, WhatsApp Community access, and social distribution to Facebook — all free.',
+	},
+	{
+		q: 'How much does the Website Builder cost?',
+		a: 'From €50/month (or €450/year). Add optional power-ups: AI SEO meta (+€5/mo), popup lead capture (+€8/mo), custom domain (+€20/mo). All plans include free hosting, SSL, and automatic MLS listing loading.',
+	},
+	{
+		q: 'Is there a free trial for paid features?',
+		a: 'Open a Direct Lead is currently free for a limited time — no credits required. Featured listings start from €10 per listing. New Verified Agencies also receive 20 free credits on signup.',
+	},
+];
+
+const pricingFaqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: pricingFaqItems.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
 ---
 
 <Layout
@@ -64,6 +113,7 @@ const sections: Array<{
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/pricing/' },
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/pricing/' },
 	]}
+	schema={pricingFaqLd}
 >
 	<section class="hero">
 		<div class="heroInner">
@@ -203,6 +253,20 @@ const sections: Array<{
 			))}
 		</div>
 	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
+			<h2>Frequently asked questions</h2>
+		</div>
+		<div class="faqGrid">
+			{pricingFaqItems.map((f) => (
+				<div class="faqCard">
+					<div class="faqQ">{f.q}</div>
+					<div class="faqA">{f.a}</div>
+				</div>
+			))}
+		</div>
+	</section>
 </Layout>
 
 <style>
@@ -263,11 +327,13 @@ const sections: Array<{
 		justify-content: space-between;
 		gap: 12px;
 		margin: 0 0 10px;
+		flex-wrap: wrap;
 	}
 
 	.sectionMeta {
 		color: rgba(16, 24, 40, 0.7);
 		font-size: 14px;
+		white-space: nowrap;
 	}
 
 	.ctaRow {
@@ -479,9 +545,10 @@ const sections: Array<{
 
 	.wbPricing {
 		display: grid;
-		grid-template-columns: 340px 1fr;
+		grid-template-columns: 300px 1fr;
 		gap: 14px;
 		align-items: start;
+		overflow: hidden;
 	}
 
 	.wbBase {
@@ -509,7 +576,7 @@ const sections: Array<{
 	}
 
 	.wbBasePrice {
-		font-size: 38px;
+		font-size: 32px;
 		font-weight: 900;
 		letter-spacing: -0.03em;
 		color: #00100e;
@@ -625,6 +692,34 @@ const sections: Array<{
 		border-top: 1px solid rgba(16, 24, 40, 0.06);
 	}
 
+	.faqGrid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.faqCard {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 16px;
+		padding: 16px;
+	}
+
+	.faqQ {
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.9);
+		font-size: 14px;
+		letter-spacing: -0.01em;
+		margin-bottom: 8px;
+		line-height: 1.35;
+	}
+
+	.faqA {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+	}
+
 	@media (max-width: 900px) {
 		.wbPricing {
 			grid-template-columns: 1fr;
@@ -632,10 +727,28 @@ const sections: Array<{
 		.wbAddonGrid {
 			grid-template-columns: repeat(2, 1fr);
 		}
+		.faqGrid {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
 	@media (max-width: 580px) {
 		.wbAddonGrid {
+			grid-template-columns: 1fr;
+		}
+		.wbBasePrice {
+			font-size: 28px;
+		}
+		.wbBasePrice span {
+			font-size: 14px;
+		}
+		.sectionHeader {
+			gap: 6px;
+		}
+		.sectionMeta {
+			font-size: 12px;
+		}
+		.faqGrid {
 			grid-template-columns: 1fr;
 		}
 	}
