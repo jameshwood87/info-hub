@@ -64,15 +64,15 @@ const quickFactsLd = {
 			<h2 class="contentsTitle">Browse by topic</h2>
 			<p class="contentsSub">Click any topic to jump to those questions.</p>
 		</div>
-		<div class="chipRow" aria-label="Topics">
-			<a class="chip" href="#website-builder">Website Builder</a>
-			<a class="chip" href="#xml-feeds">XML Feeds</a>
-			<a class="chip" href="#market-intelligence">Market Intelligence</a>
-			<a class="chip" href="#crm-pipelines">CRM &amp; Pipelines</a>
-			<a class="chip" href="#rentals-module">Rentals Module</a>
-			<a class="chip" href="#credits-pricing">Credits &amp; Pricing</a>
-			<a class="chip" href="#mcp-developers">MCP &amp; Developers</a>
-			<a class="chip" href="#oracle">Oracle</a>
+		<div class="topicRow" aria-label="Topics">
+			<span class="chip">Website Builder</span>
+			<span class="chip">XML Feeds</span>
+			<span class="chip">Market Intelligence</span>
+			<span class="chip">CRM &amp; Pipelines</span>
+			<span class="chip">Rentals Module</span>
+			<span class="chip">Credits &amp; Pricing</span>
+			<span class="chip">MCP &amp; Developers</span>
+			<span class="chip">Oracle</span>
 		</div>
 	</section>
 
@@ -241,13 +241,6 @@ const quickFactsLd = {
 		font-size: 12px;
 		font-weight: 700;
 		color: rgba(16, 24, 40, 0.8);
-		text-decoration: none;
-		transition: border-color 0.15s, background 0.15s;
-	}
-	.chip:hover {
-		border-color: rgba(0, 174, 154, 0.4);
-		background: rgba(255, 255, 255, 1);
-		text-decoration: none;
 	}
 
 	#main {
@@ -308,6 +301,14 @@ const quickFactsLd = {
 	}
 	.faqA :global(a:hover) {
 		color: #008e7e;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	.faqItem .faqQ {
+		scroll-margin-top: 80px;
 	}
 
 	.ctaBanner {

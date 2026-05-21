@@ -186,7 +186,7 @@ const faqItems: FaqItem[] = [
 		section: 'How do I use PropertyList day-to-day?',
 		q: 'Is there market data and analytics available?',
 		aHtml:
-			'<p><strong>Coming soon.</strong> PropertyList will provide market trend reports, CMA tools, buyer preference insights, and pricing support data.</p>',
+			'<p>Yes. <a href="https://intelligence.propertylist.es">PropertyList Market Intelligence</a> is live — built on real MLS transaction data. Free city snapshots cover median price, year-on-year change, and days on market across Costa del Sol areas. Paid reports start at €5 for an Executive Overview and go up to €29 for an Investment Forensic. Live subscriptions for serious investors start at €29/month.</p>',
 	},
 	{
 		id: 'support',
@@ -244,6 +244,9 @@ const quickFactsLd = {
 				<a class="btnSecondary" href="/neighbourhood/">
 					Neighbourhood Guides
 				</a>
+			</div>
+			<div class="featuresCta">
+				Looking for product details? <a href="/features/">Features FAQ</a> — website builder, XML feeds, CRM pipelines, Rentals, Market Intelligence, MCP API, and more.
 			</div>
 
 			<div class="filterRow">
@@ -575,5 +578,29 @@ const quickFactsLd = {
 		.factsGrid {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	.featuresCta {
+		margin-top: 12px;
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.65);
+		background: rgba(0, 174, 154, 0.08);
+		border: 1px solid rgba(0, 174, 154, 0.2);
+		border-radius: 12px;
+		padding: 10px 14px;
+		display: inline-flex;
+		gap: 4px;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.featuresCta a {
+		color: #00ae9a;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.featuresCta a:hover {
+		text-decoration: underline;
 	}
 </style>

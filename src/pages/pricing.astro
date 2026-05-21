@@ -257,6 +257,7 @@ const pricingFaqLd = {
 	<section class="section">
 		<div class="sectionHeader">
 			<h2>Frequently asked questions</h2>
+			<p class="faqSub">See every feature explained in detail — website builder, XML feeds, CRM pipelines, Rentals, Market Intelligence, and more — on the <a href="/features/">Features FAQ page</a>.</p>
 		</div>
 		<div class="faqGrid">
 			{pricingFaqItems.map((f) => (
@@ -718,6 +719,18 @@ const pricingFaqLd = {
 		font-size: 13px;
 		color: rgba(16, 24, 40, 0.72);
 		line-height: 1.55;
+	}
+
+	.faqSub {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.6);
+		margin: -6px 0 12px;
+		line-height: 1.5;
+	}
+
+	.faqSub a {
+		color: #00ae9a;
+		text-decoration: underline;
 	}
 
 	@media (max-width: 900px) {
