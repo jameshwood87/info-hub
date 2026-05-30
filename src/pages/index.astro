@@ -22,13 +22,44 @@ const hrefForPersona = (nextPersona: string) => {
 <Layout
 	lang="en"
 	title="PropertyList — Free MLS, CRM & Property Portal for Spain"
-	description="PropertyList is Europe's free Smart MLS, CRM & Property Portal. The MLS and CRM are 100% free forever for estate agents and developers. No hidden fees, no setup fees, no lock-ins."
+	description="Free Smart MLS & CRM for Spanish estate agents. No hidden fees, no setup costs, no lock-ins. Share listings directly with other agents, 100% free forever."
 	canonical="https://info.propertylist.es/"
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/' },
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/' },
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/' },
 	]}
+	schema={{
+		'@context': 'https://schema.org',
+		'@type': 'RealEstateAgent',
+		name: 'PropertyList',
+		description: 'Free agent-to-agent MLS and CRM for Spain. 6,000+ active listings, 1,250+ agents.',
+		url: 'https://propertylist.es/',
+		logo: 'https://info.propertylist.es/og/logo-default.png',
+		image: 'https://info.propertylist.es/og/logo-default.png',
+		address: {
+			'@type': 'PostalAddress',
+			addressLocality: 'Marbella',
+			addressRegion: 'Andalusia',
+			addressCountry: 'ES',
+		},
+		areaServed: {
+			'@type': 'Country',
+			name: 'Spain',
+		},
+		contactPoint: {
+			'@type': 'ContactPoint',
+			telephone: '+34-610-95-11-77',
+			contactType: 'customer service',
+			availableLanguage: ['Spanish', 'English'],
+		},
+		sameAs: [
+			'https://www.facebook.com/PropertyList.es',
+			'https://www.instagram.com/propertylist_es/',
+			'https://www.linkedin.com/company/11216131',
+			'https://www.youtube.com/@PropertyList_es',
+		],
+	}}
 >
 	<section class="hero">
 		<div class="heroBg" aria-hidden="true">
@@ -47,12 +78,16 @@ const hrefForPersona = (nextPersona: string) => {
 
 				<div class="metaRow">
 					<div class="metaItem">
-						<div class="metaKpi">5,700+</div>
+						<div class="metaKpi">6,000+</div>
 						<div class="metaLabel">Active Listings</div>
 					</div>
 					<div class="metaItem">
-						<div class="metaKpi">1,350+</div>
+						<div class="metaKpi">1,250+</div>
 						<div class="metaLabel">Active Agents</div>
+					</div>
+					<div class="metaItem">
+						<div class="metaKpi">800+</div>
+						<div class="metaLabel">Agencies</div>
 					</div>
 					<div class="metaItem">
 						<div class="metaKpi">Multi-Language</div>

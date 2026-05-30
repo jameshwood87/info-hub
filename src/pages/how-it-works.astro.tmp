@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/hiw-page.css';
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/hiw-page.css';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/how-it-works/`;
+const title = 'How PropertyList Works — Free MLS, CRM & Website Platform for Estate Agents in Spain';
+const description =
+  'See how PropertyList gives estate agents a free MLS, performance CRM and optional website builder — all in one connected platform. List once, share everywhere, manage every lead in one place.';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+    { '@type': 'ListItem', position: 2, name: 'How It Works', item: `${origin}/how-it-works/` },
+  ],
+};
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: 'PropertyList',
+  url: 'https://propertylist.es/',
+  areaServed: { '@type': 'Country', name: 'Spain' },
+  serviceArea: [
+    { '@type': 'Place', name: 'Costa del Sol' },
+    { '@type': 'Place', name: 'Marbella' },
+    { '@type': 'Place', name: 'Madrid' },
+    { '@type': 'Place', name: 'Barcelona' },
+    { '@type': 'Place', name: 'Malaga' },
+    { '@type': 'Place', name: 'Alicante' },
+    { '@type': 'Place', name: 'Valencia' },
+  ],
+};
+---
+
+
+

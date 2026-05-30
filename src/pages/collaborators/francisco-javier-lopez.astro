@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Francisco Javier Lopez - Developer Partnerships | PropertyList.es</title>
+  <meta name="description" content="Francisco Javier Lopez leads property partnerships at PropertyList.es - working with developers and promotors to get new developments in front of qualified buyers across Spain." />
+  <link rel="canonical" href="https://info.propertylist.es/collaborators/francisco-javier-lopez/" />
+  <link rel="alternate" hreflang="es" href="https://info.propertylist.es/es/collaborators/francisco-javier-lopez/" />
+  <meta property="og:title" content="Francisco Javier Lopez - Developer Partnerships | PropertyList.es" />
+  <meta property="og:description" content="Francisco Javier Lopez leads property partnerships at PropertyList.es." />
+  <meta property="og:type" content="profile" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #1abf9b;
+      --teal-dark: #12967a;
+      --teal-light: #e8faf6;
+      --navy: #0f1f2e;
+      --dark: #1a2b3c;
+      --mid: #4a5e72;
+      --light: #8fa3b4;
+      --off-white: #f7f9fb;
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── SITE NAV ─── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid rgba(15, 31, 46, 0.08);
+    }
+
+    .site-nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
+    }
+
+    .site-nav-logo img {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
+
+    .site-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-switch {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--mid);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(15, 31, 46, 0.15);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lang-switch:hover {
+      border-color: var(--teal);
+      color: var(--teal-dark);
+      text-decoration: none;
+    }
+
+    .lang-switch-es {
+      background: var(--teal-light);
+      border-color: rgba(26, 191, 155, 0.3);
+      color: var(--teal-dark);
+    }
+
+    /* ─── HAMBURGER ─── */
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 200;
+      position: relative;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    .nav-hamburger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-hamburger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* ─── MOBILE OVERLAY ─── */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--navy);
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .nav-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .nav-overlay a {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-overlay a:hover {
+      color: var(--teal);
+    }
+
+    .nav-overlay-logo {
+      margin-bottom: 12px;
+    }
+
+    .nav-overlay-logo img {
+      height: 44px;
+      width: auto;
+      opacity: 0.85;
+      filter: brightness(0) invert(1);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: calc(100vh - 71px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-left {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      min-height: calc(100vh - 71px);
+    }
+
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,191,155,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 240px;
+      background: linear-gradient(to top, var(--navy) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0.85;
+    }
+
+    .hero-photo-credit {
+      position: relative;
+      z-index: 3;
+      padding: 40px 48px;
+      width: 100%;
+    }
+
+    .teal-line {
+      width: 48px;
+      height: 3px;
+      background: var(--teal);
+      margin-bottom: 20px;
+    }
+
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 3.5vw, 48px);
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .hero-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ─── RIGHT PANEL ─── */
+    .hero-right {
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px;
+      position: relative;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--teal), transparent);
+    }
+
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal-light);
+      border: 1px solid rgba(26,191,155,0.3);
+      border-radius: 100px;
+      padding: 6px 14px;
+      margin-bottom: 40px;
+      width: fit-content;
+    }
+
+    .platform-badge img {
+      height: 18px;
+    }
+
+    .platform-badge span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal-dark);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .intro-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 2.5vw, 32px);
+      line-height: 1.3;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .body-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--mid);
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, var(--teal), transparent);
+      margin: 40px 0;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--teal-dark); text-decoration: none; }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--navy);
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 1.5px solid var(--teal);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { background: var(--teal-light); text-decoration: none; }
+
+    /* ─── CONTENT SECTIONS ─── */
+    .content-section {
+      background: var(--off-white);
+      padding: 80px 0;
+    }
+
+    .content-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .content-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 32px;
+      border: 1px solid #e8eaed;
+    }
+
+    .content-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .content-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--mid);
+    }
+
+    /* ─── FOOTER ─── */
+    .collab-footer {
+      background: var(--navy);
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .collab-footer p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 16px;
+    }
+
+    .collab-footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .collab-footer a:hover { text-decoration: underline; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-left {
+        min-height: 60vh;
+      }
+
+      .hero-right {
+        padding: 56px 32px;
+      }
+
+      .hero-right::before {
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(to right, transparent, var(--teal), transparent);
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-hamburger {
+        display: flex;
+      }
+
+      .site-nav-actions .nav-desktop-link {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-left {
+        min-height: 50vh;
+      }
+
+      .hero-right {
+        padding: 40px 24px;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .site-nav-inner {
+        padding: 12px 16px;
+      }
+
+      .site-nav-logo img {
+        height: 36px;
+      }
+    }
+
+    /* ─── CONTACT MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 560px;
+      width: 100%;
+      padding: 36px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+      line-height: 1;
+    }
+    .modal-close:hover { color: #222; }
+    .modal-content h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      margin-bottom: 6px;
+      color: var(--dark);
+    }
+    .modal-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 7px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+    .form-group textarea { resize: vertical; }
+    .btn-full { width: 100%; text-align: center; margin-top: 8px; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ─── SITE NAV ─── -->
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a href="https://propertylist.es/" class="site-nav-logo">
+        <img src="https://info.propertylist.es/email-images/originals/email-logo-main-for-light-bk.png" alt="PropertyList.es" />
+      </a>
+      <div class="site-nav-actions">
+        <a href="/es/collaborators/francisco-javier-lopez/" class="lang-switch lang-switch-es">
+          ES
+        </a>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── MOBILE OVERLAY ─── -->
+  <div class="nav-overlay" id="navOverlay">
+    <div class="nav-overlay-logo">
+      <img src="https://info.propertylist.es/email-images/originals/email-logo-main-for-light-bk.png" alt="PropertyList.es" />
+    </div>
+    <a href="https://propertylist.es/">Home</a>
+    <a href="https://info.propertylist.es/about-us/">About</a>
+    <a href="https://info.propertylist.es/general-information/">Guides</a>
+    <a href="https://info.propertylist.es/docs/">Documentation</a>
+    <a href="/es/collaborators/francisco-javier-lopez/" style="color: var(--teal);">Espanol</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var h = document.getElementById('navHamburger');
+      var o = document.getElementById('navOverlay');
+      if (!h || !o) return;
+      h.addEventListener('click', function () {
+        var isOpen = o.classList.contains('open');
+        o.classList.toggle('open');
+        h.classList.toggle('active');
+        h.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+      });
+      o.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          o.classList.remove('open');
+          h.classList.remove('active');
+          h.setAttribute('aria-label', 'Open menu');
+          document.body.style.overflow = '';
+        });
+      });
+    });
+  </script>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <!-- Left: Photo + Name -->
+    <div class="hero-left">
+      <img
+        src="/collaborators/francisco-javier-lopez-header.jpg"
+        alt="Francisco Javier Lopez - Developer and Promotor Partnerships at PropertyList.es"
+        class="hero-photo"
+      />
+      <div class="hero-photo-credit">
+        <div class="teal-line"></div>
+        <h1 class="hero-name">Francisco Javier Lopez</h1>
+        <p class="hero-title">Developer Partnerships</p>
+      </div>
+    </div>
+
+    <!-- Right: Bio + CTA -->
+    <div class="hero-right">
+      <div class="platform-badge">
+        <img src="https://info.propertylist.es/favicon.png" alt="PropertyList" />
+        <span>PropertyList.es</span>
+      </div>
+
+      <p class="section-label">About</p>
+      <p class="intro-text">
+        Francisco Javier Lopez is the point of contact for developer and promotor partnerships at PropertyList.es
+      </p>
+
+      <p class="body-text">
+        Francisco Javier leads developer and promotor partnerships at PropertyList.es. He works closely with property developers and promoters to onboard new developments, advising on the best strategies to maximise visibility and performance on the platform.
+      </p>
+
+      <p class="body-text">
+        If you're launching a development or want to expand your reach across Spain's most active property market, he's the person to talk to.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="cta-buttons">
+        <a href="https://developers.propertylist.es/signup/new" class="btn-primary">
+          List a Development
+        </a>
+        <a href="#" class="btn-secondary modal-trigger">
+          Get in touch
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTENT SECTIONS ─── -->
+  <section class="content-section">
+    <div class="content-inner">
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>New Build Partnerships</h3>
+          <p>
+            PropertyList gives new developments immediate access to one of Spain's largest network of active agents and buyers. Francisco works directly with promotors to structure listings, set up visibility, and provide ongoing platform support.
+          </p>
+        </div>
+        <div class="content-card">
+          <h3>Direct to Buyer Network</h3>
+          <p>
+            PropertyList gives new developments immediate access to one of Spain's largest network of active agents and buyers - without paying portal fees or locking listings behind a paywall. Francisco works directly with promotors to get developments visible and performing on the platform.
+          </p>
+        </div>
+        <div class="content-card">
+          <h3>Partner Onboarding</h3>
+          <p>
+            Getting your development or integration live is straightforward. Francisco coordinates the onboarding process from initial setup through to your development going live on the platform.
+          </p>
+        </div>
+        <div class="content-card">
+          <h3>Property Developer Resources</h3>
+          <p>
+            PropertyList provides promotors and developers with everything needed to present a development effectively to the market. Francisco manages the developer portal, advises listing best practices, and coordinates directly with agency partners to support successful listings.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="collab-footer">
+    <p>
+      <a href="https://propertylist.es">PropertyList.es</a> - Free agent-to-agent MLS for Spain
+    </p>
+    <p style="font-size:12px; color: rgba(255,255,255,0.2);">
+      &copy; 2026 PropertyList.es &middot; Built for agents, not portals.
+    </p>
+  </footer>
+
+
+  <!-- ─── CONTACT MODAL ─── -->
+  <div class="modal-overlay" id="contact-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <h2>Get in touch</h2>
+      <p class="modal-subtitle">Send a message to Francisco Javier about your development or partnership enquiry.</p>
+      <form class="contact-form" id="contact-form" action="https://formspree.io/f/xpwzvvvv" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="company">Company / Developer</label>
+            <input type="text" id="company" name="company" required>
+          </div>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="developments">Number of Active New Developments</label>
+          <select id="developments" name="developments">
+            <option value="">Select...</option>
+            <option value="0">None yet - exploring</option>
+            <option value="1">1</option>
+            <option value="2-5">2-5</option>
+            <option value="6-10">6-10</option>
+            <option value="10+">10+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4" placeholder="Tell us about your development, location, and any specific requirements..."></textarea>
+        </div>
+        <input type="hidden" name="_subject" value="Developer Partnership Enquiry">
+        <input type="hidden" name="_from_page" value="francisco-javier-lopez">
+        <button type="submit" class="btn-primary btn-full">Send Enquiry</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('contact-modal');
+    const trigger = document.querySelector('.modal-trigger');
+    const closeBtn = document.getElementById('modal-close');
+
+    if (trigger && modal) {
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+
+      closeBtn.addEventListener('click', function() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

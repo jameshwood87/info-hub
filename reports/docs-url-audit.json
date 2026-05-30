@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-14T17:43:17.426Z",
+  "generatedAt": "2026-05-27T10:34:34.771Z",
   "origin": "https://info.propertylist.es",
   "sitemap": {
     "url": "https://info.propertylist.es/sitemap.xml",
@@ -12,10 +12,10 @@
   "counts": {
     "sitemapDocsUrls": 309,
     "sitemapDuplicateGroups": 0,
-    "crawledPages": 399,
-    "reachableDocsPages": 399,
+    "crawledPages": 397,
+    "reachableDocsPages": 397,
     "orphanDocsPages": 4,
-    "redirectsSeen": 33,
+    "redirectsSeen": 32,
     "brokenPagesSeen": 0,
     "brokenLinksSeen": 0
   },
@@ -38,14 +38,14 @@
       "to": "/docs/laws-procedures/buying-a-property/legal-requirements/obtaining-a-nie/"
     },
     {
-      "from": "/docs/laws-procedures/buying-a-property/paying-taxes/",
-      "status": 301,
-      "to": "/docs/laws-procedures/buying-a-property/legal-requirements/paying-taxes/"
-    },
-    {
       "from": "/docs/laws-procedures/buying-a-property/registering-the-property-in-the-land-registry/",
       "status": 301,
       "to": "/docs/laws-procedures/buying-a-property/legal-requirements/registering-the-property-in-the-land-registry/"
+    },
+    {
+      "from": "/docs/laws-procedures/buying-a-property/paying-taxes/",
+      "status": 301,
+      "to": "/docs/laws-procedures/buying-a-property/legal-requirements/paying-taxes/"
     },
     {
       "from": "/docs/laws-procedures/selling-a-property/marketing-the-property/",
@@ -181,11 +181,6 @@
       "from": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/creating-a-new-listing/",
       "status": 301,
       "to": "/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/"
-    },
-    {
-      "from": "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/how-to-use-pipeline/",
-      "status": 301,
-      "to": "/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/"
     },
     {
       "from": "/es/docs/propertylist-mls-manual-de-usuario/ai-automation/ai-property-research-agent/",

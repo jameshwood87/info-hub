@@ -1,0 +1,498 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/how-it-works/`;
+const title = 'How PropertyList Works — Free MLS, CRM & Website Platform for Estate Agents in Spain';
+const description =
+  'See how PropertyList gives estate agents a free MLS, performance CRM and optional website builder — all in one connected platform. List once, share everywhere, manage every lead in one place.';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+    { '@type': 'ListItem', position: 2, name: 'How It Works', item: `${origin}/how-it-works/` },
+  ],
+};
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: 'PropertyList',
+  url: 'https://propertylist.es/',
+  areaServed: { '@type': 'Country', name: 'Spain' },
+  serviceArea: [
+    { '@type': 'Place', name: 'Costa del Sol' },
+    { '@type': 'Place', name: 'Marbella' },
+    { '@type': 'Place', name: 'Madrid' },
+    { '@type': 'Place', name: 'Barcelona' },
+    { '@type': 'Place', name: 'Malaga' },
+    { '@type': 'Place', name: 'Alicante' },
+    { '@type': 'Place', name: 'Valencia' },
+  ],
+};
+---
+
+<Layout
+  lang="en"
+  {title}
+  {description}
+  {canonical}
+  hreflangs={[
+    { hreflang: 'en', href: 'https://info.propertylist.es/how-it-works/' },
+    { hreflang: 'x-default', href: 'https://info.propertylist.es/how-it-works/' },
+  ]}
+  schema={[breadcrumbLd, orgLd]}
+>
+
+<!-- HERO -->
+<section class="pl-hero">
+  <div class="pl-hero-grid"></div>
+  <div class="pl-hero-glow"></div>
+  <div class="pl-hero-inner">
+    <div class="pl-badge">Spain's First Free Smart Platform for Estate Agents</div>
+    <h1>Stop paying rent<br>to <em>host your own listings.</em></h1>
+    <p>PropertyList is a free MLS, performance-based CRM and website platform built exclusively for estate agents on the Costa del Sol. One system. Zero monthly subscriptions. Everything connected.</p>
+    <div class="pl-ctas">
+      <a href="https://agents.propertylist.es/login" class="pl-btn-primary">Get Started — It's Free &rarr;</a>
+      <a href="#how-it-works" class="pl-btn-secondary">See How It Works &darr;</a>
+    </div>
+    <div class="pl-stats">
+      <div class="pl-stat">
+        <div class="pl-stat-num">1,250<span>+</span></div>
+        <div class="pl-stat-label">Active Agents</div>
+      </div>
+      <div class="pl-stat">
+        <div class="pl-stat-num">6,000<span>+</span></div>
+        <div class="pl-stat-label">Live Listings</div>
+      </div>
+      <div class="pl-stat">
+        <div class="pl-stat-num">30<span>k+</span></div>
+        <div class="pl-stat-label">Facebook Community</div>
+      </div>
+      <div class="pl-stat">
+        <div class="pl-stat-num">100<span>%</span></div>
+        <div class="pl-stat-label">Free Core Platform</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN BAND -->
+<div class="pl-pain">
+  <div class="pl-pain-inner">
+    <div class="pl-pain-text">
+      <h2>Sound familiar?</h2>
+      <p>The average Costa del Sol agency pays for 4-6 separate tools every month - most of which don't talk to each other. PropertyList replaces all of it, for free.</p>
+    </div>
+    <div class="pl-pain-pills">
+      <div class="pl-pain-pill"><span class="pl-x">✗</span> Portal subscriptions eating margin</div>
+      <div class="pl-pain-pill"><span class="pl-x">✗</span> CRM subscriptions whether leads convert or not</div>
+      <div class="pl-pain-pill"><span class="pl-x">✗</span> Agency website dev costs</div>
+      <div class="pl-pain-pill"><span class="pl-x">✗</span> Listings manually updated everywhere</div>
+      <div class="pl-pain-pill"><span class="pl-x">✗</span> Leads scattered across inboxes</div>
+      <div class="pl-pain-pill"><span class="pl-x">✗</span> No network - selling alone</div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT IS PROPERTYLIST -->
+<section class="pl-pillars">
+  <div class="pl-section-inner">
+    <div class="pl-pillars-intro">
+      <div>
+        <div class="pl-section-tag">What is PropertyList</div>
+        <h2 class="pl-section-title">Three tools.<br>One platform.<br>Zero cost.</h2>
+        <p class="pl-section-sub">PropertyList combines a cooperative MLS network, a full agency CRM, and a drag-and-drop website builder into a single connected system - so your listings, leads and website always work together.</p>
+      </div>
+      <div class="pl-difference-box">
+        <p class="pl-diff-label">The PropertyList difference</p>
+        <p class="pl-diff-quote">"You only pay when a lead becomes a real opportunity - never for the ones that don't."</p>
+        <p class="pl-diff-body">The MLS, contacts, and core pipelines are free forever. Qualifying a lead as a Buyer, Seller, or Tenant uses one credit (~€1) - your first five are on us. No monthly CRM bill regardless of results.</p>
+      </div>
+    </div>
+
+    <div class="pl-pillars-grid">
+      <div class="pl-pillar">
+        <div class="pl-pillar-num">01</div>
+        <div class="pl-pillar-icon">🏘️</div>
+        <h3>MLS Network</h3>
+        <p>Share and co-list with 1,250+ verified agencies across the Costa del Sol. Collaborative selling means more deals, more exposure, and zero additional cost.</p>
+        <div class="pl-pillar-tags">
+          <span class="pl-tag">Shared Listings</span>
+          <span class="pl-tag">Co-Agent Collab</span>
+          <span class="pl-tag">XML Feed</span>
+          <span class="pl-tag">Market Reports</span>
+          <span class="pl-tag">AI MCP Discovery</span>
+        </div>
+      </div>
+      <div class="pl-pillar">
+        <div class="pl-pillar-num">02</div>
+        <div class="pl-pillar-icon">📋</div>
+        <h3>Full CRM</h3>
+        <p>Seven pipeline boards that mirror how an agency actually runs. Contacts, leads, and core pipelines are free. Qualify a lead as a Buyer, Seller or Tenant for ~€1 - your first five are free. Never pay a monthly CRM bill.</p>
+        <div class="pl-pillar-tags">
+          <span class="pl-tag">Lead Pipelines</span>
+          <span class="pl-tag">Contact History</span>
+          <span class="pl-tag">Unlimited Team</span>
+          <span class="pl-tag">AI Workflows</span>
+        </div>
+      </div>
+      <div class="pl-pillar">
+        <div class="pl-pillar-num">03</div>
+        <div class="pl-pillar-icon">🌐</div>
+        <h3>Agency Website</h3>
+        <p>Drag-and-drop builder. Your brand, your domain, your listings auto-populating from the MLS. Preview everything for free - only pay when you publish.</p>
+        <div class="pl-pillar-tags">
+          <span class="pl-tag">Drag & Drop</span>
+          <span class="pl-tag">Live Listings</span>
+          <span class="pl-tag">From €50/mo</span>
+          <span class="pl-tag">No Dev Needed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM DIAGRAM -->
+<section class="pl-diagram-section">
+  <div class="pl-section-inner">
+    <div>
+      <div class="pl-section-tag">How It All Connects</div>
+      <h2 class="pl-section-title">One listing.<br>Everywhere at once.</h2>
+      <p class="pl-section-sub">Add a property once in PropertyList. It flows automatically to the MLS network, your agency website, and your CRM - no copy-pasting, no double data entry, no manual updates.</p>
+    </div>
+
+    <div class="pl-diagram-wrap">
+      <div class="pl-diagram">
+        <div class="pl-diag-node">
+          <span class="pl-diag-icon">📝</span>
+          <h4>You Add a Listing</h4>
+          <p>Upload once with photos, price, and description</p>
+        </div>
+        <div class="pl-diag-arrow">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="pl-diag-node">
+          <span class="pl-diag-icon">🏘️</span>
+          <h4>MLS Network</h4>
+          <p>1,250+ agents can see, share and co-sell it</p>
+        </div>
+        <div class="pl-diag-arrow">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="pl-diag-node">
+          <span class="pl-diag-icon">🌐</span>
+          <h4>Your Website</h4>
+          <p>Auto-populates via XML feed or website builder</p>
+          <div class="pl-xml-badge">&lt;xml feed&gt;</div>
+        </div>
+        <div class="pl-diag-arrow">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="pl-diag-node pl-diag-result">
+          <span class="pl-diag-icon">📋</span>
+          <h4>Leads Into CRM</h4>
+          <p>Enquiries land in your free pipeline. Qualify the real ones - only then does a credit apply.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENT JOURNEY TIMELINE -->
+<section id="how-it-works" class="pl-steps-section">
+  <div class="pl-section-inner">
+
+    <div class="pl-steps-header">
+      <div class="pl-section-tag" style="color: var(--pl-teal); justify-content: center;">The Agent Journey</div>
+      <h2 class="pl-steps-title">From sign-up to<br><em style="font-style:normal; color: var(--pl-teal);">closing deals on autopilot.</em></h2>
+      <p class="pl-steps-sub">This is the exact path every PropertyList agency follows. Most are fully set up before their second coffee. Everything after that runs itself.</p>
+    </div>
+
+    <div class="pl-timeline">
+      <!-- STAGE 1 -->
+      <div class="pl-step">
+        <div class="pl-step-num">1</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">Day 1 · 5 minutes</span>
+          <h3>Sign up. No card. No contract.</h3>
+          <p>Create your agency account and verify in minutes. The moment you're in, the full platform is yours - MLS, CRM, pipelines, network. No trial period. No expiry.</p>
+          <span class="pl-step-callout">✅ You feel: relief</span>
+        </div>
+      </div>
+
+      <!-- STAGE 2 -->
+      <div class="pl-step">
+        <div class="pl-step-num">2</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">Day 1 · 20 minutes</span>
+          <h3>Your entire portfolio, live in the MLS.</h3>
+          <p>Add listings manually or bulk-import via XML. Photos, prices, descriptions, locations - everything syncs. Add your whole team with no per-user limit. Your inventory is now visible to 1,250+ verified agencies across the Costa del Sol.</p>
+          <span class="pl-step-callout">📂 Bulk XML import supported</span>
+        </div>
+      </div>
+
+      <!-- STAGE 3 -->
+      <div class="pl-step">
+        <div class="pl-step-num">3</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">Day 1 · Your choice</span>
+          <h3>Website live. Every listing, already there.</h3>
+          <p>Already have a website? Plug in the XML feed - your listings auto-populate and stay in sync, forever. No developer needed. Building from scratch? The drag-and-drop website builder has your full MLS loaded from day one. Build and preview free. Publish from €50/month when you're ready.</p>
+          <div class="pl-step-tags">
+            <span class="pl-step-tag">🌐 Existing site: XML feed</span>
+            <span class="pl-step-tag">🏗️ New site: from €50/mo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 4 -->
+      <div class="pl-step">
+        <div class="pl-step-num">4</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">Ongoing · Working while you sleep</span>
+          <h3>AI recommends your listings. Agents co-sell them.</h3>
+          <p>Your listings work in two powerful ways simultaneously: 1,250+ co-agents can share and sell them with their own buyers, and the PropertyList MCP server (<code class="pl-mono">mcp.propertylist.es</code>) feeds your properties directly into AI assistants - so when a buyer asks an AI what's available in Marbella, your listings come up. Reach that no subscription can buy.</p>
+          <div class="pl-step-tags">
+            <span class="pl-step-tag">🤝 1,250+ co-agents</span>
+            <span class="pl-step-tag">🤖 AI-recommended via MCP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 5 -->
+      <div class="pl-step">
+        <div class="pl-step-num">5</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">The moment a lead arrives</span>
+          <h3>Lead lands. Pipeline fills. You do nothing.</h3>
+          <p>Every enquiry - from your website form, the portal, a co-agent, or a listing page - lands automatically in your Leads pipeline. No copy-paste. No Zapier. No "did that email go to spam?" The contact is created, the source is tracked, and the conversation is there waiting for you. One company to call if anything goes wrong: us.</p>
+          <span class="pl-step-callout">✅ You feel: calm. In control.</span>
+        </div>
+      </div>
+
+      <!-- LEAD NOTIFICATION MOCKUP -->
+      <div class="pl-lead-mock">
+        <div class="pl-lead-mock-inner">
+          <div class="pl-lead-icon">📥</div>
+          <div>
+            <div class="pl-lead-meta">
+              <span class="pl-lead-tag">New Lead · PropertyList CRM</span>
+              <span class="pl-lead-time">Just now</span>
+            </div>
+            <p class="pl-lead-title">Sarah Mitchell enquired about Villa Estepona Hills</p>
+            <p class="pl-lead-sub">Source: Website form · Auto-added to Leads pipeline · Contact created</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 6 -->
+      <div class="pl-step">
+        <div class="pl-step-num">6</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">Your call. Your criteria.</span>
+          <h3>Qualify the real ones. Ignore the rest. ~€1.</h3>
+          <p>Review the lead in your Leads pipeline - completely free. When you decide they're a genuine buyer, seller or tenant, drag them to the right board. That single action uses one credit (~€1). Tyre-kickers never cost you a thing. Your first five qualifications are on us.</p>
+          <span class="pl-step-callout pl-callout-gold">~€1 only when you qualify · First 5 free</span>
+        </div>
+      </div>
+
+      <!-- STAGE 7 -->
+      <div class="pl-step">
+        <div class="pl-step-num">7</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta">The deal closes</span>
+          <h3>Deposit paid. Deal moves itself.</h3>
+          <p>Mark a deal as Deposit Paid and the contact slides automatically to the Transactions board - solicitors, mortgage, exchange, completion. The seven pipeline boards talk to each other. You just do the work. The admin handles itself.</p>
+          <span class="pl-step-callout">✅ You feel: momentum</span>
+        </div>
+      </div>
+
+      <!-- STAGE 8 -->
+      <div class="pl-step">
+        <div class="pl-step-num pl-step-num-gold">8</div>
+        <div class="pl-step-body">
+          <span class="pl-step-meta pl-meta-gold">Post-sale · Runs itself</span>
+          <h3>Deal done. Client stays warm. Forever.</h3>
+          <p>Completed clients move to the Nurture pipeline automatically. Market updates, anniversary check-ins, re-list prompts, referral asks - all running in the background while you focus on the next deal. The agents who win on the Costa del Sol aren't the ones who hustle hardest. They're the ones whose past clients remember them.</p>
+          <span class="pl-step-callout pl-callout-gold">💛 Nurture pipeline - free forever</span>
+        </div>
+      </div>
+    </div><!-- end timeline -->
+
+    <!-- ONE COMPANY BANNER -->
+    <div class="pl-one-company">
+      <p><strong style="color: var(--pl-teal);">One platform. One team. One number to call.</strong><br>
+      Your listings, your website, your leads, your CRM, your pipelines - all connected inside PropertyList. When something needs fixing, you're not bouncing between Zapier, your web developer, and three different support chats. You call us. That's it.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CRM MODEL HIGHLIGHT -->
+<section class="pl-crm-section">
+  <div class="pl-section-inner">
+    <div class="pl-crm-grid">
+      <div>
+        <div class="pl-section-tag">CRM Pricing Model</div>
+        <h2 class="pl-section-title">Pay per qualified lead.<br>Never per month.</h2>
+        <p class="pl-section-sub">Most CRMs charge you a flat subscription whether your leads convert or not. PropertyList flips that - you only spend a credit (~€1) when you decide a lead is worth pursuing. Tyre-kickers cost you nothing.</p>
+      </div>
+      <div class="pl-crm-cards">
+        <div class="pl-crm-card">
+          <div class="pl-crm-icon">📥</div>
+          <div>
+            <p class="pl-crm-card-title">Leads, Property Lifecycle, Transactions, Nurture</p>
+            <p class="pl-crm-card-body">Unlimited - completely free, forever. Use these boards without ever spending a credit.</p>
+            <span class="pl-badge-free">FREE</span>
+          </div>
+        </div>
+        <div class="pl-crm-card">
+          <div class="pl-crm-icon">🏠</div>
+          <div>
+            <p class="pl-crm-card-title">Qualify a Buyer, Seller or Tenant</p>
+            <p class="pl-crm-card-body">Tag a contact as a real opportunity. One credit (~€1) is deducted only at that moment - never for unqualified enquiries. Your first 5 are on us.</p>
+            <span class="pl-badge-gold">~€1 PER CONVERSION · FIRST 5 FREE</span>
+          </div>
+        </div>
+        <div class="pl-crm-insight">
+          <p>💡 <strong>The logic:</strong> if you close even one sale from PropertyList, the credit cost is negligible against your commission. You're only paying when the platform is working for you.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEBSITE BUILDER HIGHLIGHT -->
+<section class="pl-website-section">
+  <div class="pl-website-inner">
+    <div class="pl-website-text">
+      <p class="pl-website-label">Website Builder - from €50/month</p>
+      <h2>Every enquiry.<br>Straight into<br>your pipeline.</h2>
+      <p>Your website isn't just a brochure - it's a lead machine wired directly to your CRM. Every form fill, every enquiry button, every popup captures to your Leads pipeline the moment it happens. No Zapier. No copy-paste. No leads lost to a forgotten inbox. And every listing is already there, auto-loaded from your MLS the day you publish.</p>
+      <a href="/website-builder/" class="pl-website-cta">See the Website Builder →</a>
+    </div>
+    <div class="pl-website-visual">
+      <img
+        src="https://info.propertylist.es/email-images/originals/email-mock-website-builder.png"
+        alt="PropertyList Website Builder - drag and drop property listings"
+        width="560"
+        height="400"
+        loading="lazy"
+      >
+      <div style="text-align:center; margin-top: 16px;">
+        <span class="pl-xml-badge" style="font-size: 0.7rem;">↺ Listings auto-synced · Leads straight to CRM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FREE VS PAID -->
+<section class="pl-fvp-section">
+  <div class="pl-section-inner">
+    <div>
+      <div class="pl-section-tag">Pricing</div>
+      <h2 class="pl-section-title">Free forever.<br>Powerful when you need it.</h2>
+      <p class="pl-section-sub">The MLS, listings, contacts, and core pipelines are free forever. You only pay when a lead becomes a qualified opportunity - and your first five are on us.</p>
+    </div>
+
+    <div class="pl-fvp-grid">
+      <div class="pl-fvp-card pl-fvp-free">
+        <div class="pl-fvp-label">✓ Always Free</div>
+        <h3>The Core Platform</h3>
+        <p>Everything you need to list, collaborate, and manage your agency with no monthly subscription - ever. Plus your first 5 lead qualifications at no charge.</p>
+        <ul class="pl-fvp-list">
+          <li><span class="pl-check">✓</span>Full MLS - unlimited property listings</li>
+          <li><span class="pl-check">✓</span>Unlimited team members</li>
+          <li><span class="pl-check">✓</span>Leads pipeline - every enquiry, free triage</li>
+          <li><span class="pl-check">✓</span>Property Lifecycle pipeline - your stock, always visible</li>
+          <li><span class="pl-check">✓</span>Transactions pipeline - legal phase tracking</li>
+          <li><span class="pl-check">✓</span>Nurture pipeline - past clients, auto warm</li>
+          <li><span class="pl-check">✓</span>Contacts, notes, activity timeline, history</li>
+          <li><span class="pl-check">✓</span>First 5 Buyer / Seller / Tenant qualifications free</li>
+          <li><span class="pl-check">✓</span>Co-agency network - 1,250+ verified agents</li>
+          <li><span class="pl-check">✓</span>Branded MicroSite and shareable listing links</li>
+          <li><span class="pl-check">✓</span>AI-recommended via MCP (mcp.propertylist.es)</li>
+        </ul>
+      </div>
+
+      <div class="pl-fvp-card pl-fvp-paid">
+        <div class="pl-fvp-label">⚡ Pay As You Go</div>
+        <h3>Power Up When It Counts</h3>
+        <p>Credits (~€1 each) deducted only when you use them. No subscriptions, no monthly minimums - pay only when a tool directly helps you close.</p>
+        <ul class="pl-fvp-list">
+          <li><span class="pl-check">✓</span>Qualify a Buyer, Seller or Tenant - ~€1 per conversion (first 5 free)</li>
+          <li><span class="pl-check">✓</span>Agency Website Builder - from €50/month</li>
+          <li><span class="pl-check">✓</span>Featured MLS placement - stand out to co-agents</li>
+          <li><span class="pl-check">✓</span>Featured portal listings - stand out to buyers</li>
+          <li><span class="pl-check">✓</span>AI CMA valuation and comparables reports</li>
+          <li><span class="pl-check">✓</span>AI listing copy and description generator</li>
+          <li><span class="pl-check">✓</span>Rentals module - Tenants pipeline, ledger, maintenance</li>
+          <li><span class="pl-check">✓</span>XML export feed - 35 credits/month</li>
+          <li><span class="pl-check">✓</span>Social media post boost - extended reach</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="pl-proof-section">
+  <div class="pl-section-inner">
+    <div style="text-align: center; max-width: 560px; margin: 0 auto 56px;">
+      <div class="pl-section-tag" style="justify-content: center;">What Agents Say</div>
+      <h2 class="pl-section-title" style="text-align:center;">Trusted by agencies<br>across the Costa del Sol.</h2>
+    </div>
+
+    <div class="pl-proof-grid">
+      <div class="pl-proof-card">
+        <div class="pl-proof-stars">★★★★★</div>
+        <p>"The platform is clearly built with agents in mind. Publishing listings quickly, gaining international exposure, and managing enquiries efficiently has saved our team significant time."</p>
+        <div class="pl-proof-author">
+          <div class="pl-proof-avatar">SA</div>
+          <div>
+            <div class="pl-proof-name">Verified Agent</div>
+            <div class="pl-proof-role">Costa del Sol Estate Agency</div>
+          </div>
+        </div>
+      </div>
+      <div class="pl-proof-card">
+        <div class="pl-proof-stars">★★★★★</div>
+        <p>"We've noticed that leads tend to be more serious and better qualified compared to traditional portals. Unlike other portals that charge heavily, PropertyList provides essential tools without excessive fees."</p>
+        <div class="pl-proof-author">
+          <div class="pl-proof-avatar">MR</div>
+          <div>
+            <div class="pl-proof-name">Verified Agent</div>
+            <div class="pl-proof-role">Marbella Boutique Agency</div>
+          </div>
+        </div>
+      </div>
+      <div class="pl-proof-card">
+        <div class="pl-proof-stars">★★★★★</div>
+        <p>"A refreshing change. Finding a platform that genuinely supports agencies, rather than just charging for visibility, has been a challenge. PropertyList solved that."</p>
+        <div class="pl-proof-author">
+          <div class="pl-proof-avatar">JK</div>
+          <div>
+            <div class="pl-proof-name">Verified Agent</div>
+            <div class="pl-proof-role">Costa del Sol Independent Agent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="pl-cta-section">
+  <h2>Your listings. Your website.<br>Your pipeline. No monthly bill.</h2>
+  <p>Join 1,250+ agencies already running on PropertyList. No card required.</p>
+  <div class="pl-cta-buttons">
+    <a href="https://agents.propertylist.es/login" class="pl-btn-primary" style="font-size: 1.05rem; padding: 18px 44px;">Create Your Free Account →</a>
+    <a href="/pricing/" class="pl-btn-secondary">View All Features</a>
+  </div>
+  <p class="pl-cta-footnote">No setup fee. No credit card. No lock-in contract. Free forever.</p>
+</section>
+
+</Layout>

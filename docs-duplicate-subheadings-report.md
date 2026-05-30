@@ -1,5 +1,5 @@
 # Duplicate Subheading Audit (en)
-Generated: 2026-04-25T23:51:47.130Z
+Generated: 2026-05-30T22:13:54.307Z
 Sources scanned:
 - src/data/mls-manual-archive.json
 - var/admin/versions/** (en docs only)

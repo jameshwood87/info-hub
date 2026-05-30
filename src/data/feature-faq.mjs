@@ -70,15 +70,14 @@ export const featureFaqItems = [
     id: 'xml-cost',
     q: 'How much does the XML feed cost?',
     aHtml:
-      'The resale and rentals feed costs 35 credits/month or 250 credits/year. The new developments feed costs 25 credits/month or 250 credits/year. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
+      `The resale and rentals feed costs 35 credits/month or 350 credits/year. The new developments feed costs 25 credits/month or 250 credits/year. <a href="https://info.propertylist.es/pricing">Full pricing</a>.`,
   },
 
-  // ─── Market Intelligence ──────────────────────────────────────────────
   {
     id: 'market-reports',
     q: 'Does PropertyList offer property market reports?',
     aHtml:
-      'Yes. The PropertyList Market Intelligence platform (intelligence.propertylist.es) provides data-driven reports across the Costa del Sol, built on live MLS transaction data.',
+      'Yes. The PropertyList Market Intelligence platform (intelligence.propertylist.es) provides data-driven reports across the Costa del Sol, built on live MLS transaction data. Every property listed in the PropertyList MLS also has a direct Analyse button — one click runs a full AI-powered market analysis for that specific property.',
   },
   {
     id: 'market-reports-free',

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="canonical" href="https://info.propertylist.es/rentals/" />
+<link rel="alternate" hreflang="en" href="https://info.propertylist.es/rentals/" />
+<link rel="alternate" hreflang="es" href="https://info.propertylist.es/es/rentals/" />
+<link rel="alternate" hreflang="x-default" href="https://info.propertylist.es/rentals/" />
+<meta property="og:site_name" content="PropertyList Info Hub" />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:locale:alternate" content="es_ES" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rentals Module for Spanish Estate Agents | PropertyList.es" />
+<meta property="og:description" content="Lease renewals on autopilot, deposit audits, maintenance triage — the PropertyList Rentals module handles your whole rental book. First 30 days free, then 50 credits per month." />
+<meta property="og:url" content="https://info.propertylist.es/rentals/" />
+<meta property="og:image" content="https://info.propertylist.es/og/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Rentals Module for Spanish Estate Agents | PropertyList.es" />
+<meta name="twitter:description" content="Lease renewals on autopilot, deposit audits, maintenance triage — the PropertyList Rentals module handles your whole rental book. First 30 days free." />
+<meta name="twitter:image" content="https://info.propertylist.es/og/og-default.png" />
+<title>Rentals Module for Spanish Estate Agents | PropertyList.es</title>
+<meta name="description" content="Lease renewals on autopilot, deposit audits, maintenance triage. Manage your whole rental book from one place — built for Spanish estate agents and landlords. 30 days free." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "PropertyList Rentals Module",
+  "url": "https://info.propertylist.es/rentals",
+  "description": "Rental management module for Spanish estate agents. Tracks leases, renewals, deposits, and maintenance — with full audit trails and multi-language renewal emails.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "PropertyList",
+    "url": "https://propertylist.es",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://info.propertylist.es/og/logo-default.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "description": "Navigation path for PropertyList Rentals module page",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://info.propertylist.es/" },
+    { "@type": "ListItem", "position": 2, "name": "Rentals" }
+  ]
+}
+</script>
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the 30-day free trial work?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sign into PropertyList, go to Tenants in the left nav, and click Start free trial. No credit card is required. After 30 days you can activate the module for 50 credits (~EUR50) per 30-day period -- or stop using it and nothing changes. We never auto-charge." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this replace my property management software?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It is designed to replace the scattered WhatsApp-based workflow. It gives you a shared ledger, audit log, and maintenance workflow that any agent on your team can access -- replacing the sticky-note system and the shared WhatsApp thread with something defensible and searchable." }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens to my deposit dispute evidence if I stop using PropertyList?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Everything you have logged stays in your account. The audit trail is yours -- timestamped entries, agent names, deposit return records. You can export it at any time. Even if you cancel the module, the underlying contact and property records remain." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the maintenance workflow required, or can I just track tenancies?",
+      "acceptedAnswer": { "@type": "Answer", "text": "You choose what you use. Start with the tenancies ledger and renewal emails, add maintenance when you need it. There is no minimum feature set. The landlord portfolio view shows only the modules you have active." }
+    },
+    {
+      "@type": "Question",
+      "name": "Who gets the renewal emails -- the tenant or the agent?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The agent who owns the tenant contact receives the email. It is sent automatically 30 days before the lease ends, in the agent's language. The tenant does not receive an automated email unless you configure it separately. The system is designed to remind your team, not to contact tenants on your behalf." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this comply with Spanish rental law -- RDL 8/2024 and the LAU?",
+      "acceptedAnswer": { "@type": "Answer", "text": "PropertyList stores the records you need to comply. The tenancy ledger holds start and end dates, rent amounts, and deposit status -- information you are required to maintain under the Ley de Arrendamientos Urbanos (LAU). The audit log supports the evidence requirements that come with deposit disputes and renewal notices. We do not provide legal advice; your agency remains responsible for compliance with applicable regulations." }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json" is:inline>
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PropertyList Rentals Module",
+  "url": "https://agents.propertylist.es/pipelines/tenants",
+  "description": "Rental management module for Spanish estate agents. Includes tenancy ledger, automated renewal emails, maintenance triage, landlord portfolio view, and full deposit audit trail.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "50",
+    "priceCurrency": "EUR",
+    "description": "Per 30-day period after free trial",
+    "availability": "https://schema.org/InStock"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "PropertyList",
+    "url": "https://propertylist.es"
+  }
+}
+</script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  ad_storage: 'denied',
+  analytics_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
+  wait_for_update: 750
+});
+try {
+  var v = localStorage.getItem('pl_ga_consent') || '';
+  if (v === 'granted') {
+    gtag('consent', 'update', {
+      ad_storage: 'denied',
+      analytics_storage: 'granted',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
+    });
+  }
+} catch(e) {}
+gtag('js', new Date());
+gtag('config', 'G-GJXF83J7WE', { send_page_view: true });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GJXF83J7WE"></script>
+</head>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--teal:#00ae9a;--teal-dark:#008f7f;--teal-light:#f0fdfa;--teal-border:#99f6e4;
+--slate:#0d2b2e;--slate-mid:#1a3f43;
+--grey-dark:#111827;--grey-mid:#374151;--grey-light:#6b7280;--grey-xlight:#9ca3af;
+--grey-bg:#f5f6f8;--white:#ffffff;
+--amber-bg:#fef3c7;--amber-border:#fde68a;--amber-text:#78350f;
+--font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+--font-serif:'Playfair Display',Georgia,serif
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--grey-bg);color:var(--grey-dark);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.wrap--narrow{max-width:740px;margin:0 auto;padding:0 24px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.eyebrow--on-dark{color:rgba(255,255,255,0.65)}
+h1,h2,h3{font-family:var(--font-serif);color:var(--slate);line-height:1.15}
+.btn{display:inline-block;font-family:var(--font-sans);font-size:15px;font-weight:700;padding:14px 28px;border-radius:9px;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-primary{background:var(--teal);color:var(--white);box-shadow:0 4px 14px rgba(0,174,154,.3)}
+.btn-primary:hover{background:var(--teal-dark);box-shadow:0 6px 20px rgba(0,174,154,.4);text-decoration:none;transform:translateY(-1px)}
+.btn-large{font-size:16px;padding:16px 36px;border-radius:10px}
+.btn-on-dark{background:var(--white);color:var(--teal)}
+.btn-on-dark:hover{background:#f0fffe;text-decoration:none}
+.wb-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid #e5ecec}
+.wb-nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.wb-nav-logo img{height:48px;width:auto}
+.wb-nav-actions{display:flex;align-items:center;gap:10px}
+.wb-nav-link{color:#0d2b2e;font-weight:600;font-size:14px;padding:6px 10px;border-radius:6px;transition:all .15s}
+.wb-nav-link:hover{color:#00ae9a;text-decoration:none}
+.wb-nav-cta{background:#00ae9a;color:#fff;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:700;transition:all .15s}
+.wb-nav-cta:hover{background:#008f7e;text-decoration:none}
+.wb-nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;z-index:200}
+.wb-nav-hamburger span{display:block;width:22px;height:2px;background:#0d2b2e;border-radius:2px;transition:all .25s}
+.wb-nav-hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.wb-nav-hamburger.active span:nth-child(2){opacity:0}
+.wb-nav-hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.wb-nav-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,43,46,.97);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-size:20px}
+.wb-nav-overlay.open{display:flex}
+.wb-nav-overlay a{color:#fff;opacity:.85;padding:8px 16px}
+.wb-nav-overlay a:hover{opacity:1;text-decoration:none}
+.wb-nav-logo-overlay{opacity:.9}
+.hero{background:linear-gradient(135deg,var(--teal) 0%,#0fcab1 50%,var(--teal) 100%);padding:72px 0 80px}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-badge{display:inline-block;padding:5px 14px;background:rgba(255,255,255,.18);color:var(--white);font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;border-radius:999px;margin-bottom:20px}
+.hero h1{font-size:42px;font-weight:700;color:var(--white);margin-bottom:16px;line-height:1.1;letter-spacing:-1px}
+.hero-sub{font-size:17px;color:rgba(255,255,255,.9);line-height:1.6;max-width:460px;margin-bottom:28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero-trust{font-size:13px;color:rgba(255,255,255,.65);margin-top:16px}
+.hero-visual{background:#f8fafa;border-radius:12px;padding:10px;display:inline-block}
+.hero-visual img{border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.trust{background:var(--white);padding:36px 0;border-bottom:1px solid #e8eaed}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.trust-item{text-align:center;padding:0 20px}
+.trust-item+.trust-item{border-left:1px solid #e8eaed}
+.trust-num{font-family:var(--font-serif);font-size:36px;font-weight:700;color:var(--teal);margin-bottom:4px}
+.trust-label{font-size:12px;color:var(--grey-xlight);letter-spacing:.5px;text-transform:uppercase}
+.section{padding:72px 0}
+.section+section{border-top:1px solid #e8eaed}
+.section-head{text-align:center;max-width:640px;margin:0 auto 48px}
+.section-head .eyebrow{margin-bottom:12px}
+.section-head h2{font-size:32px;font-weight:700;margin-bottom:14px;letter-spacing:-.5px}
+.section-head .lead{font-size:17px;color:var(--grey-light);line-height:1.65}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feature-card{background:var(--teal-light);border:1px solid var(--teal-border);border-radius:12px;padding:24px 22px}
+.feature-card--wide{grid-column:span 2}
+.feature-card-icon{font-size:28px;line-height:1;margin-bottom:12px}
+.feature-card h4{font-size:16px;font-weight:800;color:var(--slate);margin-bottom:8px;font-family:var(--font-sans)}
+.feature-card p{font-size:13.5px;color:var(--grey-mid);line-height:1.55}
+.feature-card-label{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal-dark);margin-bottom:8px}
+.feature-card h4 strong{color:var(--teal)}
+.callout{background:linear-gradient(135deg,var(--teal-light) 0%,#ecfeff 100%);border:1px solid var(--teal-border);border-radius:14px;padding:28px 32px;text-align:center;margin:40px 0}
+.callout-num{font-family:var(--font-serif);font-size:56px;font-weight:700;color:var(--teal);letter-spacing:-2px;line-height:1;margin-bottom:6px}
+.callout h3{font-size:20px;font-weight:700;color:var(--slate);margin-bottom:10px;font-family:var(--font-sans)}
+.callout p{font-size:14px;color:var(--grey-mid);line-height:1.6;max-width:480px;margin:0 auto}
+.pricing{background:var(--slate)}
+.pricing .section-head h2{color:var(--white)}
+.pricing .section-head .lead{color:rgba(255,255,255,.65)}
+.price-card{background:var(--white);border-radius:16px;padding:40px 36px;text-align:center;max-width:480px;margin:0 auto;box-shadow:0 16px 48px rgba(0,0,0,.2)}
+.price-badge{display:inline-block;padding:4px 12px;background:var(--teal-light);color:var(--teal);font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;border-radius:999px;margin-bottom:20px}
+.price-name{font-size:18px;font-weight:700;color:var(--slate);margin-bottom:6px}
+.price-tagline{font-size:14px;color:var(--grey-light);margin-bottom:24px}
+.price-amount{font-family:var(--font-serif);font-size:52px;font-weight:700;color:var(--teal);letter-spacing:-2px;line-height:1;margin-bottom:4px}
+.price-amount .unit{font-size:20px;font-weight:600;color:var(--grey-light);letter-spacing:0}
+.price-note{font-size:13px;color:var(--grey-light);margin-bottom:28px}
+.price-features{list-style:none;text-align:left;margin-bottom:28px}
+.price-features li{font-size:14px;color:var(--grey-mid);padding:8px 0;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px}
+.price-features li::before{content:"";display:inline-block;width:18px;height:18px;background:var(--teal);border-radius:50%;flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2 6l3 3 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:10px}
+.price-cta{display:block;width:100%;text-align:center}
+.amber-callout{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:12px;padding:20px 24px;margin-top:40px}
+.amber-callout p{font-size:14px;color:var(--amber-text);line-height:1.6}
+.faq-q{font-weight:700;color:var(--slate);font-size:16px;margin-bottom:8px}
+.faq-a{color:var(--grey-mid);font-size:15px;line-height:1.65;margin-bottom:28px}
+.faq-item{margin-bottom:0}
+.faq-item summary{font-weight:600;color:var(--slate);font-size:15px;cursor:pointer;padding:16px 0;border-bottom:1px solid #e8eaed;list-style:none}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";float:right;font-size:20px;font-weight:400;color:var(--teal)}
+.faq-item[open] summary::after{content:"-"}
+.faq-item p{padding:16px 0;color:var(--grey-mid);font-size:15px;line-height:1.65}
+.final{background:linear-gradient(135deg,var(--slate) 0%,var(--slate-mid) 100%);text-align:center}
+.final h2{font-size:34px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:-.5px}
+.final p{font-size:17px;color:rgba(255,255,255,.7);max-width:520px;margin:0 auto 32px;line-height:1.6}
+.final-note{font-size:13px;color:rgba(255,255,255,.45);margin-top:18px}
+.footer{background:var(--white);border-top:1px solid #e8eaed;padding:32px 0}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--grey-light)}
+.footer-links a:hover{color:var(--teal);text-decoration:none}
+.footer-fine{font-size:12px;color:var(--grey-xlight)}
+@media(max-width:768px){
+.wb-nav-hamburger{display:flex}
+.hero-grid{grid-template-columns:1fr;gap:32px}
+.hero-visual{display:none}
+.hero h1{font-size:30px}
+.trust-grid{grid-template-columns:1fr 1fr}
+.trust-item+.trust-item{border-left:none}
+.trust-item:nth-child(3),.trust-item:nth-child(4){border-top:1px solid #e8eaed}
+.feature-grid{grid-template-columns:1fr}
+.feature-card--wide{grid-column:span 1}
+.section{padding:48px 0}
+}
+</style>
+</head>
+<body>
+
+<nav class="wb-nav"><div class="wb-nav-inner"><a href="https://propertylist.es/" class="wb-nav-logo"><img src="https://info.propertylist.es/email-images/originals/email-logo-main-for-light-bk.png" alt="PropertyList.es" /></a><div class="wb-nav-actions"><a href="/mls/" class="wb-nav-link">MLS</a><a href="/crm/" class="wb-nav-link">CRM</a><a href="/pricing/" class="wb-nav-link">Pricing</a><a href="/blog/" class="wb-nav-link">Blog</a><a href="https://agents.propertylist.es/login" class="wb-nav-link">Log in</a><a href="/es/rentals/" class="wb-nav-link" hreflang="es">ES</a><a href="https://agents.propertylist.es/pipelines/tenants" class="wb-nav-cta">Start free trial</a><button class="wb-nav-hamburger" id="wbHamburger" aria-label="Open menu"><span></span><span></span><span></span></button></div></div><div class="wb-nav-overlay" id="wbOverlay"><a href="https://propertylist.es/" class="wb-nav-logo-overlay"><img src="https://info.propertylist.es/email-images/originals/email-logo-main-for-light-bk.png" alt="PropertyList.es" style="height:44px;margin-bottom:16px;filter:brightness(0) invert(1);opacity:.9" /></a><a href="https://agents.propertylist.es/pipelines/tenants">Start free trial</a><a href="https://agents.propertylist.es/login">Log in</a><a href="/mls/">MLS</a><a href="/crm/">CRM</a><a href="/pricing/">Pricing</a><a href="/blog/">Blog</a><a href="/es/rentals/" hreflang="es">ES</a></div></nav><script>document.addEventListener("DOMContentLoaded",function(){var h=document.getElementById("wbHamburger");var o=document.getElementById("wbOverlay");if(!h||!o)return;h.addEventListener("click",function(){var isOpen=o.classList.contains("open");o.classList.toggle("open");h.classList.toggle("active");h.setAttribute("aria-label",isOpen?"Open menu":"Close menu");document.body.style.overflow=isOpen?"":"hidden"});o.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){o.classList.remove("open");h.classList.remove("active");h.setAttribute("aria-label","Open menu");document.body.style.overflow=""})})});</script>
+
+<section class="hero">
+<div class="wrap">
+<div class="hero-grid">
+<div>
+<div class="hero-badge">New module &middot; 30 days free</div>
+<h1>Stop running rentals<br>out of WhatsApp.</h1>
+<p class="hero-sub">If your rental book lives in WhatsApp threads, sticky notes, and "I will remember to call them about the renewal" -- we just built the thing.</p>
+<div class="hero-ctas">
+<a href="https://agents.propertylist.es/pipelines/tenants" class="btn btn-primary btn-large btn-on-dark" data-ga-event="rentals_activate_trial">Activate Rentals &mdash; free for 30 days &rarr;</a>
+</div>
+<p class="hero-trust">No credit card &middot; 50 credits per 30 days after trial &middot; Cancel any time</p>
+</div>
+<div class="hero-visual">
+<img src="https://info.propertylist.es/email-images/originals/email-mock-website-builder.png?v=20260514" alt="PropertyList Rentals module" />
+</div>
+</div>
+</div>
+</section>
+
+<section class="trust">
+<div class="wrap">
+<div class="trust-grid">
+<div class="trust-item"><div class="trust-num">6,000+</div><div class="trust-label">Live properties</div></div>
+<div class="trust-item"><div class="trust-num">1,250+</div><div class="trust-label">Active agents</div></div>
+<div class="trust-item"><div class="trust-num">800+</div><div class="trust-label">Agencies</div></div>
+<div class="trust-item"><div class="trust-num">30</div><div class="trust-label">Days free, no card</div></div>
+<div class="trust-item"><div class="trust-num">50</div><div class="trust-label">Credits per month</div></div>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="wrap">
+<div class="section-head">
+<p class="eyebrow">What you get</p>
+<h2>One place for every lease.<br>One workflow for every issue.</h2>
+<p class="lead">The PropertyList Rentals module covers the full rental lifecycle -- from tenancy ledger and automated renewal reminders, through maintenance triage, to landlord portfolio tracking and deposit dispute evidence.</p>
+</div>
+
+<div class="feature-grid">
+<div class="feature-card">
+<div class="feature-card-icon">&#128221;</div>
+<h4>Every lease, one screen</h4>
+<p>Property, tenant, landlord, start and end dates, monthly rent, deposit amount, deposit status. All in one form. Filter your whole book by Live / Expiring 60 days / Ended.</p>
+</div>
+<div class="feature-card">
+<div class="feature-card-icon">&#9200;</div>
+<h4>Renewals on autopilot</h4>
+<p>Email the agent who owns the tenant 30 days before the lease ends -- automatically, in their language. No missed renewals. No "I thought I sent that".</p>
+</div>
+<div class="feature-card">
+<div class="feature-card-icon">&#128295;</div>
+<h4>Maintenance triage</h4>
+<p>Tenant reports something broken -- log it with priority and category. Track it through Reported / Assigned / In Progress / Resolved. Supplier name and cost tracked automatically.</p>
+</div>
+<div class="feature-card">
+<div class="feature-card-icon">&#128202;</div>
+<h4>Landlord portfolio numbers</h4>
+<p>Open any landlord contact page and see live tenancies, properties, rent roll, deposits held, renewals due. The bones of a real landlord portal -- without building one from scratch.</p>
+</div>
+<div class="feature-card feature-card--wide">
+<div class="feature-card-label">The killer feature</div>
+<h4>An audit trail that ends <strong>"he said / she said"</strong></h4>
+<p>Every status change on every tenancy is stamped with a timestamp and the agent who made it. When a landlord rings up six months later asking "when exactly did you return my deposit?" -- the answer is two clicks away. Defensible against Spanish deposit disputes under the LAU framework.</p>
+</div>
+</div>
+
+<div class="callout">
+<div class="callout-num">30 days free</div>
+<h3>No credit card. No auto-charge.</h3>
+<p>After the trial, the Rentals module costs 50 credits per 30-day period (about EUR50). Or stop using it -- nothing else changes. We never auto-charge anything.</p>
+<a href="https://agents.propertylist.es/pipelines/tenants" class="btn btn-primary" style="margin-top:20px;" data-ga-event="rentals_start_trial">Start free trial &rarr;</a>
+</div>
+</div>
+</section>
+
+<section class="section pricing">
+<div class="wrap">
+<div class="section-head">
+<p class="eyebrow eyebrow--on-dark">Honest pricing</p>
+<h2>Pay for what you use.<br>Nothing more.</h2>
+<p class="lead" style="color:rgba(255,255,255,.65);">The Rentals module is an optional add-on to your existing PropertyList account. Use it or not -- your MLS and CRM carry on exactly as before.</p>
+</div>
+
+<div class="price-card">
+<div class="price-badge">Rentals module</div>
+<div class="price-name">Rentals</div>
+<div class="price-tagline">Everything you need to manage a rental book properly.</div>
+<div class="price-amount">50<span class="unit">/month</span></div>
+<div class="price-note">50 credits per 30-day period. No minimum commitment.</div>
+<ul class="price-features">
+<li><strong>Tenants pipeline</strong> -- full funnel from rental lead to active tenancy</li>
+<li><strong>Tenancies ledger</strong> -- real lease records with rent, deposit, dates</li>
+<li><strong>Lease renewal emails</strong> -- daily, 30 days out, multi-language</li>
+<li><strong>Maintenance workflow</strong> -- triage, assign, supplier + cost tracking</li>
+<li><strong>Landlord portfolio view</strong> -- rent roll, deposits, renewals per landlord</li>
+<li><strong>Audit log</strong> -- every status and deposit change timestamped</li>
+</ul>
+<a href="https://agents.propertylist.es/pipelines/tenants" class="btn btn-primary price-cta" data-ga-event="rentals_start_trial">Start free trial &rarr;</a>
+<div class="price-note" style="margin-top:16px;font-size:12px;">Log in &rarr; click <strong>Tenants</strong> in the left nav &rarr; hit "Start free trial". Takes ten seconds. No credit card required.</div>
+</div>
+
+<div class="amber-callout">
+<p><strong>If you manage 20+ rental properties</strong> -- the maintenance audit log alone pays for the module the first time a landlord questions a repair invoice. We have heard that conversation enough times to know.</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="wrap--narrow">
+<div class="section-head">
+<p class="eyebrow">Questions</p>
+<h2>Before you activate</h2>
+</div>
+
+<details class="faq-item" itemscope itemtype="https://schema.org/FAQPage">
+<summary itemprop="name">How does the 30-day free trial work?</summary>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text" class="faq-a">Sign into PropertyList, go to <strong>Tenants</strong> in the left nav, and click <strong>Start free trial</strong>. No credit card is required. After 30 days you can activate the module for 50 credits (~EUR50) per 30-day period -- or stop using it and nothing changes. We never auto-charge.</p>
+</div>
+</details>
+
+<details class="faq-item" itemscope itemtype="https://schema.org/FAQPage">
+<summary itemprop="name">Does this replace my property management software?</summary>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text" class="faq-a">It is designed to replace the scattered WhatsApp-based workflow. It gives you a shared ledger, audit log, and maintenance workflow that any agent on your team can access -- replacing the sticky-note system and the shared WhatsApp thread with something defensible and searchable.</p>
+</div>
+</details>
+
+<details class="faq-item" itemscope itemtype="https://schema.org/FAQPage">
+<summary itemprop="name">What happens to my deposit dispute evidence if I stop?</summary>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text" class="faq-a">Everything you have logged stays in your account. The audit trail is yours -- timestamped entries, agent names, deposit return records. You can export it at any time. Even if you cancel the module, the underlying contact and property records remain.</p>
+</div>
+</details>
+
+<details class="faq-item" itemscope itemtype="https://schema.org/FAQPage">
+<summary itemprop="name">Is the maintenance workflow required, or can I just track tenancies?</summary>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text" class="faq-a">You choose what you use. Start with the tenancies ledger and renewal emails, add maintenance when you need it. There is no minimum feature set. The landlord portfolio view shows only the modules you have active.</p>
+</div>
+</details>
+
+<details class="faq-item" itemscope itemtype="https://schema.org/FAQPage">
+<summary itemprop="name">Who gets the renewal emails -- the tenant or the agent?</summary>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text" class="faq-a">The agent who owns the tenant contact receives the email. It is sent automatically 30 days before the lease ends, in the agent's language. The tenant does not receive an automated email unless you configure it separately. The system is designed to remind your team, not to contact tenants on your behalf.</p>
+</div>
+</details>
+
+<details class="faq-item" itemscope itemtype="https://schema.org/FAQPage">
+<summary itemprop="name">Does this comply with Spanish rental law -- RDL 8/2024 and the LAU?</summary>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text" class="faq-a">PropertyList stores the records you need to comply. The tenancy ledger holds start and end dates, rent amounts, and deposit status -- information you are required to maintain under the Ley de Arrendamientos Urbanos (LAU). The audit log supports the evidence requirements that come with deposit disputes and renewal notices. We do not provide legal advice; your agency remains responsible for compliance with applicable regulations.</p>
+</div>
+</details>
+</div>
+</section>
+
+<section class="section final">
+<div class="wrap--narrow">
+<h2>Stop renting other people's portals.<br><em>Build your own.</em></h2>
+<p>Your agency deserves a rental management system that works as hard as you do -- and keeps the evidence when things get contentious.</p>
+<a href="https://agents.propertylist.es/pipelines/tenants" class="btn btn-primary btn-large btn-on-dark" data-ga-event="rentals_start_trial">Start free trial &rarr;</a>
+<p class="final-note">Questions? <a href="https://wa.me/34610951177" data-ga-event="rentals_whatsapp" style="color:rgba(255,255,255,.6);">WhatsApp +34 610 95 11 77</a></p>
+</div>
+</section>
+
+<footer class="footer">
+<div class="wrap">
+<div class="footer-inner">
+<div style="display:flex;align-items:center;gap:12px;">
+<img src="https://info.propertylist.es/og/logo-default.png" alt="PropertyList.es" style="height:28px;" />
+</div>
+<div class="footer-links">
+<a href="https://propertylist.es/" data-ga-event="rentals_footer_portal">Portal</a>
+<a href="https://agents.propertylist.es" data-ga-event="rentals_agent_login">Agent login</a>
+<a href="/website-builder/" data-ga-event="rentals_nav_website_builder">Website Builder</a>
+</div>
+<p class="footer-fine">&copy; 2026 PropertyList. The free MLS &amp; CRM, built by agents for agents.</p>
+</div>
+</div>
+</footer>
+
+<script>
+function gtag_click(label){try{typeof window.gtag==='function'&&window.gtag('event',label,{event_category:'CTA'});}catch(e){}}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('[data-ga-event]').forEach(function(el){
+    el.addEventListener('click',function(){gtag_click(el.dataset.gaEvent);});
+  });
+});
+</script>
+</body>
+</html>

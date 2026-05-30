@@ -297,6 +297,11 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		{hreflangLinks.map((h) => (
 			<link rel="alternate" hreflang={h.hreflang} href={h.href} />
 		))}
+	<style is:global>
+:root{--pl-teal: #00ae9a;--pl-teal-dark: #008c7c;--pl-teal-light: #e6f9f7;--pl-teal-pale: #f0fdfb;--pl-dark: #141a1a;--pl-mid: #3d4d4a;--pl-muted: #5a6b68;--pl-cream: #f7f4ef;--pl-white: #ffffff;--pl-border: #e0e8e7;--pl-gold: #c9a84c;--pl-font-serif: "Playfair Display", Georgia, serif;--pl-font-sans: "DM Sans", -apple-system, sans-serif}*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:var(--pl-font-sans);background:var(--pl-white);color:var(--pl-dark);overflow-x:hidden}a{color:inherit}code{font-family:DM Mono,Fira Mono,monospace;font-size:.85em;background:#00ae9a1a;padding:2px 6px;border-radius:4px}.pl-section-inner{max-width:1100px;margin:0 auto;padding:0 40px}.pl-section-tag{display:inline-flex;align-items:center;gap:8px;color:var(--pl-teal);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}.pl-section-tag:before{content:"";display:block;width:24px;height:2px;background:var(--pl-teal)}.pl-section-title{font-family:var(--pl-font-serif);font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.15;letter-spacing:-.03em;color:var(--pl-dark);margin-bottom:16px}.pl-section-sub{font-size:1.1rem;color:var(--pl-muted);line-height:1.7;max-width:580px;font-weight:300}.pl-hero{min-height:100vh;padding:120px 40px 80px;display:flex;align-items:center;justify-content:center;background:var(--pl-dark);position:relative;overflow:hidden}.pl-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,174,154,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,174,154,.07) 1px,transparent 1px);background-size:60px 60px}.pl-hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(0,174,154,.18) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}.pl-hero-inner{position:relative;z-index:1;max-width:900px;text-align:center}.pl-badge{display:inline-flex;align-items:center;gap:8px;background:#00ae9a26;border:1px solid rgba(0,174,154,.3);color:var(--pl-teal);padding:6px 16px;border-radius:50px;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:32px}.pl-hero h1{font-family:var(--pl-font-serif);font-size:clamp(2.8rem,6vw,5.2rem);font-weight:900;line-height:1.08;color:var(--pl-white);letter-spacing:-.03em;margin-bottom:28px}.pl-hero h1 em{font-style:normal;color:var(--pl-teal)}.pl-hero p{font-size:clamp(1rem,2vw,1.2rem);color:#ffffffa6;max-width:620px;margin:0 auto 44px;line-height:1.7;font-weight:300}
+
+	</style>
+
 	</head>
 	<body>
 		<a class="skipLink" href="#main">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
@@ -329,6 +334,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							</div>
 							<a class="brandText brandText--centered" href="/">Info Hub</a>
 							<div class="navLinks">
+								<a href={lang === 'es' ? '/es/crm/' : '/crm/'}>{lang === 'es' ? 'CRM' : 'CRM'}</a>
+								<a href={lang === 'es' ? '/es/pipelines/' : '/pipelines/'}>{lang === 'es' ? 'Pipelines' : 'Pipelines'}</a>
+								<a href={lang === 'es' ? '/es/rentals/' : '/rentals/'}>{lang === 'es' ? 'Rentals' : 'Rentals'}</a>
 								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
 								<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
@@ -3392,3 +3400,6 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		}
 	}
 </style>
+
+<style is:global>
+/* HOW IT WORKS PAGE STYLES */

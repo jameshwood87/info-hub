@@ -72,7 +72,7 @@ const quickFactsLd = {
 			<span class="chip">Rentals Module</span>
 			<span class="chip">Credits &amp; Pricing</span>
 			<span class="chip">MCP &amp; Developers</span>
-			<span class="chip">Oracle</span>
+			<span class="chip">Oracle <span class="badge">Coming soon</span></span>
 		</div>
 	</section>
 
@@ -234,6 +234,7 @@ const quickFactsLd = {
 	.chip {
 		display: inline-flex;
 		align-items: center;
+		gap: 5px;
 		padding: 6px 12px;
 		background: rgba(255, 255, 255, 0.85);
 		border: 1px solid rgba(16, 24, 40, 0.12);
@@ -241,6 +242,18 @@ const quickFactsLd = {
 		font-size: 12px;
 		font-weight: 700;
 		color: rgba(16, 24, 40, 0.8);
+	}
+	.chip .badge {
+		display: inline-block;
+		padding: 1px 6px;
+		background: #f59e0b;
+		color: #fff;
+		font-size: 9px;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		border-radius: 999px;
+		vertical-align: middle;
 	}
 
 	#main {

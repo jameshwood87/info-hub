@@ -1,0 +1,656 @@
+<Layout title="XML Import & Export | PropertyList.es" description="Update your listings once. Sync everywhere automatically - your website, Idealista, Kyero, Rightmove and every portal you use. Free XML import. Export from 35€/month.">
+
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="https://propertylist.es/" class="nav-logo" aria-label="PropertyList.es">
+        <picture>
+          <source srcset="https://info.propertylist.es/email-images/originals/email-logo-main-for-dark-bk.png" media="(prefers-color-scheme: dark)" />
+          <img class="logo-light" src="https://info.propertylist.es/email-images/originals/email-logo-main-for-light-bk.png" alt="PropertyList.es" />
+        </picture>
+      </a>
+      <div class="nav-actions">
+        <a href="#how-it-works" class="nav-link">How it works</a>
+        <a href="#pricing"      class="nav-link">Pricing</a>
+        <a href="https://agents.propertylist.es/login" class="nav-link">Log in</a>
+        <a href="https://agents.propertylist.es/settings/export" class="nav-cta">Activate now</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-inner">
+
+        <div class="hero-text">
+          <div class="hero-badge">
+            <span></span>
+            Live sync &middot; Every portal &middot; One place
+          </div>
+
+          <h1 class="hero-h1">
+            Update once.<br /><em>Sync everywhere.</em>
+          </h1>
+
+          <p class="hero-sub">
+            Change a price in PropertyList. It updates on your website, Idealista, Kyero, Rightmove and every other portal you use - automatically, within minutes. No copy-pasting. No portals out of sync. No wasted hours.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="https://agents.propertylist.es/settings/export" class="btn btn-primary btn-large">
+              Activate export
+              <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+                <path d="M1 7H17M17 7L11 1M17 7L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#how-it-works" class="btn btn-secondary-outline btn-large">
+              See how it works
+            </a>
+          </div>
+          <p class="hero-trust">
+            XML import is <strong>free forever</strong> &middot; Export from <strong>35€/month</strong> &middot; Cancel anytime
+          </p>
+        </div>
+
+        <!-- Distribution diagram - CSS-built SVG illustration -->
+        <div class="dist-diagram">
+          <svg class="dist-svg" viewBox="0 0 480 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Background glow -->
+            <defs>
+              <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stop-color="#00ae9a" stop-opacity="0.15" />
+                <stop offset="100%" stop-color="#00ae9a" stop-opacity="0" />
+              </radialGradient>
+              <filter id="blur-sm">
+                <feGaussianBlur stdDeviation="2"/>
+              </filter>
+            </defs>
+            <ellipse cx="240" cy="200" rx="200" ry="160" fill="url(#glow)" />
+
+            <!-- Connection lines from center to portals -->
+            <g stroke="#00ae9a" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.5">
+              <line x1="240" y1="200" x2="80"  y2="60"  />
+              <line x1="240" y1="200" x2="240" y2="36"  />
+              <line x1="240" y1="200" x2="400" y2="60"  />
+              <line x1="240" y1="200" x2="420" y2="200" />
+              <line x1="240" y1="200" x2="380" y2="330" />
+              <line x1="240" y1="200" x2="240" y2="356" />
+              <line x1="240" y1="200" x2="100" y2="330" />
+              <line x1="240" y1="200" x2="60"  y2="200" />
+            </g>
+
+            <!-- Portal nodes -->
+            <!-- Idealista -->
+            <g transform="translate(56,36)">
+              <rect width="48" height="48" rx="12" fill="#1e4d6b" />
+              <text x="24" y="30" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">ID</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Idealista</text>
+            </g>
+            <!-- Your site -->
+            <g transform="translate(216,12)">
+              <rect width="48" height="48" rx="12" fill="#00ae9a" />
+              <text x="24" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#fff">YOUR</text>
+              <text x="24" y="40" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#fff">SITE</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Website</text>
+            </g>
+            <!-- Kyero -->
+            <g transform="translate(376,36)">
+              <rect width="48" height="48" rx="12" fill="#c0392b" />
+              <text x="24" y="30" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">KY</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Kyero</text>
+            </g>
+            <!-- Rightmove -->
+            <g transform="translate(396,176)">
+              <rect width="48" height="48" rx="12" fill="#e63f3f" />
+              <text x="24" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#fff">RIGHT</text>
+              <text x="24" y="40" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#fff">MOVE</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Rightmove</text>
+            </g>
+            <!-- Fotocasa -->
+            <g transform="translate(356,306)">
+              <rect width="48" height="48" rx="12" fill="#8e44ad" />
+              <text x="24" y="30" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">FC</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Fotocasa</text>
+            </g>
+            <!-- Zoopla -->
+            <g transform="translate(216,332)">
+              <rect width="48" height="48" rx="12" fill="#2563eb" />
+              <text x="24" y="30" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">ZP</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Zoopla</text>
+            </g>
+            <!-- Other portal -->
+            <g transform="translate(76,306)">
+              <rect width="48" height="48" rx="12" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+              <text x="24" y="30" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" fill="#8aa5a8">+</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Any portal</text>
+            </g>
+            <!-- Primelocation -->
+            <g transform="translate(36,176)">
+              <rect width="48" height="48" rx="12" fill="#16a34a" />
+              <text x="24" y="30" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#fff">PL</text>
+              <text x="24" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">Primeloc.</text>
+            </g>
+
+            <!-- Central node - PropertyList -->
+            <g transform="translate(180,140)">
+              <rect width="120" height="120" rx="20" fill="#0d2b2e" stroke="#00ae9a" stroke-width="2" />
+              <image href="https://info.propertylist.es/email-images/originals/email-icon-main-ai.png"
+                x="36" y="16" width="48" height="48" />
+              <text x="60" y="82" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" font-weight="700" fill="#00ae9a">PropertyList</text>
+              <text x="60" y="96" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8aa5a8">1 update</text>
+            </g>
+
+            <!-- "Instant" pulse ring on center -->
+            <circle cx="240" cy="200" r="72" fill="none" stroke="#00ae9a" stroke-width="1" opacity="0.25" />
+            <circle cx="240" cy="200" r="86" fill="none" stroke="#00ae9a" stroke-width="0.5" opacity="0.12" />
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ===== PAIN SECTION ===== -->
+  <section class="pain-section">
+    <div class="wrap">
+      <div class="pain-inner">
+
+        <div class="pain-text">
+          <p class="eyebrow">Sound familiar?</p>
+          <h2 class="section-h2">The update that takes <em>6 times too long.</em></h2>
+          <p class="lead" style="margin-bottom:20px;">
+            You drop the price on a villa by €15,000. Now you open Idealista. Then Fotocasa. Then Kyero. Then your own site. Then Rightmove. You know you're going to miss one, and next week a buyer will call with the wrong price.
+          </p>
+          <p style="color:var(--muted);font-size:16px;line-height:1.65;margin-bottom:18px;">
+            Agents on the Costa del Sol manage listings across an average of 4-6 portals. At 20-30 minutes per property update across all of them, the admin alone can consume an entire working day per week.
+          </p>
+          <p style="color:var(--ink);font-weight:700;font-size:16px;">
+            That's time you're not in front of clients. That stops today.
+          </p>
+        </div>
+
+        <div class="pain-visual">
+          <div class="portal-chaos">
+            <div class="portal-chaos-label">Manual update task list &middot; 1 price change</div>
+
+            <div class="portal-task done">
+              <div class="portal-task-icon">✓</div>
+              <span class="portal-task-name">Update PropertyList CRM</span>
+              <span class="portal-task-status">DONE</span>
+            </div>
+            <div class="portal-task">
+              <div class="portal-task-icon">2</div>
+              <span class="portal-task-name">Login to Idealista, update price</span>
+              <span class="portal-task-status">PENDING</span>
+            </div>
+            <div class="portal-task">
+              <div class="portal-task-icon">3</div>
+              <span class="portal-task-name">Login to Kyero, find listing, update</span>
+              <span class="portal-task-status">PENDING</span>
+            </div>
+            <div class="portal-task">
+              <div class="portal-task-icon">4</div>
+              <span class="portal-task-name">Login to Fotocasa, find listing</span>
+              <span class="portal-task-status">PENDING</span>
+            </div>
+            <div class="portal-task">
+              <div class="portal-task-icon">5</div>
+              <span class="portal-task-name">Update your website (if you have one)</span>
+              <span class="portal-task-status">PENDING</span>
+            </div>
+            <div class="portal-task">
+              <div class="portal-task-icon">6</div>
+              <span class="portal-task-name">Update Rightmove (if you use it)</span>
+              <span class="portal-task-status">PENDING</span>
+            </div>
+
+            <div class="portal-time-badge">
+              ⏱ Estimated time: 45 minutes. For one price change.
+            </div>
+
+            <div class="removed-badge">✦ With XML sync: done automatically in &lt;60 seconds</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== TWO PATHS ===== -->
+  <section class="two-paths" id="how-it-works">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Two tools. One workflow.</p>
+        <h2 class="section-h2">Import listings <em>in.</em> Push listings <em>out.</em></h2>
+        <p class="lead">XML works in both directions. Bring external listings into PropertyList for free, or push your PropertyList listings to every portal and portal you use.</p>
+      </div>
+
+      <div class="two-paths-grid">
+
+        <!-- IMPORT CARD -->
+        <div class="path-card import">
+          <span class="path-tag free">Free forever</span>
+          <h3>XML Import<br /><em>Bring listings in.</em></h3>
+          <p>Pull property listings from any source - other CRMs, portals, or agencies - directly into your PropertyList account. Every listing arrives with photos, descriptions, prices and details intact. Free, always.</p>
+          <ul class="path-list">
+            <li>Import from any XML-compatible source</li>
+            <li>Listings land in your CRM automatically</li>
+            <li>Photos, descriptions, prices all included</li>
+            <li>No manual data entry, no CSV wrestling</li>
+            <li>Works with your existing portal relationships</li>
+          </ul>
+          <a href="https://agents.propertylist.es/settings/export" class="btn btn-ink-outline btn-large">
+            Set up free import
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <p style="margin-top:12px;font-size:12px;color:var(--quiet);">No credit card. No setup. Works immediately.</p>
+        </div>
+
+        <!-- EXPORT CARD -->
+        <div class="path-card export">
+          <span class="path-tag paid">From 35€/month</span>
+          <h3>XML Export<br /><em>Push listings everywhere.</em></h3>
+          <p>One live XML feed from PropertyList. Point your website, Idealista, Kyero, Rightmove, Fotocasa, Zoopla or any other portal at it. Every update you make in PropertyList syncs everywhere, automatically, within minutes.</p>
+          <ul class="path-list">
+            <li>One feed - distributes to unlimited portals</li>
+            <li>Real-time sync &mdash; updates appear within minutes</li>
+            <li>Sales, long-term rentals, holiday lets - all included</li>
+            <li>Works with your existing site or any new one</li>
+            <li>Setup support included &mdash; we help you connect it</li>
+          </ul>
+          <a href="https://agents.propertylist.es/settings/export" class="btn btn-primary btn-large">
+            Activate export feed
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <!-- No-website nudge inside export card -->
+          <div class="no-website-nudge">
+            <strong>Don't have a website yet?</strong> You don't need one to start - but when you're ready, <a href="https://info.propertylist.es/website-builder">build your agency site in minutes with the PropertyList Website Builder &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== HOW IT WORKS - 3 STEPS ===== -->
+  <section class="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Up and running in minutes</p>
+        <h2 class="section-h2">Three steps, <em>then it runs itself.</em></h2>
+        <p class="lead">No developer. No waiting. No API documentation to wade through. If you can copy a URL, you can set this up.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Activate in settings</h3>
+          <p>Go to Settings &rarr; Export in your PropertyList account. Your live XML feed URL is generated instantly - one click, no form to fill, no approval required.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Share the feed URL</h3>
+          <p>Copy your feed URL. Paste it into your website CMS, or send it to each portal's data team. Most portals accept XML feeds - we'll help you with any that need setup support.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Update once, everywhere</h3>
+          <p>That's it. Now every change you make in PropertyList - new listing, price change, status update, sold - appears on every portal automatically. Usually within minutes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== PORTALS SECTION ===== -->
+  <section class="portals-section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" style="color:#6fe5d3;">One feed. Every portal.</p>
+        <h2 class="section-h2 on-dark">Your listings, <em>wherever buyers look.</em></h2>
+        <p class="lead">The same feed works with every major Spanish and international property portal. Push to one, or all of them at once.</p>
+      </div>
+
+      <div class="portal-flow">
+
+        <!-- Source -->
+        <div class="portal-source">
+          <div class="portal-source-icon">
+            <img src="https://info.propertylist.es/email-images/originals/email-icon-main-ai.png"
+                 alt="PropertyList" width="32" height="32"
+                 style="border-radius:8px;margin:auto;" />
+          </div>
+          <div class="portal-source-label">PropertyList</div>
+          <div class="portal-source-sub">Update once here</div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="portal-arrows">
+          <div class="portal-arrows-label">Live XML feed</div>
+          <div class="portal-arrows-line"></div>
+        </div>
+
+        <!-- Portal grid -->
+        <div>
+          <div class="portals-grid">
+            <div class="portal-pill own">
+              <div class="portal-pill-icon">🏠</div>
+              <div class="portal-pill-name">Your website</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">🔵</div>
+              <div class="portal-pill-name">Idealista</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">🔴</div>
+              <div class="portal-pill-name">Kyero</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">🟣</div>
+              <div class="portal-pill-name">Fotocasa</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">🟥</div>
+              <div class="portal-pill-name">Rightmove</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">🔷</div>
+              <div class="portal-pill-name">Zoopla</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">🟢</div>
+              <div class="portal-pill-name">Primeloc.</div>
+            </div>
+            <div class="portal-pill">
+              <div class="portal-pill-icon">➕</div>
+              <div class="portal-pill-name">Any portal</div>
+            </div>
+          </div>
+          <p class="portals-note">
+            If a portal accepts XML feeds, your listings can reach it. <a href="https://wa.me/34610951177">Ask us about your specific portals &rarr;</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== PRICING ===== -->
+  <section class="pricing-section" id="pricing">
+    <div class="wrap">
+
+      <div class="section-head">
+        <p class="eyebrow">Clear pricing, no surprises</p>
+        <h2 class="section-h2">Import free. <em>Export from 35€/month.</em></h2>
+        <p class="lead">Import is and always will be free. Export is priced to be less than an hour of your time per month - because that's what it saves you every week.</p>
+      </div>
+
+      <!-- Billing toggle - Annual default -->
+      <div class="pricing-toggle-wrap">
+        <div class="pricing-toggle" role="tablist">
+          <div class="pricing-toggle-opt" data-period="monthly" role="tab">Monthly</div>
+          <div class="pricing-toggle-opt active" data-period="annual" role="tab">
+            Annual <span class="save-badge">SAVE 70€</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing-cards-wrap">
+
+        <!-- FREE CARD -->
+        <div class="pricing-free-card">
+          <span class="pc-tag">Free forever</span>
+          <h3>XML Import</h3>
+          <p class="pc-tagline">Bring any listings into PropertyList.</p>
+          <div class="pc-price">€0</div>
+          <p class="pc-period">Always free &middot; No limits</p>
+          <p class="pc-price-detail">No catch. No expiry. No card needed.</p>
+
+          <ul class="pc-features">
+            <li>Import from any XML-compatible source</li>
+            <li>Unlimited listings imported</li>
+            <li>Full property data including photos</li>
+            <li>Automatic sync when source updates</li>
+            <li>Works from day one</li>
+          </ul>
+
+          <a href="https://agents.propertylist.es/settings/export" class="btn btn-primary pc-cta">
+            Set up free import
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <p class="pc-note">No card required. Activate in your account settings.</p>
+        </div>
+
+        <!-- PAID CARD -->
+        <div class="pricing-paid-card">
+          <h3>XML Export</h3>
+          <p class="pc-tagline">Push your listings to every portal.</p>
+          <div class="pc-price" id="export-price">350€</div>
+          <p class="pc-period" id="export-period">/year</p>
+          <p class="pc-price-detail" id="export-detail">Less than 30€/month &middot; Save 70€ vs monthly</p>
+
+          <ul class="pc-features">
+            <li>Live XML feed - unlimited portals</li>
+            <li>Real-time sync (updates within minutes)</li>
+            <li>Sales, long-term &amp; holiday rentals</li>
+            <li>Your website <strong style="color:#fff;">+</strong> every external portal</li>
+            <li>Setup support included</li>
+            <li>Cancel anytime, no contract</li>
+          </ul>
+
+          <a href="https://agents.propertylist.es/settings/export" class="btn btn-primary pc-cta" id="export-cta">
+            Activate export feed
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <p class="pc-note" id="export-note">
+            <strong>✓ Cancel anytime.</strong> No setup fee. Domain &amp; portals stay yours if you leave.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- No website banner -->
+      <div class="no-website-banner">
+        <div>
+          <p class="eyebrow" style="text-align:left;">Don't have a website yet?</p>
+          <h3>Build one in minutes.<br /><em>Listings included automatically.</em></h3>
+          <p>The PropertyList Website Builder gives you a fully branded agency site with every MLS property auto-loaded. No developer, no headache - and your XML feed is already built in. From 50€/month, build and preview free.</p>
+        </div>
+        <div class="no-website-banner-cta">
+          <a href="https://info.propertylist.es/website-builder" class="btn btn-primary btn-large">
+            Build your website free
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <p style="margin-top:10px;font-size:12px;color:var(--quiet);text-align:center;">50€/month when published &middot; Cancel anytime</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq-section">
+    <div class="narrow">
+      <div class="section-head">
+        <p class="eyebrow">Questions?</p>
+        <h2 class="section-h2">Everything <em>you might be wondering.</em></h2>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>How quickly do updates sync to the portals?</summary>
+          <p>Most portals pull the XML feed every 15-60 minutes, so changes typically appear within an hour. Some portals sync faster. The feed itself updates within seconds of you saving a change in PropertyList - the delay is on the portal's end, not ours.</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>Can I send to multiple portals with one feed?</summary>
+          <p>Yes. Your XML feed URL is the same for every portal - you just give the same URL to each portal's data team. One update in PropertyList, one feed, every portal picks it up automatically. No separate feeds per portal.</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>Do the portals need to accept XML? What if mine don't?</summary>
+          <p>All major Spanish and international property portals accept XML feeds - it's the industry standard for bulk property data. If you're not sure whether a specific portal you use accepts feeds, <a href="https://wa.me/34610951177">WhatsApp us</a> and we'll check for you. We include setup support with every export subscription.</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>What does the XML feed include? Photos, descriptions, all of it?</summary>
+          <p>Yes - the feed includes everything: photos, full descriptions, prices, floor areas, bedrooms, bathrooms, location data, property type, status (available / under offer / sold), and any custom fields you've filled in. Whatever's in your PropertyList property record goes into the feed.</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>What's the difference between import and export?</summary>
+          <p><strong>Import</strong> brings listings into PropertyList from an external source - for example, if you work with another agency's feed or have listings on another CRM you want to consolidate. This is free forever. <strong>Export</strong> pushes your PropertyList listings outward to your website, Idealista, Kyero, Rightmove and any other portal. This is the paid feature (from 35€/month).</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>I already have a website. How do I connect it?</summary>
+          <p>Your website just needs to accept an XML feed URL - most property website platforms do this natively. Once you activate export in your settings, you get a feed URL to paste into your CMS. If you need help, our setup support is included and we can walk you through it. <a href="https://wa.me/34610951177">WhatsApp us &rarr;</a></p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>I don't have a website. Can I still use the export?</summary>
+          <p>Yes - you can push to external portals (Idealista, Kyero, Rightmove etc.) without having your own website. If you'd like a website too, the <a href="https://info.propertylist.es/website-builder">PropertyList Website Builder</a> gives you a fully branded site with your listings auto-loaded from 50€/month - build and preview free.</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>What happens to my portal listings if I cancel?</summary>
+          <p>Your portals keep whatever they last pulled from your feed. The listings don't disappear immediately, but they'll stop updating - so portals may eventually mark them as inactive or remove them. Your PropertyList CRM data is yours and stays intact regardless.</p>
+        </details>
+      </div>
+
+      <div class="faq-item">
+        <details>
+          <summary>Is setup support really included?</summary>
+          <p>Yes. Every export subscription includes help getting connected. Some portals have their own onboarding process - we know how they work and can help you navigate it. Reach James directly on <a href="https://wa.me/34610951177">WhatsApp +34 610 95 11 77</a> for any setup questions.</p>
+        </details>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="final-cta">
+    <div class="narrow">
+      <p class="eyebrow" style="color:#6fe5d3;">Born on the Costa del Sol &middot; Built by agents for agents</p>
+      <h2 class="section-h2 on-dark">Stop updating portals manually.<br /><em>Start doing what matters.</em></h2>
+      <p class="lead">Your listings deserve to be everywhere buyers are looking - without costing you half your day. Set it up once. Let it run.</p>
+
+      <div class="final-cta-actions">
+        <a href="https://agents.propertylist.es/settings/export" class="btn btn-primary btn-large">
+          Activate export feed
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+            <path d="M1 7H17M17 7L11 1M17 7L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="https://info.propertylist.es/website-builder" class="btn btn-secondary-outline btn-large">
+          Build a website too
+        </a>
+      </div>
+
+      <p class="final-cta-note">
+        Free XML import &middot; Export from 35€/month &middot; <a href="https://wa.me/34610951177">Questions? WhatsApp James &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wrap footer-inner">
+      <a href="https://propertylist.es/" class="footer-logo">
+        <picture>
+          <source srcset="https://info.propertylist.es/email-images/originals/email-logo-main-for-dark-bk.png" media="(prefers-color-scheme: dark)" />
+          <img class="logo-light" src="https://info.propertylist.es/email-images/originals/email-logo-main-for-light-bk.png" alt="PropertyList.es" />
+        </picture>
+      </a>
+      <p class="footer-tagline">The free MLS &amp; CRM, built by agents for agents.</p>
+      <div class="footer-links">
+        <a href="https://propertylist.es/">Portal</a>
+        <a href="https://agents.propertylist.es">Agent login</a>
+        <a href="https://agents.propertylist.es/new-agent-signup/new">Sign up free</a>
+        <a href="https://info.propertylist.es/website-builder">Website Builder</a>
+        <a href="https://agents.propertylist.es/settings/export">XML Export</a>
+        <a href="https://info.propertylist.es/developers">For developers</a>
+      </div>
+      <p class="footer-fine">
+        PropertyList.es &middot; Costa del Sol, Spain<br />
+        &copy; 2026 PropertyList. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+
+  <script>
+    // Pricing toggle - annual default
+    (function () {
+      const opts   = document.querySelectorAll('.pricing-toggle-opt');
+      const price  = document.getElementById('export-price');
+      const period = document.getElementById('export-period');
+      const detail = document.getElementById('export-detail');
+      const note   = document.getElementById('export-note');
+      const cta    = document.getElementById('export-cta');
+
+      const data = {
+        monthly: {
+          price:  '35€',
+          period: '/month',
+          detail: 'Flexible billing. Cancel any time.',
+          note:   '<strong>✓ Cancel anytime.</strong> No setup fee. No contract.'
+        },
+        annual: {
+          price:  '350€',
+          period: '/year',
+          detail: 'Less than 30€/month · Save 70€ vs monthly',
+          note:   '<strong>✓ Best value.</strong> Save 70€. Cancel anytime.'
+        }
+      };
+
+      opts.forEach(opt => {
+        opt.addEventListener('click', () => {
+          opts.forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+          const d = data[opt.dataset.period];
+          price.textContent  = d.price;
+          period.textContent = d.period;
+          detail.textContent = d.detail;
+          note.innerHTML     = d.note;
+        });
+      });
+    })();
+  </script>
+
+
+</Layout>
