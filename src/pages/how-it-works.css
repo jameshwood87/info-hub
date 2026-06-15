@@ -1,0 +1,31 @@
+/* fallback CSS for How It Works page */
+
+/* ===== DESIGN TOKENS ===== */
+:root {
+  --pl-teal: #00ae9a;
+  --pl-teal-dark: #008c7c;
+  --pl-teal-light: #e6f9f7;
+  --pl-teal-pale: #f0fdfb;
+  --pl-dark: #141a1a;
+  --pl-mid: #3d4d4a;
+  --pl-muted: #7a9190;
+  --pl-cream: #f7f4ef;
+  --pl-white: #ffffff;
+  --pl-border: #e0e8e7;
+  --pl-gold: #c9a84c;
+  --pl-font-serif: 'Playfair Display', Georgia, serif;
+  --pl-font-sans: 'DM Sans', -apple-system, sans-serif;
+}
+
+/* Global */
+* { box-sizing: border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {font-family: var(--pl-font-sans); background: var(--pl-white); color: var(--pl-dark); overflow-x:hidden;}
+
+/* Minimal copy of key sections */
+.pl-hero {min-height:100vh; padding:120px 40px 80px; display:flex; align-items:center; justify-content:center; background:var(--pl-dark); position:relative; overflow:hidden;}
+.pl-hero-inner {position:relative; z-index:1; max-width:900px; text-align:center;}
+.pl-hero h1 {font-family:var(--pl-font-serif); font-size:clamp(2.8rem,6vw,5.2rem); font-weight:900; color:var(--pl-white); margin-bottom:28px;}
+.pl-hero p {font-size:clamp(1rem,2vw,1.2rem); color:rgba(255,255,255,0.65); max-width:620px; margin:0 auto 44px; line-height:1.7;}
+
+/* Additional classes omitted for brevity – they are defined in src/styles/hiw-page.css */

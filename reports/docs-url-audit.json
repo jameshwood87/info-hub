@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-27T10:34:34.771Z",
+  "generatedAt": "2026-06-03T06:01:29.786Z",
   "origin": "https://info.propertylist.es",
   "sitemap": {
     "url": "https://info.propertylist.es/sitemap.xml",
@@ -38,14 +38,14 @@
       "to": "/docs/laws-procedures/buying-a-property/legal-requirements/obtaining-a-nie/"
     },
     {
-      "from": "/docs/laws-procedures/buying-a-property/registering-the-property-in-the-land-registry/",
-      "status": 301,
-      "to": "/docs/laws-procedures/buying-a-property/legal-requirements/registering-the-property-in-the-land-registry/"
-    },
-    {
       "from": "/docs/laws-procedures/buying-a-property/paying-taxes/",
       "status": 301,
       "to": "/docs/laws-procedures/buying-a-property/legal-requirements/paying-taxes/"
+    },
+    {
+      "from": "/docs/laws-procedures/buying-a-property/registering-the-property-in-the-land-registry/",
+      "status": 301,
+      "to": "/docs/laws-procedures/buying-a-property/legal-requirements/registering-the-property-in-the-land-registry/"
     },
     {
       "from": "/docs/laws-procedures/selling-a-property/marketing-the-property/",
