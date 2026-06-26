@@ -1,0 +1,348 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/rentals/`;
+const title = 'Rentals Management Module for Estate Agents | PropertyList';
+const description =
+	'The Rentals Module runs the full lettings workflow - tenants pipeline, tenancies ledger, automatic renewals, maintenance, landlord portfolio and a deposit audit log built for Spanish rental law. Free 30-day trial.';
+
+const features = [
+	{ name: 'Tenants pipeline', desc: 'A dedicated board for applicants, from first enquiry through to a signed lease.' },
+	{ name: 'Tenancies ledger', desc: 'Every live, expiring and ended lease in one view, each with its deposit status.' },
+	{ name: 'Automatic renewals', desc: 'Lease renewal emails sent 30 days before expiry, in your client’s language.' },
+	{ name: 'Maintenance workflow', desc: 'Log issues, assign suppliers, and track every job through to completion.' },
+	{ name: 'Landlord portfolio view', desc: 'Rent roll and renewals due, per landlord, at a glance.' },
+	{ name: 'Deposit audit log', desc: 'Every status and deposit change timestamped against the agent responsible.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: [
+		{
+			'@type': 'Question',
+			name: 'What does the Rentals module include?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'A dedicated Tenants pipeline, a Tenancies ledger (live, expiring and ended leases with deposit status), automatic lease renewal emails 30 days before expiry, a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'How much does the Rentals module cost?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Free 30-day trial, no credit card required. After the trial it is 50 credits per 30-day period, with no auto-charge.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'Does the Rentals module comply with Spanish rental law?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Yes. The audit log timestamps every status and deposit change with the agent responsible, providing defensible evidence for Spanish deposit disputes under the LAU and RDL 8/2024 framework.',
+			},
+		},
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Rentals Module</div>
+			<h1>The full rental workflow, end to end.</h1>
+			<p class="lead">
+				The Rentals Module unlocks everything an agency needs to run lettings - from the first enquiry through to lease completion, renewal and
+				deposit return. Built for Spanish rental law, with a free 30-day trial and no auto-charge.
+			</p>
+			<div class="ctaRow" aria-label="Get started">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
+					Start the free trial
+				</a>
+				<a class="btnSecondary" href="/pricing/">See full pricing</a>
+			</div>
+			<div class="note">30-day free trial. No credit card required.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What is inside</h2>
+			<p>
+				One module covers the entire lettings lifecycle, so you are not stitching the rental side of your business together from spreadsheets and
+				reminders.
+			</p>
+		</div>
+		<div class="grid3" aria-label="Rentals module features">
+			{
+				features.map((f) => (
+					<div class="card">
+						<h3>{f.name}</h3>
+						<p>{f.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Built for Spanish rental law</h2>
+				<p>
+					The audit log timestamps every status and deposit change against the agent responsible, giving you defensible evidence for deposit
+					disputes under the LAU and RDL 8/2024 framework.
+				</p>
+				<p>No more reconstructing who changed what, and when, after a dispute has already started.</p>
+			</div>
+			<div class="card">
+				<h2>Simple, honest pricing</h2>
+				<p>
+					Start with a free 30-day trial - no credit card required. After the trial, the module is 50 credits per 30-day period, and there is no
+					auto-charge. You renew it when you want it, not before.
+				</p>
+				<div class="pillRow">
+					<span class="pill">30-day free trial</span>
+					<span class="pill">No card required</span>
+					<span class="pill">50 credits / 30 days</span>
+					<span class="pill">No auto-charge</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section cta">
+		<div class="ctaInner">
+			<h2>Run lettings the same place you run sales</h2>
+			<p>
+				The Rentals Module sits inside the same free CRM that powers your sales pipeline - one login, one contact database, one workflow for the
+				whole agency.
+			</p>
+			<div class="ctaRow" aria-label="Join PropertyList">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
+					Agents: Get Started FREE
+				</a>
+				<a class="btnSecondary" href="/features/">See all features</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+	}
+
+	.hero {
+		border-radius: 22px;
+		padding: 16px;
+		margin: 0 0 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background:
+			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.75);
+		max-width: 78ch;
+		line-height: 1.6;
+	}
+
+	.note {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.section {
+		margin: 0 0 14px;
+	}
+
+	.sectionHead {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 12px;
+	}
+
+	.sectionHead p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.6;
+		max-width: 88ch;
+	}
+
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.card.accent {
+		border-color: rgba(var(--pl-accent-rgb), 0.25);
+		background:
+			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
+			rgba(255, 255, 255, 0.86);
+	}
+
+	.card h2 {
+		margin: 0 0 10px;
+	}
+
+	.card h3 {
+		margin: 0 0 8px;
+		font-size: 16px;
+	}
+
+	.card p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+
+	.pillRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 4px;
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: rgba(var(--pl-accent-rgb), 0.1);
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.86);
+		font-size: 13px;
+	}
+
+	.cta {
+		border-radius: 22px;
+		padding: 16px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.ctaInner {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	.ctaInner p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.6;
+		max-width: 90ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 14px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 950;
+		color: rgba(16, 24, 40, 0.88);
+	}
+
+	.btnPrimary {
+		border-color: rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.14);
+	}
+
+	.btnPrimary:hover,
+	.btnSecondary:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	@media (max-width: 980px) {
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
