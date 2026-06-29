@@ -27,3 +27,6 @@ pnpm-debug.log*
 coverage/
 test-results/
 playwright-report/
+
+# runtime analytics (regenerated at runtime; do not let deploys reset it)
+var/weekly-views.json
