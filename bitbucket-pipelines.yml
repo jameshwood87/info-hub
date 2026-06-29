@@ -1,33 +1,33 @@
-# .bitbucket-pipelines.yml  (place this at the repo root)
-image: atlassian/default-image:2          # base Docker image with ssh & git
+# bitbucket-pipelines.yml  (repo root - this is the file Bitbucket actually reads)
+image: atlassian/default-image:2          # base image with ssh + git
 
 pipelines:
   branches:
-    main:                                 # runs only on pushes to `main`
+    main:                                 # runs only on pushes to main
       - step:
           name: Deploy to Production
-          deployment: production          # optional – shows in UI
+          deployment: production
           script:
-            # 1️⃣ Export the repo variables so the ssh‑run pipe can see them
+            # Export the repo variables so the ssh-run pipe can see them
             - export SSH_KEY="${PROD_SSH_KEY}"
             - export SERVER="${PROD_HOST}"
             - export USER="${PROD_USER}"
             - export DEPLOY_PATH="${PROD_DEPLOY_PATH}"
-            # 2️⃣ Use the official Bitbucket ssh‑run pipe
+            # Run the deploy on the production host via the official ssh-run pipe
             - pipe: atlassian/ssh-run:0.4.1
               variables:
-                SSH_USER: $USER                # expands to the value of PROD_USER
-                SERVER: $SERVER                # expands to PROD_HOST
-                SSH_KEY: $SSH_KEY              # expands to the private key
-                # The actual commands run on the remote host:
+                SSH_USER: $USER
+                SERVER: $SERVER
+                SSH_KEY: $SSH_KEY
                 COMMAND: |
-                  set -e                     # fail fast on any error
+                  set -e
                   cd "$DEPLOY_PATH"
-                  echo "🔧 Pulling latest code..."
-                  git pull origin main
-                  echo "📦 Installing dependencies..."
+                  echo "Fetching latest code..."
+                  git fetch origin main
+                  git reset --hard origin/main
+                  echo "Installing dependencies..."
                   npm ci
-                  echo "🏗️ Building site..."
+                  echo "Building site..."
                   npm run build
-                  echo "🚀 Restarting service..."
-                  sudo systemctl restart nginx   # or the service you use
+                  echo "Restarting the app (Astro SSR), not nginx..."
+                  sudo systemctl restart info-hub.service
