@@ -31,7 +31,7 @@ const {
 
 // Seasonal assets import
 import { getSeasonalAssets } from "../lib/seasonalLogo";
-const { logo, og } = getSeasonalAssets();
+const { logo, og, icon } = getSeasonalAssets();
 
 const stripInfoHubSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
 const pageTitle = stripInfoHubSuffix(title) || 'PropertyList Info Hub';
@@ -309,7 +309,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								<a class="brandLogoLink" href="https://info.propertylist.es/">
 									<img
 										class="brandLogo brandLogo--wide"
-										src="/og/logo-default.png?v=20260514"
+										src={logo}
 										alt="PropertyList"
 										width="200"
 										height="40"
@@ -318,7 +318,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 									/>
 									<img
 										class="brandLogo brandLogo--icon"
-										src="/og/icon-default.png"
+										src={icon}
 										alt="PropertyList"
 										width="40"
 										height="40"
