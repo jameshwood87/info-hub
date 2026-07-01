@@ -429,6 +429,27 @@ const byId = Object.fromEntries(featureFaqItems.map((i) => [i.id, i]));
 	@media (max-width: 640px) {
 		.trustGrid { grid-template-columns: repeat(2, 1fr); }
 	}
+
+	/* 2-column Q&A on desktop, with questions left-aligned and chevron on the right */
+	.faqGroup { grid-template-columns: 1fr 1fr; gap: 10px 12px; align-items: start; }
+	.faqGroupTitle { grid-column: 1 / -1; }
+	.faqQ::before { content: none; }
+	.faqQ::after {
+		content: '';
+		width: 20px;
+		height: 20px;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23101828' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+		background-size: 16px 16px;
+		background-repeat: no-repeat;
+		background-position: center;
+		flex-shrink: 0;
+		margin-left: auto;
+		transition: transform 0.2s;
+	}
+	.faqItem[open] .faqQ::after { transform: rotate(90deg); }
+	@media (max-width: 760px) {
+		.faqGroup { grid-template-columns: 1fr; }
+	}
 </style>
 
 <script is:inline>
