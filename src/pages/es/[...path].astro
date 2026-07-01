@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AreaGuide from '../../components/AreaGuide.astro';
 import AreaPage from '../../components/AreaPage.astro';
 import { getKbPageByPath, listKbPagesByPrefix, listKbPagesByPrefixes } from '../../lib/directus';
 import { getKbMeta } from '../../lib/adminMeta';
@@ -2412,6 +2413,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			) : null}
 
 			<div class="docMain">
+				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" /> : null}
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
 
 				{folderArticles.length ? (
