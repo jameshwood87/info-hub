@@ -124,6 +124,14 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			))}
 		</div>
 
+		{sale!.oracle.verified && sale!.oracle.attestationUrl ? (
+			<p class="agOracle">
+				{t('The "verified" €/m² is notary-verified by', 'El €/m² "verificado" está verificado ante notario por')}{' '}
+				<a href={sale!.oracle.attestationUrl} target="_blank" rel="noopener">PropertyList Oracle</a>
+				{` (${sale!.oracle.source || 'Spanish notarial register'}${sale!.oracle.sampleSize ? `, ${nfmt(sale!.oracle.sampleSize)} ${t('transactions', 'transacciones')}` : ''}${sale!.oracle.periodEnd ? ` ${t('to', 'hasta')} ${sale!.oracle.periodEnd}` : ''}).`}
+			</p>
+		) : null}
+
 		{bands.some((b) => b.n > 0) ? (
 			<>
 				<div class="agSecHead"><h2>{t('What is for sale', 'Qué hay en venta')}</h2><p>{t(`Homes for sale in ${areaName} by bedrooms.`, `Viviendas en venta en ${areaName} por dormitorios.`)}</p></div>
@@ -230,6 +238,8 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 	.agMStats dt { color:rgba(16,24,40,.6); margin:0; }
 	.agMStats dd { margin:0; font-weight:800; color:rgba(16,24,40,.86); }
 	.agMSubline { color:rgba(16,24,40,.6); font-size:13px; line-height:1.45; margin:10px 0 14px; }
+	.agOracle { font-size:12.5px; color:rgba(16,24,40,.6); line-height:1.5; margin:-8px 0 18px; }
+	.agOracle a { color:#00937f; font-weight:800; text-decoration:underline; }
 	.agMCta { margin-top:auto; font-weight:800; font-size:13.5px; color:#00937f; text-decoration:none; }
 	.agMNone { color:rgba(16,24,40,.55); font-size:13.5px; padding:8px 0; }
 
