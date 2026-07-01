@@ -15,10 +15,10 @@ const stats: Array<{ value: string; label: string }> = [
 	lang="es"
 	title={title}
 	description={description}
-	canonical="https://info.propertylist.es/es/developers/"
+	canonical="https://info.propertylist.es/es/promotores/"
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/developers/' },
-		{ hreflang: 'es', href: 'https://info.propertylist.es/es/developers/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/promotores/' },
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/developers/' },
 	]}
 >
@@ -260,7 +260,7 @@ const stats: Array<{ value: string; label: string }> = [
 					const res = await fetch('/api/subscribe', {
 						method: 'POST',
 						headers: { 'content-type': 'application/json' },
-						body: JSON.stringify({ email, lang: 'es', page: '/es/developers/', utm }),
+						body: JSON.stringify({ email, lang: 'es', page: '/es/promotores/', utm }),
 					});
 					const data = await res.json().catch(() => ({}));
 					if (!res.ok || !data?.ok) {

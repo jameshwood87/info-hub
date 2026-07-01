@@ -116,7 +116,12 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/laws/', es: '/es/leyes/' },
 	{ en: '/neighbourhood/', es: '/es/barrios/' },
 	{ en: '/mls/', es: '/es/mls/' },
-	{ en: '/pricing/', es: '/es/pricing/' },
+	{ en: '/features/', es: '/es/funciones/' },
+	{ en: '/website-builder/', es: '/es/constructor-de-webs/' },
+	{ en: '/rentals/', es: '/es/alquileres/' },
+	{ en: '/developers/', es: '/es/promotores/' },
+	{ en: '/faq/', es: '/es/preguntas-frecuentes/' },
+	{ en: '/pricing/', es: '/es/precios/' },
 	{ en: '/search', es: '/es/search' },
 ];
 
@@ -336,14 +341,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 										<svg class="navDropChev" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
 									</button>
 									<div class="navDropMenu" role="menu">
-										<a role="menuitem" href={lang === 'es' ? '/es/features/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/website-builder/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 										<a role="menuitem" href="/pipelines/">Pipelines</a>
 										<a role="menuitem" href="/rentals/">{lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
 										<a role="menuitem" href={lang === 'es' ? '/es/mls/' : '/mls/'}>MLS</a>
 									</div>
 								</div>
-								<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+								<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
 								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
@@ -410,14 +415,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
 							</button>
 							<a href={lang === 'es' ? '/es/' : '/'}>{lang === 'es' ? 'Inicio' : 'Home'}</a>
-							<a href={lang === 'es' ? '/es/features/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
-							<a href={lang === 'es' ? '/es/website-builder/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
+							<a href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
+							<a href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 							<a href="/pipelines/">Pipelines</a>
 							<a href="/rentals/">{lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
 							<a href={lang === 'es' ? '/es/mls/' : '/mls/'}>MLS</a>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
 							<div class="mobileLang">
 								<a class:list={['mobileLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
@@ -473,7 +478,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						<div class="footerCol">
 							<div class="footerColTitle">{lang === 'es' ? 'Producto' : 'Product'}</div>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'es' ? 'Documentación' : 'Docs'}</a>
-							<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 							<a href="https://propertylist.es/">{lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
 							<a href="https://intelligence.propertylist.es/">Market Intelligence</a>
 						</div>
@@ -481,7 +486,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<div class="footerColTitle">{lang === 'es' ? 'Empresa' : 'Company'}</div>
 							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
 							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/faq/' : '/faq/'}>FAQ</a>
+							<a href={lang === 'es' ? '/es/preguntas-frecuentes/' : '/faq/'}>FAQ</a>
 						</div>
 						<div class="footerCol">
 							<div class="footerColTitle">{lang === 'es' ? 'Cuenta' : 'Account'}</div>
@@ -575,7 +580,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
     if (p.indexOf('/neighbourhood/') === 0 || p.indexOf('/es/barrios/') === 0) return 'neighbourhood';
     if (p.indexOf('/docs/') === 0 || p.indexOf('/es/docs/') === 0) return 'docs';
     if (p.indexOf('/blog/') === 0 || p.indexOf('/es/informacion-general/') === 0) return 'blog';
-    if (p.indexOf('/pricing/') === 0 || p.indexOf('/es/pricing/') === 0) return 'pricing';
+    if (p.indexOf('/pricing/') === 0 || p.indexOf('/es/precios/') === 0) return 'pricing';
     if (p.indexOf('/search') === 0 || p.indexOf('/es/search') === 0) return 'search';
     return 'content';
   }

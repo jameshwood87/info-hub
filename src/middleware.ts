@@ -77,6 +77,20 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			}
 		}
 
+		const marketingEsAliases: Array<{ from: string; to: string }> = [
+			{ from: '/es/features/', to: '/es/funciones/' },
+			{ from: '/es/pricing/', to: '/es/precios/' },
+			{ from: '/es/website-builder/', to: '/es/constructor-de-webs/' },
+			{ from: '/es/rentals/', to: '/es/alquileres/' },
+			{ from: '/es/developers/', to: '/es/promotores/' },
+			{ from: '/es/faq/', to: '/es/preguntas-frecuentes/' },
+		];
+		for (const r of marketingEsAliases) {
+			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
+				return new Response(null, { status: 301, headers: { Location: `${r.to}${url.search}` } });
+			}
+		}
+
 		const legacyNeighbourhoodSlug = (() => {
 			if (!pathname.startsWith('/neighbourhood/')) return '';
 			const parts = pathname.split('/').filter(Boolean);

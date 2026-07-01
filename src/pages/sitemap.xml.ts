@@ -74,7 +74,7 @@ const toSpanishPath = (p: string) => {
     { en: '/neighbourhood/', es: '/es/barrios/' },
     { en: '/andalucia/', es: '/es/andalucia/' },
     { en: '/mls/', es: '/es/mls/' },
-    { en: '/pricing/', es: '/es/pricing/' },
+    { en: '/pricing/', es: '/es/precios/' },
     { en: '/search', es: '/es/search' },
   ];
   for (const pair of mapPairs) {
@@ -172,15 +172,15 @@ export async function GET() {
     '/website-builder/',
     '/es/',
     '/es/sobre-nosotros/',
-    '/es/faq/',
-    '/es/website-builder/',
+    '/es/preguntas-frecuentes/',
+    '/es/constructor-de-webs/',
     '/es/docs/',
     '/es/informacion-general/',
     '/es/comunidad/',
     '/es/barrios/',
     '/es/mls/',
     '/es/leyes/',
-    '/es/pricing/',
+    '/es/precios/',
     '/es/search',
   ];
 

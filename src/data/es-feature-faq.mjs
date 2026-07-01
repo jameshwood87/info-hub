@@ -70,7 +70,7 @@ export const featureFaqItemsEs = [
     id: 'xml-cost',
     q: '¿Cuánto cuesta el feed XML?',
     aHtml:
-      'El feed de segunda mano y alquiler cuesta 35 créditos/mes o 250 créditos/año. El feed de nuevos desarrollos cuesta 25 créditos/mes o 250 créditos/año. <a href="https://info.propertylist.es/es/pricing/">Ver precios</a>.',
+      'El feed de segunda mano y alquiler cuesta 35 créditos/mes o 250 créditos/año. El feed de nuevos desarrollos cuesta 25 créditos/mes o 250 créditos/año. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────
@@ -104,7 +104,7 @@ export const featureFaqItemsEs = [
     id: 'crm-free',
     q: '¿El CRM de PropertyList es realmente gratis?',
     aHtml:
-      'El MLS core y el CRM son gratis para siempre. Cuatro de los siete tableros de pipeline - Leads, Property Lifecycle, Transactions y Nurture - son completamente gratis sin límites. Las mejoras de pago para Buyers, Sellers y Tenants usan el sistema de créditos. <a href="https://info.propertylist.es/es/pricing/">Ver precios</a>.',
+      'El MLS core y el CRM son gratis para siempre. Cuatro de los siete tableros de pipeline - Leads, Property Lifecycle, Transactions y Nurture - son completamente gratis sin límites. Las mejoras de pago para Buyers, Sellers y Tenants usan el sistema de créditos. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
   },
   {
     id: 'pipeline-boards',
@@ -156,7 +156,7 @@ export const featureFaqItemsEs = [
     id: 'credits-work',
     q: '¿Cómo funcionan los créditos de PropertyList?',
     aHtml:
-      '1 crédito = 1 €. Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. <a href="https://info.propertylist.es/es/pricing/">Ver precios de créditos</a>.',
+      '1 crédito = 1 €. Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
   },
   {
     id: 'credits-expire',
