@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import {
@@ -2892,109 +2893,7 @@ const ldJson = JSON.stringify([
 			) : null}
 
 			<div class="docMain">
-				{isNeighbourhood ? (
-					<section class="nbTop" aria-label="Neighbourhood guide summary">
-						<div class="nbCtas" aria-label="Call to action">
-							<a class="nbBtn primary" href={neighbourhoodPortalUrl} target="_blank" rel="noopener">
-								View homes for sale
-							</a>
-							<a class="nbBtn" href="https://propertylist.es" target="_blank" rel="noopener">
-								Search all properties
-							</a>
-						</div>
-
-						{neighbourhoodMeta?.neighbourhoodStats ? (
-							<dl class="nbStats" aria-label="Key stats">
-								{typeof (neighbourhoodMeta.neighbourhoodStats as any).listingCount === 'number' &&
-								Number((neighbourhoodMeta.neighbourhoodStats as any).listingCount) > 0 ? (
-									<div class="nbStat">
-										<dt>Listings</dt>
-										<dd>{Math.round((neighbourhoodMeta.neighbourhoodStats as any).listingCount).toLocaleString('en-GB')}</dd>
-									</div>
-								) : null}
-								{typeof (neighbourhoodMeta.neighbourhoodStats as any).avgPriceEur === 'number' ? (
-									<div class="nbStat">
-										<dt>Median price</dt>
-										<dd>€{Math.round((neighbourhoodMeta.neighbourhoodStats as any).avgPriceEur).toLocaleString('en-GB')}</dd>
-									</div>
-								) : null}
-								{typeof (neighbourhoodMeta.neighbourhoodStats as any).pricePerM2Eur === 'number' ? (
-									<div class="nbStat">
-										<dt>Median €/m²</dt>
-										<dd>€{Math.round((neighbourhoodMeta.neighbourhoodStats as any).pricePerM2Eur).toLocaleString('en-GB')}</dd>
-									</div>
-								) : null}
-								{typeof (neighbourhoodMeta.neighbourhoodStats as any).driveToMalagaAirportMin === 'number' ? (
-									<div class="nbStat">
-										<dt>Airport drive</dt>
-										<dd>~{Math.round((neighbourhoodMeta.neighbourhoodStats as any).driveToMalagaAirportMin)} min</dd>
-									</div>
-								) : null}
-								{typeof (neighbourhoodMeta.neighbourhoodStats as any).driveToPuertoBanusMin === 'number' ? (
-									<div class="nbStat">
-										<dt>Puerto Banús</dt>
-										<dd>~{Math.round((neighbourhoodMeta.neighbourhoodStats as any).driveToPuertoBanusMin)} min</dd>
-									</div>
-								) : null}
-								{typeof (neighbourhoodMeta.neighbourhoodStats as any).driveToBeachMin === 'number' ||
-								typeof (neighbourhoodMeta.neighbourhoodStats as any).beachDistanceKm === 'number' ? (
-									<div class="nbStat">
-										<dt>Beach</dt>
-										<dd>
-											{typeof (neighbourhoodMeta.neighbourhoodStats as any).driveToBeachMin === 'number'
-												? `~${Math.round((neighbourhoodMeta.neighbourhoodStats as any).driveToBeachMin)} min`
-												: `${Math.round((neighbourhoodMeta.neighbourhoodStats as any).beachDistanceKm)} km`}
-										</dd>
-									</div>
-								) : null}
-							</dl>
-						) : (
-							<div class="nbStatsEmpty">Key stats will appear here as they’re added and refreshed.</div>
-						)}
-
-						{toc.length ? (
-							<nav class="nbToc" aria-label="On this page">
-								<div class="nbTocTitle">On this page</div>
-								<ul class="nbTocList">
-									{toc.slice(0, 14).map((t) => (
-										<li class:list={['nbTocItem', t.depth === 3 ? 'depth3' : null]}>
-											<a class="nbTocLink" href={`#${t.id}`}>
-												{t.text}
-											</a>
-										</li>
-									))}
-								</ul>
-							</nav>
-						) : null}
-					</section>
-				) : null}
-
-				{isNeighbourhood && neighbourhoodMeta?.neighbourhoodListings?.length ? (
-					<section class="nbListings" aria-label="Live listings">
-						<div class="nbListingsTop">
-							<div class="nbListingsTitle">Live listings</div>
-							<a class="nbListingsLink" href={neighbourhoodPortalUrl} target="_blank" rel="noopener">
-								View all
-							</a>
-						</div>
-						<div class="nbListingsGrid">
-							{neighbourhoodMeta.neighbourhoodListings.slice(0, 4).map((l: any) => (
-								<a class="nbCard" href={String(l.url).replace(/^http:\/\//i, 'https://')} target="_blank" rel="noopener">
-									{l.imageUrl ? <img class="nbCardImg" src={String(l.imageUrl).replace(/^http:\/\//i, 'https://')} alt={l.title} loading="lazy" decoding="async" /> : <div class="nbCardImg nbCardImgEmpty" />}
-									<div class="nbCardBody">
-										<div class="nbCardTitle">{l.title}</div>
-										<div class="nbCardMeta">
-											{typeof l.priceEur === 'number' ? <span>€{Math.round(l.priceEur).toLocaleString('en-GB')}</span> : null}
-											{typeof l.bedrooms === 'number' ? <span>{l.bedrooms} bd</span> : null}
-											{typeof l.bathrooms === 'number' ? <span>{l.bathrooms} ba</span> : null}
-											{typeof l.buildM2 === 'number' ? <span>{l.buildM2} m²</span> : null}
-										</div>
-									</div>
-								</a>
-							))}
-						</div>
-					</section>
-				) : null}
+				{isNeighbourhood ? <AreaGuide areaName={h1} lang="en" /> : null}
 
 				{isNeighbourhood ? (
 					<style>

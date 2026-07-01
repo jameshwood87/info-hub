@@ -1,0 +1,250 @@
+---
+// AreaGuide - live market data + founding-agent CTA for a neighbourhood/area page.
+// Data is pulled live from the PropertyList MCP (Spain + Portugal). Counts show for
+// all three markets; prices only for for-sale (MCP rent/holiday prices are unreliable).
+import { marketsForArea, searchProperties, type AreaMarketSummary, type MarketListing } from '../lib/marketData';
+import { regionFromProvince, countryOfRegion, type Region, type Country } from '../data/geo';
+
+interface Props {
+	areaName: string;
+	lang?: 'en' | 'es';
+}
+const { areaName: rawName, lang = 'en' } = Astro.props as Props;
+const areaName = String(rawName || '')
+	.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '')
+	.replace(/\s+(?:neighbourhood\s+guide|area\s+guide)\s*$/i, '')
+	.replace(/^gu[ií]a\s+del\s+barrio\s+(?:de\s+|del\s+)?/i, '')
+	.replace(/^gu[ií]a\s+de\s+/i, '')
+	.replace(/\s+/g, ' ')
+	.trim();
+
+const es = lang === 'es';
+const [markets, listings] = await Promise.all([marketsForArea(areaName), searchProperties(areaName, 'for-sale', 6)]);
+const sale = markets.sale;
+const rent = markets.rent;
+const holiday = markets.holiday;
+
+const provinceGuess = (listings.find((l) => l.province)?.province || '').trim();
+const region: Region | null = regionFromProvince(provinceGuess);
+const country: Country | null = region ? countryOfRegion(region.key) : null;
+const hasSale = !!sale && sale.totalListings > 0;
+
+const eurCompact = (n: number | null | undefined) => {
+	const v = Number(n);
+	if (!Number.isFinite(v) || v <= 0) return null;
+	if (v >= 1_000_000) return `€${(v / 1_000_000).toFixed(v >= 10_000_000 ? 0 : 1).replace(/\.0$/, '')}M`;
+	if (v >= 1_000) return `€${Math.round(v / 1_000)}k`;
+	return `€${Math.round(v)}`;
+};
+const eurFull = (n: number | null | undefined) => {
+	const v = Number(n);
+	if (!Number.isFinite(v) || v <= 0) return null;
+	return `€${Math.round(v).toLocaleString('en-GB')}`;
+};
+const nfmt = (n: number | null | undefined) => {
+	const v = Number(n);
+	return Number.isFinite(v) ? v.toLocaleString('en-GB') : '0';
+};
+
+const t = (en: string, esT: string) => (es ? esT : en);
+const oracleSqm = sale?.oracle?.verified ? sale.oracle.verifiedPricePerSqm : null;
+const listSqm = sale?.medianPricePerSqm || null;
+
+const bandOrder = ['1_bed', '2_bed', '3_bed', '4_bed', '5_bed_plus'];
+const bandLabel: Record<string, string> = { '1_bed': '1', '2_bed': '2', '3_bed': '3', '4_bed': '4', '5_bed_plus': '5+' };
+const bands = (() => {
+	const b = sale?.byBedroomBand || {};
+	const rows = bandOrder.map((k) => ({ k, label: bandLabel[k], n: Number((b as any)[k]) || 0 }));
+	const max = Math.max(1, ...rows.map((r) => r.n));
+	return rows.map((r) => ({ ...r, pct: Math.round((r.n / max) * 100) }));
+})();
+
+const portalBase = 'https://www.propertylist.es';
+const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') => `${portalBase}/${ty}/${encodeURIComponent(areaSlug || areaName.toLowerCase())}`;
+const signupHref = `https://agents.propertylist.es/new-agent-signup/new?area=${encodeURIComponent(areaName)}${
+	region ? `&region=${encodeURIComponent(region.key)}` : ''
+}${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area`;
+
+const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary | null; type: 'for-sale' | 'for-rent' | 'holiday-rentals' }> = [
+	{ label: t('Buy', 'Comprar'), sub: t('For sale', 'En venta'), data: sale, type: 'for-sale' },
+	{ label: t('Long-term rent', 'Alquiler'), sub: t('Rentals', 'Alquileres'), data: rent, type: 'for-rent' },
+	{ label: t('Holiday', 'Vacacional'), sub: t('Short-term lets', 'Corta estancia'), data: holiday, type: 'holiday-rentals' },
+];
+---
+
+{hasSale ? (
+	<div class="ag">
+		<div class="agChips">
+			<div class="agChip"><span class="agNum">{nfmt(sale!.totalListings)}</span><span class="agLab">{t('for sale', 'en venta')}</span></div>
+			{sale!.medianPrice ? <div class="agChip"><span class="agNum">{eurCompact(sale!.medianPrice)}</span><span class="agLab">{t('median price', 'precio mediano')}</span></div> : null}
+			{oracleSqm || listSqm ? <div class="agChip"><span class="agNum">€{nfmt(oracleSqm || listSqm)}</span><span class="agLab">{t('per m²', 'por m²')}{sale!.oracle.verified ? <span class="agVer"> · {t('verified', 'verificado')}</span> : null}</span></div> : null}
+			{rent && rent.totalListings ? <div class="agChip"><span class="agNum">{nfmt(rent.totalListings)}</span><span class="agLab">{t('to rent', 'en alquiler')}</span></div> : null}
+			{holiday && holiday.totalListings ? <div class="agChip"><span class="agNum">{nfmt(holiday.totalListings)}</span><span class="agLab">{t('holiday lets', 'vacacional')}</span></div> : null}
+		</div>
+
+		<div class="agSecHead"><h2>{t('The market right now', 'El mercado ahora')}</h2><p>{t(`Live counts and prices across every way to live in ${areaName}.`, `Datos en directo de todas las formas de vivir en ${areaName}.`)}</p></div>
+		<div class="agMarketGrid">
+			{marketCards.map((m) => (
+				<div class={`agMCard ${m.data && m.data.totalListings ? '' : 'agMCardEmpty'}`}>
+					<div class="agMHead"><div class="agMLabel">{m.label}</div><div class="agMSub">{m.sub}</div></div>
+					{m.data && m.data.totalListings ? (
+						<>
+							<div class="agMBig">{nfmt(m.data.totalListings)}<span> {t('listings', 'anuncios')}</span></div>
+							{m.type === 'for-sale' ? (
+								<dl class="agMStats">
+									{m.data.medianPrice ? <div><dt>{t('Median price', 'Precio mediano')}</dt><dd>{eurFull(m.data.medianPrice)}</dd></div> : null}
+									{m.data.medianPricePerSqm ? <div><dt>{t('Per m²', 'Por m²')}</dt><dd>€{nfmt(m.data.medianPricePerSqm)}</dd></div> : null}
+									{m.data.minPrice && m.data.maxPrice ? <div><dt>{t('Range', 'Rango')}</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}</dd></div> : null}
+								</dl>
+							) : (
+								<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${areaName} right now.`, `Disponibilidad en directo en ${areaName}.`)}</div>
+							)}
+							<a class="agMCta" href={portalSearch(m.type)} target="_blank" rel="noopener">{t('View all', 'Ver los')} {nfmt(m.data.totalListings)} →</a>
+						</>
+					) : (
+						<div class="agMNone">{t(`No live ${m.label.toLowerCase()} listings yet.`, 'Aún no hay anuncios aquí.')}</div>
+					)}
+				</div>
+			))}
+		</div>
+
+		{bands.some((b) => b.n > 0) ? (
+			<>
+				<div class="agSecHead"><h2>{t('What is for sale', 'Qué hay en venta')}</h2><p>{t(`Homes for sale in ${areaName} by bedrooms.`, `Viviendas en venta en ${areaName} por dormitorios.`)}</p></div>
+				<div class="agBandWrap">
+					{bands.map((b) => (
+						<div class="agBandRow">
+							<div class="agBandLab">{b.label} {t('bed', 'dorm')}{b.label === '5+' ? 's' : ''}</div>
+							<div class="agBandBar"><div class="agBandFill" style={`width:${b.pct}%`}></div></div>
+							<div class="agBandN">{nfmt(b.n)}</div>
+						</div>
+					))}
+				</div>
+			</>
+		) : null}
+
+		{listings.length ? (
+			<>
+				<div class="agSecHead"><h2>{t('Featured homes for sale', 'Viviendas destacadas en venta')}</h2><p>{t('Live from the PropertyList MLS.', 'En directo desde el MLS de PropertyList.')}</p></div>
+				<div class="agListGrid">
+					{listings.slice(0, 6).map((l: MarketListing) => (
+						<a class="agLCard" href={l.url || portalSearch('for-sale')} target="_blank" rel="noopener">
+							<div class="agLImg" style={l.photoUrl ? `background-image:url('${l.photoUrl}')` : ''}>
+								{l.oracleVerified ? <span class="agLVer">{t('Verified', 'Verificado')}</span> : null}
+							</div>
+							<div class="agLBody">
+								<div class="agLPrice">{eurFull(l.price) || t('Price on request', 'Precio a consultar')}</div>
+								<div class="agLMeta">{[l.bedrooms ? `${l.bedrooms} ${t('bed', 'dorm')}` : '', l.bathrooms ? `${l.bathrooms} ${t('bath', 'baño')}` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
+								<div class="agLLoc">{[l.suburb, l.city].filter(Boolean).join(', ') || areaName}</div>
+							</div>
+						</a>
+					))}
+				</div>
+			</>
+		) : null}
+
+		<div class="agSecHead"><h2>{t(`Who ${areaName} suits`, `Para quién es ${areaName}`)}</h2></div>
+		<div class="agAudGrid">
+			<div class="agAudCard"><h3>{t('Buyers', 'Compradores')}</h3><p>{sale!.totalListings ? t(`${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, median ${eurFull(sale!.medianPrice) || '-'}${sale!.oracle.verified ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`, `${nfmt(sale!.totalListings)} viviendas en venta, desde ${eurCompact(sale!.minPrice) || '-'} hasta ${eurCompact(sale!.maxPrice) || '-'}, precio mediano ${eurFull(sale!.medianPrice) || '-'}${sale!.oracle.verified ? `. Valor verificado ante notario ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`) : t('No homes for sale here yet.', 'Aún no hay viviendas en venta aquí.')}</p></div>
+			<div class="agAudCard"><h3>{t('Long-term renters', 'Alquiler de larga duración')}</h3><p>{rent && rent.totalListings ? t(`${nfmt(rent.totalListings)} long-term rentals available to browse right now in ${areaName}.`, `${nfmt(rent.totalListings)} alquileres de larga duración disponibles ahora en ${areaName}.`) : t('No long-term rentals listed here yet.', 'Aún no hay alquileres de larga duración.')}</p></div>
+			<div class="agAudCard"><h3>{t('Holiday-makers', 'Vacacional')}</h3><p>{holiday && holiday.totalListings ? t(`${nfmt(holiday.totalListings)} holiday properties available for short stays in ${areaName}.`, `${nfmt(holiday.totalListings)} propiedades vacacionales disponibles en ${areaName}.`) : t('No holiday lets listed here yet.', 'Aún no hay alojamientos vacacionales.')}</p></div>
+		</div>
+
+		<div class="agFoundingInline">
+			<div>
+				<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
+				<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits on signup.`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis al registrarse.`)}</div>
+			</div>
+			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
+		</div>
+	</div>
+) : (
+	<section class="agFounding">
+		<div class="agFInner">
+			<div class="agFBadge">{t('Founding member opportunity', 'Oportunidad de miembro fundador')}</div>
+			<h2>{t(`No agency has claimed ${areaName} yet`, `Ninguna agencia tiene ${areaName} todavía`)}</h2>
+			<p class="agFLead">{t(`Be the founding agent for ${areaName}${region ? `, ${region.label}` : ''}. List all your properties for free and they show right here, in front of every buyer, renter and holiday-maker searching this area.`, `Sé el agente fundador de ${areaName}${region ? `, ${region.label}` : ''}. Publica todas tus propiedades gratis y aparecerán aquí, ante cada comprador, inquilino y viajero que busca en esta zona.`)}</p>
+			<ul class="agFPerks">
+				<li>{t('List everything free', 'Publica todo gratis')} - {t('your whole portfolio, live on PropertyList and on this page.', 'toda tu cartera, en directo en PropertyList y en esta página.')}</li>
+				<li>{t('50€ of credits', '50€ en créditos')} {t('to feature your listings or generate area-specific market reports.', 'para destacar tus anuncios o generar informes de mercado de la zona.')}</li>
+				<li>{t(`Founding-member status for ${areaName} as we grow the area.`, `Estatus de miembro fundador de ${areaName} a medida que crece la zona.`)}</li>
+			</ul>
+			<a class="agFBtn" href={signupHref} target="_blank" rel="noopener">{t(`Become the founding agent for ${areaName} →`, `Conviértete en el agente fundador de ${areaName} →`)}</a>
+			<p class="agFFine">{t('Free MLS + CRM forever. Verified agencies also receive 20 free credits on signup.', 'MLS + CRM gratis para siempre. Las agencias verificadas reciben 20 créditos gratis al registrarse.')}</p>
+		</div>
+	</section>
+)}
+
+<style>
+	.ag { margin: 0 0 4px; }
+	.agChips { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+	.agChip { display:flex; flex-direction:column; background:rgba(255,255,255,.9); border:1px solid rgba(16,24,40,.08); border-radius:14px; padding:10px 14px; min-width:92px; }
+	.agNum { font-size:21px; font-weight:900; letter-spacing:-.03em; color:#00806f; }
+	.agLab { font-size:12px; color:rgba(16,24,40,.6); font-weight:600; }
+	.agVer { color:#00937f; font-weight:800; }
+
+	.agSecHead { margin:6px 0 12px; }
+	.agSecHead h2 { margin:0 0 4px; letter-spacing:-.03em; font-size:clamp(18px,2.6vw,24px); }
+	.agSecHead p { margin:0; color:rgba(16,24,40,.65); font-size:13.5px; }
+
+	.agMarketGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+	.agMCard { background:rgba(255,255,255,.9); border:1px solid rgba(16,24,40,.08); border-radius:18px; padding:16px; display:flex; flex-direction:column; }
+	.agMCardEmpty { opacity:.72; }
+	.agMHead { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:10px; }
+	.agMLabel { font-weight:900; letter-spacing:-.02em; font-size:16px; }
+	.agMSub { font-size:11.5px; color:rgba(16,24,40,.55); text-transform:uppercase; letter-spacing:.06em; font-weight:700; }
+	.agMBig { font-size:28px; font-weight:900; letter-spacing:-.03em; color:#00806f; }
+	.agMBig span { font-size:14px; font-weight:700; color:rgba(16,24,40,.55); }
+	.agMStats { margin:12px 0 14px; display:grid; gap:7px; }
+	.agMStats div { display:flex; justify-content:space-between; gap:10px; font-size:13px; border-bottom:1px solid rgba(16,24,40,.06); padding-bottom:6px; }
+	.agMStats dt { color:rgba(16,24,40,.6); margin:0; }
+	.agMStats dd { margin:0; font-weight:800; color:rgba(16,24,40,.86); }
+	.agMSubline { color:rgba(16,24,40,.6); font-size:13px; line-height:1.45; margin:10px 0 14px; }
+	.agMCta { margin-top:auto; font-weight:800; font-size:13.5px; color:#00937f; text-decoration:none; }
+	.agMNone { color:rgba(16,24,40,.55); font-size:13.5px; padding:8px 0; }
+
+	.agBandWrap { background:rgba(255,255,255,.85); border:1px solid rgba(16,24,40,.08); border-radius:16px; padding:14px 16px; display:grid; gap:9px; margin-bottom:18px; }
+	.agBandRow { display:grid; grid-template-columns:74px 1fr 52px; align-items:center; gap:10px; }
+	.agBandLab { font-size:13px; color:rgba(16,24,40,.7); font-weight:600; }
+	.agBandBar { background:rgba(0,174,154,.1); border-radius:999px; height:12px; overflow:hidden; }
+	.agBandFill { height:100%; background:linear-gradient(90deg,#00ae9a,#00cbb2); border-radius:999px; }
+	.agBandN { text-align:right; font-weight:800; font-size:13px; color:rgba(16,24,40,.78); }
+
+	.agListGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+	.agLCard { display:flex; flex-direction:column; background:#fff; border:1px solid rgba(16,24,40,.08); border-radius:16px; overflow:hidden; text-decoration:none; color:inherit; transition:transform .16s, box-shadow .16s, border-color .16s; }
+	.agLCard:hover { transform:translateY(-3px); box-shadow:0 16px 36px rgba(13,43,46,.1); border-color:rgba(0,174,154,.32); text-decoration:none; }
+	.agLImg { aspect-ratio:16/10; background:#e8edf0 center/cover no-repeat; position:relative; }
+	.agLVer { position:absolute; top:8px; left:8px; background:rgba(0,142,126,.95); color:#fff; font-size:10px; font-weight:900; letter-spacing:.04em; text-transform:uppercase; padding:3px 7px; border-radius:999px; }
+	.agLBody { padding:12px 14px; }
+	.agLPrice { font-size:17px; font-weight:900; letter-spacing:-.02em; color:rgba(16,24,40,.92); }
+	.agLMeta { font-size:12.5px; color:rgba(16,24,40,.62); margin-top:3px; }
+	.agLLoc { font-size:12.5px; color:rgba(16,24,40,.55); margin-top:5px; }
+
+	.agAudGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+	.agAudCard { background:rgba(255,255,255,.85); border:1px solid rgba(16,24,40,.08); border-radius:16px; padding:14px 16px; }
+	.agAudCard h3 { margin:0 0 6px; font-size:15px; letter-spacing:-.01em; color:#00806f; }
+	.agAudCard p { margin:0; font-size:13.5px; line-height:1.5; color:rgba(16,24,40,.72); }
+
+	.agFoundingInline { background:radial-gradient(800px 400px at 50% 50%, rgba(0,174,154,.14), rgba(255,255,255,0)); border:1px solid rgba(0,174,154,.2); border-radius:18px; padding:14px; margin-bottom:14px; display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+	.agFiTitle { font-weight:900; letter-spacing:-.02em; font-size:16px; }
+	.agFiBody { font-size:13.5px; color:rgba(16,24,40,.72); margin-top:4px; max-width:64ch; }
+	.agFiBtn { white-space:nowrap; background:#00ae9a; color:#00100e; border:1px solid rgba(0,0,0,.12); border-radius:999px; padding:11px 18px; font-weight:900; text-decoration:none; }
+
+	.agFounding { background:radial-gradient(1000px 500px at 30% -10%, rgba(0,174,154,.2), rgba(255,255,255,0)); border:1px solid rgba(0,174,154,.25); border-radius:22px; padding:16px; margin-bottom:16px; }
+	.agFInner { background:rgba(255,255,255,.86); border-radius:18px; padding:24px; }
+	.agFBadge { display:inline-flex; padding:6px 12px; border-radius:999px; background:rgba(0,174,154,.14); border:1px solid rgba(0,174,154,.3); color:#00806f; font-weight:900; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+	.agFounding h2 { margin:12px 0 8px; letter-spacing:-.03em; font-size:clamp(20px,3.4vw,28px); }
+	.agFLead { margin:0 0 14px; color:rgba(16,24,40,.78); font-size:15.5px; line-height:1.55; max-width:70ch; }
+	.agFPerks { list-style:none; padding:0; margin:0 0 18px; display:grid; gap:10px; max-width:70ch; }
+	.agFPerks li { position:relative; padding-left:26px; font-size:14.5px; color:rgba(16,24,40,.78); line-height:1.5; }
+	.agFPerks li::before { content:'✓'; position:absolute; left:0; top:0; color:#00ae9a; font-weight:900; }
+	.agFBtn { display:inline-flex; background:#00ae9a; color:#00100e; border:1px solid rgba(0,0,0,.12); border-radius:999px; padding:13px 22px; font-weight:900; text-decoration:none; font-size:15px; }
+	.agFBtn:hover { filter:brightness(.98); text-decoration:none; }
+	.agFFine { margin:14px 0 0; font-size:12.5px; color:rgba(16,24,40,.55); }
+
+	@media (max-width:820px) {
+		.agMarketGrid, .agListGrid, .agAudGrid { grid-template-columns:1fr; }
+		.agBandRow { grid-template-columns:64px 1fr 44px; }
+	}
+</style>
