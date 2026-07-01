@@ -128,7 +128,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			<p class="agOracle">
 				{t('The "verified" €/m² is notary-verified by', 'El €/m² "verificado" está verificado ante notario por')}{' '}
 				<a href={sale!.oracle.attestationUrl} target="_blank" rel="noopener">PropertyList Oracle</a>
-				{` (${sale!.oracle.source || 'Spanish notarial register'}${sale!.oracle.sampleSize ? `, ${nfmt(sale!.oracle.sampleSize)} ${t('transactions', 'transacciones')}` : ''}${sale!.oracle.periodEnd ? ` ${t('to', 'hasta')} ${sale!.oracle.periodEnd}` : ''}).`}
+				{`. ${sale!.oracle.source || 'Spanish notarial register'}${sale!.oracle.sampleSize ? `, ${nfmt(sale!.oracle.sampleSize)} ${t('transactions', 'transacciones')}` : ''}${sale!.oracle.periodEnd ? ` ${t('to', 'hasta')} ${sale!.oracle.periodEnd}` : ''}.`}
 			</p>
 		) : null}
 
