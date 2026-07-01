@@ -1,0 +1,297 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { marketsForArea, searchProperties, type AreaMarketSummary, type MarketListing } from '../../lib/marketData';
+import { regionFromProvince, countryOfRegion, type Region, type Country } from '../../data/geo';
+
+const areaParam = String(Astro.params.area || '').trim();
+const deslug = (s: string) =>
+	s
+		.split('-')
+		.filter(Boolean)
+		.map((w) => (w.length > 2 ? w[0].toUpperCase() + w.slice(1) : w))
+		.join(' ')
+		.trim();
+const areaName = deslug(areaParam) || 'Marbella';
+
+const [markets, listings] = await Promise.all([marketsForArea(areaName), searchProperties(areaName, 'for-sale', 6)]);
+const sale = markets.sale;
+const rent = markets.rent;
+const holiday = markets.holiday;
+
+const provinceGuess =
+	(listings.find((l) => l.province)?.province || '').trim() || '';
+const region: Region | null = regionFromProvince(provinceGuess);
+const country: Country | null = region ? countryOfRegion(region.key) : null;
+
+const hasSale = !!sale && sale.totalListings > 0;
+
+// ---- formatting ----
+const eurCompact = (n: number | null | undefined) => {
+	const v = Number(n);
+	if (!Number.isFinite(v) || v <= 0) return null;
+	if (v >= 1_000_000) return `€${(v / 1_000_000).toFixed(v >= 10_000_000 ? 0 : 1).replace(/\.0$/, '')}M`;
+	if (v >= 1_000) return `€${Math.round(v / 1_000)}k`;
+	return `€${Math.round(v)}`;
+};
+const eurFull = (n: number | null | undefined) => {
+	const v = Number(n);
+	if (!Number.isFinite(v) || v <= 0) return null;
+	return `€${Math.round(v).toLocaleString('en-GB')}`;
+};
+const nfmt = (n: number | null | undefined) => {
+	const v = Number(n);
+	return Number.isFinite(v) ? v.toLocaleString('en-GB') : '0';
+};
+
+const oracleSqm = sale?.oracle?.verified ? sale.oracle.verifiedPricePerSqm : null;
+const listSqm = sale?.medianPricePerSqm || null;
+
+// bedroom band bars (for-sale)
+const bandOrder = ['1_bed', '2_bed', '3_bed', '4_bed', '5_bed_plus'];
+const bandLabel: Record<string, string> = { '1_bed': '1', '2_bed': '2', '3_bed': '3', '4_bed': '4', '5_bed_plus': '5+' };
+const bands = (() => {
+	const b = sale?.byBedroomBand || {};
+	const rows = bandOrder.map((k) => ({ k, label: bandLabel[k], n: Number((b as any)[k]) || 0 }));
+	const max = Math.max(1, ...rows.map((r) => r.n));
+	return rows.map((r) => ({ ...r, pct: Math.round((r.n / max) * 100) }));
+})();
+
+const portalBase = 'https://www.propertylist.es';
+const portalSearch = (t: 'for-sale' | 'for-rent' | 'holiday-rentals') =>
+	`${portalBase}/${t}/${encodeURIComponent(areaParam || areaName.toLowerCase())}`;
+
+const signupHref = `https://agents.propertylist.es/new-agent-signup/new?area=${encodeURIComponent(areaName)}${
+	region ? `&region=${encodeURIComponent(region.key)}` : ''
+}${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area`;
+
+const marketCards: Array<{ key: string; label: string; sub: string; data: AreaMarketSummary | null; type: 'for-sale' | 'for-rent' | 'holiday-rentals' }> = [
+	{ key: 'buy', label: 'Buy', sub: 'For sale', data: sale, type: 'for-sale' },
+	{ key: 'rent', label: 'Long-term rent', sub: 'Rentals', data: rent, type: 'for-rent' },
+	{ key: 'holiday', label: 'Holiday', sub: 'Short-term lets', data: holiday, type: 'holiday-rentals' },
+];
+
+const title = `${areaName} property market${country ? ` (${country.label})` : ''} | PropertyList`;
+const description = hasSale
+	? `Live property data for ${areaName}: ${nfmt(sale!.totalListings)} homes for sale, median ${eurFull(sale!.medianPrice) || ''}, plus long-term and holiday rentals. Real listings and area insight.`
+	: `${areaName} area guide and live property market data on PropertyList.`;
+---
+
+<Layout lang="en" title={title} description={description} canonical={`https://info.propertylist.es/area-preview/${areaParam}/`}>
+	<section class="hero">
+		<div class="heroInner">
+			<nav class="crumbs" aria-label="Breadcrumb">
+				<a href="/neighbourhood/">Areas</a>
+				{country ? <><span>›</span><span>{country.label}</span></> : null}
+				{region ? <><span>›</span><span>{region.label}</span></> : null}
+				<span>›</span><strong>{areaName}</strong>
+			</nav>
+			<h1>{areaName}</h1>
+			<p class="lead">
+				{hasSale
+					? `Live market snapshot for ${areaName}${region ? `, ${region.label}` : ''} - what is for sale, to rent long-term, and available for holidays right now.`
+					: `${areaName}${region ? `, ${region.label}` : ''} - be the first agency to put this area on the map.`}
+			</p>
+			{hasSale ? (
+				<div class="chips">
+					<div class="chip"><span class="chipNum">{nfmt(sale!.totalListings)}</span><span class="chipLab">for sale</span></div>
+					{sale!.medianPrice ? <div class="chip"><span class="chipNum">{eurCompact(sale!.medianPrice)}</span><span class="chipLab">median price</span></div> : null}
+					{oracleSqm || listSqm ? (
+						<div class="chip">
+							<span class="chipNum">€{nfmt(oracleSqm || listSqm)}</span>
+							<span class="chipLab">per m²{sale!.oracle.verified ? <span class="verified" title="Notary-verified by PropertyList Oracle"> · verified</span> : null}</span>
+						</div>
+					) : null}
+					{rent && rent.totalListings ? <div class="chip"><span class="chipNum">{nfmt(rent.totalListings)}</span><span class="chipLab">to rent</span></div> : null}
+					{holiday && holiday.totalListings ? <div class="chip"><span class="chipNum">{nfmt(holiday.totalListings)}</span><span class="chipLab">holiday lets</span></div> : null}
+				</div>
+			) : null}
+		</div>
+	</section>
+
+	{hasSale ? (
+		<>
+			<section class="section">
+				<div class="sectionHead"><h2>The market right now</h2><p>Live counts and prices across every way to live in {areaName}.</p></div>
+				<div class="marketGrid">
+					{marketCards.map((m) => (
+						<div class={`mCard ${m.data && m.data.totalListings ? '' : 'mCardEmpty'}`}>
+							<div class="mHead"><div class="mLabel">{m.label}</div><div class="mSub">{m.sub}</div></div>
+							{m.data && m.data.totalListings ? (
+								<>
+									<div class="mBig">{nfmt(m.data.totalListings)}<span> listings</span></div>
+									{m.type === 'for-sale' ? (
+										<dl class="mStats">
+											{m.data.medianPrice ? <div><dt>Median price</dt><dd>{eurFull(m.data.medianPrice)}</dd></div> : null}
+											{m.data.medianPricePerSqm ? <div><dt>Per m²</dt><dd>€{nfmt(m.data.medianPricePerSqm)}</dd></div> : null}
+											{m.data.minPrice && m.data.maxPrice ? <div><dt>Range</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}</dd></div> : null}
+										</dl>
+									) : (
+										<div class="mSubline">Live {m.label.toLowerCase()} availability in {areaName} right now.</div>
+									)}
+									<a class="mCta" href={portalSearch(m.type)} target="_blank" rel="noopener">View all {nfmt(m.data.totalListings)} →</a>
+								</>
+							) : (
+								<div class="mNone">No live {m.label.toLowerCase()} listings yet.</div>
+							)}
+						</div>
+					))}
+				</div>
+			</section>
+
+			{bands.some((b) => b.n > 0) ? (
+				<section class="section">
+					<div class="sectionHead"><h2>What is for sale</h2><p>Homes for sale in {areaName} by number of bedrooms.</p></div>
+					<div class="bandWrap">
+						{bands.map((b) => (
+							<div class="bandRow">
+								<div class="bandLab">{b.label} bed{b.label === '5+' ? 's' : ''}</div>
+								<div class="bandBar"><div class="bandFill" style={`width:${b.pct}%`}></div></div>
+								<div class="bandN">{nfmt(b.n)}</div>
+							</div>
+						))}
+					</div>
+				</section>
+			) : null}
+
+			{listings.length ? (
+				<section class="section">
+					<div class="sectionHead"><h2>Featured homes for sale</h2><p>Live from the PropertyList MLS.</p></div>
+					<div class="listGrid">
+						{listings.slice(0, 6).map((l: MarketListing) => (
+							<a class="lCard" href={l.url || portalSearch('for-sale')} target="_blank" rel="noopener">
+								<div class="lImg" style={l.photoUrl ? `background-image:url('${l.photoUrl}')` : ''}>
+									{l.oracleVerified ? <span class="lVerified" title="Oracle notary-verified price">Verified</span> : null}
+								</div>
+								<div class="lBody">
+									<div class="lPrice">{eurFull(l.price) || 'Price on request'}</div>
+									<div class="lMeta">{[l.bedrooms ? `${l.bedrooms} bed` : '', l.bathrooms ? `${l.bathrooms} bath` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
+									<div class="lLoc">{[l.suburb, l.city].filter(Boolean).join(', ') || areaName}</div>
+								</div>
+							</a>
+						))}
+					</div>
+				</section>
+			) : null}
+
+			<section class="section">
+				<div class="sectionHead"><h2>Who {areaName} suits</h2></div>
+				<div class="audGrid">
+					<div class="audCard"><h3>Buyers</h3><p>{sale!.totalListings ? `${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, median ${eurFull(sale!.medianPrice) || '-'}${sale!.oracle.verified ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}` : 'No homes listed for sale here yet.'}</p></div>
+					<div class="audCard"><h3>Long-term renters</h3><p>{rent && rent.totalListings ? `${nfmt(rent.totalListings)} long-term rentals available to browse right now in ${areaName}.` : 'No long-term rentals listed here yet.'}</p></div>
+					<div class="audCard"><h3>Holiday-makers</h3><p>{holiday && holiday.totalListings ? `${nfmt(holiday.totalListings)} holiday properties available for short stays in ${areaName}.` : 'No holiday lets listed here yet.'}</p></div>
+				</div>
+				<p class="guideNote">A full, written area guide (lifestyle, climate, getting around, what to check) is generated for each area - shown here once published.</p>
+			</section>
+
+			<section class="foundingInline">
+				<div class="fiInner">
+					<div>
+						<div class="fiTitle">Are you an agent in {areaName}?</div>
+						<div class="fiBody">List your properties free and they appear right here, in front of buyers and renters searching {areaName}. Verified agencies get 20 free credits on signup.</div>
+					</div>
+					<a class="fiBtn" href={signupHref} target="_blank" rel="noopener">List free on PropertyList →</a>
+				</div>
+			</section>
+		</>
+	) : (
+		<section class="founding">
+			<div class="fInner">
+				<div class="fBadge">Founding member opportunity</div>
+				<h2>No agency has claimed {areaName} yet</h2>
+				<p class="fLead">
+					Be the founding agent for {areaName}{region ? `, ${region.label}` : ''}. List all your properties for free and they show right here,
+					in front of every buyer, renter and holiday-maker searching this area.
+				</p>
+				<ul class="fPerks">
+					<li><strong>List everything free</strong> - your whole portfolio, live on PropertyList and on this page.</li>
+					<li><strong>50€ of credits</strong> to feature your listings or generate area-specific market reports.</li>
+					<li><strong>Founding-member status</strong> for {areaName} as we grow the area.</li>
+				</ul>
+				<a class="fBtn" href={signupHref} target="_blank" rel="noopener">Become the founding agent for {areaName} →</a>
+				<p class="fFine">Free MLS + CRM forever. Verified agencies also receive 20 free credits on signup.</p>
+			</div>
+		</section>
+	)}
+</Layout>
+
+<style>
+	.hero { background: radial-gradient(1200px 600px at 25% -10%, rgba(0,174,154,0.18), rgba(255,255,255,0)); border:1px solid rgba(16,24,40,.08); border-radius:22px; padding:18px; margin-bottom:14px; }
+	.heroInner { background:rgba(255,255,255,.75); border-radius:18px; padding:22px; }
+	.crumbs { display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:12.5px; color:rgba(16,24,40,.6); margin-bottom:8px; }
+	.crumbs a { color:#00937f; text-decoration:none; }
+	.crumbs strong { color:rgba(16,24,40,.85); }
+	h1 { margin:4px 0 8px; letter-spacing:-.04em; font-size:clamp(28px,5vw,44px); line-height:1.04; }
+	.lead { margin:0; color:rgba(16,24,40,.78); font-size:16px; line-height:1.55; max-width:74ch; }
+	.chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+	.chip { display:flex; flex-direction:column; background:rgba(255,255,255,.9); border:1px solid rgba(16,24,40,.08); border-radius:14px; padding:10px 14px; min-width:96px; }
+	.chipNum { font-size:22px; font-weight:900; letter-spacing:-.03em; color:#00806f; }
+	.chipLab { font-size:12px; color:rgba(16,24,40,.6); font-weight:600; }
+	.verified { color:#00937f; font-weight:800; }
+
+	.section { margin-bottom:18px; }
+	.sectionHead { margin:6px 0 12px; }
+	.sectionHead h2 { margin:0 0 4px; letter-spacing:-.03em; font-size:clamp(19px,3vw,26px); }
+	.sectionHead p { margin:0; color:rgba(16,24,40,.65); font-size:14px; }
+
+	.marketGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+	.mCard { background:rgba(255,255,255,.9); border:1px solid rgba(16,24,40,.08); border-radius:18px; padding:16px; display:flex; flex-direction:column; }
+	.mCardEmpty { opacity:.72; }
+	.mHead { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:10px; }
+	.mLabel { font-weight:900; letter-spacing:-.02em; font-size:16px; }
+	.mSub { font-size:12px; color:rgba(16,24,40,.55); text-transform:uppercase; letter-spacing:.06em; font-weight:700; }
+	.mBig { font-size:30px; font-weight:900; letter-spacing:-.03em; color:#00806f; }
+	.mBig span { font-size:14px; font-weight:700; color:rgba(16,24,40,.55); }
+	.mStats { margin:12px 0 14px; display:grid; gap:7px; }
+	.mStats div { display:flex; justify-content:space-between; gap:10px; font-size:13.5px; border-bottom:1px solid rgba(16,24,40,.06); padding-bottom:6px; }
+	.mStats dt { color:rgba(16,24,40,.6); margin:0; }
+	.mStats dd { margin:0; font-weight:800; color:rgba(16,24,40,.86); }
+	.mCta { margin-top:auto; font-weight:800; font-size:13.5px; color:#00937f; text-decoration:none; }
+	.mNone { color:rgba(16,24,40,.55); font-size:13.5px; padding:8px 0; }
+	.mSubline { color:rgba(16,24,40,.6); font-size:13px; line-height:1.45; margin:10px 0 14px; }
+
+	.bandWrap { background:rgba(255,255,255,.85); border:1px solid rgba(16,24,40,.08); border-radius:16px; padding:14px 16px; display:grid; gap:9px; }
+	.bandRow { display:grid; grid-template-columns:64px 1fr 52px; align-items:center; gap:10px; }
+	.bandLab { font-size:13px; color:rgba(16,24,40,.7); font-weight:600; }
+	.bandBar { background:rgba(0,174,154,.1); border-radius:999px; height:12px; overflow:hidden; }
+	.bandFill { height:100%; background:linear-gradient(90deg,#00ae9a,#00cbb2); border-radius:999px; }
+	.bandN { text-align:right; font-weight:800; font-size:13px; color:rgba(16,24,40,.78); }
+
+	.listGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+	.lCard { display:flex; flex-direction:column; background:#fff; border:1px solid rgba(16,24,40,.08); border-radius:16px; overflow:hidden; text-decoration:none; color:inherit; transition:transform .16s, box-shadow .16s, border-color .16s; }
+	.lCard:hover { transform:translateY(-3px); box-shadow:0 16px 36px rgba(13,43,46,.1); border-color:rgba(0,174,154,.32); text-decoration:none; }
+	.lImg { aspect-ratio:16/10; background:#e8edf0 center/cover no-repeat; position:relative; }
+	.lVerified { position:absolute; top:8px; left:8px; background:rgba(0,142,126,.95); color:#fff; font-size:10px; font-weight:900; letter-spacing:.04em; text-transform:uppercase; padding:3px 7px; border-radius:999px; }
+	.lBody { padding:12px 14px; }
+	.lPrice { font-size:17px; font-weight:900; letter-spacing:-.02em; color:rgba(16,24,40,.92); }
+	.lMeta { font-size:12.5px; color:rgba(16,24,40,.62); margin-top:3px; }
+	.lLoc { font-size:12.5px; color:rgba(16,24,40,.55); margin-top:5px; }
+
+	.audGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+	.audCard { background:rgba(255,255,255,.85); border:1px solid rgba(16,24,40,.08); border-radius:16px; padding:14px 16px; }
+	.audCard h3 { margin:0 0 6px; font-size:15px; letter-spacing:-.01em; color:#00806f; }
+	.audCard p { margin:0; font-size:13.5px; line-height:1.5; color:rgba(16,24,40,.72); }
+	.guideNote { margin:12px 0 0; font-size:12.5px; color:rgba(16,24,40,.5); font-style:italic; }
+
+	.foundingInline { background:radial-gradient(800px 400px at 50% 50%, rgba(0,174,154,.14), rgba(255,255,255,0)); border:1px solid rgba(0,174,154,.2); border-radius:22px; padding:16px; margin-bottom:14px; }
+	.fiInner { background:rgba(255,255,255,.85); border-radius:16px; padding:16px 18px; display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+	.fiTitle { font-weight:900; letter-spacing:-.02em; font-size:16px; }
+	.fiBody { font-size:13.5px; color:rgba(16,24,40,.72); margin-top:4px; max-width:64ch; }
+	.fiBtn { white-space:nowrap; background:#00ae9a; color:#00100e; border:1px solid rgba(0,0,0,.12); border-radius:999px; padding:11px 18px; font-weight:900; text-decoration:none; }
+
+	.founding { background:radial-gradient(1000px 500px at 30% -10%, rgba(0,174,154,.2), rgba(255,255,255,0)); border:1px solid rgba(0,174,154,.25); border-radius:22px; padding:18px; margin-bottom:16px; }
+	.fInner { background:rgba(255,255,255,.86); border-radius:18px; padding:26px; }
+	.fBadge { display:inline-flex; padding:6px 12px; border-radius:999px; background:rgba(0,174,154,.14); border:1px solid rgba(0,174,154,.3); color:#00806f; font-weight:900; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+	.founding h2 { margin:12px 0 8px; letter-spacing:-.03em; font-size:clamp(22px,4vw,32px); }
+	.fLead { margin:0 0 14px; color:rgba(16,24,40,.78); font-size:16px; line-height:1.55; max-width:70ch; }
+	.fPerks { list-style:none; padding:0; margin:0 0 18px; display:grid; gap:10px; max-width:70ch; }
+	.fPerks li { position:relative; padding-left:26px; font-size:14.5px; color:rgba(16,24,40,.78); line-height:1.5; }
+	.fPerks li::before { content:'✓'; position:absolute; left:0; top:0; color:#00ae9a; font-weight:900; }
+	.fBtn { display:inline-flex; background:#00ae9a; color:#00100e; border:1px solid rgba(0,0,0,.12); border-radius:999px; padding:13px 22px; font-weight:900; text-decoration:none; font-size:15px; }
+	.fBtn:hover { filter:brightness(.98); text-decoration:none; }
+	.fFine { margin:14px 0 0; font-size:12.5px; color:rgba(16,24,40,.55); }
+
+	@media (max-width:820px) {
+		.marketGrid, .listGrid, .audGrid { grid-template-columns:1fr; }
+		.bandRow { grid-template-columns:56px 1fr 44px; }
+	}
+</style>
