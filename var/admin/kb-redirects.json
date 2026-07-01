@@ -136,6 +136,8 @@
     "/es/docs/leyes-procedimientos/selling-a-property/signing-a-contract-and-reservation/": "/es/docs/leyes-procedimientos/selling-a-property/the-selling-process/signing-a-contract-and-reservation/",
     "/es/docs/leyes-procedimientos/selling-a-property/taxes/": "/es/docs/leyes-procedimientos/selling-a-property/costs/taxes/",
     "/es/docs/leyes-procedimientos/building-a-property/construction-standards/": "/es/docs/leyes-procedimientos/building-a-property/construction-and-completion/construction-standards/",
-    "/es/docs/propertylist-mls-manual-de-usuario/managing-your-schedule-and-tasks/": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/managing-your-schedule-and-tasks/"
+    "/es/docs/propertylist-mls-manual-de-usuario/managing-your-schedule-and-tasks/": "/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/managing-your-schedule-and-tasks/",
+    "/docs/mls-manual-de-usuario/": "/docs/propertylist-mls-user-manual/",
+    "/es/docs/mls-manual-de-usuario/": "/es/docs/propertylist-mls-manual-de-usuario/"
   }
 }
