@@ -82,6 +82,7 @@ const mapDocsToEnglish = (p: string) => {
 						? 'getting-started'
 						: seg;
 	parts[1] = mapped;
+	if (mapped === 'propertylist-mls-user-manual' && (parts[2] || '') === 'empezar') parts[2] = 'getting-started';
 	return `/${parts.join('/')}/`;
 };
 
