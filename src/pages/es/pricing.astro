@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const title = 'Precios • PropertyList Info Hub';
+const title = 'Precios | PropertyList Info Hub';
 const description =
-	'El MLS y el CRM son gratis para siempre para agencias y agentes. Usa créditos opcionales para destacar anuncios y extras, solo cuando los necesites.';
+	'El MLS y el CRM son gratis para siempre para agentes inmobiliarios. Usa créditos de pago por uso opcionales para destacar anuncios y complementos, solo cuando los necesites.';
 
 const sections: Array<{
 	title: string;
@@ -12,72 +12,83 @@ const sections: Array<{
 }> = [
 	{
 		title: 'MLS',
-		subtitle: 'Multi‑Listing Service',
+		subtitle: 'Multi-Listing Service',
 		items: [
 			{ feature: 'Anuncios ilimitados', price: 'Gratis' },
-			{ feature: 'Usuarios / equipo', price: 'Gratis' },
-			{ feature: 'MicroSite con marca', price: 'Gratis' },
-			{ feature: 'Destacar un anuncio', price: '10 créditos / 72h' },
-			{ feature: 'Alertas de propiedades', price: '5 créditos' },
-			{ feature: 'LeadBoard', price: 'Herramientas de pago' },
+			{ feature: 'Usuarios/Personal', price: 'Gratis' },
+			{ feature: 'MicroSite con tu marca', price: 'Gratis' },
+			{ feature: 'Destacar un anuncio', price: 'desde 10 €' },
+			{ feature: 'Alertas de propiedades', price: 'Gratis' },
+			{ feature: 'LeadBoard', price: 'Próximamente' },
 			{ feature: 'Importación XML', price: 'Gratis' },
-			{ feature: 'Exportación XML', price: '35 créditos / mes o 250 créditos / año' },
-			{ feature: 'Anuncios privados', price: 'Herramientas de pago' },
+			{ feature: 'Exportación XML', price: '35 créditos/mes o 350 €/año' },
+			{ feature: 'Anuncios privados', price: 'Próximamente' },
 		],
 	},
 	{
 		title: 'CRM',
-		subtitle: 'Gestión de relaciones con clientes',
+		subtitle: 'Gestión de Relaciones con Clientes',
 		items: [
 			{ feature: 'Contactos ilimitados', price: 'Gratis' },
-			{ feature: 'Eventos del calendario', price: 'Gratis' },
+			{ feature: 'Eventos de calendario', price: 'Gratis' },
 			{ feature: 'Pipeline de ventas', price: 'Gratis' },
 			{ feature: 'Subida de documentos', price: 'Gratis' },
-			{ feature: 'Utilidades de IA', price: 'Herramientas de pago' },
-			{ feature: 'Funnels de IA', price: 'Herramientas de pago' },
-			{ feature: 'Chatbot de IA', price: 'Herramientas de pago' },
+			{ feature: 'Utilidades de IA', price: 'Próximamente' },
+			{ feature: 'Embudos de IA', price: 'Próximamente' },
+			{ feature: 'Chatbot de IA', price: 'Próximamente' },
 			{ feature: 'Análisis de mercado con IA', price: '5 créditos por análisis (oferta por tiempo limitado)' },
 		],
 	},
 	{
 		title: 'Portal Público',
-		subtitle: 'Nosotros hacemos publicidad por ti',
+		subtitle: 'Anunciamos por ti',
 		items: [
-			{ feature: 'Destacar un anuncio', price: 'Herramientas de pago' },
-			{ feature: 'Abrir un lead directo', price: 'Herramientas de pago' },
-			{ feature: 'Agentes destacados', price: 'Herramientas de pago' },
-			{ feature: 'Tours virtuales con IA', price: 'Herramientas de pago' },
-			{ feature: 'Homepage premium', price: 'Herramientas de pago' },
-			{ feature: 'Servicios inmobiliarios', price: 'Herramientas de pago' },
+			{ feature: 'Destacar un anuncio', price: 'desde 10 €' },
+			{ feature: 'Abrir un lead directo', price: 'Gratis por tiempo limitado' },
+			{ feature: 'Agentes destacados', price: 'Próximamente' },
+			{ feature: 'Tours virtuales con IA', price: 'Próximamente' },
+			{ feature: 'Portada premium', price: 'Próximamente' },
+			{ feature: 'Servicios inmobiliarios', price: 'Próximamente' },
+		],
+	},
+	{
+		title: 'Constructor de Webs',
+		subtitle: 'Tu propia web de agencia',
+		items: [
+			{ feature: 'Constructor drag-and-drop', price: 'desde 50 €/mes' },
+			{ feature: 'SEO y meta con IA', price: '+5 €/mes' },
+			{ feature: 'Captura de leads con popup', price: '+8 €/mes' },
+			{ feature: 'Dominio personalizado', price: '+20 €/mes' },
+			{ feature: 'Todos los anuncios del MLS cargados automáticamente', price: 'Incluido' },
+			{ feature: 'Hosting y SSL gratis', price: 'Incluido' },
 		],
 	},
 ];
 
-
 const pricingFaqItems = [
 	{
-		q: '¿PropertyList es realmente gratis para las agencias?',
-		a: 'Sí. El MLS, CRM, anuncios ilimitados, cuentas de equipo y gestión de contactos son 100% gratis para siempre. Solo pagas por mejoras opcionales como destacar anuncios (desde 10 créditos) o el Website Builder (desde 50€/mes).',
+		q: '¿PropertyList es realmente gratis para agentes inmobiliarios?',
+		a: 'Sí. El MLS, el CRM, los anuncios ilimitados, las cuentas de equipo y la gestión de contactos son 100% gratis para siempre. Solo pagas por mejoras opcionales como destacar anuncios (desde 10 €) o el Constructor de Webs (desde 50 €/mes).',
 	},
 	{
 		q: '¿Cómo funcionan los créditos?',
-		a: '1 crédito = 1€. Las compras en volumen incluyen descuentos y los créditos nunca caducan. Usa créditos para destacar anuncios, exportar XML, acceder al Análisis de Mercado con IA u otras funciones premium.',
+		a: '1 crédito = 1 €. Las compras por volumen incluyen descuentos y los créditos nunca caducan. Usa créditos para destacar anuncios, realizar exportaciones XML, acceder al Análisis de Mercado con IA o desbloquear otras funciones premium.',
 	},
 	{
-		q: '¿Puedo cancelar mi suscripción al Website Builder en cualquier momento?',
-		a: 'Sí. No hay contratos vinculados ni tasas de cancelación. Cancela mensualmente o anualmente sin penalizaciones.',
+		q: '¿Puedo cancelar mi suscripción al constructor de webs en cualquier momento?',
+		a: 'Sí. No hay contratos de permanencia ni comisiones de cancelación. Cancela mensual o anualmente cuando quieras, sin penalizaciones.',
 	},
 	{
 		q: '¿Qué incluye el plan gratuito?',
-		a: 'Anuncios ilimitados, cuentas de personal ilimitadas, un MicroSite con marca para tu agencia, CRM completo con gestión de contactos y leads, eventos de calendario, pipeline de ventas, subida de documentos, acceso a la Comunidad de WhatsApp y distribución social a Facebook — todo gratis.',
+		a: 'Anuncios de propiedades ilimitados, cuentas de personal ilimitadas, un MicroSite con la marca de tu agencia, CRM completo con gestión de contactos y leads, eventos de calendario, pipeline de ventas, subida de documentos, acceso a la Comunidad de WhatsApp y distribución social en Facebook - todo gratis.',
 	},
 	{
-		q: '¿Cuánto cuesta el Website Builder?',
-		a: 'Desde 50€/mes (o 450€/año). Añade extras opcionales: SEO con IA (+5€/mes), captura de leads con popups (+8€/mes), dominio personalizado (+20€/mes). Todos los planes incluyen hosting gratuito, SSL y carga automática de anuncios del MLS.',
+		q: '¿Cuánto cuesta el Constructor de Webs?',
+		a: 'Desde 50 €/mes (o 450 €/año). Añade potenciadores opcionales: meta SEO con IA (+5 €/mes), captura de leads con popup (+8 €/mes), dominio personalizado (+20 €/mes). Todos los planes incluyen hosting gratis, SSL y carga automática de anuncios del MLS.',
 	},
 	{
-		q: '¿Hay prueba gratuita para las funciones de pago?',
-		a: 'Abrir un Lead Directo es gratis actualmente por tiempo limitado — sin necesidad de créditos. Los anuncios destacados empiezan desde 10 créditos por anuncio. Las agencias verificadas también reciben 20 créditos gratis al registrarse.',
+		q: '¿Hay una prueba gratis para las funciones de pago?',
+		a: 'Abrir un Lead Directo es gratis por tiempo limitado - sin necesidad de créditos. Los anuncios destacados empiezan desde 10 € por anuncio. Las Agencias Verificadas nuevas también reciben 20 créditos gratis al registrarse.',
 	},
 ];
 
@@ -107,20 +118,20 @@ const pricingFaqLd = {
 	<section class="hero">
 		<div class="heroInner">
 			<div class="badge">Precios transparentes</div>
-			<h1>MLS + CRM gratis. Paga solo por mejoras.</h1>
+			<h1>MLS + CRM gratis. Paga solo por las mejoras.</h1>
 			<p class="lead">
-				PropertyList ofrece a cada agente acceso gratuito para publicar propiedades, colaborar con el equipo y gestionar contactos—sin
-				suscripciones. Cuando quieras más visibilidad o automatización, usa créditos de pago por uso a tu ritmo.
+				PropertyList ofrece a cada agente inmobiliario y promotor acceso gratis para publicar propiedades, colaborar con tu equipo y gestionar
+				contactos - sin suscripciones. Cuando quieras más visibilidad o automatización, usa créditos de pago por uso a tu propio ritmo.
 			</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="/es/mls/">Empieza con el manual del MLS</a>
-				<a class="btnSecondary" href="/es/docs/">Ver documentación</a>
+				<a class="btnSecondary" href="/es/docs/">Ver la documentación</a>
 			</div>
 			<div class="trustRow" aria-label="Términos clave">
 				<div class="trustPill">Sin permanencia</div>
-				<div class="trustPill">Sin costes de alta</div>
-				<div class="trustPill">Sin costes de cancelación</div>
-				<div class="trustPill">Sin cargos ocultos</div>
+				<div class="trustPill">Sin cuotas de alta</div>
+				<div class="trustPill">Sin comisiones de cancelación</div>
+				<div class="trustPill">Sin costes ocultos</div>
 			</div>
 		</div>
 	</section>
@@ -130,26 +141,26 @@ const pricingFaqLd = {
 			<div class="panel">
 				<h2>Por qué el MLS es gratis</h2>
 				<p>
-					En PropertyList damos acceso gratuito a la plataforma para impulsar a todos los agentes. Esto permite mostrar propiedades sin
-					costes iniciales, ofreciendo a los compradores y arrendatarios más opciones.
+					En PropertyList potenciamos a todos los agentes inmobiliarios y promotores dándoles acceso gratis a nuestra plataforma. Esto permite a los
+					agentes mostrar sus propiedades sin costes iniciales, y ofrece a quienes buscan propiedad una amplia variedad donde elegir.
 				</p>
 				<p>
-					Creemos en un mercado inclusivo donde cada agente y cada anuncio pueda destacar—por eso lo esencial es gratis y solo cobramos
-					por herramientas opcionales de valor añadido.
+					Creemos en un mercado inclusivo donde cada agente y cada anuncio pueda brillar - por eso mantenemos lo esencial gratis y solo ganamos con
+					herramientas opcionales de valor añadido.
 				</p>
 			</div>
 			<div class="panel">
 				<h2>Créditos y pago por uso</h2>
 				<p>
-					Nuestro sistema de créditos ofrece máxima flexibilidad para destacar propiedades y acceder a servicios adicionales. Escala desde
-					agentes independientes hasta grandes agencias, así que solo pagas por lo que usas—cuando de verdad lo necesitas.
+					Nuestro sistema de créditos ofrece la máxima flexibilidad para destacar propiedades y acceder a servicios adicionales. Escala desde el agente
+					individual hasta grandes agencias, así que solo pagas por lo que usas, cuando realmente lo necesitas.
 				</p>
 				<div class="callout">
 					<div class="calloutTitle">1 crédito = 1 €</div>
-					<div class="calloutBody">Las compras en volumen incluyen descuentos. Los créditos no caducan.</div>
+					<div class="calloutBody">Las compras por volumen incluyen descuentos. Los créditos no caducan.</div>
 				</div>
 				<div class="callout muted">
-					<div class="calloutTitle">Bonificación de Agencia Verificada</div>
+					<div class="calloutTitle">Bono de Agencia Verificada</div>
 					<div class="calloutBody">Cada nueva Agencia Verificada recibe 20 créditos gratis.</div>
 				</div>
 			</div>
@@ -158,8 +169,70 @@ const pricingFaqLd = {
 
 	<section class="section">
 		<div class="sectionHeader">
+			<h2>Constructor de Webs</h2>
+			<div class="sectionMeta">Desde 50 €/mes · Sin permanencia</div>
+		</div>
+		<div class="wbPricing">
+			<div class="wbBase">
+				<div class="wbBaseBadge">Plan base</div>
+				<div class="wbBasePrice">50 €<span>/mes</span></div>
+				<div class="wbBaseNote">o 450 €/año - cancela cuando quieras</div>
+				<ul class="wbBaseList">
+					<li>Constructor de páginas drag-and-drop</li>
+					<li>Todas las propiedades del MLS cargadas automáticamente</li>
+					<li>La marca de tu propia agencia</li>
+					<li>Diseños adaptados a móvil</li>
+					<li>Formularios de contacto y captura de leads</li>
+					<li>Integración con Google Analytics</li>
+					<li>Hosting y SSL gratis</li>
+					<li>Construye y previsualiza antes de pagar</li>
+				</ul>
+				<a class="btnPrimary" href="/es/website-builder">Ver cómo funciona</a>
+			</div>
+			<div class="wbAddons">
+				<div class="wbAddonsTitle">Potenciadores - añade a medida que creces</div>
+				<div class="wbAddonsNote">Facturado mensualmente. Cancela cuando quieras.</div>
+				<div class="wbAddonGrid">
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Keyword y meta con IA</div>
+						<div class="wbAddonDesc">Escribe automáticamente títulos y descripciones SEO para cada anuncio</div>
+						<div class="wbAddonPrice">5 €<span>/mes</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Boletín mensual de propiedades</div>
+						<div class="wbAddonDesc">Email con IA de nuevos anuncios para tu base de datos</div>
+						<div class="wbAddonPrice">5 €<span>/mes</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Captura de leads con popup</div>
+						<div class="wbAddonDesc">Popups inteligentes de intención de salida y de scroll en tu web</div>
+						<div class="wbAddonPrice">8 €<span>/mes</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Generador de FAQ con IA</div>
+						<div class="wbAddonDesc">Genera preguntas y respuestas de comprador para cada anuncio automáticamente</div>
+						<div class="wbAddonPrice">8 €<span>/mes</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Dominio personalizado</div>
+						<div class="wbAddonDesc">Conecta tu propio dominio (tu-agencia.com)</div>
+						<div class="wbAddonPrice">20 €<span>/mes</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Páginas extra</div>
+						<div class="wbAddonDesc">Landings, guías de zona, promos - paga por página</div>
+						<div class="wbAddonPrice">desde 2 €<span>/página</span></div>
+					</div>
+				</div>
+				<div class="wbAddonsFooter">Se publican nuevos complementos con regularidad - herramientas de IA, integraciones, páginas de zona</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
 			<h2>Extras de pago (todas las funciones)</h2>
-			<div class="sectionMeta">Pago por uso, a tu ritmo.</div>
+			<div class="sectionMeta">Pago por uso, a tu propio ritmo.</div>
 		</div>
 		<div class="grid">
 			{sections.map((s) => (
@@ -184,6 +257,7 @@ const pricingFaqLd = {
 	<section class="section">
 		<div class="sectionHeader">
 			<h2>Preguntas frecuentes</h2>
+			<p class="faqSub">Consulta cada función explicada en detalle - constructor de webs, feeds XML, pipelines de CRM, Alquileres, Market Intelligence y más - en la <a href="/es/features/">página de Funciones</a>.</p>
 		</div>
 		<div class="faqGrid">
 			{pricingFaqItems.map((f) => (
@@ -254,11 +328,13 @@ const pricingFaqLd = {
 		justify-content: space-between;
 		gap: 12px;
 		margin: 0 0 10px;
+		flex-wrap: wrap;
 	}
 
 	.sectionMeta {
 		color: rgba(16, 24, 40, 0.7);
 		font-size: 14px;
+		white-space: nowrap;
 	}
 
 	.ctaRow {
@@ -266,6 +342,10 @@ const pricingFaqLd = {
 		display: flex;
 		gap: 10px;
 		flex-wrap: wrap;
+	}
+
+	.ctaRow.compact {
+		margin-top: 10px;
 	}
 
 	.btnPrimary,
@@ -332,27 +412,56 @@ const pricingFaqLd = {
 		padding: 14px;
 	}
 
+	.panel p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.55;
+	}
+
+	.panel p:last-child {
+		margin-bottom: 0;
+	}
+
 	.callout {
 		margin-top: 12px;
-		border: 1px solid rgba(0, 174, 154, 0.22);
-		background: rgba(0, 174, 154, 0.08);
 		border-radius: 14px;
-		padding: 12px;
+		padding: 12px 12px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
 	}
 
 	.callout.muted {
-		border-color: rgba(16, 24, 40, 0.12);
-		background: rgba(255, 255, 255, 0.6);
+		background: rgba(255, 255, 255, 0.75);
+		border: 1px solid rgba(16, 24, 40, 0.12);
 	}
 
 	.calloutTitle {
 		font-weight: 900;
-		letter-spacing: -0.02em;
+		letter-spacing: -0.01em;
 	}
 
 	.calloutBody {
-		color: rgba(16, 24, 40, 0.74);
-		margin-top: 4px;
+		margin-top: 6px;
+		color: rgba(16, 24, 40, 0.76);
+		line-height: 1.5;
+		font-size: 14px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.cardLead {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.55;
+	}
+
+	.cardLead:last-child {
+		margin-bottom: 0;
 	}
 
 	.grid {
@@ -372,7 +481,7 @@ const pricingFaqLd = {
 	}
 
 	.pricingHead {
-		margin-bottom: 12px;
+		margin-bottom: 10px;
 	}
 
 	.pricingTitle {
@@ -382,9 +491,9 @@ const pricingFaqLd = {
 	}
 
 	.pricingSubtitle {
+		margin-top: 4px;
 		color: rgba(16, 24, 40, 0.7);
 		font-size: 13px;
-		margin-top: 4px;
 	}
 
 	.pricingList {
@@ -406,28 +515,23 @@ const pricingFaqLd = {
 		border-radius: 14px;
 	}
 
-	.pricingRow:first-child {
-		margin-top: 0;
-	}
-
 	.pricingFeature {
-		color: rgba(16, 24, 40, 0.86);
+		color: rgba(16, 24, 40, 0.88);
 		line-height: 1.35;
 		min-width: 0;
 	}
 
 	.pricingPrice {
-		font-weight: 800;
-		color: rgba(16, 24, 40, 0.85);
+		font-weight: 900;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.86);
 		text-align: right;
 		white-space: normal;
 		max-width: 22ch;
-		overflow-wrap: anywhere;
-		min-width: 0;
 	}
 
 	.pricingPrice.isFree {
-		color: rgba(0, 174, 154, 1);
+		color: rgba(0, 142, 126, 1);
 	}
 
 	@media (max-width: 980px) {
@@ -439,4 +543,227 @@ const pricingFaqLd = {
 			grid-template-columns: 1fr;
 		}
 	}
+
+	.wbPricing {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		gap: 14px;
+		align-items: start;
+		overflow: hidden;
+	}
+
+	.wbBase {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 20px;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.wbBaseBadge {
+		display: inline-block;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.25);
+		color: rgba(0, 142, 126, 1);
+		font-size: 11px;
+		font-weight: 800;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		padding: 4px 10px;
+		border-radius: 999px;
+		margin-bottom: 12px;
+		align-self: flex-start;
+	}
+
+	.wbBasePrice {
+		font-size: 32px;
+		font-weight: 900;
+		letter-spacing: -0.03em;
+		color: #00100e;
+		line-height: 1;
+	}
+
+	.wbBasePrice span {
+		font-size: 18px;
+		font-weight: 700;
+		color: rgba(16, 24, 40, 0.6);
+	}
+
+	.wbBaseNote {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.6);
+		margin-top: 4px;
+		margin-bottom: 16px;
+	}
+
+	.wbBaseList {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 18px;
+		display: grid;
+		gap: 8px;
+	}
+
+	.wbBaseList li {
+		font-size: 14px;
+		color: rgba(16, 24, 40, 0.82);
+		padding: 6px 0;
+		border-bottom: 1px solid rgba(16, 24, 40, 0.06);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.wbBaseList li::before {
+		content: "✓";
+		color: #00ae9a;
+		font-weight: 700;
+		font-size: 12px;
+		flex-shrink: 0;
+	}
+
+	.wbAddons {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 20px;
+		padding: 20px;
+	}
+
+	.wbAddonsTitle {
+		font-size: 15px;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: rgba(16, 24, 40, 0.88);
+		margin-bottom: 4px;
+	}
+
+	.wbAddonsNote {
+		font-size: 12px;
+		color: rgba(16, 24, 40, 0.55);
+		margin-bottom: 16px;
+	}
+
+	.wbAddonGrid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 10px;
+		margin-bottom: 14px;
+	}
+
+	.wbAddonCard {
+		background: rgba(255, 255, 255, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 14px;
+	}
+
+	.wbAddonName {
+		font-size: 13px;
+		font-weight: 800;
+		color: rgba(16, 24, 40, 0.88);
+		margin-bottom: 4px;
+	}
+
+	.wbAddonDesc {
+		font-size: 11px;
+		color: rgba(16, 24, 40, 0.6);
+		line-height: 1.45;
+		margin-bottom: 10px;
+	}
+
+	.wbAddonPrice {
+		font-size: 16px;
+		font-weight: 900;
+		letter-spacing: -0.02em;
+		color: #00ae9a;
+	}
+
+	.wbAddonPrice span {
+		font-size: 11px;
+		font-weight: 700;
+		color: rgba(16, 24, 40, 0.5);
+	}
+
+	.wbAddonsFooter {
+		font-size: 12px;
+		color: rgba(16, 24, 40, 0.5);
+		text-align: center;
+		padding-top: 10px;
+		border-top: 1px solid rgba(16, 24, 40, 0.06);
+	}
+
+	.faqGrid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.faqCard {
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 16px;
+		padding: 16px;
+	}
+
+	.faqQ {
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.9);
+		font-size: 14px;
+		letter-spacing: -0.01em;
+		margin-bottom: 8px;
+		line-height: 1.35;
+	}
+
+	.faqA {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+	}
+
+	.faqSub {
+		font-size: 13px;
+		color: rgba(16, 24, 40, 0.6);
+		margin: -6px 0 12px;
+		line-height: 1.5;
+	}
+
+	.faqSub a {
+		color: #00ae9a;
+		text-decoration: underline;
+	}
+
+	@media (max-width: 900px) {
+		.wbPricing {
+			grid-template-columns: 1fr;
+		}
+		.wbAddonGrid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		.faqGrid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 580px) {
+		.wbAddonGrid {
+			grid-template-columns: 1fr;
+		}
+		.wbBasePrice {
+			font-size: 28px;
+		}
+		.wbBasePrice span {
+			font-size: 14px;
+		}
+		.sectionHeader {
+			gap: 6px;
+		}
+		.sectionMeta {
+			font-size: 12px;
+		}
+		.faqGrid {
+			grid-template-columns: 1fr;
+		}
+	}
+
 </style>
