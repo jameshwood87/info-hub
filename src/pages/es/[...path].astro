@@ -1608,7 +1608,7 @@ const neighbourhoodAutoSource =
 		: '';
 
 const cleanedSourceBody = (() => {
-	let out = isNeighbourhood && neighbourhoodAutoSource ? String(neighbourhoodAutoSource) : String(page.body || '');
+	let out = isNeighbourhood && neighbourhoodAutoSource && String(page.body || '').trim().length < 400 ? String(neighbourhoodAutoSource) : String(page.body || '');
 	if (renderPath.startsWith('/es/docs/')) {
 		out = out
 			.replace(/<script\b[\s\S]*?<\/script>/gi, '')

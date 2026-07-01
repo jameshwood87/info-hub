@@ -2255,13 +2255,13 @@ const finalBodyHtml = (() => {
 		}
 	}
 	if (isDocs) out = rewriteDocLinksToCanonical(out);
-	if (isNeighbourhood) {
+	if (isNeighbourhood && String(page.body || '').trim().length < 400) {
 		out = neighbourhoodAutoHtml;
 	}
 	return out;
 })();
 
-const toc = isNeighbourhood ? neighbourhoodAutoToc : sourceToc;
+const toc = isNeighbourhood && String(page.body || '').trim().length < 400 ? neighbourhoodAutoToc : sourceToc;
 
 const crumbs = (() => {
 	const parts = renderPath.split('/').filter(Boolean);
