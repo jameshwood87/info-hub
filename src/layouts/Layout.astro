@@ -102,6 +102,7 @@ const mapDocsToSpanish = (p: string) => {
 						? 'empezar'
 						: seg;
 	parts[1] = mapped;
+	if (mapped === 'propertylist-mls-manual-de-usuario' && (parts[2] || '') === 'getting-started') parts[2] = 'empezar';
 	return `/es/${parts.join('/')}/`;
 };
 
