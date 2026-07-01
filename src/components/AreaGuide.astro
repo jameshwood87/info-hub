@@ -166,6 +166,18 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			<div class="agAudCard"><h3>{t('Holiday-makers', 'Vacacional')}</h3><p>{holiday && holiday.totalListings ? t(`${nfmt(holiday.totalListings)} holiday properties available for short stays in ${areaName}.`, `${nfmt(holiday.totalListings)} propiedades vacacionales disponibles en ${areaName}.`) : t('No holiday lets listed here yet.', 'Aún no hay alojamientos vacacionales.')}</p></div>
 		</div>
 
+		<a class="agIntel" href="https://intelligence.propertylist.es/" target="_blank" rel="noopener">
+			<span class="agIntelIcon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/></svg>
+			</span>
+			<span class="agIntelText">
+				<span class="agIntelKicker">PropertyList Intelligence</span>
+				<span class="agIntelTitle">{t(`Go deeper on the ${areaName} market`, `Analiza el mercado de ${areaName} en profundidad`)}</span>
+				<span class="agIntelBody">{t('In-depth market reports, price trends and buyer-demand data, built on live transaction data.', 'Informes de mercado en profundidad, tendencias de precios y datos de demanda, con datos reales de transacciones.')}</span>
+			</span>
+			<span class="agIntelBtn">{t('Explore Intelligence →', 'Explora Intelligence →')}</span>
+		</a>
+
 		<div class="agFoundingInline">
 			<div>
 				<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
@@ -242,6 +254,16 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 	.agAudCard { background:rgba(255,255,255,.85); border:1px solid rgba(16,24,40,.08); border-radius:16px; padding:14px 16px; }
 	.agAudCard h3 { margin:0 0 6px; font-size:15px; letter-spacing:-.01em; color:#00806f; }
 	.agAudCard p { margin:0; font-size:13.5px; line-height:1.5; color:rgba(16,24,40,.72); }
+
+	.agIntel { display:flex; gap:16px; align-items:center; text-decoration:none; color:#fff; background:linear-gradient(120deg,#0d2b2e,#10393a); border:1px solid rgba(0,174,154,.3); border-radius:18px; padding:18px 20px; margin-bottom:14px; }
+	.agIntel:hover { text-decoration:none; border-color:rgba(0,174,154,.55); }
+	.agIntelIcon { flex-shrink:0; width:48px; height:48px; border-radius:12px; background:rgba(0,174,154,.18); color:#6fe5d3; display:flex; align-items:center; justify-content:center; }
+	.agIntelText { min-width:0; flex:1; }
+	.agIntelKicker { display:block; font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:#6fe5d3; }
+	.agIntelTitle { display:block; font-size:17px; font-weight:900; letter-spacing:-.02em; margin-top:2px; color:#fff; }
+	.agIntelBody { display:block; font-size:13px; color:rgba(255,255,255,.72); margin-top:4px; }
+	.agIntelBtn { white-space:nowrap; align-self:center; background:#00ae9a; color:#00100e; border-radius:999px; padding:11px 18px; font-weight:900; font-size:13.5px; }
+	@media (max-width:640px){ .agIntel{ flex-wrap:wrap; } .agIntelBtn{ width:100%; text-align:center; } }
 
 	.agFoundingInline { background:radial-gradient(800px 400px at 50% 50%, rgba(0,174,154,.14), rgba(255,255,255,0)); border:1px solid rgba(0,174,154,.2); border-radius:18px; padding:14px; margin-bottom:14px; display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
 	.agFiTitle { font-weight:900; letter-spacing:-.02em; font-size:16px; }
