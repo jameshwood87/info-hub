@@ -136,7 +136,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			{ from: '/docs/propertylist-mls-user-manual/export-listings/', to: '/docs/propertylist-mls-user-manual/integrations/export-listings/' },
 			{ from: '/docs/propertylist-mls-user-manual/integrations/listings/', to: '/docs/propertylist-mls-user-manual/integrations/export-listings/' },
 			{ from: '/docs/propertylist-mls-user-manual/integrations/technical-documentation/', to: '/docs/propertylist-mls-user-manual/technical-documentation/' },
-			{ from: '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/', to: '/docs/propertylist-mls-user-manual/ai-and-automation/' },
+			{ from: '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/', to: '/docs/propertylist-mls-user-manual/ai-automation/' },
 			{
 				from: '/docs/propertylist-mls-user-manual/core-workflow/creating-a-new-listing/',
 				to: '/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/',

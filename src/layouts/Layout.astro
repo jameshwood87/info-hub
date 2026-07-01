@@ -833,7 +833,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						lang === 'es'
 							? '/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/agente-de-investigacion-de-propiedades/'
 							: '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/';
-					const aiAgentHref = 'https://ai.propertylist.es/how-it-works';
+					const aiAgentHref = lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/ai-automation/' : '/docs/propertylist-mls-user-manual/ai-automation/';
 					const groups = new Map();
 					for (const r of items.slice(0, 10)) {
 						const section = toSection(r.path, lang);

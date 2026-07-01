@@ -5,7 +5,7 @@ import { getKbTreeOrderSnapshot, sortPathsWithOrder } from '../../../../lib/kbTr
 
 const baseEn = '/docs/propertylist-mls-user-manual/';
 const base = mapDocsEnglishToSpanishPath(baseEn);
-const aiAgentExternalHref = 'https://ai.propertylist.es/how-it-works';
+const aiAgentExternalHref = '/es/docs/propertylist-mls-manual-de-usuario/ai-automation/';
 const externalHrefForDocPath = (p: string) => {
 	const s = String(p || '');
 	if (s.includes('/property-research-agent/')) return aiAgentExternalHref;

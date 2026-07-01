@@ -9,7 +9,7 @@ import { getKbTreeOrderSnapshot, sortPathsWithOrder } from '../../../lib/kbTreeO
 
 const base = '/docs/propertylist-mls-user-manual/';
 const aiAgentDocPath = '/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/';
-const aiAgentExternalHref = 'https://ai.propertylist.es/how-it-works';
+const aiAgentExternalHref = '/docs/propertylist-mls-user-manual/ai-automation/';
 const externalHrefForDocPath = (p: string) => (p === aiAgentDocPath ? aiAgentExternalHref : null);
 
 const itemsFromDirectusRaw = await listKbPagesByPrefixes({

@@ -65,21 +65,21 @@ if (normalizedPath === '/what-we-offer/') {
 if (normalizedPath === '/docs/propertylist-mls-user-manual/ai-and-automation/') {
 	return new Response(null, {
 		status: 301,
-		headers: { Location: '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/' },
+		headers: { Location: '/docs/propertylist-mls-user-manual/ai-automation/' },
 	});
 }
 
 if (normalizedPath === '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/') {
 	return new Response(null, {
 		status: 301,
-		headers: { Location: 'https://ai.propertylist.es/how-it-works' },
+		headers: { Location: '/docs/propertylist-mls-user-manual/ai-automation/' },
 	});
 }
 
 if (normalizedPath === '/docs/propertylist-mls-user-manual/ai-and-automation/ai-property-research-agent/') {
 	return new Response(null, {
 		status: 301,
-		headers: { Location: 'https://ai.propertylist.es/how-it-works' },
+		headers: { Location: '/docs/propertylist-mls-user-manual/ai-automation/' },
 	});
 }
 
@@ -2566,7 +2566,7 @@ const escapeHtml = (s: string) =>
 
 function externalDocLinkForPath(p: string) {
 	if (p === '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/')
-		return { href: 'https://ai.propertylist.es/how-it-works', target: '_blank' as const, rel: 'noopener' };
+		return { href: '/docs/propertylist-mls-user-manual/ai-automation/', target: '_blank' as const, rel: 'noopener' };
 	return null;
 }
 
