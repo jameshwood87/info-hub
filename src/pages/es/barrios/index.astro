@@ -29,7 +29,7 @@ if (!itemsRaw.length) {
 const stripSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
 const stripGuideSuffix = (s: string) =>
 	stripSuffix(s)
-		.replace(/\s+(?:gu[ií]a\s+de\s+(?:barrio|zona)|barrio|zona)\s*$/i, '')
+		.replace(/^gu[ií]a\s+del\s+barrio\s+(?:de\s+|del\s+)?/i, '')
 		.replace(/^gu[ií]a\s+de\s+/i, '')
 		.replace(/\s+/g, ' ')
 		.trim();
