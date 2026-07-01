@@ -34,16 +34,18 @@ const ic = {
 	euro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 9.2a4 4 0 1 0 0 5.6"/><path d="M8 11h5"/><path d="M8 13.5h5"/></svg>',
 	code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path d="M13 6l-2 12"/></svg>',
 	shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+	share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4"/><path d="M15.4 6.5l-6.8 4"/></svg>',
 };
 
 const featureCards = [
 	{ icon: ic.web, title: 'Website Builder', desc: 'Your own branded agency website, live in minutes. Every MLS listing auto-loads, an AI assistant builds your pages, and enquiries land straight in your CRM.', href: '/website-builder/', cta: 'See how it works' },
 	{ icon: ic.crm, title: 'Smart MLS & CRM', desc: 'Free forever. Seven Kanban boards from first lead to closed deal, set up and backfilled on day one. You only pay a credit when you actually convert.', href: '/docs/propertylist-mls-user-manual/', cta: 'Explore the CRM' },
+	{ icon: ic.share, title: '6,500+ Shared Properties', desc: 'Free for estate agents. Tap into a shared pool of 6,500+ listings across the network - sell properties from other members, collaborate on deals and split the commission, at no extra cost.', href: 'https://propertylist.es', cta: 'See the network' },
 	{ icon: ic.key, title: 'Rentals Module', desc: 'Run lettings end to end: tenants, tenancies, automatic renewal emails, maintenance workflows and a deposit-dispute-proof audit log.', href: '#topic-rentals', cta: 'Learn more' },
 	{ icon: ic.chart, title: 'Market Intelligence', desc: 'Real, transaction-based market data for the Costa del Sol. Free city snapshots, forensic PDF reports, and live dashboards for serious investors.', href: 'https://intelligence.propertylist.es', cta: 'See the data' },
 	{ icon: ic.feed, title: 'XML Feeds', desc: 'Already have a website? Push every listing to it and to portals like Idealista and Fotocasa at the same time, synced live.', href: '#topic-xml', cta: 'See feeds' },
 	{ icon: ic.euro, title: 'Simple Credits', desc: 'Pay only for what you use. 1 credit = €1 and they never expire. New agencies get 20 free, and you earn more every time you refer.', href: '/pricing/', cta: 'See pricing' },
-	{ icon: ic.code, title: 'MCP & Developers', desc: 'A live API layer — the same Model Context Protocol that powers Claude, Cursor and Perplexity — over your live MLS data.', href: 'https://mcp.propertylist.es', cta: 'For developers' },
+	{ icon: ic.code, title: 'MCP & Developers', desc: 'A live API layer - the same Model Context Protocol that powers Claude, Cursor and Perplexity - over your live MLS data.', href: 'https://mcp.propertylist.es', cta: 'For developers' },
 	{ icon: ic.shield, title: 'Oracle', desc: 'A live, signed, notary-grade €/m² price feed built for tokenisation platforms, on-chain lenders and RWA protocols.', href: 'https://oracle.propertylist.es', cta: 'Explore Oracle' },
 ];
 
@@ -75,7 +77,7 @@ const byId = Object.fromEntries(featureFaqItems.map((i) => [i.id, i]));
 		<div class="heroInner">
 			<div class="badge">Features &amp; pricing</div>
 			<h1>Everything an estate agency needs. <span class="accent">The core is free.</span></h1>
-			<p class="lead">MLS, CRM and pipelines free forever - plus a website builder, live market data, rentals, XML feeds and an AI/developer layer you switch on only when you need them. Here is what you get, and exactly what it costs.</p>
+			<p class="lead">MLS, CRM and basic pipelines free forever - plus a website builder, live market data, rentals, XML feeds and an AI/developer layer you switch on only when you need them. Here is what you get, and exactly what it costs.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">Open a free account</a>
 				<a class="btnSecondary" href="/pricing/">See full pricing</a>

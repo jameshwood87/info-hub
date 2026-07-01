@@ -27,7 +27,5 @@ pipelines:
                   git reset --hard origin/main
                   echo "Installing dependencies..."
                   npm ci
-                  echo "Building site..."
-                  npm run build
-                  echo "Restarting the app (Astro SSR), not nginx..."
-                  sudo systemctl restart info-hub.service
+                  echo "Atomic build + swap + restart (no 502 during build)..."
+                  bash deploy/prod-deploy.sh

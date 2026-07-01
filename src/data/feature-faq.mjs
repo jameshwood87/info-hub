@@ -14,7 +14,7 @@ export const featureFaqItems = [
     id: 'auto-property-upload',
     q: 'Do I need to manually upload my properties to my agency website?',
     aHtml:
-      'No. Every listing in your PropertyList MLS — photos, prices, descriptions — loads onto your agency website automatically. No manual re-entry needed.',
+      'No. Every listing in your PropertyList MLS - photos, prices, descriptions - loads onto your agency website automatically. No manual re-entry needed.',
   },
   {
     id: 'custom-domain',
@@ -32,19 +32,19 @@ export const featureFaqItems = [
     id: 'leads-to-crm',
     q: 'How do leads from my agency website get into my CRM?',
     aHtml:
-      'Lead capture forms are embedded on your site and feed enquiries directly into your PropertyList CRM the moment a visitor submits one — no manual export, no lag.',
+      'Lead capture forms are embedded on your site and feed enquiries directly into your PropertyList CRM the moment a visitor submits one - no manual export, no lag.',
   },
   {
     id: 'cancel-website-builder',
     q: 'What happens to my website if I cancel the website builder subscription?',
     aHtml:
-      'Your published website goes offline. Your property listings and CRM data are unaffected — everything stays in PropertyList. You can republish at any time with no penalty or re-upload.',
+      'Your published website goes offline. Your property listings and CRM data are unaffected - everything stays in PropertyList. You can republish at any time with no penalty or re-upload.',
   },
 
   // ─── XML Feeds ────────────────────────────────────────────────────────
   {
     id: 'xml-own-website',
-    q: 'I already have a website — can I still get my PropertyList properties on it?',
+    q: 'I already have a website - can I still get my PropertyList properties on it?',
     aHtml:
       'Yes. The PropertyList XML feeds let you push your listings to any website. Both feeds can also send to third-party portals simultaneously.',
   },
@@ -58,13 +58,13 @@ export const featureFaqItems = [
     id: 'xml-new-developments',
     q: 'Is there a separate XML feed for new developments?',
     aHtml:
-      'Yes. New development and off-plan properties are in a separate dedicated feed — keeping your resale/rental feed clean and uncluttered.',
+      'Yes. New development and off-plan properties are in a separate dedicated feed - keeping your resale/rental feed clean and uncluttered.',
   },
   {
     id: 'xml-portals',
     q: 'Can I use the XML feed to push listings to other portals like Idealista?',
     aHtml:
-      'Yes. Both feeds push to your own website and to third-party portals simultaneously — Idealista, Fotocasa, or any platform that accepts XML.',
+      'Yes. Both feeds push to your own website and to third-party portals simultaneously - Idealista, Fotocasa, or any platform that accepts XML.',
   },
   {
     id: 'xml-cost',
@@ -84,7 +84,7 @@ export const featureFaqItems = [
     id: 'market-reports-free',
     q: 'Are the market reports free?',
     aHtml:
-      'Free city snapshots are available without signup — monthly readings covering median price, year-on-year change, and days on market for Marbella, Estepona, Mijas, Benahavís, Fuengirola, Sotogrande, and more. Paid forensic reports and live subscriptions are also available.',
+      'Free city snapshots are available without signup - monthly readings covering median price, year-on-year change, and days on market for Marbella, Estepona, Mijas, Benahavís, Fuengirola, Sotogrande, and more. Paid forensic reports and live subscriptions are also available.',
   },
   {
     id: 'forensic-reports',
@@ -104,7 +104,7 @@ export const featureFaqItems = [
     id: 'crm-free',
     q: 'Is the PropertyList CRM really free?',
     aHtml:
-      'The core MLS and CRM are free forever. Four of the seven pipeline boards — Leads, Property Lifecycle, Transactions, and Nurture — are completely free with no limits. Paid upgrades for Buyers, Sellers, and Tenants use the credit system. <a href="https://info.propertylist.es/pricing">See full pricing</a>.',
+      'The core MLS and CRM are free forever. Four of the seven pipeline boards - Leads, Property Lifecycle, Transactions, and Nurture - are completely free with no limits. Paid upgrades for Buyers, Sellers, and Tenants use the credit system. <a href="https://info.propertylist.es/pricing">See full pricing</a>.',
   },
   {
     id: 'pipeline-boards',
@@ -116,13 +116,13 @@ export const featureFaqItems = [
     id: 'pipeline-setup',
     q: 'Do I have to set up the pipeline boards manually?',
     aHtml:
-      'No. All boards are automatically configured and all existing contacts and properties are backfilled onto the correct boards on day one — nothing to set up.',
+      'No. All boards are automatically configured and all existing contacts and properties are backfilled onto the correct boards on day one - nothing to set up.',
   },
   {
     id: 'pipeline-pricing',
-    q: 'How does the pipeline pricing work — is it really pay-per-conversion?',
+    q: 'How does the pipeline pricing work - is it really pay-per-conversion?',
     aHtml:
-      'Buyers, Sellers, and Tenants boards: first 5 conversions free forever. After that, 1 credit per conversion — only charged when you tag a contact as a real opportunity, never for unqualified leads. No subscription, no lock-in. Leads, Property Lifecycle, Transactions, and Nurture are free without limit.',
+      'Buyers, Sellers, and Tenants boards: first 5 conversions free forever. After that, 1 credit per conversion - only charged when you tag a contact as a real opportunity, never for unqualified leads. No subscription, no lock-in. Leads, Property Lifecycle, Transactions, and Nurture are free without limit.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────
@@ -130,7 +130,7 @@ export const featureFaqItems = [
     id: 'rentals-module',
     q: 'Does PropertyList have a rentals management module?',
     aHtml:
-      'Yes. The Rentals Module unlocks the full rental workflow — from first enquiry through to lease completion and renewal.',
+      'Yes. The Rentals Module unlocks the full rental workflow - from first enquiry through to lease completion and renewal.',
   },
   {
     id: 'rentals-includes',
@@ -148,7 +148,7 @@ export const featureFaqItems = [
     id: 'rentals-deposit-disputes',
     q: 'Does the Rentals module handle deposit disputes and comply with Spanish rental law?',
     aHtml:
-      'Yes. The audit log timestamps every status and deposit change with the agent responsible — providing defensible evidence for Spanish deposit disputes under the LAU / RDL 8/2024 framework.',
+      'Yes. The audit log timestamps every status and deposit change with the agent responsible - providing defensible evidence for Spanish deposit disputes under the LAU / RDL 8/2024 framework.',
   },
 
   // ─── Credits & Pricing ─────────────────────────────────────────────────
@@ -161,13 +161,13 @@ export const featureFaqItems = [
   {
     id: 'credits-expire',
     q: 'Do credits expire?',
-    aHtml: 'No. PropertyList credits never expire — use them at your own pace.',
+    aHtml: 'No. PropertyList credits never expire - use them at your own pace.',
   },
   {
     id: 'earn-free-credits',
     q: 'Can I earn free credits on PropertyList?',
     aHtml:
-      'Yes. New verified agencies receive 20 free credits on signup. Agents also earn 20 credits for each agency that signs up via their referral link — and the new signup gets 10 credits.',
+      'Yes. New verified agencies receive 20 free credits on signup. Agents also earn 20 credits for each agency that signs up via their referral link - and the new signup gets 10 credits.',
   },
 
   // ─── MCP / Developers ─────────────────────────────────────────────────
@@ -181,13 +181,13 @@ export const featureFaqItems = [
     id: 'ai-tools',
     q: 'Can I connect PropertyList to AI tools like Claude, Cursor, or Perplexity?',
     aHtml:
-      'Yes. The MCP connects PropertyList live MLS data to any MCP-compatible AI client — Claude, Cursor, Zed, Perplexity, and more. Install via Claude Desktop config, npx adapter, or direct JSON-RPC endpoint.',
+      'Yes. The MCP connects PropertyList live MLS data to any MCP-compatible AI client - Claude, Cursor, Zed, Perplexity, and more. Install via Claude Desktop config, npx adapter, or direct JSON-RPC endpoint.',
   },
   {
     id: 'mcp-free',
     q: 'Is the MCP free to use?',
     aHtml:
-      'Free public tier: 60 requests/minute, no signup required. An API key is needed for natural-language search — free for agencies, developers, and AI product teams.',
+      'Free public tier: 60 requests/minute, no signup required. An API key is needed for natural-language search - free for agencies, developers, and AI product teams.',
   },
 
   // ─── Oracle ────────────────────────────────────────────────────────────
@@ -195,11 +195,11 @@ export const featureFaqItems = [
     id: 'oracle',
     q: 'What is PropertyList Oracle?',
     aHtml:
-      'PropertyList Oracle (oracle.propertylist.es) is a live, signed €/m² price feed for Spanish real estate — purpose-built for tokenisation platforms, on-chain lenders, and property-backed stablecoin issuers who need daily attestation. Built for RWA (Real World Asset) protocols. <a href="https://oracle.propertylist.es">Explore PropertyList Oracle</a>.',
+      'PropertyList Oracle (oracle.propertylist.es) is a live, signed €/m² price feed for Spanish real estate - purpose-built for tokenisation platforms, on-chain lenders, and property-backed stablecoin issuers who need daily attestation. Built for RWA (Real World Asset) protocols. <a href="https://oracle.propertylist.es">Explore PropertyList Oracle</a>.',
   },
 ];
 
-// JSON-LD FAQPage schema — all 30 questions, plain text answers (no HTML)
+// JSON-LD FAQPage schema - all 30 questions, plain text answers (no HTML)
 export const featureFaqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
