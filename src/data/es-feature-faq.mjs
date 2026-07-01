@@ -195,7 +195,7 @@ export const featureFaqItemsEs = [
     id: 'oracle',
     q: '¿Qué es PropertyList Oracle?',
     aHtml:
-      'PropertyList Oracle (oracle.propertylist.es) es un suministro de precios €/m² firmado y próximo a lanzarse — creado para plataformas de tokenización, prestamistas on-chain e issuers de stablecoins respaldadas por propiedad que necesitan feeds de atestación diarios. Construido para protocolos RWA (Real World Assets). <a href="https://oracle.propertylist.es">Regístrate para recibir notificaciones de lanzamiento</a>.',
+      'PropertyList Oracle (oracle.propertylist.es) es un suministro de precios €/m² firmado y ya disponible — creado para plataformas de tokenización, prestamistas on-chain e issuers de stablecoins respaldadas por propiedad que necesitan feeds de atestación diarios. Construido para protocolos RWA (Real World Assets). <a href="https://oracle.propertylist.es">Explora PropertyList Oracle</a>.',
   },
 ];
 
