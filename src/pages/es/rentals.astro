@@ -1,19 +1,19 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 
 const origin = 'https://info.propertylist.es';
-const canonical = `${origin}/rentals/`;
-const title = 'Rentals Management Module for Estate Agents | PropertyList';
+const canonical = `${origin}/es/rentals/`;
+const title = 'Módulo de Gestión de Alquileres para Inmobiliarias | PropertyList';
 const description =
-	'The Rentals Module runs the full lettings workflow - tenants pipeline, tenancies ledger, automatic renewals, maintenance, landlord portfolio and a deposit audit log built for Spanish rental law. Free 30-day trial.';
+	'El Módulo de Alquileres gestiona todo el flujo de arrendamiento - pipeline de inquilinos, libro de contratos, renovaciones automáticas, mantenimiento, cartera del propietario y un registro de auditoría de fianzas creado para la ley de alquiler española. Prueba gratis de 30 días.';
 
 const features = [
-	{ name: 'Tenants pipeline', desc: 'A dedicated board for applicants, from first enquiry through to a signed lease.' },
-	{ name: 'Tenancies ledger', desc: 'Every live, expiring and ended lease in one view, each with its deposit status.' },
-	{ name: 'Automatic renewals', desc: 'Lease renewal emails sent 30 days before expiry, in your client’s language.' },
-	{ name: 'Maintenance workflow', desc: 'Log issues, assign suppliers, and track every job through to completion.' },
-	{ name: 'Landlord portfolio view', desc: 'Rent roll and renewals due, per landlord, at a glance.' },
-	{ name: 'Deposit audit log', desc: 'Every status and deposit change timestamped against the agent responsible.' },
+	{ name: 'Pipeline de inquilinos', desc: 'Un tablero dedicado para candidatos, desde la primera consulta hasta el contrato firmado.' },
+	{ name: 'Libro de contratos', desc: 'Cada contrato vivo, en expiración y finalizado en una sola vista, cada uno con su estado de fianza.' },
+	{ name: 'Renovaciones automáticas', desc: 'Correos de renovación de contrato enviados 30 días antes del vencimiento, en el idioma de tu cliente.' },
+	{ name: 'Flujo de mantenimiento', desc: 'Registra incidencias, asigna proveedores y sigue cada trabajo hasta su finalización.' },
+	{ name: 'Vista de cartera del propietario', desc: 'Renta y renovaciones pendientes, por propietario, de un vistazo.' },
+	{ name: 'Registro de auditoría de fianzas', desc: 'Cada cambio de estado y de fianza con fecha y hora, asociado al agente responsable.' },
 ];
 
 const faqLd = {
@@ -22,26 +22,26 @@ const faqLd = {
 	mainEntity: [
 		{
 			'@type': 'Question',
-			name: 'What does the Rentals module include?',
+			name: '¿Qué incluye el módulo de Alquileres?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'A dedicated Tenants pipeline, a Tenancies ledger (live, expiring and ended leases with deposit status), automatic lease renewal emails 30 days before expiry, a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
+				text: 'Un pipeline de inquilinos dedicado, un libro de contratos (contratos vivos, en expiración y finalizados con estado de fianza), correos automáticos de renovación 30 días antes del vencimiento, un flujo de mantenimiento con seguimiento de proveedores, una vista de cartera del propietario con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas.',
 			},
 		},
 		{
 			'@type': 'Question',
-			name: 'How much does the Rentals module cost?',
+			name: '¿Cuánto cuesta el módulo de Alquileres?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Free 30-day trial, no credit card required. After the trial it is 50 credits per 30-day period, with no auto-charge.',
+				text: 'Prueba gratis de 30 días, sin tarjeta de crédito. Después de la prueba son 50 créditos por período de 30 días, sin cargo automático.',
 			},
 		},
 		{
 			'@type': 'Question',
-			name: 'Does the Rentals module comply with Spanish rental law?',
+			name: '¿El módulo de Alquileres cumple con la ley de alquiler española?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Yes. The audit log timestamps every status and deposit change with the agent responsible, providing defensible evidence for Spanish deposit disputes under the LAU and RDL 8/2024 framework.',
+				text: 'Sí. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, proporcionando evidencia defendible para disputas de fianzas españolas bajo el marco LAU y RDL 8/2024.',
 			},
 		},
 	],
@@ -49,45 +49,45 @@ const faqLd = {
 ---
 
 <Layout
-	lang="en"
+	lang="es"
 	title={title}
 	description={description}
 	canonical={canonical}
 	hreflangs={[
-		{ hreflang: 'en', href: canonical },
-		{ hreflang: 'es', href: `${origin}/es/rentals/` },
-		{ hreflang: 'x-default', href: canonical },
+		{ hreflang: 'en', href: `${origin}/rentals/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/rentals/` },
 	]}
 >
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
 
 	<section class="hero">
 		<div class="heroInner">
-			<div class="kicker">Rentals Module</div>
-			<h1>The full rental workflow, end to end.</h1>
+			<div class="kicker">Módulo de Alquileres</div>
+			<h1>Todo el flujo de alquiler, de principio a fin.</h1>
 			<p class="lead">
-				The Rentals Module unlocks everything an agency needs to run lettings - from the first enquiry through to lease completion, renewal and
-				deposit return. Built for Spanish rental law, with a free 30-day trial and no auto-charge.
+				El Módulo de Alquileres desbloquea todo lo que una agencia necesita para gestionar arrendamientos - desde la primera consulta hasta la firma
+				del contrato, la renovación y la devolución de la fianza. Creado para la ley de alquiler española, con una prueba gratis de 30 días y sin cargo automático.
 			</p>
-			<div class="ctaRow" aria-label="Get started">
+			<div class="ctaRow" aria-label="Empezar">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Start the free trial
+					Empezar la prueba gratis
 				</a>
-				<a class="btnSecondary" href="/pricing/">See full pricing</a>
+				<a class="btnSecondary" href="/es/pricing/">Ver precios completos</a>
 			</div>
-			<div class="note">30-day free trial. No credit card required.</div>
+			<div class="note">Prueba gratis de 30 días. Sin tarjeta de crédito.</div>
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHead">
-			<h2>What is inside</h2>
+			<h2>Qué incluye</h2>
 			<p>
-				One module covers the entire lettings lifecycle, so you are not stitching the rental side of your business together from spreadsheets and
-				reminders.
+				Un solo módulo cubre todo el ciclo de vida del alquiler, así no tienes que unir la parte de arrendamientos de tu negocio a base de hojas de
+				cálculo y recordatorios.
 			</p>
 		</div>
-		<div class="grid3" aria-label="Rentals module features">
+		<div class="grid3" aria-label="Funciones del módulo de alquileres">
 			{
 				features.map((f) => (
 					<div class="card">
@@ -102,24 +102,24 @@ const faqLd = {
 	<section class="section">
 		<div class="grid2">
 			<div class="card accent">
-				<h2>Built for Spanish rental law</h2>
+				<h2>Creado para la ley de alquiler española</h2>
 				<p>
-					The audit log timestamps every status and deposit change against the agent responsible, giving you defensible evidence for deposit
-					disputes under the LAU and RDL 8/2024 framework.
+					El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, dándote evidencia
+					defendible para disputas de fianzas bajo el marco LAU y RDL 8/2024.
 				</p>
-				<p>No more reconstructing who changed what, and when, after a dispute has already started.</p>
+				<p>Se acabó reconstruir quién cambió qué, y cuándo, una vez que la disputa ya ha empezado.</p>
 			</div>
 			<div class="card">
-				<h2>Simple, honest pricing</h2>
+				<h2>Precios sencillos y honestos</h2>
 				<p>
-					Start with a free 30-day trial - no credit card required. After the trial, the module is 50 credits per 30-day period, and there is no
-					auto-charge. You renew it when you want it, not before.
+					Empieza con una prueba gratis de 30 días - sin tarjeta de crédito. Después de la prueba, el módulo cuesta 50 créditos por período de 30 días,
+					y no hay cargo automático. Lo renuevas cuando quieras, no antes.
 				</p>
 				<div class="pillRow">
-					<span class="pill">30-day free trial</span>
-					<span class="pill">No card required</span>
-					<span class="pill">50 credits / 30 days</span>
-					<span class="pill">No auto-charge</span>
+					<span class="pill">Prueba gratis de 30 días</span>
+					<span class="pill">Sin tarjeta</span>
+					<span class="pill">50 créditos / 30 días</span>
+					<span class="pill">Sin cargo automático</span>
 				</div>
 			</div>
 		</div>
@@ -127,16 +127,16 @@ const faqLd = {
 
 	<section class="section cta">
 		<div class="ctaInner">
-			<h2>Run lettings the same place you run sales</h2>
+			<h2>Gestiona alquileres en el mismo sitio que las ventas</h2>
 			<p>
-				The Rentals Module sits inside the same free CRM that powers your sales pipeline - one login, one contact database, one workflow for the
-				whole agency.
+				El Módulo de Alquileres vive dentro del mismo CRM gratis que impulsa tu pipeline de ventas - un solo acceso, una sola base de datos de
+				contactos, un solo flujo de trabajo para toda la agencia.
 			</p>
-			<div class="ctaRow" aria-label="Join PropertyList">
+			<div class="ctaRow" aria-label="Únete a PropertyList">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Agents: Get Started FREE
+					Agentes: Empieza GRATIS
 				</a>
-				<a class="btnSecondary" href="/features/">See all features</a>
+				<a class="btnSecondary" href="/es/features/">Ver todas las funciones</a>
 			</div>
 		</div>
 	</section>
