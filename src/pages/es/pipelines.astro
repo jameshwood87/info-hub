@@ -1,20 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 
 const origin = 'https://info.propertylist.es';
-const canonical = `${origin}/pipelines/`;
-const title = 'CRM Pipelines for Estate Agents | PropertyList';
+const canonical = `${origin}/es/pipelines/`;
+const title = 'Pipelines de CRM para Inmobiliarias | PropertyList';
 const description =
-	'Seven specialised CRM pipeline boards that move every deal forward - Leads, Buyers, Sellers, Tenants, Property Lifecycle, Transactions and Nurture. Four free forever, pay-per-conversion on the rest.';
+	'Siete tableros de pipeline de CRM especializados que hacen avanzar cada operación - Leads, Buyers, Sellers, Tenants, Property Lifecycle, Transactions y Nurture. Cuatro gratis para siempre, pago por conversión en el resto.';
 
 const boards = [
-	{ name: 'Leads', tag: 'Free', desc: 'New enquiry triage. Every incoming lead lands here for fast qualification before it goes anywhere else.' },
-	{ name: 'Buyers', tag: 'Credit', desc: 'Qualified purchasers, tracked from first viewing through offer to a closed sale.' },
-	{ name: 'Sellers', tag: 'Credit', desc: 'The full vendor journey, from valuation to signed mandate to completion.' },
-	{ name: 'Tenants', tag: 'Credit', desc: 'The rental pipeline - applicants moving through to a signed lease.' },
-	{ name: 'Property Lifecycle', tag: 'Free', desc: 'Live stock status for every listing you manage, at a glance.' },
-	{ name: 'Transactions', tag: 'Free', desc: 'The legal phase of every deal, tracked cleanly to completion.' },
-	{ name: 'Nurture', tag: 'Free', desc: 'Past clients and referral opportunities, kept warm automatically.' },
+	{ name: 'Leads', tag: 'Free', desc: 'Clasificación de nuevas consultas. Cada lead entrante llega aquí para una cualificación rápida antes de ir a cualquier otro sitio.' },
+	{ name: 'Buyers', tag: 'Credit', desc: 'Compradores cualificados, seguidos desde la primera visita hasta la oferta y la venta cerrada.' },
+	{ name: 'Sellers', tag: 'Credit', desc: 'El recorrido completo del vendedor, desde la valoración al mandato firmado y la firma final.' },
+	{ name: 'Tenants', tag: 'Credit', desc: 'El pipeline de alquiler - candidatos avanzando hasta un contrato firmado.' },
+	{ name: 'Property Lifecycle', tag: 'Free', desc: 'Estado del stock en directo para cada anuncio que gestionas, de un vistazo.' },
+	{ name: 'Transactions', tag: 'Free', desc: 'La fase legal de cada operación, seguida limpiamente hasta la firma.' },
+	{ name: 'Nurture', tag: 'Free', desc: 'Clientes pasados y oportunidades de referidos, mantenidos activos automáticamente.' },
 ];
 
 const faqLd = {
@@ -23,26 +23,26 @@ const faqLd = {
 	mainEntity: [
 		{
 			'@type': 'Question',
-			name: 'What pipeline boards does the PropertyList CRM include?',
+			name: '¿Qué tableros de pipeline incluye el CRM de PropertyList?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Seven specialised Kanban boards that work together automatically: Leads, Buyers, Sellers, Tenants, Property Lifecycle, Transactions and Nurture.',
+				text: 'Siete tableros Kanban especializados que funcionan juntos automáticamente: Leads, Buyers, Sellers, Tenants, Property Lifecycle, Transactions y Nurture.',
 			},
 		},
 		{
 			'@type': 'Question',
-			name: 'How does the pipeline pricing work?',
+			name: '¿Cómo funciona el precio de los pipelines?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'The Buyers, Sellers and Tenants boards give you your first 5 conversions free forever, then 1 credit per conversion - charged only when you tag a contact as a real opportunity. Leads, Property Lifecycle, Transactions and Nurture are free without limit.',
+				text: 'Los tableros Buyers, Sellers y Tenants te dan tus primeras 5 conversiones gratis para siempre, después 1 crédito por conversión - solo se cobra cuando etiquetas a un contacto como una oportunidad real. Leads, Property Lifecycle, Transactions y Nurture son gratis sin límite.',
 			},
 		},
 		{
 			'@type': 'Question',
-			name: 'Do I have to set up the pipeline boards manually?',
+			name: '¿Tengo que configurar los tableros de pipeline manualmente?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'No. All boards are configured automatically and every existing contact and property is backfilled onto the correct board on day one.',
+				text: 'No. Todos los tableros se configuran automáticamente y cada contacto y propiedad existente se distribuye en el tablero correcto desde el primer día.',
 			},
 		},
 	],
@@ -50,51 +50,51 @@ const faqLd = {
 ---
 
 <Layout
-	lang="en"
+	lang="es"
 	title={title}
 	description={description}
 	canonical={canonical}
 	hreflangs={[
-		{ hreflang: 'en', href: canonical },
-		{ hreflang: 'es', href: `${origin}/es/pipelines/` },
-		{ hreflang: 'x-default', href: canonical },
+		{ hreflang: 'en', href: `${origin}/pipelines/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/pipelines/` },
 	]}
 >
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
 
 	<section class="hero">
 		<div class="heroInner">
-			<div class="kicker">CRM Pipelines</div>
-			<h1>Seven boards that move every deal forward.</h1>
+			<div class="kicker">Pipelines de CRM</div>
+			<h1>Siete tableros que hacen avanzar cada operación.</h1>
 			<p class="lead">
-				PropertyList gives every agency a complete CRM pipeline system - seven specialised Kanban boards that work together automatically, from
-				the first enquiry to a closed deal and beyond. Four are free forever. You only pay when a lead becomes a real opportunity.
+				PropertyList da a cada agencia un sistema completo de pipelines de CRM - siete tableros Kanban especializados que funcionan juntos
+				automáticamente, desde la primera consulta hasta el cierre y más allá. Cuatro son gratis para siempre. Solo pagas cuando un lead se convierte en una oportunidad real.
 			</p>
-			<div class="ctaRow" aria-label="Get started">
+			<div class="ctaRow" aria-label="Empezar">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Get started free
+					Empieza gratis
 				</a>
-				<a class="btnSecondary" href="/pricing/">See full pricing</a>
+				<a class="btnSecondary" href="/es/pricing/">Ver precios completos</a>
 			</div>
-			<div class="note">No credit card required.</div>
+			<div class="note">Sin tarjeta de crédito.</div>
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHead">
-			<h2>Seven boards, one workflow</h2>
+			<h2>Siete tableros, un solo flujo</h2>
 			<p>
-				Each board is purpose-built for a stage of the agency workflow, and contacts flow between them automatically as a deal progresses. No
-				spreadsheets, no duplicate data entry, no leads slipping through the cracks.
+				Cada tablero está creado a medida para una etapa del flujo de la agencia, y los contactos fluyen entre ellos automáticamente a medida que
+				avanza la operación. Sin hojas de cálculo, sin duplicar datos, sin leads que se escapan.
 			</p>
 		</div>
-		<div class="grid3" aria-label="Pipeline boards">
+		<div class="grid3" aria-label="Tableros de pipeline">
 			{
 				boards.map((b) => (
 					<div class="card">
 						<div class="boardHead">
 							<h3>{b.name}</h3>
-							<span class={b.tag === 'Free' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag === 'Free' ? 'Free forever' : 'Pay per conversion'}</span>
+							<span class={b.tag === 'Free' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag === 'Free' ? 'Gratis para siempre' : 'Pago por conversión'}</span>
 						</div>
 						<p>{b.desc}</p>
 					</div>
@@ -106,25 +106,25 @@ const faqLd = {
 	<section class="section">
 		<div class="grid2">
 			<div class="card">
-				<h2>Nothing to set up</h2>
+				<h2>Nada que configurar</h2>
 				<p>
-					All seven boards are configured automatically. On day one, every existing contact and property is backfilled onto the right board -
-					no manual setup, no data migration, no blank screens to fill.
+					Los siete tableros se configuran automáticamente. Desde el primer día, cada contacto y propiedad existente se distribuye en el tablero
+					correcto - sin configuración manual, sin migración de datos, sin pantallas en blanco que rellenar.
 				</p>
 			</div>
 			<div class="card accent">
-				<h2>Pay-per-conversion, not per seat</h2>
+				<h2>Pago por conversión, no por usuario</h2>
 				<p>
-					The Leads, Property Lifecycle, Transactions and Nurture boards are free, with no limits, forever.
+					Los tableros Leads, Property Lifecycle, Transactions y Nurture son gratis, sin límites, para siempre.
 				</p>
 				<p>
-					The Buyers, Sellers and Tenants boards give you your first 5 conversions free forever. After that it is 1 credit per conversion - and
-					you are only charged when you tag a contact as a real opportunity. Never for an unqualified lead. No subscription, no lock-in.
+					Los tableros Buyers, Sellers y Tenants te dan tus primeras 5 conversiones gratis para siempre. Después son 1 crédito por conversión - y
+					solo se te cobra cuando etiquetas a un contacto como una oportunidad real. Nunca por un lead no cualificado. Sin suscripción, sin permanencia.
 				</p>
 				<div class="pillRow">
-					<span class="pill">5 free conversions</span>
-					<span class="pill">1 credit each after</span>
-					<span class="pill">4 boards free forever</span>
+					<span class="pill">5 conversiones gratis</span>
+					<span class="pill">1 crédito cada una después</span>
+					<span class="pill">4 tableros gratis para siempre</span>
 				</div>
 			</div>
 		</div>
@@ -132,16 +132,16 @@ const faqLd = {
 
 	<section class="section cta">
 		<div class="ctaInner">
-			<h2>Run your whole agency in one place</h2>
+			<h2>Gestiona toda tu agencia en un solo lugar</h2>
 			<p>
-				The core MLS and CRM are free forever - unlimited listings, unlimited staff, no setup fee. Add the conversion boards only when a lead is
-				worth it.
+				El MLS y el CRM core son gratis para siempre - anuncios ilimitados, personal ilimitado, sin cuota de alta. Añade los tableros de conversión
+				solo cuando un lead lo merezca.
 			</p>
-			<div class="ctaRow" aria-label="Join PropertyList">
+			<div class="ctaRow" aria-label="Únete a PropertyList">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Agents: Get Started FREE
+					Agentes: Empieza GRATIS
 				</a>
-				<a class="btnSecondary" href="/features/">See all features</a>
+				<a class="btnSecondary" href="/es/features/">Ver todas las funciones</a>
 			</div>
 		</div>
 	</section>

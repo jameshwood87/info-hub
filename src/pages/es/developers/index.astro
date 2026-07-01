@@ -1,0 +1,708 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const title = 'Promotores Inmobiliarios | PropertyList Info Hub';
+const description =
+	'Distribuye tus nuevas promociones a través de agentes inmobiliarios registrados. Recibe visitas confirmadas y un traspaso directo a tu equipo de ventas.';
+
+const stats: Array<{ value: string; label: string }> = [
+	{ value: '2.000+', label: 'Agentes inmobiliarios registrados' },
+	{ value: '5.777', label: 'Anuncios inmobiliarios' },
+];
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/es/developers/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/developers/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/developers/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/developers/' },
+	]}
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Para promotores inmobiliarios</div>
+			<h1>Llega a más de 2.000 agentes y a compradores directos. Lo mejor de ambos mundos.</h1>
+			<p class="lead">
+				Mientras nuestra red de agentes comercializa tus propiedades entre sus compradores, nuestro sistema automatizado reserva sin fricción las
+				visitas de tu portal público. Entregamos el comprador directamente a tu equipo de ventas interno, dándote el 100% del control para gestionar la relación y cerrar la operación.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://developers.propertylist.es/login">Únete como promotor</a>
+				<a class="btnSecondary" href="#get-updates">Recibir novedades</a>
+			</div>
+			<div class="trustRow" aria-label="Estadísticas de la plataforma">
+				{stats.map((s) => (
+					<div class="trustPill">
+						<div class="trustPillValue">{s.value}</div>
+						<div class="trustPillLabel">{s.label}</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="twoCol">
+			<div class="panel">
+				<h2>Cómo funciona</h2>
+				<ol class="steps" aria-label="Cómo funciona">
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">1</div>
+							<div class="stepTitle">Publica en tu propio CRM y MLS (gratis)</div>
+						</div>
+						<div class="stepBody">
+							Publica tus promociones sin coste: sin suscripciones, sin comisiones ocultas y sin costes de alta.
+						</div>
+					</li>
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">2</div>
+							<div class="stepTitle">Da acceso gratis a los agentes</div>
+						</div>
+						<div class="stepBody">
+							Cada agente inmobiliario registrado puede acceder y compartir tus promociones sin coste, dándote una distribución más amplia que las plataformas de pago.
+						</div>
+					</li>
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">3</div>
+							<div class="stepTitle">Mantén el control del comprador</div>
+						</div>
+						<div class="stepBody">
+							Los agentes te traen a sus clientes como siempre.
+							<a href="https://propertylist.es/" target="_blank" rel="noopener">PropertyList.es</a>
+							también envía leads directamente a tu equipo de ventas para que controles la relación desde el primer día.
+						</div>
+					</li>
+					<li class="step">
+						<div class="stepTop">
+							<div class="stepNum">4</div>
+							<div class="stepTitle">Paga solo cuando cobras</div>
+						</div>
+						<div class="stepBody">
+							Tú fijas el porcentaje de comisión por promoción al publicar. Solo pagas esa comisión después de que te hayan pagado.
+						</div>
+					</li>
+				</ol>
+			</div>
+			<div class="panel">
+				<h2>Por qué los promotores lo usan</h2>
+				<ul class="bullets">
+					<li>CRM completo para organizar leads, visitas y anuncios en un solo lugar.</li>
+					<li>Un hub de documentos compartidos para planos, memorias de calidades, folletos y dosieres legales.</li>
+					<li>Los agentes pueden acceder y compartir tus promociones sin coste para ellos.</li>
+					<li>Precios basados en el éxito: paga solo después de que te hayan pagado, para que nunca estés en descubierto.</li>
+				</ul>
+				<div class="callout">
+					<div class="calloutTitle">Creado para reducir la fricción</div>
+					<div class="calloutBody">Elimina los muros de pago, mantén la distribución simple y deja que tu equipo de ventas controle el resultado.</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section alt">
+		<div class="sectionHeader">
+			<h2>Dos canales, un traspaso directo</h2>
+			<div class="sectionMeta">Los agentes traen compradores. El portal envía leads directos.</div>
+		</div>
+		<div class="twoCol">
+			<div class="panel channel">
+				<h3>La Red de Agencias</h3>
+				<p class="muted">
+					Nuestra red de más de 2.000 agentes inmobiliarios obtiene acceso gratis inmediato a tus promociones. Actúan como un canal de distribución
+					externo - compartiendo tus promociones con sus listas de compradores y trayéndote clientes cualificados a las visitas.
+				</p>
+			</div>
+			<div class="panel channel">
+				<h3>El Portal Directo</h3>
+				<p class="muted">
+					Cuando los compradores descubren tu promoción en
+					<a class="inlineLink" href="https://propertylist.es/" target="_blank" rel="noopener">PropertyList.es</a>, generamos un lead de plataforma y lo
+					enviamos directamente a tu equipo de ventas. Para estos leads directos, tu equipo realiza la visita y gestiona la relación desde el primer día.
+				</p>
+			</div>
+		</div>
+		<div class="sectionFoot">
+			<div class="callout calloutWide">
+				<div class="calloutTitle">Lo mejor: publicar sin riesgo</div>
+				<div class="calloutBody">
+					Publicar es gratis. Tú fijas el porcentaje de comisión en cada promoción, y solo pagas cuando un comprador paga el depósito de reserva (según
+					lo definido en el acuerdo).
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section alt">
+		<div class="sectionHeader">
+			<h2>Condiciones (resumen sencillo)</h2>
+			<div class="sectionMeta">Mantenlo ligero al principio, y luego revisa los términos completos.</div>
+		</div>
+		<div class="grid">
+			<div class="card">
+				<div class="cardTitle">Publicación</div>
+				<div class="cardBody">Publica tu nueva promoción sin comisiones iniciales de portal.</div>
+			</div>
+			<div class="card">
+				<div class="cardTitle">Basado en el éxito</div>
+				<div class="cardBody">Paga solo cuando se recibe y verifica un depósito de reserva (según lo definido en el acuerdo).</div>
+			</div>
+			<div class="card">
+				<div class="cardTitle">Transparente</div>
+				<div class="cardBody">Rastro de auditoría claro desde la presentación hasta la confirmación de la cita.</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="get-updates">
+		<div class="twoCol">
+			<div class="panel">
+				<h2>Recibir novedades</h2>
+				<p class="muted">Deja un email para recibir novedades de onboarding para promotores y lanzamientos de producto. Sin spam, cancela cuando quieras.</p>
+				<form class="form" data-subscribe-form>
+					<label class="srOnly" for="dev-email">Email</label>
+					<input
+						id="dev-email"
+						class="input"
+						name="email"
+						type="email"
+						inputmode="email"
+						autocomplete="email"
+						placeholder="Dirección de email"
+						required
+					/>
+					<button class="btnPrimary" type="submit">Suscribirse</button>
+				</form>
+				<div class="formMsg" aria-live="polite" data-subscribe-msg></div>
+			</div>
+			<div class="panel">
+				<h2>Preguntas frecuentes</h2>
+				<div class="faq">
+					<details class="faqItem">
+						<summary class="faqQ">¿Es exclusivo?</summary>
+						<div class="faqA">No. Los promotores pueden seguir comercializando por los canales que elijan.</div>
+					</details>
+					<details class="faqItem">
+						<summary class="faqQ">¿Quién realiza las visitas?</summary>
+						<div class="faqA">
+							Tu equipo de ventas realiza las visitas tanto para consultas traídas por agencias como para leads del portal PropertyList.es. Para los
+							leads del portal, tu equipo gestiona la relación con el comprador desde el primer día.
+						</div>
+					</details>
+					<details class="faqItem">
+						<summary class="faqQ">¿Qué recibo en un traspaso?</summary>
+						<div class="faqA">Una hora de cita confirmada más los datos del comprador necesarios para realizar la visita (compartidos con consentimiento).</div>
+					</details>
+					<details class="faqItem">
+						<summary class="faqQ">¿Dónde puedo saber más?</summary>
+						<div class="faqA">Lee la documentación y las guías en <a href="/es/docs/?role=developer">/es/docs/?role=developer</a>.</div>
+					</details>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="final">
+		<div class="finalInner">
+			<h2>¿Listo para publicar una nueva promoción?</h2>
+			<p class="finalSub">Únete como promotor y empieza a distribuir tus unidades a través de la red de agentes.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://developers.propertylist.es/login">Únete como promotor</a>
+				<a class="btnSecondary" href="/es/docs/?role=developer">Ver documentación para promotores</a>
+			</div>
+		</div>
+	</section>
+
+	<script is:inline>
+		(() => {
+			const form = document.querySelector('[data-subscribe-form]');
+			const msg = document.querySelector('[data-subscribe-msg]');
+			if (!(form instanceof HTMLFormElement) || !(msg instanceof HTMLElement)) return;
+			const input = form.querySelector('input[name="email"]');
+			const btn = form.querySelector('button[type="submit"]');
+			if (!(input instanceof HTMLInputElement) || !(btn instanceof HTMLButtonElement)) return;
+
+			const utm = (() => {
+				const out = {};
+				try {
+					const sp = new URLSearchParams(window.location.search);
+					for (const [k, v] of sp.entries()) {
+						if (!k.startsWith('utm_')) continue;
+						if (!v) continue;
+						out[k] = v;
+					}
+				} catch {}
+				return out;
+			})();
+
+			const setMsg = (text, tone) => {
+				msg.textContent = text || '';
+				msg.dataset.tone = tone || '';
+			};
+
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				setMsg('', '');
+				const email = String(input.value || '').trim();
+				if (!email || !email.includes('@')) {
+					setMsg('Introduce una dirección de email válida.', 'bad');
+					return;
+				}
+
+				btn.disabled = true;
+				try {
+					const res = await fetch('/api/subscribe', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ email, lang: 'es', page: '/es/developers/', utm }),
+					});
+					const data = await res.json().catch(() => ({}));
+					if (!res.ok || !data?.ok) {
+						const code = String(data?.error || '').trim();
+						if (code === 'not_configured') setMsg('Las suscripciones aún no están configuradas. Inténtalo de nuevo más tarde.', 'bad');
+						else if (code === 'invalid_email') setMsg('Introduce una dirección de email válida.', 'bad');
+						else setMsg('Algo salió mal. Inténtalo de nuevo.', 'bad');
+						btn.disabled = false;
+						return;
+					}
+					setMsg('Suscrito. Recibirás novedades para promotores por email.', 'ok');
+					input.value = '';
+				} catch {
+					setMsg('Error de red. Inténtalo de nuevo.', 'bad');
+				} finally {
+					btn.disabled = false;
+				}
+			});
+		})();
+	</script>
+
+	<style>
+		.hero {
+			background: radial-gradient(1100px 680px at 20% 0%, rgba(34, 197, 94, 0.14), rgba(0, 0, 0, 0) 55%),
+				linear-gradient(180deg, rgba(7, 19, 33, 1), rgba(10, 26, 44, 1));
+			padding: 64px 0 42px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		}
+
+		.heroInner {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 12px;
+			font-weight: 800;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.75);
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.16);
+			padding: 8px 12px;
+			border-radius: 999px;
+		}
+
+		h1 {
+			margin: 16px 0 12px;
+			font-size: 44px;
+			line-height: 1.1;
+			letter-spacing: -0.02em;
+			color: white;
+		}
+
+		.lead {
+			margin: 0;
+			font-size: 18px;
+			line-height: 1.6;
+			color: rgba(255, 255, 255, 0.78);
+			max-width: 72ch;
+		}
+
+		.ctaRow {
+			margin-top: 18px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.btnPrimary,
+		.btnSecondary {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			padding: 12px 16px;
+			border-radius: 12px;
+			font-weight: 800;
+			text-decoration: none;
+			white-space: nowrap;
+		}
+
+		.btnPrimary {
+			background: rgba(16, 185, 129, 1);
+			color: rgba(7, 19, 33, 1);
+			border: 1px solid rgba(16, 185, 129, 1);
+		}
+
+		.btnPrimary:hover {
+			filter: brightness(0.98);
+		}
+
+		.btnSecondary {
+			background: rgba(255, 255, 255, 0.08);
+			color: white;
+			border: 1px solid rgba(255, 255, 255, 0.18);
+		}
+
+		.btnSecondary:hover {
+			background: rgba(255, 255, 255, 0.12);
+		}
+
+		.trustRow {
+			margin-top: 18px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.trustPill {
+			display: grid;
+			gap: 2px;
+			padding: 10px 12px;
+			border-radius: 14px;
+			background: rgba(255, 255, 255, 0.06);
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			min-width: 190px;
+		}
+
+		.trustPillValue {
+			font-weight: 900;
+			color: white;
+			font-size: 18px;
+			letter-spacing: -0.01em;
+		}
+
+		.trustPillLabel {
+			font-size: 13px;
+			color: rgba(255, 255, 255, 0.75);
+		}
+
+		.section {
+			padding: 46px 0;
+		}
+
+		.section.alt {
+			background: rgba(2, 6, 23, 0.03);
+			border-top: 1px solid rgba(15, 23, 42, 0.06);
+			border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+		}
+
+		.sectionHeader {
+			max-width: 1040px;
+			margin: 0 auto 18px;
+			padding: 0 24px;
+			display: flex;
+			align-items: baseline;
+			justify-content: space-between;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.sectionHeader h2 {
+			margin: 0;
+		}
+
+		.sectionMeta {
+			color: rgba(15, 23, 42, 0.7);
+			font-weight: 700;
+		}
+
+		.twoCol {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 18px;
+		}
+
+		.panel {
+			background: white;
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 16px;
+			padding: 18px;
+		}
+
+		.panel h2 {
+			margin: 0 0 10px;
+			font-size: 20px;
+			letter-spacing: -0.01em;
+		}
+
+		.panel h3 {
+			margin: 0 0 8px;
+			font-size: 16px;
+			letter-spacing: -0.01em;
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.92);
+		}
+
+		.steps {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: grid;
+			gap: 12px;
+		}
+
+		.step {
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 14px;
+			padding: 12px;
+			background: rgba(2, 6, 23, 0.02);
+		}
+
+		.stepTop {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 6px;
+		}
+
+		.stepNum {
+			width: 28px;
+			height: 28px;
+			border-radius: 999px;
+			display: grid;
+			place-items: center;
+			font-weight: 900;
+			background: rgba(16, 185, 129, 0.16);
+			color: rgba(16, 185, 129, 1);
+			border: 1px solid rgba(16, 185, 129, 0.22);
+		}
+
+		.stepTitle {
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.9);
+		}
+
+		.stepBody {
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.stepBody a,
+		.inlineLink {
+			color: rgba(2, 132, 199, 1);
+			font-weight: 900;
+			text-decoration: none;
+		}
+
+		.stepBody a:hover,
+		.inlineLink:hover {
+			text-decoration: underline;
+		}
+
+		.bullets {
+			margin: 12px 0 0;
+			padding-left: 18px;
+			display: grid;
+			gap: 10px;
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.sectionFoot {
+			max-width: 1040px;
+			margin: 18px auto 0;
+			padding: 0 24px;
+		}
+
+		.calloutWide {
+			margin-top: 0;
+		}
+
+		.callout {
+			margin-top: 14px;
+			border-radius: 14px;
+			padding: 12px;
+			border: 1px solid rgba(16, 185, 129, 0.22);
+			background: rgba(16, 185, 129, 0.08);
+		}
+
+		.calloutTitle {
+			font-weight: 900;
+			color: rgba(7, 19, 33, 0.95);
+		}
+
+		.calloutBody {
+			color: rgba(15, 23, 42, 0.78);
+			margin-top: 6px;
+			line-height: 1.5;
+		}
+
+		.grid {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 18px;
+		}
+
+		.card {
+			background: white;
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 16px;
+			padding: 16px;
+		}
+
+		.cardTitle {
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.92);
+			margin-bottom: 6px;
+		}
+
+		.cardBody {
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.muted {
+			color: rgba(15, 23, 42, 0.74);
+			margin: 0 0 12px;
+			line-height: 1.6;
+		}
+
+		.form {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 10px;
+			align-items: center;
+		}
+
+		.input {
+			width: 100%;
+			padding: 12px 12px;
+			border-radius: 12px;
+			border: 1px solid rgba(15, 23, 42, 0.12);
+			background: white;
+			font-weight: 700;
+		}
+
+		.formMsg {
+			margin-top: 10px;
+			font-weight: 800;
+			color: rgba(15, 23, 42, 0.8);
+		}
+
+		.formMsg[data-tone='ok'] {
+			color: rgba(16, 185, 129, 1);
+		}
+
+		.formMsg[data-tone='bad'] {
+			color: rgba(220, 38, 38, 1);
+		}
+
+		.faq {
+			display: grid;
+			gap: 10px;
+		}
+
+		.faqItem {
+			border: 1px solid rgba(15, 23, 42, 0.08);
+			border-radius: 14px;
+			background: rgba(2, 6, 23, 0.02);
+			padding: 10px 12px;
+		}
+
+		.faqQ {
+			cursor: pointer;
+			font-weight: 900;
+			color: rgba(15, 23, 42, 0.92);
+		}
+
+		.faqA {
+			margin-top: 8px;
+			color: rgba(15, 23, 42, 0.78);
+			line-height: 1.5;
+		}
+
+		.faqA a {
+			color: rgba(2, 132, 199, 1);
+			font-weight: 900;
+			text-decoration: none;
+		}
+
+		.faqA a:hover {
+			text-decoration: underline;
+		}
+
+		.final {
+			padding: 46px 0 60px;
+			background: linear-gradient(180deg, rgba(7, 19, 33, 1), rgba(10, 26, 44, 1));
+		}
+
+		.finalInner {
+			max-width: 1040px;
+			margin: 0 auto;
+			padding: 0 24px;
+			color: white;
+		}
+
+		.finalInner h2 {
+			margin: 0 0 10px;
+			font-size: 28px;
+			letter-spacing: -0.01em;
+		}
+
+		.finalSub {
+			margin: 0;
+			color: rgba(255, 255, 255, 0.78);
+			line-height: 1.6;
+		}
+
+		.srOnly {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border-width: 0;
+		}
+
+		@media (max-width: 980px) {
+			.twoCol {
+				grid-template-columns: 1fr;
+			}
+			.grid {
+				grid-template-columns: 1fr;
+			}
+			h1 {
+				font-size: 36px;
+			}
+			.trustPill {
+				min-width: unset;
+			}
+			.form {
+				grid-template-columns: 1fr;
+			}
+			.btnPrimary,
+			.btnSecondary {
+				width: 100%;
+			}
+		}
+	</style>
+</Layout>
