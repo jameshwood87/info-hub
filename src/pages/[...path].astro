@@ -1502,6 +1502,7 @@ const neighbourhoodSlug = neighbourhoodParts.length >= 2 ? neighbourhoodParts[ne
 const neighbourhoodPortalUrlRaw = neighbourhoodSlug ? `https://propertylist.es/portal/for-sale/${encodeURIComponent(neighbourhoodSlug)}` : 'https://propertylist.es';
 const title = page.seo_title || page.title;
 const h1 = page.title;
+const areaNameClean = String(h1 || '').replace(/\s+(?:neighbourhood|area)\s+guide\s*$/i, '').replace(/\s+/g, ' ').trim();
 const description = page.seo_description || page.description || undefined;
 const canonical = `https://info.propertylist.es${renderPath}`;
 const viewCount = Number((await getTotalViewCounts([renderPath]).catch(() => ({} as any)))[renderPath] || 0);
@@ -3223,6 +3224,15 @@ const ldJson = JSON.stringify([
 				</style>
 
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+{isNeighbourhood ? (
+	<a class="areaPortalCta" href={neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
+		<span style="min-width:0;">
+			<span style="display:block;font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">Ready to explore {areaNameClean}?</span>
+			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">Search every home for sale, to rent and for holidays in {areaNameClean} on the PropertyList portal.</span>
+		</span>
+		<span style="white-space:nowrap;background:#00ae9a;color:#00100e;border:1px solid rgba(0,0,0,0.12);border-radius:999px;padding:12px 20px;font-weight:900;">Search properties &rarr;</span>
+	</a>
+) : null}
 
 				{isBlogLike ? (
 					<section class="blogPropertySection" aria-label="Featured properties">

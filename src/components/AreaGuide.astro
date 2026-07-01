@@ -59,6 +59,16 @@ const bands = (() => {
 	return rows.map((r) => ({ ...r, pct: Math.round((r.n / max) * 100) }));
 })();
 
+// pick a scenic-ish listing photo for the hero (prefer villas/views/exteriors)
+const heroPick = [...listings].sort((a, b) => {
+	const score = (l: MarketListing) =>
+		(/(villa|view|sea|golf|beach|frontline|garden|terrace|panoram)/i.test(l.title || '') ? 2 : 0) +
+		(l.plotSqm ? 1 : 0) +
+		Math.min(1, (l.buildSqm || 0) / 300);
+	return score(b) - score(a);
+})[0];
+const heroPhoto = heroPick?.photoUrl || listings.find((l) => l.photoUrl)?.photoUrl || null;
+
 const portalBase = 'https://www.propertylist.es';
 const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') => `${portalBase}/${ty}/${encodeURIComponent(areaSlug || areaName.toLowerCase())}`;
@@ -75,6 +85,11 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 
 {hasSale ? (
 	<div class="ag">
+		{heroPhoto ? (
+			<div class="agHero" style={`background-image:url('${heroPhoto}')`} role="img" aria-label={`Property in ${areaName}`}>
+				<div class="agHeroCap">{areaName}{region ? `, ${region.label}` : ''}</div>
+			</div>
+		) : null}
 		<div class="agChips">
 			<div class="agChip"><span class="agNum">{nfmt(sale!.totalListings)}</span><span class="agLab">{t('for sale', 'en venta')}</span></div>
 			{sale!.medianPrice ? <div class="agChip"><span class="agNum">{eurCompact(sale!.medianPrice)}</span><span class="agLab">{t('median price', 'precio mediano')}</span></div> : null}
@@ -178,6 +193,8 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 
 <style>
 	.ag { margin: 0 0 4px; }
+	.agHero { position:relative; height:clamp(200px,30vw,320px); border-radius:18px; background:#e8edf0 center/cover no-repeat; margin-bottom:16px; box-shadow:inset 0 -90px 90px -50px rgba(0,0,0,.6); }
+	.agHeroCap { position:absolute; left:16px; bottom:12px; color:#fff; font-weight:900; letter-spacing:-.02em; font-size:clamp(17px,2.8vw,24px); text-shadow:0 2px 14px rgba(0,0,0,.55); }
 	.agChips { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
 	.agChip { display:flex; flex-direction:column; background:rgba(255,255,255,.9); border:1px solid rgba(16,24,40,.08); border-radius:14px; padding:10px 14px; min-width:92px; }
 	.agNum { font-size:21px; font-weight:900; letter-spacing:-.03em; color:#00806f; }
