@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import AreaGuide from '../../components/AreaGuide.astro';
 import AreaPage from '../../components/AreaPage.astro';
 import { getKbPageByPath, listKbPagesByPrefix, listKbPagesByPrefixes } from '../../lib/directus';
+import { getKbTreeOrderSnapshot } from '../../lib/kbTreeOrder';
 import { getKbMeta } from '../../lib/adminMeta';
 import { listPrefixRedirects } from '../../lib/kbRedirects';
 import { getTotalViewCounts } from '../../lib/weeklyViews';
@@ -2010,6 +2011,16 @@ const folderArticles = (() => {
 	return out;
 })();
 
+const esTreeOrder = isDocs ? await getKbTreeOrderSnapshot() : null;
+const orderOf = (() => {
+	const m = new Map<string, number>();
+	const pcx = (esTreeOrder as any)?.parentChildren || {};
+	for (const parent of Object.keys(pcx)) {
+		(pcx[parent] || []).forEach((c: string, i: number) => { if (!m.has(c)) m.set(c, i); });
+	}
+	return m;
+})();
+
 const docPager = (() => {
 	if (!isDocs) {
 		return {
@@ -2024,7 +2035,7 @@ const docPager = (() => {
 			const bIsCurrent = b.path === currentManualRoot;
 			if (aIsCurrent !== bIsCurrent) return aIsCurrent ? -1 : 1;
 		}
-		const aInMls = a.path.startsWith(mlsManualPath);
+		const _ao = orderOf.get(a.path); const _bo = orderOf.get(b.path); if (_ao != null || _bo != null) { if (_ao == null) return 1; if (_bo == null) return -1; if (_ao !== _bo) return _ao - _bo; } const aInMls = a.path.startsWith(mlsManualPath);
 		const bInMls = b.path.startsWith(mlsManualPath);
 		if (depth === 1 && aInMls && bInMls) {
 			const aw = manualOrderWeight(a);
@@ -2071,7 +2082,7 @@ const renderDocNavHtml = (nodes: DocNode[], depth = 0, forceOpen = false): strin
 				const bIsCurrent = b.path === currentManualRoot;
 				if (aIsCurrent !== bIsCurrent) return aIsCurrent ? -1 : 1;
 			}
-			const aInMls = a.path.startsWith(mlsManualPath);
+			const _ao = orderOf.get(a.path); const _bo = orderOf.get(b.path); if (_ao != null || _bo != null) { if (_ao == null) return 1; if (_bo == null) return -1; if (_ao !== _bo) return _ao - _bo; } const aInMls = a.path.startsWith(mlsManualPath);
 			const bInMls = b.path.startsWith(mlsManualPath);
 			if (depth === 1 && aInMls && bInMls) {
 				const aw = manualOrderWeight(a);
