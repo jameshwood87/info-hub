@@ -22,10 +22,10 @@ pipelines:
                 COMMAND: |
                   set -e
                   cd "$DEPLOY_PATH"
+                  PREV=$(git rev-parse HEAD 2>/dev/null || echo none)
                   echo "Fetching latest code..."
                   git fetch origin main
                   git reset --hard origin/main
-                  echo "Installing dependencies..."
-                  npm ci
+                  if [ "$PREV" = "none" ] || [ ! -d node_modules ] || ! git diff --quiet "$PREV" HEAD -- package.json package-lock.json; then echo "Installing dependencies..."; npm ci; else echo "Dependencies unchanged - skipping npm ci"; fi
                   echo "Atomic build + swap + restart (no 502 during build)..."
                   bash deploy/prod-deploy.sh
