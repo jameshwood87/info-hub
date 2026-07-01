@@ -24,6 +24,40 @@ const quickFactsLd = {
 	description: 'PropTech platform: Smart MLS, CRM, and property portal for Europe.',
 	url: 'https://propertylist.es/',
 };
+
+const ic = {
+	web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 6.5h.01"/></svg>',
+	crm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="10" rx="1"/><rect x="17" y="4" width="4" height="13" rx="1"/></svg>',
+	key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5"/><path d="M11.5 11.5 21 21"/><path d="M17 17l2-2"/><path d="M15 19l2-2"/></svg>',
+	chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M8 17v-5"/><path d="M13 17V8"/><path d="M18 17v-9"/></svg>',
+	feed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.6" fill="currentColor" stroke="none"/></svg>',
+	euro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 9.2a4 4 0 1 0 0 5.6"/><path d="M8 11h5"/><path d="M8 13.5h5"/></svg>',
+	code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path d="M13 6l-2 12"/></svg>',
+	shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+};
+
+const featureCards = [
+	{ icon: ic.web, title: 'Website Builder', desc: 'Your own branded agency website, live in minutes. Every MLS listing auto-loads, an AI assistant builds your pages, and enquiries land straight in your CRM.', href: '/website-builder/', cta: 'See how it works' },
+	{ icon: ic.crm, title: 'Smart MLS & CRM', desc: 'Free forever. Seven Kanban boards from first lead to closed deal, set up and backfilled on day one. You only pay a credit when you actually convert.', href: '/docs/propertylist-mls-user-manual/', cta: 'Explore the CRM' },
+	{ icon: ic.key, title: 'Rentals Module', desc: 'Run lettings end to end: tenants, tenancies, automatic renewal emails, maintenance workflows and a deposit-dispute-proof audit log.', href: '#topic-rentals', cta: 'Learn more' },
+	{ icon: ic.chart, title: 'Market Intelligence', desc: 'Real, transaction-based market data for the Costa del Sol. Free city snapshots, forensic PDF reports, and live dashboards for serious investors.', href: 'https://intelligence.propertylist.es', cta: 'See the data' },
+	{ icon: ic.feed, title: 'XML Feeds', desc: 'Already have a website? Push every listing to it and to portals like Idealista and Fotocasa at the same time, synced live.', href: '#topic-xml', cta: 'See feeds' },
+	{ icon: ic.euro, title: 'Simple Credits', desc: 'Pay only for what you use. 1 credit = €1 and they never expire. New agencies get 20 free, and you earn more every time you refer.', href: '/pricing/', cta: 'See pricing' },
+	{ icon: ic.code, title: 'MCP & Developers', desc: 'A live API layer — the same Model Context Protocol that powers Claude, Cursor and Perplexity — over your live MLS data.', href: 'https://mcp.propertylist.es', cta: 'For developers' },
+	{ icon: ic.shield, title: 'Oracle', badge: 'Coming soon', desc: 'A signed, notary-grade €/m² price feed built for tokenisation platforms, on-chain lenders and RWA protocols.', href: 'https://oracle.propertylist.es', cta: 'Get launch updates' },
+];
+
+const topics = [
+	{ key: 'website-builder', label: 'Website Builder', ids: ['website-builder-exists', 'auto-property-upload', 'custom-domain', 'seo-features', 'leads-to-crm', 'cancel-website-builder'] },
+	{ key: 'xml', label: 'XML Feeds', ids: ['xml-own-website', 'xml-property-types', 'xml-new-developments', 'xml-portals', 'xml-cost'] },
+	{ key: 'market', label: 'Market Intelligence', ids: ['market-reports', 'market-reports-free', 'forensic-reports', 'live-dashboard'] },
+	{ key: 'crm', label: 'CRM & Pipelines', ids: ['crm-free', 'pipeline-boards', 'pipeline-setup', 'pipeline-pricing'] },
+	{ key: 'rentals', label: 'Rentals Module', ids: ['rentals-module', 'rentals-includes', 'rentals-cost', 'rentals-deposit-disputes'] },
+	{ key: 'credits', label: 'Credits & Pricing', ids: ['credits-work', 'credits-expire', 'earn-free-credits'] },
+	{ key: 'mcp', label: 'MCP & Developers', ids: ['api-developers', 'ai-tools', 'mcp-free'] },
+	{ key: 'oracle', label: 'Oracle', ids: ['oracle'] },
+];
+const byId = Object.fromEntries(featureFaqItems.map((i) => [i.id, i]));
 ---
 
 <Layout
@@ -39,60 +73,82 @@ const quickFactsLd = {
 >
 	<section class="hero">
 		<div class="heroInner">
-			<div class="badge">Features FAQ</div>
-			<h1>How much does PropertyList cost and what do I get?</h1>
-			<p class="lead">Clear answers on every PropertyList feature — website builder, XML feeds, CRM pipelines, Rentals, Market Intelligence, MCP API, and credits.</p>
+			<div class="badge">Features &amp; pricing</div>
+			<h1>Everything an estate agency needs. <span class="accent">The core is free.</span></h1>
+			<p class="lead">MLS, CRM and pipelines free forever - plus a website builder, live market data, rentals, XML feeds and an AI/developer layer you switch on only when you need them. Here is what you get, and exactly what it costs.</p>
 			<div class="ctaRow">
-				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">
-					Open PropertyList.es
-				</a>
+				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">Open a free account</a>
 				<a class="btnSecondary" href="/pricing/">See full pricing</a>
-				<a class="btnSecondary" href="/docs/propertylist-mls-user-manual/">MLS &amp; CRM manual</a>
+				<a class="btnSecondary" href="/website-builder/">Website builder</a>
 			</div>
+		</div>
+	</section>
+
+	<section class="trust" aria-label="Why PropertyList">
+		<div class="trustGrid">
+			<div class="trustCell"><span class="trustNum">Free</span><span class="trustLabel">MLS + CRM, forever</span></div>
+			<div class="trustCell"><span class="trustNum">2,000+</span><span class="trustLabel">Spanish agents</span></div>
+			<div class="trustCell"><span class="trustNum">1 = €1</span><span class="trustLabel">Credits never expire</span></div>
+			<div class="trustCell"><span class="trustNum">Minutes</span><span class="trustLabel">To launch your site</span></div>
+		</div>
+	</section>
+
+	<section class="cards" aria-label="What you get">
+		<div class="sectionHead">
+			<h2>One platform. Every tool you need to sell.</h2>
+			<p>A free MLS and CRM at the core, with powerful add-ons you turn on only when they earn their keep.</p>
+		</div>
+		<div class="cardGrid">
+			{featureCards.map((c) => (
+				<a class="fCard" href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener' : undefined}>
+					<div class="fIcon" set:html={c.icon} />
+					<h3 class="fTitle">{c.title}{c.badge ? <span class="fBadge">{c.badge}</span> : null}</h3>
+					<p class="fDesc">{c.desc}</p>
+					<span class="fLink">{c.cta} <span aria-hidden="true">&rarr;</span></span>
+				</a>
+			))}
 		</div>
 	</section>
 
 	<section class="search-section">
 		<div class="filterRow">
 			<label class="filterLabel" for="faq-filter">Search</label>
-			<input id="faq-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search features…" />
+			<input id="faq-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search features & answers…" />
 		</div>
 	</section>
 
 	<section class="contents" aria-label="FAQ contents">
 		<div class="contentsHeader">
-			<h2 class="contentsTitle">Browse by topic</h2>
-			<p class="contentsSub">Click any topic to jump to those questions.</p>
+			<h2 class="contentsTitle">Questions? Jump to a topic</h2>
+			<p class="contentsSub">Clear, honest answers on every feature and what it costs.</p>
 		</div>
 		<div class="topicRow" aria-label="Topics">
-			<span class="chip">Website Builder</span>
-			<span class="chip">XML Feeds</span>
-			<span class="chip">Market Intelligence</span>
-			<span class="chip">CRM &amp; Pipelines</span>
-			<span class="chip">Rentals Module</span>
-			<span class="chip">Credits &amp; Pricing</span>
-			<span class="chip">MCP &amp; Developers</span>
-			<span class="chip">Oracle</span>
+			{topics.map((t) => (
+				<a class="chip" href={`#topic-${t.key}`}>{t.label}</a>
+			))}
 		</div>
 	</section>
 
 	<main id="main">
-		{featureFaqItems.map((it) => (
-			<details class="faqItem" data-faq="1" data-q={it.q.toLowerCase()}>
-				<summary class="faqQ" id={`q-${it.id}`}>
-					{it.q}
-				</summary>
-				<div class="faqA" role="region" aria-labelledby={`q-${it.id}`}>
-					<Fragment set:html={it.aHtml} />
-				</div>
-			</details>
+		{topics.map((t) => (
+			<section class="faqGroup" data-group={t.key} id={`topic-${t.key}`}>
+				<h2 class="faqGroupTitle">{t.label}</h2>
+				{t.ids.map((id) => byId[id] && (
+					<details class="faqItem" data-faq="1" data-q={byId[id].q.toLowerCase()}>
+						<summary class="faqQ" id={`q-${byId[id].id}`}>{byId[id].q}</summary>
+						<div class="faqA" role="region" aria-labelledby={`q-${byId[id].id}`}>
+							<Fragment set:html={byId[id].aHtml} />
+						</div>
+					</details>
+				))}
+			</section>
 		))}
 	</main>
 
 	<section class="ctaBanner">
 		<div class="ctaBannerInner">
 			<h2>Ready to get started?</h2>
-			<p>The MLS and CRM are free. Optional paid features use a simple credit system — 1 credit = €1, bought in bulk, never expiring.</p>
+			<p>The MLS and CRM are free. Optional paid features use a simple credit system - 1 credit = €1, bought in bulk, never expiring.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">Open a free account</a>
 				<a class="btnSecondary" href="/pricing/">See pricing</a>
@@ -112,7 +168,7 @@ const quickFactsLd = {
 	.heroInner {
 		background: rgba(255, 255, 255, 0.75);
 		border-radius: 18px;
-		padding: 18px;
+		padding: 22px;
 	}
 	.badge {
 		display: inline-flex;
@@ -128,18 +184,21 @@ const quickFactsLd = {
 		text-transform: uppercase;
 	}
 	h1 {
-		margin: 10px 0 10px;
+		margin: 12px 0 10px;
 		letter-spacing: -0.04em;
 		line-height: 1.06;
+		font-size: clamp(26px, 4.4vw, 40px);
 	}
+	h1 .accent { color: #00ae9a; }
 	.lead {
 		margin: 0;
 		color: rgba(16, 24, 40, 0.78);
 		font-size: 16px;
 		line-height: 1.55;
+		max-width: 760px;
 	}
 	.ctaRow {
-		margin-top: 14px;
+		margin-top: 16px;
 		display: flex;
 		gap: 10px;
 		flex-wrap: wrap;
@@ -151,7 +210,7 @@ const quickFactsLd = {
 		justify-content: center;
 		gap: 8px;
 		border-radius: 999px;
-		padding: 10px 14px;
+		padding: 11px 16px;
 		text-decoration: none;
 		font-weight: 800;
 		letter-spacing: -0.01em;
@@ -161,23 +220,95 @@ const quickFactsLd = {
 		color: #00100e;
 		border: 1px solid rgba(0, 0, 0, 0.12);
 	}
-	.btnPrimary:hover {
-		filter: brightness(0.98);
-		text-decoration: none;
-	}
+	.btnPrimary:hover { filter: brightness(0.98); text-decoration: none; }
 	.btnSecondary {
 		background: rgba(255, 255, 255, 0.85);
 		color: rgba(16, 24, 40, 0.9);
 		border: 1px solid rgba(16, 24, 40, 0.12);
 	}
-	.btnSecondary:hover {
-		text-decoration: none;
-		border-color: rgba(0, 174, 154, 0.35);
-	}
+	.btnSecondary:hover { text-decoration: none; border-color: rgba(0, 174, 154, 0.35); }
 
-	.search-section {
-		margin-bottom: 14px;
+	.trust { margin-bottom: 14px; }
+	.trustGrid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 10px;
 	}
+	.trustCell {
+		background: rgba(255, 255, 255, 0.72);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 14px 12px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+	.trustNum { font-size: 22px; font-weight: 900; letter-spacing: -0.03em; color: #00937f; }
+	.trustLabel { font-size: 12px; color: rgba(16, 24, 40, 0.62); font-weight: 600; }
+
+	.cards { margin-bottom: 18px; }
+	.sectionHead { text-align: center; margin: 8px 0 16px; }
+	.sectionHead h2 { margin: 0 0 6px; letter-spacing: -0.03em; font-size: clamp(20px, 3vw, 28px); }
+	.sectionHead p { margin: 0 auto; max-width: 620px; color: rgba(16, 24, 40, 0.66); font-size: 15px; line-height: 1.5; }
+	.cardGrid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
+		gap: 12px;
+	}
+	.fCard {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		background: rgba(255, 255, 255, 0.9);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 20px;
+		text-decoration: none;
+		color: inherit;
+		transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+	}
+	.fCard:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 18px 40px rgba(13, 43, 46, 0.1);
+		border-color: rgba(0, 174, 154, 0.32);
+		text-decoration: none;
+	}
+	.fIcon {
+		width: 44px;
+		height: 44px;
+		border-radius: 12px;
+		background: rgba(0, 174, 154, 0.12);
+		color: #00937f;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.fIcon :global(svg) { width: 24px; height: 24px; }
+	.fTitle {
+		margin: 0;
+		font-size: 17px;
+		letter-spacing: -0.02em;
+		color: rgba(16, 24, 40, 0.92);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.fBadge {
+		font-size: 9px;
+		font-weight: 900;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #fff;
+		background: #f59e0b;
+		padding: 2px 7px;
+		border-radius: 999px;
+	}
+	.fDesc { margin: 0; flex: 1; font-size: 13.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.68); }
+	.fLink { font-size: 13px; font-weight: 800; color: #00937f; letter-spacing: -0.01em; }
+
+	.search-section { margin-bottom: 14px; }
 	.filterRow {
 		display: flex;
 		align-items: center;
@@ -188,65 +319,54 @@ const quickFactsLd = {
 		padding: 10px 16px;
 		max-width: 480px;
 	}
-	.filterLabel {
-		font-size: 13px;
-		color: rgba(16, 24, 40, 0.6);
-		white-space: nowrap;
-	}
+	.filterLabel { font-size: 13px; color: rgba(16, 24, 40, 0.6); white-space: nowrap; }
 	.filterInput {
-		flex: 1;
-		border: none;
-		outline: none;
-		background: transparent;
-		font-size: 14px;
-		color: rgba(16, 24, 40, 0.88);
-		min-width: 0;
+		flex: 1; border: none; outline: none; background: transparent;
+		font-size: 14px; color: rgba(16, 24, 40, 0.88); min-width: 0;
 	}
-	.filterInput::placeholder {
-		color: rgba(16, 24, 40, 0.4);
-	}
+	.filterInput::placeholder { color: rgba(16, 24, 40, 0.4); }
 
 	.contents {
 		background: rgba(255, 255, 255, 0.7);
 		border: 1px solid rgba(16, 24, 40, 0.08);
 		border-radius: 18px;
-		padding: 14px;
+		padding: 16px;
 		margin-bottom: 14px;
 	}
-	.contentsHeader {
-		margin-bottom: 10px;
-	}
-	.contentsTitle {
-		margin: 0 0 4px;
-		letter-spacing: -0.02em;
-		font-size: 15px;
-	}
-	.contentsSub {
-		margin: 0;
-		font-size: 13px;
-		color: rgba(16, 24, 40, 0.6);
-	}
-	.chipRow {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-	}
+	.contentsHeader { margin-bottom: 12px; }
+	.contentsTitle { margin: 0 0 4px; letter-spacing: -0.02em; font-size: 16px; }
+	.contentsSub { margin: 0; font-size: 13px; color: rgba(16, 24, 40, 0.6); }
+	.topicRow { display: flex; flex-wrap: wrap; gap: 8px; }
 	.chip {
 		display: inline-flex;
 		align-items: center;
-		padding: 6px 12px;
-		background: rgba(255, 255, 255, 0.85);
+		padding: 7px 13px;
+		background: rgba(255, 255, 255, 0.9);
 		border: 1px solid rgba(16, 24, 40, 0.12);
 		border-radius: 999px;
-		font-size: 12px;
+		font-size: 12.5px;
 		font-weight: 700;
-		color: rgba(16, 24, 40, 0.8);
+		color: rgba(16, 24, 40, 0.82);
+		text-decoration: none;
+		transition: border-color 0.15s, background 0.15s, color 0.15s;
+	}
+	.chip:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.5);
+		background: rgba(0, 174, 154, 0.08);
+		color: #00806f;
 	}
 
-	#main {
-		display: grid;
-		gap: 8px;
-		margin-bottom: 14px;
+	#main { display: flex; flex-direction: column; gap: 20px; margin-bottom: 14px; }
+	.faqGroup { display: grid; gap: 8px; scroll-margin-top: 84px; }
+	.faqGroup[hidden] { display: none; }
+	.faqGroupTitle {
+		margin: 4px 0 2px;
+		font-size: 15px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: #00806f;
+		font-weight: 800;
 	}
 	.faqItem {
 		background: rgba(255, 255, 255, 0.85);
@@ -254,9 +374,7 @@ const quickFactsLd = {
 		border-radius: 16px;
 		overflow: hidden;
 	}
-	.faqItem[hidden] {
-		display: none;
-	}
+	.faqItem[hidden] { display: none; }
 	.faqQ {
 		display: flex;
 		align-items: center;
@@ -271,9 +389,7 @@ const quickFactsLd = {
 		user-select: none;
 		transition: background 0.15s;
 	}
-	.faqQ::-webkit-details-marker {
-		display: none;
-	}
+	.faqQ::-webkit-details-marker { display: none; }
 	.faqQ::before {
 		content: '';
 		width: 20px;
@@ -286,30 +402,13 @@ const quickFactsLd = {
 		margin-left: auto;
 		transition: transform 0.2s;
 	}
-	.faqItem[open] .faqQ::before {
-		transform: rotate(90deg);
-	}
-	.faqA {
-		padding: 0 16px 14px 16px;
-		font-size: 14px;
-		color: rgba(16, 24, 40, 0.78);
-		line-height: 1.6;
-	}
-	.faqA :global(a) {
-		color: #00ae9a;
-		text-decoration: underline;
-	}
-	.faqA :global(a:hover) {
-		color: #008e7e;
-	}
+	.faqItem[open] .faqQ::before { transform: rotate(90deg); }
+	.faqA { padding: 0 16px 14px 16px; font-size: 14px; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+	.faqA :global(a) { color: #00ae9a; text-decoration: underline; }
+	.faqA :global(a:hover) { color: #008e7e; }
 
-	html {
-		scroll-behavior: smooth;
-	}
-
-	.faqItem .faqQ {
-		scroll-margin-top: 80px;
-	}
+	html { scroll-behavior: smooth; }
+	.faqItem .faqQ { scroll-margin-top: 80px; }
 
 	.ctaBanner {
 		background: radial-gradient(800px 400px at 50% 50%, rgba(0, 174, 154, 0.14), rgba(255, 255, 255, 0));
@@ -321,18 +420,14 @@ const quickFactsLd = {
 	.ctaBannerInner {
 		background: rgba(255, 255, 255, 0.8);
 		border-radius: 18px;
-		padding: 18px;
+		padding: 22px;
 		text-align: center;
 	}
-	.ctaBannerInner h2 {
-		margin: 0 0 8px;
-		letter-spacing: -0.03em;
-	}
-	.ctaBannerInner p {
-		margin: 0 0 14px;
-		color: rgba(16, 24, 40, 0.72);
-		font-size: 14px;
-		line-height: 1.5;
+	.ctaBannerInner h2 { margin: 0 0 8px; letter-spacing: -0.03em; }
+	.ctaBannerInner p { margin: 0 auto 14px; max-width: 560px; color: rgba(16, 24, 40, 0.72); font-size: 14px; line-height: 1.5; }
+
+	@media (max-width: 640px) {
+		.trustGrid { grid-template-columns: repeat(2, 1fr); }
 	}
 </style>
 
@@ -340,19 +435,20 @@ const quickFactsLd = {
 	(function () {
 		var input = document.getElementById('faq-filter');
 		var items = Array.from(document.querySelectorAll('[data-faq="1"]'));
-		var norm = function (s) {
-			return String(s || '').toLowerCase().trim();
-		};
+		var groups = Array.from(document.querySelectorAll('[data-group]'));
+		var norm = function (s) { return String(s || '').toLowerCase().trim(); };
 		var run = function () {
 			var q = norm(input ? input.value : '');
 			for (var i = 0; i < items.length; i++) {
 				var it = items[i];
 				var text = norm(it.getAttribute('data-q')) + ' ' + norm(it.textContent);
-				it.hidden = q ? !text.includes(q) : false;
+				it.hidden = q ? text.indexOf(q) === -1 : false;
+			}
+			for (var g = 0; g < groups.length; g++) {
+				var visible = groups[g].querySelectorAll('[data-faq="1"]:not([hidden])').length;
+				groups[g].hidden = q ? visible === 0 : false;
 			}
 		};
-		if (input) {
-			input.addEventListener('input', run);
-		}
+		if (input) { input.addEventListener('input', run); }
 	})();
 </script>
