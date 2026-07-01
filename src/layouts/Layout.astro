@@ -129,6 +129,11 @@ const toEnglishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (!path.startsWith('/es/')) return path;
 	if (path.startsWith('/es/docs/')) return mapDocsToEnglish(path);
+	if (path.startsWith('/es/barrios/')) {
+		const parts = path.split('/').filter(Boolean);
+		const slug = parts.length >= 3 ? parts[2] : '';
+		return slug ? `/neighbourhood/${slug}/` : '/neighbourhood/';
+	}
 	for (const pair of mapPairs) {
 		if (path.startsWith(pair.es)) return `${pair.en}${path.slice(pair.es.length)}`;
 	}
@@ -139,6 +144,11 @@ const toSpanishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (path.startsWith('/es/')) return path;
 	if (path.startsWith('/docs/')) return mapDocsToSpanish(path);
+	if (path.startsWith('/neighbourhood/')) {
+		const parts = path.split('/').filter(Boolean);
+		const slug = parts.length >= 4 ? parts[3] : (parts.length === 2 && parts[1] !== 'andalucia' ? parts[1] : '');
+		return slug ? `/es/barrios/${slug}/` : '/es/barrios/';
+	}
 	for (const pair of mapPairs) {
 		if (path.startsWith(pair.en)) return `${pair.es}${path.slice(pair.en.length)}`;
 	}
