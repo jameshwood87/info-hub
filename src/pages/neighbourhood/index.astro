@@ -502,7 +502,7 @@ const provinces = (() => {
 				const isSearching = tokens.length > 0;
 				let visible = 0;
 
-				if (topSection instanceof HTMLElement) topSection.style.display = isSearching ? 'none' : '';
+				if (topSection instanceof HTMLElement) topSection.style.display = isSearching || prov ? 'none' : '';
 
 				for (const c of cards) {
 					const matchesQ = !tokens.length || tokens.every((t) => c.label.includes(t));
