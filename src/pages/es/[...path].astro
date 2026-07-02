@@ -2169,7 +2169,7 @@ const toIso = (value: unknown) => {
 };
 
 const datePublished = isBlogLike ? toIso((page as any).date_created) : null;
-const dateModified = isBlogLike ? toIso((page as any).date_updated ?? (page as any).date_created) : null;
+const dateModified = isBlogLike || isNeighbourhood ? toIso((page as any).date_updated ?? (page as any).date_created) : null;
 
 const articleLd = {
 	'@context': 'https://schema.org',

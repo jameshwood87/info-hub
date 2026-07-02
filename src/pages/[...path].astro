@@ -2650,7 +2650,7 @@ const toIso = (value: string | null | undefined) => {
 
 const articleType = isBlogLike ? 'BlogPosting' : isDocs ? 'TechArticle' : 'Article';
 const datePublished = isBlogLike ? toIso((page as any).date_created) : null;
-const dateModified = isBlogLike ? toIso((page as any).date_updated || (page as any).date_created) : null;
+const dateModified = isBlogLike || isNeighbourhood ? toIso((page as any).date_updated || (page as any).date_created) : null;
 const absUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : `${origin}${u.startsWith('/') ? u : `/${u}`}`);
 const heroAbs = heroSrc ? absUrl(heroSrc) : null;
 
