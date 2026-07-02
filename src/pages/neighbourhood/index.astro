@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { areaImagePath } from '../../lib/areaImages';
 import { canonicalAreaPath, provinceForAreaSlug } from '../../lib/areaProvince';
 import { adminCreateKbPage, listKbPagesByPrefix } from '../../lib/directus';
 import { getKbMetaSnapshot } from '../../lib/adminMeta';
@@ -421,6 +422,9 @@ const provinces = (() => {
 									data-label={String((p as any)._label || p.title || '').toLowerCase()}
 									data-province={String((p as any)._provinceKey || '')}
 								>
+									{areaImagePath(slugFromNeighbourhoodPath(p)) ? (
+										<img class="cardImg" src={areaImagePath(slugFromNeighbourhoodPath(p))} alt="" loading="lazy" decoding="async" width="400" height="150" />
+									) : null}
 									<div class="cardTitle">{String((p as any)._label || p.title || '')}</div>
 									{cardDescFor(p) ? <div class="cardDesc">{cardDescFor(p)}</div> : null}
 								</a>
@@ -786,6 +790,14 @@ const provinces = (() => {
 		gap: 12px;
 	}
 
+	.cardImg {
+		width: calc(100% + 28px);
+		margin: -14px -14px 10px;
+		height: 130px;
+		object-fit: cover;
+		border-radius: 14px 14px 0 0;
+		display: block;
+	}
 	.card {
 		display: flex;
 		flex-direction: column;

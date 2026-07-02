@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { areaImagePath } from '../../lib/areaImages';
 import { canonicalAreaPath } from '../../lib/areaProvince';
 import AreaGuide from '../../components/AreaGuide.astro';
 import AreaPage from '../../components/AreaPage.astro';
@@ -2360,7 +2361,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 		canonical={canonical}
 		hreflangs={hreflangs}
 		robots={robots}
-		ogImage={isBlogLike ? heroSrc : undefined}
+		ogImage={isBlogLike ? heroSrc : isNeighbourhood && areaImagePath(barriosSlugForLookup) ? `https://info.propertylist.es${areaImagePath(barriosSlugForLookup)}` : undefined}
 		twitterCard="summary_large_image"
 	>
 		<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />

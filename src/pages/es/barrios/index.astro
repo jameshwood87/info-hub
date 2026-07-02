@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import { areaImagePath } from '../../../lib/areaImages';
 import { adminCreateKbPage, listKbPagesByPrefix } from '../../../lib/directus';
 
 let itemsRaw = await listKbPagesByPrefix({ prefix: '/es/barrios/', lang: 'es', limit: 200 });
@@ -196,6 +197,9 @@ const groups = (() => {
 									href={p.path}
 									data-label={String((p as any)._label || p.title || '').toLowerCase()}
 								>
+									{areaImagePath(String(p.path || '').split('/').filter(Boolean)[2] || '') ? (
+										<img class="cardImg" src={areaImagePath(String(p.path || '').split('/').filter(Boolean)[2] || '')} alt="" loading="lazy" decoding="async" width="400" height="150" />
+									) : null}
 									<div class="cardTitle">{String((p as any)._label || p.title || '')}</div>
 									{cardDescFor(p) ? <div class="cardDesc">{cardDescFor(p)}</div> : null}
 								</a>
@@ -526,6 +530,14 @@ const groups = (() => {
 		gap: 12px;
 	}
 
+	.cardImg {
+		width: calc(100% + 28px);
+		margin: -14px -14px 10px;
+		height: 130px;
+		object-fit: cover;
+		border-radius: 14px 14px 0 0;
+		display: block;
+	}
 	.card {
 		display: flex;
 		flex-direction: column;

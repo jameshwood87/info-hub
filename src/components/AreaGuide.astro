@@ -3,6 +3,7 @@
 // Data is pulled live from the PropertyList MCP (Spain + Portugal). Counts show for
 // all three markets; prices only for for-sale (MCP rent/holiday prices are unreliable).
 import { marketsForArea, searchProperties, type AreaMarketSummary, type MarketListing } from '../lib/marketData';
+import { areaImagePath } from '../lib/areaImages';
 import { regionFromProvince, countryOfRegion, type Region, type Country } from '../data/geo';
 
 interface Props {
@@ -71,6 +72,8 @@ const heroPhoto = heroPick?.photoUrl || listings.find((l) => l.photoUrl)?.photoU
 
 const portalBase = 'https://www.propertylist.es';
 const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const areaImage = areaImagePath(areaSlug);
+const heroImage = areaImage || heroPhoto;
 const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') => `${portalBase}/${ty}/${encodeURIComponent(areaSlug || areaName.toLowerCase())}`;
 const signupHref = `https://agents.propertylist.es/new-agent-signup/new?area=${encodeURIComponent(areaName)}${
 	region ? `&region=${encodeURIComponent(region.key)}` : ''
@@ -85,8 +88,8 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 
 {hasSale ? (
 	<div class="ag">
-		{heroPhoto ? (
-			<div class="agHero" style={`background-image:url('${heroPhoto}')`} role="img" aria-label={`Property in ${areaName}`}>
+		{heroImage ? (
+			<div class="agHero" style={`background-image:url('${heroImage}')`} role="img" aria-label={areaImage ? `View of ${areaName}` : `Property in ${areaName}`}>
 				<div class="agHeroCap">{areaName}{region ? `, ${region.label}` : ''}</div>
 			</div>
 		) : null}
