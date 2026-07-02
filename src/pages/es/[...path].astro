@@ -1094,7 +1094,7 @@ const pageEnArchive = pageEnArchiveBody
 		} as any)
 	: null;
 const pageEn = pageEnDirect || pageEnArchive;
-const mlsBackfillEs = isMlsManualEsPath ? mlsManualBackfillEsForPath(normalizedPath) : null;
+const mlsBackfillEs = isMlsManualEsPath && pageEn ? mlsManualBackfillEsForPath(normalizedPath) : null;
 const isEsDocsPath = normalizedPath.startsWith('/es/docs/');
 const pageEsLooksEnglish = Boolean(pageEsRaw && (looksLikeEnglish(pageEsRaw.body) || looksEnglishForEsGate(pageEsRaw.body)));
 const pageEsIsPlaceholder = Boolean(pageEsRaw && containsEsPlaceholderMarkers(pageEsRaw.body));

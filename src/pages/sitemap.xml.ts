@@ -170,6 +170,9 @@ export async function GET() {
     '/pricing/',
     '/search',
     '/website-builder/',
+    '/features/',
+    '/rentals/',
+    '/pipelines/',
     '/es/',
     '/es/sobre-nosotros/',
     '/es/preguntas-frecuentes/',
@@ -181,6 +184,10 @@ export async function GET() {
     '/es/mls/',
     '/es/leyes/',
     '/es/precios/',
+    '/es/funciones/',
+    '/es/alquileres/',
+    '/es/promotores/',
+    '/es/pipelines/',
     '/es/search',
   ];
 

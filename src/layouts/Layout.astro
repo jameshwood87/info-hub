@@ -166,7 +166,7 @@ const hreflangLinks = hreflangs.map((h) => ({ ...h, href: normalizeCanonical(h.h
 const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
-const effectiveOgImage = ogImage;
+const effectiveOgImage = ogImage || `${siteOrigin}/og/og-default.png`;
 
 const effectiveOgType = String(ogType || '').trim() || 'website';
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard

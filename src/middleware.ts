@@ -466,6 +466,26 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		headers.set('expires', '0');
 		return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 	}
+	if (
+		context.request.method === 'GET' &&
+		response.status === 200 &&
+		(pathname.startsWith('/es/docs/') || pathname.startsWith('/es/barrios/')) &&
+		(response.headers.get('content-type') || '').includes('text/html')
+	) {
+		const html = await response.text();
+		const headers = new Headers(response.headers);
+		if (html.includes('class="badge">404<')) {
+			return new Response(html, { status: 404, statusText: 'Not Found', headers });
+		}
+		try {
+			if (pathname.startsWith('/es/docs/') && pathname !== '/es/docs/') await recordWeeklyView(pathname);
+			if (pathname.startsWith('/es/barrios/')) {
+				const parts = pathname.split('/').filter(Boolean);
+				if (parts.length === 3) await recordWeeklyView(pathname);
+			}
+		} catch {}
+		return new Response(html, { status: 200, headers });
+	}
 	try {
 		if (context.request.method !== 'GET') return response;
 		if (response.status < 200 || response.status >= 300) return response;
