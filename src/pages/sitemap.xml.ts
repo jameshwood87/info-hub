@@ -174,6 +174,7 @@ export async function GET() {
     '/features/',
     '/rentals/',
     '/pipelines/',
+    '/verify-your-agency/',
     '/es/',
     '/es/sobre-nosotros/',
     '/es/preguntas-frecuentes/',
@@ -189,6 +190,7 @@ export async function GET() {
     '/es/alquileres/',
     '/es/promotores/',
     '/es/pipelines/',
+    '/es/verifica-tu-agencia/',
     '/es/search',
   ];
 

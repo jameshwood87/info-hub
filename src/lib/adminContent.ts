@@ -270,7 +270,6 @@ const stripDangerousHtml = (html: string) => {
 	out = out.replace(/javascript:/gi, '');
 	const allowedIframeHosts = new Set([
 		'info.propertylist.es',
-		'info-staging.propertylist.es',
 		'propertylist.es',
 		'www.propertylist.es',
 		'agents.propertylist.es',

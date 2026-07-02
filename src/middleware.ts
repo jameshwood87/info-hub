@@ -85,6 +85,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			{ from: '/es/rentals/', to: '/es/alquileres/' },
 			{ from: '/es/developers/', to: '/es/promotores/' },
 			{ from: '/es/faq/', to: '/es/preguntas-frecuentes/' },
+			{ from: '/es/verify-your-agency/', to: '/es/verifica-tu-agencia/' },
 		];
 		for (const r of marketingEsAliases) {
 			if (pathname === r.from || pathname === r.from.slice(0, -1)) {

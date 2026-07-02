@@ -1,0 +1,177 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/verify-your-agency/`;
+const title = 'Verify Your Agency | PropertyList';
+const description =
+	'Get the verified badge on PropertyList: priority for your duplicate listings, a check mark on every property and 20 bonus credits. Free - takes two minutes.';
+
+const benefits = [
+	{ name: 'Verified badge', desc: 'The check mark tells agents, buyers and renters that your agency is a registered company.' },
+	{ name: 'Badge on every listing', desc: 'Your properties display the verified check mark on their property pages.' },
+	{ name: 'Duplicate priority', desc: 'When the same property is listed twice, the verified agency’s listing is prioritised.' },
+	{ name: '20 bonus credits', desc: 'Approved agencies receive 20 credits to spend on featuring or CMA reports.' },
+];
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/verifica-tu-agencia/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<section class="vwrap">
+		<header class="vhead">
+			<h1>Verify your agency</h1>
+			<p class="vlead">
+				Verification is free and takes about two minutes. We check that your agency is a registered company, then add the
+				verified badge to your profile and every listing - plus 20 bonus credits when you are approved.
+			</p>
+		</header>
+
+		<div class="vgrid">
+			{benefits.map((b) => (
+				<div class="vcard">
+					<h3>{b.name}</h3>
+					<p>{b.desc}</p>
+				</div>
+			))}
+		</div>
+
+		<form id="verify-form" class="vform" novalidate>
+			<h2>Verification request</h2>
+			<p class="vnote">Use the same email as your PropertyList account so we can match your agency.</p>
+
+			<div class="vrow">
+				<div class="vfield">
+					<label for="v-agency">Agency name *</label>
+					<input id="v-agency" name="agency_name" type="text" required maxlength="200" autocomplete="organization" />
+				</div>
+				<div class="vfield">
+					<label for="v-cif">Company number (CIF / SL) *</label>
+					<input id="v-cif" name="company_number" type="text" required maxlength="60" placeholder="e.g. B12345678" />
+				</div>
+			</div>
+			<div class="vrow">
+				<div class="vfield">
+					<label for="v-email">PropertyList account email *</label>
+					<input id="v-email" name="mls_email" type="email" required maxlength="200" autocomplete="email" />
+				</div>
+				<div class="vfield">
+					<label for="v-website">Agency website *</label>
+					<input id="v-website" name="website" type="text" required maxlength="300" placeholder="https://" inputmode="url" />
+				</div>
+			</div>
+			<div class="vrow">
+				<div class="vfield">
+					<label for="v-name">Contact name</label>
+					<input id="v-name" name="contact_name" type="text" maxlength="200" autocomplete="name" />
+				</div>
+				<div class="vfield">
+					<label for="v-phone">Phone</label>
+					<input id="v-phone" name="phone" type="tel" maxlength="60" autocomplete="tel" />
+				</div>
+			</div>
+			<div class="vrow">
+				<div class="vfield">
+					<label for="v-gbp">Google Business Profile link</label>
+					<input id="v-gbp" name="google_business" type="text" maxlength="300" placeholder="https://maps.google.com/..." />
+					<span class="vhint">Your verified badge links to your Google reviews.</span>
+				</div>
+				<div class="vfield">
+					<label for="v-social">Social media link</label>
+					<input id="v-social" name="social_link" type="text" maxlength="300" placeholder="Instagram, Facebook or LinkedIn" />
+				</div>
+			</div>
+			<div class="vfield">
+				<label for="v-notes">Anything else we should know?</label>
+				<textarea id="v-notes" name="notes" rows="3" maxlength="2000"></textarea>
+			</div>
+			<p class="vhp" aria-hidden="true"><label>Fax <input name="company_fax" type="text" tabindex="-1" autocomplete="off" /></label></p>
+
+			<button class="vsubmit" type="submit">Submit verification request</button>
+			<p class="vstatus" id="v-status" role="status" aria-live="polite"></p>
+			<p class="vsmall">
+				We review requests within 1-2 working days. Not signed up yet?
+				<a href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account first</a>.
+				Learn more in the <a href="/docs/propertylist-mls-user-manual/verified-agencies/">verified agencies guide</a>.
+			</p>
+		</form>
+	</section>
+</Layout>
+
+<script>
+	const form = document.getElementById('verify-form') as HTMLFormElement | null;
+	const status = document.getElementById('v-status');
+	const started = performance.now();
+	form?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		if (!form || !status) return;
+		const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+		for (const k of ['agency_name', 'company_number', 'mls_email', 'website']) {
+			if (!String(data[k] || '').trim()) {
+				status.textContent = 'Please complete the required fields marked *.';
+				status.className = 'vstatus err';
+				return;
+			}
+		}
+		const btn = form.querySelector('.vsubmit') as HTMLButtonElement | null;
+		if (btn) btn.disabled = true;
+		status.textContent = 'Sending...';
+		status.className = 'vstatus';
+		try {
+			const res = await fetch('/api/verify-agency', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ ...data, lang: 'en', page: location.pathname, t: Math.round(performance.now() - started) }),
+			});
+			const j = await res.json().catch(() => ({ ok: false }));
+			if (res.ok && j.ok) {
+				form.reset();
+				status.textContent = 'Request received. We will review it within 1-2 working days and email you once the badge and your 20 bonus credits are live.';
+				status.className = 'vstatus ok';
+			} else {
+				status.textContent = res.status === 429 ? 'Too many requests - please try again later.' : 'Something went wrong - please try again or email xml@propertylist.es.';
+				status.className = 'vstatus err';
+				if (btn) btn.disabled = false;
+			}
+		} catch {
+			status.textContent = 'Network error - please try again.';
+			status.className = 'vstatus err';
+			if (btn) btn.disabled = false;
+		}
+	});
+</script>
+
+<style>
+	.vwrap { max-width: 880px; margin: 0 auto; padding: 32px 18px 64px; }
+	.vhead h1 { font-size: 34px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 10px; }
+	.vlead { color: rgba(16, 24, 40, 0.72); font-size: 16px; line-height: 1.6; margin: 0 0 26px; max-width: 640px; }
+	.vgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 34px; }
+	.vcard { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 14px; background: #fff; }
+	.vcard h3 { margin: 0 0 6px; font-size: 15px; font-weight: 800; }
+	.vcard p { margin: 0; font-size: 13.5px; color: rgba(16, 24, 40, 0.66); line-height: 1.5; }
+	.vform { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 22px; background: #fff; }
+	.vform h2 { margin: 0 0 4px; font-size: 22px; font-weight: 900; }
+	.vnote { margin: 0 0 18px; color: rgba(16, 24, 40, 0.6); font-size: 14px; }
+	.vrow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+	.vfield { margin-bottom: 14px; display: flex; flex-direction: column; }
+	.vfield label { font-size: 13.5px; font-weight: 700; margin-bottom: 5px; }
+	.vfield input, .vfield textarea { border: 1px solid rgba(16, 24, 40, 0.18); border-radius: 10px; padding: 10px 12px; font-size: 15px; font-family: inherit; }
+	.vfield input:focus, .vfield textarea:focus { outline: 2px solid rgba(13, 148, 136, 0.4); border-color: rgba(13, 148, 136, 0.6); }
+	.vhint { font-size: 12px; color: rgba(16, 24, 40, 0.55); margin-top: 4px; }
+	.vhp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+	.vsubmit { background: #0d9488; color: #fff; font-weight: 800; font-size: 15.5px; border: 0; border-radius: 999px; padding: 12px 26px; cursor: pointer; }
+	.vsubmit:disabled { opacity: 0.6; cursor: default; }
+	.vstatus { min-height: 20px; font-size: 14px; margin: 12px 0 0; }
+	.vstatus.ok { color: #047857; font-weight: 600; }
+	.vstatus.err { color: #b91c1c; font-weight: 600; }
+	.vsmall { font-size: 13px; color: rgba(16, 24, 40, 0.6); margin: 14px 0 0; }
+	@media (max-width: 640px) { .vrow { grid-template-columns: 1fr; } }
+</style>
