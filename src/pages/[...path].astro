@@ -5,6 +5,7 @@ import { canonicalAreaPath } from '../lib/areaProvince';
 import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
 import PropertyCard from '../components/PropertyCard.astro';
+import { searchProperties, type MarketListing } from '../lib/marketData';
 import {
 	adminCreateKbPage,
 	adminGetKbPageByPath,
@@ -1502,10 +1503,21 @@ const isNeighbourhood = renderPath.startsWith('/neighbourhood/');
 const neighbourhoodParts = isNeighbourhood ? renderPath.split('/').filter(Boolean) : [];
 const neighbourhoodSlug = neighbourhoodParts.length >= 2 ? neighbourhoodParts[neighbourhoodParts.length - 1] || '' : '';
 const neighbourhoodPortalUrlRaw = neighbourhoodSlug ? `https://propertylist.es/portal/for-sale/${encodeURIComponent(neighbourhoodSlug)}` : 'https://propertylist.es';
-const title = page.seo_title || page.title;
-const h1 = page.title;
+const NAMED_ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', ndash: '–', mdash: '—', hellip: '…', eacute: 'é', aacute: 'á', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', laquo: '«', raquo: '»' };
+const cleanText = (v: string | null | undefined) => {
+	let out = String(v || '');
+	out = out.replace(/&#0*38;(#\d+;|#[xX][0-9a-fA-F]+;|[a-zA-Z]+;)/g, '&$1').replace(/&amp;(#\d+;|#[xX][0-9a-fA-F]+;|[a-zA-Z]+;)/g, '&$1');
+	out = out
+		.replace(/&#(\d+);/g, (_m, d) => { try { return String.fromCodePoint(parseInt(d, 10)); } catch { return _m; } })
+		.replace(/&#[xX]([0-9a-fA-F]+);/g, (_m, h) => { try { return String.fromCodePoint(parseInt(h, 16)); } catch { return _m; } })
+		.replace(/&([a-zA-Z]+);/g, (_m, n) => (Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, n) ? NAMED_ENTITIES[n] : _m));
+	out = out.replace(/\s*[‒–—―−]\s*/g, ' - ');
+	return out;
+};
+const title = cleanText(page.seo_title || page.title);
+const h1 = cleanText(page.title);
 const areaNameClean = String(h1 || '').replace(/\s+(?:neighbourhood|area)\s+guide\s*$/i, '').replace(/\s+/g, ' ').trim();
-const description = page.seo_description || page.description || undefined;
+const description = page.seo_description || page.description ? cleanText(page.seo_description || page.description) : undefined;
 const canonical = `https://info.propertylist.es${renderPath}`;
 const viewCount = Number((await getTotalViewCounts([renderPath]).catch(() => ({} as any)))[renderPath] || 0);
 const viewCountLabel = new Intl.NumberFormat('en-US').format(viewCount);
@@ -1712,6 +1724,13 @@ const cleanImportedBody = (html: string | null | undefined, path: string) => {
 
 	out = out.replace(/\n{3,}/g, '\n\n').trim();
 
+	// Fix double-encoded HTML entities that survived the WordPress import (e.g. &#38;#039; -> ')
+	out = out
+		.replace(/&#0*38;(#\d+;|#[xX][0-9a-fA-F]+;|(?:amp|lt|gt|quot|apos|nbsp|mdash|ndash|hellip|rsquo|lsquo|rdquo|ldquo|eacute|aacute|iacute|oacute|uacute|ntilde|copy|reg|trade|euro|pound|deg);)/g, '&$1')
+		.replace(/&amp;(#\d+;|#[xX][0-9a-fA-F]+;|(?:amp|lt|gt|quot|apos|nbsp|mdash|ndash|hellip|rsquo|lsquo|rdquo|ldquo);)/g, '&$1');
+	// Normalise em/en dashes (chars and entities) to a plain hyphen per house style
+	out = out.replace(/\s*(?:[\u2012\u2013\u2014\u2015\u2212]|&#821[0-9];|&#8722;|&mdash;|&ndash;)\s*/g, ' - ');
+
 	return out;
 };
 
@@ -1766,6 +1785,20 @@ const renamedBodyHtml = cleanedBodyHtml
 	.replace(/<h([23])([^>]*)>\s*Propertylist\s*Mls\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>');
 
 const isBlogLike = renderPath.startsWith('/general-information/') || renderPath.startsWith('/blog/') || renderPath.startsWith('/estate-agents/');
+const stripAccents = (v: string) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const blogPropertyLocation = (() => {
+	if (!isBlogLike) return '';
+	const hay = stripAccents(`${h1} ${page.description || ''} ${String(page.body || '').slice(0, 2500)}`);
+	const known = ['Puerto Banus','Nueva Andalucia','San Pedro de Alcantara','Golden Mile','La Zagaleta','Sierra Blanca','Los Monteros','Marbella','Estepona','Benahavis','Mijas','Fuengirola','Benalmadena','Torremolinos','Nerja','Sotogrande','Manilva','Casares','Calahonda','Malaga'];
+	for (const k of known) { if (hay.includes(stripAccents(k))) return k; }
+	return 'Marbella';
+})();
+const blogListings: MarketListing[] = isBlogLike
+	? await searchProperties(blogPropertyLocation, 'for-sale', 8).catch(() => [] as MarketListing[])
+	: [];
+const blogPortalUrl = `https://www.propertylist.es/for-sale/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}` : 'Price on request');
+const blogCardTitle = (l: MarketListing) => (l.title && l.title.trim() ? l.title.trim().slice(0, 70) : `${l.bedrooms ? l.bedrooms + '-bed ' : ''}property for sale`);
 const isDocs = renderPath.startsWith('/docs/');
 const prefixRedirects = (await listPrefixRedirects().catch(() => []))
 	.map((r) => ({ from: String(r?.from || ''), to: String(r?.to || '') }))
@@ -3246,33 +3279,25 @@ const ldJson = JSON.stringify([
 	</a>
 ) : null}
 
-				{isBlogLike ? (
+				{isBlogLike && blogListings.length ? (
 					<section class="blogPropertySection" aria-label="Featured properties">
-						<h2 class="blogPropertyTitle">Featured Properties</h2>
+						<h2 class="blogPropertyTitle">Properties in {blogPropertyLocation}</h2>
 						<div class="blogPropertyGrid">
-							<PropertyCard
-								title="Stunning Sea View Apartment"
-								price="€650,000"
-								location="Estepona, Málaga"
-								beds={2}
-								baths={2}
-								area="90 m²"
-								image="/blog/hero-marbella-property.png"
-								url="https://propertylist.es/"
-							/>
-							<PropertyCard
-								title="Luxury Villa with Pool"
-								price="€1,200,000"
-								location="Marbella, Málaga"
-								beds={4}
-								baths={3}
-								area="250 m²"
-								image="/blog/hero-villa-spain.jpg"
-								url="https://propertylist.es/"
-							/>
+							{blogListings.slice(0, 3).map((l) => (
+								<PropertyCard
+									title={blogCardTitle(l)}
+									price={fmtEurBlog(l.price)}
+									location={[l.suburb, l.city].filter(Boolean).join(', ') || blogPropertyLocation}
+									beds={l.bedrooms || undefined}
+									baths={l.bathrooms || undefined}
+									area={l.buildSqm ? `${l.buildSqm} m\u00b2` : undefined}
+									image={l.photoUrl || '/blog/hero-marbella-property.png'}
+									url={l.url || blogPortalUrl}
+								/>
+							))}
 						</div>
 						<p class="blogPropertyCta">
-							<a href="https://propertylist.es/" target="_blank" rel="noopener">Browse all listings on PropertyList →</a>
+							<a href={blogPortalUrl} target="_blank" rel="noopener">Browse all listings in {blogPropertyLocation} on PropertyList \u2192</a>
 						</p>
 					</section>
 				) : null}
@@ -3313,7 +3338,24 @@ const ldJson = JSON.stringify([
 				) : null}
 			</div>
 
-			{toc.filter((t) => t.depth === 2).length > 1 ? (
+			{isBlogLike && blogListings.length ? (
+				<aside class="docToc blogAside" aria-label="Properties">
+					<div class="docTocTitle">Properties {blogPropertyLocation ? `in ${blogPropertyLocation}` : 'for sale'}</div>
+					<div style="display:flex;flex-direction:column;gap:12px;">
+						{blogListings.slice(0, 4).map((l) => (
+							<a href={l.url || blogPortalUrl} target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit;border:1px solid rgba(16,24,40,0.1);border-radius:12px;overflow:hidden;background:#fff;">
+								<div style={l.photoUrl ? `height:110px;background:#eef2f4 center/cover no-repeat;background-image:url('${l.photoUrl}');` : 'height:110px;background:#eef2f4;'}></div>
+								<div style="padding:9px 11px;">
+									<div style="font-weight:800;font-size:14px;">{fmtEurBlog(l.price)}</div>
+									<div style="font-size:12px;color:rgba(16,24,40,0.6);margin-top:2px;">{[l.bedrooms ? `${l.bedrooms} bed` : '', l.bathrooms ? `${l.bathrooms} bath` : '', l.buildSqm ? `${l.buildSqm} m\u00b2` : ''].filter(Boolean).join(' \u00b7 ')}</div>
+									<div style="font-size:12px;color:rgba(16,24,40,0.55);margin-top:2px;">{[l.suburb, l.city].filter(Boolean).join(', ') || blogPropertyLocation}</div>
+								</div>
+							</a>
+						))}
+					</div>
+					<a href={blogPortalUrl} target="_blank" rel="noopener" style="display:inline-block;margin-top:12px;font-weight:800;font-size:13px;color:#0d9488;text-decoration:none;">See all in {blogPropertyLocation} \u2192</a>
+				</aside>
+			) : toc.filter((t) => t.depth === 2).length > 1 ? (
 				<aside class="docToc" aria-label="On this page">
 					<div class="docTocTitle">On this page</div>
 					<ol class="docTocList">
