@@ -68,7 +68,7 @@ const toSpanishPath = (p: string) => {
   }
   const mapPairs: Array<{ en: string; es: string }> = [
     { en: '/general-information/', es: '/es/informacion-general/' },
-    { en: '/blog/', es: '/es/informacion-general/' },
+    { en: '/blog/', es: '/es/blog/' },
     { en: '/community/', es: '/es/comunidad/' },
     { en: '/laws/', es: '/es/leyes/' },
     { en: '/neighbourhood/', es: '/es/barrios/' },
@@ -261,6 +261,7 @@ export async function GET() {
 
     await addPrefix('/docs/', 'en');
     await addPrefix('/general-information/', 'en');
+    await addPrefix('/blog/', 'en');
     await addPrefix('/neighbourhood/', 'en');
     await addPrefix('/andalucia/', 'en');
     await addPrefix('/es/docs/', 'es');

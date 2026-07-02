@@ -2181,6 +2181,16 @@ const articleLd = {
 	url: canonical,
 	...(datePublished ? { datePublished } : {}),
 	...(dateModified ? { dateModified } : {}),
+	...(isBlogLike
+		? {
+				author: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+				publisher: {
+					'@type': 'Organization',
+					name: 'PropertyList',
+					logo: { '@type': 'ImageObject', url: 'https://info.propertylist.es/og/logo-default.png' },
+				},
+			}
+		: {}),
 };
 
 const stepTexts = extractSteps(bodyHtml);
