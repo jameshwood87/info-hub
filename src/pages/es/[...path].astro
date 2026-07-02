@@ -1244,18 +1244,26 @@ const kbMetaEnglish =
 const featuredImageUrl =
 	typeof (kbMetaEnglish as any).featuredImageUrl === 'string' && String((kbMetaEnglish as any).featuredImageUrl).trim()
 		? String((kbMetaEnglish as any).featuredImageUrl).trim()
+		: typeof (kbMeta as any).featuredImageUrl === 'string' && String((kbMeta as any).featuredImageUrl).trim()
+			? String((kbMeta as any).featuredImageUrl).trim()
 		: null;
 const featuredImageAlt =
 	typeof (kbMetaEnglish as any).featuredImageAlt === 'string' && String((kbMetaEnglish as any).featuredImageAlt).trim()
 		? String((kbMetaEnglish as any).featuredImageAlt).trim()
+		: typeof (kbMeta as any).featuredImageAlt === 'string' && String((kbMeta as any).featuredImageAlt).trim()
+			? String((kbMeta as any).featuredImageAlt).trim()
 		: null;
 const featuredImageTitle =
 	typeof (kbMetaEnglish as any).featuredImageTitle === 'string' && String((kbMetaEnglish as any).featuredImageTitle).trim()
 		? String((kbMetaEnglish as any).featuredImageTitle).trim()
+		: typeof (kbMeta as any).featuredImageTitle === 'string' && String((kbMeta as any).featuredImageTitle).trim()
+			? String((kbMeta as any).featuredImageTitle).trim()
 		: null;
 const featuredImageCaption =
 	typeof (kbMetaEnglish as any).featuredImageCaption === 'string' && String((kbMetaEnglish as any).featuredImageCaption).trim()
 		? String((kbMetaEnglish as any).featuredImageCaption).trim()
+		: typeof (kbMeta as any).featuredImageCaption === 'string' && String((kbMeta as any).featuredImageCaption).trim()
+			? String((kbMeta as any).featuredImageCaption).trim()
 		: null;
 const featuredImageCredit =
 	typeof (kbMetaEnglish as any).featuredImageCredit === 'string' && String((kbMetaEnglish as any).featuredImageCredit).trim()
