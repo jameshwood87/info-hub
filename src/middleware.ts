@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro/middleware';
+import { canonicalAreaPath } from './lib/areaProvince';
 import { recordWeeklyView } from './lib/weeklyViews';
 import { getAdminSessionFromRequest } from './lib/adminAuth';
 import { runAreaStatsScheduler, runNeighbourhoodStatsScheduler, runPublishScheduler } from './lib/adminScheduler';
@@ -91,24 +92,21 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			}
 		}
 
-		const legacyNeighbourhoodSlug = (() => {
-			if (!pathname.startsWith('/neighbourhood/')) return '';
+		if (pathname.startsWith('/neighbourhood/')) {
 			const parts = pathname.split('/').filter(Boolean);
-			if (parts.length !== 2) return '';
-			const slug = parts[1] || '';
-			if (!slug || slug === 'andalucia') return '';
-			return slug;
-		})();
-		if (legacyNeighbourhoodSlug) {
-			return new Response(null, {
-				status: 301,
-				headers: { Location: `/neighbourhood/andalucia/malaga/${legacyNeighbourhoodSlug}/${url.search}` },
-			});
-		}
-
-		if (pathname.startsWith('/neighbourhood/andalucia/malaga/') && !pathname.endsWith('/')) {
-			const parts = pathname.split('/').filter(Boolean);
-			if (parts.length === 4) {
+			const areaSlug =
+				parts.length === 2 && parts[1] && parts[1] !== 'andalucia' && parts[1] !== 'spain'
+					? parts[1]
+					: parts.length === 4
+						? parts[3] || ''
+						: '';
+			if (areaSlug) {
+				const canon = canonicalAreaPath(areaSlug);
+				if (`/${parts.join('/')}/` !== canon) {
+					return new Response(null, { status: 301, headers: { Location: `${canon}${url.search}` } });
+				}
+			}
+			if (!pathname.endsWith('/') && parts.length >= 2) {
 				return new Response(null, { status: 301, headers: { Location: `/${parts.join('/')}/${url.search}` } });
 			}
 		}
@@ -508,8 +506,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		}
 		if (pathname.startsWith('/neighbourhood/')) {
 			const parts = pathname.split('/').filter(Boolean);
-			const isLegacyGuide = parts.length === 2 && parts[0] === 'neighbourhood' && parts[1] !== 'andalucia';
-			const isCanonicalGuide = parts.length === 4 && parts[0] === 'neighbourhood' && parts[1] === 'andalucia';
+			const isLegacyGuide = parts.length === 2 && parts[0] === 'neighbourhood' && parts[1] !== 'andalucia' && parts[1] !== 'spain';
+			const isCanonicalGuide = parts.length === 4 && parts[0] === 'neighbourhood' && (parts[1] === 'andalucia' || parts[1] === 'spain');
 			if (isLegacyGuide || isCanonicalGuide) await recordWeeklyView(pathname);
 		}
 		if (pathname.startsWith('/es/barrios/')) {

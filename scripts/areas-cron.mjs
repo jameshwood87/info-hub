@@ -39,6 +39,8 @@ const CANDIDATES = [
   ['Vélez-Málaga', 'velez-malaga'], ['Frigiliana', 'frigiliana'], ['Monda', 'monda'],
   ['Alora', 'alora'], ['Cártama', 'cartama'], ['Antequera', 'antequera'],
   ['Bahía de Marbella', 'bahia-de-marbella'], ['Costalita', 'costalita'],
+  ['Sotogrande', 'sotogrande'], ['Alcaidesa', 'alcaidesa'],
+  ['Mallorca', 'mallorca'], ['Ibiza', 'ibiza'], ['Madrid', 'madrid'],
 ];
 
 const log = (...a) => console.log(`[areas-cron ${new Date().toISOString()}]`, ...a);
@@ -133,8 +135,9 @@ if (!DRY) writeState(state);
 // ---- 3. IndexNow ----
 if (changed.length && !DRY) {
   try {
+    const provMap = JSON.parse(fs.readFileSync('/opt/info-hub/src/data/area-provinces.json', 'utf8'));
     const urls = changed.flatMap((s) => [
-      `https://info.propertylist.es/neighbourhood/andalucia/malaga/${s}/`,
+      `https://info.propertylist.es/neighbourhood/spain/${provMap[s] || 'malaga'}/${s}/`,
       `https://info.propertylist.es/es/barrios/${s}/`,
     ]);
     const key = fs.readFileSync('/opt/info-hub/var/admin/indexnow-key.txt', 'utf8').trim();

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { canonicalAreaPath } from '../../../../lib/areaProvince';
 import { assertAdmin, assertCsrf, assertRole } from '../../../../lib/adminAuth';
 import {
 	assertAllowedPath,
@@ -56,7 +57,7 @@ const mapNeighbourhoodSpanishToEnglishPath = (p: string) => {
 	if (parts[0] !== 'es' || parts[1] !== 'barrios') return path;
 	const slug = parts[2] || '';
 	if (!slug) return path;
-	return `/neighbourhood/andalucia/malaga/${slug}/`;
+	return canonicalAreaPath(slug);
 };
 
 const mapAreaEnglishToSpanishPath = (p: string) => {

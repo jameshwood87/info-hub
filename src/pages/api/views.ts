@@ -27,8 +27,8 @@ const isTrackable = (path: string) => {
 	if (path.startsWith('/es/informacion-general/') && path !== '/es/informacion-general/') return true;
 	if (path.startsWith('/neighbourhood/')) {
 		const parts = path.split('/').filter(Boolean);
-		const isLegacyGuide = parts.length === 2 && parts[0] === 'neighbourhood' && parts[1] !== 'andalucia';
-		const isCanonicalGuide = parts.length === 4 && parts[0] === 'neighbourhood' && parts[1] === 'andalucia';
+		const isLegacyGuide = parts.length === 2 && parts[0] === 'neighbourhood' && parts[1] !== 'andalucia' && parts[1] !== 'spain';
+		const isCanonicalGuide = parts.length === 4 && parts[0] === 'neighbourhood' && (parts[1] === 'andalucia' || parts[1] === 'spain');
 		return isLegacyGuide || isCanonicalGuide;
 	}
 	if (path.startsWith('/es/barrios/')) {

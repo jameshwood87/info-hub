@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { canonicalAreaPath } from '../../lib/areaProvince';
 import { normaliseKbText } from '../../lib/directus';
 
 const DEFAULT_LIMIT = 20;
@@ -11,8 +12,8 @@ const canonicalNeighbourhoodPath = (p: string) => {
 	if (parts.length >= 4) return path;
 	if (parts.length !== 2) return path;
 	const slug = parts[1] || '';
-	if (!slug || slug === 'andalucia') return path;
-	return `/neighbourhood/andalucia/malaga/${slug}/`;
+	if (!slug || slug === 'andalucia' || slug === 'spain') return path;
+	return canonicalAreaPath(slug);
 };
 
 export const GET: APIRoute = async ({ url }) => {

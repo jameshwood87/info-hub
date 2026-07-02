@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { canonicalAreaPath } from '../lib/areaProvince';
 import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
 import PropertyCard from '../components/PropertyCard.astro';
@@ -1378,14 +1379,14 @@ const directusCandidatePaths = (() => {
 		if (parts[0] !== 'neighbourhood') return '';
 		if (parts.length !== 2) return '';
 		const slug = parts[1] || '';
-		if (!slug || slug === 'andalucia') return '';
+		if (!slug || slug === 'andalucia' || slug === 'spain') return '';
 		return slug;
 	})();
 
 	const canonicalNeighbourhoodPath = neighbourhoodStructured
 		? normalizedPath
 		: legacyNeighbourhoodSlug
-			? `/neighbourhood/andalucia/malaga/${legacyNeighbourhoodSlug}/`
+			? canonicalAreaPath(legacyNeighbourhoodSlug)
 			: normalizedPath;
 
 	const legacyNeighbourhoodPath = neighbourhoodStructured?.slug ? `/neighbourhood/${neighbourhoodStructured.slug}/` : normalizedPath;
@@ -1492,8 +1493,8 @@ const renderPath = (() => {
 	if (parts[0] !== 'neighbourhood') return normalizedPath;
 	if (parts.length !== 2) return normalizedPath;
 	const slug = parts[1] || '';
-	if (!slug || slug === 'andalucia') return normalizedPath;
-	return `/neighbourhood/andalucia/malaga/${slug}/`;
+	if (!slug || slug === 'andalucia' || slug === 'spain') return normalizedPath;
+	return canonicalAreaPath(slug);
 })();
 const isArea = renderPath.startsWith('/andalucia/');
 const isNeighbourhood = renderPath.startsWith('/neighbourhood/');

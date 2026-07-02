@@ -1,4 +1,5 @@
 import { listKbPagesByPrefix } from '../lib/directus';
+import { canonicalAreaPath } from '../lib/areaProvince';
 import { listPrefixRedirects } from '../lib/kbRedirects';
 
 export const prerender = false;
@@ -127,8 +128,8 @@ const canonicalNeighbourhoodPath = (p: string) => {
   if (parts.length >= 4) return path;
   if (parts.length !== 2) return path;
   const slug = parts[1] || '';
-  if (!slug || slug === 'andalucia') return path;
-  return `/neighbourhood/andalucia/malaga/${slug}/`;
+  if (!slug || slug === 'andalucia' || slug === 'spain') return path;
+  return canonicalAreaPath(slug);
 };
 
 // Set of REAL (published, non-placeholder) ES page paths, normalised, used to

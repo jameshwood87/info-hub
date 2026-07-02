@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { canonicalAreaPath } from '../../lib/areaProvince';
 import AreaGuide from '../../components/AreaGuide.astro';
 import AreaPage from '../../components/AreaPage.astro';
 import { getKbPageByPath, listKbPagesByPrefix, listKbPagesByPrefixes } from '../../lib/directus';
@@ -74,7 +75,7 @@ const toEnglishPath = (p: string) => {
 		const parts = withoutEs.split('/').filter(Boolean);
 		if (parts.length === 2) {
 			const slug = parts[1] || '';
-			return slug ? `/neighbourhood/andalucia/malaga/${slug}/` : withoutEs;
+			return slug ? canonicalAreaPath(slug) : withoutEs;
 		}
 	}
 	if (withoutEs.startsWith('/docs/')) {

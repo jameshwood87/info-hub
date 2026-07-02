@@ -82,7 +82,6 @@ const mapDocsToEnglish = (p: string) => {
 						? 'getting-started'
 						: seg;
 	parts[1] = mapped;
-	if (mapped === 'propertylist-mls-user-manual' && (parts[2] || '') === 'empezar') parts[2] = 'getting-started';
 	return `/${parts.join('/')}/`;
 };
 
@@ -102,7 +101,6 @@ const mapDocsToSpanish = (p: string) => {
 						? 'empezar'
 						: seg;
 	parts[1] = mapped;
-	if (mapped === 'propertylist-mls-manual-de-usuario' && (parts[2] || '') === 'getting-started') parts[2] = 'empezar';
 	return `/es/${parts.join('/')}/`;
 };
 
@@ -116,12 +114,7 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/laws/', es: '/es/leyes/' },
 	{ en: '/neighbourhood/', es: '/es/barrios/' },
 	{ en: '/mls/', es: '/es/mls/' },
-	{ en: '/features/', es: '/es/funciones/' },
-	{ en: '/website-builder/', es: '/es/constructor-de-webs/' },
-	{ en: '/rentals/', es: '/es/alquileres/' },
-	{ en: '/developers/', es: '/es/promotores/' },
-	{ en: '/faq/', es: '/es/preguntas-frecuentes/' },
-	{ en: '/pricing/', es: '/es/precios/' },
+	{ en: '/pricing/', es: '/es/pricing/' },
 	{ en: '/search', es: '/es/search' },
 ];
 
@@ -129,11 +122,6 @@ const toEnglishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (!path.startsWith('/es/')) return path;
 	if (path.startsWith('/es/docs/')) return mapDocsToEnglish(path);
-	if (path.startsWith('/es/barrios/')) {
-		const parts = path.split('/').filter(Boolean);
-		const slug = parts.length >= 3 ? parts[2] : '';
-		return slug ? `/neighbourhood/${slug}/` : '/neighbourhood/';
-	}
 	for (const pair of mapPairs) {
 		if (path.startsWith(pair.es)) return `${pair.en}${path.slice(pair.es.length)}`;
 	}
@@ -144,11 +132,6 @@ const toSpanishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (path.startsWith('/es/')) return path;
 	if (path.startsWith('/docs/')) return mapDocsToSpanish(path);
-	if (path.startsWith('/neighbourhood/')) {
-		const parts = path.split('/').filter(Boolean);
-		const slug = parts.length >= 4 ? parts[3] : (parts.length === 2 && parts[1] !== 'andalucia' && parts[1] !== 'spain' ? parts[1] : '');
-		return slug ? `/es/barrios/${slug}/` : '/es/barrios/';
-	}
 	for (const pair of mapPairs) {
 		if (path.startsWith(pair.en)) return `${pair.es}${path.slice(pair.en.length)}`;
 	}
@@ -166,7 +149,7 @@ const hreflangLinks = hreflangs.map((h) => ({ ...h, href: normalizeCanonical(h.h
 const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
-const effectiveOgImage = ogImage || `${siteOrigin}/og/og-default.png`;
+const effectiveOgImage = ogImage;
 
 const effectiveOgType = String(ogType || '').trim() || 'website';
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
@@ -309,6 +292,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				})(window, document, "clarity", "script", "w55lwt90on");
 			</script>
 		) : null}
+}
 		<slot name="head" />
 		{hreflangLinks.map((h) => (
 			<link rel="alternate" hreflang={h.hreflang} href={h.href} />
@@ -351,14 +335,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 										<svg class="navDropChev" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
 									</button>
 									<div class="navDropMenu" role="menu">
-										<a role="menuitem" href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/features/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/website-builder/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 										<a role="menuitem" href="/pipelines/">Pipelines</a>
 										<a role="menuitem" href="/rentals/">{lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
 										<a role="menuitem" href={lang === 'es' ? '/es/mls/' : '/mls/'}>MLS</a>
 									</div>
 								</div>
-								<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+								<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
 								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
@@ -425,14 +409,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
 							</button>
 							<a href={lang === 'es' ? '/es/' : '/'}>{lang === 'es' ? 'Inicio' : 'Home'}</a>
-							<a href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
-							<a href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
+							<a href={lang === 'es' ? '/es/features/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
+							<a href={lang === 'es' ? '/es/website-builder/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 							<a href="/pipelines/">Pipelines</a>
 							<a href="/rentals/">{lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
 							<a href={lang === 'es' ? '/es/mls/' : '/mls/'}>MLS</a>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
 							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
 							<div class="mobileLang">
 								<a class:list={['mobileLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
@@ -475,7 +459,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<div class="footerInner">
 					<div class="footerBrand">
 						<a href="https://propertylist.es/" class="footerLogoLink">
-							<img src="/favicon.png" alt="PropertyList" width="36" height="36" loading="lazy" decoding="async" />
+							<img src="/og/icon-default.png" alt="PropertyList" width="36" height="36" loading="lazy" decoding="async" />
 							<span>PropertyList</span>
 						</a>
 						<p class="footerTagline">
@@ -488,15 +472,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						<div class="footerCol">
 							<div class="footerColTitle">{lang === 'es' ? 'Producto' : 'Product'}</div>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'es' ? 'Documentación' : 'Docs'}</a>
-							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href={lang === 'es' ? '/es/pricing/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
 							<a href="https://propertylist.es/">{lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
-							<a href="https://intelligence.propertylist.es/">Market Intelligence</a>
 						</div>
 						<div class="footerCol">
 							<div class="footerColTitle">{lang === 'es' ? 'Empresa' : 'Company'}</div>
 							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
 							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/preguntas-frecuentes/' : '/faq/'}>FAQ</a>
+							<a href={lang === 'es' ? '/es/faq/' : '/faq/'}>FAQ</a>
 						</div>
 						<div class="footerCol">
 							<div class="footerColTitle">{lang === 'es' ? 'Cuenta' : 'Account'}</div>
@@ -590,7 +573,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
     if (p.indexOf('/neighbourhood/') === 0 || p.indexOf('/es/barrios/') === 0) return 'neighbourhood';
     if (p.indexOf('/docs/') === 0 || p.indexOf('/es/docs/') === 0) return 'docs';
     if (p.indexOf('/blog/') === 0 || p.indexOf('/es/informacion-general/') === 0) return 'blog';
-    if (p.indexOf('/pricing/') === 0 || p.indexOf('/es/precios/') === 0) return 'pricing';
+    if (p.indexOf('/pricing/') === 0 || p.indexOf('/es/pricing/') === 0) return 'pricing';
     if (p.indexOf('/search') === 0 || p.indexOf('/es/search') === 0) return 'search';
     return 'content';
   }
@@ -843,7 +826,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						lang === 'es'
 							? '/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/agente-de-investigacion-de-propiedades/'
 							: '/docs/propertylist-mls-user-manual/ai-ezd_ampersand-automation/ai-property-research-agent/';
-					const aiAgentHref = lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/ai-automation/' : '/docs/propertylist-mls-user-manual/ai-automation/';
+					const aiAgentHref = 'https://ai.propertylist.es/how-it-works';
 					const groups = new Map();
 					for (const r of items.slice(0, 10)) {
 						const section = toSection(r.path, lang);
@@ -1082,8 +1065,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 					if (path.startsWith('/es/informacion-general/') && path !== '/es/informacion-general/') return true;
 					if (path.startsWith('/neighbourhood/')) {
 						const parts = path.split('/').filter(Boolean);
-						const isLegacyGuide = parts.length === 2 && parts[0] === 'neighbourhood' && parts[1] !== 'andalucia' && parts[1] !== 'spain';
-						const isCanonicalGuide = parts.length === 4 && parts[0] === 'neighbourhood' && (parts[1] === 'andalucia' || parts[1] === 'spain');
+						const isLegacyGuide = parts.length === 2 && parts[0] === 'neighbourhood' && parts[1] !== 'andalucia';
+						const isCanonicalGuide = parts.length === 4 && parts[0] === 'neighbourhood' && parts[1] === 'andalucia';
 						return isLegacyGuide || isCanonicalGuide;
 					}
 					if (path.startsWith('/es/barrios/')) {

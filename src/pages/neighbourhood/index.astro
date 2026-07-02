@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { canonicalAreaPath, provinceForAreaSlug } from '../../lib/areaProvince';
 import { adminCreateKbPage, listKbPagesByPrefix } from '../../lib/directus';
 import { getKbMetaSnapshot } from '../../lib/adminMeta';
 import { getWeeklyTopPaths } from '../../lib/weeklyViews';
@@ -47,6 +48,8 @@ const canonicalProvinceLabel = (key: string) => {
 	const k = slugify(key);
 	const map: Record<string, string> = {
 		almeria: 'Almería',
+		baleares: 'Islas Baleares',
+		madrid: 'Madrid',
 		cadiz: 'Cádiz',
 		cordoba: 'Córdoba',
 		granada: 'Granada',
@@ -92,8 +95,7 @@ const canonicalGuideHref = (p: any) => {
 	if (parts.length !== 2) return rawPath;
 	const slug = parts[1] || '';
 	if (!slug) return rawPath;
-	const provinceKey = String((p as any)?._provinceKey || '').trim() || 'malaga';
-	return `/neighbourhood/andalucia/${provinceKey}/${slug}/`;
+	return canonicalAreaPath(slug);
 };
 
 const slugFromNeighbourhoodPath = (p: any) => {
@@ -183,8 +185,8 @@ const canonicalizeNeighbourhoodPath = (path: string) => {
 	if (!p.startsWith('/neighbourhood/')) return '';
 	const parts = p.split('/').filter(Boolean);
 	if (parts[0] !== 'neighbourhood') return '';
-	if (parts.length === 2 && parts[1] && parts[1] !== 'andalucia') return `/neighbourhood/andalucia/malaga/${parts[1]}/`;
-	if (parts.length === 4 && parts[1] === 'andalucia' && parts[2] && parts[3]) return `/${parts.join('/')}/`;
+	if (parts.length === 2 && parts[1] && parts[1] !== 'andalucia' && parts[1] !== 'spain') return canonicalAreaPath(parts[1]);
+	if (parts.length === 4 && parts[3]) return canonicalAreaPath(parts[3]);
 	return '';
 };
 
@@ -245,7 +247,9 @@ const priceRangeFor = (p: any) => {
 
 const items = [...itemsRaw]
 	.map((p) => {
-		const prov = extractProvince(String((p as any)?.id || ''));
+		const slugForProv = slugFromNeighbourhoodPath(p);
+		const mappedProv = provinceForAreaSlug(slugForProv);
+		const prov = mappedProv !== 'malaga' ? { key: mappedProv, label: canonicalProvinceLabel(mappedProv) } : extractProvince(String((p as any)?.id || ''));
 		return {
 			...p,
 			title: stripSuffix(String(p.title || '')),
