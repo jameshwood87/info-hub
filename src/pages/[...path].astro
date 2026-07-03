@@ -2909,7 +2909,7 @@ const ldJson = JSON.stringify([
 		{!bodyHasH1 && !moveDocHeaderIntoBody && page.description ? <p class="docLead">{page.description}</p> : null}
 		</header>
 
-		<div class:list={['docGrid', isDocs ? 'withNav' : null]}>
+		<div class:list={['docGrid', isDocs ? 'withNav' : null, isBlogLike && blogListings.length ? 'withAside' : null]}>
 			{isDocs ? (
 				<aside class="docNav" aria-label="Docs navigation" data-current-manual-root={currentManualRoot || ''}>
 					<div class="docNavHeader">

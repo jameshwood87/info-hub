@@ -2647,6 +2647,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		grid-template-columns: 290px minmax(0, 1fr) 220px;
 	}
 
+	article.blogPost .docGrid.withAside {
+		grid-template-columns: minmax(0, 1fr) 300px;
+	}
+
+	.blogAside .docTocTitle {
+		font-size: 15px;
+	}
+
 	.docBrowseBtn {
 		display: none;
 		align-items: center;
@@ -3450,6 +3458,14 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 
 		.docGrid.withNav {
 			grid-template-columns: 1fr;
+		}
+
+		article.blogPost .docGrid.withAside {
+			grid-template-columns: 1fr;
+		}
+
+		.blogAside {
+			display: none;
 		}
 
 		.docNav {
