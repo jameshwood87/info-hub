@@ -1,6 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import background from '../../assets/background.svg';
+import { getPortalStats } from '../../lib/portalStats';
+
+const stats = await getPortalStats();
+const nf = { format: (n) => n.toLocaleString('en-GB').replace(/,/g, '.') };
 
 const personaParam = Astro.url.searchParams.get('persona') || '';
 
@@ -37,20 +41,26 @@ const hrefForPersona = (nextPersona: string) => {
 		<div class="heroInner">
 			<a class="btnSecondary topCta" href="/es/docs/">Cómo usar PropertyList</a>
 			<div class="heroCopy">
-				<h1>El MLS, CRM y portal inmobiliario gratis para España</h1>
-				<p class="lead">PropertyList es el primer Smart MLS, CRM y Portal Inmobiliario de España orientado a resultados.</p>
+				<div class="heroEyebrow">Gratis para siempre para agentes y promotores</div>
+				<h1>Publica una vez. Deja que 1.200 agentes la vendan.</h1>
 				<p class="lead">
-					El MLS y el CRM son 100% gratis para siempre para agentes inmobiliarios y promotores. Sin comisiones ocultas, sin cuotas de alta. Sin permanencia. Hay funciones de pago opcionales para quienes quieren más visibilidad, automatización y rendimiento. La actividad inmobiliaria debe verificarse.
+					PropertyList es el MLS, CRM y portal inmobiliario gratis de España. Publica una propiedad una vez y llega a más
+					de 1.200 agentes verificados y a miles de compradores - sin cuotas de alta, sin mensualidades, sin permanencia.
+					Añade herramientas de IA y marketing solo cuando una operación concreta lo pida.
 				</p>
+				<div class="heroCtas">
+					<a class="btnPrimary heroCtaPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+					<a class="btnSecondary" href="https://propertylist.es/" target="_blank" rel="noopener">Explora el portal inmobiliario</a>
+				</div>
 
 				<div class="metaRow">
 					<div class="metaItem">
-						<div class="metaKpi">5.700+</div>
+						<div class="metaKpi">{nf.format(stats.listings)}</div>
 						<div class="metaLabel">Anuncios activos</div>
 					</div>
 					<div class="metaItem">
-						<div class="metaKpi">1.350+</div>
-						<div class="metaLabel">Agentes activos</div>
+						<div class="metaKpi">{nf.format(stats.agencies)}</div>
+						<div class="metaLabel">Agencias</div>
 					</div>
 					<div class="metaItem">
 						<div class="metaKpi">Multi-idioma</div>
@@ -101,8 +111,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
 							<div class="personaTitle">Para agentes inmobiliarios</div>
 						<div class="personaSummary">
-					PropertyList te permite convertir anuncios pasivos en operaciones activas.<br /><br />Deja de caer en la trampa de las suscripciones y de pagar un alquiler mensual solo por alojar tus propias propiedades. Al unirte al primer ecosistema gratis de Smart MLS y CRM de Andalucía, obtienes acceso instantáneo a una red colaborativa de agencias verificadas y a miles de propiedades compartidas.<br /><br />A diferencia de los portales tradicionales, tratamos la infraestructura básica como un servicio público gratis. Operas con un modelo flexible de pago por uso, invirtiendo en herramientas de IA avanzadas - como nuestro Agente de Investigación CMA o el Agente de Reformas con Google Gemini - solo cuando tienes una operación concreta que desbloquear. Maximiza tu ROI, elimina los costes fijos y cierra operaciones más rápido.
-							</div>
+								Deja de pagar una mensualidad solo para alojar tus propios anuncios. Publícalos gratis en PropertyList y más de 1.200 agentes verificados pueden venderlos por ti - tú fijas la comisión y mantienes el control.<br /><br />Cruza al instante a tus compradores con miles de anuncios compartidos de toda la red. El MLS y el CRM son gratis para siempre - sin cuotas de alta, sin permanencia.<br /><br />Solo pagas cuando quieres ventaja en una operación concreta: un CMA con IA para fijar el precio, o el Agente de Reformas con Gemini para desbloquearla. Sin costes fijos, nunca.
+						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Crea tu cuenta gratis</a></div>
 						<div class="personaLinks">
 							<a href="/es/docs/propertylist-mls-manual-de-usuario/">Guía del MLS y CRM</a>
 							<a href="/es/docs/leyes-procedimientos/">Leyes y procedimientos</a>
@@ -112,8 +123,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'developers' ? 'isActive' : ''}`} data-persona-panel="developers">
 							<div class="personaTitle">Para promotores</div>
 						<div class="personaSummary">
-					PropertyList transforma a los promotores de anunciantes especulativos en distribuidores estratégicos.<br /><br />Deja de quemar tu presupuesto de marketing en exposición inicial que no garantiza nada. En su lugar, coloca al instante toda tu cartera de obra nueva en manos de una enorme fuerza de ventas activa de agentes inmobiliarios verificados.<br /><br />A diferencia de las plataformas de publicidad tradicionales, publicar tus nuevas promociones en PropertyList es completamente gratis. Tu cartera se convierte en inventario compartido dentro de nuestra red de alta velocidad. Solo pagas la comisión basada en resultados que tú fijas cuando un agente consigue de verdad un comprador. Cada euro invertido está ligado directamente a una venta confirmada, lo que significa cero gasto de marketing desperdiciado.
-							</div>
+								Pon toda tu promoción ante más de 1.200 agentes verificados el mismo día que la publicas - gratis. Tu cartera pasa a ser inventario compartido en la red, así que una fuerza de ventas real vende tus unidades, no un simple anuncio aparcado en un portal.<br /><br />Solo pagas la comisión que tú fijas, y solo cuando un agente trae de verdad a un comprador. Cada euro va ligado a una venta confirmada - sin gasto de publicidad por adelantado, sin presupuesto desperdiciado.
+						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Crea tu cuenta gratis</a></div>
 						<div class="personaLinks">
 							<a href="https://info.propertylist.es/es/developers#get-updates">¿Cómo funciona?</a>
 							<a href="/es/docs/">Docs para promotores</a>
@@ -123,8 +135,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'services' ? 'isActive' : ''}`} data-persona-panel="services">
 							<div class="personaTitle">Para servicios inmobiliarios</div>
 						<div class="personaSummary">
-					PropertyList eleva a arquitectos, abogados y constructores de anunciantes fríos a soluciones estratégicas contextuales.<br /><br />Deja de malgastar presupuesto interrumpiendo a la gente con anuncios de directorio genéricos. Nuestra plataforma integra tus servicios directamente en el trabajo diario de profesionales inmobiliarios activos, justo cuando una transacción requiere tu experiencia.<br /><br />Aprovechando la IA contextual - como nuestro Agente de Reformas que calcula los costes de un proyecto al instante - presentamos tu perfil a agentes y compradores en el momento exacto de mayor intención. Solo pagas por conexiones altamente cualificadas, reduciendo el spam para la red y asegurando que cada lead en el que inviertes está vinculado a una operación inmobiliaria real.
-							</div>
+								Llega a agentes y compradores justo cuando te necesitan - no con un anuncio genérico de directorio, sino dentro de la propia operación. Tu servicio aparece en el flujo de trabajo cuando la transacción lo requiere.<br /><br />Nuestra IA hace la presentación: el Agente de Reformas, por ejemplo, calcula el coste de un proyecto al momento y pone tu perfil ante las personas adecuadas. Solo pagas por contactos cualificados ligados a una operación real.
+						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Crea tu cuenta gratis</a></div>
 						<div class="personaLinks">
 							<a href="/es/docs/property-services/">Docs de servicios</a>
 							<a href="/es/barrios/">Guías de zona</a>
@@ -133,8 +146,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'public' ? 'isActive' : ''}`} data-persona-panel="public">
 							<div class="personaTitle">Para compradores e inquilinos</div>
 						<div class="personaSummary">
-					PropertyList te da la ventaja definitiva: transparencia total del mercado.<br /><br />Explora miles de propiedades en venta, alquileres de larga duración, propiedades vacacionales y obra nueva con acceso ilimitado y en tiempo real. A diferencia de otras plataformas que ocultan detalles tras muros de pago o venden tus datos, PropertyList ofrece una experiencia de búsqueda transparente y sin fricción para ayudarte a decidir con confianza.<br /><br />Para quienes buscan la ventaja de un inversor, ofrecemos herramientas premium opcionales. Genera informes profesionales de Análisis de Mercado con IA (CMA) y desgloses de costes de reforma en segundos, dándote la misma inteligencia potente que usan los mejores profesionales de la región.
-							</div>
+								Ve todo el mercado, en tiempo real. Explora ventas, alquileres de larga temporada, propiedades vacacionales y obra nueva sin muros de pago ni trucos - y nunca vendemos tus datos.<br /><br />¿Quieres una ventaja profesional? Genera un informe de análisis de mercado (CMA) con IA o un desglose de costes de reforma en segundos - la misma inteligencia que usan los mejores agentes de la zona, basada en datos reales verificados ante notario.
+						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://propertylist.es/" target="_blank" rel="noopener">Explora el portal inmobiliario</a></div>
 						<div class="personaLinks">
 							<a href="/es/docs/portal-publico/">Portal público de propiedades</a>
 							<a href="/es/docs/leyes-procedimientos/">Leyes y procedimientos</a>
@@ -405,6 +419,8 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 							</span>
 						</a>
 					</li>
+				<li><a class="featureLink" href="/es/listado-instantaneo/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M6 11a6 6 0 0 0 12 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 17v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Publica con la voz</span><span class="featureHint">Fotos y una nota de voz se convierten en un anuncio completo</span></span></a></li>
+				<li><a class="featureLink" href="https://propertylist.es/" target="_blank" rel="noopener"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Busca escribiendo</span><span class="featureHint">Describe lo que quieres con tus palabras - portal y MLS</span></span></a></li>
 				</ul>
 			</div>
 			<div class="tile mutedTile pricingTile">
@@ -453,24 +469,8 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 							</span>
 						</a>
 					</li>
-					<li>
-						<a class="featureLink" href="/es/search?q=Private%20Listings">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7 11v-2.2c0-2.8 2.2-5 5-5s5 2.2 5 5V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path
-										d="M7.5 11h9c.8 0 1.5.7 1.5 1.5v6.5c0 .8-.7 1.5-1.5 1.5h-9c-.8 0-1.5-.7-1.5-1.5v-6.5c0-.8.7-1.5 1.5-1.5Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Anuncios privados</span>
-								<span class="featureHint">Controla quién ve qué</span>
-							</span>
-						</a>
-					</li>
+					<li><a class="featureLink" href="https://intelligence.propertylist.es" target="_blank" rel="noopener"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="5" y="12" width="3" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="10.5" y="8" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="16" y="4" width="3" height="14" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="featureText"><span class="featureName">Inteligencia de Mercado</span><span class="featureHint">Datos de mercado en vivo e informes por zona, verificados ante notario</span></span></a></li>
+					<li><a class="featureLink" href="/es/contenido-instantaneo/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="3.5" width="15" height="17" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Contenido Instantáneo</span><span class="featureHint">Blogs y guías de zona automáticos - muy pronto</span></span></a></li>
 					<li>
 						<a class="featureLink" href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/generating-property-reports/" target="_blank" rel="noopener">
 							<span class="featureIcon" aria-hidden="true">
@@ -482,7 +482,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 							</span>
 							<span class="featureText">
 								<span class="featureName">Informe CMA</span>
-								<span class="featureHint">Apoyo en precios y comparables</span>
+								<span class="featureHint">Informe por inmueble con comparables y precios verificados ante notario</span>
 							</span>
 						</a>
 					</li>
@@ -533,7 +533,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 							</span>
 							<span class="featureText">
 								<span class="featureName">Anuncios destacados en el Portal Público</span>
-								<span class="featureHint">Más exposición ante compradores</span>
+								<span class="featureHint">Más exposición ante compradores/inquilinos</span>
 							</span>
 						</a>
 					</li>
@@ -589,7 +589,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 							</span>
 							<span class="featureText">
 								<span class="featureName">Agentes inmobiliarios destacados</span>
-								<span class="featureHint">Destaca ante vendedores y compradores</span>
+								<span class="featureHint">Destaca en la portada de PropertyList.es ante compradores/inquilinos</span>
 							</span>
 						</a>
 					</li>
@@ -603,7 +603,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 							</span>
 							<span class="featureText">
 								<span class="featureName">Email directo de propiedades a clientes</span>
-								<span class="featureHint">Envía anuncios a clientes más rápido</span>
+								<span class="featureHint">Envía un anuncio a compradores/inquilinos que ya buscan en esa zona</span>
 							</span>
 						</a>
 					</li>
@@ -668,6 +668,16 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 					</li>
 				</ul>
 			</div>
+		</div>
+	</section>
+
+	<section aria-label="Agent survey" data-band="agent-survey-band" style="max-width:1120px;margin:0 auto;padding:0 20px 56px;">
+		<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border:1px solid rgba(0,174,154,0.28);background:rgba(0,174,154,0.05);border-radius:16px;padding:18px 22px;">
+			<div style="min-width:0;max-width:640px;">
+				<strong style="display:block;font-size:16px;letter-spacing:-.01em;color:rgba(16,24,40,0.92);">Eres agente? Ayudanos a decidir que construimos.</strong>
+				<span style="display:block;font-size:14px;color:rgba(16,24,40,0.66);margin-top:3px;">Una encuesta de 2 minutos: cuentanos que quieres de un portal inmobiliario y anadiremos 20 creditos (valor 20 &euro;) a tu cuenta.</span>
+			</div>
+			<a href="/es/encuesta-agentes" style="flex:none;white-space:nowrap;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Hacer la encuesta (2 min) &rarr;</a>
 		</div>
 	</section>
 
@@ -877,6 +887,24 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 		text-decoration: none;
 		background: rgba(16, 24, 40, 0.08);
 	}
+
+	.heroEyebrow {
+		display: inline-block;
+		font-size: 12.5px;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+		background: rgba(var(--accent-rgb), 0.1);
+		border: 1px solid rgba(var(--accent-rgb), 0.2);
+		padding: 6px 12px;
+		border-radius: 999px;
+		margin-bottom: 14px;
+	}
+	.heroCtas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+	.heroCtaPrimary { font-size: 16px; padding: 14px 22px; }
+	.personaCta { margin: 6px 0 14px; }
+	.personaCta .btnPrimary { font-size: 15px; padding: 12px 18px; }
 
 	.metaRow {
 		margin-top: 30px;
@@ -1142,7 +1170,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 
 	.featureList li {
 		margin: 0;
-		display: block;
+		display: flex;
 	}
 
 	.featureLink {

@@ -1,6 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import background from '../assets/background.svg';
+import { getPortalStats } from '../lib/portalStats';
+
+const stats = await getPortalStats();
+const nf = new Intl.NumberFormat('en-GB');
 
 const personaParam = Astro.url.searchParams.get('persona') || '';
 
@@ -37,22 +41,26 @@ const hrefForPersona = (nextPersona: string) => {
 		<div class="heroInner">
 			<a class="btnSecondary topCta" href="/docs/">How to use PropertyList</a>
 			<div class="heroCopy">
-				<h1>The free MLS, CRM & property portal for Spain</h1>
-				<p class="lead">PropertyList is Spain's first results-driven Smart MLS, CRM &amp; Property Portal.</p>
+				<div class="heroEyebrow">Free forever for estate agents and developers</div>
+				<h1>List once. Let 1,200 agents sell it.</h1>
 				<p class="lead">
-					The MLS and CRM are 100% free forever for estate agents and developers. No hidden fees, No Setup fees. No lock-ins.
-					Optional paid features are available for those who want more visibility, automation, and performance. Real Estate
-					activity must be verified.
+					PropertyList is Spain's free Smart MLS, CRM and property portal. List a property once and it reaches 1,200+
+					verified agents and thousands of buyers - no setup fees, no monthly rent, no lock-ins. Add AI and marketing
+					power only when a specific deal calls for it.
 				</p>
+				<div class="heroCtas">
+					<a class="btnPrimary heroCtaPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a>
+					<a class="btnSecondary" href="https://propertylist.es/" target="_blank" rel="noopener">Browse the property portal</a>
+				</div>
 
 				<div class="metaRow">
 					<div class="metaItem">
-						<div class="metaKpi">5,700+</div>
+						<div class="metaKpi">{nf.format(stats.listings)}</div>
 						<div class="metaLabel">Active Listings</div>
 					</div>
 					<div class="metaItem">
-						<div class="metaKpi">1,350+</div>
-						<div class="metaLabel">Active Agents</div>
+						<div class="metaKpi">{nf.format(stats.agencies)}</div>
+						<div class="metaLabel">Agencies</div>
 					</div>
 					<div class="metaItem">
 						<div class="metaKpi">Multi-Language</div>
@@ -111,19 +119,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
 							<div class="personaTitle">For Estate Agents</div>
 						<div class="personaSummary">
-								PropertyList empowers you to turn passive listings into active deals.
-								<br />
-								<br />
-								Stop falling into the subscription trap of paying monthly rent just to host your own properties. By joining
-								Andalucía’s first free Smart MLS and CRM ecosystem, you gain instant access to a collaborative grid of verified
-								agencies and thousands of shared properties.
-								<br />
-								<br />
-								Unlike legacy portals, we treat the core infrastructure as a free public utility. You operate on a flexible
-								“Pay-As-You-Go” model, only investing in advanced AI tools - like our CMA Property Research Agent or the Google
-								Gemini-powered Renovation Agent - when you have a specific deal to unblock. Maximise your ROI, eliminate fixed
-								overheads, and close deals faster.
+								Stop paying monthly rent just to host your own listings. List them free on PropertyList, and 1,200+ verified agents can sell them for you - you set the commission and keep control.<br /><br />Match your buyers instantly against thousands of shared listings across the network. The MLS and CRM stay free forever - no setup fees, no lock-ins.<br /><br />Only pay when you want an edge on a specific deal: an AI CMA to price it, or the Gemini-powered Renovation Agent to unblock it. No fixed overheads, ever.
 						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a></div>
 						<div class="personaLinks">
 							<a href="/docs/propertylist-mls-user-manual/">MLS &amp; CRM User Guide</a>
 							<a href="/docs/laws-procedures/">Laws &amp; Procedures</a>
@@ -133,18 +131,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'developers' ? 'isActive' : ''}`} data-persona-panel="developers">
 							<div class="personaTitle">For Developers</div>
 						<div class="personaSummary">
-								PropertyList transforms developers from Speculative Advertisers into Strategic Distributors.
-								<br />
-								<br />
-								Stop burning your marketing budget on upfront exposure that guarantees nothing. Instead, instantly place your
-								entire new build portfolio into the hands of a massive, active sales force of verified estate agents.
-								<br />
-								<br />
-								Unlike traditional advertising platforms, listing your new developments on PropertyList is completely free.
-								Your portfolio becomes shared inventory within our high-speed network. You only pay the performance-based
-								commission that you set when an agent actually secures a buyer. Every euro spent is tied directly to a confirmed
-								sale, meaning zero wasted marketing spend.
+								Put your whole development in front of 1,200+ verified agents the day you list it - for free. Your portfolio becomes shared inventory across the network, so a real sales force is selling your units, not just an advert parked on a portal.<br /><br />You only pay the commission you set, and only when an agent actually brings a buyer. Every euro is tied to a confirmed sale - no upfront ad spend, no wasted budget.
 						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a></div>
 						<div class="personaLinks">
 							<a href="https://info.propertylist.es/developers#get-updates">How it works?</a>
 							<a href="/docs/developers/">Developers Docs</a>
@@ -154,19 +143,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'services' ? 'isActive' : ''}`} data-persona-panel="services">
 							<div class="personaTitle">For Property Services</div>
 						<div class="personaSummary">
-								PropertyList elevates Architects, Lawyers, and Builders from Cold Advertisers into Contextual Strategic
-								Solutions.
-								<br />
-								<br />
-								Stop wasting budget interrupting people with generic directory ads. Our platform embeds your services directly
-								into the daily workflow of active real estate professionals exactly when a transaction requires your expertise.
-								<br />
-								<br />
-								Leveraging Contextual AI - such as our Renovation Agent that calculates project costs on the spot - we present
-								your profile to agents and buyers at the exact moment of high intent. You only pay for highly qualified
-								connections, reducing spam for the network and ensuring every lead you invest in is attached to a real property
-								deal.
+								Reach agents and buyers at the exact moment they need you - not with a generic directory ad, but inside the deal itself. Your service shows up in the workflow when a transaction calls for it.<br /><br />Our AI does the introducing: the Renovation Agent, for example, prices a project on the spot and puts your profile in front of the right people. You only pay for qualified connections tied to a real property deal.
 						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a></div>
 						<div class="personaLinks">
 							<a href="/docs/property-services/">Property Service Docs</a>
 							<a href="/neighbourhood/">Area Guides</a>
@@ -175,18 +154,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'public' ? 'isActive' : ''}`} data-persona-panel="public">
 							<div class="personaTitle">For Buyers &amp; Renters</div>
 						<div class="personaSummary">
-								PropertyList gives you the ultimate advantage: Total Market Transparency.
-								<br />
-								<br />
-								Browse thousands of sales, long-term rentals, holiday properties, and new developments with unrestricted,
-								real-time access. Unlike other platforms that hide details behind paywalls or sell your data, PropertyList
-								provides a frictionless, transparent search experience to help you make confident decisions.
-								<br />
-								<br />
-								For those seeking an investor&apos;s edge, we offer optional premium tools. Generate professional-grade AI Market
-								Analysis (CMA) reports and renovation cost breakdowns in seconds, giving you the exact same powerful
-								intelligence used by the region&apos;s top professionals.
+								See the whole market, in real time. Browse sales, long-term rentals, holiday homes and new developments with no paywalls and no games - and we never sell your data.<br /><br />Want a professional edge? Generate an AI market-analysis (CMA) report or a renovation cost breakdown in seconds - the same intelligence the region's top agents use, priced on real, notary-verified data.
 						</div>
+						<div class="personaCta"><a class="btnPrimary" href="https://propertylist.es/" target="_blank" rel="noopener">Browse the property portal</a></div>
 						<div class="personaLinks">
 							<a href="/docs/public-portal/">Public Property Portal</a>
 							<a href="/docs/laws-procedures/">Laws &amp; Procedures</a>
@@ -215,7 +185,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 			<div class="wbHeroInner">
 				<div class="wbHeroText">
 					<div class="wbBadge">Website Builder - from €50/month</div>
-					<h3 class="wbHeadline">Your Agency Website.<br />Live in Minutes.</h3>
+					<h3 class="wbHeadline">Your agency website.<br />Live in minutes.</h3>
 					<p class="wbSub">
 						Drag-and-drop builder. Your listings. Your brand. No developer needed.<br />
 						Build the whole site, preview it like a client for free, only pay and publish when you're happy.
@@ -458,6 +428,8 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 						</a>
 					</li>
+				<li><a class="featureLink" href="/instant-listing/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M6 11a6 6 0 0 0 12 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 17v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">List by voice</span><span class="featureHint">Photos and a voice note become a full listing</span></span></a></li>
+				<li><a class="featureLink" href="https://propertylist.es/" target="_blank" rel="noopener"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Search by texting</span><span class="featureHint">Describe what you want in plain words - portal and MLS</span></span></a></li>
 				</ul>
 			</div>
 			<div class="tile mutedTile pricingTile">
@@ -506,24 +478,8 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 						</a>
 					</li>
-					<li>
-						<a class="featureLink" href="/search?q=Private%20Listings">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7 11v-2.2c0-2.8 2.2-5 5-5s5 2.2 5 5V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path
-										d="M7.5 11h9c.8 0 1.5.7 1.5 1.5v6.5c0 .8-.7 1.5-1.5 1.5h-9c-.8 0-1.5-.7-1.5-1.5v-6.5c0-.8.7-1.5 1.5-1.5Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Private Listings</span>
-								<span class="featureHint">Control who sees what</span>
-							</span>
-						</a>
-					</li>
+					<li><a class="featureLink" href="https://intelligence.propertylist.es" target="_blank" rel="noopener"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="5" y="12" width="3" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="10.5" y="8" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="16" y="4" width="3" height="14" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="featureText"><span class="featureName">Property Intelligence</span><span class="featureHint">Live market data and area reports, notary-verified</span></span></a></li>
+					<li><a class="featureLink" href="/instant-content/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="3.5" width="15" height="17" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Instant Content</span><span class="featureHint">Automated blogs and area guides - coming soon</span></span></a></li>
 					<li>
 						<a class="featureLink" href="https://info.propertylist.es/docs/propertylist-mls-user-manual/reports-statistics/generating-property-reports/" target="_blank" rel="noopener">
 							<span class="featureIcon" aria-hidden="true">
@@ -535,7 +491,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 							<span class="featureText">
 								<span class="featureName">CMA Report</span>
-								<span class="featureHint">Pricing support and comparables</span>
+								<span class="featureHint">Per-property report with comparables and notary-verified prices</span>
 							</span>
 						</a>
 					</li>
@@ -586,7 +542,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 							<span class="featureText">
 								<span class="featureName">Featured Public Portal Listings</span>
-								<span class="featureHint">More exposure to buyers</span>
+								<span class="featureHint">More exposure to buyers/renters</span>
 							</span>
 						</a>
 					</li>
@@ -642,7 +598,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 							<span class="featureText">
 								<span class="featureName">Featured Estate Agents</span>
-								<span class="featureHint">Stand out to sellers and buyers</span>
+								<span class="featureHint">Featured on the PropertyList.es homepage to buyers/renters</span>
 							</span>
 						</a>
 					</li>
@@ -656,7 +612,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 							<span class="featureText">
 								<span class="featureName">Direct Client Property Email</span>
-								<span class="featureHint">Send listings to clients faster</span>
+								<span class="featureHint">Email a listing to buyers/renters already searching that area</span>
 							</span>
 						</a>
 					</li>
@@ -721,6 +677,16 @@ When you want to move faster, stand out, or build your own agency website - tap 
 					</li>
 				</ul>
 			</div>
+		</div>
+	</section>
+
+	<section aria-label="Agent survey" data-band="agent-survey-band" style="max-width:1120px;margin:0 auto;padding:0 20px 56px;">
+		<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border:1px solid rgba(0,174,154,0.28);background:rgba(0,174,154,0.05);border-radius:16px;padding:18px 22px;">
+			<div style="min-width:0;max-width:640px;">
+				<strong style="display:block;font-size:16px;letter-spacing:-.01em;color:rgba(16,24,40,0.92);">Are you an agent? Help shape what we build next.</strong>
+				<span style="display:block;font-size:14px;color:rgba(16,24,40,0.66);margin-top:3px;">A 2-minute survey - tell us what you want from a property portal, and we'll add 20 credits (worth &euro;20) to your account.</span>
+			</div>
+			<a href="/agents-survey" style="flex:none;white-space:nowrap;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Take the 2-min survey &rarr;</a>
 		</div>
 	</section>
 
@@ -929,6 +895,37 @@ When you want to move faster, stand out, or build your own agency website - tap 
 	.btnSecondary:hover {
 		text-decoration: none;
 		background: rgba(16, 24, 40, 0.08);
+	}
+
+	.heroEyebrow {
+		display: inline-block;
+		font-size: 12.5px;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+		background: rgba(var(--accent-rgb), 0.1);
+		border: 1px solid rgba(var(--accent-rgb), 0.2);
+		padding: 6px 12px;
+		border-radius: 999px;
+		margin-bottom: 14px;
+	}
+	.heroCtas {
+		display: flex;
+		gap: 12px;
+		flex-wrap: wrap;
+		margin-top: 22px;
+	}
+	.heroCtaPrimary {
+		font-size: 16px;
+		padding: 14px 22px;
+	}
+	.personaCta {
+		margin: 6px 0 14px;
+	}
+	.personaCta .btnPrimary {
+		font-size: 15px;
+		padding: 12px 18px;
 	}
 
 	.metaRow {
@@ -1195,7 +1192,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 
 	.featureList li {
 		margin: 0;
-		display: block;
+		display: flex;
 	}
 
 	.featureLink {
