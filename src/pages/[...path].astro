@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { readFileSync } from 'node:fs';
 import { areaImagePath } from '../lib/areaImages';
 import { canonicalAreaPath } from '../lib/areaProvince';
 import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
 import PropertyCard from '../components/PropertyCard.astro';
-import { searchProperties, type MarketListing } from '../lib/marketData';
+import { searchProperties, enrichListingPrices, type MarketListing } from '../lib/marketData';
 import {
 	adminCreateKbPage,
 	adminGetKbPageByPath,
@@ -33,13 +34,12 @@ if (shareMode && normalizedPath.startsWith('/neighbourhood/')) {
 }
 
 const mapPairs: Array<{ en: string; es: string }> = [
-	{ en: '/blog/', es: '/es/informacion-general/' },
+	{ en: '/blog/', es: '/es/blog/' },
 	{ en: '/general-information/', es: '/es/informacion-general/' },
 	{ en: '/community/', es: '/es/comunidad/' },
 	{ en: '/laws/', es: '/es/leyes/' },
 	{ en: '/neighbourhood/', es: '/es/barrios/' },
 	{ en: '/andalucia/', es: '/es/andalucia/' },
-	{ en: '/mls/', es: '/es/mls/' },
 	{ en: '/pricing/', es: '/es/precios/' },
 	{ en: '/search', es: '/es/search' },
 ];
@@ -47,6 +47,7 @@ const mapPairs: Array<{ en: string; es: string }> = [
 const toSpanishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (path.startsWith('/es/')) return path;
+	{ const _n = path.endsWith('/') ? path : path + '/'; if (_n === '/blog/how-to-avoid-property-scams-in-spain/') return '/es/blog/como-evitar-estafas-inmobiliarias-en-espana/'; }
 	if (path.startsWith('/neighbourhood/')) {
 		const parts = path.split('/').filter(Boolean);
 		if (parts[0] === 'neighbourhood' && parts.length === 4) {
@@ -1599,7 +1600,7 @@ const slugify = (s: string) =>
 const cleanImportedBody = (html: string | null | undefined, path: string) => {
 	let out = String(html || '');
 
-	const isBlogLike = path.startsWith('/general-information/') || path.startsWith('/blog/') || path.startsWith('/estate-agents/');
+	const isBlogLike = path.startsWith('/general-information/') || path.startsWith('/blog/') || path.startsWith('/estate-agents/') || path.startsWith('/food/') || path.startsWith('/nightlife/') || path.startsWith('/lifestyle/');
 	const isDocsLike = path.startsWith('/docs/') || path.startsWith('/es/docs/');
 
 	const pickFirstMatch = (re: RegExp) => {
@@ -1784,7 +1785,7 @@ const renamedBodyHtml = cleanedBodyHtml
 	.replace(/<h([23])([^>]*)>\s*MLS\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>')
 	.replace(/<h([23])([^>]*)>\s*Propertylist\s*Mls\s*User\s*Manual\s*<\/h\1>/gi, '<h$1$2>MLS &amp; CRM User Manual</h$1>');
 
-const isBlogLike = renderPath.startsWith('/general-information/') || renderPath.startsWith('/blog/') || renderPath.startsWith('/estate-agents/');
+const isBlogLike = renderPath.startsWith('/general-information/') || renderPath.startsWith('/blog/') || renderPath.startsWith('/estate-agents/') || renderPath.startsWith('/food/') || renderPath.startsWith('/nightlife/') || renderPath.startsWith('/lifestyle/');
 const stripAccents = (v: string) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 const blogPropertyLocation = (() => {
 	if (!isBlogLike) return '';
@@ -1793,13 +1794,49 @@ const blogPropertyLocation = (() => {
 	for (const k of known) { if (hay.includes(stripAccents(k))) return k; }
 	return 'Marbella';
 })();
+const AREA_LINKS: Array<[string, string]> = [
+	['Marbella', '/neighbourhood/spain/malaga/marbella/'],
+	['Estepona', '/neighbourhood/spain/malaga/estepona/'],
+	['Fuengirola', '/neighbourhood/spain/malaga/fuengirola/'],
+	['Benalmadena', '/neighbourhood/spain/malaga/benalmadena/'],
+	['Nerja', '/neighbourhood/spain/malaga/nerja/'],
+	['Torremolinos', '/neighbourhood/spain/malaga/torremolinos/'],
+	['Nueva Andalucia', '/neighbourhood/spain/malaga/nueva-andalucia/'],
+	['Puerto Banus', '/neighbourhood/spain/malaga/puerto-banus/'],
+	['Sotogrande', '/neighbourhood/spain/cadiz/sotogrande/'],
+];
+const autoLinkAreas = (html: string) => {
+	if (!isBlogLike) return html;
+	let out = String(html || '');
+	let added = 0;
+	for (const [name, target] of AREA_LINKS) {
+		if (added >= 3) break;
+		if (out.includes(`href="${target}"`)) continue;
+		const re = new RegExp(`(<p(?![^>]*class=)[^>]*>)((?:(?!<\\/p>|<a\\b|<h\\d)[\\s\\S]){0,600}?)\\b(${name.replace(/\s+/g, '\\s+')})\\b(?![^<]*<\\/a>)`, '');
+		const m = re.exec(out);
+		if (!m) continue;
+		out = out.slice(0, m.index) + m[1] + m[2] + `<a href="${target}">${m[3]}</a>` + out.slice(m.index + m[0].length);
+		added++;
+	}
+	return out;
+};
+
+const blogSearchType = (() => {
+	if (!isBlogLike) return 'for-sale' as const;
+	const hay = stripAccents(`${renderPath} ${h1} ${page.description || ''}`);
+	if (/short-?term|holiday|vacation|vacacional|turistic/.test(hay)) return 'holiday-rentals' as const;
+	if (/\brent|landlord|tenant|alquil|arrenda|inquilin/.test(hay)) return 'for-rent' as const;
+	return 'for-sale' as const;
+})();
+const blogTypeNoun = blogSearchType === 'for-rent' ? 'property for rent' : blogSearchType === 'holiday-rentals' ? 'holiday rental' : 'property for sale';
 const blogListings: MarketListing[] = isBlogLike
-	? await searchProperties(blogPropertyLocation, 'for-sale', 8).catch(() => [] as MarketListing[])
+	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
 	: [];
-const blogPortalUrl = `https://www.propertylist.es/for-sale/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
-const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}` : 'Price on request');
-const blogCardTitle = (l: MarketListing) => (l.title && l.title.trim() ? l.title.trim().slice(0, 70) : `${l.bedrooms ? l.bedrooms + '-bed ' : ''}property for sale`);
+const blogPortalUrl = `https://www.propertylist.es/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}${blogSearchType === 'for-rent' ? '/month' : ''}` : 'Price on request');
+const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + '-bed ' : ''}${blogTypeNoun}${l.suburb ? ` in ${l.suburb}` : ''}`.slice(0, 70);
 const isDocs = renderPath.startsWith('/docs/');
+const isPublicDocs = renderPath.startsWith('/docs/laws-procedures/');
 const prefixRedirects = (await listPrefixRedirects().catch(() => []))
 	.map((r) => ({ from: String(r?.from || ''), to: String(r?.to || '') }))
 	.filter((r) => r.from && r.to)
@@ -1910,6 +1947,21 @@ const neighbourhoodPortalUrl = (() => {
 	};
 	return `https://propertylist.es/portal/for-sale/${encodeURIComponent(canonicalPortalMunicipalitySlug(muni))}/`;
 })();
+
+// Live "N homes for sale" for the area CTA (2026-07-08): show the real count for this exact town
+// and link to the count-showing SEO page (/for-sale/{slug}). Only for towns in our cached counts.
+let neighbourhoodSaleCount: number | null = null;
+let neighbourhoodSeoUrl = '';
+if (isNeighbourhood && neighbourhoodSlug) {
+	try {
+		const _fc = JSON.parse(readFileSync('/opt/info-hub/var/admin/finder-counts.json', 'utf8'));
+		const _hit = (_fc.areas || []).find((a: any) => a.slug === neighbourhoodSlug);
+		if (_hit && _hit.counts && Number(_hit.counts['for-sale']) > 0) {
+			neighbourhoodSaleCount = Number(_hit.counts['for-sale']);
+			neighbourhoodSeoUrl = `https://propertylist.es/for-sale/${neighbourhoodSlug}`;
+		}
+	} catch {}
+}
 const featuredImageUrl =
 	typeof (kbMeta as any).featuredImageUrl === 'string' && String((kbMeta as any).featuredImageUrl).trim()
 		? String((kbMeta as any).featuredImageUrl).trim()
@@ -1954,15 +2006,22 @@ const escapeHtmlAttr = (s: string) =>
 		.replaceAll('"', '&quot;')
 		.replaceAll("'", '&#39;');
 
-const blogMetaDate = (() => {
-	const raw = (page as any).date_updated || (page as any).date_created || null;
+const parseDbDate = (raw: unknown) => {
 	const ms = raw ? Date.parse(String(raw)) : NaN;
 	return Number.isFinite(ms) ? new Date(ms) : null;
-})();
-
-const blogDateLabel = blogMetaDate
-	? new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' }).format(blogMetaDate)
-	: null;
+};
+const blogPublishedDate = parseDbDate((page as any).date_created) || parseDbDate((page as any).date_updated);
+const blogUpdatedDate = parseDbDate((page as any).date_updated);
+const blogMetaDate = blogPublishedDate;
+const blogDateFmt = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+const blogDateLabel = blogPublishedDate ? blogDateFmt.format(blogPublishedDate) : null;
+const blogUpdatedLabel =
+	blogUpdatedDate && blogPublishedDate && blogUpdatedDate.getTime() - blogPublishedDate.getTime() > 86400000
+		? blogDateFmt.format(blogUpdatedDate)
+		: null;
+const blogDatesInlineHtml = blogDateLabel
+	? `<p class="blogDatesLine" style="margin:10px 0 18px;font-size:13.5px;color:rgba(16,24,40,0.62);">Published ${blogDateLabel}${blogUpdatedLabel ? ` · Updated ${blogUpdatedLabel}` : ''}</p>`
+	: '';
 
 const words = stripTags(sourceBody).replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
 const readingMins = Math.max(1, Math.round(words / 220));
@@ -2252,6 +2311,7 @@ const finalBodyHtml = (() => {
 	}
 	if (isBlogLike) {
 		out = removeLeadingDuplicateHeading(out, stripInfoHubSuffix(h1));
+		out = autoLinkAreas(out);
 		const alt = featuredImageAlt || stripInfoHubSuffix(h1);
 		const titleAttr = featuredImageTitle ? ` title="${escapeHtmlAttr(featuredImageTitle)}"` : '';
 		const captionText = featuredImageCaption || '';
@@ -2285,9 +2345,9 @@ const finalBodyHtml = (() => {
 			const avif = sizes.map((w) => `${mk(w, 'avif')} ${w}w`).join(', ');
 			const webp = sizes.map((w) => `${mk(w, 'webp')} ${w}w`).join(', ');
 			const jpg = sizes.map((w) => `${mk(w, 'jpg')} ${w}w`).join(', ');
-			out = `<figure class="blogHero"><picture><source type="image/avif" srcset="${escapeHtmlAttr(avif)}" sizes="(max-width: 900px) 100vw, 900px" /><source type="image/webp" srcset="${escapeHtmlAttr(webp)}" sizes="(max-width: 900px) 100vw, 900px" /><img src="${escapeHtmlAttr(mk(1200, 'jpg'))}" srcset="${escapeHtmlAttr(jpg)}" sizes="(max-width: 900px) 100vw, 900px" alt="${escapeHtmlAttr(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" /></picture>${figcaption}</figure>${out}`;
+			out = `<figure class="blogHero"><picture><source type="image/avif" srcset="${escapeHtmlAttr(avif)}" sizes="(max-width: 900px) 100vw, 900px" /><source type="image/webp" srcset="${escapeHtmlAttr(webp)}" sizes="(max-width: 900px) 100vw, 900px" /><img src="${escapeHtmlAttr(mk(1200, 'jpg'))}" srcset="${escapeHtmlAttr(jpg)}" sizes="(max-width: 900px) 100vw, 900px" alt="${escapeHtmlAttr(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" /></picture>${figcaption}</figure>${blogDatesInlineHtml}${out}`;
 		} else {
-			out = `<figure class="blogHero"><img src="${escapeHtmlAttr(heroSrc)}" alt="${escapeHtmlAttr(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" />${figcaption}</figure>${out}`;
+			out = `<figure class="blogHero"><img src="${escapeHtmlAttr(heroSrc)}" alt="${escapeHtmlAttr(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" />${figcaption}</figure>${blogDatesInlineHtml}${out}`;
 		}
 	}
 	if (isDocs) out = rewriteDocLinksToCanonical(out);
@@ -2555,6 +2615,25 @@ const folderArticles = (() => {
 	return out;
 })();
 
+const docFolderChildren = await (async () => {
+	if (!isDocs || folderArticles.length) return [] as Array<{ path: string; title: string; description?: string | null; href: string; external: boolean }>;
+	const kids = await listKbPagesByPrefix({ prefix: renderPath, lang, limit: 60 }).catch(() => [] as any[]);
+	const depth = renderPath.split('/').filter(Boolean).length;
+	return (kids as any[])
+		.filter((k) => {
+			const kp = String(k?.path || '');
+			return kp !== renderPath && kp.split('/').filter(Boolean).length === depth + 1;
+		})
+		.map((k) => ({
+			path: String(k.path),
+			title: String(k.title || ''),
+			description: (k.description as string) || null,
+			href: String(k.path),
+			external: false,
+		}));
+})();
+const folderArticlesAll = folderArticles.length ? folderArticles : docFolderChildren;
+
 const docPager = (() => {
 	if (!isDocs) {
 		const prevRaw = siblingCurrentIndex > 0 ? siblingSorted[siblingCurrentIndex - 1] : null;
@@ -2618,6 +2697,15 @@ const renderDocNavHtml = (nodes: DocNode[], depth = 0, forceOpen = false): strin
 			const manualRootAttr = n.path === mlsManualPath ? ' data-manual-root="1"' : '';
 			const externalAttrs = ext ? ` target="${ext.target}" rel="${ext.rel}"` : '';
 
+			// Single leaf child: link the section straight to that page (no dead-end section page).
+			if (n.children.length === 1 && !n.children[0].children.length && n.children[0].hasPage) {
+				const only = n.children[0];
+				const onlyExt = externalDocLinkForPath(only.path);
+				const onlyHref = escapeHtml(onlyExt?.href || only.path);
+				const onlyAttrs = onlyExt ? ` target="${onlyExt.target}" rel="${onlyExt.rel}"` : '';
+				const leafActive = n.path === renderPath || only.path === renderPath ? ' active' : '';
+				return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><a class="docNavLink${leafActive}" href="${onlyHref}"${onlyAttrs}>${title}</a></li>`;
+			}
 			if (n.children.length) {
 				const kids = renderDocNavHtml(n.children, depth + 1, forceOpen);
 				const summaryInner = n.hasPage
@@ -2714,7 +2802,7 @@ const articleLd = {
 
 const stepTexts = extractSteps(bodyHtml);
 const howToLd =
-	stepTexts.length >= 2
+	stepTexts.length >= 2 && /\bhow to\b/i.test(h1)
 		? {
 				'@context': 'https://schema.org',
 				'@type': 'HowTo',
@@ -2729,6 +2817,27 @@ const howToLd =
 				})),
 			}
 		: null;
+
+const blogFaqLd = (() => {
+	if (!isBlogLike && !isDocs) return null;
+	const m = /<h2[^>]*>[^<]*(?:FAQ|Frequently asked|Preguntas)[^<]*<\/h2>([\s\S]*?)(?=<h2|$)/i.exec(bodyHtml);
+	if (!m) return null;
+	const seg = m[1] || '';
+	const qa: Array<{ q: string; a: string }> = [];
+	const re = /<h3[^>]*>([\s\S]*?)<\/h3>\s*((?:<p[^>]*>[\s\S]*?<\/p>\s*)+)/gi;
+	let mm;
+	while ((mm = re.exec(seg)) && qa.length < 8) {
+		const q = mm[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+		const a = mm[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+		if (q && a) qa.push({ q, a });
+	}
+	if (qa.length < 2) return null;
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: qa.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })),
+	};
+})();
 
 const placeLd = (() => {
 	if (!isNeighbourhood) return null;
@@ -2820,6 +2929,7 @@ const ldJson = JSON.stringify([
 	...(placeLd ? [placeLd] : []),
 	...(listingsLd ? [listingsLd] : []),
 	...(faqLd ? [faqLd] : []),
+	...(blogFaqLd ? [blogFaqLd] : []),
 ]);
 ---
 
@@ -2892,7 +3002,12 @@ const ldJson = JSON.stringify([
 					<span class="blogAuthor">PropertyList</span>
 					{blogMetaDate && blogDateLabel ? (
 						<time class="blogDate" datetime={blogMetaDate.toISOString()}>
-							{blogDateLabel}
+							Published {blogDateLabel}
+						</time>
+					) : null}
+					{blogUpdatedDate && blogUpdatedLabel ? (
+						<time class="blogDate" datetime={blogUpdatedDate.toISOString()}>
+							Updated {blogUpdatedLabel}
 						</time>
 					) : null}
 					<span class="blogRead">{readingMins} min read</span>
@@ -3269,15 +3384,31 @@ const ldJson = JSON.stringify([
 				</style>
 
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+				{isPublicDocs && blogUpdatedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
+					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Last reviewed: {blogDateFmt.format(blogUpdatedDate)}</p>
+				) : null}
 {isNeighbourhood ? (
-	<a class="areaPortalCta" href={neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
+	<a class="areaPortalCta" href={neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
 		<span style="min-width:0;">
-			<span style="display:block;font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">Ready to explore {areaNameClean}?</span>
-			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">Search every home for sale, to rent and for holidays in {areaNameClean} on the PropertyList portal.</span>
+			<span style="display:block;font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">{neighbourhoodSaleCount ? `See all ${neighbourhoodSaleCount.toLocaleString('en-GB')} homes for sale in ${areaNameClean}` : `Ready to explore ${areaNameClean}?`}</span>
+			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">{neighbourhoodSaleCount ? `Every home for sale, to rent and for holidays in ${areaNameClean} - browse them all on PropertyList.` : `Search every home for sale, to rent and for holidays in ${areaNameClean} on the PropertyList portal.`}</span>
 		</span>
 		<span style="white-space:nowrap;background:#00ae9a;color:#00100e;border:1px solid rgba(0,0,0,0.12);border-radius:999px;padding:12px 20px;font-weight:900;">Search properties &rarr;</span>
 	</a>
 ) : null}
+
+				{isBlogLike || isPublicDocs ? (
+					<section class="blogOracleBand" aria-label="Verified market data" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:26px 0 6px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.14), rgba(255,255,255,0.65));">
+						<div style="min-width:0;max-width:640px;">
+							<div style="font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">Don't guess prices - verify them</div>
+							<p style="margin:6px 0 0;font-size:14px;color:rgba(16,24,40,0.72);">PropertyList's Price Oracle publishes notary-verified €/m² from the Spanish notarial register, and agents can turn live MLS data into a full area market report in minutes. Real data beats asking-price guesswork.</p>
+						</div>
+						<div style="display:flex;gap:10px;flex-wrap:wrap;">
+							<a href="https://oracle.propertylist.es" target="_blank" rel="noopener" style="white-space:nowrap;background:#00ae9a;color:#00100e;border:1px solid rgba(0,0,0,0.12);border-radius:999px;padding:11px 18px;font-weight:900;text-decoration:none;">See notary-verified prices</a>
+							<a href="/docs/propertylist-mls-user-manual/reports-statistics/area-market-reports/" style="white-space:nowrap;background:#fff;color:rgba(16,24,40,0.85);border:1px solid rgba(16,24,40,0.15);border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;">Area market reports</a>
+						</div>
+					</section>
+				) : null}
 
 				{isBlogLike && blogListings.length ? (
 					<section class="blogPropertySection" aria-label="Featured properties">
@@ -3302,11 +3433,11 @@ const ldJson = JSON.stringify([
 					</section>
 				) : null}
 
-				{folderArticles.length ? (
+				{folderArticlesAll.length ? (
 					<section class="docArticles" aria-label="Articles">
 						<div class="docArticlesTitle">Articles</div>
 						<ul class="docArticlesList">
-							{folderArticles.map((a) => (
+							{folderArticlesAll.map((a) => (
 								<li>
 									<a class="docArticlesLink" href={a.href} target={a.external ? '_blank' : undefined} rel={a.external ? 'noopener' : undefined}>
 										<span class="docArticlesLinkTitle">{a.title}</span>
