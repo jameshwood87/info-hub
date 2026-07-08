@@ -1,0 +1,195 @@
+---
+export const prerender = false;
+---
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Da forma a PropertyList - encuesta de 2 min para agentes</title>
+<meta name="robots" content="noindex, follow" />
+<meta name="description" content="Cuéntanos qué quieres de verdad de un portal inmobiliario. 2 minutos y ayudas a dar forma a PropertyList, además de 20 créditos (valor 20 €)." />
+<link rel="canonical" href="https://info.propertylist.es/es/encuesta-agentes" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="PropertyList" />
+<meta property="og:url" content="https://info.propertylist.es/es/encuesta-agentes" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:title" content="¿Qué quieres de verdad de un portal inmobiliario?" />
+<meta property="og:description" content="Una encuesta de 2 minutos para agentes: ayuda a decidir qué construimos y llévate 20 créditos (valor 20 €)." />
+<meta property="og:image" content="https://info.propertylist.es/og/encuesta-agentes.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="PropertyList - una encuesta de 2 minutos para agentes" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="¿Qué quieres de verdad de un portal inmobiliario?" />
+<meta name="twitter:description" content="Una encuesta de 2 minutos para agentes: ayuda a decidir qué construimos y llévate 20 créditos (valor 20 €)." />
+<meta name="twitter:image" content="https://info.propertylist.es/og/encuesta-agentes.png" />
+<style>
+  :root{--bg:#f5f8f7;--card:#fff;--ink:#0f2a26;--ink2:#5b736e;--line:#e2ece9;--pl:#00ae9a;--pl-d:#008574}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:600px;margin:0 auto;padding:24px 18px 60px}
+  .brand{font-weight:800;letter-spacing:-.02em;color:var(--pl-d);font-size:15px}
+  .hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .langs{display:flex;gap:5px;flex:none}
+  .langs a{font-size:12px;font-weight:700;color:var(--ink2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;text-decoration:none;background:#fff}
+  .langs a.on{color:#fff;background:var(--pl);border-color:var(--pl)}
+  .hero{background:linear-gradient(135deg,#00ae9a,#0b7d6d);color:#fff;border-radius:18px;padding:22px 20px;margin:14px 0 18px}
+  .hero h1{margin:0 0 6px;font-size:22px;letter-spacing:-.02em}
+  .hero p{margin:0;opacity:.94;font-size:14.5px}
+  .perk{display:inline-block;margin-top:12px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;line-height:1.35}
+  .meta{text-align:center;color:var(--ink2);font-size:12px;font-weight:600;margin:0 0 16px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;margin-bottom:12px}
+  .q .lab{font-weight:700;font-size:15px;margin-bottom:2px}
+  .q .sub{color:var(--ink2);font-size:12.5px;margin-bottom:11px}
+  .opt{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;cursor:pointer;font-size:14.5px;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--pl)}
+  .opt input{accent-color:var(--pl);width:18px;height:18px;flex:none}
+  .opt.on{border-color:var(--pl);background:#f0faf8}
+  textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff}
+  textarea{min-height:64px;resize:vertical}
+  input:focus,textarea:focus{outline:2px solid var(--pl);border-color:var(--pl)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:460px){.row2{grid-template-columns:1fr}}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0}
+  .cta{width:100%;background:var(--pl);color:#fff;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px;box-shadow:0 6px 18px rgba(0,174,154,.32)}
+  .cta:disabled{opacity:.55}
+  .fine{color:var(--ink2);font-size:11.5px;text-align:center;margin-top:12px}
+  .done{display:none;text-align:center;padding:40px 16px}
+  .done .big{font-size:44px}
+  .done h2{margin:10px 0 6px}
+  .done p{color:var(--ink2)}
+  .optional{color:var(--pl-d);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <a href="https://info.propertylist.es/es/" class="brand" aria-label="PropertyList"><img src="/og/logo-default.png" alt="PropertyList - be free to share" width="130" height="42" style="height:42px;width:auto;display:block" /></a>
+    <nav class="langs" aria-label="Idioma">
+      <a href="/agents-survey" hreflang="en">EN</a>
+      <a href="/es/encuesta-agentes" class="on" hreflang="es">ES</a>
+      <a href="/nl/agenten-enquete" hreflang="nl">NL</a>
+    </nav>
+  </div>
+
+  <div id="form">
+    <div class="hero">
+      <h1>¿Qué es lo que de verdad quieres de un portal inmobiliario?</h1>
+      <p>PropertyList ya está en marcha y cuenta con más de 1.200 agentes, y estamos construyendo lo que viene a partir de lo que agentes como tú realmente quieren. Preferimos preguntártelo a adivinarlo.</p>
+      <span class="perk">&#127873; Complétala y añadiremos 20 créditos (valor 20&nbsp;&euro;) a tu cuenta: úsalos para destacar tus propiedades, además de acceso prioritario a lo que está por llegar</span>
+    </div>
+    <div class="meta">6 preguntas rápidas &middot; unos 2 minutos &middot; tus respuestas son privadas</div>
+
+    <div class="q">
+      <div class="lab">1. ¿Cuántas propiedades tienes publicadas ahora mismo?</div>
+      <label class="opt"><input type="radio" name="listings_band" value="Under 10"> Menos de 10</label>
+      <label class="opt"><input type="radio" name="listings_band" value="10-50"> 10-50</label>
+      <label class="opt"><input type="radio" name="listings_band" value="51-150"> 51-150</label>
+      <label class="opt"><input type="radio" name="listings_band" value="150+"> 150+</label>
+    </div>
+
+    <div class="q">
+      <div class="lab">2. ¿Por qué portales pagas actualmente?</div>
+      <div class="sub">Marca todos los que correspondan.</div>
+      <label class="opt"><input type="checkbox" name="portals" value="Idealista"> Idealista</label>
+      <label class="opt"><input type="checkbox" name="portals" value="Fotocasa"> Fotocasa</label>
+      <label class="opt"><input type="checkbox" name="portals" value="Kyero"> Kyero</label>
+      <label class="opt"><input type="checkbox" name="portals" value="Resales Online"> Resales Online</label>
+      <label class="opt"><input type="checkbox" name="portals" value="thinkSPAIN"> thinkSPAIN</label>
+      <label class="opt"><input type="checkbox" name="portals" value="Other"> Otro</label>
+      <label class="opt"><input type="checkbox" name="portals" value="None"> Ninguno ahora mismo</label>
+    </div>
+
+    <div class="q">
+      <div class="lab">3. ¿Qué es lo que más te frustra de los portales que usas hoy?</div>
+      <div class="sub">Dilo sin rodeos: es lo más útil que nos puedes contar.</div>
+      <textarea name="frustration" placeholder="p. ej. los leads son caros y la mitad no llega a nada..."></textarea>
+    </div>
+
+    <div class="q">
+      <div class="lab">4. Cuando eliges un portal, ¿qué es lo que más importa?</div>
+      <label class="opt"><input type="radio" name="top_value" value="More buyer leads"> Más leads de compradores</label>
+      <label class="opt"><input type="radio" name="top_value" value="Better lead quality"> Mejor calidad de leads</label>
+      <label class="opt"><input type="radio" name="top_value" value="Lower cost"> Menor coste</label>
+      <label class="opt"><input type="radio" name="top_value" value="Leads from other agents"> Conseguir leads de otros agentes</label>
+      <label class="opt"><input type="radio" name="top_value" value="Easy to list"> Fácil de publicar y gestionar</label>
+      <label class="opt"><input type="radio" name="top_value" value="Reach &amp; brand"> Alcance y marca</label>
+    </div>
+
+    <div class="q">
+      <div class="lab">5. ¿Cómo de valiosos serían los leads de <em>otros agentes</em> en la misma plataforma?</div>
+      <div class="sub">Compartir clientes y propiedades entre agentes.</div>
+      <label class="opt"><input type="radio" name="mls_value" value="Very"> Muy valiosos</label>
+      <label class="opt"><input type="radio" name="mls_value" value="Somewhat"> Algo valiosos</label>
+      <label class="opt"><input type="radio" name="mls_value" value="Not really"> No mucho</label>
+    </div>
+
+    <div class="q">
+      <div class="lab">6. ¿Qué es lo único que te frenaría a la hora de cambiarte a un portal nuevo?</div>
+      <div class="sub">El verdadero obstáculo, para que podamos eliminarlo.</div>
+      <textarea name="switch_blocker" placeholder="p. ej. la molestia de mover todos mis anuncios..."></textarea>
+    </div>
+
+    <div class="q">
+      <div class="lab">7. ¿Dónde te enviamos tus 20 créditos (&euro;20)? <span class="optional">opcional</span></div>
+      <div class="sub">Déjanos tus datos y los añadiremos a tu cuenta y te daremos acceso anticipado. ¿Prefieres quedar anónimo? Sáltalo: tus respuestas cuentan igual.</div>
+      <div class="row2">
+        <input type="text" name="name" placeholder="Tu nombre" autocomplete="name">
+        <input type="text" name="agency" placeholder="Agencia" autocomplete="organization">
+      </div>
+      <div style="height:10px"></div>
+      <div class="row2">
+        <input type="text" name="phone" placeholder="Número de WhatsApp" inputmode="tel">
+        <input type="text" name="email" placeholder="Email" inputmode="email">
+      </div>
+    </div>
+
+    <input class="hp" type="text" name="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="cta" id="submit">Enviar mis respuestas</button>
+    <div class="fine">Privado y solo se usa para mejorar PropertyList para los agentes. Nada de spam, nunca.</div>
+  </div>
+
+  <div class="done" id="done">
+    <div class="big">&#127881;</div>
+    <h2>Gracias, esto ayuda de verdad.</h2>
+    <p>Las respuestas reales de agentes reales son la forma en que decidimos qué construir a continuación. Si dejaste tus datos, añadiremos tus 20 créditos (&euro;20) y te daremos acceso anticipado en breve.</p>
+  </div>
+</div>
+
+<script is:inline>
+  const t0 = Date.now();
+  document.querySelectorAll('.opt input').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      const box=inp.closest('.q');
+      if(inp.type==='radio') box.querySelectorAll('.opt').forEach(function(o){o.classList.remove('on');});
+      inp.closest('.opt').classList.toggle('on', inp.checked);
+    });
+  });
+  document.getElementById('submit').addEventListener('click', async function(e){
+    const btn=e.currentTarget; btn.disabled=true; btn.textContent='Enviando...';
+    const val=function(n){const el=document.querySelector('[name="'+n+'"]:checked'); return el?el.value:'';};
+    const portals=Array.prototype.slice.call(document.querySelectorAll('[name="portals"]:checked')).map(function(x){return x.value;});
+    const body={
+      listings_band:val('listings_band'), portals:portals,
+      frustration:document.querySelector('[name=frustration]').value,
+      top_value:val('top_value'), mls_value:val('mls_value'),
+      switch_blocker:document.querySelector('[name=switch_blocker]').value,
+      name:document.querySelector('[name=name]').value, agency:document.querySelector('[name=agency]').value,
+      phone:document.querySelector('[name=phone]').value, email:document.querySelector('[name=email]').value,
+      company_fax:document.querySelector('[name=company_fax]').value, t:Date.now()-t0, lang:'es'
+    };
+    if(!body.listings_band && !body.frustration && !body.top_value && !portals.length){
+      btn.disabled=false; btn.textContent='Enviar mis respuestas'; alert('Por favor, responde al menos una pregunta.'); return;
+    }
+    try{
+      const r=await fetch('/api/agents-survey',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+      if(!r.ok) throw new Error();
+      document.getElementById('form').style.display='none';
+      document.getElementById('done').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }catch(err){ btn.disabled=false; btn.textContent='Enviar mis respuestas'; alert('Algo salió mal, inténtalo de nuevo.'); }
+  });
+</script>
+</body>
+</html>
