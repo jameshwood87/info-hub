@@ -1,0 +1,207 @@
+---
+export const prerender = false;
+import fs from 'node:fs/promises';
+let data: any = { areas: [], updated: null };
+try { data = JSON.parse(await fs.readFile('/opt/info-hub/var/admin/finder-counts.json', 'utf8')); } catch {}
+const AREAS = data.areas || [];
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Find your place on the Costa del Sol - PropertyList</title>
+<meta name="robots" content="noindex, follow" />
+<meta name="description" content="Tell us two things and see what's available right now on the Costa del Sol - homes for sale and rent from PropertyList's verified agents." />
+<link rel="canonical" href="https://info.propertylist.es/property-finder" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="PropertyList" />
+<meta property="og:url" content="https://info.propertylist.es/property-finder" />
+<meta property="og:title" content="Find your place on the Costa del Sol" />
+<meta property="og:description" content="Two taps and you'll see what's available right now - homes for sale and rent from verified agents." />
+<meta property="og:image" content="https://info.propertylist.es/og/property-finder.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="PropertyList - find your place on the Costa del Sol" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Find your place on the Costa del Sol" />
+<meta name="twitter:description" content="Two taps and you'll see what's available right now - homes for sale and rent from verified agents." />
+<meta name="twitter:image" content="https://info.propertylist.es/og/property-finder.png" />
+<style>
+  :root{--bg:#f5f8f7;--card:#fff;--ink:#0f2a26;--ink2:#5b736e;--line:#e2ece9;--pl:#00ae9a;--pl-d:#008574}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:600px;margin:0 auto;padding:24px 18px 60px}
+  .brand{font-weight:800;letter-spacing:-.02em;color:var(--pl-d);font-size:15px}
+  .hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .langs{display:flex;gap:5px;flex:none}
+  .langs a{font-size:12px;font-weight:700;color:var(--ink2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;text-decoration:none;background:#fff}
+  .langs a.on{color:#fff;background:var(--pl);border-color:var(--pl)}
+  .hero{background:linear-gradient(135deg,#00ae9a,#0b7d6d);color:#fff;border-radius:18px;padding:22px 20px;margin:14px 0 18px}
+  .hero h1{margin:0 0 6px;font-size:22px;letter-spacing:-.02em}
+  .hero p{margin:0;opacity:.94;font-size:14.5px}
+  .steplab{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--pl-d);margin:0 0 10px}
+  .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:480px){.cards{grid-template-columns:1fr}}
+  .pick{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 14px;text-align:center;cursor:pointer;transition:border-color .12s,transform .08s,box-shadow .12s}
+  .pick:hover{border-color:var(--pl);box-shadow:0 6px 18px rgba(0,174,154,.14)}
+  .pick .ic{font-size:26px;line-height:1}
+  .pick .t{font-weight:700;font-size:15px;margin-top:8px}
+  .pick .s{color:var(--ink2);font-size:12px;margin-top:2px}
+  .areas{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  @media(max-width:480px){.areas{grid-template-columns:1fr}}
+  .area{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;cursor:pointer;font-weight:600;font-size:14.5px;transition:border-color .12s,background .12s}
+  .area:hover{border-color:var(--pl);background:#f0faf8}
+  .area .n{font-family:ui-monospace,monospace;font-size:12px;font-weight:600;color:var(--pl-d);background:#eafaf7;border-radius:20px;padding:2px 9px;flex:none}
+  .back{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--ink2);font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;margin-bottom:6px}
+  .result{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 20px;text-align:center}
+  .result .eyebrow{color:var(--pl-d);font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+  .result h2{font-size:24px;margin:8px 0 4px;letter-spacing:-.02em}
+  .result h2 .big{color:var(--pl-d)}
+  .result .lede{color:var(--ink2);font-size:14.5px;margin:0 0 18px}
+  .go{display:block;width:100%;background:var(--pl);color:#fff;border:0;border-radius:12px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;text-decoration:none;box-shadow:0 6px 18px rgba(0,174,154,.32)}
+  .alert{margin-top:18px;border-top:1px solid var(--line);padding-top:16px;text-align:left}
+  .alert .lab{font-weight:700;font-size:14px}
+  .alert .sub{color:var(--ink2);font-size:12.5px;margin:2px 0 12px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+  @media(max-width:440px){.row2{grid-template-columns:1fr}}
+  select,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff}
+  input:focus,select:focus{outline:2px solid var(--pl);border-color:var(--pl)}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--ink2);margin:10px 0}
+  .consent input{width:18px;height:18px;flex:none;accent-color:var(--pl);margin-top:1px}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0}
+  .setbtn{width:100%;background:#0f2a26;color:#fff;border:0;border-radius:11px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;margin-top:2px}
+  .setbtn:disabled{opacity:.5}
+  .fine{color:var(--ink2);font-size:11px;text-align:center;margin-top:16px}
+  .done2{display:none;background:#f0faf8;border:1px solid var(--pl);border-radius:12px;padding:16px;text-align:center;font-weight:600;color:var(--pl-d);margin-top:14px}
+  .thin{background:#fff8ec;border:1px solid #f0dcae;border-radius:12px;padding:12px 14px;font-size:13px;color:#7a5c14;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <a href="https://info.propertylist.es/" class="brand" aria-label="PropertyList"><img src="/og/logo-default.png" alt="PropertyList - be free to share" width="130" height="42" style="height:42px;width:auto;display:block" /></a>
+    <nav class="langs" aria-label="Language">
+      <a href="/property-finder" class="on" hreflang="en">EN</a>
+      <a href="/es/buscador-propiedades" hreflang="es">ES</a>
+    </nav>
+  </div>
+
+  <div class="hero">
+    <h1>Find your place on the Costa del Sol</h1>
+    <p>Tell us two things and we'll show you what's available right now - homes from PropertyList's verified agents, updated daily.</p>
+  </div>
+
+  <div id="stage"></div>
+
+  <div class="fine">Live counts refreshed daily from PropertyList. Listings shown on propertylist.es.</div>
+</div>
+
+<script is:inline define:vars={{ areas: AREAS }}>
+  const OPS = {
+    "for-sale":        { label: "Buy",             ic: "&#127968;", s: "homes for sale",     verb: "for sale",           short: "for sale" },
+    "for-rent":        { label: "Rent",            ic: "&#128273;", s: "long-term rentals",  verb: "to rent long-term",  short: "to rent" },
+    "holiday-rentals": { label: "Holiday rental",  ic: "&#127958;", s: "holiday homes",      verb: "for holiday stays",  short: "for holiday stays" }
+  };
+  const fmt = (n) => n.toLocaleString("en-GB");
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  let state = { op: null, area: null };
+  const stage = document.getElementById("stage");
+  const t0 = Date.now();
+
+  function areasFor(op) {
+    return areas.filter((a) => a.counts && a.counts[op] > 0).sort((a, b) => b.counts[op] - a.counts[op]);
+  }
+  function render() {
+    if (!state.op) return renderIntent();
+    if (!state.area) return renderAreas();
+    return renderResult();
+  }
+  function renderIntent() {
+    stage.innerHTML = `<p class="steplab">Step 1 &middot; What are you looking to do?</p>
+      <div class="cards">${Object.entries(OPS).map(([op, m]) =>
+        `<div class="pick" data-op="${op}"><div class="ic">${m.ic}</div><div class="t">${m.label}</div><div class="s">${m.s}</div></div>`
+      ).join("")}</div>`;
+    stage.querySelectorAll(".pick").forEach((el) => el.onclick = () => { state.op = el.dataset.op; render(); });
+  }
+  function renderAreas() {
+    const list = areasFor(state.op);
+    stage.innerHTML = `<button class="back" id="back">&#8592; Back</button>
+      <p class="steplab">Step 2 &middot; Where on the Costa del Sol?</p>
+      <div class="areas">${list.map((a) =>
+        `<div class="area" data-slug="${a.slug}"><span>${esc(a.name)}</span><span class="n">${fmt(a.counts[state.op])}</span></div>`
+      ).join("")}</div>`;
+    document.getElementById("back").onclick = () => { state.op = null; render(); };
+    stage.querySelectorAll(".area").forEach((el) => el.onclick = () => { state.area = el.dataset.slug; render(); });
+  }
+  function renderResult() {
+    const m = OPS[state.op];
+    const a = areas.find((x) => x.slug === state.area);
+    const n = (a && a.counts[state.op]) || 0;
+    const url = `https://propertylist.es/${state.op}/${state.area}`;
+    const strong = n >= 25;
+    const head = strong
+      ? `<div class="eyebrow">You've found the right place</div>
+         <h2>We've got <span class="big">${fmt(n)}</span> ${esc(m.s)} in ${esc(a.name)}</h2>
+         <p class="lede">Handpicked from PropertyList's verified agents, ready to view now.</p>`
+      : `<div class="eyebrow">Fresh selection</div>
+         <h2><span class="big">${fmt(n)}</span> ${esc(m.s)} in ${esc(a.name)}</h2>
+         <p class="lede">A smaller pool here - take a look, and set an alert so you never miss a new one.</p>`;
+    stage.innerHTML = `<button class="back" id="back">&#8592; Change search</button>
+      <div class="result">
+        ${head}
+        <a class="go" href="${url}" target="_blank" rel="noopener">See them on PropertyList &#8594;</a>
+        <div class="alert">
+          <div class="lab">&#128276; Get alerted when new matches land</div>
+          <div class="sub">New ${esc(m.short)} homes in ${esc(a.name)} come on daily. We'll ping you the moment they do.</div>
+          <div class="row2">
+            <select name="budget"><option value="">Budget (optional)</option>${budgetOpts()}</select>
+            <select name="beds"><option value="">Bedrooms (optional)</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option><option>5+</option></select>
+          </div>
+          <div class="row2">
+            <input type="text" name="name" placeholder="Your name (optional)" autocomplete="name">
+            <input type="text" name="email" placeholder="Email" inputmode="email" autocomplete="email">
+          </div>
+          <input type="text" name="phone" placeholder="WhatsApp number (optional, for alerts)" inputmode="tel" style="margin-bottom:0">
+          <input class="hp" type="text" name="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="consent"><input type="checkbox" id="consent"> <span>Yes, PropertyList can contact me about matching properties. I can opt out anytime.</span></label>
+          <button class="setbtn" id="setbtn">Set up my alert</button>
+          <div class="done2" id="done2">You're all set - we'll alert you when new ${esc(a.name)} matches land.</div>
+        </div>
+      </div>`;
+    document.getElementById("back").onclick = () => { state.area = null; render(); };
+    document.getElementById("setbtn").onclick = submitAlert;
+  }
+  function budgetOpts() {
+    const sale = ["Up to €200k","€200k-€400k","€400k-€700k","€700k-€1.5M","€1.5M+"];
+    const rent = ["Up to €1,000/mo","€1,000-€2,000/mo","€2,000-€4,000/mo","€4,000+/mo"];
+    const opts = state.op === "for-sale" ? sale : rent;
+    return opts.map((o) => `<option>${o}</option>`).join("");
+  }
+  async function submitAlert(e) {
+    const btn = e.currentTarget;
+    const q = (n) => { const el = document.querySelector(`[name="${n}"]`); return el ? el.value.trim() : ""; };
+    const email = q("email"), phone = q("phone");
+    if (!document.getElementById("consent").checked) { alert("Please tick the box so we're allowed to contact you."); return; }
+    if (!email && !phone) { alert("Add an email or WhatsApp number so we can reach you."); return; }
+    const a = areas.find((x) => x.slug === state.area);
+    btn.disabled = true; btn.textContent = "Setting up...";
+    const body = {
+      op: state.op, area: state.area, area_name: a ? a.name : state.area,
+      budget: q("budget"), beds: q("beds"), name: q("name"), email, phone,
+      consent: document.getElementById("consent").checked,
+      company_fax: q("company_fax"), t: Date.now() - t0, lang: "en"
+    };
+    try {
+      const r = await fetch("/api/buyer-lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+      if (!r.ok) throw new Error();
+      document.querySelector(".alert .lab").style.display = "none";
+      document.querySelector(".alert .sub").style.display = "none";
+      document.querySelectorAll(".alert .row2, .alert input, .alert select, .alert .consent, #setbtn").forEach((el) => el.style.display = "none");
+      document.getElementById("done2").style.display = "block";
+    } catch { btn.disabled = false; btn.textContent = "Set up my alert"; alert("Something went wrong - please try again."); }
+  }
+  render();
+</script>
+</body>
+</html>
