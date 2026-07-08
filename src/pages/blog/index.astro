@@ -4,6 +4,20 @@ import { listKbPagesByPrefix, type KbPageListItem } from '../../lib/directus';
 import { getKbTreeOrderSnapshot, sortPathsWithOrder } from '../../lib/kbTreeOrder';
 import { getKbMetaSnapshot } from '../../lib/adminMeta';
 
+const decodeTextEntities = (v: string | null | undefined) => {
+	let out = String(v || '');
+	for (let i = 0; i < 3; i++) {
+		const prev = out;
+		out = out
+			.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+			.replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&apos;/g, "'")
+			.replace(/&#8217;|&rsquo;/g, '\u2019').replace(/&#8216;|&lsquo;/g, '\u2018')
+			.replace(/&nbsp;/g, ' ');
+		if (out === prev) break;
+	}
+	return out;
+};
+
 const blogPrefix = '/blog/';
 const newsPrefix = '/general-information/';
 const estateAgentsPrefix = '/estate-agents/';
@@ -463,6 +477,14 @@ const ldJson = JSON.stringify({
 		</div>
 	</header>
 
+	<aside data-band="finder-cta-band" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,#00ae9a,#0b7d6d);color:#fff;border-radius:16px;padding:20px 22px;margin:4px 0 26px">
+		<div style="max-width:560px">
+			<strong style="display:block;font-size:17px;letter-spacing:-.01em;margin-bottom:3px">Looking for a home, not a blog post?</strong>
+			<span style="font-size:14px;opacity:.95">See what's available right now on the Costa del Sol - homes for sale &amp; to rent from verified agents.</span>
+		</div>
+		<a href="/property-finder" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap">Find your place →</a>
+	</aside>
+
 	{sorted.length ? (
 		<section aria-label="Blog posts">
 			<ul class="grid" role="list">
@@ -482,9 +504,9 @@ const ldJson = JSON.stringify({
 								class="card"
 								data-post="1"
 								data-cat={cat.toLowerCase()}
-								data-label={`${stripSuffix(p.title)} ${cat}`.toLowerCase()}
+								data-label={`${decodeTextEntities(stripSuffix(p.title))} ${cat}`.toLowerCase()}
 							>
-								<a class="thumbLink" href={p.path} aria-label={`Read: ${stripSuffix(p.title)}`}>
+								<a class="thumbLink" href={p.path} aria-label={`Read: ${decodeTextEntities(stripSuffix(p.title))}`}>
 									{responsive ? (
 										<picture>
 											<source type="image/avif" srcset={responsive.avifSrcset} sizes={responsive.sizes} />
@@ -524,10 +546,10 @@ const ldJson = JSON.stringify({
 									</div>
 									<h2 class="title">
 										<a class="link" href={p.path}>
-											{stripSuffix(p.title)}
+											{decodeTextEntities(stripSuffix(p.title))}
 										</a>
 									</h2>
-									{p.description ? <p class="desc">{p.description}</p> : null}
+									{p.description ? <p class="desc">{decodeTextEntities(p.description)}</p> : null}
 									<div class="footer">
 										<a class="readMore" href={p.path}>
 											Read article
