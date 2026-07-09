@@ -1,0 +1,271 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/instant-content/`;
+const title = 'Instant Content - AI blogs and area guides for your agency | PropertyList';
+const description =
+	'Now live in the PropertyList Website Builder: AI writes SEO blog posts and area guides for your agency, built from your own listings and notary-verified market data, in your buyers’ languages.';
+
+const steps = [
+	{ n: 1, t: 'Connect', d: 'It reads the listings and areas already on your Website Builder site - nothing to import.' },
+	{ n: 2, t: 'Choose or automate', d: 'Pick a topic or an area, write about a single listing in one click, or switch on autopilot.' },
+	{ n: 3, t: 'Review and publish', d: 'Approve in a click, or let it publish for you. Translations, photos and SEO are handled.' },
+];
+
+const gets = [
+	{ name: 'Built from your own listings', desc: 'Real properties and real photos from your site, not stock filler.' },
+	{ name: 'Notary-verified market data', desc: 'Real prices confirmed at the notary, never invented figures.' },
+	{ name: 'Your voice, your languages', desc: 'Your agency’s tone, in English and Spanish as standard, more on demand.' },
+	{ name: 'SEO done for you', desc: 'Schema, meta, hreflang and translations handled on every page.' },
+	{ name: 'One click or autopilot', desc: 'Write on demand, or let it publish on a schedule while you work.' },
+	{ name: 'You stay in control', desc: 'Review first or auto-publish. Sensitive topics always wait for you.' },
+];
+
+const faqs = [
+	{ q: 'Isn’t AI content bad for SEO?', a: 'Not when it is grounded in real data and unique to your agency. Every page is built from your own listings and verified market data, and checked across the network so no two agencies publish the same thing - that is content Google trusts.' },
+	{ q: 'Will it sound like my agency?', a: 'Yes. It writes in your agency’s voice and links your own properties, not someone else’s. You can review and edit anything before it goes live.' },
+	{ q: 'What languages does it write in?', a: 'English and Spanish as standard, so you reach international buyers in their own language. German, French, Dutch and Swedish are available on demand.' },
+	{ q: 'Do I have to publish everything?', a: 'No. Choose review-first and approve each piece, or switch on auto-publish. Either way you stay in control, and regulated topics like tax and legal always wait for your approval.' },
+	{ q: 'What does it cost?', a: 'Your PropertyList account, MLS and CRM are free forever. Instant Content is an add-on inside the paid Website Builder, billed in credits - a monthly blog allowance plus pay-as-you-go posts and area guides, with no long contract.' },
+	{ q: 'How do I switch it on?', a: 'It is live now inside the paid Website Builder. Get your Website Builder site live and switch on Instant Content - no rebuild, no waiting.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 3, name: 'Instant Content', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Instant Content',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
+	description: 'AI writes SEO blog posts and area guides for estate agencies, grounded in the agency’s own listings and notary-verified market data, published to their Website Builder site.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/contenido-instantaneo/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Instant Content - Live now</div>
+				<h1>Rank on Google. Without writing a word.</h1>
+				<p class="lead">
+					PropertyList writes SEO blog posts and area guides for your agency - built from your own listings and real
+					notary-verified market data, in your buyers’ languages - and publishes them straight to your site. You get found,
+					you look like the local expert, and you never open a blank page.
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Start your Website Builder</a>
+					<a class="btnSecondary" href="#how">See how it works</a>
+				</div>
+				<div class="note">Live now inside the Website Builder. Get your site live and switch on Instant Content - no rebuild, no waiting.</div>
+			</div>
+
+			<div class="preview" aria-hidden="true">
+				<div class="pvBar"><span class="pvDot"></span><span class="pvDot"></span><span class="pvDot"></span><span class="pvUrl">youragency.com &rsaquo; areas &rsaquo; nueva-andalucia</span></div>
+				<div class="pvBody">
+					<span class="pvTag">Area guide</span>
+					<div class="pvTitle">Living in Nueva Andaluc&iacute;a: the complete buyer&rsquo;s guide</div>
+					<div class="pvChips"><span class="pvChip">&euro;4,571 / m&sup2; &middot; verified at the notary</span><span class="pvChip">18 of your listings here</span></div>
+					<p class="pvText">Framed by golf and ten minutes from Puerto Ban&uacute;s, Nueva Andaluc&iacute;a blends resort living with a genuine year-round community. Here is what buyers pay and the homes available now.</p>
+					<div class="pvLabel">Your properties in this area</div>
+					<div class="pvGrid">
+						<div class="pvCard"><div class="pvImg"></div><div class="pvMeta"><b>&euro;1.95M</b><span>3-bed villa</span></div></div>
+						<div class="pvCard"><div class="pvImg"></div><div class="pvMeta"><b>&euro;780k</b><span>2-bed apartment</span></div></div>
+						<div class="pvCard"><div class="pvImg"></div><div class="pvMeta"><b>&euro;3.4M</b><span>5-bed villa</span></div></div>
+					</div>
+					<div class="pvFoot">Published to your site &middot; written by PropertyList &middot; updated this week</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Buyers Google your area before they ever call you</h2>
+			<p>If your agency is not on page one for "Nueva Andaluc&iacute;a property for sale", the lead goes to whoever is. Content that ranks takes hours a week you do not have, so it never gets written - and the bigger agencies keep winning your patch.</p>
+		</div>
+		<div class="grid3">
+			<div class="card"><h3>No time to write</h3><p>So nothing gets published, and your site stays invisible.</p></div>
+			<div class="card"><h3>Generic AI gets ignored</h3><p>Google quietly buries the same thin content everyone else pastes in.</p></div>
+			<div class="card"><h3>You lose your own patch</h3><p>Bigger agencies outrank you for the areas you actually work.</p></div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Not another AI writer. Content grounded in your reality.</h2>
+			<p>ChatGPT invents. We do not. Every page is built from your live listings and PropertyList’s verified market data - the real prices from the notary, not guesses. That is content Google trusts and buyers believe.</p>
+		</div>
+		<div class="grid3 steps">
+			{
+				steps.map((s) => (
+					<div class="card step"><div class="stepNum">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p></div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Two ways to own your local search</h2>
+			<p>One engine, grounded in your own inventory. Two kinds of page that make your agency the answer buyers find.</p>
+		</div>
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Instant Blogs</h2>
+				<p>Fresh SEO articles on autopilot: market updates, buyer guides, and a one-click "write about this listing" post for every new property. Published to your site with photos and SEO already done - one click, or fully automatic.</p>
+			</div>
+			<div class="card accent">
+				<h2>Instant Area Guides</h2>
+				<p>A professional guide for every area you work - lifestyle, live market data and your own listings in that area. The evergreen page that makes you the local authority, and it refreshes its data free, forever.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Everything a buyer needs to choose you</h2>
+			<p>Real, unique, and done for you - not thin AI filler that hurts your ranking.</p>
+		</div>
+		<div class="grid3">
+			{
+				gets.map((g) => (
+					<div class="card">
+						<h3>{g.name}</h3>
+						<p>{g.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Be the agency your area finds first.</h2>
+			<p>A freelancer charges 50 to 150 euros for one blog post. Instant Content does it for a few credits - grounded in your listings, in your voice, ranking for the areas you actually work.</p>
+		</div>
+	</section>
+
+	<section class="cta" id="early">
+		<div class="ctaInner">
+			<h2>Live now inside the Website Builder.</h2>
+			<p>Instant Content lives inside the Website Builder - get your site live and switch it on, no waiting. All inside the free <a href="/features/">PropertyList platform</a>.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Start your Website Builder</a>
+				<a class="btnSecondary" href="/website-builder/">See the Website Builder</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; cursor: pointer; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.preview { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
+		.pvBar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: rgba(16, 24, 40, 0.03); border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
+		.pvDot { width: 9px; height: 9px; border-radius: 50%; background: rgba(16, 24, 40, 0.16); }
+		.pvUrl { flex: 1; margin-left: 6px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 5px 12px; font-size: 12px; color: rgba(16, 24, 40, 0.55); }
+		.pvBody { padding: 16px 18px; }
+		.pvTag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.14); padding: 4px 10px; border-radius: 999px; }
+		.pvTitle { font-size: 18px; font-weight: 850; letter-spacing: -0.02em; color: #101828; margin: 11px 0 9px; line-height: 1.25; }
+		.pvChips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 11px; }
+		.pvChip { font-size: 12px; font-weight: 800; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); padding: 5px 10px; border-radius: 8px; }
+		.pvText { font-size: 13px; color: rgba(16, 24, 40, 0.72); line-height: 1.6; margin: 0 0 14px; }
+		.pvLabel { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(16, 24, 40, 0.45); margin-bottom: 8px; }
+		.pvGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+		.pvCard { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 10px; overflow: hidden; background: #fff; }
+		.pvImg { height: 52px; background: linear-gradient(160deg, rgba(var(--pl-accent-rgb), 0.28), rgba(var(--pl-accent-rgb), 0.08)); }
+		.pvMeta { padding: 7px 9px; }
+		.pvMeta b { display: block; font-size: 13px; font-weight: 850; color: #101828; }
+		.pvMeta span { font-size: 12px; color: rgba(16, 24, 40, 0.6); }
+		.pvFoot { font-size: 12px; color: rgba(16, 24, 40, 0.5); margin-top: 13px; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.grid3 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+</Layout>

@@ -1,0 +1,276 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/contenido-instantaneo/`;
+const title = 'Contenido Instantáneo - Blogs y guías de zona con IA para tu agencia | PropertyList';
+const description =
+	'Ya disponible en el Constructor de Webs de PropertyList: la IA escribe entradas de blog y guías de zona SEO para tu agencia, a partir de tus propios inmuebles y datos de mercado verificados en notaría, en los idiomas de tus compradores.';
+
+const steps = [
+	{ n: 1, t: 'Conecta', d: 'Lee los inmuebles y zonas que ya tienes en tu web del Constructor - sin importar nada.' },
+	{ n: 2, t: 'Elige o automatiza', d: 'Escoge un tema o una zona, escribe sobre un inmueble con un clic, o activa el piloto automático.' },
+	{ n: 3, t: 'Revisa y publica', d: 'Aprueba con un clic, o deja que publique por ti. Traducciones, fotos y SEO incluidos.' },
+];
+
+const gets = [
+	{ name: 'Creado con tus propios inmuebles', desc: 'Propiedades y fotos reales de tu web, no relleno genérico.' },
+	{ name: 'Datos verificados en notaría', desc: 'Precios reales confirmados en notaría, nunca cifras inventadas.' },
+	{ name: 'Tu voz, tus idiomas', desc: 'El tono de tu agencia, en inglés y español de serie, y más bajo demanda.' },
+	{ name: 'SEO hecho por ti', desc: 'Schema, meta, hreflang y traducciones en cada página.' },
+	{ name: 'Un clic o piloto automático', desc: 'Publica cuando quieras, o deja que publique solo mientras trabajas.' },
+	{ name: 'Tú tienes el control', desc: 'Revisa antes o publica automático. Los temas sensibles siempre esperan tu visto bueno.' },
+];
+
+const faqs = [
+	{ q: '¿La IA no es mala para el SEO?', a: 'No cuando se basa en datos reales y es única de tu agencia. Cada página se crea con tus propios inmuebles y datos verificados, y se comprueba en toda la red para que dos agencias nunca publiquen lo mismo. Eso es contenido en el que Google confía.' },
+	{ q: '¿Sonará como mi agencia?', a: 'Sí. Escribe con la voz de tu agencia y enlaza tus propios inmuebles, no los de otros. Puedes revisar y editar todo antes de publicar.' },
+	{ q: '¿En qué idiomas escribe?', a: 'Inglés y español de serie, para llegar a compradores internacionales en su idioma. Alemán, francés, neerlandés y sueco estarán disponibles bajo demanda.' },
+	{ q: '¿Tengo que publicarlo todo?', a: 'No. Elige revisar primero y aprueba cada pieza, o activa la publicación automática. Siempre tienes el control, y los temas regulados como impuestos o legal siempre esperan tu aprobación.' },
+	{ q: '¿Cuánto cuesta?', a: 'Tu cuenta de PropertyList, el MLS y el CRM son gratis para siempre. Contenido Instantáneo es un extra dentro del Constructor de Webs de pago, cobrado en créditos - una cuota mensual de blog más entradas y guías de zona de pago por uso, sin permanencia.' },
+	{ q: '¿Cómo lo activo?', a: 'Ya está disponible dentro del Constructor de Webs de pago. Pon en marcha tu web del Constructor y activa Contenido Instantáneo - sin rehacer nada, sin esperas.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+		{ '@type': 'ListItem', position: 3, name: 'Contenido Instantáneo', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Contenido Instantáneo',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
+	description: 'La IA escribe entradas de blog y guías de zona SEO para agencias inmobiliarias, a partir de sus propios inmuebles y datos de mercado verificados en notaría, publicadas en su web del Constructor.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/instant-content/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/instant-content/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Contenido Instantáneo - Ya disponible</div>
+				<h1>Aparece en Google. Sin escribir una palabra.</h1>
+				<p class="lead">
+					PropertyList escribe entradas de blog y guías de zona SEO para tu agencia - a partir de tus propios inmuebles y
+					datos de mercado reales verificados en notaría, en los idiomas de tus compradores - y las publica directamente en
+					tu web. Te encuentran, pareces el experto local, y nunca te enfrentas a una página en blanco.
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Empieza tu web</a>
+					<a class="btnSecondary" href="#how">Mira cómo funciona</a>
+				</div>
+				<div class="note">Ya disponible dentro del Constructor de Webs. Pon en marcha tu web y activa Contenido Instantáneo - sin rehacer nada, sin esperas.</div>
+			</div>
+
+			<div class="preview" aria-hidden="true">
+				<div class="pvBar"><span class="pvDot"></span><span class="pvDot"></span><span class="pvDot"></span><span class="pvUrl">tuagencia.com &rsaquo; zonas &rsaquo; nueva-andalucia</span></div>
+				<div class="pvBody">
+					<span class="pvTag">Gu&iacute;a de zona</span>
+					<div class="pvTitle">Vivir en Nueva Andaluc&iacute;a: la gu&iacute;a completa del comprador</div>
+					<div class="pvChips"><span class="pvChip">&euro;4.571 / m&sup2; &middot; verificado ante notario</span><span class="pvChip">18 de tus inmuebles aqu&iacute;</span></div>
+					<p class="pvText">Rodeada de golf y a diez minutos de Puerto Ban&uacute;s, Nueva Andaluc&iacute;a combina vida de resort con una comunidad real todo el a&ntilde;o. Esto es lo que pagan los compradores y las viviendas disponibles ahora.</p>
+					<div class="pvLabel">Tus inmuebles en esta zona</div>
+					<div class="pvGrid">
+						<div class="pvCard"><div class="pvImg"></div><div class="pvMeta"><b>&euro;1,95M</b><span>Villa de 3 dorm.</span></div></div>
+						<div class="pvCard"><div class="pvImg"></div><div class="pvMeta"><b>&euro;780k</b><span>Piso de 2 dorm.</span></div></div>
+						<div class="pvCard"><div class="pvImg"></div><div class="pvMeta"><b>&euro;3,4M</b><span>Villa de 5 dorm.</span></div></div>
+					</div>
+					<div class="pvFoot">Publicado en tu web &middot; escrito por PropertyList &middot; actualizado esta semana</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Los compradores buscan tu zona en Google antes de llamarte</h2>
+			<p>Si tu agencia no está en la primera página para "inmuebles en venta en Nueva Andalucía", el cliente se lo lleva quien sí lo está. Crear contenido que posicione lleva horas cada semana que no tienes, así que nunca se hace - y las agencias grandes siguen ganando tu zona.</p>
+		</div>
+		<div class="grid3">
+			<div class="card"><h3>Sin tiempo para escribir</h3><p>Así no se publica nada, y tu web sigue invisible.</p></div>
+			<div class="card"><h3>La IA genérica se ignora</h3><p>Google entierra el mismo contenido pobre que todos copian y pegan.</p></div>
+			<div class="card"><h3>Pierdes tu propia zona</h3><p>Las agencias grandes te superan en las zonas donde trabajas.</p></div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>No es otra IA que escribe. Es contenido basado en tu realidad.</h2>
+			<p>ChatGPT inventa. Nosotros no. Cada página se crea con tus anuncios en vivo y los datos de mercado verificados de PropertyList - los precios reales de la notaría, no suposiciones. Eso es contenido en el que Google confía y los compradores creen.</p>
+		</div>
+		<div class="grid3 steps">
+			{
+				steps.map((s) => (
+					<div class="card step"><div class="stepNum">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p></div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Dos formas de dominar tu búsqueda local</h2>
+			<p>Un solo motor, basado en tu propio inventario. Dos tipos de página que convierten a tu agencia en la respuesta que encuentran los compradores.</p>
+		</div>
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Blogs Instantáneos</h2>
+				<p>Artículos SEO en piloto automático: novedades de mercado, guías para compradores y una entrada "escribe sobre este inmueble" con un clic para cada nueva propiedad. Publicados en tu web con fotos y SEO ya hechos - un clic, o totalmente automático.</p>
+			</div>
+			<div class="card accent">
+				<h2>Guías de Zona Instantáneas</h2>
+				<p>Una guía profesional para cada zona en la que trabajas - estilo de vida, datos de mercado en vivo y tus propios inmuebles de esa zona. La página perenne que te convierte en la autoridad local, y actualiza sus datos gratis, para siempre.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Todo lo que un comprador necesita para elegirte</h2>
+			<p>Real, único y hecho por ti - no relleno pobre de IA que perjudica tu posicionamiento.</p>
+		</div>
+		<div class="grid3">
+			{
+				gets.map((g) => (
+					<div class="card">
+						<h3>{g.name}</h3>
+						<p>{g.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Sé la agencia que tu zona encuentra primero.</h2>
+			<p>Un freelance cobra de 50 a 150 euros por una entrada de blog. Contenido Instantáneo lo hace por unos créditos - basado en tus inmuebles, con tu voz, posicionando para las zonas donde de verdad trabajas.</p>
+		</div>
+	</section>
+
+	<section class="cta" id="early">
+		<div class="ctaInner">
+			<h2>Ya disponible dentro del Constructor de Webs.</h2>
+			<p>Contenido Instantáneo vive dentro del Constructor de Webs - pon en marcha tu web y actívalo, sin esperas. Todo dentro de la plataforma gratuita de <a href="/es/funciones/">PropertyList</a>.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Empieza tu web</a>
+				<a class="btnSecondary" href="/es/constructor-de-webs/">Ver el Constructor de Webs</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas, respondidas</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; cursor: pointer; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.preview { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
+		.pvBar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: rgba(16, 24, 40, 0.03); border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
+		.pvDot { width: 9px; height: 9px; border-radius: 50%; background: rgba(16, 24, 40, 0.16); }
+		.pvUrl { flex: 1; margin-left: 6px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 5px 12px; font-size: 12px; color: rgba(16, 24, 40, 0.55); }
+		.pvBody { padding: 16px 18px; }
+		.pvTag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.14); padding: 4px 10px; border-radius: 999px; }
+		.pvTitle { font-size: 18px; font-weight: 850; letter-spacing: -0.02em; color: #101828; margin: 11px 0 9px; line-height: 1.25; }
+		.pvChips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 11px; }
+		.pvChip { font-size: 12px; font-weight: 800; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); padding: 5px 10px; border-radius: 8px; }
+		.pvText { font-size: 13px; color: rgba(16, 24, 40, 0.72); line-height: 1.6; margin: 0 0 14px; }
+		.pvLabel { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(16, 24, 40, 0.45); margin-bottom: 8px; }
+		.pvGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+		.pvCard { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 10px; overflow: hidden; background: #fff; }
+		.pvImg { height: 52px; background: linear-gradient(160deg, rgba(var(--pl-accent-rgb), 0.28), rgba(var(--pl-accent-rgb), 0.08)); }
+		.pvMeta { padding: 7px 9px; }
+		.pvMeta b { display: block; font-size: 13px; font-weight: 850; color: #101828; }
+		.pvMeta span { font-size: 12px; color: rgba(16, 24, 40, 0.6); }
+		.pvFoot { font-size: 12px; color: rgba(16, 24, 40, 0.5); margin-top: 13px; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.waitForm { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
+		.waitForm input[type='email'] { flex: 1; min-width: 220px; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.16); font-size: 15px; }
+		.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		.waitMsg { width: 100%; margin: 6px 0 0; font-weight: 800; color: var(--pl-ink); font-size: 13px; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.grid3 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+</Layout>
