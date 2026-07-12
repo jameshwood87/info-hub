@@ -1,6 +1,8 @@
 // Refreshes live property counts per area+operation from propertylist.es so the
 // finder can honestly say "we found N homes" without hitting the portal live.
-// Run daily by cron. Reads the portal's own server-rendered "N viviendas" count.
+// Run daily by cron. Uses the portal's own /portal/listings JSON API (the same
+// endpoint the portal-ssr v3 frontend calls) - the count is no longer present
+// in the server-rendered HTML since the 2026-07 portal rebuild.
 import fs from "fs/promises";
 
 const OUT = "/opt/info-hub/var/admin/finder-counts.json";
@@ -30,12 +32,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function countFor(op, slug) {
   try {
-    const res = await fetch(`https://propertylist.es/${op}/${slug}`, { headers: { "user-agent": UA } });
+    const url = `https://propertylist.es/portal/listings?search_type=${op}&city=${slug}&page=1&results_count=1`;
+    const res = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" } });
     if (!res.ok) return null;
-    const html = await res.text();
-    const m = html.match(/([0-9][0-9.,]*)\s+viviendas/i);
-    if (!m) return null;
-    return parseInt(m[1].replace(/[.,]/g, ""), 10);
+    const data = await res.json();
+    return typeof data.total_count === "number" ? data.total_count : null;
   } catch { return null; }
 }
 
@@ -53,5 +54,11 @@ for (const [slug, name] of TOWNS) {
 }
 // Keep only areas with any inventory, biggest first (nicer default order).
 const withStock = areas.filter((a) => a.total > 0).sort((a, b) => b.total - a.total);
+// A fully-empty result means the portal changed or is down, not that every town
+// has zero stock - keep the last good cache rather than blanking the finder.
+if (withStock.length === 0) {
+  console.error("\nno counts fetched - keeping existing cache untouched");
+  process.exit(1);
+}
 await fs.writeFile(OUT, JSON.stringify({ updated: new Date().toISOString(), areas: withStock }, null, 2));
 console.error(`\nwrote ${OUT} - ${withStock.length} areas with stock`);
