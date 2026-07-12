@@ -1,6 +1,7 @@
 import { defineMiddleware } from 'astro/middleware';
 import { canonicalAreaPath } from './lib/areaProvince';
 import { recordWeeklyView } from './lib/weeklyViews';
+import { recordEvent } from './lib/eventStats';
 import { getAdminSessionFromRequest } from './lib/adminAuth';
 import { runAreaStatsScheduler, runNeighbourhoodStatsScheduler, runPublishScheduler } from './lib/adminScheduler';
 import { resolveRedirect } from './lib/kbRedirects';
@@ -9,6 +10,12 @@ const readEnv = (k: string) => (process.env[k] as string | undefined) || (import
 const directusUrl = () => (readEnv('DIRECTUS_URL') || 'http://127.0.0.1:8055').replace(/\/+$/g, '');
 
 export const onRequest = defineMiddleware(async (context, next) => {
+	try {
+		const ua = context.request.headers.get('user-agent') || '';
+		const bot = /GPTBot|ClaudeBot|Claude-Web|anthropic-ai|PerplexityBot|Perplexity-User|Google-Extended|CCBot|Bytespider|meta-externalagent|Applebot-Extended/i.exec(ua);
+		if (bot) recordEvent(`bot:${bot[0]}`, context.url.pathname).catch(() => undefined);
+	} catch {}
+
 	const url = new URL(context.request.url);
 	const pathname = url.pathname;
 	if (context.request.method === 'GET' || context.request.method === 'HEAD') {
@@ -119,10 +126,35 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
 		// Blog redirects — duplicate/filler posts → canonical versions
 		const blogRedirects: Array<{ from: string; to: string }> = [
-			{ from: '/blog/itp-tax-in-spain-complete-guide-for-property-buyers-2026/', to: '/blog/itp-tax-spain-complete-guide-2026/' },
-			{ from: '/es/informacion-general/itp-tax-in-spain-complete-guide-for-property-buyers-2026/', to: '/blog/itp-tax-spain-complete-guide-2026/' },
+			{ from: '/blog/rdl-8-2026-rent-cap-extension-explained/', to: '/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/' },
 		];
 		for (const r of blogRedirects) {
+			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
+				return new Response(null, { status: 301, headers: { Location: `${r.to}${url.search}` } });
+			}
+		}
+
+		// Removed page /mls/ -> moved to the agents app (property sharing)
+		const externalRedirects: Array<{ from: string; to: string }> = [
+			{ from: '/mls/', to: 'https://agents.propertylist.es/' },
+			{ from: '/es/mls/', to: 'https://agents.propertylist.es/' },
+		];
+		for (const r of externalRedirects) {
+			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
+				return new Response(null, { status: 301, headers: { Location: r.to } });
+			}
+		}
+
+		// Legacy/fallback ES aliases: an EN slug under /es/ -> its canonical localized ES page.
+		// Defensive net so a stale or proxied EN page whose language switcher still builds
+		// `/es`+path (e.g. /es/instant-listing/) lands on the real Spanish page, not a 404.
+		const esAliasRedirects: Array<{ from: string; to: string }> = [
+			{ from: '/es/instant-listing/', to: '/es/listado-instantaneo/' },
+			{ from: '/es/instant-renovation/', to: '/es/renovacion-instantanea/' },
+			{ from: '/es/instant-content/', to: '/es/contenido-instantaneo/' },
+			{ from: '/es/mobile-app/', to: '/es/app-movil/' },
+		];
+		for (const r of esAliasRedirects) {
 			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
 				return new Response(null, { status: 301, headers: { Location: `${r.to}${url.search}` } });
 			}
@@ -458,6 +490,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	}
 
 	const response = await next();
+	// HTML documents: force revalidation so content/URL fixes always reach returning
+	// visitors instead of being masked by heuristic browser caching (e.g. a stale language
+	// switcher link pointing at a now-404 path). SSR HTML otherwise ships with no cache-control.
+	if (
+		context.request.method === 'GET' &&
+		(response.headers.get('content-type') || '').includes('text/html') &&
+		!response.headers.get('cache-control')
+	) {
+		try { response.headers.set('cache-control', 'no-cache'); } catch {}
+	}
 	if (pathname === '/admin' || pathname.startsWith('/admin/') || pathname.startsWith('/api/admin/')) {
 		const headers = new Headers(response.headers);
 		headers.set('cache-control', 'no-store, no-cache, must-revalidate, max-age=0');
@@ -500,6 +542,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			await recordWeeklyView(pathname);
 		}
 		if (pathname !== '/general-information/' && pathname.startsWith('/general-information/')) {
+			await recordWeeklyView(pathname);
+		}
+		if (pathname === '/whats-on/' || pathname.startsWith('/whats-on/')) {
+			await recordWeeklyView(pathname);
+		}
+		if (pathname === '/es/que-hacer/' || pathname.startsWith('/es/que-hacer/')) {
 			await recordWeeklyView(pathname);
 		}
 		if (pathname !== '/es/informacion-general/' && pathname.startsWith('/es/informacion-general/')) {
