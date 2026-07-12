@@ -13,6 +13,7 @@ type Props = {
 	twitterCard?: 'summary' | 'summary_large_image';
 	schema?: unknown;
 	minimal?: boolean;
+	hideSearch?: boolean;
 };
 
 const {
@@ -27,10 +28,12 @@ const {
 	twitterCard,
 	schema,
 	minimal = false,
+	hideSearch = false,
 } = Astro.props;
 
 // Seasonal assets import
 import { getSeasonalAssets } from "../lib/seasonalLogo";
+import { canonicalAreaPath } from "../lib/areaProvince";
 const { logo, og, icon } = getSeasonalAssets();
 
 const stripInfoHubSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
@@ -64,7 +67,9 @@ const normalizeCanonical = (value?: string) => {
 
 const pathname = Astro.url?.pathname ?? '/';
 const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/');
+const isWhatsOnPath = pathname === '/whats-on' || pathname.startsWith('/whats-on/') || pathname === '/es/que-hacer' || pathname.startsWith('/es/que-hacer/');
 const isHomePath = pathname === '/' || pathname === '/es/';
+const showSearch = pathname.startsWith('/docs') || pathname.startsWith('/es/docs') || pathname === '/search' || pathname === '/es/search';
 const mapDocsToEnglish = (p: string) => {
 	const path = String(p || '');
 	if (!path.startsWith('/es/docs/')) return path;
@@ -110,12 +115,11 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/about-us', es: '/es/sobre-nosotros/' },
 	{ en: '/about-us/', es: '/es/sobre-nosotros/' },
 	{ en: '/about-us/', es: '/es/sobre-nosotros' },
-	{ en: '/blog/', es: '/es/informacion-general/' },
+	{ en: '/blog/', es: '/es/blog/' },
 	{ en: '/general-information/', es: '/es/informacion-general/' },
 	{ en: '/community/', es: '/es/comunidad/' },
 	{ en: '/laws/', es: '/es/leyes/' },
 	{ en: '/neighbourhood/', es: '/es/barrios/' },
-	{ en: '/mls/', es: '/es/mls/' },
 	{ en: '/features/', es: '/es/funciones/' },
 	{ en: '/website-builder/', es: '/es/constructor-de-webs/' },
 	{ en: '/rentals/', es: '/es/alquileres/' },
@@ -123,17 +127,24 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/faq/', es: '/es/preguntas-frecuentes/' },
 	{ en: '/verify-your-agency/', es: '/es/verifica-tu-agencia/' },
 	{ en: '/pricing/', es: '/es/precios/' },
+	{ en: '/referrals/', es: '/es/referidos/' },
+	{ en: '/whats-on/', es: '/es/que-hacer/' },
+	{ en: '/mobile-app/', es: '/es/app-movil/' },
+	{ en: '/instant-listing/', es: '/es/listado-instantaneo/' },
+	{ en: '/instant-renovation/', es: '/es/renovacion-instantanea/' },
+	{ en: '/instant-content/', es: '/es/contenido-instantaneo/' },
 	{ en: '/search', es: '/es/search' },
 ];
 
 const toEnglishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (!path.startsWith('/es/')) return path;
+	{ const _n = path.endsWith('/') ? path : path + '/'; if (_n === '/es/blog/como-evitar-estafas-inmobiliarias-en-espana/') return '/blog/how-to-avoid-property-scams-in-spain/'; }
 	if (path.startsWith('/es/docs/')) return mapDocsToEnglish(path);
 	if (path.startsWith('/es/barrios/')) {
 		const parts = path.split('/').filter(Boolean);
 		const slug = parts.length >= 3 ? parts[2] : '';
-		return slug ? `/neighbourhood/${slug}/` : '/neighbourhood/';
+		return slug ? canonicalAreaPath(slug) : '/neighbourhood/';
 	}
 	for (const pair of mapPairs) {
 		if (path.startsWith(pair.es)) return `${pair.en}${path.slice(pair.es.length)}`;
@@ -144,6 +155,7 @@ const toEnglishSwitchPath = (p: string) => {
 const toSpanishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (path.startsWith('/es/')) return path;
+	{ const _n = path.endsWith('/') ? path : path + '/'; if (_n === '/blog/how-to-avoid-property-scams-in-spain/') return '/es/blog/como-evitar-estafas-inmobiliarias-en-espana/'; }
 	if (path.startsWith('/docs/')) return mapDocsToSpanish(path);
 	if (path.startsWith('/neighbourhood/')) {
 		const parts = path.split('/').filter(Boolean);
@@ -156,8 +168,12 @@ const toSpanishSwitchPath = (p: string) => {
 	return `/es${path}`;
 };
 
-const enPath = toEnglishSwitchPath(pathname);
-const esPath = toSpanishSwitchPath(pathname);
+const enHreflang = (hreflangs || []).find((h) => h.hreflang === 'en')?.href;
+const esHreflang = (hreflangs || []).find((h) => h.hreflang === 'es')?.href;
+const deHreflang = (hreflangs || []).find((h) => h.hreflang === 'de')?.href;
+const enPath = lang === 'de' ? (enHreflang ?? '/') : toEnglishSwitchPath(pathname);
+const esPath = lang === 'de' ? (esHreflang ?? '/es/') : toSpanishSwitchPath(pathname);
+const deSwitchHref = deHreflang ?? '/de/';
 
 const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 
@@ -176,7 +192,7 @@ const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
 		? 'summary_large_image'
 		: 'summary';
 
-const ogLocale = lang === 'es' ? 'es_ES' : 'en_GB';
+const ogLocale = lang === 'de' ? 'de_DE' : lang === 'es' ? 'es_ES' : 'en_GB';
 const ogLocaleAlternate = lang === 'es' ? 'en_GB' : 'es_ES';
 
 const organizationLd = siteOrigin
@@ -300,7 +316,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<script async src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`}></script>
 			</>
 		) : null}
-		{isAdminPath ? null : <script is:inline src="//code.tidio.co/4pmcnp7kmt1ew2g0x5rgmhiopejtxvv6.js" async></script>}
+		{isAdminPath || isWhatsOnPath ? null : <script is:inline src="//code.tidio.co/4pmcnp7kmt1ew2g0x5rgmhiopejtxvv6.js" async></script>}
 		{!isAdminPath ? (
 			<script is:inline>
 				(function(c,l,a,r,i,t,y){
@@ -316,7 +332,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		))}
 	</head>
 	<body>
-		<a class="skipLink" href="#main">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+		<a class="skipLink" href="#main">{lang === 'de' ? 'Zum Inhalt springen' : lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
 		{minimal ? null : (
 			<>
 				<header class="header">
@@ -344,39 +360,58 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 									/>
 								</a>
 							</div>
-							<a class="brandText brandText--centered" href="https://propertylist.es/">{lang === 'es' ? 'Buscar propiedades' : 'Property Search'}</a>
+							<a class="brandText brandText--centered" href="https://propertylist.es/">{lang === 'de' ? 'Immobiliensuche' : lang === 'es' ? 'Buscar propiedades' : 'Property Search'}</a>
 							<div class="navLinks">
 								<div class="navDrop">
 									<button class="navDropBtn" type="button" aria-haspopup="true" aria-expanded="false">
-										{lang === 'es' ? 'Producto' : 'Product'}
+										{lang === 'de' ? 'Produkt' : lang === 'es' ? 'Producto' : 'Product'}
 										<svg class="navDropChev" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
 									</button>
 									<div class="navDropMenu" role="menu">
-										<a role="menuitem" href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'de' ? 'Funktionen' : lang === 'es' ? 'Funciones' : 'Features'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'de' ? 'Website-Baukasten' : lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 										<a role="menuitem" href="/pipelines/">Pipelines</a>
-										<a role="menuitem" href="/rentals/">{lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/mls/' : '/mls/'}>MLS</a>
+										<a role="menuitem" href="/rentals/">{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
+										<a role="menuitem" href="https://agents.propertylist.es/">{lang === 'es' ? 'MLS (compartir propiedades)' : 'MLS (Property Sharing)'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile App'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/listado-instantaneo/' : '/instant-listing/'}>{lang === 'de' ? 'Instant Listing' : lang === 'es' ? 'Listado Instantáneo' : 'Instant Listing'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/renovacion-instantanea/' : '/instant-renovation/'}>{lang === 'de' ? 'Instant Renovation' : lang === 'es' ? 'Renovación Instantánea' : 'Instant Renovation'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
 									</div>
 								</div>
-								<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
-								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
-								<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre' : 'About'}</a>
+								<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
+								<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : 'Docs'}</a>
+								<div class="navDrop">
+									<button class="navDropBtn" type="button" aria-haspopup="true" aria-expanded="false">
+										{lang === 'de' ? 'Ratgeber' : lang === 'es' ? 'Guías' : 'Guides'}
+										<svg class="navDropChev" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+									</button>
+									<div class="navDropMenu" role="menu">
+										<a role="menuitem" href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebietsführer' : lang === 'es' ? 'Guías de zonas' : 'Area Guides'}</a>
+									<a role="menuitem" href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
+									</div>
+								</div>
+								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre' : 'About'}</a>
 							</div>
-							<div class="navLang" aria-label={lang === 'es' ? 'Idioma' : 'Language'}>
+							<div class="navLang" aria-label={lang === 'de' ? 'Sprache' : lang === 'es' ? 'Idioma' : 'Language'}>
 								<a class:list={['navLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
 									EN
 								</a>
 								<a class:list={['navLangLink', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">
 									ES
 								</a>
+								{lang === 'de' && (
+									<a class:list={['navLangLink', 'isActive']} href={deSwitchHref} hreflang="de">
+										DE
+									</a>
+								)}
 							</div>
 							<div class="navCtas">
 								<button class="navAuthBtn" type="button" data-auth-open>
-									{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
+									{lang === 'de' ? 'Anmelden / Registrieren' : lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
 								</button>
-								<button class="navMenuBtn" type="button" data-mobile-menu-open aria-label={lang === 'es' ? 'Abrir menú' : 'Open menu'}>
+								<button class="navMenuBtn" type="button" data-mobile-menu-open aria-label={lang === 'de' ? 'Menü öffnen' : lang === 'es' ? 'Abrir menú' : 'Open menu'}>
 									<svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 										<path d="M5 7h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
 										<path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
@@ -385,15 +420,15 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								</button>
 							</div>
 						</nav>
-						<div class="searchRow">
+						{(hideSearch || !showSearch) ? null : (<div class="searchRow">
 							<form class="navSearch" method="get" action={lang === 'es' ? '/es/search' : '/search'} role="search">
 								<input
 									class="navSearchInput"
 									type="search"
 									name="q"
 									value={searchQ}
-									placeholder={lang === 'es' ? 'Buscar en la documentación' : 'Search documentation'}
-									aria-label={lang === 'es' ? 'Buscar' : 'Search'}
+									placeholder={lang === 'de' ? 'Dokumentation durchsuchen' : lang === 'es' ? 'Buscar en la documentación' : 'Search documentation'}
+									aria-label={lang === 'de' ? 'Suchen' : lang === 'es' ? 'Buscar' : 'Search'}
 									autocomplete="off"
 									spellcheck="false"
 									data-header-search
@@ -406,35 +441,41 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 									aria-controls="header-search-listbox"
 								/>
 								<button class="navSearchBtn" type="submit">
-									{lang === 'es' ? 'Buscar' : 'Search'}
+									{lang === 'de' ? 'Suchen' : lang === 'es' ? 'Buscar' : 'Search'}
 								</button>
 								<div class="navSearchMenu" data-header-search-menu hidden></div>
 							</form>
-						</div>
+						</div>)}
 					</div>
 				</header>
 				<div class="mobileMenuOverlay" data-mobile-menu-overlay hidden>
-					<div class="mobileMenuDrawer" role="dialog" aria-modal="true" aria-label={lang === 'es' ? 'Menú' : 'Menu'} tabindex="-1">
+					<div class="mobileMenuDrawer" role="dialog" aria-modal="true" aria-label={lang === 'de' ? 'Menü' : lang === 'es' ? 'Menú' : 'Menu'} tabindex="-1">
 						<div class="mobileMenuHeader">
-							<div class="mobileMenuTitle">{lang === 'es' ? 'Menú' : 'Menu'}</div>
-							<button class="mobileMenuClose" type="button" data-mobile-menu-close aria-label={lang === 'es' ? 'Cerrar' : 'Close'}>
-								{lang === 'es' ? 'Cerrar' : 'Close'}
+							<div class="mobileMenuTitle">{lang === 'de' ? 'Menü' : lang === 'es' ? 'Menú' : 'Menu'}</div>
+							<button class="mobileMenuClose" type="button" data-mobile-menu-close aria-label={lang === 'de' ? 'Schließen' : lang === 'es' ? 'Cerrar' : 'Close'}>
+								{lang === 'de' ? 'Schließen' : lang === 'es' ? 'Cerrar' : 'Close'}
 							</button>
 						</div>
-						<nav class="mobileMenuLinks" aria-label={lang === 'es' ? 'Enlaces del menú' : 'Menu links'}>
+						<nav class="mobileMenuLinks" aria-label={lang === 'de' ? 'Menülinks' : lang === 'es' ? 'Enlaces del menú' : 'Menu links'}>
 							<button class="mobileMenuAuth" type="button" data-auth-open>
-								{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
+								{lang === 'de' ? 'Anmelden / Registrieren' : lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
 							</button>
-							<a href={lang === 'es' ? '/es/' : '/'}>{lang === 'es' ? 'Inicio' : 'Home'}</a>
-							<a href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'es' ? 'Funciones' : 'Features'}</a>
-							<a href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
+							<a href={lang === 'es' ? '/es/' : '/'}>{lang === 'de' ? 'Startseite' : lang === 'es' ? 'Inicio' : 'Home'}</a>
+							<a href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'de' ? 'Funktionen' : lang === 'es' ? 'Funciones' : 'Features'}</a>
+							<a href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'de' ? 'Website-Baukasten' : lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 							<a href="/pipelines/">Pipelines</a>
-							<a href="/rentals/">{lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
-							<a href={lang === 'es' ? '/es/mls/' : '/mls/'}>MLS</a>
-							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>Docs</a>
-							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
-							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
+							<a href="/rentals/">{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
+							<a href="https://agents.propertylist.es/">{lang === 'es' ? 'MLS (compartir propiedades)' : 'MLS (Property Sharing)'}</a>
+							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile App'}</a>
+							<a href={lang === 'es' ? '/es/listado-instantaneo/' : '/instant-listing/'}>{lang === 'de' ? 'Instant Listing' : lang === 'es' ? 'Listado Instantáneo' : 'Instant Listing'}</a>
+							<a href={lang === 'es' ? '/es/renovacion-instantanea/' : '/instant-renovation/'}>{lang === 'de' ? 'Instant Renovation' : lang === 'es' ? 'Renovación Instantánea' : 'Instant Renovation'}</a>
+							<a href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
+							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : 'Docs'}</a>
+							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
+							<a href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebiete' : lang === 'es' ? 'Zonas' : 'Areas'}</a>
+							<a href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
+							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
 							<div class="mobileLang">
 								<a class:list={['mobileLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
 									EN
@@ -442,26 +483,31 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								<a class:list={['mobileLangLink', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">
 									ES
 								</a>
+								{lang === 'de' && (
+									<a class:list={['mobileLangLink', 'isActive']} href={deSwitchHref} hreflang="de">
+										DE
+									</a>
+								)}
 							</div>
 						</nav>
 					</div>
 				</div>
 				<div class="authOverlay" data-auth-overlay hidden>
-					<div class="authModal" role="dialog" aria-modal="true" aria-label={lang === 'es' ? 'Entrar o crear cuenta' : 'Sign in or sign up'} tabindex="-1">
+					<div class="authModal" role="dialog" aria-modal="true" aria-label={lang === 'de' ? 'Anmelden oder registrieren' : lang === 'es' ? 'Entrar o crear cuenta' : 'Sign in or sign up'} tabindex="-1">
 						<div class="authModalHead">
-							<div class="authModalTitle">{lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}</div>
-							<button class="authModalClose" type="button" data-auth-close aria-label={lang === 'es' ? 'Cerrar' : 'Close'}>
-								{lang === 'es' ? 'Cerrar' : 'Close'}
+							<div class="authModalTitle">{lang === 'de' ? 'Anmelden / Registrieren' : lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}</div>
+							<button class="authModalClose" type="button" data-auth-close aria-label={lang === 'de' ? 'Schließen' : lang === 'es' ? 'Cerrar' : 'Close'}>
+								{lang === 'de' ? 'Schließen' : lang === 'es' ? 'Cerrar' : 'Close'}
 							</button>
 						</div>
 						<div class="authModalBody">
 							<a class="authChoice" href="https://agents.propertylist.es/login">
-								<div class="authChoiceTitle">{lang === 'es' ? 'Freelancer / Agencia inmobiliaria' : 'Freelancer / Estate Agency'}</div>
-								<div class="authChoiceDesc">{lang === 'es' ? 'Acceso de agentes' : 'Agent login'}</div>
+								<div class="authChoiceTitle">{lang === 'de' ? 'Freiberufler / Immobilienagentur' : lang === 'es' ? 'Freelancer / Agencia inmobiliaria' : 'Freelancer / Estate Agency'}</div>
+								<div class="authChoiceDesc">{lang === 'de' ? 'Makler-Login' : lang === 'es' ? 'Acceso de agentes' : 'Agent login'}</div>
 							</a>
 							<a class="authChoice" href="https://developers.propertylist.es/login">
-								<div class="authChoiceTitle">{lang === 'es' ? 'Developer' : 'Developer'}</div>
-								<div class="authChoiceDesc">{lang === 'es' ? 'Acceso de developers' : 'Developer login'}</div>
+								<div class="authChoiceTitle">{lang === 'de' ? 'Entwickler' : lang === 'es' ? 'Developer' : 'Developer'}</div>
+								<div class="authChoiceDesc">{lang === 'de' ? 'Entwickler-Login' : lang === 'es' ? 'Acceso de developers' : 'Developer login'}</div>
 							</a>
 						</div>
 					</div>
@@ -485,37 +531,44 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								: 'The free agent-to-agent MLS for Spain'}
 						</p>
 					</div>
-					<nav class="footerNav" aria-label={lang === 'es' ? 'Navegación del pie de página' : 'Footer navigation'}>
+					<nav class="footerNav" aria-label={lang === 'de' ? 'Fußzeilen-Navigation' : lang === 'es' ? 'Navegación del pie de página' : 'Footer navigation'}>
 						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'es' ? 'Producto' : 'Product'}</div>
-							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'es' ? 'Documentación' : 'Docs'}</a>
-							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'es' ? 'Precios' : 'Pricing'}</a>
-							<a href="https://propertylist.es/">{lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
+							<div class="footerColTitle">{lang === 'de' ? 'Produkt' : lang === 'es' ? 'Producto' : 'Product'}</div>
+							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : lang === 'es' ? 'Documentación' : 'Docs'}</a>
+							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href="https://propertylist.es/">{lang === 'de' ? 'Immobilien suchen' : lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
 							<a href="https://intelligence.propertylist.es/">Market Intelligence</a>
+							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile app'}</a>
+							<a href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
 						</div>
 						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'es' ? 'Empresa' : 'Company'}</div>
-							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
-							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'es' ? 'Noticias' : 'Blog'}</a>
+							<div class="footerColTitle">{lang === 'de' ? 'Unternehmen' : lang === 'es' ? 'Empresa' : 'Company'}</div>
+							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
+							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
+							<a href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebiete' : lang === 'es' ? 'Zonas' : 'Areas'}</a>
+							<a href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
+							<a href="/de/" hreflang="de">Deutsch</a>
 							<a href={lang === 'es' ? '/es/preguntas-frecuentes/' : '/faq/'}>FAQ</a>
 						</div>
 						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'es' ? 'Cuenta' : 'Account'}</div>
-							<a href="https://agents.propertylist.es/">{lang === 'es' ? 'Acceso agentes' : 'Agents Login'}</a>
-							<a href="https://developers.propertylist.es/login">{lang === 'es' ? 'Acceso desarrolladores' : 'Developers Login'}</a>
+							<div class="footerColTitle">{lang === 'de' ? 'Konto' : lang === 'es' ? 'Cuenta' : 'Account'}</div>
+							<a href="https://agents.propertylist.es/">{lang === 'de' ? 'Makler-Login' : lang === 'es' ? 'Acceso agentes' : 'Agents Login'}</a>
+							<a href="https://developers.propertylist.es/login">{lang === 'de' ? 'Entwickler-Login' : lang === 'es' ? 'Acceso desarrolladores' : 'Developers Login'}</a>
 						</div>
 						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'es' ? 'Legal' : 'Legal'}</div>
+							<div class="footerColTitle">{lang === 'de' ? 'Rechtliches' : lang === 'es' ? 'Legal' : 'Legal'}</div>
 							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/privacy-policy/' : '/docs/propertylist-mls-user-manual/privacy-policy/'}>
-								{lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}
+								{lang === 'de' ? 'Datenschutzerklärung' : lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}
 							</a>
+							<a class="footerLink" href={lang === 'es' ? '/es/reportar-un-problema/' : '/report-a-problem/'}>{lang === 'de' ? 'Betrug melden' : lang === 'es' ? 'Reportar una estafa' : 'Report a scam'}</a>
 							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/terms-conditions/' : '/docs/propertylist-mls-user-manual/terms-conditions/'}>
-								{lang === 'es' ? 'Términos y condiciones' : 'Terms & Conditions'}
+								{lang === 'de' ? 'Allgemeine Geschäftsbedingungen' : lang === 'es' ? 'Términos y condiciones' : 'Terms & Conditions'}
 							</a>
 						</div>
 					</nav>
 					<div class="footerBottom">
-						<span class="footerCopy">&copy; {new Date().getFullYear()} PropertyList.es. {lang === 'es' ? 'Todos los derechos reservados' : 'All rights reserved'}.</span>
+						<span class="footerFine" style="display:block;font-size:11.5px;opacity:0.6;margin-top:6px;">{lang === 'de' ? 'Die Informationen auf dieser Website sind allgemeine Hinweise, keine professionelle Beratung.' : lang === 'es' ? 'La informacion de este sitio es orientacion general, no asesoramiento profesional.' : 'Information on this site is general guidance, not professional advice.'}</span>
+						<span class="footerCopy">&copy; {new Date().getFullYear()} PropertyList.es. {lang === 'de' ? 'Alle Rechte vorbehalten' : lang === 'es' ? 'Todos los derechos reservados' : 'All rights reserved'}.</span>
 						<div class="footerSocial">
 							<a href="https://www.facebook.com/PropertyList.es" aria-label="Facebook" target="_blank" rel="noopener">
 								<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -533,7 +586,62 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 					</div>
 				</div>
 			</footer>
+
+		<script is:inline data-cta-tracker>
+			document.addEventListener('click', function (e) {
+				try {
+					var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+					if (!a) return;
+					var href = a.href || '';
+					var cta = '';
+					if (/agents\.propertylist\.es/.test(href)) cta = 'signup';
+					else if (/oracle\.propertylist\.es/.test(href)) cta = 'oracle';
+					else if (/(www\.)?propertylist\.es\/(for-sale|for-rent|holiday-rentals|p\/|portal|search)/.test(href)) cta = 'portal';
+					else return;
+					var sec = a.closest('.blogOracleBand') ? 'band' : a.closest('.blogAside') ? 'sidebar' : a.closest('.blogPropertySection') ? 'featured' : a.closest('nav,header') ? 'nav' : 'body';
+					var payload = JSON.stringify({ path: location.pathname, cta: cta + ':' + sec });
+					if (navigator.sendBeacon) navigator.sendBeacon('/api/track', payload);
+					else fetch('/api/track', { method: 'POST', body: payload, keepalive: true });
+				} catch (_) {}
+			});
+		</script>
 		)}
+		{!minimal && !isAdminPath && (
+			<div class="appPromo" data-app-promo hidden>
+				<button class="appPromoX" type="button" data-app-promo-close aria-label={lang === 'es' ? 'Cerrar' : 'Dismiss'}>&times;</button>
+				<div class="appPromoIcon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5" /><path d="M10.5 18.5h3" /></svg>
+				</div>
+				<div class="appPromoText">
+					<strong>{lang === 'de' ? 'Die PropertyList-App ist auf Android' : lang === 'es' ? 'La app de PropertyList ya está en Android' : 'The PropertyList app is on Android'}</strong>
+					<span>{lang === 'de' ? 'MLS und CRM auf dem Handy, kostenlos.' : lang === 'es' ? 'MLS y CRM en tu móvil, gratis.' : 'Your MLS and CRM on your phone, free.'}</span>
+				</div>
+				<a class="appPromoBtn" href="https://play.google.com/store/apps/details?id=com.propertylist.mobile" target="_blank" rel="noopener" data-app-promo-get>{lang === 'de' ? 'Holen' : lang === 'es' ? 'Descargar' : 'Get it'}</a>
+			</div>
+		)}
+		<script is:inline>
+			(() => {
+				var el = document.querySelector('[data-app-promo]');
+				if (!el) return;
+				try { if (localStorage.getItem('pl_app_promo_dismissed') === '1') return; } catch (e) {}
+				var dismiss = function () { el.classList.remove('show'); setTimeout(function () { el.hidden = true; }, 300); try { localStorage.setItem('pl_app_promo_dismissed', '1'); } catch (e) {} };
+				setTimeout(function () { el.hidden = false; requestAnimationFrame(function () { el.classList.add('show'); }); }, 2500);
+				var x = el.querySelector('[data-app-promo-close]'); if (x) x.addEventListener('click', dismiss);
+				var g = el.querySelector('[data-app-promo-get]'); if (g) g.addEventListener('click', function () { try { localStorage.setItem('pl_app_promo_dismissed', '1'); } catch (e) {} });
+			})();
+		</script>
+		<style>
+			.appPromo { position: fixed; z-index: 40; left: 16px; right: 16px; bottom: 16px; margin: 0 auto; max-width: 420px; display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 16px; box-shadow: 0 18px 44px -18px rgba(11, 18, 32, 0.5); transform: translateY(140%); opacity: 0; transition: transform 280ms ease, opacity 280ms ease; }
+			.appPromo.show { transform: translateY(0); opacity: 1; }
+			.appPromoIcon { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: rgba(0, 174, 154, 0.12); color: #0a6d61; }
+			.appPromoText { flex: 1; min-width: 0; line-height: 1.3; }
+			.appPromoText strong { display: block; font-size: 13.5px; color: rgba(11, 18, 32, 0.92); }
+			.appPromoText span { font-size: 12px; color: rgba(16, 24, 40, 0.6); }
+			.appPromoBtn { flex: none; background: #0a6d61; color: #fff; text-decoration: none; font-weight: 900; font-size: 13.5px; padding: 9px 15px; border-radius: 11px; }
+			.appPromoBtn:hover { background: #086055; }
+			.appPromoX { position: absolute; top: -9px; right: -9px; width: 24px; height: 24px; border-radius: 999px; border: 1px solid rgba(16, 24, 40, 0.15); background: #fff; color: rgba(16, 24, 40, 0.6); font-size: 16px; line-height: 1; cursor: pointer; }
+			@media (min-width: 560px) { .appPromo { left: auto; right: 20px; bottom: 20px; margin: 0; } }
+		</style>
 		{consentEnabled ? (
 			<div class="gaConsent" data-ga-consent hidden>
 				<div class="gaConsentInner" role="region" aria-label="Cookies">
@@ -862,7 +970,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 					let html = `<div class="navSearchMenuInner" role="presentation">`;
 
 					if (!items.length) {
-						html += `<div class="navSearchEmpty" role="presentation">${lang === 'es' ? 'Sin resultados.' : 'No results.'}</div>`;
+						html += `<div class="navSearchEmpty" role="presentation">${lang === 'de' ? 'Keine Ergebnisse.' : lang === 'es' ? 'Sin resultados.' : 'No results.'}</div>`;
 					}
 
 					for (const section of sections) {
@@ -902,7 +1010,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						`<a class="navSearchItem navSearchQuery" id="${actionId}" role="option" aria-selected="false" data-i="${options.length - 1}" href="${escapeHtml(
 							input.dataset.searchPage
 						)}?q=${encodeURIComponent(q)}">` +
-						`${lang === 'es' ? 'Buscar' : 'Search'} “${qSafe}”` +
+						`${lang === 'de' ? 'Suchen' : lang === 'es' ? 'Buscar' : 'Search'} “${qSafe}”` +
 						`</a>`;
 					html += `</div>`;
 
@@ -2174,6 +2282,10 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		display: grid;
 		align-content: start;
 		gap: 10px;
+		min-height: 0;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: max(14px, env(safe-area-inset-bottom));
 	}
 
 	.mobileMenuLinks a,
