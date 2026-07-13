@@ -14,7 +14,7 @@ const description =
 const steps = [
 	{ n: 1, t: 'Pick a listing or photo', d: 'From the Marketing tab, or straight from the listing - enhance one photo or the whole set in one run.' },
 	{ n: 2, t: 'Choose the fix', d: 'Twilight, blue sky, auto-enhance, lawn and pool cleanup, upscale - or stage an empty room in the style you choose.' },
-	{ n: 3, t: 'Preview, then download', d: 'See the before and after side by side before you spend a credit. Your originals are always kept.' },
+	{ n: 3, t: 'Download and use', d: 'Your enhanced photos are ready in moments. Not quite right? Run it again free - and your originals are always kept.' },
 ];
 
 const makers = [
@@ -25,7 +25,7 @@ const makers = [
 ];
 
 const gets = [
-	{ name: 'Preview before you pay', desc: 'Every edit shows a before/after preview first. If you do not like it, it costs nothing.' },
+	{ name: 'One free re-run', desc: 'Not happy with a result? Every image includes one free re-run, and failed generations are never charged.' },
 	{ name: 'Originals always kept', desc: 'Enhanced photos are saved alongside your originals, never over them. One-click revert, any time.' },
 	{ name: 'Honest by design', desc: 'Staged and materially edited images carry a clear label. Skies and lighting improve; the property itself is never changed.' },
 	{ name: 'Real photos only', desc: 'Enhancement works on your actual listing photos - never an AI-invented room, view or exterior.' },
@@ -36,7 +36,7 @@ const gets = [
 const fixes = ['Twilight', 'Blue sky', 'Auto-enhance', 'Lawn & pool', 'Declutter', 'Upscale', 'Virtual staging'];
 
 const prices = [
-	{ name: 'Photo enhancement', price: '1 credit', desc: 'Per photo - twilight, sky, auto-enhance, cleanup or upscale. Preview first.' },
+	{ name: 'Photo enhancement', price: '1 credit', desc: 'Per photo - twilight, sky, auto-enhance, cleanup or upscale. One free re-run included.' },
 	{ name: 'Whole listing', price: '10 credits', desc: 'Auto-enhance every photo on a listing (up to ~25) in one run.', tag: 'Best value' },
 	{ name: 'Virtual staging', price: '5 credits', desc: 'Per room, in the furniture style you choose. Clearly labelled.' },
 	{ name: 'Social cards & infographics', price: 'from 2 credits', desc: 'One size 2 credits, all 3 sizes 4 credits. Market infographic 3 credits.' },
@@ -101,8 +101,8 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 				<h1>Every photo, portfolio-perfect. One click.</h1>
 				<p class="lead">
 					Twilight conversions, blue skies, virtual staging and branded social cards - made from the photos already on
-					your listings. The edits that cost 5-30 euros per photo with an editor, for one credit, with a before/after
-					preview so you only pay for what you love.
+					your listings. The edits that cost 5-30 euros per photo with an editor, for one credit - and if you do not
+					love a result, your first re-run is free.
 				</p>
 				<div class="ctaRow">
 					{LIVE
@@ -131,7 +131,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 						<span class="pvChip">Whole listing &middot; 10</span>
 						<span class="pvChip">Originals kept</span>
 					</div>
-					<div class="pvFoot">Preview before you pay &middot; one-click revert &middot; honest labels on staged images</div>
+					<div class="pvFoot">One free re-run &middot; one-click revert &middot; honest labels on staged images</div>
 				</div>
 			</div>
 		</div>

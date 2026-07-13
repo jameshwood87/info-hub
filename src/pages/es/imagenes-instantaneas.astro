@@ -14,7 +14,7 @@ const description =
 const steps = [
 	{ n: 1, t: 'Elige un anuncio o foto', d: 'Desde la pestaña Marketing, o directamente en el anuncio - mejora una foto o todo el reportaje de una vez.' },
 	{ n: 2, t: 'Elige el arreglo', d: 'Atardecer, cielo azul, mejora automática, césped y piscina, ampliación - o amuebla una habitación vacía en el estilo que elijas.' },
-	{ n: 3, t: 'Previsualiza y descarga', d: 'Compara el antes y el después antes de gastar un crédito. Tus originales se guardan siempre.' },
+	{ n: 3, t: 'Descarga y úsalas', d: 'Tus fotos mejoradas están listas en un momento. ¿No ha quedado bien? Repítelo gratis - y tus originales se guardan siempre.' },
 ];
 
 const makers = [
@@ -25,7 +25,7 @@ const makers = [
 ];
 
 const gets = [
-	{ name: 'Previsualiza antes de pagar', desc: 'Cada edición muestra primero un antes/después. Si no te gusta, no cuesta nada.' },
+	{ name: 'Una repetición gratis', desc: '¿No te convence un resultado? Cada imagen incluye una repetición gratis, y las generaciones fallidas nunca se cobran.' },
 	{ name: 'Originales siempre guardados', desc: 'Las fotos mejoradas se guardan junto a tus originales, nunca encima. Reversión en un clic, cuando quieras.' },
 	{ name: 'Honesto por diseño', desc: 'Las imágenes amuebladas o editadas de forma sustancial llevan una etiqueta clara. La luz y el cielo mejoran; la propiedad en sí nunca se cambia.' },
 	{ name: 'Solo fotos reales', desc: 'La mejora trabaja sobre tus fotos reales del anuncio - nunca una habitación, vista o fachada inventada por IA.' },
@@ -36,7 +36,7 @@ const gets = [
 const fixes = ['Atardecer', 'Cielo azul', 'Mejora automática', 'Césped y piscina', 'Despejar', 'Ampliación', 'Staging virtual'];
 
 const prices = [
-	{ name: 'Mejora de foto', price: '1 crédito', desc: 'Por foto - atardecer, cielo, mejora automática, limpieza o ampliación. Con vista previa.' },
+	{ name: 'Mejora de foto', price: '1 crédito', desc: 'Por foto - atardecer, cielo, mejora automática, limpieza o ampliación. Con una repetición gratis.' },
 	{ name: 'Anuncio completo', price: '10 créditos', desc: 'Mejora automática de todas las fotos de un anuncio (hasta ~25) de una vez.', tag: 'Mejor valor' },
 	{ name: 'Staging virtual', price: '5 créditos', desc: 'Por habitación, en el estilo de mobiliario que elijas. Claramente etiquetado.' },
 	{ name: 'Tarjetas e infografías', price: 'desde 2 créditos', desc: 'Un tamaño 2 créditos, los 3 tamaños 4 créditos. Infografía de mercado 3 créditos.' },
@@ -101,8 +101,8 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 				<h1>Cada foto, perfecta. En un clic.</h1>
 				<p class="lead">
 					Conversión a atardecer, cielos azules, home staging virtual y tarjetas sociales con tu marca - desde las fotos
-					que ya tienen tus anuncios. Los retoques que cuestan 5-30 euros por foto con un editor, por un crédito, con
-					vista previa del antes y el después para que solo pagues lo que te encanta.
+					que ya tienen tus anuncios. Los retoques que cuestan 5-30 euros por foto con un editor, por un crédito - y si un
+					resultado no te encanta, la primera repetición es gratis.
 				</p>
 				<div class="ctaRow">
 					{LIVE
@@ -131,7 +131,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 						<span class="pvChip">Anuncio completo &middot; 10</span>
 						<span class="pvChip">Originales guardados</span>
 					</div>
-					<div class="pvFoot">Vista previa antes de pagar &middot; reversión en un clic &middot; etiquetas honestas en el staging</div>
+					<div class="pvFoot">Una repetición gratis &middot; reversión en un clic &middot; etiquetas honestas en el staging</div>
 				</div>
 			</div>
 		</div>
