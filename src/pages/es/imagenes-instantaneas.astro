@@ -1,0 +1,376 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// LAUNCH-DAY FLIP: poner LIVE = true cuando el Image Studio se lance (igual que
+// en /instant-images/ - los dos flags deben cambiarse juntos). Luego redeploy.
+const LIVE = false;
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/imagenes-instantaneas/`;
+const title = 'Imágenes Instantáneas - mejora de fotos y marketing con IA | PropertyList';
+const description =
+	'Conversión a atardecer, cielos azules, home staging virtual y tarjetas sociales con tu marca - en un clic, desde las fotos que ya tienes. Honesto por diseño: etiquetas en imágenes amuebladas, originales siempre guardados.';
+
+const steps = [
+	{ n: 1, t: 'Elige un anuncio o foto', d: 'Desde la pestaña Marketing, o directamente en el anuncio - mejora una foto o todo el reportaje de una vez.' },
+	{ n: 2, t: 'Elige el arreglo', d: 'Atardecer, cielo azul, mejora automática, césped y piscina, ampliación - o amuebla una habitación vacía en el estilo que elijas.' },
+	{ n: 3, t: 'Previsualiza y descarga', d: 'Compara el antes y el después antes de gastar un crédito. Tus originales se guardan siempre.' },
+];
+
+const makers = [
+	{ name: 'Mejora de fotos', desc: 'Conversión a atardecer, cambio de cielo, mejora automática, césped y piscina impecables, y ampliación de fotos pequeñas de feeds. Los retoques que un editor cobra a 5-30 euros por foto - en un clic, por un crédito.' },
+	{ name: 'Home staging virtual', desc: 'Convierte una habitación vacía en una amueblada en el estilo que elijas, o despeja una habitación ocupada. Cada imagen amueblada lleva una etiqueta clara de "amueblado virtual" - los compradores confían en lo honesto.' },
+	{ name: 'Tarjetas sociales de anuncios', desc: 'Imágenes con tu marca para feed y stories de cualquier anuncio: foto, precio, dormitorios, zona y un código QR al anuncio - en los mismos estilos que Vídeo Instantáneo (Promo, Nuevo anuncio, Precio rebajado, Open House, Vendido), con o sin marca.' },
+	{ name: 'Infografías de mercado', desc: 'Un gráfico de "tu zona ahora mismo" con precios medianos reales y cifras verificadas ante notario - datos de mercado que ninguna IA genérica puede producir con honestidad, listo para tu feed.' },
+];
+
+const gets = [
+	{ name: 'Previsualiza antes de pagar', desc: 'Cada edición muestra primero un antes/después. Si no te gusta, no cuesta nada.' },
+	{ name: 'Originales siempre guardados', desc: 'Las fotos mejoradas se guardan junto a tus originales, nunca encima. Reversión en un clic, cuando quieras.' },
+	{ name: 'Honesto por diseño', desc: 'Las imágenes amuebladas o editadas de forma sustancial llevan una etiqueta clara. La luz y el cielo mejoran; la propiedad en sí nunca se cambia.' },
+	{ name: 'Solo fotos reales', desc: 'La mejora trabaja sobre tus fotos reales del anuncio - nunca una habitación, vista o fachada inventada por IA.' },
+	{ name: 'Con marca o sin marca', desc: 'Las tarjetas se generan con tu logo y contacto, o sin marca para que tus colaboradores del MLS las compartan con sus clientes.' },
+	{ name: 'Datos de tu anuncio', desc: 'Los precios y cifras de las tarjetas salen del anuncio - las ventas muestran el precio de venta; los alquileres, por mes o por semana.' },
+];
+
+const fixes = ['Atardecer', 'Cielo azul', 'Mejora automática', 'Césped y piscina', 'Despejar', 'Ampliación', 'Staging virtual'];
+
+const prices = [
+	{ name: 'Mejora de foto', price: '1 crédito', desc: 'Por foto - atardecer, cielo, mejora automática, limpieza o ampliación. Con vista previa.' },
+	{ name: 'Anuncio completo', price: '10 créditos', desc: 'Mejora automática de todas las fotos de un anuncio (hasta ~25) de una vez.', tag: 'Mejor valor' },
+	{ name: 'Staging virtual', price: '5 créditos', desc: 'Por habitación, en el estilo de mobiliario que elijas. Claramente etiquetado.' },
+	{ name: 'Tarjetas e infografías', price: 'desde 2 créditos', desc: 'Un tamaño 2 créditos, los 3 tamaños 4 créditos. Infografía de mercado 3 créditos.' },
+];
+
+const faqs = [
+	{ q: '¿Los compradores sabrán que las fotos están editadas?', a: 'Donde importa, sí - a propósito. Las habitaciones con staging virtual y las imágenes editadas de forma sustancial llevan una etiqueta clara, que te protege legalmente y genera confianza. Las mejoras de luz y color, como el atardecer o un cielo azul, son práctica habitual en el marketing inmobiliario y no cambian lo que es la propiedad.' },
+	{ q: '¿Qué se negará a hacer?', a: 'Cualquier cosa que tergiverse la propiedad: no eliminará ni ocultará elementos y defectos permanentes - humedades, grietas, cables de alta tensión, una carretera. Mejora la luz, el cielo, el jardín y la presentación, y amuebla habitaciones. Esa línea es la que mantiene tus anuncios seguros.' },
+	{ q: '¿Sustituye mis fotos originales?', a: 'Nunca. Las fotos mejoradas se guardan junto a tus originales como versiones adicionales entre las que elegir, y puedes revertir en un clic. Tus fotos originales permanecen siempre en el anuncio.' },
+	{ q: 'Mis fotos importadas son pequeñas y borrosas - ¿puede arreglarlas?', a: 'Sí. El ampliador eleva las fotos pequeñas y comprimidas (habituales en anuncios importados por feed) a calidad de portal. Cuesta un crédito por foto, como cualquier otra mejora.' },
+	{ q: '¿Cuánto cuesta?', a: LIVE
+		? 'Pago por uso con tus créditos de PropertyList: 1 crédito por foto mejorada, 10 créditos por un anuncio completo, 5 créditos por habitación amueblada, y tarjetas sociales desde 2 créditos. 1 crédito = 1 euro, sin suscripción.'
+		: 'El precio previsto es de pago por uso con tus créditos de PropertyList: 1 crédito por foto mejorada, 10 créditos por un anuncio completo, 5 créditos por habitación amueblada, y tarjetas sociales desde 2 créditos. 1 crédito = 1 euro, sin suscripción. El precio final se confirma en el lanzamiento.' },
+	{ q: '¿Cuándo puedo usarlo?', a: LIVE
+		? 'Ya está disponible - abre la sección Marketing de tu cuenta PropertyList. Las agencias nuevas empiezan gratis en propertylist.es.'
+		: 'Muy pronto - se lanza junto a Vídeo Instantáneo en la nueva sección Marketing. Apúntate a la lista de espera y te enviaremos un solo email el día que esté disponible. ¿Aún no estás en PropertyList? Tu cuenta gratuita se crea en minutos.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+		{ '@type': 'ListItem', position: 3, name: 'Imágenes Instantáneas', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Imágenes Instantáneas',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
+	description: 'Mejora de fotos con IA, home staging virtual e imágenes de marketing con marca para agencias inmobiliarias, generadas desde las fotos y datos de los anuncios de la propia agencia.',
+	offers: { '@type': 'Offer', price: '1', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/instant-images/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/instant-images/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">{LIVE ? 'Imágenes Instantáneas - Ya disponible' : 'Imágenes Instantáneas - Muy pronto'}</div>
+				<h1>Cada foto, perfecta. En un clic.</h1>
+				<p class="lead">
+					Conversión a atardecer, cielos azules, home staging virtual y tarjetas sociales con tu marca - desde las fotos
+					que ya tienen tus anuncios. Los retoques que cuestan 5-30 euros por foto con un editor, por un crédito, con
+					vista previa del antes y el después para que solo pagues lo que te encanta.
+				</p>
+				<div class="ctaRow">
+					{LIVE
+						? <a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Mejora tu primer anuncio</a>
+						: <a class="btnPrimary" href="#waitlist">Apúntate a la lista</a>}
+					<a class="btnSecondary" href="#how">Cómo funciona</a>
+				</div>
+				<div class="note">
+					{LIVE
+						? 'Ya disponible en la sección Marketing de tu cuenta PropertyList. Pago por uso con créditos - sin suscripción.'
+						: 'Se lanza muy pronto en tu cuenta PropertyList, junto a Vídeo Instantáneo. Pago por uso con créditos - sin suscripción.'}
+				</div>
+			</div>
+
+			<div class="preview" aria-hidden="true">
+				<div class="pvBar"><span class="pvDot"></span><span class="pvDot"></span><span class="pvDot"></span><span class="pvUrl">Image Studio &rsaquo; Atardecer</span></div>
+				<div class="pvBody">
+					<div class="pvSplit">
+						<div class="pvHalf pvBefore"><span class="pvHalfTag">Antes</span></div>
+						<div class="pvDivider"><span class="pvHandle">&#8596;</span></div>
+						<div class="pvHalf pvAfter"><span class="pvHalfTag">Después</span></div>
+						<span class="pvStyle">ATARDECER</span>
+					</div>
+					<div class="pvChips">
+						<span class="pvChip">1 crédito / foto</span>
+						<span class="pvChip">Anuncio completo &middot; 10</span>
+						<span class="pvChip">Originales guardados</span>
+					</div>
+					<div class="pvFoot">Vista previa antes de pagar &middot; reversión en un clic &middot; etiquetas honestas en el staging</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Los compradores eligen con los ojos. Las fotos deciden el clic.</h2>
+			<p>Un cielo gris, una habitación oscura o una foto diminuta y comprimida entierran una gran propiedad. La edición profesional lo arregla - a 5-30 euros por foto, por 25 fotos, por cada anuncio. Así que la mayoría de los anuncios salen con las fotos que les tocaron.</p>
+		</div>
+		<div class="grid3">
+			<div class="card"><h3>Los editores cobran por foto</h3><p>Retocar un reportaje completo cuesta más de lo que la mayoría de anuncios reciben jamás.</p></div>
+			<div class="card"><h3>Las fotos de feed llegan cansadas</h3><p>Los anuncios importados suelen traer imágenes pequeñas y comprimidas que lucen mal en los portales modernos.</p></div>
+			<div class="card"><h3>Las habitaciones vacías no venden</h3><p>Las propiedades sin amueblar fotografían frías, y el home staging físico cuesta miles.</p></div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>De foto cansada a foto de portada en tres pasos</h2>
+			<p>Sin subir nada, sin editor, sin esperar días. Tus fotos ya están en tus anuncios - el arreglo está a un clic.</p>
+		</div>
+		<div class="grid3 steps">
+			{steps.map((s) => (
+				<div class="card step"><div class="stepNum">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p></div>
+			))}
+		</div>
+		<div class="styleStrip">
+			<span class="styleLabel">Arreglos:</span>
+			{fixes.map((s) => <span class="styleChip">{s}</span>)}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Cuatro herramientas de imagen, una sección de Marketing</h2>
+			<p>Todo funciona desde tus propios anuncios y datos de mercado verificados - y convive con Vídeo Instantáneo, compartiendo tu kit de marca y tus créditos.</p>
+		</div>
+		<div class="grid2">
+			{makers.map((m) => (
+				<div class="card accent"><h2>{m.name}</h2><p>{m.desc}</p></div>
+			))}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Hecho para que luzcas bien - con honestidad</h2>
+			<p>Estas imágenes van en tus anuncios y en tus redes, con tu nombre. Las reglas van integradas para que solo puedan ayudarte.</p>
+		</div>
+		<div class="grid3">
+			{gets.map((g) => (
+				<div class="card"><h3>{g.name}</h3><p>{g.desc}</p></div>
+			))}
+		</div>
+	</section>
+
+	<section class="section" id="pricing">
+		<div class="sectionHead">
+			<h2>Un precio para usarlo cada semana</h2>
+			<p>1 crédito = 1 euro, del mismo saldo de créditos que tu agencia ya usa. Sin suscripción.{LIVE ? '' : ' Precio previsto, se confirma en el lanzamiento.'}</p>
+		</div>
+		<div class="grid4">
+			{prices.map((p) => (
+				<div class={p.tag ? 'card priceCard best' : 'card priceCard'}>
+					{p.tag && <span class="bestTag">{p.tag}</span>}
+					<h3>{p.name}</h3>
+					<div class="priceBig">{p.price}</div>
+					<p>{p.desc}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	{LIVE ? (
+		<section class="cta" id="waitlist">
+			<div class="ctaInner">
+				<h2>Ya disponible en tu sección Marketing.</h2>
+				<p>Abre PropertyList, entra en Marketing y dale a tu mejor anuncio las fotos que merece. ¿Aún no estás en PropertyList? El MLS y el CRM son gratis para siempre.</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Empieza gratis</a>
+					<a class="btnSecondary" href="/es/funciones/">Todo lo que incluye</a>
+				</div>
+			</div>
+		</section>
+	) : (
+		<section class="cta waitlistBand" id="waitlist">
+			<div class="ctaInner">
+				<h2>Se lanza muy pronto. Sé el primero.</h2>
+				<p>Déjanos tu email y te enviaremos un solo mensaje el día que Imágenes Instantáneas esté disponible - nada más. Y si aún no estás en PropertyList, crea ahora tu cuenta gratuita para estar listo desde el primer día.</p>
+				<form class="waitlistForm" data-source="instant-images">
+					<input type="email" name="email" required placeholder="tu@agencia.com" aria-label="Tu email" autocomplete="email" />
+					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					<button type="submit">Avísame en el lanzamiento</button>
+					<p class="wlStatus" role="status" aria-live="polite"></p>
+				</form>
+				<div class="ctaRow" style="margin-top: 12px;">
+					<a class="btnSecondary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratuita</a>
+				</div>
+			</div>
+		</section>
+	)}
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas frecuentes</h2></div>
+		<div class="faq">
+			{faqs.map((f) => (
+				<details>
+					<summary>{f.q}</summary>
+					<p>{f.a}</p>
+				</details>
+			))}
+		</div>
+	</section>
+
+	<script is:inline>
+		document.querySelectorAll('.waitlistForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.wlStatus');
+				const emailEl = form.querySelector('input[name="email"]');
+				const hpEl = form.querySelector('input[name="website"]');
+				const email = emailEl ? emailEl.value : '';
+				const website = hpEl ? hpEl.value : '';
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'wlStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/app-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ email: email, website: website, lang: es ? 'es' : 'en', source: form.getAttribute('data-source') || 'instant-images' }),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'wlStatus ok';
+						status.textContent = es ? 'Estas en la lista. Te avisaremos el dia del lanzamiento.' : "You're on the list. We'll email you the day it launches.";
+					} else {
+						status.className = 'wlStatus err';
+						status.textContent = es ? 'Revisa tu correo e intentalo de nuevo.' : 'Please check your email and try again.';
+					}
+				} catch (err) {
+					status.className = 'wlStatus err';
+					status.textContent = es ? 'Algo salio mal. Intentalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; cursor: pointer; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.preview { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
+		.pvBar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: rgba(16, 24, 40, 0.03); border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
+		.pvDot { width: 9px; height: 9px; border-radius: 50%; background: rgba(16, 24, 40, 0.16); }
+		.pvUrl { flex: 1; margin-left: 6px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 5px 12px; font-size: 12px; color: rgba(16, 24, 40, 0.55); }
+		.pvBody { padding: 16px 18px; }
+		.pvSplit { position: relative; display: flex; border-radius: 12px; overflow: hidden; height: 210px; }
+		.pvHalf { flex: 1; position: relative; }
+		.pvBefore { background: linear-gradient(180deg, #aeb6bd 0%, #cfd4d8 55%, #9aa48f 100%); filter: saturate(0.65) brightness(0.92); }
+		.pvAfter { background: linear-gradient(180deg, #2b3f66 0%, #7a5f8f 38%, #e2905f 62%, #35524a 100%); }
+		.pvHalfTag { position: absolute; top: 10px; left: 10px; font-size: 10.5px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: rgba(16, 24, 40, 0.5); padding: 4px 9px; border-radius: 999px; }
+		.pvAfter .pvHalfTag { left: auto; right: 10px; background: rgba(10, 109, 97, 0.9); }
+		.pvDivider { width: 3px; background: #fff; position: relative; z-index: 2; }
+		.pvHandle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: #fff; color: #0a6d61; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; box-shadow: 0 6px 18px rgba(16, 24, 40, 0.3); }
+		.pvStyle { position: absolute; bottom: 12px; left: 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.08em; color: #fff; background: rgba(10, 109, 97, 0.9); padding: 5px 10px; border-radius: 999px; z-index: 3; }
+		.pvChips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; }
+		.pvChip { font-size: 12px; font-weight: 800; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); padding: 5px 10px; border-radius: 8px; }
+		.pvFoot { font-size: 12px; color: rgba(16, 24, 40, 0.5); margin-top: 12px; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.styleStrip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; }
+		.styleLabel { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(16, 24, 40, 0.5); }
+		.styleChip { font-size: 13px; font-weight: 800; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.1); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); padding: 6px 12px; border-radius: 999px; }
+		.priceCard { position: relative; text-align: left; }
+		.priceCard.best { border-color: rgba(var(--pl-accent-rgb), 0.45); box-shadow: 0 8px 22px rgba(var(--pl-accent-rgb), 0.12); }
+		.bestTag { position: absolute; top: -10px; right: 14px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: var(--pl-ink); padding: 4px 10px; border-radius: 999px; }
+		.priceBig { font-size: 26px; font-weight: 900; letter-spacing: -0.02em; color: var(--pl-ink); margin: 4px 0 8px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.waitlistForm { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 4px; max-width: 520px; }
+		.waitlistForm input[type='email'] { flex: 1; min-width: 220px; padding: 13px 14px; border-radius: 14px; border: 1px solid rgba(16, 24, 40, 0.2); font-size: 15px; background: #fff; }
+		.waitlistForm input[type='email']:focus { outline: none; border-color: var(--pl-accent); box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.18); }
+		.waitlistForm .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		.waitlistForm button { padding: 13px 20px; border-radius: 14px; border: 1px solid #0a6d61; background: #0a6d61; color: #fff; font-weight: 950; font-size: 15px; cursor: pointer; }
+		.waitlistForm button:hover { background: #086055; }
+		.wlStatus { flex-basis: 100%; margin: 4px 0 0; font-size: 13px; font-weight: 700; color: rgba(16, 24, 40, 0.6); }
+		.wlStatus.ok { color: #0a6d61; }
+		.wlStatus.err { color: #b42318; }
+		.waitlistForm.done input, .waitlistForm.done button { display: none; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.grid3 { grid-template-columns: repeat(2, 1fr); }
+			.grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (max-width: 560px) {
+			.grid4 { grid-template-columns: 1fr; }
+		}
+	</style>
+</Layout>
