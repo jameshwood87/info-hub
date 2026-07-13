@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { readFileSync } from 'node:fs';
 import { areaImagePath } from '../lib/areaImages';
-import { canonicalAreaPath } from '../lib/areaProvince';
+import { canonicalAreaPath, provinceForAreaSlug } from '../lib/areaProvince';
 import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
 import PropertyCard from '../components/PropertyCard.astro';
@@ -1730,7 +1730,7 @@ const cleanImportedBody = (html: string | null | undefined, path: string) => {
 		.replace(/&#0*38;(#\d+;|#[xX][0-9a-fA-F]+;|(?:amp|lt|gt|quot|apos|nbsp|mdash|ndash|hellip|rsquo|lsquo|rdquo|ldquo|eacute|aacute|iacute|oacute|uacute|ntilde|copy|reg|trade|euro|pound|deg);)/g, '&$1')
 		.replace(/&amp;(#\d+;|#[xX][0-9a-fA-F]+;|(?:amp|lt|gt|quot|apos|nbsp|mdash|ndash|hellip|rsquo|lsquo|rdquo|ldquo);)/g, '&$1');
 	// Normalise em/en dashes (chars and entities) to a plain hyphen per house style
-	out = out.replace(/\s*(?:[\u2012\u2013\u2014\u2015\u2212]|&#821[0-9];|&#8722;|&mdash;|&ndash;)\s*/g, ' - ');
+	out = out.replace(/\s*(?:[\u2012\u2013\u2014\u2015\u2212]|&#821[0-3];|&#8722;|&mdash;|&ndash;)\s*/g, ' - ');
 
 	return out;
 };
@@ -1832,7 +1832,7 @@ const blogTypeNoun = blogSearchType === 'for-rent' ? 'property for rent' : blogS
 const blogListings: MarketListing[] = isBlogLike
 	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
 	: [];
-const blogPortalUrl = `https://www.propertylist.es/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const blogPortalUrl = `https://www.propertylist.es/en/portal/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
 const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}${blogSearchType === 'for-rent' ? '/month' : ''}` : 'Price on request');
 const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + '-bed ' : ''}${blogTypeNoun}${l.suburb ? ` in ${l.suburb}` : ''}`.slice(0, 70);
 const isDocs = renderPath.startsWith('/docs/');
@@ -1931,6 +1931,16 @@ const neighbourhoodMeta = (() => {
 const neighbourhoodPortalUrl = (() => {
 	if (!isNeighbourhood) return '';
 	if (!neighbourhoodSlug) return 'https://propertylist.es';
+	// The /portal/for-sale/{muni}/ mapping below forces the municipality onto a hard-coded
+	// Costa-del-Sol town list, so it is only trustworthy for guides that actually sit in the
+	// Costa del Sol (Malaga / Cadiz provinces). For areas outside that footprint (Baleares,
+	// Madrid, ...) the municipality metadata is junk/geocoded to a random CdS town, so the
+	// resolver mis-maps to a wrong town (e.g. Mallorca -> marbella, Madrid -> casares). For
+	// those, skip the municipality mapping and link to the guide's own real area page.
+	const province = provinceForAreaSlug(neighbourhoodSlug);
+	if (province !== 'malaga' && province !== 'cadiz') {
+		return `https://propertylist.es/en/portal/for-sale/${encodeURIComponent(neighbourhoodSlug)}`;
+	}
 	const muni =
 		String((neighbourhoodMeta as any)?.neighbourhoodStats?.municipality || '').trim() ||
 		String((neighbourhoodMeta as any)?.neighbourhoodGeo?.municipality || '').trim();
@@ -1958,7 +1968,7 @@ if (isNeighbourhood && neighbourhoodSlug) {
 		const _hit = (_fc.areas || []).find((a: any) => a.slug === neighbourhoodSlug);
 		if (_hit && _hit.counts && Number(_hit.counts['for-sale']) > 0) {
 			neighbourhoodSaleCount = Number(_hit.counts['for-sale']);
-			neighbourhoodSeoUrl = `https://propertylist.es/for-sale/${neighbourhoodSlug}`;
+			neighbourhoodSeoUrl = `https://propertylist.es/en/portal/for-sale/${neighbourhoodSlug}`;
 		}
 	} catch {}
 }
@@ -3408,6 +3418,16 @@ const ldJson = JSON.stringify([
 							<a href="/docs/propertylist-mls-user-manual/reports-statistics/area-market-reports/" style="white-space:nowrap;background:#fff;color:rgba(16,24,40,0.85);border:1px solid rgba(16,24,40,0.15);border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;">Area market reports</a>
 						</div>
 					</section>
+				) : null}
+
+				{isBlogLike ? (
+					<aside class="blogHomeCta" aria-label="Search homes" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:14px 0 6px;padding:20px 22px;border-radius:18px;background:linear-gradient(120deg,#00ae9a,#0b7d6d);color:#fff;">
+						<div style="min-width:0;max-width:640px;">
+							<strong style="display:block;font-size:17px;letter-spacing:-.01em;margin-bottom:3px;">Looking for a home?</strong>
+							<span style="font-size:14px;opacity:.95;">{blogPropertyLocation ? `See what's available right now in ${blogPropertyLocation} - homes for sale & to rent from registered agents.` : `See what's available right now on the Costa del Sol - homes for sale & to rent from registered agents.`}</span>
+						</div>
+						<a href="/property-finder" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap;">Find your place &rarr;</a>
+					</aside>
 				) : null}
 
 				{isBlogLike && blogListings.length ? (

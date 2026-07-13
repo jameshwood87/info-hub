@@ -1,6 +1,7 @@
 import { listKbPagesByPrefix } from '../lib/directus';
 import { canonicalAreaPath } from '../lib/areaProvince';
 import { listPrefixRedirects } from '../lib/kbRedirects';
+import dePilot from '../data/de-pilot.json';
 
 export const prerender = false;
 
@@ -74,8 +75,9 @@ const toSpanishPath = (p: string) => {
     { en: '/laws/', es: '/es/leyes/' },
     { en: '/neighbourhood/', es: '/es/barrios/' },
     { en: '/andalucia/', es: '/es/andalucia/' },
-    { en: '/mls/', es: '/es/mls/' },
     { en: '/pricing/', es: '/es/precios/' },
+    { en: '/referrals/', es: '/es/referidos/' },
+    { en: '/whats-on/', es: '/es/que-hacer/' },
     { en: '/search', es: '/es/search' },
   ];
   for (const pair of mapPairs) {
@@ -166,12 +168,20 @@ export async function GET() {
     '/community/',
     '/developers/',
     '/neighbourhood/',
-    '/mls/',
     '/laws/',
     '/pricing/',
+    '/referrals/',
+    '/whats-on/',
+    '/whats-on/marbella/',
+    '/whats-on/estepona/',
+    '/whats-on/malaga/',
     '/search',
     '/website-builder/',
     '/features/',
+    '/mobile-app/',
+    '/instant-listing/',
+    '/instant-renovation/',
+    '/instant-content/',
     '/rentals/',
     '/pipelines/',
     '/verify-your-agency/',
@@ -183,10 +193,18 @@ export async function GET() {
     '/es/informacion-general/',
     '/es/comunidad/',
     '/es/barrios/',
-    '/es/mls/',
     '/es/leyes/',
     '/es/precios/',
+    '/es/referidos/',
+    '/es/que-hacer/',
+    '/es/que-hacer/marbella/',
+    '/es/que-hacer/estepona/',
+    '/es/que-hacer/malaga/',
     '/es/funciones/',
+    '/es/app-movil/',
+    '/es/listado-instantaneo/',
+    '/es/renovacion-instantanea/',
+    '/es/contenido-instantaneo/',
     '/es/alquileres/',
     '/es/promotores/',
     '/es/pipelines/',
@@ -232,6 +250,21 @@ export async function GET() {
   };
 
   for (const p of staticPaths) push(p, null);
+
+  // German pilot pages (self-contained /de/ section)
+  push('/de/', null, [
+    { hreflang: 'de', href: `${origin}/de/` },
+    { hreflang: 'en', href: `${origin}/` },
+    { hreflang: 'es', href: `${origin}/es/` },
+    { hreflang: 'x-default', href: `${origin}/` },
+  ]);
+  for (const [dePath, e] of Object.entries(dePilot as Record<string, { hreflang?: { en?: string; es?: string } }>)) {
+    const alts: Alt[] = [{ hreflang: 'de', href: `${origin}${dePath}` }];
+    if (e?.hreflang?.en) alts.push({ hreflang: 'en', href: `${origin}${e.hreflang.en}` });
+    if (e?.hreflang?.es) alts.push({ hreflang: 'es', href: `${origin}${e.hreflang.es}` });
+    if (e?.hreflang?.en) alts.push({ hreflang: 'x-default', href: `${origin}${e.hreflang.en}` });
+    push(dePath, null, alts);
+  }
 
   try {
     const realEsSet = await fetchRealEsPaths();

@@ -1,0 +1,103 @@
+---
+import fs from 'node:fs';
+import Layout from '../../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/que-hacer/`;
+const title = 'Qué hacer en la Costa del Sol: agendas por ciudad | PropertyList';
+const description =
+	'Agendas de eventos siempre al día para las ciudades de la Costa del Sol: conciertos, ferias, mercadillos y planes de playa, de fuentes oficiales, actualizadas cada semana. Monta tu plan gratis, compártelo y pásalo a tu calendario.';
+
+const todayIso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+const TOWNS = [
+	{ key: 'marbella', name: 'Marbella', href: '/es/que-hacer/marbella/', blurb: 'Noches de Starlite, ferias, mercadillos y los beach clubs famosos.' },
+	{ key: 'estepona', name: 'Estepona', href: '/es/que-hacer/estepona/', blurb: 'El casco antiguo lleno de flores, el puerto de noche y la temporada de festivales.' },
+	{ key: 'malaga', name: 'Málaga', href: '/es/que-hacer/malaga/', blurb: 'Cultura urbana, estrellas Michelin, chiringuitos y salas abiertas hasta el amanecer.' },
+];
+const towns = TOWNS.map((t) => {
+	let count = 0, updated = null;
+	try {
+		const store = JSON.parse(fs.readFileSync(`/opt/info-hub/var/admin/events/${t.key}.json`, 'utf8'));
+		const evs = (store.events || []).filter((e: any) => String(e.end || e.start) >= todayIso);
+		count = evs.filter((e: any) => e.scope === 'local').length;
+		updated = store.updated || null;
+	} catch {}
+	return { ...t, count, updated };
+});
+const fmt = (iso: string | null) => (iso ? new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long' }).format(new Date(iso)) : null);
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Qué hacer', item: canonical },
+	],
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'en', href: `${origin}/whats-on/` },
+		{ hreflang: 'x-default', href: `${origin}/whats-on/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Qué hacer &middot; Costa del Sol</div>
+			<h1>Qué hacer, ciudad a ciudad</h1>
+			<p class="lead">
+				Eventos reales y verificados - conciertos, ferias, exposiciones, mercadillos y planes de playa - de fuentes
+				oficiales, actualizados cada semana. Elige tu ciudad, toca <strong>+ Añadir al plan</strong> en lo que te
+				guste, comparte el plan con tus amigos o compañeros de viaje y pásalo directo al calendario. Gratis y sin registro.
+			</p>
+		</div>
+	</section>
+
+	<section class="section" aria-label="Ciudades">
+		<div class="grid">
+			{towns.map((t) => (
+				<a class="card" href={t.href}>
+					<h2>{t.name}</h2>
+					<p class="blurb">{t.blurb}</p>
+					<p class="meta">
+						{t.count ? <strong>{t.count} eventos en marcha y por venir</strong> : <strong>Agenda en camino</strong>}
+						{t.updated ? <span> &middot; actualizada el {fmt(t.updated)}</span> : null}
+					</p>
+					<span class="go">Ver la agenda de {t.name} &rarr;</span>
+				</a>
+			))}
+		</div>
+		<p class="note">
+			¿Tienes un local u organizas eventos en otra ciudad de la Costa del Sol? <a href="/es/que-hacer/marbella/#add-event">Registra tu evento o tu feed</a>
+			- abrimos nuevas ciudades donde la agenda se llena.
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.hero { background: linear-gradient(160deg, #04211c 0%, #0a4a3f 70%, #0d5c4d 100%); color: #fff; padding: 56px 20px 40px; }
+	.heroInner { max-width: 1040px; margin: 0 auto; }
+	.kicker { font-size: 12.5px; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: #7fe7d9; margin-bottom: 10px; }
+	h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.02em; margin: 0 0 12px; }
+	.lead { max-width: 720px; font-size: 16.5px; line-height: 1.6; color: rgba(255, 255, 255, 0.88); margin: 0; }
+	.section { max-width: 1040px; margin: 0 auto; padding: 36px 20px 64px; }
+	.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+	.card { display: block; border: 1px solid rgba(4, 33, 28, 0.12); border-radius: 16px; padding: 22px; text-decoration: none; color: inherit; background: #fff; box-shadow: 0 1px 2px rgba(4, 33, 28, 0.05); transition: transform 0.12s ease, box-shadow 0.12s ease; }
+	.card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(4, 33, 28, 0.1); }
+	.card h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: -0.01em; color: #0a2e28; }
+	.blurb { margin: 0 0 12px; font-size: 14.5px; line-height: 1.55; color: rgba(10, 46, 40, 0.72); }
+	.meta { margin: 0 0 14px; font-size: 13px; color: rgba(10, 46, 40, 0.6); }
+	.meta strong { color: #075e53; }
+	.go { font-weight: 900; font-size: 14.5px; color: #00806f; }
+	.note { margin-top: 26px; font-size: 13.5px; color: rgba(10, 46, 40, 0.65); }
+	.note a { color: #00806f; font-weight: 700; }
+</style>

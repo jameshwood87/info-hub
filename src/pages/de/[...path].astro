@@ -1,0 +1,111 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import pagesData from '../../data/de-pilot.json';
+
+const ORIGIN = 'https://info.propertylist.es';
+type DePage = {
+  lang: string;
+  title: string;
+  description: string;
+  body: string;
+  hreflang: { en?: string; es?: string };
+  portal?: string;
+};
+const pages = pagesData as Record<string, DePage>;
+
+let path = Astro.url.pathname;
+if (!path.endsWith('/')) path += '/';
+
+const isHub = path === '/de/';
+const entry = isHub ? null : pages[path];
+
+if (!isHub && !entry) {
+  return new Response('Nicht gefunden', { status: 404 });
+}
+
+const canonical = ORIGIN + path;
+
+const title = isHub
+  ? 'PropertyList auf Deutsch - Immobilien an der Costa del Sol'
+  : entry!.title;
+const description = isHub
+  ? 'Immobilien an der Costa del Sol auf Deutsch: Gebietsführer, Kaufratgeber und Betrugsschutz, mit geprüften Marktdaten von PropertyList.'
+  : entry!.description;
+
+const hreflangs = isHub
+  ? [
+      { hreflang: 'de', href: canonical },
+      { hreflang: 'en', href: ORIGIN + '/' },
+      { hreflang: 'es', href: ORIGIN + '/es/' },
+      { hreflang: 'x-default', href: ORIGIN + '/' },
+    ]
+  : [
+      { hreflang: 'de', href: canonical },
+      ...(entry!.hreflang.en ? [{ hreflang: 'en', href: ORIGIN + entry!.hreflang.en }] : []),
+      ...(entry!.hreflang.es ? [{ hreflang: 'es', href: ORIGIN + entry!.hreflang.es }] : []),
+      ...(entry!.hreflang.en ? [{ hreflang: 'x-default', href: ORIGIN + entry!.hreflang.en }] : []),
+    ];
+
+const hubItems = Object.entries(pages).map(([p, e]) => ({ path: p, title: e.title, description: e.description }));
+const hasH1 = !isHub && /<h1[\s>]/i.test(entry!.body);
+---
+<Layout lang="de" title={title} description={description} canonical={canonical} hreflangs={hreflangs}>
+  <main id="main" class="deWrap">
+    {isHub ? (
+      <section class="deHub">
+        <p class="deKicker">PropertyList</p>
+        <h1>Immobilien an der Costa del Sol - auf Deutsch</h1>
+        <p class="deLead">
+          Eine deutschsprachige Auswahl unserer Ratgeber und Gebietsführer, mit geprüften Marktdaten
+          aus dem spanischen Notarregister. Alle Live-Angebote finden Sie im Portal.
+        </p>
+        <ul class="deList">
+          {hubItems.map((it) => (
+            <li>
+              <a href={it.path}>{it.title}</a>
+              <span>{it.description}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="deNote">
+          Das vollständige Angebot gibt es auf <a href="/">Englisch</a> und <a href="/es/">Spanisch</a>.
+          Live-Angebote: <a href="https://www.propertylist.es" target="_blank" rel="noopener">propertylist.es</a>.
+        </p>
+      </section>
+    ) : (
+      <article class="deArticle">
+        <nav class="deCrumb"><a href="/de/">Deutsch</a> <span aria-hidden="true">/</span> <span>{entry!.title}</span></nav>
+        {!hasH1 && <h1>{entry!.title}</h1>}
+        <div class="deBody" set:html={entry!.body} />
+        {entry!.portal && (
+          <p class="deCta"><a href={entry!.portal} target="_blank" rel="noopener">Alle Angebote und geprüfte Marktdaten ansehen &rarr;</a></p>
+        )}
+        <p class="deNote">
+          Auch verfügbar auf
+          {entry!.hreflang.en ? (<> <a href={entry!.hreflang.en}>Englisch</a></>) : null}
+          {entry!.hreflang.es ? (<> und <a href={entry!.hreflang.es}>Spanisch</a></>) : null}
+          . <a href="/de/">Alle deutschen Seiten</a>.
+        </p>
+      </article>
+    )}
+  </main>
+  <style>
+    .deWrap { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    .deKicker { text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; color: var(--muted, #6b7280); margin: 0 0 .35rem; }
+    .deHub h1, .deArticle :global(h1) { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.15; margin: 0 0 .75rem; }
+    .deLead { font-size: 1.1rem; color: var(--muted, #4b5563); margin: 0 0 1.75rem; }
+    .deList { list-style: none; padding: 0; margin: 0 0 2rem; display: grid; gap: .9rem; }
+    .deList li { border: 1px solid var(--border, #e5e7eb); border-radius: 12px; padding: 1rem 1.15rem; }
+    .deList li a { font-weight: 650; font-size: 1.08rem; text-decoration: none; }
+    .deList li span { display: block; color: var(--muted, #6b7280); font-size: .95rem; margin-top: .25rem; }
+    .deCrumb { font-size: .85rem; color: var(--muted, #6b7280); margin: 0 0 1rem; }
+    .deCrumb a { color: inherit; }
+    .deBody :global(h2) { margin-top: 2rem; }
+    .deBody :global(p) { line-height: 1.7; }
+    .deBody :global(a) { color: var(--accent, #0b5cff); }
+    .deCta { margin: 2rem 0 1rem; }
+    .deCta a { display: inline-block; background: var(--accent, #0b5cff); color: #fff; padding: .8rem 1.3rem; border-radius: 10px; font-weight: 650; text-decoration: none; }
+    .deNote { margin-top: 1.75rem; padding-top: 1rem; border-top: 1px solid var(--border, #e5e7eb); font-size: .9rem; color: var(--muted, #6b7280); }
+    .deNote a { color: inherit; }
+  </style>
+</Layout>

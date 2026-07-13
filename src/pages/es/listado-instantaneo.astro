@@ -1,0 +1,325 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats } from '../../lib/portalStats';
+
+const stats = await getPortalStats();
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/listado-instantaneo/`;
+const title = 'Listado Instantáneo - crea un anuncio completo con fotos y tu voz | PropertyList';
+const description =
+	'Crea un anuncio desde fotos y una nota de voz. Listado Instantáneo de PropertyList rellena cada campo - m2, dormitorios, características y una descripción pulida - para que los agentes revisen y publiquen en un minuto.';
+
+const fills = [
+	{ name: 'Tipo y estado de la propiedad', desc: 'Villa, apartamento, ático, obra nueva o reventa - identificado por ti.' },
+	{ name: 'Dormitorios y baños', desc: 'Contados a partir de lo que dices y de lo que muestran las fotos.' },
+	{ name: 'm2 construidos, parcela y terraza', desc: 'Cada superficie capturada de tu nota de voz, en el campo correcto.' },
+	{ name: 'Características y extras', desc: 'Piscina, vistas al mar, aire acondicionado, parking, jardín, urbanización cerrada - todo etiquetado.' },
+	{ name: 'Orientación y ubicación', desc: 'Orientación sur, la zona y el entorno, colocados correctamente.' },
+	{ name: 'Una descripción lista para vender', desc: 'Un texto limpio y atractivo - listo para publicar o ajustar.' },
+	{ name: 'Preparado en varios idiomas', desc: 'Llega a compradores en distintos idiomas, no solo en uno.' },
+	{ name: 'Todo, estructurado', desc: 'Un anuncio completo listo para el MLS, no un borrador.' },
+];
+
+const faqs = [
+	{ q: '¿Cómo funciona?', a: 'Añade las fotos de la propiedad y graba una breve nota de voz describiéndola. Listado Instantáneo lee tus imágenes y tus palabras y completa todo el anuncio para que lo revises y publiques.' },
+	{ q: '¿Qué tengo que decir en la grabación?', a: 'Habla con naturalidad - describe la propiedad, su tamaño, distribución y las características que la venden. Cuanto más digas, más campos se rellenan.' },
+	{ q: '¿También escribe la descripción?', a: 'Sí. Redacta una descripción limpia y lista para vender que puedes publicar tal cual o editar en unos toques.' },
+	{ q: '¿Qué campos se rellenan?', a: 'Tipo y estado de la propiedad, dormitorios, baños, m2 construidos, de parcela y de terraza, características y extras, orientación, ubicación y la descripción.' },
+	{ q: '¿Sigo teniendo el control?', a: 'Siempre. La IA redacta cada campo; tú revisas, ajustas lo que quieras y nada se publica hasta que tú lo publiques.' },
+	{ q: '¿Es gratis?', a: 'Sí. Listado Instantáneo forma parte de tu cuenta gratuita de PropertyList - el MLS y el CRM son gratis para siempre.' },
+	{ q: '¿Puedo hacerlo desde el móvil?', a: 'Sí. Funciona en el navegador del móvil, y la app de PropertyList para Android ya está en Google Play - añade fotos directamente desde la cámara, graba in situ, revisa y publica. La app para iOS llega muy pronto.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+		{ '@type': 'ListItem', position: 3, name: 'Listado Instantáneo', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'PropertyList Listado Instantáneo',
+	applicationCategory: 'BusinessApplication',
+	operatingSystem: 'Web, Android',
+	url: canonical,
+	description:
+		'Crea un anuncio completo desde fotos y una nota de voz. Listado Instantáneo de PropertyList rellena tipo de propiedad, dormitorios, baños, m2 construidos, de parcela y terraza, características, orientación y una descripción pulida para que los agentes revisen y publiquen.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'en', href: `${origin}/instant-listing/` },
+		{ hreflang: 'x-default', href: `${origin}/instant-listing/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Listado Instantáneo</div>
+				<h1>Añade fotos. Graba los detalles. El anuncio se rellena solo.</h1>
+				<p class="lead">
+					Sube tus fotos y graba una breve nota de voz describiendo la propiedad. Listado Instantáneo convierte tus palabras e
+					imágenes en un anuncio completo - m2, dormitorios y baños, características, estado y una descripción pulida, todo rellenado.
+					Tú revisas y publicas. Lo que antes eran veinte minutos rellenando campos ahora es uno.
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+					<a class="btnSecondary" href="#how">Cómo funciona</a>
+				</div>
+				<div class="note">Gratis con tu cuenta de PropertyList - únete a {stats.agencies} agencias del MLS gratuito de España. Nada se publica sin ti.</div>
+			</div>
+
+			<div class="ilFlow" aria-hidden="true">
+				<div class="ilIn">
+					<div class="ilTitle">&#10024; Empieza con IA</div>
+					<div class="ilPhotos"><span></span><span></span><span></span><span></span></div>
+					<div class="ilVoice">
+						<span class="ilMic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M6 11a6 6 0 0 0 12 0" /><path d="M12 17v4" /></svg></span>
+						<span class="ilWave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+					</div>
+					<div class="ilQuote">"Villa de tres dormitorios en Nueva Andalucía, orientación sur, piscina privada, vistas al mar, 180 metros cuadrados..."</div>
+					<div class="ilBtns"><span class="ilBtn">&#128247; Añadir fotos</span><span class="ilBtn">&#127908; Grabar nota de voz</span><span class="ilBtn ilBtnGo">Crear borrador con IA</span></div>
+					<div class="ilMicro">La IA solo rellena lo que puede ver u oír. Nada se publica sin ti.</div>
+				</div>
+				<div class="ilArrow">&darr;</div>
+				<div class="ilOut">
+					<div class="ilOutHead"><b>Villa de 3 dorm., Nueva Andalucía</b><span class="ilTag">Auto-rellenado</span></div>
+					<div class="ilChips"><span>3 dorm.</span><span>2 baños</span><span>180 m2</span><span>Piscina</span><span>Vistas al mar</span><span>Sur</span></div>
+					<div class="ilDesc">Una villa luminosa orientada al sur con piscina privada y vistas abiertas al mar, a un paso de Puerto Banús...</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Tres pasos, un minuto</h2>
+			<p>Sin formularios, sin desplegables, sin volver a teclear lo que ya sabes. Describe la propiedad como se la contarías a un comprador.</p>
+		</div>
+		<div class="grid3 steps">
+			<div class="card step">
+				<div class="stepNum">1</div>
+				<h3>Añade tus fotos</h3>
+				<p>Haz una foto o súbelas - desde tu móvil en la visita, o desde el ordenador.</p>
+			</div>
+			<div class="card step">
+				<div class="stepNum">2</div>
+				<h3>Graba los detalles</h3>
+				<p>Mantén pulsado el botón y descríbela en voz alta - tamaño, distribución y las características que venden. Solo habla.</p>
+			</div>
+			<div class="card step">
+				<div class="stepNum">3</div>
+				<h3>Todo se rellena solo</h3>
+				<p>La IA lee tus fotos y tu voz y completa todo el anuncio - listo para revisar y publicar.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Rellenado por ti, automáticamente</h2>
+			<p>Una nota de voz y un conjunto de fotos se convierten en un anuncio completo, estructurado y listo para el MLS - todos los campos, no un simple comienzo.</p>
+		</div>
+		<div class="grid4">
+			{
+				fills.map((f) => (
+					<div class="card fill">
+						<h3>{f.name}</h3>
+						<p>{f.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Y eso es solo el principio.</h2>
+			<p>Un anuncio terminado es un motor de leads listo para arrancar. En cuanto está publicado, ponlo a trabajar en todos los canales - en unos clics, sin herramientas extra.</p>
+		</div>
+		<div class="grid4">
+			<div class="card promo">
+				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.7 5.5 6 .9-4.3 4.2 1 6L12 17.8 6.6 20.1l1-6L3.3 9.9l6-.9z" /></svg></span>
+				<h3>Destácalo en el MLS</h3>
+				<p>Sube tu anuncio a lo más alto donde navegan más de 1.200 agentes, para que toda la red lo vea primero.</p>
+			</div>
+			<div class="card promo">
+				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18" /></svg></span>
+				<h3>Destácalo en el portal</h3>
+				<p>Ponlo delante de los compradores que buscan en el portal público, por encima del resto del mercado.</p>
+			</div>
+			<div class="card promo">
+				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></svg></span>
+				<h3>Envíalo a compradores que encajan</h3>
+				<p>Va directo a los compradores e inquilinos que ya buscan en esa zona - la propiedad correcta, ante la persona correcta, al instante.</p>
+			</div>
+			<div class="card promo">
+				<div class="promoTop"><span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z" /><path d="M16 9a4 4 0 0 1 0 6" /></svg></span><span class="soon">Muy pronto</span></div>
+				<h3>Anúncialo en Google y redes</h3>
+				<p>Lanza anuncios en Google y redes sociales en unos clics - sin agencia, sin gestor de anuncios.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Cada lead llega a tu CRM, automáticamente.</h2>
+			<p>
+				Sea cual sea la forma en que un comprador lo encuentra - el MLS, el portal, una coincidencia o un anuncio - la consulta
+				entra directa en tu CRM y tu pipeline. Archivada en la etapa correcta (comprador, vendedor o inquilino), con un historial
+				completo de cada interacción. Nada se queda en una bandeja aparte, y nada se escapa.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Siempre tienes el control</h2>
+				<p>
+					La IA solo rellena lo que puede ver u oír - nunca datos inventados. Tú decides: revisa cada campo, cambia lo que necesite un toque humano y publica solo cuando esté perfecto.
+					Nada se publica sin tu visto bueno.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Hazlo in situ, desde el móvil</h2>
+				<p>
+					Haz las fotos y graba mientras estás dentro de la propiedad - desde el navegador del móvil o la app de Android. El anuncio se redacta antes de que vuelvas al coche.
+					La <a href="/es/app-movil/">app de Android ya está en Google Play</a>; la de iOS llega muy pronto.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas, resueltas</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Añade tu próximo anuncio en un minuto, no en veinte.</h2>
+			<p>Cada hora que ahorras metiendo datos es una hora vendiendo. Es gratis con tu cuenta de PropertyList - una de las herramientas del <a href="/es/funciones/">MLS y CRM gratis de PropertyList</a>. Fotos dentro, nota de voz grabada, anuncio hecho.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.ilFlow { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+		.ilIn { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 14px; }
+		.ilTitle { font-weight: 900; font-size: 13.5px; color: #101828; margin-bottom: 10px; }
+		.ilBtns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+		.ilBtn { border: 1px solid rgba(0, 174, 154, 0.45); color: var(--pl-ink); border-radius: 10px; padding: 7px 10px; font-size: 12px; font-weight: 800; background: #fff; }
+		.ilBtnGo { background: rgba(0, 174, 154, 0.35); border-color: transparent; color: #075e53; }
+		.ilMicro { margin-top: 10px; font-size: 11.5px; color: rgba(16, 24, 40, 0.55); }
+		.ilPhotos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+		.ilPhotos span { height: 44px; border-radius: 8px; }
+		.ilPhotos span:nth-child(1) { background: linear-gradient(135deg, #9fe1cb, #1d9e75); }
+		.ilPhotos span:nth-child(2) { background: linear-gradient(135deg, #b5d4f4, #378add); }
+		.ilPhotos span:nth-child(3) { background: linear-gradient(135deg, #ead9bd, #b99a63); }
+		.ilPhotos span:nth-child(4) { background: linear-gradient(135deg, #d3d1c7, #888780); }
+		.ilVoice { display: flex; align-items: center; gap: 10px; }
+		.ilMic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+		.ilWave { display: inline-flex; align-items: center; gap: 3px; height: 24px; }
+		.ilWave i { width: 3px; border-radius: 3px; background: var(--pl-ink); opacity: 0.85; }
+		.ilWave i:nth-child(1) { height: 8px; } .ilWave i:nth-child(2) { height: 18px; } .ilWave i:nth-child(3) { height: 12px; } .ilWave i:nth-child(4) { height: 22px; } .ilWave i:nth-child(5) { height: 10px; } .ilWave i:nth-child(6) { height: 16px; } .ilWave i:nth-child(7) { height: 8px; } .ilWave i:nth-child(8) { height: 14px; }
+		.ilQuote { margin-top: 10px; font-size: 13px; font-style: italic; color: rgba(16, 24, 40, 0.7); line-height: 1.5; }
+		.ilArrow { text-align: center; color: var(--pl-ink); font-size: 22px; font-weight: 900; line-height: 1; }
+		.ilOut { background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(16, 24, 40, 0.08); }
+		.ilOutHead { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+		.ilOutHead b { font-size: 14px; color: #101828; }
+		.ilTag { flex: none; font-size: 10.5px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 999px; padding: 3px 8px; }
+		.ilChips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+		.ilChips span { font-size: 12px; font-weight: 800; color: rgba(16, 24, 40, 0.82); background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 4px 10px; }
+		.ilDesc { font-size: 12.5px; color: rgba(16, 24, 40, 0.6); line-height: 1.5; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.card p a { color: var(--pl-ink); font-weight: 700; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.promoIcon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(var(--pl-accent-rgb), 0.14); color: var(--pl-ink); margin-bottom: 10px; }
+		.promoTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+		.soon { flex: none; font-size: 10.5px; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; color: #8a5300; background: #fdf0d5; border: 1px solid #f0d091; border-radius: 999px; padding: 3px 9px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+			.grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+</Layout>

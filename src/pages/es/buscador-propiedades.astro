@@ -12,23 +12,23 @@ const AREAS = data.areas || [];
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Encuentra tu sitio en la Costa del Sol - PropertyList</title>
 <meta name="robots" content="noindex, follow" />
-<meta name="description" content="Cuéntanos dos cosas y mira lo que hay disponible ahora mismo en la Costa del Sol - viviendas en venta y alquiler de los agentes verificados de PropertyList." />
+<meta name="description" content="Cuéntanos dos cosas y mira lo que hay disponible ahora mismo en la Costa del Sol - viviendas en venta y alquiler de los agentes registrados de PropertyList." />
 <link rel="canonical" href="https://info.propertylist.es/es/buscador-propiedades" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="PropertyList" />
 <meta property="og:url" content="https://info.propertylist.es/es/buscador-propiedades" />
 <meta property="og:locale" content="es_ES" />
 <meta property="og:title" content="Encuentra tu sitio en la Costa del Sol" />
-<meta property="og:description" content="Dos toques y verás lo que hay disponible ahora mismo - viviendas en venta y alquiler de agentes verificados." />
+<meta property="og:description" content="Dos toques y verás lo que hay disponible ahora mismo - viviendas en venta y alquiler de agentes registrados." />
 <meta property="og:image" content="https://info.propertylist.es/og/buscador-propiedades.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="PropertyList - encuentra tu sitio en la Costa del Sol" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Encuentra tu sitio en la Costa del Sol" />
-<meta name="twitter:description" content="Dos toques y verás lo que hay disponible ahora mismo - viviendas en venta y alquiler de agentes verificados." />
+<meta name="twitter:description" content="Dos toques y verás lo que hay disponible ahora mismo - viviendas en venta y alquiler de agentes registrados." />
 <meta name="twitter:image" content="https://info.propertylist.es/og/buscador-propiedades.png" />
-<style>
+<style is:global>
   :root{--bg:#f5f8f7;--card:#fff;--ink:#0f2a26;--ink2:#5b736e;--line:#e2ece9;--pl:#00ae9a;--pl-d:#008574}
   *{box-sizing:border-box}html,body{margin:0}
   body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -89,7 +89,7 @@ const AREAS = data.areas || [];
 
   <div class="hero">
     <h1>Encuentra tu sitio en la Costa del Sol</h1>
-    <p>Cuéntanos dos cosas y te mostramos lo que hay disponible ahora mismo - viviendas de los agentes verificados de PropertyList, actualizado a diario.</p>
+    <p>Cuéntanos dos cosas y te mostramos lo que hay disponible ahora mismo - viviendas de los agentes registrados de PropertyList, actualizado a diario.</p>
   </div>
 
   <div id="stage"></div>
@@ -138,12 +138,12 @@ const AREAS = data.areas || [];
     const m = OPS[state.op];
     const a = areas.find((x) => x.slug === state.area);
     const n = (a && a.counts[state.op]) || 0;
-    const url = `https://propertylist.es/${state.op}/${state.area}`;
+    const url = `https://propertylist.es/portal/${state.op}/${state.area}`;
     const strong = n >= 25;
     const head = strong
       ? `<div class="eyebrow">Has encontrado el sitio ideal</div>
          <h2>Tenemos <span class="big">${fmt(n)}</span> viviendas ${esc(m.s)} en ${esc(a.name)}</h2>
-         <p class="lede">Seleccionadas de los agentes verificados de PropertyList, listas para ver.</p>`
+         <p class="lede">Seleccionadas de los agentes registrados de PropertyList, listas para ver.</p>`
       : `<div class="eyebrow">Selección reciente</div>
          <h2><span class="big">${fmt(n)}</span> viviendas ${esc(m.s)} en ${esc(a.name)}</h2>
          <p class="lede">Aquí hay menos opciones - échales un vistazo y activa una alerta para no perderte ninguna nueva.</p>`;

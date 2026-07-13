@@ -31,13 +31,14 @@ const STATE_PATH = '/opt/info-hub/var/admin/blog-cron-state.json';
 const AREAS = ['Marbella', 'Estepona', 'Benahavis', 'Mijas', 'Fuengirola', 'Benalmadena', 'Nueva Andalucia', 'Puerto Banus', 'Casares', 'Manilva', 'Calahonda', 'Torremolinos'];
 const GUIDES = [
   { key: 'non-resident-buying', topic: 'Buying property in Spain as a non-resident: the complete process, costs and timeline' },
-  { key: 'taxes-itp-ibi', topic: 'Property taxes in Spain explained: ITP, IBI, plusvalia and notary costs by region' },
+  { key: 'mortgages-non-residents', topic: 'Getting a Spanish mortgage as a non-resident: rates, deposits and the approval process' },
   { key: 'nie-bank', topic: 'NIE numbers and Spanish bank accounts: a step-by-step guide for property buyers' },
-  { key: 'rent-out-rules', topic: 'Renting out your Spanish property: rules, taxes and licences explained' },
+  { key: 'selling-costs', topic: 'What it really costs to sell a property in Spain: agency fees, plusvalia and capital gains tax' },
   { key: 'valuation-oracle', topic: 'How property valuation works in Spain and why notary-verified prices matter' },
   { key: 'marbella-micro-areas', topic: 'Golden Mile vs Puerto Banus vs Nueva Andalucia: where to buy in Marbella' },
   { key: 'off-plan', topic: 'Buying off-plan new developments in Spain: protections, payments and pitfalls' },
   { key: 'community-fees', topic: 'Community fees and comunidad rules in Spain: what owners actually pay for' },
+  { key: 'inheritance-basics', topic: 'Inheriting property in Spain: taxes, deadlines and the process for foreign families' },
 ];
 
 const readState = () => {
@@ -56,7 +57,20 @@ const state = readState();
 let topic = null;
 let commit = () => {};
 
-if (dow === 5) {
+// 1) ideas queue (from ideas-cron.mjs) takes priority on any day
+const QUEUE_PATH = '/opt/info-hub/var/admin/blog-topics-queue.json';
+try {
+  const queue = JSON.parse(fs.readFileSync(QUEUE_PATH, 'utf8'));
+  if (Array.isArray(queue) && queue.length) {
+    const item = queue.shift();
+    if (item && item.topic) {
+      topic = String(item.topic);
+      commit = () => fs.writeFileSync(QUEUE_PATH, JSON.stringify(queue, null, 2));
+    }
+  }
+} catch {}
+
+if (!topic && dow === 5) {
   const g = GUIDES.find((x) => !state.usedGuides.includes(x.key));
   if (g) {
     topic = g.topic;

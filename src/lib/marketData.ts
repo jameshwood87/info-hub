@@ -182,3 +182,47 @@ export const marketsForArea = async (
 	]);
 	return { sale, rent, holiday };
 };
+
+// ---- portal price enrichment ----
+// MCP rental price serializer was fixed 2026-07-04 (Lucy): rentals now return price +
+// price_period. This portal-JSON-LD enrichment is now a DORMANT fallback: it only
+// fires when price is still null (e.g. price-on-application listings). Safe to keep.
+const portalPriceCache = new Map<string, { v: number | null; at: number }>();
+const PORTAL_PRICE_TTL_MS = 6 * 60 * 60 * 1000;
+
+export const fetchPortalPrice = async (url: string): Promise<number | null> => {
+	if (!url || !/^https?:\/\//i.test(url)) return null;
+	const hit = portalPriceCache.get(url);
+	if (hit && Date.now() - hit.at < PORTAL_PRICE_TTL_MS) return hit.v;
+	let v: number | null = null;
+	try {
+		const res = await fetch(url, {
+			headers: { 'User-Agent': 'Mozilla/5.0 (compatible; info-hub)' },
+			redirect: 'follow',
+			signal: AbortSignal.timeout(6000),
+		});
+		if (res.ok) {
+			const html = await res.text();
+			const m = html.match(/"offers"\s*:\s*\{[^}]*?"price"\s*:\s*"?([0-9][0-9.,]*)"?/);
+			if (m) {
+				const n = Number(String(m[1]).replace(/,/g, ''));
+				if (Number.isFinite(n) && n > 0) v = Math.round(n);
+			}
+		}
+	} catch {
+		// leave null; caller falls back to "Price on request"
+	}
+	portalPriceCache.set(url, { v, at: Date.now() });
+	return v;
+};
+
+export const enrichListingPrices = async (listings: MarketListing[], max = 6): Promise<MarketListing[]> => {
+	const targets = listings.slice(0, max).filter((l) => !l.price && l.url);
+	await Promise.all(
+		targets.map(async (l) => {
+			const p = await fetchPortalPrice(l.url);
+			if (p) (l as { price: number | null }).price = p;
+		})
+	);
+	return [...listings.filter((l) => l.price), ...listings.filter((l) => !l.price)];
+};

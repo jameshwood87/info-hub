@@ -12,22 +12,22 @@ const AREAS = data.areas || [];
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Find your place on the Costa del Sol - PropertyList</title>
 <meta name="robots" content="noindex, follow" />
-<meta name="description" content="Tell us two things and see what's available right now on the Costa del Sol - homes for sale and rent from PropertyList's verified agents." />
+<meta name="description" content="Tell us two things and see what's available right now on the Costa del Sol - homes for sale and rent from PropertyList's registered agents." />
 <link rel="canonical" href="https://info.propertylist.es/property-finder" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="PropertyList" />
 <meta property="og:url" content="https://info.propertylist.es/property-finder" />
 <meta property="og:title" content="Find your place on the Costa del Sol" />
-<meta property="og:description" content="Two taps and you'll see what's available right now - homes for sale and rent from verified agents." />
+<meta property="og:description" content="Two taps and you'll see what's available right now - homes for sale and rent from registered agents." />
 <meta property="og:image" content="https://info.propertylist.es/og/property-finder.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="PropertyList - find your place on the Costa del Sol" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Find your place on the Costa del Sol" />
-<meta name="twitter:description" content="Two taps and you'll see what's available right now - homes for sale and rent from verified agents." />
+<meta name="twitter:description" content="Two taps and you'll see what's available right now - homes for sale and rent from registered agents." />
 <meta name="twitter:image" content="https://info.propertylist.es/og/property-finder.png" />
-<style>
+<style is:global>
   :root{--bg:#f5f8f7;--card:#fff;--ink:#0f2a26;--ink2:#5b736e;--line:#e2ece9;--pl:#00ae9a;--pl-d:#008574}
   *{box-sizing:border-box}html,body{margin:0}
   body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -89,7 +89,7 @@ const AREAS = data.areas || [];
 
   <div class="hero">
     <h1>Find your place on the Costa del Sol</h1>
-    <p>Tell us two things and we'll show you what's available right now - homes from PropertyList's verified agents, updated daily.</p>
+    <p>Tell us two things and we'll show you what's available right now - homes from PropertyList's registered agents, updated daily.</p>
   </div>
 
   <div id="stage"></div>
@@ -138,12 +138,12 @@ const AREAS = data.areas || [];
     const m = OPS[state.op];
     const a = areas.find((x) => x.slug === state.area);
     const n = (a && a.counts[state.op]) || 0;
-    const url = `https://propertylist.es/${state.op}/${state.area}`;
+    const url = `https://propertylist.es/en/portal/${state.op}/${state.area}`;
     const strong = n >= 25;
     const head = strong
       ? `<div class="eyebrow">You've found the right place</div>
          <h2>We've got <span class="big">${fmt(n)}</span> ${esc(m.s)} in ${esc(a.name)}</h2>
-         <p class="lede">Handpicked from PropertyList's verified agents, ready to view now.</p>`
+         <p class="lede">Handpicked from PropertyList's registered agents, ready to view now.</p>`
       : `<div class="eyebrow">Fresh selection</div>
          <h2><span class="big">${fmt(n)}</span> ${esc(m.s)} in ${esc(a.name)}</h2>
          <p class="lede">A smaller pool here - take a look, and set an alert so you never miss a new one.</p>`;

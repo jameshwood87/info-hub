@@ -1,0 +1,247 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/instant-renovation/`;
+const title = 'Instant Renovation (coming soon) - AI before-and-after visuals and area-priced costs | PropertyList';
+const description =
+	'Coming soon to PropertyList: Instant Renovation will show a before-and-after slider and a full, area-specific renovation cost breakdown for any resale property - materials and labour - downloadable as a PDF.';
+
+const gets = [
+	{ name: 'Before and after, side by side', desc: 'A drag-to-compare slider shows the room as it is now and fully renovated.' },
+	{ name: 'Your style, your budget', desc: 'Pick the rooms, choose a style, and set the budget - the visuals and costs follow.' },
+	{ name: 'A cost on every image', desc: 'Each renovated room comes with its own price - materials and labour, not a vague guess.' },
+	{ name: 'Priced for the actual area', desc: 'Labour and material rates for where the property really is, so the numbers hold up.' },
+	{ name: 'Full breakdown and summary', desc: 'A clear, line-by-line total and a short description of the work.' },
+	{ name: 'A shareable PDF', desc: 'Export the whole thing to send to a buyer or seller in one tap.' },
+];
+
+const faqs = [
+	{ q: 'Which listings will have it?', a: 'Every resale property on the MLS and the public portal will have an Instant Renovation button, not just the ones flagged as needing work. It will be most powerful on tired homes, but a buyer can picture an upgrade on any resale listing.' },
+	{ q: 'What do I choose?', a: 'The photos or rooms to renovate, a style, and a budget. Instant Renovation will generate the before-and-after visuals and the costs from there.' },
+	{ q: 'How will the costs be worked out?', a: 'Materials and labour will be priced for the property’s own area, broken down per image and totalled - so the estimate reflects local rates, not a national average.' },
+	{ q: 'Can I download or share it?', a: 'Yes - you will be able to export the full before-and-after and cost breakdown as a PDF to send to a buyer or seller.' },
+	{ q: 'How accurate will it be?', a: 'It will be a professional-grade estimate to guide the conversation and the decision. As with any estimate, confirm the final figures with a builder before works begin.' },
+	{ q: 'What will it cost?', a: 'Your PropertyList account, MLS and CRM are free forever. Instant Renovation will be a pay-as-you-go AI tool - you will spend a credit only when you generate one, so there is no subscription.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 3, name: 'Instant Renovation', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Instant Renovation',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
+	description: 'Coming soon: generate AI before-and-after renovation visuals and a full, area-specific cost breakdown (materials and labour) for any resale property, exportable as a PDF.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/renovacion-instantanea/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Instant Renovation - Coming soon</div>
+				<h1>Sell the potential, not the problem.</h1>
+				<p class="lead">
+					On any resale property, Instant Renovation will show buyers exactly what it could become - a drag-to-compare before
+					and after - and exactly what it would cost, with materials and labour priced for the property's own area. Export it as a
+					PDF and turn "needs work" into "look at the upside".
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+					<a class="btnSecondary" href="#how">See how it will work</a>
+				</div>
+				<div class="note">Coming soon. Instant Renovation will run on pay-as-you-go credits - create your free account now and you are ready on day one.</div>
+			</div>
+
+			<div class="brWrap" aria-hidden="true">
+				<div class="brLayer brBefore"><span class="brWin" style="left:14%"></span><span class="brFloor"></span></div>
+				<div class="brLayer brAfter"><span class="brWin bright" style="right:14%"></span><span class="brFloor bright"></span></div>
+				<span class="brDivider"></span>
+				<span class="brHandle">&#8596;</span>
+				<span class="brTag brBeforeTag">Before</span>
+				<span class="brTag brAfterTag">After</span>
+				<div class="brCost">Renovation from &euro;18,400<i>materials + labour, Marbella</i></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Four steps, one costed vision</h2>
+			<p>No quantity surveyor, no waiting on a builder to call back. You will turn a tired room into a costed plan without leaving the page.</p>
+		</div>
+		<div class="grid4 steps">
+			<div class="card step"><div class="stepNum">1</div><h3>Open any resale listing</h3><p>Every resale property - on the MLS or the public portal - will have an Instant Renovation button, not just the ones flagged as needing work.</p></div>
+			<div class="card step"><div class="stepNum">2</div><h3>Pick photos, style and budget</h3><p>Choose the rooms to transform, a style, and how much to spend.</p></div>
+			<div class="card step"><div class="stepNum">3</div><h3>See it renovated</h3><p>A drag-to-compare slider reveals the room now and fully renovated, side by side.</p></div>
+			<div class="card step"><div class="stepNum">4</div><h3>Get the costed plan</h3><p>Each image is priced - materials and labour for the area - with a full breakdown and a PDF.</p></div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Everything a buyer needs to say yes</h2>
+			<p>Not a mood board - a costed, credible plan for the exact property in front of them.</p>
+		</div>
+		<div class="grid3">
+			{
+				gets.map((g) => (
+					<div class="card">
+						<h3>{g.name}</h3>
+						<p>{g.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Unblock the listings that just sit.</h2>
+			<p>
+				A tired property is a hard sell. Show a buyer the finished vision and the real numbers, and "needs work" becomes "imagine the
+				upside" - you win the instruction, defend the price, and close faster.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Real numbers, for the real area</h2>
+				<p>
+					The costs will not be generic. Materials and labour will be priced for where the property actually is, so the figures still stand
+					when a buyer - or a builder - checks them.
+				</p>
+			</div>
+			<div class="card">
+				<h2>A costed plan, not a mood board</h2>
+				<p>
+					Every visual will come with a price and a breakdown, so the conversation moves from "it needs work" straight to "here is what it
+					takes". You review it, and share it.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Turn your next renovation listing into a sale.</h2>
+			<p>Instant Renovation is coming soon to every resale property - create your free account now and be ready on day one, inside the free <a href="/features/">PropertyList platform</a>.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.brWrap { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); aspect-ratio: 16 / 11; }
+		.brLayer { position: absolute; inset: 0; }
+		.brBefore { background: linear-gradient(160deg, #cfc9bd 0%, #9a9182 100%); }
+		.brAfter { background: linear-gradient(160deg, #eafaf5 0%, #a7e2cf 100%); clip-path: inset(0 0 0 52%); }
+		.brWin { position: absolute; top: 15%; width: 26%; height: 40%; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.45); background: rgba(255, 255, 255, 0.14); }
+		.brWin.bright { border-color: rgba(255, 255, 255, 0.75); background: rgba(255, 255, 255, 0.4); }
+		.brFloor { position: absolute; left: 0; right: 0; bottom: 0; height: 24%; background: rgba(16, 24, 40, 0.18); }
+		.brFloor.bright { background: rgba(10, 109, 97, 0.16); }
+		.brDivider { position: absolute; top: 0; bottom: 0; left: 52%; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.12); }
+		.brHandle { position: absolute; top: 50%; left: 52%; transform: translate(-50%, -50%); width: 36px; height: 36px; border-radius: 50%; background: #fff; box-shadow: 0 3px 12px rgba(16, 24, 40, 0.28); display: flex; align-items: center; justify-content: center; color: var(--pl-ink); font-weight: 900; font-size: 16px; }
+		.brTag { position: absolute; top: 12px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+		.brBeforeTag { left: 12px; background: rgba(16, 24, 40, 0.62); color: #fff; }
+		.brAfterTag { right: 12px; background: var(--pl-ink); color: #fff; }
+		.brCost { position: absolute; bottom: 12px; left: 12px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 8px 12px; font-size: 13px; font-weight: 800; color: #101828; box-shadow: 0 4px 14px rgba(16, 24, 40, 0.14); }
+		.brCost i { display: block; font-style: normal; font-size: 11px; font-weight: 600; color: rgba(16, 24, 40, 0.55); margin-top: 1px; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+			.grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+</Layout>

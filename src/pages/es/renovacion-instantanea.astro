@@ -1,0 +1,247 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/renovacion-instantanea/`;
+const title = 'Renovación Instantánea (muy pronto) - antes y después con IA y costes por zona | PropertyList';
+const description =
+	'Muy pronto en PropertyList: Renovación Instantánea mostrará un antes y después con deslizador y un desglose de costes específico de la zona para cualquier propiedad de segunda mano - materiales y mano de obra - descargable en PDF.';
+
+const gets = [
+	{ name: 'Antes y después, lado a lado', desc: 'Un deslizador de comparación muestra la estancia tal cual está y ya reformada.' },
+	{ name: 'Tu estilo, tu presupuesto', desc: 'Elige las estancias, un estilo y el presupuesto - los visuales y los costes lo siguen.' },
+	{ name: 'Un coste en cada imagen', desc: 'Cada estancia reformada trae su precio - materiales y mano de obra, no una estimación vaga.' },
+	{ name: 'Precios para la zona real', desc: 'Tarifas de mano de obra y materiales para donde está realmente la propiedad, para que las cifras se sostengan.' },
+	{ name: 'Desglose y resumen completos', desc: 'Un total claro, línea a línea, y una breve descripción de la obra.' },
+	{ name: 'Un PDF para compartir', desc: 'Exporta todo para enviárselo a un comprador o vendedor con un toque.' },
+];
+
+const faqs = [
+	{ q: '¿Qué anuncios lo tendrán?', a: 'Cada propiedad de segunda mano del MLS y del portal público tendrá un botón de Renovación Instantánea, no solo las marcadas como que necesitan obra. Será más potente en viviendas anticuadas, pero un comprador puede imaginar una mejora en cualquier anuncio de segunda mano.' },
+	{ q: '¿Qué elijo?', a: 'Las fotos o estancias a reformar, un estilo y un presupuesto. Renovación Instantánea generará los visuales de antes y después y los costes a partir de ahí.' },
+	{ q: '¿Cómo se calcularán los costes?', a: 'Los materiales y la mano de obra se valorarán para la zona de la propiedad, desglosados por imagen y sumados - así la estimación refleja las tarifas locales, no una media nacional.' },
+	{ q: '¿Puedo descargarlo o compartirlo?', a: 'Sí - podrás exportar el antes y después completo y el desglose de costes en PDF para enviárselo a un comprador o vendedor.' },
+	{ q: '¿Será preciso?', a: 'Será una estimación de nivel profesional para guiar la conversación y la decisión. Como con cualquier estimación, confirma las cifras finales con un constructor antes de empezar la obra.' },
+	{ q: '¿Qué costará?', a: 'Tu cuenta de PropertyList, el MLS y el CRM son gratis para siempre. Renovación Instantánea será una herramienta de IA de pago por uso - gastarás un crédito solo cuando generes uno, así que no hay suscripción.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+		{ '@type': 'ListItem', position: 3, name: 'Renovación Instantánea', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Renovación Instantánea',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
+	description: 'Muy pronto: genera visuales de reforma antes y después con IA y un desglose de costes completo y específico de la zona (materiales y mano de obra) para cualquier propiedad de segunda mano, exportable en PDF.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'en', href: `${origin}/instant-renovation/` },
+		{ hreflang: 'x-default', href: `${origin}/instant-renovation/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Renovación Instantánea - Muy pronto</div>
+				<h1>Vende el potencial, no el problema.</h1>
+				<p class="lead">
+					En cualquier propiedad de segunda mano, Renovación Instantánea mostrará a los compradores exactamente en qué podría
+					convertirse - un antes y después con deslizador - y exactamente cuánto costaría, con materiales y mano de obra valorados para
+					la propia zona de la propiedad. Expórtalo en PDF y convierte "necesita reforma" en "mira el potencial".
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+					<a class="btnSecondary" href="#how">Cómo funcionará</a>
+				</div>
+				<div class="note">Muy pronto. Renovación Instantánea funcionará con créditos de pago por uso - crea tu cuenta gratis ahora y estarás listo desde el primer día.</div>
+			</div>
+
+			<div class="brWrap" aria-hidden="true">
+				<div class="brLayer brBefore"><span class="brWin" style="left:14%"></span><span class="brFloor"></span></div>
+				<div class="brLayer brAfter"><span class="brWin bright" style="right:14%"></span><span class="brFloor bright"></span></div>
+				<span class="brDivider"></span>
+				<span class="brHandle">&#8596;</span>
+				<span class="brTag brBeforeTag">Antes</span>
+				<span class="brTag brAfterTag">Después</span>
+				<div class="brCost">Reforma desde &euro;18.400<i>materiales + mano de obra, Marbella</i></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Cuatro pasos, una visión con presupuesto</h2>
+			<p>Sin aparejador, sin esperar a que un constructor te llame. Convertirás una estancia anticuada en un plan con precio sin salir de la página.</p>
+		</div>
+		<div class="grid4 steps">
+			<div class="card step"><div class="stepNum">1</div><h3>Abre cualquier anuncio de segunda mano</h3><p>Cada propiedad de segunda mano - en el MLS o en el portal público - tendrá un botón de Renovación Instantánea, no solo las marcadas como que necesitan obra.</p></div>
+			<div class="card step"><div class="stepNum">2</div><h3>Elige fotos, estilo y presupuesto</h3><p>Elige las estancias a transformar, un estilo y cuánto gastar.</p></div>
+			<div class="card step"><div class="stepNum">3</div><h3>Míralo reformado</h3><p>Un deslizador de comparación revela la estancia ahora y ya reformada, lado a lado.</p></div>
+			<div class="card step"><div class="stepNum">4</div><h3>Consigue el plan con precio</h3><p>Cada imagen lleva precio - materiales y mano de obra para la zona - con un desglose completo y un PDF.</p></div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Todo lo que un comprador necesita para decir sí</h2>
+			<p>No un tablero de inspiración - un plan con precio y creíble para la propiedad exacta que tiene delante.</p>
+		</div>
+		<div class="grid3">
+			{
+				gets.map((g) => (
+					<div class="card">
+						<h3>{g.name}</h3>
+						<p>{g.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Desbloquea los anuncios que se quedan parados.</h2>
+			<p>
+				Una propiedad anticuada es difícil de vender. Enséñale al comprador la visión terminada y las cifras reales, y "necesita reforma"
+				se convierte en "imagina el potencial" - ganas el encargo, defiendes el precio y cierras más rápido.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Cifras reales, para la zona real</h2>
+				<p>
+					Los costes no serán genéricos. Los materiales y la mano de obra se valorarán para donde está realmente la propiedad, para que las
+					cifras se sostengan cuando las revise un comprador - o un constructor.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Un plan con precio, no un tablero de inspiración</h2>
+				<p>
+					Cada visual vendrá con un precio y un desglose, para que la conversación pase de "necesita reforma" directamente a "esto es lo
+					que hace falta". Tú lo revisas y lo compartes.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas, resueltas</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Convierte tu próximo anuncio de reforma en una venta.</h2>
+			<p>Renovación Instantánea llega muy pronto a cada propiedad de segunda mano - crea tu cuenta gratis ahora y estarás listo desde el primer día, dentro de la <a href="/es/funciones/">plataforma PropertyList gratis</a>.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.brWrap { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); aspect-ratio: 16 / 11; }
+		.brLayer { position: absolute; inset: 0; }
+		.brBefore { background: linear-gradient(160deg, #cfc9bd 0%, #9a9182 100%); }
+		.brAfter { background: linear-gradient(160deg, #eafaf5 0%, #a7e2cf 100%); clip-path: inset(0 0 0 52%); }
+		.brWin { position: absolute; top: 15%; width: 26%; height: 40%; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.45); background: rgba(255, 255, 255, 0.14); }
+		.brWin.bright { border-color: rgba(255, 255, 255, 0.75); background: rgba(255, 255, 255, 0.4); }
+		.brFloor { position: absolute; left: 0; right: 0; bottom: 0; height: 24%; background: rgba(16, 24, 40, 0.18); }
+		.brFloor.bright { background: rgba(10, 109, 97, 0.16); }
+		.brDivider { position: absolute; top: 0; bottom: 0; left: 52%; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.12); }
+		.brHandle { position: absolute; top: 50%; left: 52%; transform: translate(-50%, -50%); width: 36px; height: 36px; border-radius: 50%; background: #fff; box-shadow: 0 3px 12px rgba(16, 24, 40, 0.28); display: flex; align-items: center; justify-content: center; color: var(--pl-ink); font-weight: 900; font-size: 16px; }
+		.brTag { position: absolute; top: 12px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+		.brBeforeTag { left: 12px; background: rgba(16, 24, 40, 0.62); color: #fff; }
+		.brAfterTag { right: 12px; background: var(--pl-ink); color: #fff; }
+		.brCost { position: absolute; bottom: 12px; left: 12px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 8px 12px; font-size: 13px; font-weight: 800; color: #101828; box-shadow: 0 4px 14px rgba(16, 24, 40, 0.14); }
+		.brCost i { display: block; font-style: normal; font-size: 11px; font-weight: 600; color: rgba(16, 24, 40, 0.55); margin-top: 1px; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+			.grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+</Layout>

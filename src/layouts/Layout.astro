@@ -67,7 +67,6 @@ const normalizeCanonical = (value?: string) => {
 
 const pathname = Astro.url?.pathname ?? '/';
 const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/');
-const isWhatsOnPath = pathname === '/whats-on' || pathname.startsWith('/whats-on/') || pathname === '/es/que-hacer' || pathname.startsWith('/es/que-hacer/');
 const isHomePath = pathname === '/' || pathname === '/es/';
 const showSearch = pathname.startsWith('/docs') || pathname.startsWith('/es/docs') || pathname === '/search' || pathname === '/es/search';
 const mapDocsToEnglish = (p: string) => {
@@ -316,7 +315,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<script async src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`}></script>
 			</>
 		) : null}
-		{isAdminPath || isWhatsOnPath ? null : <script is:inline src="//code.tidio.co/4pmcnp7kmt1ew2g0x5rgmhiopejtxvv6.js" async></script>}
+		{/* Umami self-hosted analytics - cookieless, no persistent identifiers, first-party proxied */}
+		{isAdminPath ? null : <script defer src="/pl-stats.js?v=1" data-website-id="8dca1470-b6ff-4dd5-9052-4ca9b8690135"></script>}
+		{isAdminPath ? null : <script is:inline src="//code.tidio.co/4pmcnp7kmt1ew2g0x5rgmhiopejtxvv6.js" async></script>}
 		{!isAdminPath ? (
 			<script is:inline>
 				(function(c,l,a,r,i,t,y){
@@ -646,15 +647,21 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 			<div class="gaConsent" data-ga-consent hidden>
 				<div class="gaConsentInner" role="region" aria-label="Cookies">
 					<div class="gaConsentText">
-						<strong>Cookies</strong>
-						<div>We use analytics cookies to understand usage and improve the site.</div>
+						<strong>{lang === 'de' ? 'Hilf uns, besser zu werden' : lang === 'es' ? 'Ayúdanos a mejorar' : 'Help us improve'}</strong>
+						<div>
+							{lang === 'de'
+								? 'Wir nutzen anonyme Statistiken, um zu sehen, welche Inhalte helfen - keine Werbung, kein Datenverkauf.'
+								: lang === 'es'
+									? 'Usamos analítica anónima para saber qué guías ayudan de verdad - sin publicidad y sin vender tus datos.'
+									: 'We use anonymous analytics to see which guides actually help people - no ads, and we never sell your data.'}
+						</div>
 					</div>
 					<div class="gaConsentActions">
 						<button type="button" class="gaConsentBtn" data-ga-consent-accept>
-							Accept
+							{lang === 'de' ? 'Akzeptieren' : lang === 'es' ? 'Aceptar' : 'Accept'}
 						</button>
 						<button type="button" class="gaConsentBtn secondary" data-ga-consent-reject>
-							Reject
+							{lang === 'de' ? 'Ablehnen' : lang === 'es' ? 'Rechazar' : 'Reject'}
 						</button>
 					</div>
 				</div>
@@ -695,7 +702,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
     } catch(e) { return 'external'; }
   }
   function campaignFromPath(path){
-    var p = String(path || '').replace(/\/+$/, '/') || '/';
+    var p = String(path || '').replace(/\\/+$/, '/') || '/';
     if (p.indexOf('/neighbourhood/') === 0 || p.indexOf('/es/barrios/') === 0) return 'neighbourhood';
     if (p.indexOf('/docs/') === 0 || p.indexOf('/es/docs/') === 0) return 'docs';
     if (p.indexOf('/blog/') === 0 || p.indexOf('/es/informacion-general/') === 0) return 'blog';
@@ -1687,17 +1694,20 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 
 	.gaConsentBtn {
 		cursor: pointer;
-		border: 1px solid rgba(0, 174, 154, 0.25);
-		background: rgba(0, 174, 154, 0.14);
-		color: rgba(11, 18, 32, 0.92);
+		border: 1px solid #00ae9a;
+		background: #00ae9a;
+		color: #00100e;
+		font-weight: 800;
 		border-radius: 999px;
-		padding: 10px 14px;
+		padding: 10px 18px;
 		font-weight: 900;
 	}
 
 	.gaConsentBtn.secondary {
 		border: 1px solid rgba(11, 18, 32, 0.16);
-		background: rgba(11, 18, 32, 0.06);
+		background: transparent;
+		color: rgba(11, 18, 32, 0.7);
+		font-weight: 600;
 	}
 
 	.gaConsentBtn:focus-visible {

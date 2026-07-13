@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+const sent = Astro.url.searchParams.get('sent') === '1';
+const error = Astro.url.searchParams.get('error') === '1';
+---
+<Layout
+	lang="en"
+	title="Report a scam or a problem | PropertyList"
+	description="Confidentially report a scam, a fraudulent listing, or a problem with an agent or service. Reviewed privately by the PropertyList trust team."
+	canonical="https://info.propertylist.es/report-a-problem/"
+>
+	<div class="rp">
+		<h1>Report a scam or a problem</h1>
+
+		{sent ? (
+			<div class="card thanks">
+				<h2>Thank you. Your report has been received.</h2>
+				<p>Our trust team reviews every report confidentially. We may contact you if we need more detail. We do not publish accusations or name individuals publicly.</p>
+				<p><strong>If you are the victim of a crime, please also report it to the authorities:</strong> Policia Nacional (091), Guardia Civil (062), or 112 in an emergency.</p>
+				<p><a href="/">Back to PropertyList</a></p>
+			</div>
+		) : (
+			<>
+				<p class="lead">
+					If you have been scammed, have spotted a fraudulent listing, or have a serious problem with an agent or service, tell us here. Reports go straight to our trust team and are handled confidentially.
+				</p>
+
+				<div class="card legal">
+					<h2>How this works</h2>
+					<ul>
+						<li><strong>Confidential and internal.</strong> Your report is reviewed privately by our team. We do not publish accusations, keep a public "blacklist", or name individuals publicly.</li>
+						<li><strong>Fair, and evidence-led.</strong> To be fair to everyone, we do not act on a single unverified report in isolation. We look for corroborating evidence and a pattern across reports, we investigate, and any reported party is given the chance to respond before we act.</li>
+						<li><strong>Action under our Terms.</strong> Where we find sufficient credible evidence of fraud or serious misconduct, we may suspend or remove the member from PropertyList under our Terms of Service.</li>
+						<li><strong>Crime is for the authorities.</strong> This form does not report a crime. If you are a victim, contact the Policia Nacional (091) or Guardia Civil (062); call 112 in an emergency. We cooperate with any lawful request or court order.</li>
+						<li><strong>Truthful, please.</strong> Keep your report factual and made in good faith. Knowingly false accusations can carry legal consequences for the person who makes them.</li>
+					</ul>
+				</div>
+
+				{error && <div class="err">Please add a description (at least a sentence) and tick the confirmation box.</div>}
+
+				<form method="post" action="/api/report-issue" class="card form">
+					<input type="hidden" name="lang" value="en" />
+					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+					<label>What are you reporting?
+						<select name="type">
+							<option value="Estate agent">An estate agent</option>
+							<option value="Property service provider">A property service (lawyer, plumber, tradesperson, etc.)</option>
+							<option value="A specific listing">A specific listing</option>
+							<option value="Other">Something else</option>
+						</select>
+					</label>
+
+					<label>Name of the agent, agency, service or listing
+						<input type="text" name="subject" maxlength="200" placeholder="e.g. company name, agent name, or a listing reference / URL" />
+					</label>
+
+					<label>What happened? <span class="req">*</span>
+						<textarea name="detail" rows="6" maxlength="5000" required placeholder="Describe what happened, in your own words. Stick to the facts."></textarea>
+					</label>
+
+					<div class="row">
+						<label>Money involved (if any)
+							<input type="text" name="amount" maxlength="40" placeholder="e.g. 3,000 EUR deposit" />
+						</label>
+						<label>When did it happen?
+							<input type="text" name="when" maxlength="60" placeholder="e.g. June 2026" />
+						</label>
+					</div>
+
+					<label>Links or references to evidence (optional)
+						<input type="text" name="evidence" maxlength="600" placeholder="e.g. a listing URL, a reference number, or where documents can be shared" />
+					</label>
+
+					<div class="row">
+						<label>Your name
+							<input type="text" name="reporter_name" maxlength="120" placeholder="So we can follow up" />
+						</label>
+						<label>Your email
+							<input type="email" name="reporter_email" maxlength="160" placeholder="We may contact you for more detail" />
+						</label>
+					</div>
+
+					<label class="check">
+						<input type="checkbox" name="consent" value="1" required />
+						<span>I confirm this report is truthful and made in good faith. I understand PropertyList reviews reports confidentially, does not publish accusations, and that any party reported has the right to respond.</span>
+					</label>
+
+					<button type="submit">Submit confidentially</button>
+					<p class="fine">We will never publish your report or your identity. The information you provide is used only to review this report and, where appropriate, to act under our Terms. See our <a href="/docs/propertylist-mls-user-manual/legal/privacy-policy/">Privacy Policy</a>. Looking for a trustworthy agent? Look for the <a href="/docs/propertylist-mls-user-manual/verified-agencies/">Verified Agency</a> signal.</p>
+				</form>
+			</>
+		)}
+	</div>
+
+	<style>
+		.rp { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+		.rp h1 { font-size: 30px; letter-spacing: -0.02em; margin: 6px 0 10px; }
+		.lead { font-size: 16px; color: rgba(16,24,40,0.75); line-height: 1.55; }
+		.card { background: #fff; border: 1px solid rgba(16,24,40,0.12); border-radius: 14px; padding: 16px 18px; margin: 16px 0; }
+		.legal h2 { font-size: 17px; margin: 0 0 8px; }
+		.legal ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; color: rgba(16,24,40,0.8); }
+		.form label { display: block; font-weight: 700; font-size: 14px; margin: 12px 0 0; }
+		.form input[type=text], .form input[type=email], .form select, .form textarea { width: 100%; margin-top: 5px; padding: 10px 12px; border: 1px solid rgba(16,24,40,0.2); border-radius: 10px; font: inherit; font-weight: 400; }
+		.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+		@media (max-width: 620px) { .row { grid-template-columns: 1fr; } }
+		.req { color: #dc2626; }
+		.check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 13.5px; margin-top: 16px; color: rgba(16,24,40,0.8); }
+		.check input { margin-top: 3px; }
+		.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		button[type=submit] { margin-top: 16px; background: #00ae9a; color: #00100e; border: none; border-radius: 999px; padding: 12px 22px; font-weight: 800; font-size: 15px; cursor: pointer; }
+		.fine { font-size: 12.5px; color: rgba(16,24,40,0.55); margin: 12px 0 0; }
+		.err { background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 12px 0; }
+		.thanks h2 { font-size: 20px; margin: 0 0 8px; }
+		.thanks p { font-size: 14.5px; line-height: 1.6; color: rgba(16,24,40,0.8); }
+	</style>
+</Layout>

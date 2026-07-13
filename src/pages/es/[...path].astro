@@ -7,6 +7,8 @@ import AreaPage from '../../components/AreaPage.astro';
 import { getKbPageByPath, listKbPagesByPrefix, listKbPagesByPrefixes } from '../../lib/directus';
 import { getKbTreeOrderSnapshot } from '../../lib/kbTreeOrder';
 import { getKbMeta } from '../../lib/adminMeta';
+import { searchProperties, enrichListingPrices, type MarketListing } from '../../lib/marketData';
+import PropertyCard from '../../components/PropertyCard.astro';
 import { listPrefixRedirects } from '../../lib/kbRedirects';
 import { getTotalViewCounts } from '../../lib/weeklyViews';
 import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../lib/deepl';
@@ -55,12 +57,11 @@ if (canonicalEsDocsPath !== normalizedPath) {
 
 const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/general-information/', es: '/es/informacion-general/' },
-	{ en: '/blog/', es: '/es/informacion-general/' },
+	{ en: '/blog/', es: '/es/blog/' },
 	{ en: '/community/', es: '/es/comunidad/' },
 	{ en: '/laws/', es: '/es/leyes/' },
 	{ en: '/neighbourhood/', es: '/es/barrios/' },
 	{ en: '/andalucia/', es: '/es/andalucia/' },
-	{ en: '/mls/', es: '/es/mls/' },
 	{ en: '/pricing/', es: '/es/precios/' },
 	{ en: '/search', es: '/es/search' },
 ];
@@ -69,6 +70,7 @@ const toEnglishPath = (p: string) => {
 	const path = String(p || '');
 	if (!path.startsWith('/es/')) return path;
 	const withoutEs = path.replace(/^\/es\//, '/');
+	{ const _n = path.endsWith('/') ? path : path + '/'; if (_n === '/es/blog/como-evitar-estafas-inmobiliarias-en-espana/') return '/blog/how-to-avoid-property-scams-in-spain/'; }
 	if (withoutEs.startsWith('/informacion-general/')) {
 		return withoutEs.replace(/^\/informacion-general\//, '/general-information/');
 	}
@@ -1721,19 +1723,52 @@ const siblingPrev = prevRaw ? { ...prevRaw, path: usingMlsBackfill || pageEsRaw 
 const siblingNext = nextRaw ? { ...nextRaw, path: usingMlsBackfill || pageEsRaw ? nextRaw.path : toSpanishPath(nextRaw.path) } : null;
 
 const isDocs = renderPath.startsWith('/es/docs/');
-const isBlogLike = renderPath.startsWith('/es/informacion-general/') || renderPath.startsWith('/es/blog/');
+const isPublicDocs = renderPath.startsWith('/es/docs/leyes-procedimientos/');
+const isBlogLike = renderPath.startsWith('/es/informacion-general/') || renderPath.startsWith('/es/blog/') || renderPath.startsWith('/es/agentes-inmobiliarios/') || renderPath.startsWith('/es/alimentos/') || renderPath.startsWith('/es/estilo-de-vida/') || renderPath.startsWith('/es/vida-nocturna/');
+
+const stripAccentsBlog = (v: string) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const blogPropertyLocation = (() => {
+	if (!isBlogLike) return '';
+	const hay = stripAccentsBlog(`${h1} ${page.description || ''} ${String(page.body || '').slice(0, 2500)}`);
+	const known = ['Puerto Banus','Nueva Andalucia','San Pedro de Alcantara','Golden Mile','La Zagaleta','Sierra Blanca','Los Monteros','Marbella','Estepona','Benahavis','Mijas','Fuengirola','Benalmadena','Torremolinos','Nerja','Sotogrande','Manilva','Casares','Calahonda','Malaga'];
+	for (const k of known) { if (hay.includes(stripAccentsBlog(k))) return k; }
+	return 'Marbella';
+})();
+const blogSearchType = (() => {
+	if (!isBlogLike) return 'for-sale' as const;
+	const hay = stripAccentsBlog(`${renderPath} ${h1} ${page.description || ''}`);
+	if (/short-?term|holiday|vacation|vacacional|turistic/.test(hay)) return 'holiday-rentals' as const;
+	if (/\brent|landlord|tenant|alquil|arrenda|inquilin/.test(hay)) return 'for-rent' as const;
+	return 'for-sale' as const;
+})();
+const blogListings: MarketListing[] = isBlogLike
+	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
+	: [];
+const blogPortalUrl = `https://www.propertylist.es/portal/${blogSearchType}/${stripAccentsBlog(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `€${Math.round(v).toLocaleString('es-ES')}${blogSearchType === 'for-rent' ? '/mes' : ''}` : 'Precio a consultar');
+const blogTypeNoun = blogSearchType === 'for-rent' ? 'propiedad en alquiler' : blogSearchType === 'holiday-rentals' ? 'alquiler vacacional' : 'propiedad en venta';
+const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + ' dorm. ' : ''}${blogTypeNoun}${l.suburb ? ` en ${l.suburb}` : ''}`.slice(0, 70);
+
 const moveDocHeaderIntoBody = isDocs && !isBlogLike && !bodyHasH1;
 const fallbackHeroSrc =
 	/\bcosta del sol\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-costa-del-sol.svg' : /\bmarbella\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-marbella.svg' : /\bandaluc[ií]a\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-andalucia.svg' : '/blog/hero-default.svg';
 const heroSrc = featuredImageUrl || fallbackHeroSrc;
-const blogMetaDate = (() => {
-	const raw = (page as any).date_updated || (page as any).date_created || null;
+const parseDbDate = (raw: unknown) => {
 	const ms = raw ? Date.parse(String(raw)) : NaN;
 	return Number.isFinite(ms) ? new Date(ms) : null;
-})();
-const blogDateLabel = blogMetaDate
-	? new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }).format(blogMetaDate)
-	: null;
+};
+const blogPublishedDate = parseDbDate((page as any).date_created) || parseDbDate((page as any).date_updated);
+const blogUpdatedDate = parseDbDate((page as any).date_updated);
+const blogMetaDate = blogPublishedDate;
+const blogDateFmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+const blogDateLabel = blogPublishedDate ? blogDateFmt.format(blogPublishedDate) : null;
+const blogUpdatedLabel =
+	blogUpdatedDate && blogPublishedDate && blogUpdatedDate.getTime() - blogPublishedDate.getTime() > 86400000
+		? blogDateFmt.format(blogUpdatedDate)
+		: null;
+const blogDatesInlineHtml = blogDateLabel
+	? `<p class="blogDatesLine" style="margin:10px 0 18px;font-size:13.5px;color:rgba(16,24,40,0.62);">Publicado el ${blogDateLabel}${blogUpdatedLabel ? ` · Actualizado el ${blogUpdatedLabel}` : ''}</p>`
+	: '';
 const blogWordCount = stripTags(cleanedBodyHtml).replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
 const readingMins = Math.max(1, Math.round(blogWordCount / 220));
 const normText = (s: string) => decodeHtmlEntities(stripTags(s)).replace(/\s+/g, ' ').trim().toLowerCase();
@@ -1789,9 +1824,9 @@ const finalBodyHtml = (() => {
 			const avif = sizes.map((w) => `${mk(w, 'avif')} ${w}w`).join(', ');
 			const webp = sizes.map((w) => `${mk(w, 'webp')} ${w}w`).join(', ');
 			const jpg = sizes.map((w) => `${mk(w, 'jpg')} ${w}w`).join(', ');
-			out = `<figure class="blogHero"><picture><source type="image/avif" srcset="${escapeHtml(avif)}" sizes="(max-width: 900px) 100vw, 900px" /><source type="image/webp" srcset="${escapeHtml(webp)}" sizes="(max-width: 900px) 100vw, 900px" /><img src="${escapeHtml(mk(1200, 'jpg'))}" srcset="${escapeHtml(jpg)}" sizes="(max-width: 900px) 100vw, 900px" alt="${escapeHtml(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" /></picture>${figcaption}</figure>${out}`;
+			out = `<figure class="blogHero"><picture><source type="image/avif" srcset="${escapeHtml(avif)}" sizes="(max-width: 900px) 100vw, 900px" /><source type="image/webp" srcset="${escapeHtml(webp)}" sizes="(max-width: 900px) 100vw, 900px" /><img src="${escapeHtml(mk(1200, 'jpg'))}" srcset="${escapeHtml(jpg)}" sizes="(max-width: 900px) 100vw, 900px" alt="${escapeHtml(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" /></picture>${figcaption}</figure>${blogDatesInlineHtml}${out}`;
 		} else {
-			out = `<figure class="blogHero"><img src="${escapeHtml(heroSrc)}" alt="${escapeHtml(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" />${figcaption}</figure>${out}`;
+			out = `<figure class="blogHero"><img src="${escapeHtml(heroSrc)}" alt="${escapeHtml(alt)}"${titleAttr} width="1200" height="630" loading="eager" decoding="async" fetchpriority="high" />${figcaption}</figure>${blogDatesInlineHtml}${out}`;
 		}
 	}
 	return `${translationNoticeHtml}${out}`;
@@ -2031,6 +2066,25 @@ const orderOf = (() => {
 	return m;
 })();
 
+const docFolderChildren = await (async () => {
+	if (!isDocs || folderArticles.length) return [] as Array<{ path: string; title: string; description?: string | null; href: string; external: boolean }>;
+	const kids = await listKbPagesByPrefix({ prefix: renderPath, lang: 'es', limit: 60 }).catch(() => [] as any[]);
+	const depth = renderPath.split('/').filter(Boolean).length;
+	return (kids as any[])
+		.filter((k) => {
+			const kp = String(k?.path || '');
+			return kp !== renderPath && kp.split('/').filter(Boolean).length === depth + 1;
+		})
+		.map((k) => ({
+			path: String(k.path),
+			title: String(k.title || ''),
+			description: (k.description as string) || null,
+			href: String(k.path),
+			external: false,
+		}));
+})();
+const folderArticlesAll = folderArticles.length ? folderArticles : docFolderChildren;
+
 const docPager = (() => {
 	if (!isDocs) {
 		return {
@@ -2112,6 +2166,15 @@ const renderDocNavHtml = (nodes: DocNode[], depth = 0, forceOpen = false): strin
 			const manualRootAttr = n.path === mlsManualPath ? ' data-manual-root="1"' : '';
 			const externalAttrs = ext ? ` target="${ext.target}" rel="${ext.rel}"` : '';
 
+			// Single leaf child: link the section straight to that page (no dead-end section page).
+			if (n.children.length === 1 && !n.children[0].children.length && n.children[0].hasPage) {
+				const only = n.children[0];
+				const onlyExt = externalDocLinkForPath(only.path);
+				const onlyHref = escapeHtml(onlyExt?.href || only.path);
+				const onlyAttrs = onlyExt ? ` target="${onlyExt.target}" rel="${onlyExt.rel}"` : '';
+				const leafActive = n.path === renderPath || only.path === renderPath ? ' active' : '';
+				return `<li class="docNavItem" data-doc-nav-node="1" data-depth="${depth}" data-label="${label}" data-path="${pathAttr}"${manualRootAttr}><a class="docNavLink${leafActive}" href="${onlyHref}"${onlyAttrs}>${title}</a></li>`;
+			}
 			if (n.children.length) {
 				const kids = renderDocNavHtml(n.children, depth + 1, forceOpen);
 				const summaryInner = n.hasPage
@@ -2425,7 +2488,12 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 					<span class="blogAuthor">PropertyList</span>
 					{blogMetaDate && blogDateLabel ? (
 						<time class="blogDate" datetime={blogMetaDate.toISOString()}>
-							{blogDateLabel}
+							Publicado el {blogDateLabel}
+						</time>
+					) : null}
+					{blogUpdatedDate && blogUpdatedLabel ? (
+						<time class="blogDate" datetime={blogUpdatedDate.toISOString()}>
+							Actualizado el {blogUpdatedLabel}
 						</time>
 					) : null}
 					<span class="blogRead">{readingMins} min de lectura</span>
@@ -2442,7 +2510,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			{!bodyHasH1 && !moveDocHeaderIntoBody && page.description ? <p class="docLead">{page.description}</p> : null}
 		</header>
 
-		<div class:list={['docGrid', isDocs ? 'withNav' : null]}>
+		<div class:list={['docGrid', isDocs ? 'withNav' : null, isBlogLike && blogListings.length ? 'withAside' : null]}>
 			{isDocs ? (
 				<aside class="docNav" aria-label="Navegación de docs" data-current-manual-root={currentManualRoot || ''}>
 					<div class="docNavHeader">
@@ -2474,6 +2542,9 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			<div class="docMain">
 				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" /> : null}
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+				{isPublicDocs && blogUpdatedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
+					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Ultima revision: {blogDateFmt.format(blogUpdatedDate)}</p>
+				) : null}
 {isNeighbourhood ? (
 	<a class="areaPortalCta" href={neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
 		<span style="min-width:0;">
@@ -2484,11 +2555,57 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 	</a>
 ) : null}
 
-				{folderArticles.length ? (
+				{isBlogLike || isPublicDocs ? (
+					<section class="blogOracleBand" aria-label="Datos de mercado verificados" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:26px 0 6px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.14), rgba(255,255,255,0.65));">
+						<div style="min-width:0;max-width:640px;">
+							<div style="font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">No adivines los precios - verifícalos</div>
+							<p style="margin:6px 0 0;font-size:14px;color:rgba(16,24,40,0.72);">El Price Oracle de PropertyList publica €/m² verificados ante notario, procedentes del registro notarial español, y los agentes pueden convertir los datos del MLS en un informe de mercado de zona en minutos. Los datos reales ganan a las estimaciones.</p>
+						</div>
+						<div style="display:flex;gap:10px;flex-wrap:wrap;">
+							<a href="https://oracle.propertylist.es" target="_blank" rel="noopener" style="white-space:nowrap;background:#00ae9a;color:#00100e;border:1px solid rgba(0,0,0,0.12);border-radius:999px;padding:11px 18px;font-weight:900;text-decoration:none;">Ver precios verificados</a>
+							<a href="/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/area-market-reports/" style="white-space:nowrap;background:#fff;color:rgba(16,24,40,0.85);border:1px solid rgba(16,24,40,0.15);border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;">Informes de mercado</a>
+						</div>
+					</section>
+				) : null}
+
+				{isBlogLike ? (
+					<aside class="blogHomeCta" aria-label="Buscar vivienda" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:14px 0 6px;padding:20px 22px;border-radius:18px;background:linear-gradient(120deg,#00ae9a,#0b7d6d);color:#fff;">
+						<div style="min-width:0;max-width:640px;">
+							<strong style="display:block;font-size:17px;letter-spacing:-.01em;margin-bottom:3px;">¿Buscas una vivienda?</strong>
+							<span style="font-size:14px;opacity:.95;">{blogPropertyLocation ? `Mira lo que hay disponible ahora mismo en ${blogPropertyLocation} - viviendas en venta y alquiler de agentes registrados.` : `Mira lo que hay disponible ahora mismo en la Costa del Sol - viviendas en venta y alquiler de agentes registrados.`}</span>
+						</div>
+						<a href="/es/buscador-propiedades" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap;">Encuentra tu hogar &rarr;</a>
+					</aside>
+				) : null}
+
+				{isBlogLike && blogListings.length ? (
+					<section class="blogPropertySection" aria-label="Propiedades destacadas">
+						<h2 class="blogPropertyTitle">Propiedades en {blogPropertyLocation}</h2>
+						<div class="blogPropertyGrid">
+							{blogListings.slice(0, 3).map((l) => (
+								<PropertyCard
+									title={blogCardTitle(l)}
+									price={fmtEurBlog(l.price)}
+									location={[l.suburb, l.city].filter(Boolean).join(', ') || blogPropertyLocation}
+									beds={l.bedrooms || undefined}
+									baths={l.bathrooms || undefined}
+									area={l.buildSqm ? `${l.buildSqm} m²` : undefined}
+									image={l.photoUrl || '/blog/hero-marbella-property.png'}
+									url={l.url || blogPortalUrl}
+								/>
+							))}
+						</div>
+						<p class="blogPropertyCta">
+							<a href={blogPortalUrl} target="_blank" rel="noopener">Ver todos los anuncios de {blogPropertyLocation} en PropertyList →</a>
+						</p>
+					</section>
+				) : null}
+
+				{folderArticlesAll.length ? (
 					<section class="docArticles" aria-label="Artículos">
 						<div class="docArticlesTitle">Artículos</div>
 						<ul class="docArticlesList">
-							{folderArticles.map((a) => (
+							{folderArticlesAll.map((a) => (
 								<li>
 									<a class="docArticlesLink" href={a.href} target={a.external ? '_blank' : undefined} rel={a.external ? 'noopener' : undefined}>
 										<span class="docArticlesLinkTitle">{a.title}</span>
@@ -2520,7 +2637,24 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 				) : null}
 			</div>
 
-			{toc.filter((t) => t.depth === 2).length > 1 ? (
+			{isBlogLike && blogListings.length ? (
+				<aside class="docToc blogAside" aria-label="Propiedades">
+					<div class="docTocTitle">Propiedades {blogPropertyLocation ? `en ${blogPropertyLocation}` : 'destacadas'}</div>
+					<div style="display:flex;flex-direction:column;gap:12px;">
+						{blogListings.slice(0, 4).map((l) => (
+							<a href={l.url || blogPortalUrl} target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit;border:1px solid rgba(16,24,40,0.1);border-radius:12px;overflow:hidden;background:#fff;">
+								<div style={l.photoUrl ? `height:110px;background:#eef2f4 center/cover no-repeat;background-image:url('${l.photoUrl}');` : 'height:110px;background:#eef2f4;'}></div>
+								<div style="padding:9px 11px;">
+									<div style="font-weight:800;font-size:14px;">{fmtEurBlog(l.price)}</div>
+									<div style="font-size:12px;color:rgba(16,24,40,0.6);margin-top:2px;">{[l.bedrooms ? `${l.bedrooms} dorm.` : '', l.bathrooms ? `${l.bathrooms} baños` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
+									<div style="font-size:12px;color:rgba(16,24,40,0.55);margin-top:2px;">{[l.suburb, l.city].filter(Boolean).join(', ') || blogPropertyLocation}</div>
+								</div>
+							</a>
+						))}
+					</div>
+					<a href={blogPortalUrl} target="_blank" rel="noopener" style="display:inline-block;margin-top:12px;font-weight:800;font-size:13px;color:#0d9488;text-decoration:none;">Ver todo en {blogPropertyLocation} →</a>
+				</aside>
+			) : toc.filter((t) => t.depth === 2).length > 1 ? (
 				<aside class="docToc" aria-label="En esta página">
 					<div class="docTocTitle">En esta página</div>
 					<ol class="docTocList">

@@ -1,0 +1,411 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/mobile-app/`;
+const title = 'PropertyList Mobile App for Estate Agents (iOS and Android) | PropertyList';
+const description =
+	'The PropertyList MLS and CRM, built for your phone. Search listings, manage your pipeline and reply to leads the moment they land. Download the Android app free on Google Play; iOS is in final review.';
+
+const features = [
+	{ name: 'Magic Match', desc: 'Describe your client in plain words and the AI surfaces the listings that fit - no manual filtering.' },
+	{ name: 'Instant comparables', desc: 'Pull a comparable-sales snapshot for any property on the spot, mid-conversation.' },
+	{ name: 'Search the MLS anywhere', desc: 'Browse and share live listings mid-viewing, straight from your phone.' },
+	{ name: 'Your pipeline in your pocket', desc: 'Leads, contacts and appointments, updated the second anything changes.' },
+	{ name: 'Instant lead alerts', desc: 'A push notification the moment a new enquiry arrives, so you are first to reply.' },
+	{ name: 'Agent-to-agent chat', desc: 'Message the agent on the other side of a deal without leaving the app.' },
+	{ name: 'One login, everywhere', desc: 'The same PropertyList account as the web. Nothing new to set up.' },
+];
+
+const faqs = [
+	{ q: 'Is the app available now?', a: 'Yes - the Android app is live on Google Play, free with your PropertyList account. The iOS app is in final review with Apple; add your email and we will tell you the day it lands.' },
+	{ q: 'Will it cost extra?', a: 'No. The app comes with your PropertyList account, and you can start on the web today for free.' },
+	{ q: 'Which devices are supported?', a: 'iPhone and iPad on iOS, and Android phones and tablets. A recent operating-system version is recommended.' },
+	{ q: 'Do I need a new account?', a: 'No. It is the same PropertyList login you already use on the web.' },
+	{ q: 'Does it replace the desktop version?', a: 'No, it complements it. It is one account, synced across web and mobile.' },
+	{ q: 'Can I use PropertyList on my phone right now?', a: 'Yes. PropertyList is fully responsive in your mobile browser, and you can add it to your home screen. See the iOS and Android guides above.' },
+];
+
+const softwareLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'PropertyList',
+	applicationCategory: 'BusinessApplication',
+	operatingSystem: 'iOS, Android',
+	url: canonical,
+	downloadUrl: 'https://play.google.com/store/apps/details?id=com.propertylist.mobile',
+	description:
+		'The PropertyList MLS and CRM mobile app for estate agents: search listings, manage your pipeline and reply to leads instantly. Android available on Google Play; iOS in final review.',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	ogImage="https://info.propertylist.es/app/og-mobile-app-v2.jpg"
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/app-movil/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Mobile app</div>
+				<div class="badge"><span class="dot live"></span> Android live on Google Play &middot; iOS coming soon</div>
+				<h1>Your whole agency, in your pocket.</h1>
+				<p class="lead">
+					The PropertyList MLS and CRM, rebuilt for your phone. Speak a lead in as you leave a viewing, snap a For Sale sign to draft a
+					seller lead, and reply the second an enquiry lands - wherever you are. The Android app is live on Google Play now;
+					iPhone is in final review with Apple.
+				</p>
+				<div class="storeRow">
+					<a class="gpBtn" href="https://play.google.com/store/apps/details?id=com.propertylist.mobile" target="_blank" rel="noopener" data-cta="app-play"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3.3 2.3 13 12 3.3 21.7a1.4 1.4 0 0 1-.5-1.1V3.4c0-.5.2-.8.5-1.1Zm11.1 10.6 2.4 2.4-9 5.2 6.6-7.6Zm0-1.8L7.8 3.5l9 5.2-2.4 2.4Zm3.7-1.2 2.3 1.3c.8.5.8 1.6 0 2.1l-2.3 1.3-2.6-2.4 2.6-2.6Z"/></svg><span><small>Get it on</small>Google Play</span></a>
+					<a class="webNow" href="https://agents.propertylist.es/login" target="_blank" rel="noopener">Open on the web &rarr;</a>
+				</div>
+				<div class="note">Free with your PropertyList account. iPhone launches once Apple completes review - <a href="#ios">get notified</a>.</div>
+			</div>
+			<div class="heroShot">
+				<img src="/app/screen-properties.webp?v=2" width="900" height="1782" alt="The PropertyList app Properties screen: search the full MLS with All listings, Near me and instant filters" />
+			</div>
+		</div>
+	</section>
+
+	<section class="trustbar" aria-label="Why PropertyList">
+		<div><b>6,000+</b><span>live MLS listings</span></div>
+		<div><b>35+</b><span>areas covered</span></div>
+		<div><b>Notary-verified</b><span>pricing data</span></div>
+		<div><b>Free</b><span>to get started</span></div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>See it in action</h2>
+			<p>The MLS, pipeline and one-tap tools you rely on at your desk - redesigned for your phone.</p>
+		</div>
+		<div class="shots">
+			<figure>
+				<img src="/app/screen-dashboard.webp?v=2" width="900" height="1782" loading="lazy" alt="PropertyList app dashboard with credits, Magic Match and one-tap actions" />
+				<figcaption>Credits, Magic Match, and one-tap Quick contact and Capture a sign.</figcaption>
+			</figure>
+			<figure>
+				<img src="/app/screen-dashboard-2.webp?v=2" width="900" height="1782" loading="lazy" alt="PropertyList app dashboard showing pipeline, market intelligence and growth tools" />
+				<figcaption>Your pipeline, live market intelligence, and tools to grow.</figcaption>
+			</figure>
+			<figure>
+				<img src="/app/screen-properties.webp?v=2" width="900" height="1782" loading="lazy" alt="PropertyList app Properties screen showing MLS listings with search, All listings and Near me filters" />
+				<figcaption>Every MLS listing, searchable and filterable, with Near me.</figcaption>
+			</figure>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card">
+				<h2>Leads don't wait for you to reach your desk.</h2>
+				<p>
+					The enquiry that arrives while you are at a viewing is the one you lose. By the time you are back at the computer, another agent
+					has already replied. Your phone should be your office, not a place where notifications pile up unanswered.
+				</p>
+			</div>
+			<div class="card accent">
+				<h2>Answer first. Keep the deal.</h2>
+				<p>
+					PropertyList on mobile puts your entire MLS and CRM one tap away. A push notification the moment a lead lands means you reply
+					first, every time - from the car, a cafe, or the sofa.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Things only the app can do</h2>
+			<p>Your phone has a microphone, a camera and GPS. Your desktop does not. These two turn every chance encounter and every street you drive down into a lead.</p>
+		</div>
+		<div class="grid2">
+			<div class="card magic">
+				<div class="magicTop">
+					<span class="magicIcon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M6 11a6 6 0 0 0 12 0" /><path d="M12 17v4" /></svg></span>
+					<span class="magicKicker">No typing</span>
+				</div>
+				<h3>Just met someone? Speak, and it's a lead.</h3>
+				<p>Hold the button and say who you just met. The app turns your voice into a saved contact, tags it with where you were, and schedules the follow-up - before you have even reached the car.</p>
+				<div class="magicFlow"><span>Hold and speak</span><i>&rarr;</i><span>Lead saved, GPS-tagged</span><i>&rarr;</i><span>Follow-up scheduled</span></div>
+			</div>
+			<div class="card magic">
+				<div class="magicTop">
+					<span class="magicIcon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2h7L16 8h4v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg></span>
+					<span class="magicKicker">Point and shoot</span>
+				</div>
+				<h3>Photograph a For Sale sign. Get a seller lead.</h3>
+				<p>Snap a board on the street and the app reads the phone number and address, then drafts a seller lead ready for you to follow up. Every sign you drive past becomes a prospecting opportunity.</p>
+				<div class="magicFlow"><span>Photo of the sign</span><i>&rarr;</i><span>AI reads number and address</span><i>&rarr;</i><span>Seller lead drafted</span></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Everything else you run your agency on, now on your phone</h2>
+			<p>The same MLS, CRM and messaging you use at your desk, redesigned for one hand and a small screen.</p>
+		</div>
+		<div class="grid3" aria-label="App features">
+			{
+				features.map((f) => (
+					<div class="card">
+						<h3>{f.name}</h3>
+						<p>{f.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta waitlistBand" id="ios">
+		<div class="ctaInner">
+			<h2>On Android now. iPhone next.</h2>
+			<p>
+				The Android app is live on Google Play today - free with your account. The iPhone app is in final review with Apple. Grab it on
+				Android now, or leave your email and we will send one message the day iOS goes live.
+			</p>
+			<div class="storeRow storeRowCenter">
+				<a class="gpBtn" href="https://play.google.com/store/apps/details?id=com.propertylist.mobile" target="_blank" rel="noopener" data-cta="app-play"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3.3 2.3 13 12 3.3 21.7a1.4 1.4 0 0 1-.5-1.1V3.4c0-.5.2-.8.5-1.1Zm11.1 10.6 2.4 2.4-9 5.2 6.6-7.6Zm0-1.8L7.8 3.5l9 5.2-2.4 2.4Zm3.7-1.2 2.3 1.3c.8.5.8 1.6 0 2.1l-2.3 1.3-2.6-2.4 2.6-2.6Z"/></svg><span><small>Get it on</small>Google Play</span></a>
+			</div>
+			<form class="waitlistForm" data-source="mobile-app-ios">
+				<input type="email" name="email" required placeholder="you@agency.com" aria-label="Your email address" autocomplete="email" />
+				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+				<button type="submit">Notify me about iPhone</button>
+				<p class="wlStatus" role="status" aria-live="polite"></p>
+			</form>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Use PropertyList on mobile today</h2>
+			<p>Android is on Google Play now. On iPhone (and any device), PropertyList also works beautifully in your mobile browser - add it to your home screen for an app-style icon.</p>
+		</div>
+		<div class="grid3">
+			<div class="card">
+				<h3>On iPhone and iPad</h3>
+				<p>Open PropertyList in Safari and add it to your Home Screen.</p>
+				<a class="cardLink" href="/docs/propertylist-mls-user-manual/getting-started/download-app/ios/">iOS guide &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>On Android</h3>
+				<p>Download the PropertyList app free from Google Play.</p>
+				<a class="cardLink" href="https://play.google.com/store/apps/details?id=com.propertylist.mobile" target="_blank" rel="noopener" data-cta="app-play">Get it on Google Play &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>Open the web app</h3>
+				<p>Sign in and use the full MLS and CRM in any mobile browser.</p>
+				<a class="cardLink" href="https://agents.propertylist.es/login" target="_blank" rel="noopener">Open PropertyList &rarr;</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Run your agency from anywhere.</h2>
+			<p>The office in your pocket is here on Android - download it free from Google Play.</p>
+			<div class="storeRow storeRowCenter">
+				<a class="gpBtn" href="https://play.google.com/store/apps/details?id=com.propertylist.mobile" target="_blank" rel="noopener" data-cta="app-play"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3.3 2.3 13 12 3.3 21.7a1.4 1.4 0 0 1-.5-1.1V3.4c0-.5.2-.8.5-1.1Zm11.1 10.6 2.4 2.4-9 5.2 6.6-7.6Zm0-1.8L7.8 3.5l9 5.2-2.4 2.4Zm3.7-1.2 2.3 1.3c.8.5.8 1.6 0 2.1l-2.3 1.3-2.6-2.4 2.6-2.6Z"/></svg><span><small>Get it on</small>Google Play</span></a>
+			</div>
+		</div>
+	</section>
+
+	<div class="stickyBar" data-sticky-cta hidden>
+		<div class="stickyInner">
+			<span class="stickyText">Get the PropertyList app on Android.</span>
+			<a class="gpBtn gpBtnSticky" href="https://play.google.com/store/apps/details?id=com.propertylist.mobile" target="_blank" rel="noopener" data-cta="app-play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3.3 2.3 13 12 3.3 21.7a1.4 1.4 0 0 1-.5-1.1V3.4c0-.5.2-.8.5-1.1Zm11.1 10.6 2.4 2.4-9 5.2 6.6-7.6Zm0-1.8L7.8 3.5l9 5.2-2.4 2.4Zm3.7-1.2 2.3 1.3c.8.5.8 1.6 0 2.1l-2.3 1.3-2.6-2.4 2.6-2.6Z"/></svg><span><small>Get it on</small>Google Play</span></a>
+		</div>
+	</div>
+
+	<script is:inline>
+		document.querySelectorAll('.waitlistForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.wlStatus');
+				const emailEl = form.querySelector('input[name="email"]');
+				const hpEl = form.querySelector('input[name="website"]');
+				const email = emailEl ? emailEl.value : '';
+				const website = hpEl ? hpEl.value : '';
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'wlStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/app-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ email: email, website: website, lang: es ? 'es' : 'en', source: form.getAttribute('data-source') || 'mobile-app' }),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'wlStatus ok';
+						status.textContent = es ? 'Estas en la lista. Te avisaremos el dia del lanzamiento.' : "You're on the list. We'll email you the day the app launches.";
+					} else {
+						status.className = 'wlStatus err';
+						status.textContent = es ? 'Revisa tu correo e intentalo de nuevo.' : 'Please check your email and try again.';
+					}
+				} catch (err) {
+					status.className = 'wlStatus err';
+					status.textContent = es ? 'Algo salio mal. Intentalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<script is:inline>
+		(function () {
+			var bar = document.querySelector('[data-sticky-cta]');
+			if (!bar || !('IntersectionObserver' in window)) return;
+			var hero = document.querySelector('.hero');
+			var end = document.querySelector('footer');
+			var heroOut = false, endIn = false;
+			function update() { bar.hidden = !(heroOut && !endIn); }
+			if (hero) new IntersectionObserver(function (e) { heroOut = !e[0].isIntersecting; update(); }, { threshold: 0 }).observe(hero);
+			if (end) new IntersectionObserver(function (e) { endIn = e[0].isIntersecting; update(); }, { threshold: 0 }).observe(end);
+		})();
+	</script>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 20px; }
+		.heroGrid { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 20px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: rgba(16, 24, 40, 0.86); font-weight: 900; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+		.badge { display: inline-flex; align-items: center; gap: 8px; margin: 12px 0 0; padding: 6px 12px; border-radius: 999px; background: rgba(16, 24, 40, 0.04); border: 1px solid rgba(16, 24, 40, 0.1); font-weight: 800; font-size: 12.5px; color: rgba(16, 24, 40, 0.8); }
+		.badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pl-accent); box-shadow: 0 0 0 4px rgba(var(--pl-accent-rgb), 0.18); }
+		h1 { margin: 12px 0 10px; line-height: 1.05; font-size: clamp(28px, 4.6vw, 44px); }
+		.lead { margin: 0 0 14px; color: rgba(16, 24, 40, 0.75); max-width: 62ch; line-height: 1.6; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 8px; }
+		.webNow { display: inline-block; margin-top: 12px; color: #0a6d61; font-weight: 800; text-decoration: none; font-size: 14px; }
+		.webNow:hover { text-decoration: underline; }
+		.waitlistForm { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 4px; }
+		.waitlistForm input[type='email'] { flex: 1; min-width: 220px; padding: 13px 14px; border-radius: 14px; border: 1px solid rgba(16, 24, 40, 0.2); font-size: 15px; background: #fff; }
+		.waitlistForm input[type='email']:focus { outline: none; border-color: var(--pl-accent); box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.18); }
+		.waitlistForm .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		.waitlistForm button { padding: 13px 20px; border-radius: 14px; border: 1px solid #0a6d61; background: #0a6d61; color: #fff; font-weight: 950; font-size: 15px; cursor: pointer; }
+		.waitlistForm button:hover { background: #086055; }
+		.wlStatus { flex-basis: 100%; margin: 4px 0 0; font-weight: 700; font-size: 13px; color: rgba(16, 24, 40, 0.7); min-height: 1px; }
+		.wlStatus.ok { color: #0a7d55; }
+		.wlStatus.err { color: #b42318; }
+		.waitlistForm.done input, .waitlistForm.done button { display: none; }
+		.phoneWrap { display: flex; justify-content: center; }
+		.phone { width: 210px; height: 420px; border-radius: 34px; background: #0b1220; padding: 10px; border: 1px solid rgba(16, 24, 40, 0.25); position: relative; box-shadow: 0 20px 50px rgba(16, 24, 40, 0.18); }
+		.phoneNotch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 90px; height: 18px; background: #0b1220; border-radius: 0 0 12px 12px; z-index: 2; }
+		.phoneScreen { height: 100%; border-radius: 26px; background: linear-gradient(180deg, #eef7f5, #ffffff); padding: 30px 12px 12px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+		.pNotif { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-left: 3px solid var(--pl-accent); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 2px; }
+		.pNotif i { font-style: normal; font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: #0a6d61; }
+		.pNotif b { font-size: 12.5px; color: #101828; line-height: 1.3; }
+		.pNotif span { font-size: 11px; color: rgba(16, 24, 40, 0.55); }
+		.pCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 8px; display: flex; gap: 8px; align-items: center; }
+		.pImg { width: 46px; height: 46px; border-radius: 8px; background: linear-gradient(135deg, #9fe1cb, #1d9e75); flex: none; }
+		.pImg.alt { background: linear-gradient(135deg, #b5d4f4, #378add); }
+		.pCard b { display: block; font-size: 12px; color: #101828; }
+		.pCard span { display: block; font-size: 10.5px; color: rgba(16, 24, 40, 0.55); }
+		.pCard i { font-style: normal; font-size: 12px; font-weight: 900; color: #0a6d61; }
+		.trustbar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 14px; }
+		.trustbar div { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px; text-align: center; }
+		.trustbar b { display: block; color: #0a6d61; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+		.trustbar span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.68); margin-top: 2px; line-height: 1.35; }
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 88ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0 0 8px; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.cardLink { font-weight: 850; color: #0a6d61; text-decoration: none; font-size: 14px; }
+		.cardLink:hover { text-decoration: underline; }
+		.magic { border-color: rgba(var(--pl-accent-rgb), 0.28); }
+		.magicTop { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+		.magicIcon { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 12px; background: rgba(var(--pl-accent-rgb), 0.14); color: #0a6d61; flex: none; }
+		.magicKicker { font-size: 11px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #0a6d61; background: rgba(var(--pl-accent-rgb), 0.1); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); padding: 4px 10px; border-radius: 999px; }
+		.magic h3 { font-size: 19px; margin: 0 0 8px; }
+		.magicFlow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 24, 40, 0.08); }
+		.magicFlow span { font-size: 12px; font-weight: 800; color: rgba(16, 24, 40, 0.78); background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 5px 10px; }
+		.magicFlow i { font-style: normal; color: var(--pl-accent); font-weight: 900; }
+		.heroShot { display: flex; justify-content: center; }
+		.heroShot img { width: 100%; max-width: 270px; height: auto; display: block; }
+		.shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+		.shots figure { margin: 0; text-align: center; }
+		.shots img { width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; }
+		.shots figcaption { margin: 12px auto 0; font-size: 12.5px; color: rgba(16, 24, 40, 0.68); line-height: 1.5; max-width: 250px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.waitlistBand .waitlistForm { max-width: 520px; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-accent); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		.stickyBar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: rgba(255, 255, 255, 0.97); border-top: 1px solid rgba(16, 24, 40, 0.12); box-shadow: 0 -6px 22px rgba(16, 24, 40, 0.1); padding: 10px 16px; }
+		.stickyInner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+		.stickyText { font-weight: 850; font-size: 14px; color: rgba(16, 24, 40, 0.9); white-space: nowrap; }
+		.stickyForm { margin: 0; flex: 1; position: relative; }
+		.stickyForm input[type='email'] { min-width: 150px; padding: 10px 12px; }
+		.stickyForm button { padding: 10px 16px; }
+		.stickyForm .wlStatus { position: absolute; bottom: calc(100% + 8px); left: 0; margin: 0; flex-basis: auto; background: #fff; border: 1px solid rgba(16, 24, 40, 0.14); border-radius: 8px; padding: 6px 10px; box-shadow: 0 6px 16px rgba(16, 24, 40, 0.12); }
+		.stickyForm .wlStatus:empty { display: none; }
+		@media (max-width: 720px) { .stickyText { display: none; } .stickyBar { padding: 8px 12px; } }
+		@media (max-width: 860px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.heroShot img { max-width: 220px; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.trustbar { grid-template-columns: repeat(2, 1fr); }
+			.shots { grid-template-columns: 1fr; }
+		}
+	</style>
+<style>
+	.gpBtn { display: inline-flex; align-items: center; gap: 10px; background: #0a6d61; color: #fff; border-radius: 12px; padding: 10px 18px; text-decoration: none; font-weight: 800; }
+	.gpBtn:hover { background: #086055; }
+	.gpBtn span { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.05; font-size: 16px; }
+	.gpBtn small { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
+	.storeRow { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin: 6px 0 0; }
+	.storeRowCenter { justify-content: center; }
+	.badge .dot.live { background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18); }
+	.stickyBar .gpBtnSticky { padding: 8px 14px; }
+	.stickyBar .gpBtnSticky span { font-size: 14px; }
+</style>
+</Layout>

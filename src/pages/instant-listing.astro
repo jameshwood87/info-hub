@@ -1,0 +1,325 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPortalStats } from '../lib/portalStats';
+
+const stats = await getPortalStats();
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/instant-listing/`;
+const title = 'Instant Listing - a full property listing from photos and your voice | PropertyList';
+const description =
+	'Add a property listing from photos and a voice note. PropertyList Instant Listing auto-fills every field - m2, bedrooms, features and a polished description - for estate agents to review and publish in a minute.';
+
+const fills = [
+	{ name: 'Property type & condition', desc: 'Villa, apartment, penthouse, new-build or resale - identified for you.' },
+	{ name: 'Bedrooms & bathrooms', desc: 'Counted from what you say and what the photos show.' },
+	{ name: 'Built, plot & terrace m2', desc: 'Every area captured from your voice note, in the right field.' },
+	{ name: 'Features & amenities', desc: 'Pool, sea view, air-con, parking, garden, gated - all tagged.' },
+	{ name: 'Orientation & location', desc: 'South-facing, the area and setting, placed correctly.' },
+	{ name: 'A sales-ready description', desc: 'A clean, compelling write-up - ready to publish or tweak.' },
+	{ name: 'Multi-language ready', desc: 'Publish to buyers across languages, not just one.' },
+	{ name: 'Everything, structured', desc: 'A complete MLS-ready listing, not a rough draft.' },
+];
+
+const faqs = [
+	{ q: 'How does it work?', a: 'Add your property photos and record a short voice note describing the property. Instant Listing reads your images and your words and completes the whole listing for you to review and publish.' },
+	{ q: 'What do I need to say in the recording?', a: 'Just talk naturally - describe the property, its size, layout and the features that sell it. The more you say, the more fields fill in.' },
+	{ q: 'Does it write the description too?', a: 'Yes. It drafts a clean, sales-ready description you can publish as-is or edit in a few taps.' },
+	{ q: 'Which fields get filled?', a: 'Property type and condition, bedrooms, bathrooms, built, plot and terrace m2, features and amenities, orientation, location, and the description.' },
+	{ q: 'Am I still in control?', a: 'Always. The AI drafts every field; you review, adjust anything, and nothing goes live until you publish it.' },
+	{ q: 'Is it free?', a: 'Yes. Instant Listing is part of your free PropertyList account - the MLS and CRM are free forever.' },
+	{ q: 'Can I do it on my phone?', a: 'Yes. It works in your phone browser, and the PropertyList Android app is on Google Play - add photos straight from the camera, record on-site, review and publish. The iOS app is coming soon.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 3, name: 'Instant Listing', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'PropertyList Instant Listing',
+	applicationCategory: 'BusinessApplication',
+	operatingSystem: 'Web, Android',
+	url: canonical,
+	description:
+		'Create a complete property listing from photos and a voice note. PropertyList Instant Listing auto-fills property type, bedrooms, bathrooms, built, plot and terrace m2, features, orientation and a polished description for estate agents to review and publish.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/listado-instantaneo/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Instant Listing</div>
+				<h1>Add photos. Record the details. The listing fills itself.</h1>
+				<p class="lead">
+					Upload your photos and record a quick voice note describing the property. Instant Listing turns your words and images
+					into a complete listing - m2, bedrooms and bathrooms, features, condition and a polished description, all filled in.
+					You review and publish. What used to take twenty minutes of form-filling now takes one.
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+					<a class="btnSecondary" href="#how">See how it works</a>
+				</div>
+				<div class="note">Free with your PropertyList account - join {stats.agencies} agencies on Spain's free MLS. Nothing publishes without you.</div>
+			</div>
+
+			<div class="ilFlow" aria-hidden="true">
+				<div class="ilIn">
+					<div class="ilTitle">&#10024; Start with AI</div>
+					<div class="ilPhotos"><span></span><span></span><span></span><span></span></div>
+					<div class="ilVoice">
+						<span class="ilMic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M6 11a6 6 0 0 0 12 0" /><path d="M12 17v4" /></svg></span>
+						<span class="ilWave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+					</div>
+					<div class="ilQuote">"Three-bed villa in Nueva Andalucia, south-facing, private pool, sea views, 180 square metres..."</div>
+					<div class="ilBtns"><span class="ilBtn">&#128247; Add photos</span><span class="ilBtn">&#127908; Record voice note</span><span class="ilBtn ilBtnGo">Create AI draft</span></div>
+					<div class="ilMicro">The AI only fills what it can see or hear. Nothing publishes without you.</div>
+				</div>
+				<div class="ilArrow">&darr;</div>
+				<div class="ilOut">
+					<div class="ilOutHead"><b>3-bed villa, Nueva Andalucia</b><span class="ilTag">Auto-filled</span></div>
+					<div class="ilChips"><span>3 bed</span><span>2 bath</span><span>180 m2</span><span>Pool</span><span>Sea view</span><span>South</span></div>
+					<div class="ilDesc">A bright, south-facing villa with a private pool and open sea views, moments from Puerto Banus...</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Three steps, one minute</h2>
+			<p>No forms, no drop-downs, no re-typing what you already know. Describe the property the way you would to a buyer.</p>
+		</div>
+		<div class="grid3 steps">
+			<div class="card step">
+				<div class="stepNum">1</div>
+				<h3>Add your photos</h3>
+				<p>Snap or upload the property photos - straight from your phone at the viewing, or your desktop.</p>
+			</div>
+			<div class="card step">
+				<div class="stepNum">2</div>
+				<h3>Record the details</h3>
+				<p>Hold the button and describe it out loud - size, layout, and the features that sell it. Just talk.</p>
+			</div>
+			<div class="card step">
+				<div class="stepNum">3</div>
+				<h3>Everything fills itself</h3>
+				<p>The AI reads your photos and your voice and completes the whole listing - ready to review and publish.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Filled in for you, automatically</h2>
+			<p>One voice note and a set of photos become a complete, structured, MLS-ready listing - every field, not a rough start.</p>
+		</div>
+		<div class="grid4">
+			{
+				fills.map((f) => (
+					<div class="card fill">
+						<h3>{f.name}</h3>
+						<p>{f.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>And that is just the start.</h2>
+			<p>A finished listing is a lead engine waiting to run. The moment it is live, put it to work across every channel - in a few clicks, no extra tools.</p>
+		</div>
+		<div class="grid4">
+			<div class="card promo">
+				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.7 5.5 6 .9-4.3 4.2 1 6L12 17.8 6.6 20.1l1-6L3.3 9.9l6-.9z" /></svg></span>
+				<h3>Feature it in the MLS</h3>
+				<p>Boost your listing to the top where 1,200+ agents browse, so the whole network sees it first.</p>
+			</div>
+			<div class="card promo">
+				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18" /></svg></span>
+				<h3>Feature it on the portal</h3>
+				<p>Push it in front of buyers searching the public portal, above the rest of the market.</p>
+			</div>
+			<div class="card promo">
+				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></svg></span>
+				<h3>Send it to matched buyers</h3>
+				<p>It goes straight to the buyers and renters already searching that area - the right property, the right person, instantly.</p>
+			</div>
+			<div class="card promo">
+				<div class="promoTop"><span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z" /><path d="M16 9a4 4 0 0 1 0 6" /></svg></span><span class="soon">Coming soon</span></div>
+				<h3>Advertise on Google &amp; social</h3>
+				<p>Launch ads to Google and social media in a few clicks - no agency, no ad manager.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Every lead lands in your CRM, automatically.</h2>
+			<p>
+				However a buyer finds it - the MLS, the portal, a match or an ad - the enquiry drops straight into your CRM and pipeline.
+				Filed to the right stage (buyer, seller or tenant), with a full history timeline of every touch. Nothing sits in a separate
+				inbox, and nothing slips through.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>You are always in control</h2>
+				<p>
+					The AI only fills what it can see or hear - never invented details. You decide: review every field, change anything that needs a human touch, and publish only when it is
+					exactly right. Nothing goes live without your say-so.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Do it on-site, from your phone</h2>
+				<p>
+					Capture the photos and record while you are standing in the property - from your phone browser or the Android app. The listing is drafted before you are back in the
+					car. The <a href="/mobile-app/">Android app is on Google Play</a>; iOS is coming soon.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Add your next listing in a minute, not twenty.</h2>
+			<p>Every hour saved on data entry is an hour spent selling. It is free with your PropertyList account - one of the tools in the free <a href="/features/">PropertyList MLS and CRM</a>. Photos in, voice note recorded, listing done.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.ilFlow { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+		.ilIn { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 14px; }
+		.ilTitle { font-weight: 900; font-size: 13.5px; color: #101828; margin-bottom: 10px; }
+		.ilBtns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+		.ilBtn { border: 1px solid rgba(0, 174, 154, 0.45); color: var(--pl-ink); border-radius: 10px; padding: 7px 10px; font-size: 12px; font-weight: 800; background: #fff; }
+		.ilBtnGo { background: rgba(0, 174, 154, 0.35); border-color: transparent; color: #075e53; }
+		.ilMicro { margin-top: 10px; font-size: 11.5px; color: rgba(16, 24, 40, 0.55); }
+		.ilPhotos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+		.ilPhotos span { height: 44px; border-radius: 8px; }
+		.ilPhotos span:nth-child(1) { background: linear-gradient(135deg, #9fe1cb, #1d9e75); }
+		.ilPhotos span:nth-child(2) { background: linear-gradient(135deg, #b5d4f4, #378add); }
+		.ilPhotos span:nth-child(3) { background: linear-gradient(135deg, #ead9bd, #b99a63); }
+		.ilPhotos span:nth-child(4) { background: linear-gradient(135deg, #d3d1c7, #888780); }
+		.ilVoice { display: flex; align-items: center; gap: 10px; }
+		.ilMic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+		.ilWave { display: inline-flex; align-items: center; gap: 3px; height: 24px; }
+		.ilWave i { width: 3px; border-radius: 3px; background: var(--pl-ink); opacity: 0.85; }
+		.ilWave i:nth-child(1) { height: 8px; } .ilWave i:nth-child(2) { height: 18px; } .ilWave i:nth-child(3) { height: 12px; } .ilWave i:nth-child(4) { height: 22px; } .ilWave i:nth-child(5) { height: 10px; } .ilWave i:nth-child(6) { height: 16px; } .ilWave i:nth-child(7) { height: 8px; } .ilWave i:nth-child(8) { height: 14px; }
+		.ilQuote { margin-top: 10px; font-size: 13px; font-style: italic; color: rgba(16, 24, 40, 0.7); line-height: 1.5; }
+		.ilArrow { text-align: center; color: var(--pl-ink); font-size: 22px; font-weight: 900; line-height: 1; }
+		.ilOut { background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(16, 24, 40, 0.08); }
+		.ilOutHead { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+		.ilOutHead b { font-size: 14px; color: #101828; }
+		.ilTag { flex: none; font-size: 10.5px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 999px; padding: 3px 8px; }
+		.ilChips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+		.ilChips span { font-size: 12px; font-weight: 800; color: rgba(16, 24, 40, 0.82); background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 4px 10px; }
+		.ilDesc { font-size: 12.5px; color: rgba(16, 24, 40, 0.6); line-height: 1.5; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.card p a { color: var(--pl-ink); font-weight: 700; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.promoIcon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(var(--pl-accent-rgb), 0.14); color: var(--pl-ink); margin-bottom: 10px; }
+		.promoTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+		.soon { flex: none; font-size: 10.5px; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; color: #8a5300; background: #fdf0d5; border: 1px solid #f0d091; border-radius: 999px; padding: 3px 9px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+			.grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+</Layout>

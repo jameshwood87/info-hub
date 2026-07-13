@@ -1,0 +1,1054 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import fs from 'node:fs';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/whats-on/malaga/`;
+const title = "What's On in Malaga 2026: Events, Festivals & Things To Do | PropertyList";
+const description =
+	'A curated, always-current diary of events in Malaga city - festivals, concerts, exhibitions, sport and family days out - from official sources, updated automatically.';
+
+type Ev = {
+	id: string; title: string; titleEn?: string; titleEs?: string; start: string; time?: string | null; end: string | null; town: string;
+	venue: string | null; category: string; scope: 'local' | 'nearby';
+	url: string | null; source: string; blurbEn: string; blurbEs: string;
+};
+let events: Ev[] = [];
+let updated: string | null = null;
+try {
+	const store = JSON.parse(fs.readFileSync('/opt/info-hub/var/admin/events/malaga.json', 'utf8'));
+	events = Array.isArray(store.events) ? store.events : [];
+	updated = store.updated || null;
+} catch {}
+
+const todayIso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date()); // Spain time, not server UTC
+events = events.filter((e) => String(e.end || e.start) >= todayIso);
+const local = events.filter((e) => e.scope === 'local');
+const nearby = events.filter((e) => e.scope === 'nearby');
+const cats = [...new Set(local.map((e) => e.category))].sort();
+
+const fmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' });
+const dateLabel = (e: Ev) => {
+	const s = new Date(e.start + 'T12:00:00Z');
+	if (!e.end || e.end === e.start) return fmt.format(s);
+	return `${fmt.format(s)} - ${fmt.format(new Date(e.end + 'T12:00:00Z'))}`;
+};
+const isOn = (e: Ev) => e.start <= todayIso && String(e.end || e.start) >= todayIso;
+const CAT_LABEL: Record<string, string> = {
+	music: 'Music', festival: 'Festivals', culture: 'Culture', sport: 'Sport',
+	family: 'Family', food: 'Food & drink', market: 'Markets', nightlife: 'Nightlife', other: 'Other',
+};
+
+// time-window flags for the filters + soonest-first ordering
+const msDay = 86400000;
+const today = new Date(todayIso + 'T00:00:00Z');
+const dow = today.getUTCDay();
+const weekendStart = dow === 6 || dow === 0 ? today : new Date(today.getTime() + (((5 - dow + 7) % 7) * msDay));
+const weekendEnd = new Date(weekendStart.getTime() + (((7 - weekendStart.getUTCDay()) % 7) * msDay));
+const wkndStartIso = weekendStart.toISOString().slice(0, 10);
+const wkndEndIso = weekendEnd.toISOString().slice(0, 10);
+const monthEndIso = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 0)).toISOString().slice(0, 10);
+const endOf = (e: Ev) => String(e.end || e.start);
+const inWeekend = (e: Ev) => e.start <= wkndEndIso && endOf(e) >= wkndStartIso;
+const inMonth = (e: Ev) => e.start <= monthEndIso;
+const durDays = (e: Ev) => Math.max(0, (new Date(endOf(e) + 'T00:00:00Z').getTime() - new Date(e.start + 'T00:00:00Z').getTime()) / msDay);
+const sortKey = (e: Ev) => `${e.start > todayIso ? e.start : todayIso}|${String(Math.round(durDays(e))).padStart(4, '0')}`;
+local.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+const catCount = new Map<string, number>();
+for (const e of local) catCount.set(e.category, (catCount.get(e.category) || 0) + 1);
+const countNow = local.filter(isOn).length;
+const countWknd = local.filter(inWeekend).length;
+const countMonth = local.filter(inMonth).length;
+
+// editorial "don't miss" picks: soonest short big-name events (no long exhibitions)
+const featured = local.filter((e) => durDays(e) <= 3 && (['starlite', 'marbella-arena'].includes(e.source) || ['festival', 'music'].includes(e.category))).slice(0, 4);
+
+// time buckets: how trip-planners actually think (long-running stuff gets its own shelf)
+const weekAheadIso = new Date(today.getTime() + 7 * msDay).toISOString().slice(0, 10);
+const bucketOf = (e: Ev) => (isOn(e) ? (durDays(e) > 21 ? 'ongoing' : 'today') : e.start <= weekAheadIso ? 'week' : 'later');
+const BUCKETS = [
+	{ k: 'today', icon: '\u{1F525}', title: 'On today', sub: null as string | null },
+	{ k: 'week', icon: '\u{1F4C5}', title: 'This week', sub: null },
+	{ k: 'later', icon: '\u{1F52E}', title: 'Coming up', sub: null },
+	{ k: 'ongoing', icon: '\u{1F3DB}\u{FE0F}', title: 'Ongoing exhibitions & seasons', sub: 'Running for weeks - drop in whenever suits you.' },
+].map((b) => ({ ...b, list: local.filter((e) => bucketOf(e) === b.k) })).filter((b) => b.list.length);
+
+const CAT_ICON: Record<string, string> = {
+	music: '\u{1F3B5}', festival: '\u{1F3AA}', culture: '\u{1F3AD}', sport: '\u{1F3C3}',
+	family: '\u{1F46A}', food: '\u{1F37D}\u{FE0F}', market: '\u{1F6CD}\u{FE0F}', nightlife: '\u{1F319}', other: '\u{2728}',
+};
+
+const eventsLd = local.slice(0, 25).map((e) => ({
+	'@context': 'https://schema.org',
+	'@type': 'Event',
+	name: e.titleEn || e.title,
+	startDate: e.time ? `${e.start}T${e.time}:00` : e.start,
+	...(e.end ? { endDate: e.end } : {}),
+	eventStatus: 'https://schema.org/EventScheduled',
+	location: { '@type': 'Place', name: e.venue || e.town, address: { '@type': 'PostalAddress', addressLocality: e.town, addressRegion: 'Malaga', addressCountry: 'ES' } },
+	description: e.blurbEn,
+	...(e.url ? { url: e.url } : {}),
+}));
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Malaga area guide', item: `${origin}/neighbourhood/spain/malaga/malaga-centre/` },
+		{ '@type': 'ListItem', position: 3, name: "What's On in Malaga", item: canonical },
+	],
+};
+const updatedFmt = updated ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(updated)) : null;
+// how far ahead the diary currently reaches, e.g. "through November"
+const lastIso = local.reduce((m, e) => (String(e.end || e.start) > m ? String(e.end || e.start) : m), todayIso);
+const lastDate = new Date(lastIso + 'T12:00:00Z');
+const horizon = new Intl.DateTimeFormat('en-GB', { month: 'long', ...(lastIso.slice(0, 4) !== todayIso.slice(0, 4) ? { year: 'numeric' } : {}) }).format(lastDate);
+
+// minimal event data for the day-planner (localStorage + .ics + share link)
+const planEvents = events.map((e) => ({
+	id: e.id, t: e.titleEn || e.title, start: e.start, time: e.time || null, end: e.end, blurb: e.blurbEn,
+	venue: e.venue, town: e.town, url: e.url,
+}));
+
+// weekly street markets - fixed recurring fixtures, verified 2026-07
+const MARKETS = [
+	{ id: 'mk-atarazanas', dow: null, dayName: 'weekday', day: 'Monday to Saturday', name: 'Atarazanas Market', town: 'Centro', place: 'Calle Atarazanas, Centro', hours: '08:00 - 14:00', desc: 'The 1879 iron market hall - fresh fish, produce and tapas counters. Closed Sundays.' },
+	{ id: 'mk-rastro', dow: 0, dayName: 'Sunday', day: 'Every Sunday', name: 'Malaga Sunday rastro', town: 'Malaga', place: 'Recinto Ferial, Cortijo de Torres', hours: '09:00 - 15:00', desc: 'Over 300 stalls - one of the biggest Sunday flea markets in Andalusia, at the fairground.' },
+];
+const mapsQ = (m: { place: string; town: string }) =>
+	'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${m.place}, ${m.town}, Spain`);
+
+// curated places - externally validated (Michelin 2026 for restaurants; clubs
+// verified operating 2026-07). Seasonal - the planner shows a check-first note.
+type Place = { id: string; cat: string; name: string; town: string; area: string; desc: string; url?: string };
+const PLACES: Place[] = [
+	{ id: 'pl-malagueta', cat: 'Beach', name: 'Playa de la Malagueta', town: 'La Malagueta', area: 'Steps from the centre', desc: 'The city beach - promenade, chiringuitos and the famous MALAGUETA sand sign.' },
+	{ id: 'pl-caleta', cat: 'Beach', name: 'Playa de la Caleta', town: 'La Caleta', area: 'East of La Malagueta', desc: 'Leafier and calmer than its neighbour - locals&#39; pick for a quieter swim near town.' },
+	{ id: 'pl-pedregalejo', cat: 'Beach', name: 'Playa de Pedregalejo', town: 'Pedregalejo', area: 'The old fishing barrio', desc: 'Small coves lined with the city&#39;s best espeto chiringuitos - sardines grilled on boats.' },
+	{ id: 'pl-elpalo', cat: 'Beach', name: 'Playa de El Palo', town: 'El Palo', area: 'Further east', desc: 'Deeply local - fishing boats on the sand and legendary seafood at every corner.' },
+	{ id: 'pl-penon', cat: 'Beach', name: 'Peñón del Cuervo', town: 'El Palo', area: 'City&#39;s eastern edge', desc: 'A wilder cove split by a rock outcrop - a favourite for evening barbecues.' },
+	{ id: 'pl-balneario', cat: 'Beach club', name: 'El Balneario', town: 'El Palo', area: 'Baños del Carmen', desc: 'The 1918 bathing club on the rocks - voted Spain&#39;s best chiringuito 2025; sunset drinks under century-old trees.', url: 'https://elbalneariomalaga.com/' },
+	{ id: 'pl-cachalote', cat: 'Beach club', name: 'Chiringuito El Cachalote', town: 'La Malagueta', area: 'Playa de la Malagueta', desc: 'Big covered beach terrace on the city sand - seafood, tapas and cold Victoria.' },
+	{ id: 'pl-gutierrez', cat: 'Beach club', name: 'Gutiérrez Playa', town: 'Huelin', area: 'Antonio Banderas promenade', desc: 'Espetos and seafood done properly on the western promenade.' },
+	{ id: 'pl-jcg', cat: 'Restaurant', name: 'José Carlos García', town: 'Centro', area: 'Muelle Uno, the port', desc: 'One Michelin star on the port - Malaga&#39;s original starred kitchen, seafood-led tasting menus.' },
+	{ id: 'pl-kaleja', cat: 'Restaurant', name: 'Kaleja', town: 'Centro', area: 'Old Jewish quarter', desc: 'One Michelin star - Dani Carnero&#39;s stew-centric, fire-driven Malaga cooking.' },
+	{ id: 'pl-blossom', cat: 'Restaurant', name: 'Blossom', town: 'Centro', area: 'Museum of Malaga building', desc: 'One Michelin star - Emi Schobert&#39;s refined tasting menus for just 30 diners.' },
+	{ id: 'pl-palodu', cat: 'Restaurant', name: 'Palodú', town: 'Centro', area: 'Historic centre', desc: 'New star for 2026 - Cristina Cánovas and Diego Aguilar&#39;s creative, approachable tasting menus.' },
+	{ id: 'pl-salagold', cat: 'Nightlife', name: 'Sala Gold', town: 'Centro', area: 'Calle Luis de Velázquez', desc: 'Open 365 nights a year - themed parties and a serious light rig in the historic centre.', url: 'https://www.salagold.com/en/' },
+	{ id: 'pl-theatro', cat: 'Nightlife', name: 'Theatro Club', town: 'Centro', area: 'Historic centre', desc: 'Club nights meet cabaret, jazz and live shows in a theatrical setting.' },
+	{ id: 'pl-amazonia', cat: 'Nightlife', name: 'Amazonia by Wengé', town: 'Centro', area: 'Historic centre', desc: 'Rainforest-themed rooms for house and electronic sessions.' },
+];
+const PLACE_CATS = [
+	{ key: 'Beach', title: 'Beaches' },
+	{ key: 'Beach club', title: 'Beach clubs' },
+	{ key: 'Restaurant', title: 'Michelin-starred restaurants' },
+	{ key: 'Nightlife', title: 'Nightlife' },
+];
+const placeMap = (p: Place) => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${p.name}, ${p.town}, Spain`);
+// planner entries for places (dated on add via the "when" dialog)
+const planPlaces = PLACES.map((p) => ({ id: p.id, t: p.name, start: null, end: null, blurb: p.desc, venue: p.area, town: p.town, url: p.url || null, cat: p.cat }));
+// markets: dow restricts the date picker to the day they actually run
+const planMarkets = MARKETS.map((m) => ({ id: m.id, t: m.name, start: null, end: null, blurb: m.desc, venue: m.place, town: m.town, url: null, cat: 'Market', dow: m.dow, dayName: m.dayName, hours: m.hours }));
+
+// places filters: type + neighbourhood (markets included)
+const pkey = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const CAT_KEY: Record<string, string> = { Beach: 'beach', 'Beach club': 'club', Restaurant: 'rest', Nightlife: 'night' };
+const P_CHIP_LABEL: Record<string, string> = { beach: 'Beaches', club: 'Beach clubs', rest: 'Restaurants', night: 'Nightlife' };
+const P_CATS = [
+	{ k: 'market', label: 'Markets', n: MARKETS.length },
+	...PLACE_CATS.map((c) => ({ k: CAT_KEY[c.key], label: P_CHIP_LABEL[CAT_KEY[c.key]] || c.title, n: PLACES.filter((p) => p.cat === c.key).length })),
+];
+const townCounts = new Map<string, number>();
+for (const t of [...PLACES.map((p) => p.town), ...MARKETS.map((m) => m.town)]) townCounts.set(pkey(t), (townCounts.get(pkey(t)) || 0) + 1);
+const P_TOWNS = [...townCounts.entries()].sort((a, b) => b[1] - a[1]);
+const townLabel = (k: string) =>
+	({ malaga: 'Málaga', centro: 'Centro', 'la-malagueta': 'La Malagueta', 'la-caleta': 'La Caleta', pedregalejo: 'Pedregalejo', 'el-palo': 'El Palo', huelin: 'Huelin' })[k] || k;
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage={`${origin}/og/whats-on-malaga.png`}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/que-hacer/malaga/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(eventsLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">What's On &middot; Malaga</div>
+			<h1>What's on in Malaga</h1>
+			<p class="lead">
+				Your night out, your feria, your beach day - everything worth doing in Malaga city, from the Centro to Pedregalejo, in one
+				always-current diary. Tap <strong>+ Add to plan</strong> to build your own itinerary, share it with your friends and
+				drop it straight into your calendar. Checked against official sources every week, so you never plan around a dead
+				listing.
+			</p>
+			<div class="ctaRow">
+				<a class="btnSecondary" href="#add-event" data-add-link>Add your event - free</a>
+			</div>
+			{updatedFmt ? <div class="note">Last updated {updatedFmt} &middot; {local.length} events in Malaga, today through {horizon} &middot; <a class="noteLink" href="/neighbourhood/spain/malaga/malaga-centre/">Malaga area guide</a></div> : null}
+			<div class="townNav" style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;">
+				<span style="opacity:.65;">More What's On:</span>
+				<a href="/whats-on/marbella/" style="color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.35);border-radius:999px;padding:4px 13px;font-weight:700;">Marbella</a>
+				<a href="/whats-on/estepona/" style="color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.35);border-radius:999px;padding:4px 13px;font-weight:700;">Estepona</a>
+				<a href="/whats-on/" style="color:#7fe7d9;text-decoration:none;padding:4px 4px;font-weight:800;">All towns &rarr;</a>
+			</div>
+		</div>
+	</section>
+
+	<div class="tabRow" role="tablist" aria-label="Events or places">
+		<button class="tabBtn isActive" data-tab-btn="events" type="button">&#128197; Events <span class="chipCount">{local.length}</span></button>
+		<button class="tabBtn" data-tab-btn="places" type="button">&#127958; Places <span class="chipCount">{PLACES.length + MARKETS.length}</span></button>
+	</div>
+
+	<div data-tab-pane="events">
+	{featured.length >= 3 ? (
+		<section class="section" aria-label="Don't miss">
+			<div class="featHead"><h2>&#11088; Don't miss</h2><span>The nights everyone will be talking about</span></div>
+			<div class="featRow">
+				{featured.map((e) => (
+					<a class="featCard" href={e.url || '#'} target="_blank" rel="noopener nofollow">
+						<span class="featDate">{dateLabel(e)}</span>
+						<strong class="featTitle">{e.titleEn || e.title}</strong>
+						<span class="featVenue">{e.venue || e.town}</span>
+					</a>
+				))}
+			</div>
+		</section>
+	) : null}
+
+	{local.length ? (
+		<div class="filters">
+			<div class="chipRow" role="group" aria-label="Filter by date">
+				<button class="chip tchip isActive" data-t="all" type="button">All upcoming <span class="chipCount">{local.length}</span></button>
+				<button class="chip tchip" data-t="now" type="button">On today <span class="chipCount">{countNow}</span></button>
+				<button class="chip tchip" data-t="wknd" type="button">This weekend <span class="chipCount">{countWknd}</span></button>
+				<button class="chip tchip" data-t="month" type="button">This month <span class="chipCount">{countMonth}</span></button>
+			</div>
+			{cats.length > 1 ? (
+				<div class="chipRow chipRowSub" role="group" aria-label="Filter by category">
+					<button class="chip cchip isActive" data-c="all" type="button">All types</button>
+					{cats.map((c) => (
+						<button class="chip cchip" data-c={c} type="button">{CAT_ICON[c]} {CAT_LABEL[c] || c} <span class="chipCount">{catCount.get(c)}</span></button>
+					))}
+				</div>
+			) : null}
+		</div>
+	) : null}
+
+	<div data-events>
+		{BUCKETS.map((b, i) => (
+			<Fragment>
+			{i === 2 ? (
+				<aside class="evAd" aria-label="Property search">
+					<div class="evAdText">
+						<strong>Looking for a rental or a home for sale in Malaga?</strong>
+						<span>Holiday homes for your stay and properties for sale - from registered agents, live on PropertyList.</span>
+					</div>
+					<div class="evAdBtns">
+						<a href="https://propertylist.es/en/portal/for-sale/malaga" target="_blank" rel="noopener">Homes for sale &rarr;</a>
+						<a href="https://propertylist.es/en/portal/holiday-rentals/malaga" target="_blank" rel="noopener">Holiday rentals &rarr;</a>
+					</div>
+				</aside>
+			) : null}
+			<section class="section" aria-label={b.title} data-bucket={b.k}>
+				<div class="bucketHead">
+					<h2>{b.icon} {b.title} <span class="chipCount">{b.list.length}</span></h2>
+					{b.sub ? <p>{b.sub}</p> : null}
+				</div>
+				<div class="grid3">
+					{b.list.map((e) => (
+						<article
+							class="card evCard"
+							data-cat={e.category}
+							data-now={isOn(e) ? '1' : '0'}
+							data-wknd={inWeekend(e) ? '1' : '0'}
+							data-month={inMonth(e) ? '1' : '0'}
+						>
+							<div class="evTop">
+								<span class="evDate">{dateLabel(e)}{e.time && (!e.end || e.end === e.start) ? ` · ${e.time}` : ""}</span>
+								{isOn(e) ? <span class="evNow">On today</span> : null}
+							</div>
+							<h2 class="evTitle">{e.titleEn || e.title}</h2>
+							<div class="evMeta">
+								<span class="evCat">{CAT_ICON[e.category]} {CAT_LABEL[e.category] || e.category}</span>
+								<span class="evTown">&#128205; {e.town}</span>
+								{e.venue ? <span class="evVenue">{e.venue}</span> : null}
+							</div>
+							<p class="evBlurb">{e.blurbEn}</p>
+							<div class="evFoot">
+								{e.url ? (
+									<a class="evLink" href={e.url} target="_blank" rel="noopener nofollow">Details &rarr;</a>
+								) : <span></span>}
+								<button class="planBtn" type="button" data-plan-add={e.id}>+ Add to plan</button>
+							</div>
+						</article>
+					))}
+				</div>
+			</section>
+			</Fragment>
+		))}
+		<p class="empty" data-empty hidden>Nothing matches those filters - try widening the dates or picking another category.</p>
+		{!local.length ? <p class="empty">No upcoming events right now - check back soon, the diary refreshes every week.</p> : null}
+	</div>
+
+	{nearby.length ? (
+		<section class="section">
+			<div class="sectionHead">
+				<h2>Worth the drive</h2>
+				<p>Bigger events elsewhere on the Costa del Sol that Malaga locals will not want to miss.</p>
+			</div>
+			<div class="grid3">
+				{nearby.map((e) => (
+					<article class="card evCard">
+						<div class="evTop"><span class="evDate">{dateLabel(e)}{e.time && (!e.end || e.end === e.start) ? ` · ${e.time}` : ""}</span><span class="evTown">{e.town}</span></div>
+						<h2 class="evTitle">{e.titleEn || e.title}</h2>
+						<p class="evBlurb">{e.blurbEn}</p>
+						<div class="evFoot">
+							{e.url ? <a class="evLink" href={e.url} target="_blank" rel="noopener nofollow">Details &rarr;</a> : <span></span>}
+							<button class="planBtn" type="button" data-plan-add={e.id}>+ Add to plan</button>
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+	) : null}
+
+	<section class="section" id="add-event">
+		<div class="sectionHead">
+			<h2>Add your event - free</h2>
+			<p>
+				Run a venue, club, market or community group in the Malaga area? Add your event and it appears here once verified -
+				free, and seen by thousands of locals, buyers and visitors every month.
+			</p>
+		</div>
+		<form class="evForm card" data-event-form>
+			<div class="formGrid">
+				<label>Event name*<input name="title" type="text" required minlength="5" maxlength="120" placeholder="e.g. Sunset Jazz at the Marina" /></label>
+				<label>Start date*<input name="start" type="date" required /></label>
+				<label>End date (optional)<input name="end" type="date" /></label>
+				<label>Venue / place*<input name="venue" type="text" maxlength="120" placeholder="e.g. Plaza de los Naranjos" /></label>
+				<label>Town<select name="town">
+					<option>Malaga Centro</option><option>La Malagueta</option><option>Pedregalejo</option><option>El Palo</option><option>Teatinos</option>
+				</select></label>
+				<label>Category<select name="category">
+					<option value="">Choose...</option><option value="music">Music</option><option value="festival">Festival</option><option value="culture">Culture</option><option value="sport">Sport</option><option value="family">Family</option><option value="food">Food &amp; drink</option><option value="market">Market</option><option value="nightlife">Nightlife</option><option value="other">Other</option>
+				</select></label>
+				<label>Event link (optional)<input name="link" type="url" maxlength="300" placeholder="https://..." /></label>
+				<label>Your name / organisation<input name="organizer" type="text" maxlength="80" /></label>
+				<label>Your email*<input name="email" type="email" required maxlength="160" /></label>
+			</div>
+			<input name="website" type="text" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true" />
+			<input type="hidden" name="lang" value="en" />
+			<div class="formFoot">
+				<button class="btnPrimary" type="submit">Submit event</button>
+				<span class="formNote">Events are checked before publishing. We only use your email to confirm details.</span>
+			</div>
+			<p class="formMsg" data-msg hidden></p>
+		</form>
+		<div class="feedCard card">
+			<div class="feedText">
+				<strong>&#128257; Got a full calendar of events?</strong>
+				<span>Register your events feed once (an iCal/Google Calendar link, or your events page URL) and we will pick up your new events automatically, forever.</span>
+			</div>
+			<form class="feedForm" data-mini-form data-kind="feed">
+				<input name="organizer" type="text" required minlength="3" maxlength="100" placeholder="Venue / organisation" />
+				<input name="url" type="url" required maxlength="400" placeholder="Feed or events page URL" />
+				<input name="email" type="email" required maxlength="160" placeholder="Your email" />
+				<input name="website_hp" type="text" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true" />
+				<button class="btnPrimary" type="submit">Register feed</button>
+			</form>
+			<p class="formMsg" data-msg hidden></p>
+		</div>
+	</section>
+
+	</div>
+
+	<div data-tab-pane="places" hidden>
+	<div class="filters">
+		<div class="chipRow" role="group" aria-label="Filter places by type">
+			<button class="chip pchip isActive" data-pc="all" type="button">All <span class="chipCount">{PLACES.length + MARKETS.length}</span></button>
+			{P_CATS.map((c) => (
+				<button class="chip pchip" data-pc={c.k} type="button">{c.label} <span class="chipCount">{c.n}</span></button>
+			))}
+		</div>
+		<div class="chipRow chipRowSub" role="group" aria-label="Filter places by area">
+			<button class="chip ptchip isActive" data-pt="all" type="button">All areas</button>
+			{P_TOWNS.map(([k, n]) => (
+				<button class="chip ptchip" data-pt={k} type="button">{townLabel(k)} <span class="chipCount">{n}</span></button>
+			))}
+		</div>
+	</div>
+	<section class="section" aria-label="Weekly street markets" data-psec="market">
+		<div class="sectionHead">
+			<h2>Weekly street markets</h2>
+			<p>Malaga's mercadillos run every week, all year round - no dates needed, just turn up.</p>
+		</div>
+		<div class="grid3">
+			{MARKETS.map((m) => (
+				<div class="card" data-pcard data-pcat="market" data-ptown={pkey(m.town)}>
+					<div class="evTop"><span class="evDate">{m.day}</span><span class="evTown">{m.hours}</span></div>
+					<h3 class="evTitle">{m.name}</h3>
+					<div class="evMeta">
+						<span class="evCat">Market</span>
+						<span class="evTown">&#128205; {m.town}</span>
+						<span class="evVenue">{m.place}</span>
+					</div>
+					<p class="evBlurb">{m.desc}</p>
+					<div class="evFoot">
+						<span class="evLinks">
+							<a class="evLink" href={mapsQ(m)} target="_blank" rel="noopener">&#128205; Map</a>
+						</span>
+						<button class="planBtn" type="button" data-plan-add={m.id}>+ Add to plan</button>
+					</div>
+				</div>
+			))}
+		</div>
+	</section>
+
+	{PLACE_CATS.map((c) => (
+		<section class="section" aria-label={c.title} data-psec={CAT_KEY[c.key]}>
+			<div class="sectionHead"><h2>{c.title}</h2></div>
+			<div class="grid3">
+				{PLACES.filter((p) => p.cat === c.key).map((p) => (
+					<div class="card" data-pcard data-pcat={CAT_KEY[p.cat]} data-ptown={pkey(p.town)}>
+						<div class="evTop"><span class="evDate">{p.cat}</span></div>
+						<h3 class="evTitle">{p.name}</h3>
+						<div class="evMeta">
+							<span class="evTown">&#128205; {p.town}</span>
+							<span class="evVenue">{p.area}</span>
+						</div>
+						<p class="evBlurb">{p.desc}</p>
+						<div class="evFoot">
+							<span class="evLinks">
+								<a class="evLink" href={placeMap(p)} target="_blank" rel="noopener">&#128205; Map</a>
+								{p.url ? <a class="evLink" href={p.url} target="_blank" rel="noopener nofollow"> Website &rarr;</a> : null}
+							</span>
+							<button class="planBtn" type="button" data-plan-add={p.id}>+ Add to plan</button>
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+	))}
+
+	<section class="section" id="add-place">
+		<div class="sectionHead">
+			<h2>Add your place - free</h2>
+			<p>Run a beach club, restaurant, bar or venue in the Malaga area? Suggest it for this guide - every listing is reviewed before it appears.</p>
+		</div>
+		<form class="evForm card" data-mini-form data-kind="place">
+			<div class="formGrid">
+				<label>Place name*<input name="name" type="text" required minlength="3" maxlength="100" placeholder="e.g. La Terraza del Mar" /></label>
+				<label>Type*<select name="cat" required>
+					<option value="">Choose...</option><option value="beach">Beach</option><option value="club">Beach club</option><option value="rest">Restaurant</option><option value="night">Nightlife</option><option value="market">Market</option><option value="other">Other</option>
+				</select></label>
+				<label>Town<select name="town">
+					<option>Malaga Centro</option><option>La Malagueta</option><option>Pedregalejo</option><option>El Palo</option><option>Teatinos</option>
+				</select></label>
+				<label>Area / address<input name="area" type="text" maxlength="120" placeholder="e.g. Golden Mile" /></label>
+				<label>Website<input name="web" type="url" maxlength="300" placeholder="https://..." /></label>
+				<label>Your email*<input name="email" type="email" required maxlength="160" /></label>
+			</div>
+			<label class="descLab">What makes it worth a visit?*<input name="desc" type="text" required minlength="10" maxlength="300" placeholder="One honest sentence about the place" /></label>
+			<input name="website_hp" type="text" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true" />
+			<div class="formFoot">
+				<button class="btnPrimary" type="submit">Submit place</button>
+				<span class="formNote">Reviewed before publishing. We only use your email to confirm details.</span>
+			</div>
+			<p class="formMsg" data-msg hidden></p>
+		</form>
+	</section>
+
+	<p class="placesNote">Venues can be seasonal and hours change - always check opening days directly with the venue before you go.</p>
+	</div>
+
+	<section class="section funnel" aria-label="Living in Malaga">
+		<div class="funnelInner">
+			<div>
+				<strong>Thinking of living where all this happens?</strong>
+				<span>Explore the Malaga area guide with live market data, or see every home for sale and to rent right now.</span>
+			</div>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="/neighbourhood/spain/malaga/malaga-centre/">Malaga area guide</a>
+				<a class="btnSecondary" href="/property-finder">Find your place &rarr;</a>
+			</div>
+		</div>
+	</section>
+
+
+	<button class="planPill" data-plan-pill type="button" hidden>&#128197; My plan <span class="planPillN" data-plan-count>0</span></button>
+	<div class="planOverlay" data-plan-overlay hidden>
+		<div class="planPanel" role="dialog" aria-modal="true" aria-label="My plan">
+			<div class="planHead">
+				<strong>My Malaga plan</strong>
+				<button class="planX" type="button" data-plan-close aria-label="Close">&times;</button>
+			</div>
+			<div class="planList" data-plan-list></div>
+			<div class="planActions">
+				<button class="planAct planActMain" type="button" data-plan-ics>&#128197; Add to calendar</button>
+				<button class="planAct" type="button" data-plan-share>&#128228; Share plan</button>
+				<button class="planAct planActGhost" type="button" data-plan-clear>Clear all</button>
+			</div>
+			<p class="planNote" data-plan-note>Saved on this device. Share the link to open your plan anywhere.</p>
+			<p class="planWarn" data-plan-warn hidden>&#9888;&#65039; Venues can be seasonal - check opening days directly with the venue before you go.</p>
+			<div class="planAd">
+				<div class="planAdText">
+					<strong>Planning more than a holiday?</strong>
+					<span>See every home for sale and to rent in Malaga - live from registered agents.</span>
+				</div>
+				<div class="planAdBtns">
+					<a href="https://propertylist.es/en/portal/for-sale/malaga" target="_blank" rel="noopener">For sale</a>
+					<a href="https://propertylist.es/en/portal/holiday-rentals/malaga" target="_blank" rel="noopener">Holiday stays</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="whenOverlay" data-when-overlay hidden>
+		<div class="whenPanel" role="dialog" aria-modal="true" aria-label="When will you go?">
+			<strong class="whenTitle" data-when-title></strong>
+			<p class="whenNote" data-when-note hidden></p>
+			<div class="whenLab">Which day?</div>
+			<div class="whenChips" data-when-days></div>
+			<div class="whenLab">What time?</div>
+			<div class="whenChips" data-when-times></div>
+			<div class="whenBtns">
+				<button class="btnPrimary" type="button" data-when-add>Add to plan</button>
+				<button class="btnSecondary" type="button" data-when-ns>Not sure yet</button>
+				<button class="btnSecondary" type="button" data-when-cancel>Cancel</button>
+			</div>
+		</div>
+	</div>
+
+	<script is:inline define:vars={{ planEvents, planPlaces, planMarkets }}>
+		(() => {
+			const L = {
+				added: '&#10003; In plan', add: '+ Add to plan', empty: 'Nothing in your plan yet - tap "+ Add to plan" on any event.',
+				remove: 'Remove', copied: 'Link copied - send it to anyone.', shareTitle: 'Our Malaga plan',
+				details: 'Event details &rarr;', map: '&#128205; Map', placesHead: 'Still deciding - tap Pick a day to schedule', pick: 'Pick a day &rarr;',
+				marketNote: (d) => `This market runs every ${d}.`, marketErr: (d) => `Pick a ${d} - that is the day this market runs.`, needDate: 'Pick a date first.',
+			};
+			const KEY = 'pl_plan_malaga';
+			const byId = Object.fromEntries([...planEvents, ...planPlaces, ...planMarkets].map((e) => [e.id, e]));
+			// plan entries: {id} for events, {id,d,tm?} for dated places/markets ("d"=YYYY-MM-DD)
+			const norm = (x) => (typeof x === 'string' ? { id: x } : x || {});
+			const load = () => { try { return (JSON.parse(localStorage.getItem(KEY)) || []).map(norm).filter((p) => byId[p.id]); } catch { return []; } };
+			const save = (ids) => { try { localStorage.setItem(KEY, JSON.stringify(ids)); } catch {} };
+			let plan = load();
+			const inPlan = (id) => plan.some((p) => p.id === id);
+
+			// import a shared plan from the URL (tokens: id or id@YYYYMMDD or id@YYYYMMDD-HHMM)
+			const shared = (location.hash.match(/plan=([a-zA-Z0-9,@-]+)/) || [])[1];
+			if (shared) {
+				for (const tok of shared.split(',')) {
+					const m = tok.match(/^([a-z0-9-]+?)(?:@(ns|\d{8})(?:-(\d{4}))?)?$/i);
+					if (!m || !byId[m[1]] || inPlan(m[1])) continue;
+					const entry = { id: m[1] };
+					if (m[2] === 'ns') entry.ns = true;
+					else if (m[2]) entry.d = `${m[2].slice(0, 4)}-${m[2].slice(4, 6)}-${m[2].slice(6, 8)}`;
+					if (m[3]) entry.tm = `${m[3].slice(0, 2)}:${m[3].slice(2, 4)}`;
+					plan.push(entry);
+				}
+				save(plan);
+			}
+
+			const pill = document.querySelector('[data-plan-pill]');
+			const count = document.querySelector('[data-plan-count]');
+			const overlay = document.querySelector('[data-plan-overlay]');
+			const list = document.querySelector('[data-plan-list]');
+			const note = document.querySelector('[data-plan-note]');
+			const fmtD = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+			const dLabel = (e) => {
+				const s = fmtD.format(new Date(e.start + 'T12:00:00Z'));
+				return e.end && e.end !== e.start ? s + ' - ' + fmtD.format(new Date(e.end + 'T12:00:00Z')) : s;
+			};
+			const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+			const sync = () => {
+				count.textContent = plan.length;
+				pill.hidden = plan.length === 0;
+				document.querySelectorAll('[data-plan-add]').forEach((b) => {
+					const isIn = inPlan(b.getAttribute('data-plan-add'));
+					b.innerHTML = isIn ? L.added : L.add;
+					b.classList.toggle('isIn', isIn);
+				});
+				const items = plan.map((p) => (byId[p.id] ? { ...byId[p.id], _d: p.d || null, _tm: p.tm || null, _ns: !!p.ns } : null)).filter(Boolean);
+				// scheduled = a concrete day (user-picked, or the event is single-day); the rest is "still deciding"
+				const singleDay = (e) => e.start && (!e.end || e.end === e.start);
+				const schedDay = (e) => e._d || (singleDay(e) ? e.start : null);
+				const schedTime = (e) => e._tm || (singleDay(e) ? e.time : null) || null;
+				const dated = items.filter((e) => !e._ns && schedDay(e)).sort((a, b) =>
+					(schedDay(a) + '|' + (schedTime(a) || '99:99')).localeCompare(schedDay(b) + '|' + (schedTime(b) || '99:99')));
+				const undated = items.filter((e) => e._ns || !schedDay(e));
+				const warn = document.querySelector('[data-plan-warn]');
+				if (warn) warn.hidden = !items.some((e) => !e.start);
+				const mapUrl = (e) => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([e.t, e.town, 'Spain'].filter(Boolean).join(', '));
+				const dateBadge = (e) => {
+					const d = schedDay(e);
+					if (!e._ns && d) return fmtD.format(new Date(d + 'T12:00:00Z')) + (schedTime(e) ? ' · ' + schedTime(e) : '');
+					if (e.start) return dLabel(e);
+					return esc(e.cat || '');
+				};
+				const itemHtml = (e, deciding) => `<div class="planItem">
+						<div class="planItemHead" data-plan-tgl>
+							<div class="planItemMain"><span class="planItemDate">${dateBadge(e)}</span><strong>${esc(e.t)}</strong><span class="planItemVenue">${esc([e.venue, e.town].filter(Boolean).join(' · '))}</span></div>
+							<div class="planItemBtns">${deciding ? `<button class="planPick" type="button" data-plan-sched="${e.id}">${L.pick}</button>` : ''}<span class="planItemChev" aria-hidden="true">&#9662;</span><button class="planItemX" type="button" data-plan-rm="${e.id}" aria-label="${L.remove}">&times;</button></div>
+						</div>
+						<div class="planItemMore" hidden>
+							${e.blurb ? `<p>${esc(e.blurb)}</p>` : ''}
+							<div class="planItemLinks">
+								${e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener nofollow">${L.details}</a>` : ''}
+								<a href="${mapUrl(e)}" target="_blank" rel="noopener">${L.map}</a>
+							</div>
+						</div>
+					</div>`;
+				list.innerHTML = items.length
+					? dated.map((e) => itemHtml(e, false)).join('') + (undated.length ? `<p class="planSubhead">${L.placesHead}</p>` + undated.map((e) => itemHtml(e, true)).join('') : '')
+					: `<p class="planEmpty">${L.empty}</p>`;
+				list.querySelectorAll('[data-plan-sched]').forEach((b) => b.addEventListener('click', (ev) => { ev.stopPropagation(); openWhen(b.getAttribute('data-plan-sched')); }));
+				list.querySelectorAll('[data-plan-rm]').forEach((b) => b.addEventListener('click', (ev) => { ev.stopPropagation(); plan = plan.filter((p) => p.id !== b.getAttribute('data-plan-rm')); save(plan); sync(); }));
+				list.querySelectorAll('[data-plan-tgl]').forEach((h) => h.addEventListener('click', () => {
+					const more = h.parentElement.querySelector('.planItemMore');
+					more.hidden = !more.hidden;
+					h.parentElement.classList.toggle('isOpen', !more.hidden);
+				}));
+			};
+
+			// "when" dialog: tap-able day + time-of-day chips (no calendar widgets)
+			const wOverlay = document.querySelector('[data-when-overlay]');
+			const wTitle = document.querySelector('[data-when-title]');
+			const wNote = document.querySelector('[data-when-note]');
+			const wDays = document.querySelector('[data-when-days]');
+			const wTimes = document.querySelector('[data-when-times]');
+			let wId = null;
+			const isoLocal = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+			const chipFmt = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+			const TIME_CHIPS = [
+				['', 'Anytime'], ['10:00', '&#127749; Morning'], ['13:00', '&#127860; Lunch'],
+				['16:00', '&#9728;&#65039; Afternoon'], ['20:00', '&#127756; Evening'], ['22:30', '&#127747; Late'],
+			];
+			const dayChip = (iso, i, isMarket) => {
+				const todayL = isoLocal(new Date());
+				const tomorrow = isoLocal(new Date(Date.now() + 86400000));
+				let label = chipFmt.format(new Date(iso + 'T12:00:00'));
+				if (iso === todayL) label = 'Today';
+				else if (iso === tomorrow) label = 'Tomorrow';
+				return `<button class="chip wchip${i === 0 ? ' isActive' : ''}" type="button" data-wd="${iso}">${label}</button>`;
+			};
+			const openWhen = (id) => {
+				const item = byId[id];
+				wId = id;
+				wTitle.textContent = item.t;
+				// day chips: markets get only their valid days; events get their own date range
+				const days = [];
+				const d = new Date();
+				if (item.dow != null) {
+					wNote.textContent = L.marketNote(item.dayName) + (item.hours ? ` (${item.hours})` : '');
+					wNote.hidden = false;
+					while (days.length < 4) { if (d.getDay() === item.dow) days.push(isoLocal(d)); d.setDate(d.getDate() + 1); }
+				} else if (item.start) {
+					// event: pick which day of its run you'll go
+					wNote.hidden = true;
+					const todayL = isoLocal(new Date());
+					let cur = new Date((item.start > todayL ? item.start : todayL) + 'T12:00:00');
+					const last = new Date((item.end || item.start) + 'T12:00:00');
+					while (days.length < 14 && cur <= last) { days.push(isoLocal(cur)); cur.setDate(cur.getDate() + 1); }
+					if (!days.length) days.push(item.start);
+				} else {
+					wNote.hidden = true;
+					for (let i = 0; i < 14; i++) { days.push(isoLocal(d)); d.setDate(d.getDate() + 1); }
+				}
+				wDays.innerHTML = days.map((iso, i) => dayChip(iso, i, item.dow != null)).join('');
+				// events with a known start time only ask WHICH DAY - the time is locked
+				wTimes.innerHTML = item.time
+					? `<button class="chip wchip isActive" type="button" data-wt="${item.time}">&#128337; Starts ${item.time}</button>`
+					: TIME_CHIPS.map(([tm, label], i) => `<button class="chip wchip${i === 0 ? ' isActive' : ''}" type="button" data-wt="${tm}">${label}</button>`).join('');
+				const wire = (sel) => wOverlay.querySelectorAll(sel).forEach((c) =>
+					c.addEventListener('click', () => { c.parentElement.querySelectorAll('.wchip').forEach((x) => x.classList.toggle('isActive', x === c)); }));
+				wire('[data-wd]'); wire('[data-wt]');
+				wOverlay.hidden = false;
+			};
+			document.querySelector('[data-when-cancel]').addEventListener('click', () => { wOverlay.hidden = true; });
+			wOverlay.addEventListener('click', (ev) => { if (ev.target === wOverlay) wOverlay.hidden = true; });
+			document.querySelector('[data-when-ns]').addEventListener('click', () => {
+				if (!byId[wId]) return;
+				plan = [...plan.filter((p) => p.id !== wId), { id: wId, ns: true }];
+				save(plan); sync();
+				wOverlay.hidden = true;
+			});
+			document.querySelector('[data-when-add]').addEventListener('click', () => {
+				const item = byId[wId];
+				if (!item) return;
+				const day = wDays.querySelector('.isActive');
+				if (!day) return;
+				const entry = { id: wId, d: day.getAttribute('data-wd') };
+				const tm = (wTimes.querySelector('.isActive') || {}).getAttribute ? wTimes.querySelector('.isActive').getAttribute('data-wt') : '';
+				if (tm) entry.tm = tm;
+				plan = [...plan.filter((p) => p.id !== wId), entry];
+				save(plan); sync();
+				wOverlay.hidden = true;
+			});
+
+			document.querySelectorAll('[data-plan-add]').forEach((b) =>
+				b.addEventListener('click', () => {
+					const id = b.getAttribute('data-plan-add');
+					if (inPlan(id)) { plan = plan.filter((p) => p.id !== id); save(plan); sync(); return; }
+					const it = byId[id];
+					// only single-day events that already carry a time go straight in;
+					// everything else (places, markets, multi-day or no-time events) asks when
+					if (it && it.start && it.time && (!it.end || it.end === it.start)) {
+						plan = [...plan, { id }];
+						save(plan); sync();
+						return;
+					}
+					openWhen(id);
+				})
+			);
+			pill.addEventListener('click', () => { overlay.hidden = false; });
+			document.querySelector('[data-plan-close]').addEventListener('click', () => { overlay.hidden = true; });
+			overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.hidden = true; });
+			document.querySelector('[data-plan-clear]').addEventListener('click', () => { plan = []; save(plan); sync(); });
+
+			// .ics export (all-day events; DTEND is exclusive so +1 day)
+			const icsEsc = (s) => String(s == null ? '' : s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+			const plusDay = (iso) => new Date(new Date(iso + 'T00:00:00Z').getTime() + 86400000).toISOString().slice(0, 10);
+			document.querySelector('[data-plan-ics]').addEventListener('click', () => {
+				const entries = plan.map((p) => ({ p, e: byId[p.id] })).filter((x) => x.e && !x.p.ns && (x.e.start || x.p.d));
+				if (!entries.length) return;
+				const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PropertyList//WhatsOn//EN'];
+				for (const { p, e } of entries) {
+					lines.push('BEGIN:VEVENT', `UID:${e.id}@info.propertylist.es`);
+					const single = e.start && (!e.end || e.end === e.start);
+					const day = p.d || (single ? e.start : null);
+					const time = p.tm || (single && !p.d ? e.time : null) || p.tm;
+					if (day && time) {
+						// timed entry (2.5h default)
+						const d8 = day.replace(/-/g, '');
+						const [hh, mm] = time.split(':').map(Number);
+						const endMin = Math.min(hh * 60 + mm + 150, 23 * 60 + 59);
+						lines.push(`DTSTART:${d8}T${String(hh).padStart(2, '0')}${String(mm).padStart(2, '0')}00`, `DTEND:${d8}T${String(Math.floor(endMin / 60)).padStart(2, '0')}${String(endMin % 60).padStart(2, '0')}00`);
+					} else if (day) {
+						lines.push(`DTSTART;VALUE=DATE:${day.replace(/-/g, '')}`, `DTEND;VALUE=DATE:${plusDay(day).replace(/-/g, '')}`);
+					} else {
+						// unscheduled multi-day event: keep the full range as all-day
+						lines.push(`DTSTART;VALUE=DATE:${e.start.replace(/-/g, '')}`, `DTEND;VALUE=DATE:${plusDay(e.end || e.start).replace(/-/g, '')}`);
+					}
+					lines.push(`SUMMARY:${icsEsc(e.t)}`,
+						`LOCATION:${icsEsc([e.venue, e.town].filter(Boolean).join(', '))}`,
+						`DESCRIPTION:${icsEsc((e.url || '') + ' - via info.propertylist.es/whats-on/malaga/')}`,
+						'END:VEVENT');
+				}
+				lines.push('END:VCALENDAR');
+				const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar' });
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob); a.download = 'malaga-plan.ics'; a.click();
+				setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+			});
+
+			// share plan
+			document.querySelector('[data-plan-share]').addEventListener('click', async () => {
+				if (!plan.length) return;
+				const tok = (p) => p.id + (p.ns ? '@ns' : p.d ? '@' + p.d.replace(/-/g, '') + (p.tm ? '-' + p.tm.replace(':', '') : '') : '');
+				const url = location.origin + location.pathname + '#plan=' + plan.map(tok).join(',');
+				try {
+					if (navigator.share) { await navigator.share({ title: L.shareTitle, url }); return; }
+					await navigator.clipboard.writeText(url);
+					note.textContent = L.copied;
+				} catch {}
+			});
+
+			sync();
+			if (shared) overlay.hidden = false;
+		})();
+	</script>
+
+	<script is:inline>
+		(() => {
+			// Events | Places tabs
+			const tabBtns = Array.from(document.querySelectorAll('[data-tab-btn]'));
+			const panes = Array.from(document.querySelectorAll('[data-tab-pane]'));
+			const setTab = (name) => {
+				tabBtns.forEach((b) => b.classList.toggle('isActive', b.getAttribute('data-tab-btn') === name));
+				panes.forEach((p) => { p.hidden = p.getAttribute('data-tab-pane') !== name; });
+				const add = document.querySelector('[data-add-link]');
+				if (add) { add.href = name === 'places' ? '#add-place' : '#add-event'; add.textContent = name === 'places' ? 'Add your place - free' : 'Add your event - free'; }
+			};
+			tabBtns.forEach((b) => b.addEventListener('click', () => setTab(b.getAttribute('data-tab-btn'))));
+			const addLink = document.querySelector('[data-add-link]');
+			if (addLink) addLink.addEventListener('click', () => setTab(addLink.getAttribute('href') === '#add-place' ? 'places' : 'events'));
+			if (/(^|[#&])tab=places/.test(location.hash)) setTab('places');
+
+			// combinable time + category filters, state kept in the URL hash
+			const tchips = Array.from(document.querySelectorAll('.tchip'));
+			const cchips = Array.from(document.querySelectorAll('.cchip'));
+			const cards = Array.from(document.querySelectorAll('[data-events] .evCard'));
+			const empty = document.querySelector('[data-empty]');
+			const state = { t: 'all', c: 'all' };
+			const pstate = { c: 'all', t: 'all' };
+			const writeHash = () => {
+				const parts = [];
+				if (state.t !== 'all') parts.push('t=' + state.t);
+				if (state.c !== 'all') parts.push('c=' + state.c);
+				if (pstate.c !== 'all') parts.push('pc=' + pstate.c);
+				if (pstate.t !== 'all') parts.push('pt=' + pstate.t);
+				history.replaceState(null, '', parts.length ? '#' + parts.join('&') : location.pathname);
+			};
+			const apply = (updateHash) => {
+				let visible = 0;
+				for (const card of cards) {
+					const okT = state.t === 'all' || card.getAttribute('data-' + state.t) === '1';
+					const okC = state.c === 'all' || card.getAttribute('data-cat') === state.c;
+					const show = okT && okC;
+					card.style.display = show ? '' : 'none';
+					if (show) visible++;
+				}
+				if (empty) empty.hidden = visible > 0 || !cards.length;
+				// hide time-bucket sections left with no visible cards
+				document.querySelectorAll('[data-bucket]').forEach((sec) => {
+					sec.hidden = !Array.from(sec.querySelectorAll('.evCard')).some((c) => c.style.display !== 'none');
+				});
+				tchips.forEach((c) => c.classList.toggle('isActive', c.getAttribute('data-t') === state.t));
+				cchips.forEach((c) => c.classList.toggle('isActive', c.getAttribute('data-c') === state.c));
+				if (updateHash) writeHash();
+			};
+			tchips.forEach((chip) => chip.addEventListener('click', () => { state.t = chip.getAttribute('data-t'); apply(true); }));
+			cchips.forEach((chip) => chip.addEventListener('click', () => { state.c = chip.getAttribute('data-c'); apply(true); }));
+			// hero quick pills jump straight to a time filter
+			document.querySelectorAll('[data-hero-t]').forEach((p) => p.addEventListener('click', () => {
+				state.t = p.getAttribute('data-hero-t'); apply(true);
+				const f = document.querySelector('.filters');
+				if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}));
+
+			// places filters (type + neighbourhood)
+			const pcChips = Array.from(document.querySelectorAll('.pchip'));
+			const ptChips = Array.from(document.querySelectorAll('.ptchip'));
+			const pCards = Array.from(document.querySelectorAll('[data-pcard]'));
+			const pSecs = Array.from(document.querySelectorAll('[data-psec]'));
+			const papply = (updateHash) => {
+				for (const card of pCards) {
+					const ok = (pstate.c === 'all' || card.getAttribute('data-pcat') === pstate.c) && (pstate.t === 'all' || card.getAttribute('data-ptown') === pstate.t);
+					card.style.display = ok ? '' : 'none';
+				}
+				for (const sec of pSecs) {
+					sec.hidden = !Array.from(sec.querySelectorAll('[data-pcard]')).some((c) => c.style.display !== 'none');
+				}
+				pcChips.forEach((c) => c.classList.toggle('isActive', c.getAttribute('data-pc') === pstate.c));
+				ptChips.forEach((c) => c.classList.toggle('isActive', c.getAttribute('data-pt') === pstate.t));
+				if (updateHash) writeHash();
+			};
+			pcChips.forEach((chip) => chip.addEventListener('click', () => { pstate.c = chip.getAttribute('data-pc'); papply(true); }));
+			ptChips.forEach((chip) => chip.addEventListener('click', () => { pstate.t = chip.getAttribute('data-pt'); papply(true); }));
+
+			// restore state from a shared URL
+			const h = location.hash.replace(/^#/, '');
+			for (const kv of h.split('&')) {
+				const [k, v] = kv.split('=');
+				if (k === 't' && ['now', 'wknd', 'month'].includes(v)) state.t = v;
+				if (k === 'c' && v) state.c = v;
+				if (k === 'pc' && v) pstate.c = v;
+				if (k === 'pt' && v) pstate.t = v;
+			}
+			if (state.t !== 'all' || state.c !== 'all') apply(false);
+			if (pstate.c !== 'all' || pstate.t !== 'all') { papply(false); setTab('places'); }
+			// submission form
+			// place + feed mini-forms -> /api/whatson-submit
+			document.querySelectorAll('[data-mini-form]').forEach((mf) => {
+				const mmsg = mf.querySelector('[data-msg]') || mf.parentElement.querySelector('[data-msg]');
+				mf.addEventListener('submit', async (ev) => {
+					ev.preventDefault();
+					const data = Object.fromEntries(new FormData(mf).entries());
+					data.kind = mf.getAttribute('data-kind'); data.lang = 'en';
+					mmsg.hidden = false; mmsg.textContent = 'Sending...'; mmsg.className = 'formMsg';
+					try {
+						const res = await fetch('/api/whatson-submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+						const j = await res.json();
+						if (j.ok) {
+							mmsg.textContent = data.kind === 'feed' ? "Thanks! We'll review your feed and start pulling your events in automatically." : 'Thanks! Your place has been submitted and will appear once reviewed.';
+							mmsg.classList.add('ok'); mf.reset();
+						} else { mmsg.textContent = 'Please check the details and try again.'; mmsg.classList.add('err'); }
+					} catch { mmsg.textContent = 'Something went wrong - please try again.'; mmsg.classList.add('err'); }
+				});
+			});
+
+			const form = document.querySelector('[data-event-form]');
+			if (!form) return;
+			// clicking a date field opens the native calendar picker
+			form.querySelectorAll('input[type=date]').forEach((i) => i.addEventListener('click', () => { try { i.showPicker(); } catch {} }));
+			const msg = form.querySelector('[data-msg]');
+			form.addEventListener('submit', async (ev) => {
+				ev.preventDefault();
+				const data = Object.fromEntries(new FormData(form).entries());
+				msg.hidden = false; msg.textContent = 'Sending...'; msg.className = 'formMsg';
+				try {
+					const res = await fetch('/api/event-submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+					const j = await res.json();
+					if (j.ok) { msg.textContent = 'Thanks! Your event has been submitted and will appear once verified.'; msg.classList.add('ok'); form.reset(); }
+					else if (j.error === 'need_venue_or_link') { msg.textContent = 'Please add a venue or an event link so we can verify it.'; msg.classList.add('err'); }
+					else { msg.textContent = 'Please check the details and try again.'; msg.classList.add('err'); }
+				} catch { msg.textContent = 'Something went wrong - please try again.'; msg.classList.add('err'); }
+			});
+		})();
+	</script>
+</Layout>
+
+<style>
+	:global(:root) { --pl-accent: #00ae9a; --pl-accent-rgb: 0, 174, 154; }
+	h1, h2, h3 { letter-spacing: -0.03em; }
+	.hero { border-radius: 22px; padding: 16px; margin: 0 0 16px; border: 1px solid rgba(16,24,40,0.08); background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255,255,255,0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255,255,255,0)); }
+	.heroInner { background: rgba(255,255,255,0.78); border: 1px solid rgba(16,24,40,0.06); border-radius: 18px; padding: 18px; }
+	.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: rgba(16,24,40,0.86); font-weight: 900; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+	h1 { margin: 10px 0; line-height: 1.06; }
+	.lead { margin: 0 0 14px; color: rgba(16,24,40,0.75); max-width: 78ch; line-height: 1.6; }
+	.note { color: rgba(16,24,40,0.65); font-weight: 700; font-size: 13px; }
+	.ctaRow { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 10px; }
+	.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(16,24,40,0.14); background: rgba(255,255,255,0.92); text-decoration: none; font-weight: 950; color: rgba(16,24,40,0.88); cursor: pointer; font-size: 14px; }
+	.btnPrimary { border-color: rgba(var(--pl-accent-rgb), 0.35); background: rgba(var(--pl-accent-rgb), 0.14); }
+	.btnPrimary:hover, .btnSecondary:hover { border-color: rgba(var(--pl-accent-rgb), 0.45); }
+	.heroPill { border: 0; }
+	.heroPillN { display: inline-block; margin-left: 6px; background: rgba(255,255,255,0.85); color: #075e53; border-radius: 999px; padding: 1px 8px; font-size: 12.5px; font-weight: 900; }
+	.btnSecondary.heroPill .heroPillN { background: rgba(var(--pl-accent-rgb), 0.14); }
+	.noteLink { color: #0a6d61; font-weight: 800; text-decoration: none; }
+	.noteLink:hover { text-decoration: underline; }
+	.featHead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+	.featHead h2 { margin: 0; font-size: 20px; }
+	.featHead span { font-size: 13px; color: rgba(16,24,40,0.55); font-weight: 700; }
+	.featRow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+	.featCard { display: flex; flex-direction: column; gap: 5px; border-radius: 16px; padding: 14px 15px; text-decoration: none; background: linear-gradient(135deg, #0b1220, #163a35); color: #fff; border: 1px solid rgba(0,174,154,0.35); transition: transform 0.12s, box-shadow 0.12s; }
+	.featCard:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -14px rgba(11,18,32,0.55); }
+	.featDate { font-size: 11.5px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: #35e0c8; }
+	.featTitle { font-size: 15.5px; letter-spacing: -0.01em; line-height: 1.25; }
+	.featVenue { font-size: 12px; color: rgba(255,255,255,0.65); }
+	.bucketHead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 4px 0 10px; }
+	.bucketHead h2 { margin: 0; font-size: 19px; letter-spacing: -0.02em; }
+	.bucketHead p { margin: 0; font-size: 13px; color: rgba(16,24,40,0.55); }
+	@media (max-width: 980px) { .featRow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+	@media (max-width: 520px) { .featRow { grid-template-columns: 1fr; } }
+	.tabRow { display: flex; gap: 8px; margin: 0 0 14px; }
+	.tabBtn { flex: none; border: 1px solid rgba(16,24,40,0.14); background: rgba(255,255,255,0.9); border-radius: 14px; padding: 11px 18px; font-weight: 900; font-size: 14.5px; color: rgba(16,24,40,0.7); cursor: pointer; }
+	.tabBtn.isActive { background: #0b1220; border-color: #0b1220; color: #fff; }
+	.tabBtn.isActive .chipCount { color: #00ae9a; }
+	.placesNote { margin: 4px 0 14px; font-size: 12.5px; color: rgba(16,24,40,0.55); }
+	.evAd { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; border-radius: 16px; padding: 16px 18px; background: linear-gradient(120deg, #00ae9a, #0b7d6d); color: #fff; }
+	.evAdText strong { display: block; font-size: 16px; letter-spacing: -0.01em; }
+	.evAdText span { display: block; font-size: 13.5px; opacity: 0.94; margin-top: 2px; }
+	.evAdBtns { display: flex; flex-wrap: wrap; gap: 8px; }
+	.evAdBtns a { background: #fff; color: #0b7d6d; font-weight: 800; text-decoration: none; border-radius: 10px; padding: 10px 16px; font-size: 13.5px; white-space: nowrap; }
+	.planAd { margin-top: 12px; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); background: rgba(var(--pl-accent-rgb), 0.08); border-radius: 12px; padding: 12px 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+	.planAdText strong { display: block; font-size: 13.5px; color: rgba(16,24,40,0.9); }
+	.planAdText span { display: block; font-size: 12px; color: rgba(16,24,40,0.65); margin-top: 1px; max-width: 40ch; }
+	.planAdBtns { display: flex; gap: 6px; flex: none; }
+	.planAdBtns a { background: #00ae9a; color: #00100e; font-weight: 900; text-decoration: none; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; white-space: nowrap; }
+	.planWarn { margin: 8px 0 0; font-size: 12px; color: #7a5c14; background: #fff8ec; border: 1px solid #f0dcae; border-radius: 10px; padding: 8px 10px; }
+	.whenOverlay { position: fixed; inset: 0; z-index: 70; background: rgba(11, 18, 32, 0.45); display: flex; align-items: center; justify-content: center; padding: 16px; }
+	.whenPanel { background: #fff; border-radius: 16px; width: min(380px, 100%); padding: 16px; box-shadow: 0 24px 60px -20px rgba(11, 18, 32, 0.6); display: flex; flex-direction: column; gap: 10px; }
+	.whenTitle { font-size: 16px; letter-spacing: -0.01em; }
+	.whenNote { margin: 0; font-size: 12.5px; font-weight: 700; color: #075e53; background: rgba(var(--pl-accent-rgb), 0.08); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); border-radius: 8px; padding: 7px 10px; }
+	.whenLab { font-weight: 900; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(16, 24, 40, 0.55); }
+	.whenChips { display: flex; flex-wrap: wrap; gap: 6px; max-height: 116px; overflow-y: auto; }
+	.whenBtns { display: flex; gap: 8px; margin-top: 2px; }
+	.evLinks { display: inline-flex; gap: 12px; align-items: center; min-width: 0; }
+	.filters { margin: 0 0 14px; }
+	.chipRow { display: flex; flex-wrap: wrap; gap: 8px; }
+	.chipRowSub { margin-top: 8px; }
+	.chip { border: 1px solid rgba(16,24,40,0.14); background: rgba(255,255,255,0.9); border-radius: 999px; padding: 8px 14px; font-weight: 800; font-size: 13px; color: rgba(16,24,40,0.75); cursor: pointer; }
+	.chipRowSub .chip { padding: 6px 12px; font-size: 12.5px; }
+	.chip.isActive { background: rgba(var(--pl-accent-rgb), 0.14); border-color: rgba(var(--pl-accent-rgb), 0.4); color: #075e53; }
+	.chipCount { display: inline-block; margin-left: 4px; font-size: 11px; font-weight: 900; color: rgba(16,24,40,0.45); }
+	.chip.isActive .chipCount { color: #0a6d61; }
+	.section { margin: 0 0 16px; }
+	.sectionHead { background: rgba(255,255,255,0.7); border: 1px solid rgba(16,24,40,0.08); border-radius: 18px; padding: 14px; margin-bottom: 12px; }
+	.sectionHead p { margin: 8px 0 0; color: rgba(16,24,40,0.72); line-height: 1.6; max-width: 88ch; }
+	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+	.card { background: rgba(255,255,255,0.86); border: 1px solid rgba(16,24,40,0.08); border-radius: 18px; padding: 14px; }
+	.evTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+	.evDate { font-weight: 900; font-size: 13px; color: #075e53; background: rgba(var(--pl-accent-rgb), 0.1); border: 1px solid rgba(var(--pl-accent-rgb), 0.24); border-radius: 999px; padding: 4px 10px; }
+	.evNow { font-weight: 900; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: #00ae9a; border-radius: 999px; padding: 4px 8px; }
+	.evTown { font-weight: 800; font-size: 12.5px; color: #0a6d61; }
+	.evTitle { margin: 0 0 6px; font-size: 16.5px; line-height: 1.25; }
+	.evMeta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+	.evCat { font-size: 11.5px; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(16,24,40,0.55); }
+	.evVenue { font-size: 12.5px; color: rgba(16,24,40,0.65); }
+	.evBlurb { margin: 0 0 8px; font-size: 13.5px; color: rgba(16,24,40,0.75); line-height: 1.55; }
+	.evLink { color: var(--pl-accent); font-weight: 900; text-decoration: none; font-size: 13.5px; }
+	.evLink:hover { text-decoration: underline; }
+	.empty { color: rgba(16,24,40,0.6); padding: 14px; }
+	.funnel { border-radius: 22px; padding: 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.16), rgba(255,255,255,0)); }
+	.funnelInner { background: rgba(255,255,255,0.82); border: 1px solid rgba(16,24,40,0.06); border-radius: 18px; padding: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+	.funnelInner strong { display: block; font-size: 16px; letter-spacing: -0.01em; }
+	.funnelInner span { display: block; font-size: 14px; color: rgba(16,24,40,0.66); margin-top: 3px; max-width: 60ch; }
+	.funnelInner .ctaRow { margin: 0; }
+	.evForm { position: relative; }
+	.formGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 12px; }
+	.evForm label { display: flex; flex-direction: column; gap: 5px; font-weight: 800; font-size: 12.5px; color: rgba(16,24,40,0.7); }
+	.evForm input, .evForm select { border: 1px solid rgba(16,24,40,0.16); border-radius: 10px; padding: 10px 11px; font-size: 14px; background: #fff; color: rgba(16,24,40,0.9); }
+	.evForm input:focus, .evForm select:focus { outline: 2px solid rgba(var(--pl-accent-rgb), 0.4); border-color: rgba(var(--pl-accent-rgb), 0.5); }
+	.formFoot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 14px; }
+	.formNote { font-size: 12.5px; color: rgba(16,24,40,0.55); max-width: 50ch; }
+	.formMsg { margin: 10px 0 0; font-weight: 800; font-size: 14px; }
+	.feedCard { margin-top: 12px; border-color: rgba(var(--pl-accent-rgb), 0.3); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.06), rgba(255, 255, 255, 0.86)); }
+	.feedText strong { display: block; font-size: 15px; letter-spacing: -0.01em; }
+	.feedText span { display: block; font-size: 13px; color: rgba(16, 24, 40, 0.65); margin: 3px 0 12px; max-width: 78ch; }
+	.feedForm { display: grid; grid-template-columns: 1fr 1.4fr 1fr auto; gap: 8px; position: relative; }
+	.feedForm input { border: 1px solid rgba(16, 24, 40, 0.16); border-radius: 10px; padding: 10px 11px; font-size: 14px; }
+	.descLab { display: flex; flex-direction: column; gap: 5px; font-weight: 800; font-size: 12.5px; color: rgba(16, 24, 40, 0.7); margin-top: 10px; }
+	@media (max-width: 860px) { .feedForm { grid-template-columns: 1fr; } }
+	.formMsg.ok { color: #0a6d61; }
+	.formMsg.err { color: #b42318; }
+	.evFoot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 2px; }
+	.planBtn { border: 1px solid rgba(var(--pl-accent-rgb), 0.4); background: rgba(var(--pl-accent-rgb), 0.08); color: #075e53; border-radius: 999px; padding: 6px 11px; font-weight: 900; font-size: 12px; cursor: pointer; white-space: nowrap; }
+	.planBtn:hover { background: rgba(var(--pl-accent-rgb), 0.16); }
+	.planBtn.isIn { background: #00ae9a; border-color: #00ae9a; color: #fff; }
+	.planPill { position: fixed; z-index: 45; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 7px; border: 0; border-radius: 999px; padding: 12px 18px; background: #0b1220; color: #fff; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 14px 34px -12px rgba(11, 18, 32, 0.55); }
+	.planPillN { background: #00ae9a; color: #00100e; border-radius: 999px; padding: 1px 8px; font-size: 12.5px; }
+	.planOverlay { position: fixed; inset: 0; z-index: 60; background: rgba(11, 18, 32, 0.45); display: flex; align-items: flex-end; justify-content: center; padding: 12px; }
+	.planPanel { background: #fff; border-radius: 20px 20px 16px 16px; width: min(560px, 100%); max-height: 82vh; display: flex; flex-direction: column; padding: 16px; box-shadow: 0 24px 60px -20px rgba(11, 18, 32, 0.6); }
+	.planHead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+	.planHead strong { font-size: 17px; letter-spacing: -0.01em; }
+	.planX { border: 1px solid rgba(16,24,40,0.15); background: #fff; border-radius: 999px; width: 30px; height: 30px; font-size: 18px; line-height: 1; cursor: pointer; color: rgba(16,24,40,0.6); }
+	.planList { overflow-y: auto; min-height: 60px; }
+	.planActions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+	.planAct { border: 1px solid rgba(16,24,40,0.15); background: #fff; border-radius: 12px; padding: 11px 14px; font-weight: 900; font-size: 13.5px; cursor: pointer; color: rgba(16,24,40,0.85); }
+	.planActMain { background: rgba(var(--pl-accent-rgb), 0.14); border-color: rgba(var(--pl-accent-rgb), 0.4); color: #075e53; }
+	.planActGhost { color: rgba(16,24,40,0.55); }
+	.planNote { margin: 10px 0 0; font-size: 12px; color: rgba(16,24,40,0.55); }
+	@media (min-width: 640px) { .planOverlay { align-items: center; } }
+	@media (max-width: 980px) { .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .formGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+	@media (max-width: 640px) { .grid3, .formGrid { grid-template-columns: 1fr; } }
+</style>
+
+<style is:global>
+	/* drawer items are JS-injected, so they need global (list-scoped) styles */
+	.planList .planItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+	.planList .planItemMain { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+	.planList .planItemMain strong { font-size: 14px; letter-spacing: -0.01em; color: rgba(16, 24, 40, 0.9); }
+	.planList .planItemDate { font-weight: 900; font-size: 11.5px; color: #075e53; text-transform: uppercase; letter-spacing: 0.04em; }
+	.planList .planItemVenue { font-size: 12px; color: rgba(16, 24, 40, 0.6); }
+	.planList .planItemX { flex: none; border: 1px solid rgba(16, 24, 40, 0.14); background: #fff; border-radius: 999px; width: 26px; height: 26px; font-size: 15px; line-height: 1; cursor: pointer; color: rgba(16, 24, 40, 0.55); }
+	.planList .planEmpty { color: rgba(16, 24, 40, 0.6); font-size: 13.5px; padding: 8px 2px; }
+	.planList .planSubhead { margin: 12px 0 8px; font-weight: 900; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(16, 24, 40, 0.55); }
+	/* when-dialog chips are JS-injected */
+	.whenChips .wchip { border: 1px solid rgba(16, 24, 40, 0.14); background: rgba(255, 255, 255, 0.95); border-radius: 999px; padding: 8px 13px; font-weight: 800; font-size: 13px; color: rgba(16, 24, 40, 0.75); cursor: pointer; }
+	.whenChips .wchip.isActive { background: #00ae9a; border-color: #00ae9a; color: #fff; }
+	.planList .planPick { flex: none; border: 1px solid rgba(0, 174, 154, 0.4); background: rgba(0, 174, 154, 0.08); color: #075e53; border-radius: 999px; padding: 5px 10px; font-weight: 900; font-size: 11.5px; cursor: pointer; white-space: nowrap; }
+	.planList .planItem { display: block; padding: 0; overflow: hidden; }
+	.planList .planItemHead { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; cursor: pointer; }
+	.planList .planItemHead:hover { background: rgba(0, 174, 154, 0.05); }
+	.planList .planItemBtns { display: flex; align-items: center; gap: 8px; flex: none; }
+	.planList .planItemChev { color: rgba(16, 24, 40, 0.45); font-size: 13px; transition: transform 0.15s; }
+	.planList .planItem.isOpen .planItemChev { transform: rotate(180deg); }
+	.planList .planItemMore { padding: 0 12px 12px; border-top: 1px dashed rgba(16, 24, 40, 0.1); }
+	.planList .planItemMore p { margin: 10px 0 8px; font-size: 13px; color: rgba(16, 24, 40, 0.72); line-height: 1.55; }
+	.planList .planItemLinks { display: flex; flex-wrap: wrap; gap: 14px; }
+	.planList .planItemLinks a { color: #00ae9a; font-weight: 900; font-size: 13px; text-decoration: none; }
+	.planList .planItemLinks a:hover { text-decoration: underline; }
+</style>

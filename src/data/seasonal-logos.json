@@ -2,7 +2,7 @@
   "default": {
     "logo": "logo-default.png",
     "og": "og-default.png",
-    "icon": "icon-default.png"
+    "icon": "icon-default.png?v=2"
   },
   "valentines": {
     "start": "02-01",
@@ -30,7 +30,7 @@
     "end": "08-31",
     "logo": "logo-summer.png",
     "og": "og-summer.png",
-    "icon": "icon-default.png"
+    "icon": "icon-default.png?v=2"
   },
   "halloween": {
     "start": "10-24",

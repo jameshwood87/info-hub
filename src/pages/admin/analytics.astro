@@ -1,0 +1,418 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout lang="en" title="Admin • Analytics" description="Content analytics" canonical="https://info.propertylist.es/admin/analytics">
+	<meta name="robots" content="noindex,nofollow" slot="head" />
+
+	<div class="shell">
+		<header class="topbar">
+			<div class="title">
+				<a class="back" href="/admin/">← Dashboard</a>
+				<h1>Content Analytics</h1>
+			</div>
+			<div class="hint">Reach = on-site views + Google Search (reliable) · GA4 = cookie-opt-in only · 28-day window</div>
+		</header>
+
+		<div id="status" class="status">Loading…</div>
+
+		<section id="content" hidden>
+			<nav class="jump" aria-label="Sections">
+				<a href="#decisions">&#9989; Needs you</a><a href="#performance">&#128202; Performance</a><a href="#pages">&#128196; Pages</a><a href="#search">&#128269; Search terms</a>
+			</nav>
+			<div id="summary" class="summary"></div>
+
+			<h2 id="decisions">What needs you <span class="h2sub">everything else on this page runs itself</span></h2>
+			<div id="proposalsBox"></div>
+			<div id="actions"></div>
+
+			<h2 id="performance">Performance <span class="h2sub">last 28 days unless stated</span></h2>
+			<div id="panels" class="panels"></div>
+
+			<h2 id="pages">Page-by-page detail</h2>
+			<div class="legend">
+				<div class="legendRow"><b>Reading the columns:</b> click any column header to sort &middot; Views = visits on the site itself (all time; the small +N wk = last 7 days) &middot; CTA = clicks from that page to PropertyList signup/portal (28 days) &middot; Google clicks / Shown / % clicked / Rank = Google Search data, 28 days (Rank 1-10 = page 1 of Google).</div>
+				<div class="legendRow"><b>What the labels mean:</b>
+					<span class="chip chipWarn">Fix the title</span> Google shows it a lot but almost nobody clicks - the Monday robot may rewrite the title automatically &middot;
+					<span class="chip chipGood">Nearly page 1</span> ranks 8-30 - the robot drafts a content addition and puts it at the top of this page for your approval &middot;
+					<span class="chip chipDim">Invisible</span> Google has not shown it yet - already submitted, improves over weeks, nothing to do &middot;
+					<span class="ok">&#10003; fine</span> healthy, leave it alone.
+				</div>
+			</div>
+
+			<h3 class="tableH">Blog posts <span id="blogCount" class="count"></span></h3>
+			<div class="tableWrap"><table id="blogTable" class="dataTable"></table></div>
+			<button class="moreBtn" data-more="blogTable" type="button">Show all</button>
+
+			<h3 class="tableH">Area pages <span id="areaCount" class="count"></span></h3>
+			<div class="tableWrap"><table id="areaTable" class="dataTable"></table></div>
+			<button class="moreBtn" data-more="areaTable" type="button">Show all</button>
+
+			<h3 class="tableH">Docs &amp; how-tos <span id="docsCount" class="count"></span></h3>
+			<div class="tableWrap"><table id="docsTable" class="dataTable"></table></div>
+			<button class="moreBtn" data-more="docsTable" type="button">Show all</button>
+
+			<h2>Title experiments</h2>
+			<p class="explain">Every Monday the system rewrites the title of the page Google shows most but people click least, then reports back 14 days later.</p>
+			<div class="tableWrap"><table id="expTable">
+				<thead><tr><th>Page</th><th>Started</th><th>Before</th><th>After 14 days</th><th>Status</th></tr></thead>
+				<tbody></tbody>
+			</table></div>
+
+			<div class="cols">
+				<div>
+					<h2 id="search">What people search to find you</h2>
+					<div class="tableWrap"><table id="queryTable">
+						<thead><tr><th>Search phrase</th><th>Clicks</th><th>Shown</th><th>Rank</th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+				</div>
+				<div>
+					<h2>Almost ranking - easy wins</h2>
+					<p class="explain">You already appear on page 1-3 for these. A better or dedicated page gets the click.</p>
+					<div class="tableWrap"><table id="strikingTable">
+						<thead><tr><th>Search phrase</th><th>Your page</th><th>Shown</th><th>Rank</th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+				</div>
+			</div>
+		</section>
+	</div>
+</Layout>
+
+<script>
+	const $ = (id) => document.getElementById(id);
+	const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+	const FLAG = {
+		'rewrite-title': ['Fix the title', 'chipWarn', 'Google shows it a lot but almost nobody clicks - the headline is losing the click'],
+		'striking-distance': ['Nearly page 1', 'chipGood', 'Ranks 8-30 - one improvement pass can reach page 1'],
+		'dormant': ['Invisible', 'chipDim', 'Google is not showing this page yet'],
+	};
+	const chip = (f) => {
+		const [label, cls, tip] = FLAG[f] || [f, 'chipDim', ''];
+		return `<span class="chip ${cls}" title="${esc(tip)}">${label}</span>`;
+	};
+
+	const fmt = (n) => Number(n || 0).toLocaleString('en-GB');
+	const HEAD = `<thead><tr>
+		<th data-k="title" class="thSort">Page</th>
+		<th data-k="views" class="thSort num" title="Visits recorded on the site itself (all time; +N wk = last 7 days)">Views</th>
+		<th data-k="cta" class="thSort num" title="Clicks from this page to signup / portal / Oracle (28 days)">CTA</th>
+		<th data-k="clicks" class="thSort num" title="Clicks from Google search results (28 days)">Google clicks</th>
+		<th data-k="impressions" class="thSort num" title="How many times Google showed this page (28 days)">Shown</th>
+		<th data-k="ctr" class="thSort num" title="Of the people who saw it in Google, % who clicked">% clicked</th>
+		<th data-k="position" class="thSort num" title="Average position in Google results (lower is better; 1-10 = page 1)">Rank</th>
+		<th>What to do</th>
+	</tr></thead>`;
+
+	const ctrCell = (p) => {
+		if (!p.impressions) return '<span class="dim">-</span>';
+		const cls = p.ctr >= 3 ? 'ctrGood' : p.ctr >= 1 ? 'ctrMid' : 'ctrLow';
+		return `<span class="${cls}">${p.ctr.toFixed(1)}%</span>`;
+	};
+	const rankCell = (p) => {
+		if (!p.position) return '<span class="dim">-</span>';
+		const cls = p.position <= 10 ? 'rankTop' : p.position <= 30 ? 'rankMid' : 'rankLow';
+		return `<span class="rank ${cls}">#${p.position.toFixed(0)}</span>`;
+	};
+	const bar = (v, max) => (max && v ? `<i class="bar" style="width:${Math.max(2, Math.round((v / max) * 46))}px"></i>` : '');
+
+	const rowHtml = (p, m) => `<tr>
+		<td class="cellTitle"><a href="${esc(p.path)}" target="_blank" rel="noopener">${esc(p.title || p.path)}</a><div class="path">${esc(p.path)}</div></td>
+		<td class="num">${fmt(p.views)}${p.views7 ? `<span class="sub">+${fmt(p.views7)} wk</span>` : ''}</td>
+		<td class="num">${p.cta ? fmt(p.cta) : '<span class="dim">0</span>'}</td>
+		<td class="num">${bar(p.clicks, m.clicks)}${fmt(p.clicks)}</td>
+		<td class="num">${fmt(p.impressions)}</td>
+		<td class="num">${ctrCell(p)}</td>
+		<td class="num">${rankCell(p)}</td>
+		<td>${(p.flags || []).map(chip).join(' ') || '<span class="ok">✓ fine</span>'}</td>
+	</tr>`;
+
+	const tableState = {};
+	const renderRows = (id) => {
+		const st = tableState[id];
+		const m = { clicks: Math.max(0, ...st.rows.map((r) => r.clicks || 0)) };
+		const k = st.key;
+		const rows = [...st.rows].sort((a, b) => {
+			const av = k === 'title' ? String(a.title || a.path).toLowerCase() : a[k] || 0;
+			const bv = k === 'title' ? String(b.title || b.path).toLowerCase() : b[k] || 0;
+			return (av < bv ? -1 : av > bv ? 1 : 0) * st.dir;
+		});
+		const t = $(id);
+		t.innerHTML = HEAD + '<tbody>' + rows.map((p, i) => rowHtml(p, m).replace('<tr>', i >= 10 && !st.showAll ? '<tr class="extra" hidden>' : '<tr>')).join('') + '</tbody>';
+		t.querySelectorAll('.thSort').forEach((th) => { if (th.dataset.k === k) th.classList.add(st.dir === -1 ? 'sortDesc' : 'sortAsc'); });
+		const btn = document.querySelector(`[data-more="${id}"]`);
+		if (st.rows.length <= 10) btn.hidden = true;
+		else btn.textContent = st.showAll ? 'Show less' : `Show all ${st.rows.length}`;
+	};
+	const fillTable = (id, rows) => { tableState[id] = { rows, key: 'impressions', dir: -1, showAll: false }; renderRows(id); };
+	document.addEventListener('click', (e) => {
+		const th = e.target.closest('.thSort');
+		if (th) {
+			const table = th.closest('table');
+			if (!table || !tableState[table.id]) return;
+			const st = tableState[table.id];
+			const k = th.dataset.k;
+			if (st.key === k) st.dir = -st.dir;
+			else { st.key = k; st.dir = k === 'title' ? 1 : -1; }
+			renderRows(table.id);
+			return;
+		}
+		const b = e.target.closest('[data-more]');
+		if (!b) return;
+		const st = tableState[b.dataset.more];
+		if (!st) return;
+		st.showAll = !st.showAll;
+		renderRows(b.dataset.more);
+	});
+
+	(async () => {
+		const res = await fetch('/api/admin/analytics/insights', { credentials: 'same-origin' });
+		if (res.status === 401 || res.status === 403) { $('status').innerHTML = 'Session expired - <a href="/admin/login">log in</a> and reload.'; return; }
+		if (!res.ok) { $('status').textContent = 'Failed to load (' + res.status + ').'; return; }
+		const d = await res.json();
+		$('status').hidden = true;
+		$('content').hidden = false;
+
+		const all = [...d.blogs, ...d.areas, ...d.docs];
+		const clicks = all.reduce((a, p) => a + p.clicks, 0);
+		const shown = all.reduce((a, p) => a + p.impressions, 0);
+		const sumCta = all.reduce((a, p) => a + (p.cta || 0), 0);
+		const best = [...all].sort((a, b) => b.clicks - a.clicks)[0];
+
+		// plain-English summary
+		$('summary').innerHTML = `<p>In the last 28 days Google showed your pages <strong>${shown.toLocaleString()}</strong> times and sent you <strong>${clicks}</strong> visitors. Readers clicked through to PropertyList (signup, portal or Oracle) <strong>${sumCta}</strong> times.${best && best.clicks ? ` Your best performer is <a href="${esc(best.path)}" target="_blank" rel="noopener">${esc(best.title || best.path)}</a>.` : ''}</p>`;
+
+		// top 3 actions in plain English
+		const actions = [];
+		const worst = all.filter((p) => p.flags.includes('rewrite-title')).sort((a, b) => b.impressions - a.impressions)[0];
+		if (worst) actions.push(`<span class="who whoAuto">automatic</span><div><strong>A title needs fixing</strong> - <a href="${esc(worst.path)}" target="_blank" rel="noopener">${esc(worst.title || worst.path)}</a> was shown ${worst.impressions.toLocaleString()} times in Google but only ${worst.ctr.toFixed(1)}% clicked, so the headline is losing the click. <span class="muted">The Monday robot rewrites the worst title each week and reports back 14 days later - nothing to do unless you would rather edit it yourself.</span></div>`);
+		if (d.striking[0]) actions.push(`<span class="who whoYou">your move</span><div><strong>Easy win within reach</strong> - you already rank #${d.striking[0].position.toFixed(0)} in Google for "${esc(d.striking[0].query)}". One improvement pass on <span class="path" style="display:inline">${esc(d.striking[0].page || '')}</span> can lift it onto page 1. <span class="muted">When the robot drafts that improvement it appears above as a proposal - you just approve it.</span></div>`);
+		if (d.indexation && d.indexation.unseenCount > 10) actions.push(`<span class="who whoAuto">automatic</span><div><strong>Google has not shown ${d.indexation.unseenCount} of ${d.indexation.total} pages yet</strong> - they are new to Google, already submitted for indexing. <span class="muted">This improves by itself over weeks; internal links speed it up. Nothing to do.</span></div>`);
+		$('actions').innerHTML = actions.length ? `<div class="actionBox"><div class="actionTitle">Recommendations - and who handles them</div><div class="actionList">${actions.map((a) => `<div class="actionItem">${a}</div>`).join('')}</div></div>` : '';
+
+		const botsTotal = Object.values(d.bots || {}).reduce((a, b) => a + b, 0);
+		const idx = d.indexation;
+		const nfmt = (n) => Number(n || 0).toLocaleString('en-GB');
+		const onsiteViews = all.reduce((a, p) => a + (p.views || 0), 0);
+		const onsiteViews7 = all.reduce((a, p) => a + (p.views7 || 0), 0);
+		const ga = d.ga4 || null;
+		const fromHub = d.portal ? (d.portal.fromInfoHub.sessions || 0) : 0;
+		let lastEl = $('panels');
+		const place = (el) => { lastEl.after(el); lastEl = el; };
+
+		// ZONE A - this site's own reach (consent-free, reliable: on-site views + Google Search)
+		$('panels').innerHTML = `<div class="zoneHead">This site &middot; info.propertylist.es <span class="muted">- your content, and how Google sees it</span></div>`
+			+ '<div class="panels">'
+			+ `<div class="panel"><div class="pv">${nfmt(onsiteViews)}</div><div class="pl">page views on this site${onsiteViews7 ? ` <span class="sub2">+${nfmt(onsiteViews7)} last 7d</span>` : ''}</div></div>`
+			+ `<div class="panel"><div class="pv">${nfmt(clicks)}</div><div class="pl">visitors from Google search (28d)</div></div>`
+			+ `<div class="panel"><div class="pv">${idx ? Math.round((idx.seen / idx.total) * 100) + '%' : '-'}</div><div class="pl">of pages visible in Google</div></div>`
+			+ `<div class="panel"><div class="pv">${nfmt(botsTotal)}</div><div class="pl">AI assistant crawler visits (28d)</div></div>`
+			+ '</div>';
+
+		// consent-aware GA4 note for THIS site (cookie-gated; most EU visitors decline)
+		if (ga) {
+			const note = document.createElement('div');
+			note.className = 'ga4Box';
+			if (!ga.totalSessions || ga.totalSessions < clicks) {
+				note.innerHTML = `<div class="muted" style="font-size:13px;line-height:1.55"><strong>Note on Google Analytics for this site:</strong> it is cookie-consent gated and most EU visitors decline, so it counted only <strong>${nfmt(ga.totalSessions || 0)}</strong> sessions in 28 days - well below the ${nfmt(clicks)} Google Search clicks. The two numbers above (on-site page views and Google Search) are the real reach; GA4 here is a small opt-in sample only.</div>`;
+			} else {
+				const pct = (n) => ga.totalSessions ? Math.round((n / ga.totalSessions) * 100) : 0;
+				const chan = ga.channels.slice(0, 6).map((c) => `<div class="ga4row"><span>${esc(c.channel)}</span><span>${nfmt(c.sessions)} <span class="muted">(${pct(c.sessions)}%, avg ${c.avgSeconds}s)</span></span></div>`).join('');
+				const ai = ga.aiReferrals.length ? ga.aiReferrals.map((a) => `${esc(a.source)} ${a.sessions}`).join(' · ') : 'none yet';
+				const ctry = ga.countries.slice(0, 5).map((c) => `${esc(c.country)} ${c.sessions}`).join(' · ');
+				note.innerHTML = `<div class="actionTitle">Where consented visitors come from <span class="muted">(GA4, opt-in only, ${nfmt(ga.totalSessions)} sessions)</span></div><div class="ga4grid"><div>${chan}</div><div class="ga4meta"><div><strong>AI referrals:</strong> ${ai}</div><div><strong>Top countries:</strong> ${ctry || '-'}</div></div></div>`;
+			}
+			place(note);
+		}
+
+		// ZONE B (the bridge) + ZONE C (the portal outcome, for context)
+		if (d.portal) {
+			const p = d.portal;
+			const chan = p.channels.filter((c) => c.avgSeconds >= 5 || c.sessions < 1000).slice(0, 6)
+				.map((c) => `<div class="ga4row"><span>${esc(c.channel)}</span><span>${nfmt(c.sessions)} <span class="muted">(avg ${c.avgSeconds}s)</span></span></div>`).join('');
+			const box = document.createElement('div');
+			box.className = 'portalBox';
+			box.innerHTML = `<div class="zoneHead">The bridge <span class="muted">- what this site pushes to the portal (the number to grow)</span></div>
+				<div class="panels">
+					<div class="panel"><div class="pv">${nfmt(sumCta)}</div><div class="pl">CTA clicks from here to PropertyList (28d)</div></div>
+					<div class="panel"><div class="pv">${nfmt(fromHub)}</div><div class="pl">of those confirmed landing on the portal (GA4)</div></div>
+				</div>
+				<div class="zoneHead" style="margin-top:16px">The portal &middot; propertylist.es <span class="muted">- separate site, where leads happen (context only)</span></div>
+				<div class="portalGrid">
+					<div class="portalStat"><div class="pv2">${nfmt(p.conversions.formSubmit)}</div><div class="pl">leads (form submits) on the portal (28d)</div></div>
+					<div class="portalStat"><div class="pv2">${nfmt(p.conversions.formStart)}</div><div class="pl">forms started</div></div>
+					<div class="portalStat"><div class="pv2">${p.aiReferrals.length ? nfmt(p.aiReferrals.reduce((a, x) => a + x.sessions, 0)) : '0'}</div><div class="pl">portal visits from AI assistants</div></div>
+				</div>
+				<div class="portalChan"><div class="muted" style="margin-bottom:4px;">Portal traffic by channel (bot-like Direct hidden):</div>${chan}</div>
+				<div class="muted" style="margin-top:8px;font-size:12px;">This is context, not a full portal dashboard - the portal has its own analytics. The lever you control here is the bridge above.</div>`;
+			place(box);
+		}
+		if (!d.gscAvailable) { $('status').hidden = false; $('status').textContent = 'Google data unavailable right now - showing on-site numbers only.'; }
+
+		fillTable('blogTable', d.blogs);
+		$('blogCount').textContent = `(${d.blogs.length})`;
+		fillTable('areaTable', d.areas);
+		$('areaCount').textContent = `(${d.areas.length})`;
+		fillTable('docsTable', d.docs);
+		$('docsCount').textContent = `(${d.docs.length})`;
+
+		$('expTable').querySelector('tbody').innerHTML = (d.experiments || []).map((e) => `<tr>
+			<td class="cellTitle"><a href="${esc(e.path)}" target="_blank" rel="noopener">${esc(e.path)}</a></td>
+			<td>${esc((e.applied || '').slice(0, 10))}</td>
+			<td>${e.before ? (e.before.ctr * 100).toFixed(1) + '% of ' + e.before.impressions.toLocaleString() + ' clicked' : '-'}</td>
+			<td>${e.after ? (e.after.ctr * 100).toFixed(1) + '% of ' + e.after.impressions.toLocaleString() + ' clicked' : 'waiting…'}</td>
+			<td>${e.status === 'active' ? '⏳ running' : e.status === 'reported' ? (e.after && e.before && e.after.ctr > e.before.ctr ? '✅ improved' : '➖ no change') : esc(e.status || '')}</td>
+		</tr>`).join('') || '<tr><td colspan="5">None yet - the first one starts automatically on Monday.</td></tr>';
+
+		$('queryTable').querySelector('tbody').innerHTML = d.topQueries
+			.map((q) => `<tr><td>${esc(q.query)}</td><td>${q.clicks}</td><td>${q.impressions}</td><td>${q.position.toFixed(1)}</td></tr>`).join('');
+		$('strikingTable').querySelector('tbody').innerHTML = d.striking
+			.map((q) => `<tr><td>${esc(q.query)}</td><td class="path">${esc(q.page || '')}</td><td>${q.impressions}</td><td>${q.position.toFixed(1)}</td></tr>`).join('');
+	})().catch((e) => { $('status').textContent = 'Error: ' + e.message; });
+</script>
+
+<style is:global>
+	.shell .zoneHead { font-weight: 800; font-size: 14px; color: rgba(11,18,32,0.85); margin: 4px 0 8px; }
+	.shell .sub2 { font-size: 11px; color: #0a6d61; font-weight: 700; }
+	.shell { max-width: 1180px; margin: 0 auto; padding: 24px 16px 60px; }
+	.shell .topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+	.shell .title h1 { margin: 4px 0 0; font-size: 26px; letter-spacing: -0.02em; }
+	.shell .back { font-size: 13px; color: rgba(16, 24, 40, 0.6); text-decoration: none; }
+	.shell .hint { font-size: 12.5px; color: rgba(16, 24, 40, 0.55); }
+	.shell .status { padding: 14px; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 12px; background: #fff; font-size: 14px; margin-bottom: 14px; }
+	.shell .summary { font-size: 15.5px; line-height: 1.55; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+	.shell .summary p { margin: 0; }
+	.shell .actionBox { background: radial-gradient(700px 200px at 15% 0%, rgba(0, 174, 154, 0.12), #fff); border: 1px solid rgba(0, 174, 154, 0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+	.shell .actionTitle { font-weight: 800; margin-bottom: 6px; }
+	.shell .actionBox ol { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; }
+	.shell .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 6px; }
+	.shell .panel { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 12px 14px; }
+	.shell .pv { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+	.shell .pl { font-size: 12px; color: rgba(16, 24, 40, 0.55); margin-top: 2px; }
+	.shell .explain { font-size: 13px; color: rgba(16, 24, 40, 0.6); margin: -4px 0 10px; }
+	.shell h2 { font-size: 18px; margin: 26px 0 10px; }
+	.shell .count { color: rgba(16, 24, 40, 0.45); font-weight: 600; font-size: 14px; }
+	.shell .tableWrap { overflow-x: auto; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; background: #fff; }
+	.shell table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+	.shell th { text-align: left; padding: 9px 10px; background: rgba(16, 24, 40, 0.035); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(16, 24, 40, 0.55); cursor: help; }
+	.shell td { padding: 8px 10px; border-top: 1px solid rgba(16, 24, 40, 0.06); vertical-align: top; }
+	.shell .cellTitle a { color: inherit; text-decoration: none; font-weight: 650; }
+	.shell .cellTitle a:hover { text-decoration: underline; }
+	.shell .path { font-size: 11.5px; color: rgba(16, 24, 40, 0.45); margin-top: 2px; word-break: break-all; }
+	.shell .chip { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 8px; white-space: nowrap; cursor: help; }
+	.shell .chipWarn { background: #fef3c7; color: #92400e; }
+	.shell .chipGood { background: #d1fae5; color: #065f46; }
+	.shell .chipDim { background: rgba(16, 24, 40, 0.06); color: rgba(16, 24, 40, 0.55); }
+	.shell .ok { color: rgba(16, 24, 40, 0.4); font-size: 12px; }
+	.shell .moreBtn { margin: 8px 0 0; font-size: 13px; font-weight: 700; border: 1px solid rgba(16, 24, 40, 0.15); background: #fff; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+	.shell .portalBox { background: radial-gradient(700px 200px at 15% 0%, rgba(59,130,246,0.10), #fff); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 14px 16px; margin: 8px 0 6px; }
+	.shell .portalGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 10px 0; }
+	.shell .portalStat { }
+	.shell .pv2 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+	.shell .portalChan .ga4row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(16,24,40,0.05); font-size: 13.5px; }
+	.shell .ga4Box { background: #fff; border: 1px solid rgba(16,24,40,0.1); border-radius: 12px; padding: 14px 16px; margin: 8px 0 6px; }
+	.shell .ga4grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; font-size: 13.5px; }
+	.shell .ga4row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(16,24,40,0.05); }
+	.shell .ga4meta { font-size: 13px; line-height: 1.7; }
+	.shell .muted { color: rgba(16,24,40,0.5); font-weight: 400; }
+	@media (max-width: 700px) { 	.shell .ga4grid { grid-template-columns: 1fr; } }
+	.shell .jump { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+	.shell .jump a { font-size: 13px; font-weight: 700; text-decoration: none; color: rgba(11, 18, 32, 0.75); background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 999px; padding: 6px 13px; }
+	.shell .jump a:hover { border-color: rgba(0, 174, 154, 0.45); color: #0a6d61; }
+	.shell .h2sub { font-size: 13px; font-weight: 500; color: rgba(16, 24, 40, 0.5); margin-left: 8px; letter-spacing: 0; }
+	.shell .tableH { font-size: 16px; margin: 22px 0 8px; }
+	.shell .legend { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 10px 14px; font-size: 13px; line-height: 1.7; color: rgba(16, 24, 40, 0.75); }
+	.shell .legendRow + .legendRow { margin-top: 4px; border-top: 1px dashed rgba(16, 24, 40, 0.08); padding-top: 6px; }
+	.shell .actionList { display: grid; gap: 10px; }
+	.shell .actionItem { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.55; }
+	.shell .who { flex: none; font-size: 11px; font-weight: 800; border-radius: 999px; padding: 3px 9px; margin-top: 1px; white-space: nowrap; }
+	.shell .whoAuto { background: rgba(16, 24, 40, 0.07); color: rgba(16, 24, 40, 0.6); }
+	.shell .whoYou { background: #d1fae5; color: #065f46; }
+	.shell .propExplain { font-size: 13px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); margin: 6px 0 10px; }
+	.shell td.num, .shell th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+	.shell .sub { display: block; font-size: 10.5px; color: #0a6d61; font-weight: 700; }
+	.shell .dim { color: rgba(16, 24, 40, 0.35); }
+	.shell .ctrGood { color: #065f46; font-weight: 800; }
+	.shell .ctrMid { color: #92400e; font-weight: 700; }
+	.shell .ctrLow { color: #b91c1c; font-weight: 700; }
+	.shell .rank { font-weight: 800; border-radius: 6px; padding: 1px 6px; font-size: 12px; }
+	.shell .rankTop { background: #d1fae5; color: #065f46; }
+	.shell .rankMid { background: #fef3c7; color: #92400e; }
+	.shell .rankLow { background: rgba(16, 24, 40, 0.06); color: rgba(16, 24, 40, 0.55); }
+	.shell .bar { display: inline-block; height: 8px; border-radius: 4px; background: rgba(0, 174, 154, 0.35); margin-right: 6px; }
+	.shell tbody tr:nth-child(even) { background: rgba(16, 24, 40, 0.018); }
+	.shell tbody tr:hover { background: rgba(0, 174, 154, 0.05); }
+	.shell .thSort { cursor: pointer; user-select: none; }
+	.shell .thSort:hover { color: #0a6d61; }
+	.shell .sortDesc::after { content: ' ↓'; }
+	.shell .sortAsc::after { content: ' ↑'; }
+	.shell .tableWrap { max-height: 640px; overflow: auto; }
+	.shell thead th { position: sticky; top: 0; background: #f4f6f8; z-index: 1; }
+	.shell .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+	@media (max-width: 900px) { 	.shell .cols { grid-template-columns: 1fr; } }
+</style>
+<script>
+	(async () => {
+		const $ = (id) => document.getElementById(id);
+		const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+		const csrf = (document.cookie.match(/(?:^|;\s*)pl_admin_csrf=([^;]+)/) || [])[1]
+			|| (await fetch('/api/admin/me', { credentials: 'same-origin' }).then((r) => r.json()).then((d) => d.csrfToken).catch(() => ''));
+
+		const load = async () => {
+			const res = await fetch('/api/admin/content-proposals', { credentials: 'same-origin' });
+			if (!res.ok) return;
+			const d = await res.json();
+			const box = $('proposalsBox');
+			if (!d.proposals || !d.proposals.length) { box.innerHTML = ''; return; }
+			box.innerHTML = `<div class="propWrap"><div class="actionTitle">Ready-to-publish improvements waiting for your approval (${d.proposals.length})</div>
+				<p class="propExplain">The robot found pages that are close to Google page 1 and drafted a new section for each. <b>Approve &amp; publish</b> does everything automatically: the section is added to the live page (just above the FAQ), search engines are pinged, and it checks the page renders - nothing else for you to do. <b>Discard</b> deletes the draft; the page is untouched.</p>`
+				+ d.proposals.map((p) => `<div class="prop" data-id="${esc(p.id)}">
+					<div class="propHead"><a href="${esc(p.path)}" target="_blank" rel="noopener">${esc(p.path)}</a>
+						<span class="muted">ranks #${p.position} in Google for "${esc(p.query)}" - shown ${p.impressions} times in 28 days</span></div>
+					<div class="propWhy"><b>Why:</b> ${esc(p.rationale || '')}</div>
+					<details><summary>Preview the section that will be added: <strong>${esc(p.heading)}</strong></summary><div class="propPrev">${p.html}</div></details>
+					<div class="propBtns"><button class="btnApprove" data-act="approve" data-id="${esc(p.id)}">Approve &amp; publish</button>
+						<button class="btnDiscard" data-act="discard" data-id="${esc(p.id)}">Discard</button>
+						<span class="propMsg"></span></div>
+				</div>`).join('') + `</div>`;
+		};
+
+		document.addEventListener('click', async (e) => {
+			const b = e.target.closest('.propBtns button');
+			if (!b) return;
+			const wrap = b.closest('.prop');
+			const msg = wrap.querySelector('.propMsg');
+			b.disabled = true; msg.textContent = b.dataset.act === 'approve' ? 'Publishing…' : 'Discarding…';
+			const res = await fetch('/api/admin/content-proposals', {
+				method: 'POST', credentials: 'same-origin',
+				headers: { 'content-type': 'application/json', 'x-csrf-token': csrf },
+				body: JSON.stringify({ id: b.dataset.id, action: b.dataset.act }),
+			}).then((r) => r.json()).catch(() => null);
+			if (res && res.ok) {
+				msg.textContent = res.action === 'approved' ? (res.rendered ? '✅ published & live' : '✅ published (may take a moment)') : 'discarded';
+				setTimeout(() => wrap.remove(), 2500);
+			} else { msg.textContent = 'failed'; wrap.querySelectorAll('button').forEach((x) => (x.disabled = false)); }
+		});
+
+		load();
+	})();
+</script>
+<style is:global>
+	.shell .propWrap { background: radial-gradient(700px 200px at 15% 0%, rgba(234,179,8,0.10), #fff); border: 1px solid rgba(234,179,8,0.35); border-radius: 12px; padding: 14px 16px; margin: 8px 0 14px; }
+	.shell .prop { border-top: 1px solid rgba(16,24,40,0.08); padding: 12px 0 4px; }
+	.shell .prop:first-of-type { border-top: none; }
+	.shell .propHead a { font-weight: 700; color: inherit; }
+	.shell .propWhy { font-size: 13px; color: rgba(16,24,40,0.7); margin: 4px 0; }
+	.shell .prop details { font-size: 13px; margin: 4px 0; }
+	.shell .propPrev { border: 1px solid rgba(16,24,40,0.1); border-radius: 8px; padding: 10px 12px; margin-top: 6px; background: #fff; font-size: 13.5px; }
+	.shell .propPrev h2 { font-size: 16px; margin: 0 0 6px; }
+	.shell .propPrev h3 { font-size: 14px; margin: 8px 0 2px; }
+	.shell .propBtns { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+	.shell .btnApprove { background: #00ae9a; color: #00100e; border: none; border-radius: 999px; padding: 7px 16px; font-weight: 800; cursor: pointer; }
+	.shell .btnDiscard { background: #fff; color: rgba(16,24,40,0.7); border: 1px solid rgba(16,24,40,0.2); border-radius: 999px; padding: 7px 16px; font-weight: 700; cursor: pointer; }
+	.shell .btnApprove:disabled, .shell .btnDiscard:disabled { opacity: 0.5; cursor: default; }
+	.shell .propMsg { font-size: 13px; font-weight: 700; color: #065f46; }
+</style>
+

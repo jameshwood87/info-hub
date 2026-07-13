@@ -1,0 +1,50 @@
+// Live platform stats from the propertylist.es portal, so the info-hub homepage
+// KPI counters always match the portal exactly instead of drifting hardcoded numbers.
+//
+// Source: https://propertylist.es/portal/bootstrap (public JSON). Relevant keys:
+//   listings_count  -> active listings   ("Anuncios inmobiliarios")
+//   agents_count    -> registered agencies ("Inmobiliarias registradas")  [key name is misleading]
+//   employees_count -> individual agents  ("Agentes inmobiliarios")
+
+export type PortalStats = {
+	listings: number;
+	agencies: number;
+	agents: number;
+};
+
+// Last-known-good values (2026-07-05) used only if the portal is unreachable,
+// so the homepage never renders an empty/broken stat.
+const FALLBACK: PortalStats = { listings: 6046, agencies: 909, agents: 1272 };
+
+const TTL_MS = 60 * 60 * 1000; // refresh at most hourly
+let cache: { v: PortalStats; at: number } | null = null;
+
+export async function getPortalStats(): Promise<PortalStats> {
+	if (cache && Date.now() - cache.at < TTL_MS) return cache.v;
+	try {
+		const res = await fetch('https://propertylist.es/portal/bootstrap', {
+			headers: { Accept: 'application/json', 'User-Agent': 'info-hub' },
+			signal: AbortSignal.timeout(4000),
+		});
+		if (res.ok) {
+			const j: any = await res.json();
+			const pick = (n: unknown, fb: number) => {
+				const v = Number(n);
+				return Number.isFinite(v) && v > 0 ? Math.round(v) : fb;
+			};
+			const v: PortalStats = {
+				listings: pick(j?.listings_count, FALLBACK.listings),
+				agencies: pick(j?.agents_count, FALLBACK.agencies),
+				agents: pick(j?.employees_count, FALLBACK.agents),
+			};
+			cache = { v, at: Date.now() };
+			return v;
+		}
+	} catch {
+		// fall through
+	}
+	// On failure: prefer a previous good value; otherwise fallback without poisoning
+	// the cache so the next request retries.
+	if (cache) return cache.v;
+	return FALLBACK;
+}

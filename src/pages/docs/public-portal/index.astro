@@ -154,7 +154,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 								<a class="cardTitle" href={seg.path}>
 									{seg.title}
 								</a>
-								<span class="cardMeta">{pages.length} guides</span>
+								{pages.length > 0 && <span class="cardMeta">{pages.length} guides</span>}
 							</div>
 							<p class="cardDesc">{desc}</p>
 							{featured.length ? (
@@ -168,7 +168,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 									))}
 								</ul>
 							) : (
-								<div class="emptySmall">No guides yet.</div>
+								<a class="listRow" href={seg.path}><span class="listRowTitle">Read this guide</span></a>
 							)}
 							{remaining.length ? (
 								<details class="more" data-more="1">
@@ -449,7 +449,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 
 			for (const c of cards) {
 				const hasVisibleChild = Array.from(c.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
-				c.hidden = !hasVisibleChild;
+				c.hidden = !(hasVisibleChild || (c.getAttribute('data-label') || '').toLowerCase().includes(q));
 				for (const d of Array.from(c.querySelectorAll('details[data-more]'))) {
 					const hasVisible = Array.from(d.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
 					d.open = hasVisible;

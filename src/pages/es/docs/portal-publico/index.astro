@@ -3,40 +3,13 @@ import Layout from '../../../../layouts/Layout.astro';
 import { listKbPagesByPrefix } from '../../../../lib/directus';
 
 const base = '/es/docs/portal-publico/';
-const baseEn = '/docs/public-portal/';
-const strictEs = true;
-const itemsEs = await listKbPagesByPrefix({ prefix: base, lang: 'es', limit: 2000 });
-const itemsEn = strictEs ? [] : await listKbPagesByPrefix({ prefix: baseEn, lang: 'en', limit: 2000 });
-const esByRest = new Map(itemsEs.map((p) => [p.path.startsWith(base) ? p.path.slice(base.length) : p.path, p]));
-const items = strictEs
-	? itemsEs
-	: itemsEn.map((p) => {
-			const rest = p.path.startsWith(baseEn) ? p.path.slice(baseEn.length) : p.path;
-			const es = esByRest.get(rest);
-			return {
-				...p,
-				title: es?.title || p.title,
-				description: es?.description || p.description,
-				path: `${base}${rest}`,
-			};
-		});
+const items = await listKbPagesByPrefix({ prefix: base, lang: 'es', limit: 500 });
 
-const toSeg = (path: string) => {
-	const rest = path.startsWith(base) ? path.slice(base.length) : path;
-	return rest.split('/').filter(Boolean)[0] || '';
-};
-
-const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
-
-const grouped = new Map<string, typeof items>();
-for (const p of items) {
-	const seg = toSeg(p.path);
-	if (!seg) continue;
-	const list = grouped.get(seg) || [];
-	list.push(p);
-	grouped.set(seg, list);
-}
-const segs = [...grouped.keys()].sort((a, b) => a.localeCompare(b));
+const titleCase = (s: string) =>
+	s
+		.replace(/[_-]+/g, ' ')
+		.replace(/\b\w/g, (m) => m.toUpperCase())
+		.replace(/\bAnd\b/g, 'and');
 
 const decodeHtmlEntities = (s: string) =>
 	s
@@ -49,82 +22,271 @@ const decodeHtmlEntities = (s: string) =>
 
 const stripSuffix = (t: string) => t.replace(/\s*•\s*PropertyList Info Hub\s*$/i, '').trim();
 const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
+
+type Node = {
+	key: string;
+	path: string;
+	seg: string;
+	title: string;
+	children: Node[];
+};
+
+const pagesByPath = new Map(items.map((p) => [p.path, p]));
+const root: Node = { key: base, path: base, seg: '', title: '', children: [] };
+
+const ensureChild = (parent: Node, seg: string, path: string) => {
+	let node = parent.children.find((c) => c.key === path) || null;
+	if (!node) {
+		node = { key: path, path, seg, title: '', children: [] };
+		parent.children.push(node);
+	}
+	return node;
+};
+
+for (const p of items) {
+	if (!p.path.startsWith(base)) continue;
+	const rest = p.path.slice(base.length);
+	const parts = rest.split('/').filter(Boolean);
+	let acc = base;
+	let parent = root;
+	for (const seg of parts) {
+		acc += `${seg}/`;
+		parent = ensureChild(parent, seg, acc);
+		const page = pagesByPath.get(acc);
+		if (page?.title) parent.title = cleanTitle(page.title);
+	}
+}
+
+const fillMissingTitles = (node: Node) => {
+	if (!node.title && node.seg) node.title = titleCase(node.seg);
+	for (const c of node.children) fillMissingTitles(c);
+};
+
+fillMissingTitles(root);
+
+const sortTree = (node: Node) => {
+	node.children.sort((a, b) => a.title.localeCompare(b.title));
+	for (const c of node.children) sortTree(c);
+};
+
+sortTree(root);
+
+type PageLink = { path: string; title: string };
+
+const listDescendantPages = (node: Node): PageLink[] => {
+	const out: PageLink[] = [];
+	const visit = (n: Node) => {
+		for (const c of n.children) {
+			const page = pagesByPath.get(c.path);
+			if (page?.title) out.push({ path: c.path, title: cleanTitle(page.title) });
+			visit(c);
+		}
+	};
+	visit(node);
+	const filtered = out.filter((p) => p.path !== node.path);
+	const byTitle = new Map<string, PageLink>();
+	for (const p of filtered) {
+		const key = p.title.toLowerCase().trim();
+		const prev = byTitle.get(key) || null;
+		if (!prev) {
+			byTitle.set(key, p);
+			continue;
+		}
+		const prevDepth = prev.path.split('/').filter(Boolean).length;
+		const nextDepth = p.path.split('/').filter(Boolean).length;
+		if (nextDepth < prevDepth) byTitle.set(key, p);
+		else if (nextDepth === prevDepth && p.path.localeCompare(prev.path) < 0) byTitle.set(key, p);
+	}
+	return [...byTitle.values()].sort((a, b) => a.title.localeCompare(b.title));
+};
 ---
 
 <Layout
 	lang="es"
-	title="Docs Portal Público • PropertyList Info Hub"
-	description="Cómo usar el portal público: buscar, guardar propiedades y consultar."
+	title="Portal Público • PropertyList Info Hub"
+	description="Cómo usar el portal público: buscar, guardar propiedades y contactar."
 	canonical="https://info.propertylist.es/es/docs/portal-publico/"
 >
-	<h1>Docs Portal Público</h1>
-	<p class="sub">Guías para el uso del portal público.</p>
-
-	{items.length ? (
-		<div class="grid">
-			{segs.map((seg) => {
-				const list = grouped.get(seg) || [];
-				const viewAllHref = `${base}${seg}/`;
-				const listItems = list.filter((p) => p.path !== viewAllHref).slice(0, 8);
-				return (
-					<section class="card">
-						<div class="cardHeader">
-							<h2>{titleCase(seg)}</h2>
-						</div>
-						{listItems.length ? (
-							<ul class="mini">
-								{listItems.map((p) => (
-									<li>
-										<a class="miniRow" href={p.path}>
-											<span class="miniRowTitle">{cleanTitle(p.title)}</span>
-										</a>
-									</li>
-								))}
-							</ul>
-						) : (
-							<div class="emptySmall">Aún no hay páginas.</div>
-						)}
-						{list.length ? (
-							<div class="cardFooter">
-								<a class="cardAction" href={viewAllHref}>
-									Ver todo
-								</a>
-								<span class="cardMeta">{Math.max(0, list.length - 1)} guías</span>
-							</div>
-						) : null}
-					</section>
-				);
-			})}
+	<section class="hero">
+		<div class="heroInner">
+			<div class="badge">Docs</div>
+			<h1>PORTAL PÚBLICO</h1>
+			<p class="lead">Guías del portal público: buscar, guardar propiedades y contactar.</p>
+			<div class="filterRow">
+				<label class="filterLabel" for="doc-filter">Filtro</label>
+				<input id="doc-filter" class="filterInput" type="search" autocomplete="off" spellcheck="false" placeholder="Buscar en estas guías…" />
+			</div>
 		</div>
-	) : (
-		<div class="empty">El portal público está activo en <a href="https://propertylist.es/" target="_blank" rel="noopener">propertylist.es</a> - las guías para compradores e inquilinos están en preparación.</div>
-	)}
+	</section>
+
+	<section class="contents" aria-label="Contenido de la documentación del portal público">
+		<div class="contentsHeader">
+			<h2 class="contentsTitle">Explora por tema</h2>
+			<p class="contentsSub">Elige un tema y luego una guía. Usa el filtro para buscar en todos los temas.</p>
+		</div>
+		{root.children.length ? (
+			<div class="grid" data-grid="1">
+				{root.children.map((seg) => {
+					const pages = listDescendantPages(seg);
+					const featured = pages.slice(0, 8);
+					const remaining = pages.slice(8);
+					const label = (seg.title || '').toLowerCase();
+					const desc = cleanTitle(pagesByPath.get(seg.path)?.description || '') || 'Guías y flujos de trabajo de este tema.';
+					return (
+						<section class="card" data-card="1" data-label={label}>
+							<div class="cardHeader">
+								<a class="cardTitle" href={seg.path}>
+									{seg.title}
+								</a>
+								{pages.length > 0 && <span class="cardMeta">{pages.length} guías</span>}
+							</div>
+							<p class="cardDesc">{desc}</p>
+							{featured.length ? (
+								<ul class="list">
+									{featured.map((p) => (
+										<li data-node="1" data-label={p.title.toLowerCase()}>
+											<a class="listRow" href={p.path}>
+												<span class="listRowTitle">{p.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<a class="listRow" href={seg.path}><span class="listRowTitle">Leer esta guía</span></a>
+							)}
+							{remaining.length ? (
+								<details class="more" data-more="1">
+									<summary class="moreSummary">Ver todas ({pages.length})</summary>
+									<ul class="list moreList">
+										{remaining.map((p) => (
+											<li data-node="1" data-label={p.title.toLowerCase()}>
+												<a class="listRow" href={p.path}>
+													<span class="listRowTitle">{p.title}</span>
+												</a>
+											</li>
+										))}
+									</ul>
+								</details>
+							) : null}
+						</section>
+					);
+				})}
+			</div>
+		) : (
+			<div class="empty">El portal público está activo en <a href="https://propertylist.es/" target="_blank" rel="noopener">propertylist.es</a> - las guías para compradores e inquilinos están en preparación.</div>
+		)}
+	</section>
 </Layout>
 
 <style>
 	h1 {
 		margin: 0 0 8px;
-		letter-spacing: -0.03em;
+		letter-spacing: -0.04em;
+		line-height: 1.06;
 	}
 
-	.sub {
-		margin: 0 0 18px;
+	h2 {
+		margin: 0 0 12px;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.hero {
+		background: radial-gradient(1200px 600px at 30% -10%, rgba(0, 174, 154, 0.18), rgba(255, 255, 255, 0));
+		border-radius: 22px;
+		padding: 18px;
+		margin-bottom: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.75);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(0, 174, 154, 0.12);
+		border: 1px solid rgba(0, 174, 154, 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 800;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+	}
+
+	.lead {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.78);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.filterRow {
+		margin-top: 12px;
+	}
+
+	.filterLabel {
+		display: block;
+		font-size: 13px;
 		color: rgba(16, 24, 40, 0.7);
+		margin: 0 0 4px;
+	}
+
+	.filterInput {
+		width: min(360px, 100%);
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 8px;
+		padding: 8px 10px;
+		background: rgba(255, 255, 255, 0.9);
+		margin: 0 0 12px;
+	}
+
+	.contents {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.contentsHeader {
+		display: grid;
+		gap: 6px;
+		margin-bottom: 12px;
+	}
+
+	.contentsTitle {
+		margin: 0;
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.contentsSub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.55;
+		max-width: 75ch;
 	}
 
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 12px;
+		align-items: start;
 	}
 
 	.card {
-		background: rgba(255, 255, 255, 0.7);
+		background: rgba(255, 255, 255, 0.82);
 		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 18px;
-		padding: 14px;
-		display: flex;
-		flex-direction: column;
+		border-radius: 16px;
+		padding: 12px 12px;
+		display: grid;
+		gap: 10px;
 	}
 
 	.cardHeader {
@@ -132,24 +294,47 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 10px;
-		margin-bottom: 10px;
 	}
 
-	.cardHeader h2 {
-		margin: 0;
-		font-size: 16px;
+	.cardTitle {
+		color: #00ae9a;
+		text-decoration: none;
+		font-weight: 900;
 		letter-spacing: -0.01em;
+		line-height: 1.2;
 	}
 
-	.mini {
+	.cardTitle:visited {
+		color: #00ae9a;
+	}
+
+	.cardTitle:hover {
+		text-decoration: underline;
+	}
+
+	.cardMeta {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 13px;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+	.cardDesc {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.45;
+		font-size: 13px;
+	}
+
+	.list {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 		display: grid;
-		gap: 6px;
+		gap: 8px;
 	}
 
-	.miniRow {
+	.listRow {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
@@ -164,7 +349,7 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 		border: 1px solid rgba(16, 24, 40, 0.06);
 	}
 
-	.miniRow::after {
+	.listRow::after {
 		content: '›';
 		flex: none;
 		color: rgba(16, 24, 40, 0.45);
@@ -173,59 +358,33 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 		margin-top: 1px;
 	}
 
-	.miniRowTitle {
+	.listRowTitle {
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
 
-	.miniRow:hover,
-	.miniRow:focus-visible {
+	.listRow:hover,
+	.listRow:focus-visible {
 		outline: none;
 		border-color: rgba(0, 174, 154, 0.4);
 		background: rgba(0, 174, 154, 0.06);
 	}
 
-	.miniRow:hover::after,
-	.miniRow:focus-visible::after {
+	.listRow:hover::after,
+	.listRow:focus-visible::after {
 		color: var(--accent);
 	}
 
-	.cardFooter {
-		margin-top: 12px;
-		padding-top: 12px;
-		border-top: 1px solid rgba(16, 24, 40, 0.08);
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 10px;
-	}
-
-	.cardAction {
-		color: var(--accent);
+	.moreSummary {
+		cursor: pointer;
 		font-weight: 900;
-		text-decoration: none;
-		white-space: nowrap;
+		color: rgba(16, 24, 40, 0.78);
 	}
 
-	.cardAction:hover {
-		text-decoration: underline;
-	}
-
-	.cardMeta {
-		color: rgba(16, 24, 40, 0.6);
-		font-size: 13px;
-		font-weight: 700;
-		white-space: nowrap;
-	}
-
-	.emptySmall {
-		padding: 10px 12px;
-		background: rgba(255, 255, 255, 0.6);
-		border: 1px dashed rgba(16, 24, 40, 0.18);
-		border-radius: 14px;
-		color: rgba(16, 24, 40, 0.7);
+	.moreList {
+		margin-top: 10px;
 	}
 
 	.empty {
@@ -236,9 +395,52 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 		color: rgba(16, 24, 40, 0.7);
 	}
 
-	@media (max-width: 620px) {
+	.emptySmall {
+		padding: 14px;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px dashed rgba(16, 24, 40, 0.18);
+		border-radius: 16px;
+		color: rgba(16, 24, 40, 0.7);
+	}
+
+	@media (max-width: 980px) {
 		.grid {
 			grid-template-columns: 1fr;
 		}
 	}
 </style>
+
+<script is:inline>
+	(() => {
+		const input = document.getElementById('doc-filter');
+		if (!(input instanceof HTMLInputElement)) return;
+		const nodes = Array.from(document.querySelectorAll('li[data-node]'));
+		const cards = Array.from(document.querySelectorAll('section[data-card]'));
+
+		const apply = () => {
+			const q = (input.value || '').trim().toLowerCase();
+			if (!q) {
+				for (const li of nodes) li.hidden = false;
+				for (const c of cards) c.hidden = false;
+				for (const d of Array.from(document.querySelectorAll('details[data-more]'))) d.open = false;
+				return;
+			}
+
+			for (const li of nodes) {
+				const label = (li.getAttribute('data-label') || '').toLowerCase();
+				li.hidden = !label.includes(q);
+			}
+
+			for (const c of cards) {
+				const hasVisibleChild = Array.from(c.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+				c.hidden = !(hasVisibleChild || (c.getAttribute('data-label') || '').toLowerCase().includes(q));
+				for (const d of Array.from(c.querySelectorAll('details[data-more]'))) {
+					const hasVisible = Array.from(d.querySelectorAll('li[data-node]')).some((li) => !li.hidden);
+					d.open = hasVisible;
+				}
+			}
+		};
+
+		input.addEventListener('input', apply, { passive: true });
+	})();
+</script>

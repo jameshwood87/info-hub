@@ -1,0 +1,443 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/referidos/`;
+const title = 'Programa de Referidos para Agentes Inmobiliarios | PropertyList';
+const description =
+	'Refiere una agencia a PropertyList y gana 20 créditos por cada alta aprobada - la agencia que refieres empieza con 10. Referidos ilimitados, los créditos no caducan, úsalos en cualquier función de pago.';
+
+const REF = 'https://agents.propertylist.es/referrals';
+
+const steps = [
+	{
+		n: '1',
+		t: 'Comparte tu enlace',
+		d: 'Cada cuenta de PropertyList tiene un enlace de referido único. Cópialo desde tu panel de referidos y compártelo con cualquier agencia - por WhatsApp, email o redes sociales.',
+	},
+	{
+		n: '2',
+		t: 'Se registran y se aprueban',
+		d: 'La agencia se une a PropertyList con tu enlace y se aprueba como Agencia Verificada - gratis para siempre, como cada agente de la red.',
+	},
+	{
+		n: '3',
+		t: 'Ambos ganáis créditos, automáticamente',
+		d: 'Al aprobarse, 20 créditos llegan a tu cuenta y 10 a la suya. Sin formularios ni seguimientos - cada alta se registra y se abona por ti.',
+	},
+];
+
+const faqs = [
+	{
+		q: '¿Cómo consigo mi enlace de referido?',
+		a: 'Inicia sesión en PropertyList y abre la sección de referidos de tu panel. Tu enlace único está ahí, listo para copiar y compartir. Todo lo demás - el seguimiento de las altas y el abono de créditos - ocurre automáticamente.',
+	},
+	{
+		q: '¿Cuántos créditos gano?',
+		a: '20 créditos (valor 20 EUR) por cada agencia que se registre con tu enlace y se apruebe, sin límite. La agencia que refieres también empieza con 10 créditos (valor 10 EUR).',
+	},
+	{
+		q: '¿Cuándo se añaden los créditos?',
+		a: 'En cuanto se aprueba la agencia que has referido. Los 20 créditos van a tu cuenta y 10 a la suya, añadidos a cada cuenta automáticamente.',
+	},
+	{
+		q: '¿Hay un límite de cuántas agencias puedo referir?',
+		a: 'No. Refiere 5 agencias o 50 - ganas 20 créditos por cada una que se apruebe. Los créditos no caducan.',
+	},
+	{
+		q: '¿En qué puedo gastar los créditos de referido?',
+		a: 'En cualquier función de pago. 1 crédito = 1 EUR - úsalos para destacar anuncios, Análisis de mercado por propiedad, exportación XML, complementos del Constructor de Webs y más.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Precios', item: `${origin}/es/precios/` },
+		{ '@type': 'ListItem', position: 3, name: 'Programa de Referidos', item: canonical },
+	],
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'en', href: `${origin}/referrals/` },
+		{ hreflang: 'x-default', href: `${origin}/referrals/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Programa de Referidos</div>
+			<h1>Refiere una agencia. Tú ganas 20 créditos, ellos 10.</h1>
+			<p class="lead">
+				Cada agente inmobiliario en PropertyList tiene un enlace de referido único. Compártelo y, por cada agencia que se
+				registre y se apruebe, ganas 20 créditos para gastar en funciones de pago - y la agencia que refieres empieza con 10.
+				Referidos ilimitados, y el MLS y el CRM principales siguen siendo gratis para siempre.
+			</p>
+			<div class="ctaRow" aria-label="Referidos">
+				<a class="btnPrimary" href={REF} target="_blank" rel="noopener">Consigue tu enlace de referido</a>
+				<a class="btnSecondary" href="/es/precios/">Ver precios</a>
+			</div>
+			<div class="note">1 crédito = 1 EUR. Los créditos no caducan.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Cómo funciona</h2>
+			<p>Tres pasos, y el abono es automático. Comparte tu enlace una vez y deja que cada alta aprobada te recompense.</p>
+		</div>
+		<div class="grid3" aria-label="Cómo funcionan los referidos">
+			{
+				steps.map((s) => (
+					<div class="card">
+						<div class="stepNum">{s.n}</div>
+						<h3>{s.t}</h3>
+						<p>{s.d}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Lo que ganas</h2>
+				<p>
+					Por cada agencia que refieres, ganas 20 créditos - valor 20 EUR - y ellos empiezan con 10 créditos, valor 10 EUR.
+					Los créditos se añaden automáticamente en cuanto se aprueba la agencia.
+				</p>
+				<div class="pillRow">
+					<span class="pill">20 créditos para ti</span>
+					<span class="pill">10 créditos para ellos</span>
+					<span class="pill">Referidos ilimitados</span>
+				</div>
+			</div>
+			<div class="card">
+				<h2>Sin límite, sin trucos</h2>
+				<p>
+					No hay límite de cuántas agencias puedes referir ni de cuántos créditos puedes ganar, y los créditos no caducan.
+					Gástalos en cualquier función de pago - destacar anuncios, Análisis de mercado por propiedad, exportación XML,
+					complementos del Constructor de Webs y más.
+				</p>
+				<p>
+					Referir a colegas también hace crecer la red de agente a agente en la que vendes: cada agencia que se une aporta sus
+					anuncios y sus compradores al MLS compartido.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Para qué te sirven tus créditos</h2>
+			<p>1 crédito = 1 EUR, y los créditos valen en cualquier función de pago. Esto es lo que suman unos pocos referidos.</p>
+		</div>
+		<div class="grid3" aria-label="Para qué sirven los créditos">
+			<div class="card">
+				<div class="creditTag">20 créditos</div>
+				<h3>1 referido</h3>
+				<p>Destaca uno de tus anuncios durante una semana completa - el impulso de 7 días más popular - o realiza 4 Análisis de mercado por propiedad.</p>
+			</div>
+			<div class="card">
+				<div class="creditTag">40 créditos</div>
+				<h3>2 referidos</h3>
+				<p>Destaca un anuncio durante 15 días a la mejor tarifa, o dos anuncios distintos una semana cada uno.</p>
+			</div>
+			<div class="card accent">
+				<div class="creditTag">60 créditos / mes</div>
+				<h3>3 referidos al mes</h3>
+				<p>
+					Suficiente para cubrir una web con el Constructor de Webs (desde 50 EUR/mes) con SEO automático - tu propia web de
+					agencia con marca, prácticamente pagada con los referidos.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Preguntas frecuentes</h2>
+		</div>
+		<div class="grid2">
+			{
+				faqs.map((f) => (
+					<div class="card">
+						<h3>{f.q}</h3>
+						<p>{f.a}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section cta">
+		<div class="ctaInner">
+			<h2>Convierte tu red en créditos</h2>
+			<p>
+				Coge tu enlace único y compártelo con las agencias que conoces. Cada alta aprobada son 20 créditos en tu cuenta - y 10
+				en la suya.
+			</p>
+			<div class="ctaRow" aria-label="Consigue tu enlace de referido">
+				<a class="btnPrimary" href={REF} target="_blank" rel="noopener">Consigue tu enlace de referido</a>
+				<a class="btnSecondary" href="/es/funciones/">Ver todas las funciones</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+	}
+
+	.hero {
+		border-radius: 22px;
+		padding: 16px;
+		margin: 0 0 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background:
+			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.75);
+		max-width: 78ch;
+		line-height: 1.6;
+	}
+
+	.note {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.section {
+		margin: 0 0 14px;
+	}
+
+	.sectionHead {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 12px;
+	}
+
+	.sectionHead p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.6;
+		max-width: 88ch;
+	}
+
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.card.accent {
+		border-color: rgba(var(--pl-accent-rgb), 0.25);
+		background:
+			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
+			rgba(255, 255, 255, 0.86);
+	}
+
+	.card h2 {
+		margin: 0 0 10px;
+	}
+
+	.card h3 {
+		margin: 0 0 6px;
+		font-size: 16px;
+	}
+
+	.card p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+
+	.card p:last-child {
+		margin-bottom: 0;
+	}
+
+	.stepNum {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.14);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.3);
+		color: #075e53;
+		font-weight: 950;
+		font-size: 15px;
+		margin-bottom: 10px;
+	}
+
+	.creditTag {
+		display: inline-flex;
+		align-items: center;
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.28);
+		color: #075e53;
+		font-weight: 950;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		margin-bottom: 10px;
+	}
+
+	.pillRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 4px;
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: rgba(var(--pl-accent-rgb), 0.1);
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.86);
+		font-size: 13px;
+	}
+
+	.cta {
+		border-radius: 22px;
+		padding: 16px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.ctaInner {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	.ctaInner p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.6;
+		max-width: 90ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 14px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 950;
+		color: rgba(16, 24, 40, 0.88);
+	}
+
+	.btnPrimary {
+		border-color: rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.14);
+	}
+
+	.btnPrimary:hover,
+	.btnSecondary:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	@media (max-width: 980px) {
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

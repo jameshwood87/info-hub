@@ -15,6 +15,7 @@ const sections: Array<{
 		subtitle: 'Multi-Listing Service',
 		items: [
 			{ feature: 'Unlimited Listings', price: 'Free' },
+			{ feature: 'List by Voice (Instant Listing)', price: 'Free' },
 			{ feature: 'Users/Staff', price: 'Free' },
 			{ feature: 'Branded MicroSite', price: 'Free' },
 			{ feature: 'Feature a Listing', price: 'from €10' },
@@ -31,12 +32,12 @@ const sections: Array<{
 		items: [
 			{ feature: 'Unlimited Contacts', price: 'Free' },
 			{ feature: 'Calendar Events', price: 'Free' },
-			{ feature: 'Sales Pipeline', price: 'Free' },
+			{ feature: 'Lead Pipeline', price: 'Free' },
+			{ feature: 'Deal pipelines (Buyers/Sellers/Tenants)', price: 'First 5 free, then 1 credit' },
 			{ feature: 'Document Upload', price: 'Free' },
-			{ feature: 'AI Utilities', price: 'Coming soon' },
 			{ feature: 'AI Funnels', price: 'Coming soon' },
 			{ feature: 'AI Chatbot', price: 'Coming soon' },
-			{ feature: 'AI Market Analysis', price: '5 credits per analysis (limited time offer)' },
+			{ feature: 'Property Specific Market Analysis', price: '5 credits per analysis (limited time offer)' },
 		],
 	},
 	{
@@ -44,21 +45,23 @@ const sections: Array<{
 		subtitle: 'We advertise for you',
 		items: [
 				{ feature: 'Feature a Listing', price: 'from €10' },
+			{ feature: 'AI Property Search (search by texting)', price: 'Free' },
 			{ feature: 'Open a Direct Lead', price: 'Free for limited time' },
 			{ feature: 'Featured Estate Agents', price: 'Coming soon' },
 			{ feature: 'AI Virtual Tours', price: 'Coming soon' },
 			{ feature: 'Premium Homepage', price: 'Coming soon' },
-			{ feature: 'Property Services', price: 'Coming soon' },
 		],
 	},
 	{
 		title: 'Website Builder',
 		subtitle: 'Your own agency website',
 		items: [
-			{ feature: 'Drag-and-drop builder', price: 'from €50/mo' },
-			{ feature: 'AI SEO & meta', price: '+€5/mo' },
-			{ feature: 'Popup lead capture', price: '+€8/mo' },
-			{ feature: 'Custom domain', price: '+€20/mo' },
+			{ feature: 'Drag-and-drop builder', price: '50 credits/mo' },
+			{ feature: 'AI SEO & meta', price: '5 credits/mo' },
+			{ feature: 'Instant Content: unlimited AI blog & area guides', price: '30 credits/mo' },
+			{ feature: 'Popup lead capture', price: '8 credits/mo' },
+			{ feature: 'Custom domain', price: '20 credits/mo' },
+			{ feature: 'Remove PropertyList branding', price: '50 credits/mo' },
 			{ feature: 'All MLS listings auto-loaded', price: 'Included' },
 			{ feature: 'Free hosting & SSL', price: 'Included' },
 		],
@@ -68,27 +71,40 @@ const sections: Array<{
 const pricingFaqItems = [
 	{
 		q: 'Is PropertyList really free for estate agents?',
-		a: 'Yes. The MLS, CRM, unlimited listings, team accounts, and contact management are 100% free forever. You only pay for optional upgrades such as featured listings (from €10) or the Website Builder (from €50/mo).',
+		a: 'Yes. The MLS, CRM, unlimited listings, team accounts, and contact management are 100% free forever. You only pay for optional upgrades such as featured listings (from €10) or the Website Builder (50 credits/mo).',
 	},
 	{
 		q: 'How do credits work?',
-		a: '1 credit = €1. Bulk purchases include discounts and credits never expire. Use credits to feature listings, run XML exports, access AI Market Analysis, or unlock other premium features.',
+		a: 'Everything paid on PropertyList draws from a single balance of credits. You buy them in packs - from €20 for 20 credits (€1 each) down to €0.80 per credit on the 1,000 pack - and credits you have bought never expire. Monthly subscriptions (like the Website Builder) and pay-as-you-go features (like market reports) all come from the same balance.',
+	},
+	{
+		q: 'What happens if I run out of credits?',
+		a: 'Nothing is lost. If your balance cannot cover a renewal, your custom site pauses and visitors see the standard page while every page and setting is kept safe as a draft. Top up and republish in one click. Coming very soon: optional Auto-Renew, which tops your balance up automatically before renewal so your site never pauses - with 5 free credits every month as a thank-you.',
 	},
 	{
 		q: 'Can I cancel my website builder subscription anytime?',
-		a: 'Yes. There are no tied contracts and no cancellation fees. Cancel monthly or yearly at any time with no penalties.',
+		a: 'Yes. There are no tied contracts and no cancellation fees. Switch a feature off and it simply will not renew next month; the current month stays active until your renewal date (no refunds for a part-month).',
 	},
 	{
 		q: 'What do I get with the free plan?',
-		a: 'Unlimited property listings, unlimited staff accounts, a branded MicroSite for your agency, full CRM with contacts and leads management, calendar events, sales pipeline, document upload, WhatsApp Community access, and social distribution to Facebook - all free.',
+		a: 'Unlimited property listings, List by Voice (add a full listing from photos and a voice note with Instant Listing), AI property search, unlimited staff accounts, a branded MicroSite for your agency, CRM with contacts and leads management, calendar events, lead pipeline, document upload, WhatsApp Community access, and social distribution to Facebook - all free.',
+	},
+	{
+		q: 'How do the CRM pipelines work?',
+		a: 'PropertyList includes seven CRM pipeline boards that move contacts from first enquiry to closed deal automatically. Four - Leads, Property Lifecycle, Transactions and Nurture - are free forever. The Buyers, Sellers and Tenants boards give you your first 5 conversions free, then 1 credit per conversion, charged only when you tag a contact as a real opportunity.',
 	},
 	{
 		q: 'How much does the Website Builder cost?',
-		a: 'From €50/month (or €450/year). Add optional power-ups: AI SEO meta (+€5/mo), popup lead capture (+€8/mo), custom domain (+€20/mo). All plans include free hosting, SSL, and automatic MLS listing loading.',
+		a: 'The base site is 50 credits a month (about €50) and includes your results page, property pages and your first few pages; extra pages are 10 credits/mo each. Add optional power-ups: Instant Content (30 credits/mo, unlimited AI blogs and area guides), AI SEO meta (5 credits/mo), popup lead capture (8 credits/mo), custom domain (20 credits/mo), or remove PropertyList branding (50 credits/mo). Free hosting, SSL, and automatic MLS listing loading are always included.',
+	},
+	{
+		q: 'Can Instant Content run automatically?',
+		a: 'Yes. Switch on auto-publish and it writes and publishes unlimited SEO blog posts and area guides for your site by itself, grounded in your own listings and verified market data - or choose review-first and approve each piece before it goes live.',
 	},
 	{
 		q: 'Is there a free trial for paid features?',
-		a: 'Open a Direct Lead is currently free for a limited time - no credits required. Featured listings start from €10 per listing. New Verified Agencies also receive 20 free credits on signup.',
+		a: 'Yes. Every paid feature comes with a free test, so you can try it before spending any credits. Verified Agencies also receive 20 free credits, and you earn another 20 credits to spend on paid features for every agency that signs up through your unique referral link.',
+		link: { href: 'https://agents.propertylist.es/referrals', label: 'Get your referral link' },
 	},
 ];
 
@@ -124,7 +140,7 @@ const pricingFaqLd = {
 				subscriptions. When you want extra visibility or automation, use pay-as-you-go credits at your own pace.
 			</p>
 			<div class="ctaRow">
-				<a class="btnPrimary" href="/mls/">Start with the MLS manual</a>
+				<a class="btnPrimary" href="/docs/propertylist-mls-user-manual/">Start with the MLS manual</a>
 				<a class="btnSecondary" href="/docs/">Browse documentation</a>
 			</div>
 			<div class="trustRow" aria-label="Key terms">
@@ -148,83 +164,38 @@ const pricingFaqLd = {
 					We believe in an inclusive marketplace where every agent and listing can shine - so we keep the essentials free and make money only on
 					optional, value-added tools.
 				</p>
+				<figure class="panelMock">
+					<img src="/img/mls-preview-en.jpg" alt="Live property listings on the PropertyList public portal - villas and apartments for sale in Marbella" loading="lazy" width="980" height="700" />
+					<figcaption>The MLS as buyers see it - live listings on <a href="https://propertylist.es/en/portal/for-sale/marbella" target="_blank" rel="noopener">propertylist.es</a> right now.</figcaption>
+				</figure>
 			</div>
 			<div class="panel">
-				<h2>Credits &amp; pay-as-you-go</h2>
+				<h2>Credits: one balance for everything</h2>
 				<p>
-					Our credit system gives maximum flexibility to feature properties and access additional services. It scales from solo
-					agents to large agencies, so you only pay for what you use-when you actually need it.
+					Everything paid on PropertyList draws from a single balance of credits - monthly subscriptions like your website,
+					and pay-as-you-go extras like market reports. Buy packs when you like; bigger packs are better value. Prices in
+					euro, VAT added at checkout.
 				</p>
+				<div class="creditPacks">
+					<div class="creditPackRow creditPackHead"><span>You pay</span><span>You get</span><span>Works out at</span></div>
+					<div class="creditPackRow"><span>€20</span><span>20 credits</span><span>€1.00 / credit</span></div>
+					<div class="creditPackRow"><span>€47</span><span>50 credits</span><span>€0.94 / credit</span></div>
+					<div class="creditPackRow"><span>€90</span><span>100 credits</span><span>€0.90 / credit</span></div>
+					<div class="creditPackRow"><span>€425</span><span>500 credits</span><span>€0.85 / credit</span></div>
+					<div class="creditPackRow"><span>€800</span><span>1,000 credits</span><span>€0.80 / credit</span></div>
+				</div>
 				<div class="callout">
-					<div class="calloutTitle">1 credit = €1</div>
-					<div class="calloutBody">Bulk purchases include discounts. Credits do not expire.</div>
+					<div class="calloutTitle">Credits you buy never expire</div>
+					<div class="calloutBody">They stay in your balance until you use them. If a renewal ever catches you short, your site pauses safely as a draft - nothing is lost, and one click republishes it.</div>
 				</div>
 				<div class="callout muted">
 					<div class="calloutTitle">Verified Agency bonus</div>
-					<div class="calloutBody">Each new Verified Agency receives 20 free credits.</div>
+					<div class="calloutBody">Each Verified Agency receives 20 free credits.</div>
 				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHeader">
-			<h2>Website Builder</h2>
-			<div class="sectionMeta">From €50/month · No tied contracts</div>
-		</div>
-		<div class="wbPricing">
-			<div class="wbBase">
-				<div class="wbBaseBadge">Base plan</div>
-				<div class="wbBasePrice">€50<span>/mo</span></div>
-				<div class="wbBaseNote">or €450/year - cancel anytime</div>
-				<ul class="wbBaseList">
-					<li>Drag-and-drop page builder</li>
-					<li>All MLS properties auto-loaded</li>
-					<li>Your own agency branding</li>
-					<li>Mobile-friendly layouts</li>
-					<li>Contact forms &amp; lead capture</li>
-					<li>Google Analytics integration</li>
-					<li>Free hosting &amp; SSL</li>
-					<li>Build &amp; preview before you pay</li>
-				</ul>
-				<a class="btnPrimary" href="/website-builder">See how it works</a>
-			</div>
-			<div class="wbAddons">
-				<div class="wbAddonsTitle">Power-ups - add as you grow</div>
-				<div class="wbAddonsNote">Billed monthly. Cancel anytime.</div>
-				<div class="wbAddonGrid">
-					<div class="wbAddonCard">
-						<div class="wbAddonName">AI keyword &amp; meta</div>
-						<div class="wbAddonDesc">Auto-writes SEO titles and descriptions for every listing</div>
-						<div class="wbAddonPrice">€5<span>/mo</span></div>
-					</div>
-					<div class="wbAddonCard">
-						<div class="wbAddonName">Monthly property digest</div>
-						<div class="wbAddonDesc">AI-powered email of new listings to your database</div>
-						<div class="wbAddonPrice">€5<span>/mo</span></div>
-					</div>
-					<div class="wbAddonCard">
-						<div class="wbAddonName">Popup lead capture</div>
-						<div class="wbAddonDesc">Smart exit-intent and scroll popups on your site</div>
-						<div class="wbAddonPrice">€8<span>/mo</span></div>
-					</div>
-					<div class="wbAddonCard">
-						<div class="wbAddonName">AI FAQ auto-generator</div>
-						<div class="wbAddonDesc">Generates buyer Q&amp;A for each listing automatically</div>
-						<div class="wbAddonPrice">€8<span>/mo</span></div>
-					</div>
-					<div class="wbAddonCard">
-						<div class="wbAddonName">Custom domain</div>
-						<div class="wbAddonDesc">Connect your own domain (your-agency.com)</div>
-						<div class="wbAddonPrice">€20<span>/mo</span></div>
-					</div>
-					<div class="wbAddonCard">
-						<div class="wbAddonName">Extra pages</div>
-						<div class="wbAddonDesc">Landings, area guides, promos - pay per page</div>
-						<div class="wbAddonPrice">from €2<span>/page</span></div>
-					</div>
+				<div class="callout muted">
+					<div class="calloutTitle">Coming very soon: Auto-Renew</div>
+					<div class="calloutBody">Save a card and we top your balance up automatically before each renewal, so your site never goes offline - plus 5 free credits every month as a thank-you.</div>
 				</div>
-				<div class="wbAddonsFooter">More add-ons released regularly - AI tools, integrations, area pages</div>
 			</div>
 		</div>
 	</section>
@@ -256,14 +227,86 @@ const pricingFaqLd = {
 
 	<section class="section">
 		<div class="sectionHeader">
+			<h2>Website Builder</h2>
+			<div class="sectionMeta">50 credits/month · No tied contracts</div>
+		</div>
+		<div class="wbPricing">
+			<div class="wbBase">
+				<div class="wbBaseBadge">Base plan</div>
+				<div class="wbBasePrice">50 credits<span>/mo</span></div>
+				<div class="wbBaseNote">about €50 - cancel anytime</div>
+				<ul class="wbBaseList">
+					<li>Drag-and-drop page builder</li>
+					<li>All MLS properties auto-loaded</li>
+					<li>Your own agency branding</li>
+					<li>Mobile-friendly layouts</li>
+					<li>Contact forms &amp; lead capture</li>
+					<li>Google Analytics integration</li>
+					<li>Free hosting &amp; SSL</li>
+					<li>Build &amp; preview before you pay</li>
+				</ul>
+				<a class="btnPrimary" href="/website-builder">See how it works</a>
+			</div>
+			<div class="wbAddons">
+				<div class="wbAddonsTitle">Power-ups - add as you grow</div>
+				<div class="wbAddonsNote">Billed monthly. Cancel anytime.</div>
+				<div class="wbAddonGrid">
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Instant Content</div>
+						<div class="wbAddonDesc">Unlimited AI blog posts and area guides - fully automated with auto-publish, or review each piece first</div>
+						<div class="wbAddonPrice">30 credits<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">AI keyword &amp; meta</div>
+						<div class="wbAddonDesc">Auto-writes SEO titles and descriptions for every listing</div>
+						<div class="wbAddonPrice">5 credits<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Monthly analytics digest</div>
+						<div class="wbAddonDesc">A monthly email of your website analytics - page views, top-viewed properties and more</div>
+						<div class="wbAddonPrice">5 credits<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Popup lead capture</div>
+						<div class="wbAddonDesc">Smart exit-intent and scroll popups on your site</div>
+						<div class="wbAddonPrice">8 credits<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">AI FAQ auto-generator</div>
+						<div class="wbAddonDesc">Generates buyer Q&amp;A for each listing automatically</div>
+						<div class="wbAddonPrice">8 credits<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Custom domain</div>
+						<div class="wbAddonDesc">Connect your own domain (your-agency.com)</div>
+						<div class="wbAddonPrice">20 credits<span>/mo</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Extra pages</div>
+						<div class="wbAddonDesc">Landings, area guides, promos - beyond the pages included in the base</div>
+						<div class="wbAddonPrice">10 credits<span>/mo each</span></div>
+					</div>
+					<div class="wbAddonCard">
+						<div class="wbAddonName">Remove PropertyList branding</div>
+						<div class="wbAddonDesc">A clean site with no "Powered by" mark</div>
+						<div class="wbAddonPrice">50 credits<span>/mo</span></div>
+					</div>
+				</div>
+				<div class="wbAddonsFooter">More add-ons released regularly - AI tools, integrations, area pages</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHeader">
 			<h2>Frequently asked questions</h2>
-			<p class="faqSub">See every feature explained in detail - website builder, XML feeds, CRM pipelines, Rentals, Market Intelligence, and more - on the <a href="/features/">Features FAQ page</a>.</p>
+			<p class="faqSub">See every feature explained in detail - website builder, XML feeds, Rentals, Market Intelligence, and more - on the <a href="/features/">Features FAQ page</a>, or see how the <a href="/pipelines/">CRM pipelines</a> work.</p>
 		</div>
 		<div class="faqGrid">
 			{pricingFaqItems.map((f) => (
 				<div class="faqCard">
 					<div class="faqQ">{f.q}</div>
-					<div class="faqA">{f.a}</div>
+					<div class="faqA">{f.a}{f.link && (<a class="faqAlink" href={f.link.href} target="_blank" rel="noopener"> {f.link.label} &rarr;</a>)}</div>
 				</div>
 			))}
 		</div>
@@ -420,6 +463,67 @@ const pricingFaqLd = {
 
 	.panel p:last-child {
 		margin-bottom: 0;
+	}
+
+	.panelMock {
+		margin: 16px 0 0;
+	}
+
+	.panelMock img {
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		box-shadow: 0 8px 22px rgba(4, 33, 28, 0.08);
+	}
+
+	.panelMock figcaption {
+		margin-top: 8px;
+		font-size: 12.5px;
+		color: rgba(16, 24, 40, 0.55);
+	}
+
+	.panelMock figcaption a {
+		color: #00806f;
+		font-weight: 700;
+	}
+
+	.creditPacks {
+		margin-top: 12px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		border-radius: 14px;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.75);
+	}
+
+	.creditPackRow {
+		display: grid;
+		grid-template-columns: 1fr 1.2fr 1.3fr;
+		gap: 8px;
+		padding: 8px 14px;
+		font-size: 14px;
+		border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.creditPackRow:last-child {
+		border-bottom: 0;
+	}
+
+	.creditPackRow span:first-child {
+		font-weight: 800;
+	}
+
+	.creditPackHead {
+		background: rgba(0, 174, 154, 0.1);
+		font-size: 11.5px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: rgba(16, 24, 40, 0.6);
+	}
+
+	.creditPackHead span:first-child {
+		font-weight: 800;
 	}
 
 	.callout {
@@ -719,6 +823,17 @@ const pricingFaqLd = {
 		font-size: 13px;
 		color: rgba(16, 24, 40, 0.72);
 		line-height: 1.55;
+	}
+
+	.faqAlink {
+		color: #00ae9a;
+		font-weight: 700;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.faqAlink:hover {
+		text-decoration: underline;
 	}
 
 	.faqSub {

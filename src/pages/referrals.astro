@@ -1,0 +1,443 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/referrals/`;
+const title = 'Referral Program for Estate Agents | PropertyList';
+const description =
+	'Refer an agency to PropertyList and earn 20 credits for every approved signup - the agency you refer starts with 10. Unlimited referrals, credits never expire, spend them on any paid feature.';
+
+const REF = 'https://agents.propertylist.es/referrals';
+
+const steps = [
+	{
+		n: '1',
+		t: 'Share your link',
+		d: 'Every PropertyList account has a unique referral link. Copy it from your referrals dashboard and share it with any agency - by WhatsApp, email or social.',
+	},
+	{
+		n: '2',
+		t: 'They sign up and get approved',
+		d: 'The agency joins PropertyList through your link and is approved as a Verified Agency - free forever, like every agent on the network.',
+	},
+	{
+		n: '3',
+		t: 'You both get credits, automatically',
+		d: 'On approval, 20 credits land in your account and 10 in theirs. No forms, no chasing - every signup is tracked and paid out for you.',
+	},
+];
+
+const faqs = [
+	{
+		q: 'How do I get my referral link?',
+		a: 'Log in to PropertyList and open the referrals section of your dashboard. Your unique link is there, ready to copy and share. Everything after that - tracking signups and paying out credits - happens automatically.',
+	},
+	{
+		q: 'How many credits do I earn?',
+		a: '20 credits (worth 20 EUR) for every agency that signs up through your link and is approved, with no limit. The agency you refer also starts with 10 credits (worth 10 EUR).',
+	},
+	{
+		q: 'When are the credits added?',
+		a: 'As soon as the agency you referred is approved on PropertyList. The 20 credits go to you and 10 to them, added to each account automatically.',
+	},
+	{
+		q: 'Is there a limit on how many agencies I can refer?',
+		a: 'No. Refer 5 agencies or 50 - you earn 20 credits for every single one that is approved. Credits never expire.',
+	},
+	{
+		q: 'What can I spend referral credits on?',
+		a: 'Any paid feature. 1 credit = 1 EUR - use them for featured listings, Property Specific Market Analysis, XML export, Website Builder add-ons and more.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Pricing', item: `${origin}/pricing/` },
+		{ '@type': 'ListItem', position: 3, name: 'Referral Program', item: canonical },
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/referidos/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Referral Program</div>
+			<h1>Refer an agency. You get 20 credits, they get 10.</h1>
+			<p class="lead">
+				Every estate agent on PropertyList has a unique referral link. Share it, and for every agency that signs up and is
+				approved you earn 20 credits to spend on paid features - and the agency you referred starts with 10. Unlimited
+				referrals, and the core MLS and CRM stay free forever.
+			</p>
+			<div class="ctaRow" aria-label="Referrals">
+				<a class="btnPrimary" href={REF} target="_blank" rel="noopener">Get your referral link</a>
+				<a class="btnSecondary" href="/pricing/">See pricing</a>
+			</div>
+			<div class="note">1 credit = 1 EUR. Credits never expire.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>How it works</h2>
+			<p>Three steps, and the crediting is automatic. Share your link once and let every approved signup pay you back.</p>
+		</div>
+		<div class="grid3" aria-label="How referrals work">
+			{
+				steps.map((s) => (
+					<div class="card">
+						<div class="stepNum">{s.n}</div>
+						<h3>{s.t}</h3>
+						<p>{s.d}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>What you earn</h2>
+				<p>
+					For every agency you refer, you get 20 credits - worth 20 EUR - and they start with 10 credits, worth 10 EUR.
+					Credits are added automatically the moment the agency is approved.
+				</p>
+				<div class="pillRow">
+					<span class="pill">20 credits for you</span>
+					<span class="pill">10 credits for them</span>
+					<span class="pill">Unlimited referrals</span>
+				</div>
+			</div>
+			<div class="card">
+				<h2>No cap, no catch</h2>
+				<p>
+					There is no limit on how many agencies you can refer or how many credits you can earn, and credits never expire.
+					Spend them on any paid feature - featured listings, Property Specific Market Analysis, XML export, Website Builder
+					add-ons and more.
+				</p>
+				<p>
+					Referring peers also grows the agent-to-agent network you sell into: every agency that joins adds their listings and
+					their buyers to the shared MLS.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What your credits get you</h2>
+			<p>1 credit = 1 EUR, and credits work on any paid feature. Here is what a few referrals add up to.</p>
+		</div>
+		<div class="grid3" aria-label="What credits are worth">
+			<div class="card">
+				<div class="creditTag">20 credits</div>
+				<h3>1 referral</h3>
+				<p>Feature one of your listings for a full week - the most popular 7-day boost - or run 4 Property Specific Market Analyses.</p>
+			</div>
+			<div class="card">
+				<div class="creditTag">40 credits</div>
+				<h3>2 referrals</h3>
+				<p>Feature a listing for 15 days at the best-value rate, or give two separate listings a full week each.</p>
+			</div>
+			<div class="card accent">
+				<div class="creditTag">60 credits / month</div>
+				<h3>3 referrals a month</h3>
+				<p>
+					Enough to cover a Website Builder site (from 50 EUR/mo) with automatic SEO - your own branded agency website,
+					effectively paid for by referrals.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Frequently asked questions</h2>
+		</div>
+		<div class="grid2">
+			{
+				faqs.map((f) => (
+					<div class="card">
+						<h3>{f.q}</h3>
+						<p>{f.a}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section cta">
+		<div class="ctaInner">
+			<h2>Turn your network into credits</h2>
+			<p>
+				Grab your unique link and share it with the agencies you know. Every approved signup is 20 credits in your account -
+				and 10 in theirs.
+			</p>
+			<div class="ctaRow" aria-label="Get your referral link">
+				<a class="btnPrimary" href={REF} target="_blank" rel="noopener">Get your referral link</a>
+				<a class="btnSecondary" href="/features/">See all features</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+	}
+
+	.hero {
+		border-radius: 22px;
+		padding: 16px;
+		margin: 0 0 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background:
+			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.75);
+		max-width: 78ch;
+		line-height: 1.6;
+	}
+
+	.note {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.section {
+		margin: 0 0 14px;
+	}
+
+	.sectionHead {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 12px;
+	}
+
+	.sectionHead p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.6;
+		max-width: 88ch;
+	}
+
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.card.accent {
+		border-color: rgba(var(--pl-accent-rgb), 0.25);
+		background:
+			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
+			rgba(255, 255, 255, 0.86);
+	}
+
+	.card h2 {
+		margin: 0 0 10px;
+	}
+
+	.card h3 {
+		margin: 0 0 6px;
+		font-size: 16px;
+	}
+
+	.card p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+
+	.card p:last-child {
+		margin-bottom: 0;
+	}
+
+	.stepNum {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.14);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.3);
+		color: #075e53;
+		font-weight: 950;
+		font-size: 15px;
+		margin-bottom: 10px;
+	}
+
+	.creditTag {
+		display: inline-flex;
+		align-items: center;
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.28);
+		color: #075e53;
+		font-weight: 950;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+		margin-bottom: 10px;
+	}
+
+	.pillRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 4px;
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: rgba(var(--pl-accent-rgb), 0.1);
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.86);
+		font-size: 13px;
+	}
+
+	.cta {
+		border-radius: 22px;
+		padding: 16px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.ctaInner {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	.ctaInner p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.6;
+		max-width: 90ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 14px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 950;
+		color: rgba(16, 24, 40, 0.88);
+	}
+
+	.btnPrimary {
+		border-color: rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.14);
+	}
+
+	.btnPrimary:hover,
+	.btnSecondary:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	@media (max-width: 980px) {
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

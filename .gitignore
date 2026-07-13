@@ -30,3 +30,19 @@ playwright-report/
 
 # runtime analytics (regenerated at runtime; do not let deploys reset it)
 var/weekly-views.json
+
+# runtime state, data and backups (mutable on the server; not source)
+var/
+
+# server-home artifacts that ended up in the repo root
+.ssh/
+.config/
+.npm/
+
+# scratch builds and backup files
+dist_check/
+dist_new/
+dist_old/
+*.bak
+*.bak-*
+*.wiped-*

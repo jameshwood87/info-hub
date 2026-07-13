@@ -104,6 +104,19 @@ async function marketData() {
 
 const slugify = (s) => String(s).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').slice(0, 80);
 const noDashes = (s) => String(s || '').replace(/\s*[—–]\s*/g, ' - ').replace(/[ \t]{2,}/g, ' ');
+const decodeEntities = (s) => {
+  let out = String(s || '');
+  for (let i = 0; i < 3; i++) {
+    const prev = out;
+    out = out
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&apos;/g, "'")
+      .replace(/&#8217;|&rsquo;/g, '\u2019').replace(/&#8216;|&lsquo;/g, '\u2018')
+      .replace(/&nbsp;/g, ' ');
+    if (out === prev) break;
+  }
+  return out;
+};
 
 // ---- main ----
 const topic = process.argv.find((a, i) => i >= 2 && !a.startsWith('--')) || TOPICS[Math.floor(Math.random() * TOPICS.length)];
@@ -119,10 +132,12 @@ Requirements:
 - 1,500-2,000 words. HTML body using <h2> headings (mix questions and statements), short paragraphs, a comparison <table> where useful, and a short FAQ section (3-5 Q&As) near the end.
 - Information-first and accurate; practical for a real buyer/seller. Cite the verified figures above where relevant.
 - No invented statistics. No em-dashes or en-dashes (plain hyphens only).
+- Sources: when citing, prefer PRIMARY sources (BOE, ministries, INE, notarial bodies) and major news wires. NEVER link competitor property portals or their blogs (Idealista, Fotocasa, Kyero, ThinkSpain and similar).
 Return a JSON object with keys: title, slug, description (a 150-200 character excerpt), body (HTML string), seo_title (<=60 chars), seo_description (<=160 chars).`;
 
 const post = await aiJson([{ role: 'system', content: system }, { role: 'user', content: user }], 9000);
 for (const k of ['title', 'description', 'body', 'seo_title', 'seo_description']) post[k] = noDashes(post[k]);
+for (const k of ['title', 'description', 'seo_title', 'seo_description']) post[k] = decodeEntities(post[k]);
 const slug = slugify(post.slug || post.title);
 console.log(`Generated EN: "${post.title}" (${String(post.body).replace(/<[^>]+>/g, ' ').split(/\s+/).length} words, slug=${slug})`);
 
@@ -138,10 +153,82 @@ console.log(`EN draft created: id=${en.data?.id} path=/blog/${slug}`);
 // translate to ES
 const tr = await aiJson([{ role: 'user', content: `Translate this property blog content from English to Spanish. Keep ALL HTML tags, attributes and URLs exactly. Translate only visible text. Use plain hyphens, no em-dashes. Return JSON with keys: title, description, body, seo_title, seo_description.\n\nTITLE:\n${post.title}\n\nDESCRIPTION:\n${post.description}\n\nBODY:\n${post.body}\n\nSEO_TITLE:\n${post.seo_title}\n\nSEO_DESCRIPTION:\n${post.seo_description}` }], 14000, 0.2);
 for (const k of ['title', 'description', 'body', 'seo_title', 'seo_description']) tr[k] = noDashes(tr[k]);
+for (const k of ['title', 'description', 'seo_title', 'seo_description']) tr[k] = decodeEntities(tr[k]);
 const es = await directus('/items/kb_pages', { method: 'POST', body: {
   status: PUBLISH ? 'published' : 'draft', language: 'es', path: `/es/blog/${slug}`,
   title: tr.title, description: tr.description, body: tr.body,
   seo_title: tr.seo_title, seo_description: tr.seo_description,
 } });
 console.log(`ES draft created: id=${es.data?.id} path=/es/blog/${slug}`);
+
+// ---- auto-assign a featured image (deduped against recent posts) ----
+// Each rule offers MULTIPLE candidates so consecutive posts in the same
+// theme don't collapse onto one image. Selection skips any image used in
+// the last N posts (tracked in blog-image-state.json).
+const IMAGE_RULES = [
+  [/itp|\btax|impuesto|plusvalia|notary|valuation|per m2|market report/i, [
+    ['/blog-img/itp-tax-euros.jpg', 'Taxes and paperwork for Spanish property buyers'],
+    ['/blog-img/eu-regulation-flags.jpg', 'EU and Spanish regulation affecting property buyers'],
+    ['/blog-img/law-scales-decision.jpg', 'Legal scales representing Spanish property tax rules'],
+  ]],
+  [/rent-cap|landlord|tenant|renting|rental|\brent\b|alquiler|housing law|ley de vivienda/i, [
+    ['/blog-img/rent-law-signing.jpg', 'Signing a Spanish rental agreement'],
+    ['/blog-img/rental-contract.jpg', 'A Spanish rental contract'],
+    ['/blog-img/rental-keys-handover.jpg', 'Handing over the keys to a Spanish rental'],
+    ['/blog-img/holiday-rental-apartments.jpg', 'Holiday rental apartments on the Costa del Sol'],
+    ['/blog-img/law-scales-decision.jpg', 'Legal scales representing Spanish housing law'],
+  ]],
+  [/invest/i, [
+    ['/blog-img/property-investment.jpg', 'Property investment in Spain'],
+    ['/blog-img/luxury-villa-pool.jpg', 'A luxury villa with a pool on the Costa del Sol'],
+    ['/blog-img/sustainable-home-solar.jpg', 'A sustainable Spanish home with solar panels'],
+  ]],
+  [/nie|bank|non-resident|buying|purchase|process|mortgage/i, [
+    ['/blog-img/nie-application-form.jpg', 'A Spanish NIE application form'],
+    ['/blog-img/passports-residency.jpg', 'Passports and Spanish residency paperwork'],
+    ['/blog-img/rental-contract.jpg', 'Property paperwork in Spain'],
+  ]],
+  [/marbella/i, [['/area-images/marbella.jpg', 'Marbella, Costa del Sol']]],
+  [/estepona/i, [['/area-images/estepona.jpg', 'Estepona, Costa del Sol']]],
+  [/fuengirola/i, [['/area-images/fuengirola.jpg', 'Fuengirola, Costa del Sol']]],
+  [/malaga/i, [['/area-images/malaga-centre.jpg', 'Malaga city centre']]],
+];
+const FALLBACK_IMAGES = [
+  ['/blog-img/luxury-villa-pool.jpg', 'A luxury villa with a pool on the Costa del Sol'],
+  ['/area-images/puerto-banus.jpg', 'Puerto Banus marina, Costa del Sol'],
+  ['/area-images/nerja.jpg', 'Nerja, Costa del Sol'],
+  ['/blog-img/sustainable-home-solar.jpg', 'A sustainable Spanish home with solar panels'],
+  ['/blog-img/andalucia-white-village.jpg', 'A white village in Andalucia'],
+];
+const IMG_STATE_PATH = '/opt/info-hub/var/admin/blog-image-state.json';
+const recentImages = () => { try { return JSON.parse(fs.readFileSync(IMG_STATE_PATH, 'utf8')).recent || []; } catch { return []; } };
+const pushRecent = (url) => {
+  const recent = [url, ...recentImages().filter((u) => u !== url)].slice(0, 10);
+  try { fs.writeFileSync(IMG_STATE_PATH, JSON.stringify({ recent }, null, 2)); } catch {}
+};
+async function setFeaturedImage(id, url, alt) {
+  const token = (process.env.INTERNAL_META_TOKEN || '').trim();
+  if (!token || !id) { console.log('featured image: skipped (no token or id)'); return; }
+  try {
+    const res = await fetch('http://127.0.0.1:3000/api/internal/set-meta', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-internal-token': token },
+      body: JSON.stringify({ id: String(id), featuredImageUrl: url, featuredImageAlt: alt }),
+    });
+    console.log(`featured image ${id} -> ${url} (${res.status})`);
+  } catch (e) { console.log('featured image failed:', e.message); }
+}
+const hayImg = `${slug} ${post.title}`.toLowerCase();
+let candidates = null;
+for (const [re, arr] of IMAGE_RULES) { if (re.test(hayImg)) { candidates = arr; break; } }
+if (!candidates) candidates = FALLBACK_IMAGES;
+const recent = recentImages();
+const chosenImg =
+  candidates.find((c) => !recent.includes(c[0])) ||
+  FALLBACK_IMAGES.find((c) => !recent.includes(c[0])) ||
+  candidates[0];
+pushRecent(chosenImg[0]);
+await setFeaturedImage(en.data?.id, chosenImg[0], chosenImg[1]);
+await setFeaturedImage(es.data?.id, chosenImg[0], chosenImg[1]);
+
 console.log(PUBLISH ? '\nDONE - both pages PUBLISHED.' : '\nDONE - both drafts are status=draft; review and publish in the admin.');

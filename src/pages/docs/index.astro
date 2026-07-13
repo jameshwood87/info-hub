@@ -10,11 +10,6 @@ const role =
 const stripSuffix = (s: string) => s.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
 const cleanDesc = (s: string) => String(s || '').replace(/^\s*\d+\s+/, '').trim();
 
-const areaGuidesTop = [
-	{ title: 'Area Guides (English)', href: '/neighbourhood/' },
-	{ title: 'Search Area Guides', href: '/search?q=Area%20Guides' },
-];
-
 type DocCategory = 'estate-agent' | 'developer' | 'property-service' | 'public';
 const fetchedMainDocsBase = await listKbMainDocs({ lang: 'en', limit: 200 }).catch(() => []);
 const fallbackMainDocs: KbPageListItem[] = [
@@ -334,23 +329,12 @@ const landingCards = (() => {
 			</details>
 		) : null}
 
-		<details class="drop">
-			<summary class="dropSummary">
-				<div class="dropSummaryText">
-					<div class="dropTitle">Area Guides</div>
-					<div class="dropSub">Neighbourhood guides and local area information.</div>
-				</div>
-			</summary>
-			<div class="dropBody">
-				<div class="rows">
-					{areaGuidesTop.map((it) => (
-						<a class="row" href={it.href}>
-							<div class="rowTitle">{it.title}</div>
-						</a>
-					))}
-				</div>
+		<a class="drop dropLink" href="/neighbourhood/">
+			<div class="dropSummaryText">
+				<div class="dropTitle">Area Guides</div>
+				<div class="dropSub">Neighbourhood guides and local area information.</div>
 			</div>
-		</details>
+		</a>
 	</div>
 	)}
 </Layout>
@@ -427,6 +411,32 @@ const landingCards = (() => {
 
 	.dropSummary::-webkit-details-marker {
 		display: none;
+	}
+
+	.dropLink {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 14px;
+		padding: 14px;
+		text-decoration: none;
+	}
+
+	.dropLink::after {
+		content: '›';
+		flex: none;
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.55);
+		margin-top: 2px;
+	}
+
+	.dropLink:hover {
+		text-decoration: none;
+		border-color: rgba(0, 174, 154, 0.35);
+	}
+
+	.dropLink:hover::after {
+		color: var(--accent);
 	}
 
 	.dropTitle {
