@@ -12,7 +12,7 @@ const description =
 	'Vídeos de propiedades con tu marca en minutos, creados desde tus propios anuncios: fotos reales animadas, tu logo y contacto, todos los tamaños sociales - con un avatar IA tuyo como presentador opcional.';
 
 const steps = [
-	{ n: 1, t: 'Elige un anuncio', d: 'Cualquiera de tus anuncios directos - el vídeo se crea con sus fotos y datos reales.' },
+	{ n: 1, t: 'Elige un anuncio', d: 'Cualquiera de tus anuncios directos - o simplemente pulsa "Crear vídeo" en el propio anuncio. El vídeo se crea con sus fotos y datos reales.' },
 	{ n: 2, t: 'Elige estilo y tamaños', d: 'Promo, Nuevo anuncio, Precio rebajado, Open House y más. Un tamaño o los tres - y añade tu avatar como presentador.' },
 	{ n: 3, t: 'Descarga y publica', d: 'Un vídeo terminado y con tu marca por tamaño, con subtítulos y cierre con tu contacto. Publícalo en Facebook, Instagram, YouTube o WhatsApp.' },
 ];
@@ -27,7 +27,7 @@ const makers = [
 const gets = [
 	{ name: 'Hecho con tus fotos reales', desc: 'Las fotos reales de tu anuncio, animadas - nunca una casa o habitación inventada por IA.' },
 	{ name: 'Datos de tu anuncio', desc: 'Precio, dormitorios, superficie y zona salen del anuncio y de datos de mercado verificados - nunca cifras inventadas.' },
-	{ name: 'Tu marca en cada fotograma', desc: 'Tu logo, tus colores y un cierre con tu contacto y un código QR al anuncio.' },
+	{ name: 'Con marca - o sin marca', desc: 'Tu logo, tus colores y un cierre con tu contacto y un código QR al anuncio. O genera una versión sin marca para que tus colaboradores del MLS la compartan con sus compradores.' },
 	{ name: 'Todos los tamaños que importan', desc: 'Vertical para Reels, Stories, TikTok y Estados de WhatsApp. Cuadrado para el feed. Panorámico para YouTube y tu web.' },
 	{ name: 'Tú como presentador', desc: 'Sube tu imagen una vez y tu avatar IA puede presentar cualquier vídeo - sobre todo guías de zona y presentaciones.' },
 	{ name: 'Subtítulos incluidos', desc: 'La mayoría del vídeo social se ve sin sonido - cada vídeo lleva subtítulos limpios integrados.' },
@@ -47,6 +47,7 @@ const faqs = [
 	{ q: '¿Qué plataformas cubren los tamaños?', a: 'Tres formatos lo cubren todo: vertical (9:16) para Reels y Stories de Instagram, TikTok, YouTube Shorts, Stories de Facebook y Estados de WhatsApp; cuadrado (1:1) para los feeds de Facebook e Instagram; panorámico (16:9) para YouTube, tu web y el email. Todo se genera en Full HD (1080p).' },
 	{ q: '¿Los datos serán correctos?', a: 'Sí - esa es la gracia. Cada precio, número de dormitorios y cifra de mercado viene de tu anuncio real o de los datos de mercado de PropertyList verificados ante notario. Nada se escribe a mano y nada se inventa.' },
 	{ q: '¿Cómo funciona el avatar?', a: 'Subes un breve vídeo tuyo una sola vez, con tu consentimiento, y es solo tuyo - nadie más puede usarlo. Tu avatar IA puede entonces presentar guías de zona, presentaciones de agencia o el vídeo que quieras. Los vídeos con avatar llevan una pequeña nota de presentador IA, que los compradores respetan mucho más de lo que les molesta.' },
+	{ q: '¿Puedo hacer una versión sin marca?', a: 'Sí. Cada vídeo puede generarse con o sin marca, sin coste extra. La versión con marca es para tus propios canales; la versión sin marca está pensada para compartir por el MLS, para que los agentes colaboradores presenten tu propiedad a sus compradores sin tus datos de contacto.' },
 	{ q: '¿Cuánto cuesta?', a: LIVE
 		? 'Los vídeos son de pago por uso con tus créditos de PropertyList: 10 créditos un tamaño, 20 créditos los tres tamaños del mismo vídeo. El avatar presentador son +10 créditos y cada idioma extra +5 créditos. 1 crédito = 1 euro, sin suscripción.'
 		: 'El precio previsto es de pago por uso con tus créditos de PropertyList: 10 créditos un tamaño, 20 créditos los tres tamaños del mismo vídeo, +10 créditos el avatar presentador y +5 créditos por idioma extra. 1 crédito = 1 euro, sin suscripción. El precio final se confirma en el lanzamiento.' },
@@ -171,7 +172,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 	<section class="section">
 		<div class="sectionHead">
 			<h2>Cuatro creadores de vídeo, una sección de Marketing</h2>
-			<p>Todo se genera desde tus propios anuncios, tus zonas y datos de mercado verificados - cada vídeo es preciso, lleva tu marca y es inconfundiblemente tuyo.</p>
+			<p>Todo se genera desde tus propios anuncios, tus zonas y datos de mercado verificados - cada vídeo es preciso, lleva tu marca y es inconfundiblemente tuyo. Créalos desde la sección Marketing o simplemente pulsando "Crear vídeo" en cualquiera de tus anuncios.</p>
 		</div>
 		<div class="grid2">
 			{makers.map((m) => (
