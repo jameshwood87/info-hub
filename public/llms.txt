@@ -1,8 +1,8 @@
 # PropertyList Info Hub - AI Crawling Guide
 
 Source: https://info.propertylist.es/
-Last Updated: 2026-07-12
-Version: 1.7
+Last Updated: 2026-07-13
+Version: 1.8
 
 ### About This Site
 PropertyList is Spain's free Smart MLS, CRM, and public property portal - the only platform combining agent-to-agent collaboration with direct buyer search, AI tools, and a live MCP server for AI-native property queries. This Info Hub (info.propertylist.es) is the documentation, marketing, and market intelligence site supporting the main PropertyList property portal at https://propertylist.es (live since February 2026; 6,000+ active listings, 1,200+ agents, 900+ agencies - live counters on the homepage).
@@ -29,6 +29,9 @@ AI-written blog posts and area guides for agency websites, grounded in the agenc
 
 #### /instant-renovation/ - Instant Renovation (coming soon)
 AI before-and-after renovation visuals for any resale listing, with an area-specific cost breakdown (materials and labour) and PDF export. Will run on pay-as-you-go credits. Spanish version: /es/renovacion-instantanea/
+
+#### /instant-video/ - Instant Video (AI property videos, coming soon)
+AI-generated branded videos for estate agencies: listing videos (styles like New Listing, Just Reduced, Open House), area guide videos, agency introduction videos and monthly market-update videos with notary-verified figures. Built from the agency's own listing photos and data - no invented figures, no AI-generated houses. Renders vertical (Reels/Stories/TikTok/WhatsApp Status), square (feeds) and wide (YouTube) in full HD, with subtitles and an optional AI avatar of the agent as presenter. Pay-as-you-go credits (planned: 10 credits one size, 20 credits all three). Spanish version: /es/video-instantaneo/
 
 #### /mobile-app/ - PropertyList Mobile App
 The MLS + CRM app: on-site listing capture, voice-to-lead quick contact, sign-photo seller leads. Android available on Google Play; iOS in final review. Spanish version: /es/app-movil/

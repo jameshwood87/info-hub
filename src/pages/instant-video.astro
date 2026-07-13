@@ -1,0 +1,377 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// LAUNCH-DAY FLIP: set LIVE = true when Video Studio ships (kicker, notes,
+// CTA bands and FAQ answers all follow this flag). Then redeploy.
+const LIVE = false;
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/instant-video/`;
+const title = 'Instant Video - AI property videos for your agency | PropertyList';
+const description =
+	'Branded property videos in minutes, made from your own listings: real photos animated, your logo and contact, every social size - with an optional AI avatar of you as the presenter.';
+
+const steps = [
+	{ n: 1, t: 'Pick a listing', d: 'Choose any of your direct listings - the video is built from its real photos and details.' },
+	{ n: 2, t: 'Choose style and sizes', d: 'New Listing, Just Reduced, Open House and more. Pick one size or all three - and add your avatar as the presenter.' },
+	{ n: 3, t: 'Download and post', d: 'A finished, branded video per size with subtitles and your contact end-card. Post it to Facebook, Instagram, YouTube or WhatsApp.' },
+];
+
+const makers = [
+	{ name: 'Listing videos', desc: 'Your listing photos brought to life, with price, beds and area pulled straight from the listing - never typed, never wrong. Styles for every moment: New Listing, Just Reduced, Open House, Just Sold, Exclusive.' },
+	{ name: 'Area guide videos', desc: 'A 30-60 second tour of an area you work - lifestyle, real market figures, and your branding. Add your avatar and you are the local expert presenting it.' },
+	{ name: 'Agency introduction video', desc: 'Your "meet the agency" video: who you are, the areas you cover, how to reach you. The evergreen asset for your website, social bios and WhatsApp.' },
+	{ name: 'Market update videos', desc: 'A monthly "your area right now" video with real median prices and notary-verified figures - market data no generic AI tool can produce honestly.' },
+];
+
+const gets = [
+	{ name: 'Made from your real photos', desc: 'Your actual listing photos, animated - never an AI-invented house or room.' },
+	{ name: 'Facts from your listing', desc: 'Price, beds, size and area come from the listing record and verified market data - no invented figures, ever.' },
+	{ name: 'Your brand on every frame', desc: 'Your logo, colours and a contact end-card with a QR code to the listing.' },
+	{ name: 'Every size that matters', desc: 'Vertical for Reels, Stories, TikTok and WhatsApp Status. Square for feeds. Wide for YouTube and your website.' },
+	{ name: 'You as the presenter', desc: 'Upload your likeness once and your AI avatar can present any video - area guides and agency intros especially.' },
+	{ name: 'Subtitles built in', desc: 'Most social video is watched on mute - every video ships with clean burned-in captions.' },
+];
+
+const styles = ['New Listing', 'Just Reduced', 'Open House', 'Just Sold', 'Back on Market', 'Exclusive', 'Luxury'];
+
+const prices = [
+	{ name: 'One size', price: '10 credits', desc: 'One video in the aspect ratio you choose, full HD.' },
+	{ name: 'All 3 sizes', price: '20 credits', desc: 'The same video rendered vertical, square and wide - every platform covered.', tag: 'Best value' },
+	{ name: 'Avatar presenter', price: '+10 credits', desc: 'Your AI avatar presents the video. Upload your likeness once, reuse it on every video.' },
+	{ name: 'Extra language', price: '+5 credits', desc: 'The same video re-voiced and re-subtitled in another language. English and Spanish first.' },
+];
+
+const faqs = [
+	{ q: 'Do I need to film anything?', a: 'No. Listing videos are built from the photos already on your listing. The only optional filming is your avatar: record one short selfie video once, and your AI presenter can appear in any video after that.' },
+	{ q: 'Which platforms do the sizes cover?', a: 'Three aspect ratios cover everything: vertical (9:16) for Instagram Reels and Stories, TikTok, YouTube Shorts, Facebook Stories and WhatsApp Status; square (1:1) for Facebook and Instagram feeds; wide (16:9) for YouTube, your website and email. Everything renders in full HD (1080p).' },
+	{ q: 'Will the details be accurate?', a: 'Yes - that is the whole point. Every price, bedroom count and market figure comes from your live listing record or PropertyList’s notary-verified market data. Nothing is typed in by hand and nothing is invented.' },
+	{ q: 'How does the avatar work?', a: 'You upload a short video of yourself once, with your consent, and it stays yours alone - no one else can use it. Your AI avatar can then present area guides, agency intros or any video you like. Avatar videos carry a small AI-presenter note, which buyers respect far more than they mind.' },
+	{ q: 'What does it cost?', a: LIVE
+		? 'Videos are pay-as-you-go with your PropertyList credits: 10 credits for one size, 20 credits for all three sizes of the same video. The avatar presenter is +10 credits and extra languages +5 credits each. 1 credit = 1 euro, no subscription needed.'
+		: 'Planned pricing is pay-as-you-go with your PropertyList credits: 10 credits for one size, 20 credits for all three sizes of the same video, +10 credits for the avatar presenter and +5 credits per extra language. 1 credit = 1 euro, no subscription. Final pricing is confirmed at launch.' },
+	{ q: 'When can I use it?', a: LIVE
+		? 'It is live now - open the Marketing section in your PropertyList account and create your first video. New agencies get started free at propertylist.es.'
+		: 'Very soon. Instant Video is in final development. Join the waitlist below and we will send one email the day it goes live - and if you are not on PropertyList yet, your free account takes minutes to set up, so you are ready on day one.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 3, name: 'Instant Video', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Instant Video',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
+	description: 'AI-generated branded property videos for estate agencies: listing videos, area guides, agency intros and market updates, built from the agency’s own listings and verified market data.',
+	offers: { '@type': 'Offer', price: '10', priceCurrency: 'EUR' },
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/video-instantaneo/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">{LIVE ? 'Instant Video - Live now' : 'Instant Video - Coming soon'}</div>
+				<h1>A video for every listing. No videographer.</h1>
+				<p class="lead">
+					PropertyList turns any of your listings into a branded, social-ready video in minutes - your real photos animated,
+					the facts pulled from the listing, your logo and contact on every frame. Add your AI avatar as the presenter, and
+					get every size Facebook, Instagram, YouTube and WhatsApp need.
+				</p>
+				<div class="ctaRow">
+					{LIVE
+						? <a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your first video</a>
+						: <a class="btnPrimary" href="#waitlist">Join the waitlist</a>}
+					<a class="btnSecondary" href="#how">See how it works</a>
+				</div>
+				<div class="note">
+					{LIVE
+						? 'Live now in the Marketing section of your PropertyList account. Pay as you go with credits - no subscription.'
+						: 'Launching very soon in your PropertyList account. Pay as you go with credits - no subscription.'}
+				</div>
+			</div>
+
+			<div class="preview" aria-hidden="true">
+				<div class="pvBar"><span class="pvDot"></span><span class="pvDot"></span><span class="pvDot"></span><span class="pvUrl">Video Studio &rsaquo; New Listing</span></div>
+				<div class="pvBody">
+					<div class="pvPlayer">
+						<div class="pvPlay">&#9654;</div>
+						<span class="pvStyle">NEW LISTING</span>
+						<div class="pvOverlay">
+							<b>&euro;1,950,000</b>
+							<span>3-bed villa &middot; Nueva Andaluc&iacute;a</span>
+						</div>
+						<div class="pvAvatar"><span class="pvAvDot"></span> Presented by your avatar</div>
+					</div>
+					<div class="pvChips">
+						<span class="pvChip">Reels &middot; 9:16</span>
+						<span class="pvChip">Feed &middot; 1:1</span>
+						<span class="pvChip">YouTube &middot; 16:9</span>
+					</div>
+					<div class="pvFoot">Full HD &middot; subtitles included &middot; your logo + contact end-card</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Video gets the reach. Almost no agency makes them.</h2>
+			<p>Listings with video earn far more attention on every platform - but a videographer costs hundreds per property, editing takes hours you do not have, and generic AI tools do not know your listings. So the reach goes unclaimed.</p>
+		</div>
+		<div class="grid3">
+			<div class="card"><h3>Videographers are expensive</h3><p>Hundreds of euros per listing means video is saved for a lucky few properties.</p></div>
+			<div class="card"><h3>Editing eats your week</h3><p>Cutting clips, adding captions and resizing for each platform is a job in itself.</p></div>
+			<div class="card"><h3>Generic AI does not know your stock</h3><p>Template tools invent details and use fake footage. Your listings deserve their real photos and real prices.</p></div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>From listing to finished video in three steps</h2>
+			<p>No filming, no editing, no uploads. It is your listing data and your photos - the video is already half made.</p>
+		</div>
+		<div class="grid3 steps">
+			{steps.map((s) => (
+				<div class="card step"><div class="stepNum">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p></div>
+			))}
+		</div>
+		<div class="styleStrip">
+			<span class="styleLabel">Styles:</span>
+			{styles.map((s) => <span class="styleChip">{s}</span>)}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Four video makers, one Marketing section</h2>
+			<p>Everything is generated from your own listings, your areas and verified market data - so every video is accurate, branded and unmistakably yours.</p>
+		</div>
+		<div class="grid2">
+			{makers.map((m) => (
+				<div class="card accent"><h2>{m.name}</h2><p>{m.desc}</p></div>
+			))}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What every video includes</h2>
+		</div>
+		<div class="grid3">
+			{gets.map((g) => (
+				<div class="card"><h3>{g.name}</h3><p>{g.desc}</p></div>
+			))}
+		</div>
+	</section>
+
+	<section class="section" id="pricing">
+		<div class="sectionHead">
+			<h2>Simple pay-as-you-go pricing</h2>
+			<p>Full HD always - no quality tiers, no subscription. 1 credit = 1 euro, from the same credit balance your agency already uses.{LIVE ? '' : ' Planned pricing, confirmed at launch.'}</p>
+		</div>
+		<div class="grid4">
+			{prices.map((p) => (
+				<div class={p.tag ? 'card priceCard best' : 'card priceCard'}>
+					{p.tag && <span class="bestTag">{p.tag}</span>}
+					<h3>{p.name}</h3>
+					<div class="priceBig">{p.price}</div>
+					<p>{p.desc}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	{LIVE ? (
+		<section class="cta" id="waitlist">
+			<div class="ctaInner">
+				<h2>Live now in your Marketing section.</h2>
+				<p>Open PropertyList, go to Marketing, and turn a listing into a video before your coffee cools. Not on PropertyList yet? The MLS and CRM are free forever.</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Get started free</a>
+					<a class="btnSecondary" href="/features/">See everything included</a>
+				</div>
+			</div>
+		</section>
+	) : (
+		<section class="cta waitlistBand" id="waitlist">
+			<div class="ctaInner">
+				<h2>Launching very soon. Be first in line.</h2>
+				<p>Leave your email and we will send one message the day Instant Video goes live - nothing else. And if you are not on PropertyList yet, set up your free account now so you are ready on day one.</p>
+				<form class="waitlistForm" data-source="instant-video">
+					<input type="email" name="email" required placeholder="you@agency.com" aria-label="Your email address" autocomplete="email" />
+					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					<button type="submit">Notify me at launch</button>
+					<p class="wlStatus" role="status" aria-live="polite"></p>
+				</form>
+				<div class="ctaRow" style="margin-top: 12px;">
+					<a class="btnSecondary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+				</div>
+			</div>
+		</section>
+	)}
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{faqs.map((f) => (
+				<details>
+					<summary>{f.q}</summary>
+					<p>{f.a}</p>
+				</details>
+			))}
+		</div>
+	</section>
+
+	<script is:inline>
+		document.querySelectorAll('.waitlistForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.wlStatus');
+				const emailEl = form.querySelector('input[name="email"]');
+				const hpEl = form.querySelector('input[name="website"]');
+				const email = emailEl ? emailEl.value : '';
+				const website = hpEl ? hpEl.value : '';
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'wlStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/app-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ email: email, website: website, lang: es ? 'es' : 'en', source: form.getAttribute('data-source') || 'instant-video' }),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'wlStatus ok';
+						status.textContent = es ? 'Estas en la lista. Te avisaremos el dia del lanzamiento.' : "You're on the list. We'll email you the day it launches.";
+					} else {
+						status.className = 'wlStatus err';
+						status.textContent = es ? 'Revisa tu correo e intentalo de nuevo.' : 'Please check your email and try again.';
+					}
+				} catch (err) {
+					status.className = 'wlStatus err';
+					status.textContent = es ? 'Algo salio mal. Intentalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; cursor: pointer; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.preview { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
+		.pvBar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: rgba(16, 24, 40, 0.03); border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
+		.pvDot { width: 9px; height: 9px; border-radius: 50%; background: rgba(16, 24, 40, 0.16); }
+		.pvUrl { flex: 1; margin-left: 6px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 5px 12px; font-size: 12px; color: rgba(16, 24, 40, 0.55); }
+		.pvBody { padding: 16px 18px; }
+		.pvPlayer { position: relative; border-radius: 12px; overflow: hidden; height: 210px; background: linear-gradient(160deg, #0e2f2a 0%, #114b42 45%, rgba(var(--pl-accent-rgb), 0.65) 130%); display: flex; align-items: center; justify-content: center; }
+		.pvPlay { width: 54px; height: 54px; border-radius: 50%; background: rgba(255, 255, 255, 0.92); color: #0a6d61; display: flex; align-items: center; justify-content: center; font-size: 20px; padding-left: 4px; box-shadow: 0 8px 22px rgba(16, 24, 40, 0.3); }
+		.pvStyle { position: absolute; top: 12px; left: 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.08em; color: #fff; background: rgba(10, 109, 97, 0.9); padding: 5px 10px; border-radius: 999px; }
+		.pvOverlay { position: absolute; left: 12px; bottom: 12px; background: rgba(255, 255, 255, 0.94); border-radius: 10px; padding: 8px 12px; }
+		.pvOverlay b { display: block; font-size: 16px; font-weight: 900; color: #101828; letter-spacing: -0.02em; }
+		.pvOverlay span { font-size: 12px; color: rgba(16, 24, 40, 0.65); }
+		.pvAvatar { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; color: #fff; background: rgba(16, 24, 40, 0.55); padding: 5px 10px; border-radius: 999px; }
+		.pvAvDot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+		.pvChips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; }
+		.pvChip { font-size: 12px; font-weight: 800; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); padding: 5px 10px; border-radius: 8px; }
+		.pvFoot { font-size: 12px; color: rgba(16, 24, 40, 0.5); margin-top: 12px; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.styleStrip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; }
+		.styleLabel { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(16, 24, 40, 0.5); }
+		.styleChip { font-size: 13px; font-weight: 800; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.1); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); padding: 6px 12px; border-radius: 999px; }
+		.priceCard { position: relative; text-align: left; }
+		.priceCard.best { border-color: rgba(var(--pl-accent-rgb), 0.45); box-shadow: 0 8px 22px rgba(var(--pl-accent-rgb), 0.12); }
+		.bestTag { position: absolute; top: -10px; right: 14px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: var(--pl-ink); padding: 4px 10px; border-radius: 999px; }
+		.priceBig { font-size: 26px; font-weight: 900; letter-spacing: -0.02em; color: var(--pl-ink); margin: 4px 0 8px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.waitlistForm { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 4px; max-width: 520px; }
+		.waitlistForm input[type='email'] { flex: 1; min-width: 220px; padding: 13px 14px; border-radius: 14px; border: 1px solid rgba(16, 24, 40, 0.2); font-size: 15px; background: #fff; }
+		.waitlistForm input[type='email']:focus { outline: none; border-color: var(--pl-accent); box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.18); }
+		.waitlistForm .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		.waitlistForm button { padding: 13px 20px; border-radius: 14px; border: 1px solid #0a6d61; background: #0a6d61; color: #fff; font-weight: 950; font-size: 15px; cursor: pointer; }
+		.waitlistForm button:hover { background: #086055; }
+		.wlStatus { flex-basis: 100%; margin: 4px 0 0; font-size: 13px; font-weight: 700; color: rgba(16, 24, 40, 0.6); }
+		.wlStatus.ok { color: #0a6d61; }
+		.wlStatus.err { color: #b42318; }
+		.waitlistForm.done input, .waitlistForm.done button { display: none; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.grid3 { grid-template-columns: repeat(2, 1fr); }
+			.grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (max-width: 560px) {
+			.grid4 { grid-template-columns: 1fr; }
+		}
+	</style>
+</Layout>
