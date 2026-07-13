@@ -26,7 +26,7 @@ const makers = [
 
 const gets = [
 	{ name: 'Made from your real photos', desc: 'Your actual listing photos, animated - never an AI-invented house or room.' },
-	{ name: 'Facts from your listing', desc: 'Price, beds, size and area come from the listing record and verified market data - no invented figures, ever.' },
+	{ name: 'Facts from your listing', desc: 'Price, beds, size and area come from the listing record and verified market data - no invented figures, ever. Sales show the sale price, rentals show per month or per week.' },
 	{ name: 'Branded - or unbranded', desc: 'Your logo, colours and a contact end-card with a QR code to the listing. Or render an unbranded version for MLS partners to share with their clients.' },
 	{ name: 'Every size that matters', desc: 'Vertical for Reels, Stories, TikTok and WhatsApp Status. Square for feeds. Wide for YouTube and your website.' },
 	{ name: 'You as the presenter', desc: 'Upload your likeness once and your AI avatar can present any video - area guides and agency intros especially.' },
@@ -166,6 +166,12 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 		<div class="styleStrip">
 			<span class="styleLabel">Styles:</span>
 			{styles.map((s) => <span class="styleChip">{s}</span>)}
+		</div>
+		<div class="styleStrip">
+			<span class="styleLabel">Works for:</span>
+			<span class="styleChip">For Sale</span>
+			<span class="styleChip">Long-term rental</span>
+			<span class="styleChip">Holiday rental</span>
 		</div>
 	</section>
 
