@@ -48,6 +48,7 @@ const nfmt = (n: number | null | undefined) => {
 };
 
 const t = (en: string, esT: string) => (es ? esT : en);
+const unitLab = (d: AreaMarketSummary | null) => (d?.priceUnit === 'per_month' ? t('/mo', '/mes') : d?.priceUnit === 'per_week' ? t('/wk', '/sem') : '');
 const oracleSqm = sale?.oracle?.verified ? sale.oracle.verifiedPricePerSqm : null;
 const listSqm = sale?.medianPricePerSqm || null;
 
@@ -75,7 +76,7 @@ const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 const areaImage = areaImagePath(areaSlug);
 const heroImage = areaImage || heroPhoto;
 const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') => `${portalBase}/${ty}/${encodeURIComponent(areaSlug || areaName.toLowerCase())}`;
-const signupHref = `https://agents.propertylist.es/new-agent-signup/new?area=${encodeURIComponent(areaName)}${
+const signupHref = `https://agents.propertylist.es/new_agency/new?locale=${es ? 'es' : 'en'}&area=${encodeURIComponent(areaName)}${
 	region ? `&region=${encodeURIComponent(region.key)}` : ''
 }${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area`;
 
@@ -109,11 +110,11 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 					{m.data && m.data.totalListings ? (
 						<>
 							<div class="agMBig">{nfmt(m.data.totalListings)}<span> {t('listings', 'anuncios')}</span></div>
-							{m.type === 'for-sale' ? (
+							{m.data.medianPrice ? (
 								<dl class="agMStats">
-									{m.data.medianPrice ? <div><dt>{t('Median price', 'Precio mediano')}</dt><dd>{eurFull(m.data.medianPrice)}</dd></div> : null}
+									{m.data.medianPrice ? <div><dt>{t('Median price', 'Precio mediano')}</dt><dd>{eurFull(m.data.medianPrice)}{unitLab(m.data)}</dd></div> : null}
 									{m.data.medianPricePerSqm ? <div><dt>{t('Per m²', 'Por m²')}</dt><dd>€{nfmt(m.data.medianPricePerSqm)}</dd></div> : null}
-									{m.data.minPrice && m.data.maxPrice ? <div><dt>{t('Range', 'Rango')}</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}</dd></div> : null}
+									{m.data.minPrice && m.data.maxPrice ? <div><dt>{t('Range', 'Rango')}</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}{unitLab(m.data)}</dd></div> : null}
 								</dl>
 							) : (
 								<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${areaName} right now.`, `Disponibilidad en directo en ${areaName}.`)}</div>
@@ -192,7 +193,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 		<div class="agFoundingInline">
 			<div>
 				<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
-				<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits on signup.`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis al registrarse.`)}</div>
+				<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits (verification is free, any time).`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).`)}</div>
 			</div>
 			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
 		</div>
@@ -209,7 +210,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 				<li>{t(`Founding-member status for ${areaName} as we grow the area.`, `Estatus de miembro fundador de ${areaName} a medida que crece la zona.`)}</li>
 			</ul>
 			<a class="agFBtn" href={signupHref} target="_blank" rel="noopener">{t(`Become the founding agent for ${areaName} →`, `Conviértete en el agente fundador de ${areaName} →`)}</a>
-			<p class="agFFine">{t('Free MLS + CRM forever. Verified agencies also receive 20 free credits on signup.', 'MLS + CRM gratis para siempre. Las agencias verificadas reciben 20 créditos gratis al registrarse.')}</p>
+			<p class="agFFine">{t('Free MLS + CRM forever. Verified agencies also get 20 free credits (verify any time, free).', 'MLS + CRM gratis para siempre. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).')}</p>
 		</div>
 	</section>
 )}

@@ -4,6 +4,7 @@
 // notary-verified prices, and real listing cards). Graceful null/[] on any failure.
 
 const MCP_URL = 'https://mcp.propertylist.es/mcp';
+const MCP_KEY = (process.env.PROPERTYLIST_MCP_KEY || '').trim(); // server-side only
 const PORTAL_ORIGIN = 'https://www.propertylist.es';
 
 export type SearchType = 'for-sale' | 'for-rent' | 'holiday-rentals';
@@ -27,6 +28,11 @@ export type AreaMarketSummary = {
 	minPrice: number | null;
 	maxPrice: number | null;
 	medianPricePerSqm: number | null;
+	priceUnit: 'total' | 'per_month' | 'per_week' | null;
+	priceBasis: string | null;
+	matchExact: boolean;
+	matchedLocation: string | null;
+	note: string | null;
 	byBedroomBand: Record<string, number>;
 	oracle: OracleInfo;
 };
@@ -45,6 +51,10 @@ export type MarketListing = {
 	suburb: string | null;
 	city: string | null;
 	province: string | null;
+	provinceCode: string | null;
+	municipality: string | null;
+	municipalityCode: string | null;
+	pricePeriod: string | null;
 	lat: number | null;
 	lon: number | null;
 	excerpt: string | null;
@@ -72,7 +82,7 @@ const callMcp = async (name: string, args: Record<string, any>): Promise<any | n
 	try {
 		const res = await fetch(MCP_URL, {
 			method: 'POST',
-			headers: { 'content-type': 'application/json' },
+			headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'user-agent': 'Mozilla/5.0 (compatible; info-hub)', ...(MCP_KEY ? { authorization: `Bearer ${MCP_KEY}` } : {}) },
 			body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name, arguments: args } }),
 		});
 		if (!res.ok) return null;
@@ -85,6 +95,10 @@ const callMcp = async (name: string, args: Record<string, any>): Promise<any | n
 	}
 };
 
+// Unmatched place names now come back from the MCP as { total_listings: 0,
+// error: 'location_not_found', location_match: { matched: false } } (Lucy, 2026-07-29),
+// so we read that field directly instead of the old sentinel calibration.
+
 export const areaMarketSummary = async (
 	location: string,
 	searchType: SearchType = 'for-sale',
@@ -93,6 +107,9 @@ export const areaMarketSummary = async (
 	if (!loc) return null;
 	const sc = await callMcp('area_market_summary', { location: loc, search_type: searchType });
 	if (!sc || typeof sc.total_listings === 'undefined') return null;
+
+	// unmatched location -> report no data rather than invent a market.
+	if (sc.error === 'location_not_found' || (sc.location_match && sc.location_match.matched === false)) return null;
 	const o = sc.oracle && typeof sc.oracle === 'object' ? sc.oracle : {};
 	return {
 		location: String(sc.location || loc),
@@ -103,6 +120,11 @@ export const areaMarketSummary = async (
 		minPrice: num(sc.min_price),
 		maxPrice: num(sc.max_price),
 		medianPricePerSqm: num(sc.median_price_per_sqm),
+		priceUnit: sc.price_unit === 'per_month' || sc.price_unit === 'per_week' || sc.price_unit === 'total' ? sc.price_unit : null,
+		priceBasis: sc.price_basis ? String(sc.price_basis) : null,
+		matchExact: sc.location_match ? Boolean(sc.location_match.exact) : true,
+		matchedLocation: sc.location_match && sc.location_match.matched_location ? String(sc.location_match.matched_location) : null,
+		note: sc.note ? String(sc.note) : null,
 		byBedroomBand: sc.by_bedroom_band && typeof sc.by_bedroom_band === 'object' ? sc.by_bedroom_band : {},
 		oracle: {
 			verified: Boolean(o.verified),
@@ -148,6 +170,10 @@ export const searchProperties = async (
 			suburb: locObj?.suburb ? String(locObj.suburb) : null,
 			city: locObj?.city ? String(locObj.city) : null,
 			province: locObj?.province ? String(locObj.province) : null,
+			provinceCode: locObj?.province_code ? String(locObj.province_code) : null,
+			municipality: locObj?.municipality ? String(locObj.municipality) : null,
+			municipalityCode: locObj?.municipality_code ? String(locObj.municipality_code) : null,
+			pricePeriod: p?.price_period ? String(p.price_period) : null,
 			lat: num(locObj?.latitude),
 			lon: num(locObj?.longitude),
 			excerpt: p?.description_excerpt ? String(p.description_excerpt) : null,

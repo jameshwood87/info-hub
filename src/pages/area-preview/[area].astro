@@ -60,9 +60,11 @@ const portalBase = 'https://www.propertylist.es';
 const portalSearch = (t: 'for-sale' | 'for-rent' | 'holiday-rentals') =>
 	`${portalBase}/${t}/${encodeURIComponent(areaParam || areaName.toLowerCase())}`;
 
-const signupHref = `https://agents.propertylist.es/new-agent-signup/new?area=${encodeURIComponent(areaName)}${
+const signupHref = `https://agents.propertylist.es/new_agency/new?locale=en&area=${encodeURIComponent(areaName)}${
 	region ? `&region=${encodeURIComponent(region.key)}` : ''
 }${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area`;
+
+const unitLab = (d: AreaMarketSummary | null) => (d?.priceUnit === 'per_month' ? '/mo' : d?.priceUnit === 'per_week' ? '/wk' : '');
 
 const marketCards: Array<{ key: string; label: string; sub: string; data: AreaMarketSummary | null; type: 'for-sale' | 'for-rent' | 'holiday-rentals' }> = [
 	{ key: 'buy', label: 'Buy', sub: 'For sale', data: sale, type: 'for-sale' },
@@ -119,11 +121,11 @@ const description = hasSale
 							{m.data && m.data.totalListings ? (
 								<>
 									<div class="mBig">{nfmt(m.data.totalListings)}<span> listings</span></div>
-									{m.type === 'for-sale' ? (
+									{m.data.medianPrice ? (
 										<dl class="mStats">
-											{m.data.medianPrice ? <div><dt>Median price</dt><dd>{eurFull(m.data.medianPrice)}</dd></div> : null}
+											{m.data.medianPrice ? <div><dt>Median price</dt><dd>{eurFull(m.data.medianPrice)}{unitLab(m.data)}</dd></div> : null}
 											{m.data.medianPricePerSqm ? <div><dt>Per m²</dt><dd>€{nfmt(m.data.medianPricePerSqm)}</dd></div> : null}
-											{m.data.minPrice && m.data.maxPrice ? <div><dt>Range</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}</dd></div> : null}
+											{m.data.minPrice && m.data.maxPrice ? <div><dt>Range</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}{unitLab(m.data)}</dd></div> : null}
 										</dl>
 									) : (
 										<div class="mSubline">Live {m.label.toLowerCase()} availability in {areaName} right now.</div>
@@ -187,7 +189,7 @@ const description = hasSale
 				<div class="fiInner">
 					<div>
 						<div class="fiTitle">Are you an agent in {areaName}?</div>
-						<div class="fiBody">List your properties free and they appear right here, in front of buyers and renters searching {areaName}. Verified agencies get 20 free credits on signup.</div>
+						<div class="fiBody">List your properties free and they appear right here, in front of buyers and renters searching {areaName}. <a href="/verify-your-agency/">Verified agencies</a> get 20 free credits (verification is free, any time).</div>
 					</div>
 					<a class="fiBtn" href={signupHref} target="_blank" rel="noopener">List free on PropertyList →</a>
 				</div>
@@ -208,7 +210,7 @@ const description = hasSale
 					<li><strong>Founding-member status</strong> for {areaName} as we grow the area.</li>
 				</ul>
 				<a class="fBtn" href={signupHref} target="_blank" rel="noopener">Become the founding agent for {areaName} →</a>
-				<p class="fFine">Free MLS + CRM forever. Verified agencies also receive 20 free credits on signup.</p>
+				<p class="fFine">Free MLS + CRM forever. Verified agencies also get 20 free credits (verify any time, free).</p>
 			</div>
 		</section>
 	)}

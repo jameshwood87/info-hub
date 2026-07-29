@@ -34,6 +34,7 @@ if (shareMode && normalizedPath.startsWith('/neighbourhood/')) {
 }
 
 const mapPairs: Array<{ en: string; es: string }> = [
+	{ en: '/what-we-offer/', es: '/es/lo-que-ofrecemos/' },
 	{ en: '/blog/', es: '/es/blog/' },
 	{ en: '/general-information/', es: '/es/informacion-general/' },
 	{ en: '/community/', es: '/es/comunidad/' },
@@ -61,10 +62,6 @@ const toSpanishSwitchPath = (p: string) => {
 	}
 	return `/es${path}`;
 };
-
-if (normalizedPath === '/what-we-offer/') {
-	return new Response(null, { status: 301, headers: { Location: '/' } });
-}
 
 if (normalizedPath === '/docs/propertylist-mls-user-manual/ai-and-automation/') {
 	return new Response(null, {
@@ -1833,7 +1830,7 @@ const blogListings: MarketListing[] = isBlogLike
 	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
 	: [];
 const blogPortalUrl = `https://www.propertylist.es/en/portal/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
-const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}${blogSearchType === 'for-rent' ? '/month' : ''}` : 'Price on request');
+const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}${blogSearchType === 'for-rent' ? '/month' : blogSearchType === 'holiday-rentals' ? '/week' : ''}` : 'Price on request');
 const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + '-bed ' : ''}${blogTypeNoun}${l.suburb ? ` in ${l.suburb}` : ''}`.slice(0, 70);
 const isDocs = renderPath.startsWith('/docs/');
 const isPublicDocs = renderPath.startsWith('/docs/laws-procedures/');
@@ -2004,7 +2001,7 @@ const fallbackHeroSrc =
 	/\b(property market|market guide|spanish property)\b/i.test(h1) ? '/blog/hero-malaga-barrio.jpg' :
 	/\b(agente|agent|mls|crm)\b/i.test(h1) ? '/blog/hero-agent-meeting.jpg' :
 	/\b(villa|luxury|luj[oa])\b/i.test(h1) ? '/blog/hero-villa-spain.jpg' :
-	/\bandaluc[ií]a\b/i.test(h1) ? '/blog/hero-andalucia.svg' :
+	/\bandaluc[ií]a\b/i.test(h1) ? '/blog/hero-andalucia.jpg' :
 	'/blog/hero-blog.jpg';
 const heroSrc = featuredImageUrl || fallbackHeroSrc;
 
@@ -2022,6 +2019,7 @@ const parseDbDate = (raw: unknown) => {
 };
 const blogPublishedDate = parseDbDate((page as any).date_created) || parseDbDate((page as any).date_updated);
 const blogUpdatedDate = parseDbDate((page as any).date_updated);
+const docReviewedDate = parseDbDate((kbMeta as any)?.reviewedAt) || blogUpdatedDate;
 const blogMetaDate = blogPublishedDate;
 const blogDateFmt = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 const blogDateLabel = blogPublishedDate ? blogDateFmt.format(blogPublishedDate) : null;
@@ -2166,11 +2164,13 @@ const buildNeighbourhoodAutoHtml = (slug: string, name: string, stats: any, port
 	const isMarinaLike = ['puerto-banus'].includes(slugKey);
 	const isGolfLike = ['la-quinta', 'nueva-andalucia', 'guadalmina', 'benahavis'].includes(slugKey);
 
-	const hasBeach = Boolean(beachName) && typeof driveBeach === 'number' && driveBeach > 0;
+	// the nearest beach is often untagged in OSM: report the drive time we do know
+	// rather than hiding it just because the beach has no name
+	const hasBeach = typeof driveBeach === 'number' && driveBeach > 0;
 	const proximityNamed = [
 		typeof driveMarbella === 'number' ? `~${Math.round(driveMarbella)} min to Marbella` : null,
 		typeof driveBanus === 'number' ? `~${Math.round(driveBanus)} min to Puerto Banús` : null,
-		hasBeach ? `~${Math.round(driveBeach)} min to ${escapeHtmlAttr(beachName)}` : null,
+		hasBeach ? (beachName ? `~${Math.round(driveBeach)} min to ${escapeHtmlAttr(beachName)}` : `~${Math.round(driveBeach)} min to the nearest beach`) : null,
 	].filter(Boolean);
 	const proximityGeneric = [
 		typeof driveMarbella === 'number' ? `~${Math.round(driveMarbella)} min to Marbella` : null,
@@ -3394,8 +3394,8 @@ const ldJson = JSON.stringify([
 				</style>
 
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
-				{isPublicDocs && blogUpdatedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
-					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Last reviewed: {blogDateFmt.format(blogUpdatedDate)}</p>
+				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
+					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Last reviewed: {blogDateFmt.format(docReviewedDate)}</p>
 				) : null}
 {isNeighbourhood ? (
 	<a class="areaPortalCta" href={neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
@@ -3486,6 +3486,17 @@ const ldJson = JSON.stringify([
 							</a>
 						) : null}
 					</footer>
+				) : null}
+				{isBlogLike ? (
+					<section class="blogSub" aria-labelledby="blogSubTitle">
+						<h2 class="blogSubTitle" id="blogSubTitle">Get the Costa del Sol market update</h2>
+						<p class="blogSubText">One email a month: real prices, new laws that affect owners, and what actually moved. No spam, unsubscribe anytime.</p>
+						<form class="blogSubForm" data-blog-sub>
+							<input class="blogSubInput" type="email" name="email" required placeholder="your@email.com" aria-label="your@email.com" autocomplete="email" />
+							<button class="blogSubBtn" type="submit">Send it to me</button>
+						</form>
+						<p class="blogSubMsg" data-blog-sub-msg role="status" aria-live="polite"></p>
+					</section>
 				) : null}
 			</div>
 
@@ -3871,3 +3882,49 @@ const ldJson = JSON.stringify([
 	) : null}
 	</Layout>
 )}
+
+<script is:inline define:vars={{ subOk: 'Done. The next one lands in your inbox.', subBad: 'Please enter a valid email address.', subErr: 'Something went wrong. Please try again.' }}>
+	(function () {
+		var form = document.querySelector('[data-blog-sub]');
+		if (!form) return;
+		var msg = document.querySelector('[data-blog-sub-msg]');
+		var input = form.querySelector('input[type=email]');
+		var btn = form.querySelector('button');
+		var set = function (t, cls) { if (msg) { msg.textContent = t; msg.className = 'blogSubMsg' + (cls ? ' ' + cls : ''); } };
+		form.addEventListener('submit', async function (e) {
+			e.preventDefault();
+			var email = String(input.value || '').trim();
+			if (!email || email.indexOf('@') < 0) { set(subBad, 'bad'); return; }
+			btn.disabled = true;
+			set('', '');
+			try {
+				var res = await fetch('/api/subscribe', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ email: email, tag: 'blog', lang: document.documentElement.lang || 'en', page: location.pathname }),
+				});
+				var data = await res.json().catch(function () { return {}; });
+				if (!res.ok || !data.ok) { set(subErr, 'bad'); btn.disabled = false; return; }
+				set(subOk, 'ok');
+				input.value = '';
+				if (window.umami && window.umami.track) window.umami.track('blog-subscribe', { page: location.pathname });
+			} catch (_) { set(subErr, 'bad'); }
+			btn.disabled = false;
+		});
+	})();
+</script>
+
+<style>
+	.blogSub { margin: 34px 0 8px; padding: 22px 24px; border: 1px solid rgba(0, 174, 154, 0.28); border-radius: 16px; background: linear-gradient(180deg, rgba(0, 174, 154, 0.07), rgba(0, 174, 154, 0.02)); }
+	.blogSubTitle { margin: 0 0 6px; font-size: 19px; line-height: 1.25; font-weight: 800; color: #101828; }
+	.blogSubText { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.68); }
+	.blogSubForm { display: flex; gap: 8px; flex-wrap: wrap; }
+	.blogSubInput { flex: 1 1 220px; min-width: 0; padding: 11px 14px; font-size: 15px; border: 1px solid rgba(16, 24, 40, 0.18); border-radius: 10px; background: #fff; }
+	.blogSubInput:focus { outline: 2px solid rgba(0, 174, 154, 0.5); outline-offset: 1px; }
+	.blogSubBtn { flex: 0 0 auto; padding: 11px 20px; font-size: 15px; font-weight: 800; color: #fff; background: #00ae9a; border: 0; border-radius: 10px; cursor: pointer; }
+	.blogSubBtn:hover { background: #0a9285; }
+	.blogSubBtn:disabled { opacity: 0.6; cursor: default; }
+	.blogSubMsg { margin: 10px 0 0; font-size: 13.5px; min-height: 1em; }
+	.blogSubMsg.ok { color: #0a6d61; font-weight: 700; }
+	.blogSubMsg.bad { color: #b42318; }
+</style>
