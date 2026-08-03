@@ -156,7 +156,7 @@ const esNeighbourhoodGuideCache: Map<string, string> = ((globalThis as any).__pl
 const translateEnKbPageToEs = async (pageEn: any, targetPath: string) => {
 	const cacheKey = `${String(pageEn?.id || '')}::${String(pageEn?.path || '')}::${String(targetPath || '')}`;
 	const cached = esRuntimeTranslationCache.get(cacheKey);
-	if (cached) return cached;
+	if (cached !== undefined) return cached;
 	const titleSrc = String(pageEn?.seo_title || pageEn?.title || '');
 	const descSrc = String(pageEn?.seo_description || pageEn?.description || '');
 	const bodySrc = String(pageEn?.body || '');
@@ -169,16 +169,16 @@ const translateEnKbPageToEs = async (pageEn: any, targetPath: string) => {
 		translatedDesc = descSrc ? await deeplTranslate(descSrc) : '';
 		translatedBody = bodySrc ? await deeplTranslateHtml(bodySrc) : '';
 	} catch {
-		const enHref = toEnglishPath(String(targetPath || ''));
-		const safeHref = String(enHref || '')
-			.replaceAll('&', '&amp;')
-			.replaceAll('<', '&lt;')
-			.replaceAll('>', '&gt;')
-			.replaceAll('"', '&quot;')
-			.replaceAll("'", '&#39;');
-		translatedTitle = '';
-		translatedDesc = 'La traducción automática no está disponible temporalmente.';
-		translatedBody = `<p>La traducción automática no está disponible temporalmente.</p><p><a href="${safeHref}">Ver en inglés</a></p>`;
+		// Translation unavailable (the DeepL key has been returning 403 since at least
+		// 2026-08-03). Do NOT fabricate a Spanish page here: the old placeholder made
+		// pageEsResolved truthy, so isFallback stayed false and the URL shipped
+		// index,follow with a self-referencing ES canonical over an empty body - 29 ES
+		// docs URLs were in that state. Returning null falls through to the EN page,
+		// which is already wired to emit noindex,follow + an English canonical.
+		// Negative-cached so a dead key costs one API attempt per page per process,
+		// not one per request; a restart re-tries.
+		esRuntimeTranslationCache.set(cacheKey, null);
+		return null;
 	}
 
 	const pageEs = {
@@ -327,119 +327,29 @@ const titleFromHtml = (html: string | null | undefined) => {
 	return stripTagsForTitle(m[1] || '');
 };
 
+// Legacy hand-written ES stubs for MLS-manual paths that have no Directus page yet.
+// Only fires when there is no published ES page at the path AND an EN twin exists,
+// so an entry whose path now redirects, 404s, or has a real ES page can never be
+// reached. Trimmed 2026-08-03 from 51 to 27 entries: the 24 removed were verified
+// unreachable (11 redirected away, 10 shadowed by a real page, 2 dead).
+// TRAP when re-probing: the EN twin that satisfies the gate may come from
+// src/data/mls-manual-archive.json, not Directus - /security/ was removed on that
+// mistake and restored the same day. Also do not detect 'is this stub live?' by
+// searching for a <p> sentence: several stubs are <h2>+<ul> only. mlsManualBackfillEsNavItems
+// does NOT reach the sidebar (strictEs is false, so the merge is dead) - these entries
+// only affect page bodies. Fall-through when an entry is missing is DeepL, whose key is
+// currently invalid, so a wrong removal renders an English-titled error placeholder.
 const mlsManualEsBackfill: Record<string, { title: string; description: string; body: string }> = {
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/': {
-		title: 'Anuncios',
-		description: 'Crea, importa, edita y gestiona anuncios de principio a fin.',
+	'/es/docs/propertylist-mls-manual-de-usuario/security/': {
+		title: 'Seguridad',
+		description: 'Protege tu cuenta y gestiona accesos.',
 		body: `
-<h2>Anuncios</h2>
-<p>En esta sección encontrarás los flujos más habituales para publicar y gestionar anuncios en el MLS: creación, importación, edición, estados, duplicados e informes.</p>
-<h3>Guías</h3>
+<h2>Seguridad</h2>
 <ul>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/creating-a-new-listing/">Crear un anuncio nuevo</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/">Importar propiedades</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/editing-existing-listings/">Editar anuncios existentes</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/">Cambiar el estado del anuncio</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/">Propiedades duplicadas</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tracking-property-enquiries-leads/">Seguimiento de consultas y leads</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/generating-property-reports/">Generar informes de propiedad</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/export-listings-xml/">Exportar anuncios (XML)</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/">Consejos para anuncios de alta calidad</a></li>
+	<li>Usa contraseñas robustas y únicas.</li>
+	<li>Revisa permisos de usuarios y roles.</li>
+	<li>No compartas accesos entre personas.</li>
 </ul>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/creating-a-new-listing/': {
-		title: 'Crear un anuncio nuevo',
-		description: 'Añade una propiedad al MLS con los campos clave y buenas prácticas.',
-		body: `
-<h2>Crear un anuncio nuevo</h2>
-<p>Crea un anuncio desde cero con la información mínima necesaria y complétalo con fotos y detalles para mejorar su rendimiento.</p>
-<h3>Pasos</h3>
-<ol>
-	<li>Abre <strong>Anuncios</strong> y selecciona <strong>Crear anuncio</strong>.</li>
-	<li>Rellena los datos básicos: tipo de propiedad, ubicación, precio y referencia.</li>
-	<li>Añade características y una descripción clara.</li>
-	<li>Sube fotos en buena resolución y en el orden correcto.</li>
-	<li>Revisa los datos y guarda el anuncio.</li>
-</ol>
-<p>Si ya tienes propiedades en otro sistema, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/">Importar propiedades</a>.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/import-properties/': {
-		title: 'Importar propiedades',
-		description: 'Trae anuncios a PropertyList usando los métodos disponibles.',
-		body: `
-<h2>Importar propiedades</h2>
-<p>Importa anuncios de forma masiva para ahorrar tiempo. Antes de empezar, revisa que tus datos estén limpios y que las referencias sean únicas.</p>
-<h3>Recomendaciones</h3>
-<ul>
-	<li>Usa referencias consistentes para evitar duplicados.</li>
-	<li>Normaliza municipios, zonas y tipos de propiedad.</li>
-	<li>Verifica precios, superficies y número de habitaciones/baños.</li>
-</ul>
-<p>Después de importar, revisa cada anuncio y completa fotos y descripciones. Consulta también <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/">Propiedades duplicadas</a>.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/editing-existing-listings/': {
-		title: 'Editar anuncios existentes',
-		description: 'Actualiza precio, descripción, fotos y características sin perder trazabilidad.',
-		body: `
-<h2>Editar anuncios existentes</h2>
-<p>Actualizar un anuncio a tiempo mejora su visibilidad y reduce errores de datos compartidos con el equipo o con portales.</p>
-<h3>Qué revisar</h3>
-<ul>
-	<li>Precio y condiciones (venta/alquiler, gastos, comunidad).</li>
-	<li>Ubicación y datos de zona.</li>
-	<li>Características y superficies.</li>
-	<li>Fotos y orden de galería.</li>
-	<li>Descripción y puntos clave.</li>
-</ul>
-<p>Si necesitas marcar un cambio importante (p. ej., vendido o reservado), consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/">Cambiar el estado del anuncio</a>.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/': {
-		title: 'Cambiar el estado del anuncio',
-		description: 'Gestiona estados como activo, reservado, vendido o retirado.',
-		body: `
-<h2>Cambiar el estado del anuncio</h2>
-<p>El estado indica si una propiedad está disponible y ayuda a mantener el inventario actualizado.</p>
-<h3>Buenas prácticas</h3>
-<ul>
-	<li>Actualiza el estado en cuanto cambie la disponibilidad.</li>
-	<li>Evita tener el mismo anuncio activo con varias referencias.</li>
-	<li>Revisa el historial de actividad para entender cambios recientes.</li>
-</ul>
-<p>Si detectas entradas repetidas del mismo inmueble, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/">Propiedades duplicadas</a>.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/duplicate-properties/': {
-		title: 'Propiedades duplicadas',
-		description: 'Identifica y gestiona anuncios duplicados para evitar confusión.',
-		body: `
-<h2>Propiedades duplicadas</h2>
-<p>Los duplicados generan problemas de calidad de datos y pueden afectar a la experiencia del cliente.</p>
-<h3>Cómo evitarlos</h3>
-<ul>
-	<li>Mantén referencias únicas por inmueble.</li>
-	<li>Revisa importaciones antes de publicarlas.</li>
-	<li>Unifica fotos y descripciones en un único anuncio.</li>
-</ul>
-<p>Para mejorar la calidad general de tus anuncios, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/">Consejos para anuncios de alta calidad</a>.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/tracking-property-enquiries-leads/': {
-		title: 'Seguimiento de consultas y leads',
-		description: 'Organiza solicitudes, preguntas y leads asociados a un anuncio.',
-		body: `
-<h2>Seguimiento de consultas y leads</h2>
-<p>Centraliza la actividad de cada anuncio para responder más rápido y medir interés real.</p>
-<h3>Sugerencias</h3>
-<ul>
-	<li>Registra llamadas y mensajes clave como actividad.</li>
-	<li>Asocia leads y contactos al anuncio correcto.</li>
-	<li>Actualiza el estado del lead según avance (nuevo, en seguimiento, cualificado, etc.).</li>
-</ul>
-<p>Si quieres preparar material para cliente, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/generating-property-reports/">Generar informes de propiedad</a>.</p>
 `,
 	},
 	'/es/docs/propertylist-mls-manual-de-usuario/listings/generating-property-reports/': {
@@ -463,36 +373,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 	<li>Revisa los datos y genera el informe.</li>
 	<li>Comparte el PDF o enlace con el cliente.</li>
 </ol>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/export-listings-xml/': {
-		title: 'Exportar anuncios (XML)',
-		description: 'Exporta anuncios a integraciones y canales compatibles.',
-		body: `
-<h2>Exportar anuncios (XML)</h2>
-<p>Usa la exportación para enviar anuncios a webs, portales o integraciones que consuman datos en formato XML.</p>
-<h3>Antes de exportar</h3>
-<ul>
-	<li>Revisa que tus anuncios tengan fotos y descripciones completas.</li>
-	<li>Comprueba el estado (activo) y los campos obligatorios.</li>
-	<li>Evita duplicados para no exportar el mismo inmueble varias veces.</li>
-</ul>
-<p>Para mejorar la calidad de salida, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/">Consejos para anuncios de alta calidad</a>.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/listings/tips-for-creating-high-quality-property-listings/': {
-		title: 'Consejos para anuncios de alta calidad',
-		description: 'Mejora el rendimiento del anuncio con fotos, textos y datos coherentes.',
-		body: `
-<h2>Consejos para anuncios de alta calidad</h2>
-<ul>
-	<li>Usa fotos luminosas, nítidas y ordenadas por recorrido.</li>
-	<li>Escribe una descripción clara con beneficios, no solo características.</li>
-	<li>Completa superficies, orientación, vistas y calidades.</li>
-	<li>Incluye detalles clave de ubicación y accesos.</li>
-	<li>Revisa precio y condiciones antes de publicar.</li>
-</ul>
-<p>Si necesitas actualizar disponibilidad, consulta <a href="/es/docs/propertylist-mls-manual-de-usuario/listings/changing-property-status/">Cambiar el estado del anuncio</a>.</p>
 `,
 	},
 	'/es/docs/propertylist-mls-manual-de-usuario/additional-resources/': {
@@ -521,43 +401,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 <p>Estamos preparando tutoriales en vídeo para los flujos más habituales. Vuelve pronto.</p>
 `,
 	},
-	'/es/docs/propertylist-mls-manual-de-usuario/ai-ezd_ampersand-automation/ai-property-research-agent/': {
-		title: 'Agente de investigación de propiedades (IA)',
-		description: 'Informes de mercado y zona con un clic para tus anuncios.',
-		body: `
-<h2>Agente de investigación de propiedades (IA)</h2>
-<p>El Agente de investigación con IA crea informes listos para cliente a partir de un anuncio: comparables, contexto de zona, puntos de interés y más.</p>
-<h3>Cómo usarlo</h3>
-<ol>
-	<li>Entra en un anuncio del MLS.</li>
-	<li>Haz clic en <strong>AI Analysis</strong>.</li>
-	<li>Añade detalles del entorno (calle, referencia, puntos clave).</li>
-	<li>Pulsa <strong>Analyse</strong> para generar el informe.</li>
-</ol>
-<p><a href="/es/docs/propertylist-mls-manual-de-usuario/ai-automation/" target="_blank" rel="noopener">Ver cómo funciona</a></p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/credits/': {
-		title: 'Créditos',
-		description: 'Entiende el sistema de créditos y cómo se usan.',
-		body: `
-<h2>Créditos</h2>
-<p>Compartir propiedades es gratis, pero algunas funciones avanzadas se desbloquean con créditos.</p>
-<h3>Cómo funciona</h3>
-<ul>
-	<li>1 crédito = 1 €</li>
-	<li>Sin cuotas mensuales</li>
-	<li>Paga solo por lo que necesites, cuando lo necesites</li>
-</ul>
-<h3>Comprar créditos</h3>
-<ol>
-	<li>Abre la pestaña <strong>Créditos</strong> en tu cuenta.</li>
-	<li>Elige el importe y sigue el proceso de pago.</li>
-	<li>Los créditos se añaden a tu saldo tras el pago.</li>
-</ol>
-<p><strong>Los créditos no caducan.</strong></p>
-`,
-	},
 	'/es/docs/propertylist-mls-manual-de-usuario/documents/': {
 		title: 'Documentos',
 		description: 'Sube, organiza y vincula documentos a propiedades y contactos.',
@@ -578,14 +421,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 <p>La opción para compartir documentos desde la plataforma estará disponible pronto.</p>
 `,
 	},
-	'/es/docs/propertylist-mls-manual-de-usuario/faq-mls/': {
-		title: 'Preguntas frecuentes (MLS)',
-		description: 'Respuestas rápidas a las dudas más comunes.',
-		body: `
-<h2>Preguntas frecuentes (MLS)</h2>
-<p>Estamos recopilando las dudas más comunes para cubrirlas aquí. Si necesitas ayuda, abre un ticket de soporte.</p>
-`,
-	},
 	'/es/docs/propertylist-mls-manual-de-usuario/empezar/': {
 		title: 'Empezar',
 		description: 'Primeros pasos para usar el MLS y el CRM.',
@@ -599,33 +434,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/portal-leads/">Leads del portal</a></li>
 	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/empezar/download-app/">Descargar la app</a></li>
 </ul>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/empezar/download-app/': {
-		title: 'Descargar la app',
-		description: 'Instala PropertyList como app en escritorio o móvil.',
-		body: `
-<h2>Descargar la app</h2>
-<h3>App de escritorio (Chrome)</h3>
-<ol>
-	<li>Abre Chrome e inicia sesión en <a href="https://agents.propertylist.es/" target="_blank" rel="noopener">agents.propertylist.es</a>.</li>
-	<li>Haz clic en los 3 puntos (arriba a la derecha).</li>
-	<li>Selecciona <strong>Instalar…</strong> (o <strong>Instalar página como app…</strong>).</li>
-	<li>Asigna un nombre y confirma.</li>
-	<li>Ancla la app a la barra de tareas si lo deseas.</li>
-</ol>
-<h3>Android</h3>
-<ol>
-	<li>Abre Chrome e inicia sesión.</li>
-	<li>Menú (3 puntos) → <strong>Añadir a pantalla de inicio</strong> / <strong>Instalar</strong>.</li>
-	<li>Confirma el acceso directo.</li>
-</ol>
-<h3>iPhone (iOS)</h3>
-<ol>
-	<li>Abre Safari e inicia sesión.</li>
-	<li>Pulsa <strong>Compartir</strong>.</li>
-	<li>Selecciona <strong>Añadir a pantalla de inicio</strong>.</li>
-</ol>
 `,
 	},
 	'/es/docs/propertylist-mls-manual-de-usuario/listing-a-property/': {
@@ -656,44 +464,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-listings/tracking-property-enquiries-leads/">Seguimiento de consultas y leads</a></li>
 	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/managing-listings/generating-property-reports/">Generar informes de propiedades</a></li>
 </ul>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/managing-listings/tracking-property-enquiries-leads/': {
-		title: 'Seguimiento de consultas y leads',
-		description: 'Sigue la actividad de tus anuncios y gestiona consultas.',
-		body: `
-<h2>Seguimiento de consultas y leads</h2>
-<p>Registra y gestiona consultas generadas por tus anuncios para no perder oportunidades.</p>
-<h3>Buenas prácticas</h3>
-<ul>
-	<li>Responde rápido y registra el resultado.</li>
-	<li>Asigna un responsable y una próxima acción.</li>
-	<li>Vincula la consulta al contacto y a la propiedad.</li>
-</ul>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/managing-your-leads/portal-leads/': {
-		title: 'Leads del portal',
-		description: 'Cómo llegan los leads del portal y cómo gestionarlos.',
-		body: `
-<h2>Leads del portal</h2>
-<p>Los leads del portal se generan cuando un usuario interesado contacta por una propiedad publicada. Gestiona el lead, asigna un agente y haz seguimiento.</p>
-<h3>Pasos</h3>
-<ol>
-	<li>Abre el lead desde la sección de <strong>Leads</strong>.</li>
-	<li>Revisa el interés y la propiedad relacionada.</li>
-	<li>Asigna un responsable y fija la próxima acción.</li>
-	<li>Cuando esté cualificado, conviértelo en contacto.</li>
-</ol>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/feature-your-property-on-the-public-property-portal/': {
-		title: 'Destacar tu propiedad en el portal público',
-		description: 'Aumenta visibilidad destacando anuncios (según disponibilidad).',
-		body: `
-<h2>Destacar tu propiedad en el portal público</h2>
-<p>Destacar un anuncio puede aumentar su visibilidad. Las opciones disponibles dependen del plan y de los créditos.</p>
-<p>Si no ves la opción en tu cuenta, contacta con soporte.</p>
 `,
 	},
 	'/es/docs/propertylist-mls-manual-de-usuario/mls-property-alerts/': {
@@ -782,19 +552,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 </ul>
 `,
 	},
-	'/es/docs/propertylist-mls-manual-de-usuario/requests/': {
-		title: 'Solicitudes',
-		description: 'Gestiona solicitudes de clientes y de otros agentes.',
-		body: `
-<h2>Solicitudes</h2>
-<p>Las solicitudes ayudan a centralizar necesidades: lo que busca un cliente o una colaboración con otro agente.</p>
-<h3>Guías</h3>
-<ul>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/requests/agent-requests/">Solicitudes de agentes</a></li>
-	<li><a href="/es/docs/propertylist-mls-manual-de-usuario/requests/client-requests/">Solicitudes de clientes</a></li>
-</ul>
-`,
-	},
 	'/es/docs/propertylist-mls-manual-de-usuario/sales-pipeline-tracking/': {
 		title: 'Pipeline de ventas',
 		description: 'Controla el estado de oportunidades y próximos pasos.',
@@ -822,18 +579,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 </ul>
 `,
 	},
-	'/es/docs/propertylist-mls-manual-de-usuario/security/': {
-		title: 'Seguridad',
-		description: 'Protege tu cuenta y gestiona accesos.',
-		body: `
-<h2>Seguridad</h2>
-<ul>
-	<li>Usa contraseñas robustas y únicas.</li>
-	<li>Revisa permisos de usuarios y roles.</li>
-	<li>No compartas accesos entre personas.</li>
-</ul>
-`,
-	},
 	'/es/docs/propertylist-mls-manual-de-usuario/technical-documentation/': {
 		title: 'Documentación técnica',
 		description: 'Notas para integraciones y configuraciones avanzadas.',
@@ -856,29 +601,6 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 		body: `
 <h2>Agencia verificada</h2>
 <p>La verificación ayuda a aumentar confianza y visibilidad. Contacta con soporte para el proceso de verificación.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/your-account/': {
-		title: 'Tu cuenta',
-		description: 'Preferencias, equipo y datos de la cuenta.',
-		body: `
-<h2>Tu cuenta</h2>
-<p>Gestiona la información de la empresa, usuarios, permisos y preferencias.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/your-account/managing-user-permissions-and-access-levels/': {
-		title: 'Gestionar permisos y niveles de acceso',
-		description: 'Controla lo que cada usuario puede ver y hacer dentro del MLS.',
-		body: `
-<h2>Gestionar permisos y niveles de acceso</h2>
-<p>Configura usuarios y permisos para que cada miembro del equipo tenga el acceso adecuado.</p>
-<h3>Recomendaciones</h3>
-<ul>
-	<li>Asigna el mínimo acceso necesario para cada rol.</li>
-	<li>Revisa permisos al incorporar o dar de baja usuarios.</li>
-	<li>Evita compartir credenciales entre personas.</li>
-</ul>
-<p>Si necesitas ajustar permisos específicos para tu agencia, contacta con soporte indicando el correo del usuario y el acceso deseado.</p>
 `,
 	},
 	'/es/docs/propertylist-mls-manual-de-usuario/microsite-share/': {
@@ -917,44 +639,12 @@ const mlsManualEsBackfill: Record<string, { title: string; description: string; 
 </ul>
 `,
 	},
-	'/es/docs/propertylist-mls-manual-de-usuario/faq-mls-crm/': {
-		title: 'Preguntas frecuentes (MLS y CRM)',
-		description: 'Respuestas rápidas sobre MLS, CRM y la plataforma.',
-		body: `
-<h2>Preguntas frecuentes (MLS y CRM)</h2>
-<p>Estamos consolidando preguntas frecuentes sobre MLS y CRM. Si necesitas ayuda, abre un ticket.</p>
-`,
-	},
 	'/es/docs/propertylist-mls-manual-de-usuario/how-to-use-the-calendar/syncing-your-calendar-with-other-apps/': {
 		title: 'Sincronizar el calendario con otras apps',
 		description: 'Integra tu calendario con otras aplicaciones (según disponibilidad).',
 		body: `
 <h2>Sincronizar el calendario con otras apps</h2>
 <p>La sincronización con calendarios externos estará disponible pronto. Mientras tanto, crea eventos y recordatorios dentro de PropertyList.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/requests/agent-requests/': {
-		title: 'Solicitudes de agentes',
-		description: 'Colabora con otros agentes a través de solicitudes.',
-		body: `
-<h2>Solicitudes de agentes</h2>
-<p>Usa solicitudes para coordinar colaboraciones con otros agentes: necesidades de clientes, captación, visitas y seguimiento.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/requests/client-requests/': {
-		title: 'Solicitudes de clientes',
-		description: 'Define lo que busca un cliente y haz seguimiento.',
-		body: `
-<h2>Solicitudes de clientes</h2>
-<p>Registra los criterios del cliente (zona, presupuesto, tipo, extras) y actualiza el estado a medida que avanzas.</p>
-`,
-	},
-	'/es/docs/propertylist-mls-manual-de-usuario/marketing-and-promotion/sharing-listings-social-media/': {
-		title: 'Compartir anuncios en redes sociales',
-		description: 'Comparte propiedades en redes para generar interés.',
-		body: `
-<h2>Compartir anuncios en redes sociales</h2>
-<p>Comparte anuncios desde la plataforma en redes sociales o por mensajería para aumentar el alcance.</p>
 `,
 	},
 	'/es/docs/propertylist-mls-manual-de-usuario/managing-listings/generating-property-reports/': {
@@ -1171,7 +861,7 @@ if (!pageEsResolved && pageEn && isBarriosDetail) {
 		.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '')
 		.trim();
 	const place = base || barriosSlugForLookup.replace(/[-_]+/g, ' ').trim();
-	const titleEs = `${place} — guía del barrio`;
+	const titleEs = `${place} - guía del barrio`;
 	pageEsResolved = {
 		id: `runtime-es-barrios-${barriosSlugForLookup || 'page'}`,
 		status: 'published',
@@ -1507,7 +1197,9 @@ const buildNeighbourhoodAutoHtml = (slug: string, name: string, stats: any, port
 	const isCityLike = ['malaga-centre', 'el-limonar', 'pedregalejo'].includes(slugKey);
 	const isLuxuryLike = ['la-zagaleta', 'sierra-blanca', 'golden-mile', 'la-zagaleta'].includes(slugKey) || (typeof medPerM2 === 'number' && medPerM2 >= 6500);
 
-	const hasBeach = Boolean(beachName) && typeof driveBeach === 'number' && driveBeach > 0;
+	// the nearest beach is often untagged in OSM: report the drive time we do know
+	// rather than hiding it just because the beach has no name
+	const hasBeach = typeof driveBeach === 'number' && driveBeach > 0;
 	const proximityNamed = [
 		typeof driveMarbella === 'number' ? `~${Math.round(driveMarbella)} min a Marbella` : null,
 		typeof driveBanus === 'number' ? `~${Math.round(driveBanus)} min a Puerto Banús` : null,
@@ -1568,10 +1260,10 @@ ${hasMarket ? `<p><a href="${escapeHtmlAttr(portalUrl)}" target="_blank" rel="no
 <h2>Transporte y conectividad</h2>
 <p>Planifica con tiempos reales. Estimaciones de conducción:</p>
 <ul>
-	${typeof driveBanus === 'number' ? `<li>Puerto Banús — ~${Math.round(driveBanus)} min</li>` : ''}
-	${typeof driveMarbella === 'number' ? `<li>Marbella — ~${Math.round(driveMarbella)} min</li>` : ''}
-	${typeof driveAirport === 'number' ? `<li>Aeropuerto de Málaga — ~${Math.round(driveAirport)} min</li>` : ''}
-	${hasBeach ? `<li>Playa más cercana — ~${Math.round(driveBeach)} min</li>` : ''}
+	${typeof driveBanus === 'number' ? `<li>Puerto Banús - ~${Math.round(driveBanus)} min</li>` : ''}
+	${typeof driveMarbella === 'number' ? `<li>Marbella - ~${Math.round(driveMarbella)} min</li>` : ''}
+	${typeof driveAirport === 'number' ? `<li>Aeropuerto de Málaga - ~${Math.round(driveAirport)} min</li>` : ''}
+	${hasBeach ? `<li>Playa más cercana - ~${Math.round(driveBeach)} min</li>` : ''}
 </ul>
 
 <h2>Consejos locales</h2>
@@ -1751,7 +1443,7 @@ const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + ' dorm.
 
 const moveDocHeaderIntoBody = isDocs && !isBlogLike && !bodyHasH1;
 const fallbackHeroSrc =
-	/\bcosta del sol\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-costa-del-sol.svg' : /\bmarbella\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-marbella.svg' : /\bandaluc[ií]a\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-andalucia.svg' : '/blog/hero-default.svg';
+	/\bcosta del sol\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-costa-del-sol.jpg' : /\bmarbella\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-marbella.jpg' : /\bandaluc[ií]a\b/i.test(String((pageEn as any)?.title || h1)) ? '/blog/hero-andalucia.jpg' : '/blog/hero-default.jpg';
 const heroSrc = featuredImageUrl || fallbackHeroSrc;
 const parseDbDate = (raw: unknown) => {
 	const ms = raw ? Date.parse(String(raw)) : NaN;
@@ -1759,6 +1451,7 @@ const parseDbDate = (raw: unknown) => {
 };
 const blogPublishedDate = parseDbDate((page as any).date_created) || parseDbDate((page as any).date_updated);
 const blogUpdatedDate = parseDbDate((page as any).date_updated);
+const docReviewedDate = parseDbDate((kbMeta as any)?.reviewedAt) || blogUpdatedDate;
 const blogMetaDate = blogPublishedDate;
 const blogDateFmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 const blogDateLabel = blogPublishedDate ? blogDateFmt.format(blogPublishedDate) : null;
@@ -1797,7 +1490,7 @@ const finalBodyHtml = (() => {
 		const creditText = featuredImageCredit || '';
 		const figcaption =
 			captionText || creditText
-				? `<figcaption class="blogHeroCaption">${escapeHtml(captionText)}${captionText && creditText ? ' — ' : ''}${escapeHtml(creditText)}</figcaption>`
+				? `<figcaption class="blogHeroCaption">${escapeHtml(captionText)}${captionText && creditText ? ' - ' : ''}${escapeHtml(creditText)}</figcaption>`
 				: '';
 		const isUnsplash = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.unsplash\.com/i.test(heroSrc);
 		const isPexels = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.pexels\.com/i.test(heroSrc);
@@ -2542,8 +2235,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			<div class="docMain">
 				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" /> : null}
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
-				{isPublicDocs && blogUpdatedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
-					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Ultima revision: {blogDateFmt.format(blogUpdatedDate)}</p>
+				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
+					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Última revisión: {blogDateFmt.format(docReviewedDate)}</p>
 				) : null}
 {isNeighbourhood ? (
 	<a class="areaPortalCta" href={neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
@@ -2574,7 +2267,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 							<strong style="display:block;font-size:17px;letter-spacing:-.01em;margin-bottom:3px;">¿Buscas una vivienda?</strong>
 							<span style="font-size:14px;opacity:.95;">{blogPropertyLocation ? `Mira lo que hay disponible ahora mismo en ${blogPropertyLocation} - viviendas en venta y alquiler de agentes registrados.` : `Mira lo que hay disponible ahora mismo en la Costa del Sol - viviendas en venta y alquiler de agentes registrados.`}</span>
 						</div>
-						<a href="/es/buscador-propiedades" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap;">Encuentra tu hogar &rarr;</a>
+						<a href="/es/buscador-propiedades/" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap;">Encuentra tu hogar &rarr;</a>
 					</aside>
 				) : null}
 
@@ -2634,6 +2327,17 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 							</a>
 						) : null}
 					</footer>
+				) : null}
+				{isBlogLike ? (
+					<section class="blogSub" aria-labelledby="blogSubTitle">
+						<h2 class="blogSubTitle" id="blogSubTitle">Recibe el informe del mercado de la Costa del Sol</h2>
+						<p class="blogSubText">Un email al mes: precios reales, cambios legales que afectan a los propietarios y lo que de verdad se ha movido. Sin spam, puedes darte de baja cuando quieras.</p>
+						<form class="blogSubForm" data-blog-sub>
+							<input class="blogSubInput" type="email" name="email" required placeholder="tu@email.com" aria-label="tu@email.com" autocomplete="email" />
+							<button class="blogSubBtn" type="submit">Enviádmelo</button>
+						</form>
+						<p class="blogSubMsg" data-blog-sub-msg role="status" aria-live="polite"></p>
+					</section>
 				) : null}
 			</div>
 
@@ -3004,3 +2708,49 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 	) : null}
 	</Layout>
 )}
+
+<script is:inline define:vars={{ subOk: 'Listo. El próximo llega a tu bandeja de entrada.', subBad: 'Introduce un email válido.', subErr: 'Algo ha fallado. Inténtalo de nuevo.' }}>
+	(function () {
+		var form = document.querySelector('[data-blog-sub]');
+		if (!form) return;
+		var msg = document.querySelector('[data-blog-sub-msg]');
+		var input = form.querySelector('input[type=email]');
+		var btn = form.querySelector('button');
+		var set = function (t, cls) { if (msg) { msg.textContent = t; msg.className = 'blogSubMsg' + (cls ? ' ' + cls : ''); } };
+		form.addEventListener('submit', async function (e) {
+			e.preventDefault();
+			var email = String(input.value || '').trim();
+			if (!email || email.indexOf('@') < 0) { set(subBad, 'bad'); return; }
+			btn.disabled = true;
+			set('', '');
+			try {
+				var res = await fetch('/api/subscribe', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ email: email, tag: 'blog', lang: document.documentElement.lang || 'en', page: location.pathname }),
+				});
+				var data = await res.json().catch(function () { return {}; });
+				if (!res.ok || !data.ok) { set(subErr, 'bad'); btn.disabled = false; return; }
+				set(subOk, 'ok');
+				input.value = '';
+				if (window.umami && window.umami.track) window.umami.track('blog-subscribe', { page: location.pathname });
+			} catch (_) { set(subErr, 'bad'); }
+			btn.disabled = false;
+		});
+	})();
+</script>
+
+<style>
+	.blogSub { margin: 34px 0 8px; padding: 22px 24px; border: 1px solid rgba(0, 174, 154, 0.28); border-radius: 16px; background: linear-gradient(180deg, rgba(0, 174, 154, 0.07), rgba(0, 174, 154, 0.02)); }
+	.blogSubTitle { margin: 0 0 6px; font-size: 19px; line-height: 1.25; font-weight: 800; color: #101828; }
+	.blogSubText { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.68); }
+	.blogSubForm { display: flex; gap: 8px; flex-wrap: wrap; }
+	.blogSubInput { flex: 1 1 220px; min-width: 0; padding: 11px 14px; font-size: 15px; border: 1px solid rgba(16, 24, 40, 0.18); border-radius: 10px; background: #fff; }
+	.blogSubInput:focus { outline: 2px solid rgba(0, 174, 154, 0.5); outline-offset: 1px; }
+	.blogSubBtn { flex: 0 0 auto; padding: 11px 20px; font-size: 15px; font-weight: 800; color: #fff; background: #00ae9a; border: 0; border-radius: 10px; cursor: pointer; }
+	.blogSubBtn:hover { background: #0a9285; }
+	.blogSubBtn:disabled { opacity: 0.6; cursor: default; }
+	.blogSubMsg { margin: 10px 0 0; font-size: 13.5px; min-height: 1em; }
+	.blogSubMsg.ok { color: #0a6d61; font-weight: 700; }
+	.blogSubMsg.bad { color: #b42318; }
+</style>
