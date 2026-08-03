@@ -201,6 +201,7 @@ export async function GET() {
     '/pipelines/',
     '/nurture/',
     '/verify-your-agency/',
+    '/report-a-problem/',
     '/es/',
     '/es/sobre-nosotros/',
     '/es/preguntas-frecuentes/',
@@ -227,6 +228,7 @@ export async function GET() {
     '/es/pipelines/',
     '/es/nurture/',
     '/es/verifica-tu-agencia/',
+    '/es/reportar-un-problema/',
     '/es/search',
   ];
 
