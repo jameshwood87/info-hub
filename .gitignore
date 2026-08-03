@@ -46,3 +46,10 @@ dist_old/
 *.bak
 *.bak-*
 *.wiped-*
+
+# large media - 348MB of source video does not belong in git (host it, do not version it)
+public/videos/
+
+# one-off scratch scripts left in the repo root
+emd-tmp.mjs
+pw-tmp.mjs
