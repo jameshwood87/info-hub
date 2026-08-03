@@ -159,78 +159,41 @@ const fetchRealEsPaths = async (): Promise<Set<string>> => {
 };
 
 export async function GET() {
-  const staticPaths = [
-    '/',
-    '/about-us/',
-    '/faq/',
-    '/docs/',
-    '/blog/',
-    '/community/',
-    '/developers/',
-    '/neighbourhood/',
-    '/laws/',
-    '/pricing/',
-    '/referrals/',
-    '/whats-on/',
-    '/whats-on/marbella/',
-    '/whats-on/estepona/',
-    '/whats-on/malaga/',
-    '/search',
-    '/website-builder/',
-    '/features/',
-    '/mobile-app/',
-    '/request-new-features/',
-    '/es/solicitar-funciones/',
-    '/ai-property-search/',
-    '/costa-del-sol/',
-    '/launch/',
-    '/free/',
-    '/xml-feed-import/',
-    '/what-is-my-property-worth/',
-    '/es/gratis/',
-    '/es/importar-feed-xml/',
-    '/es/cuanto-vale-mi-propiedad/',
-    '/es/lanza-tu-agencia/',
-    '/es/costa-del-sol/',
-    '/es/busqueda-ia/',
-    '/instant-listing/',
-    '/instant-renovation/',
-    '/instant-content/',
-    '/instant-brochure/',
-    '/rentals/',
-    '/pipelines/',
-    '/nurture/',
-    '/verify-your-agency/',
-    '/report-a-problem/',
-    '/es/',
-    '/es/sobre-nosotros/',
-    '/es/preguntas-frecuentes/',
-    '/es/constructor-de-webs/',
-    '/es/docs/',
-    '/es/informacion-general/',
-    '/es/comunidad/',
-    '/es/barrios/',
-    '/es/leyes/',
-    '/es/precios/',
-    '/es/referidos/',
-    '/es/que-hacer/',
-    '/es/que-hacer/marbella/',
-    '/es/que-hacer/estepona/',
-    '/es/que-hacer/malaga/',
-    '/es/funciones/',
-    '/es/app-movil/',
-    '/es/listado-instantaneo/',
-    '/es/renovacion-instantanea/',
-    '/es/contenido-instantaneo/',
-    '/es/folleto-instantaneo/',
-    '/es/alquileres/',
-    '/es/promotores/',
-    '/es/pipelines/',
-    '/es/nurture/',
-    '/es/verifica-tu-agencia/',
-    '/es/reportar-un-problema/',
-    '/es/search',
-  ];
+  // Static page routes are DERIVED from the files in src/pages rather than
+  // hand-listed. A hand-maintained list silently drops any new page: the
+  // report-a-scam pages sat outside the sitemap for a month that way, and
+  // /search + /es/search were listed without their trailing slash, so both
+  // entries were 301s. import.meta.glob is resolved at build time, so this
+  // list can no longer drift from the routes that actually exist.
+  //
+  // Only pages that are deliberately not indexable belong in the exclude set.
+  // If you add a noindex or gated page, add it here too.
+  const SITEMAP_EXCLUDE = new Set([
+    '/about/', // redirect stub -> /about-us/
+    '/activate/',
+    '/es/activar/', // noindex: dormant-agent activation
+    '/agents-survey/',
+    '/es/encuesta-agentes/',
+    '/nl/agenten-enquete/', // noindex: roadmap survey
+    '/property-finder/',
+    '/es/buscador-propiedades/', // noindex: draft
+    '/es/video-guias/',
+    '/property-intelligence-report/',
+    '/es/informe-inteligencia-propiedad/', // password-gated, see VIDEO_GATE_PATHS in middleware.ts
+  ]);
+
+  const derivedStaticPaths = Object.keys(import.meta.glob('./**/*.astro'))
+    .map((file) => {
+      const r = file.replace(/^\./, '').replace(/\.astro$/, '').replace(/\/index$/, '');
+      return `${r}/`;
+    })
+    .filter((r) => !r.includes('[')) // dynamic routes are enumerated from Directus below
+    .filter((r) => !r.startsWith('/admin/'))
+    .filter((r) => r !== '/404/')
+    .filter((r) => !SITEMAP_EXCLUDE.has(r))
+    .sort();
+
+  const staticPaths = derivedStaticPaths;
 
   const urls: Array<{ loc: string; lastmod: string | null }> = [];
   const seen = new Set<string>();
