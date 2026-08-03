@@ -12,9 +12,9 @@ export type PortalStats = {
 	agents: number;
 };
 
-// Last-known-good values (2026-07-05) used only if the portal is unreachable,
+// Last-known-good values (2026-08-03) used only if the portal is unreachable,
 // so the homepage never renders an empty/broken stat.
-const FALLBACK: PortalStats = { listings: 6046, agencies: 909, agents: 1272 };
+const FALLBACK: PortalStats = { listings: 6167, agencies: 945, agents: 1319 };
 
 const TTL_MS = 60 * 60 * 1000; // refresh at most hourly
 let cache: { v: PortalStats; at: number } | null = null;
