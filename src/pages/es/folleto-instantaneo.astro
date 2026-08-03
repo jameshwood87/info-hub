@@ -1,0 +1,337 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/folleto-instantaneo/`;
+const title = 'Folleto Instantáneo (muy pronto) - un folleto de propiedad listo para imprimir en un clic | PropertyList';
+const description =
+	'Muy pronto: folletos en un clic - un PDF listo para imprimir más una página web viva que se actualiza sola al cambiar el precio, las fotos o los datos.';
+
+const gets = [
+	{ name: 'Listo para imprimir en un clic', desc: 'Un PDF A4 profesional, creado con las fotos y los datos del anuncio - sin software de diseño y sin esperar a un diseñador.' },
+	{ name: 'Un estilo que encaja con la casa', desc: 'Elige un tema cuidado - Clásico, Moderno o Lujo - para que el folleto encaje con la propiedad y, si eres agente, con tu marca.' },
+	{ name: 'Con o sin tu marca', desc: 'El logo, los colores y los datos de tu agencia, o una versión limpia sin marca para compartir o entregar a un agente colaborador.' },
+	{ name: 'Cumple la ley, automáticamente', desc: 'La etiqueta energética (de A a G) va integrada, así que cada folleto cumple la obligación legal de la publicidad inmobiliaria en España.' },
+	{ name: 'Fotos, características y la zona', desc: 'La galería, las características clave, un mapa y el contexto local - todo maquetado por ti a partir de los datos que ya tiene el anuncio.' },
+	{ name: 'Un código QR directo al anuncio', desc: 'Cada folleto con tu marca lleva un código QR a tu ficha en vivo de la propiedad, para que hasta una hoja impresa lleve al comprador directo a ella en internet.' },
+];
+
+const faqs = [
+	{ q: '¿Puedo usarlo si no soy agente inmobiliario?', a: 'Sí. Cualquiera puede crear un folleto profesional de una propiedad en propertylist.es/brochures por 20 euros cada uno - ideal si vendes por tu cuenta y quieres que tu casa luzca como si la hubiera publicado una agencia. Los agentes lo tienen integrado en su plataforma a un precio menor, basado en créditos.' },
+	{ q: '¿Por qué los agentes pagan menos que el público?', a: 'Los agentes son miembros de la plataforma - los folletos son una de las herramientas de su panel, con precio en créditos (alrededor de una cuarta parte del precio público) y el primero a precio de estreno. Los 20 euros son la opción puntual, sin membresía, para todos los demás.' },
+	{ q: '¿Qué propiedades pueden tener folleto?', a: 'Cualquier propiedad en el MLS o en el portal público - venta o alquiler, segunda mano u obra nueva. Si tiene fotos y datos, puede convertirse en folleto en segundos.' },
+	{ q: '¿Qué elijo yo exactamente?', a: 'Un tema, si lleva tu marca o no, y el idioma. Todo lo demás - fotos, precio, características, mapa, etiqueta energética - se rellena automáticamente. Lo revisas antes de compartirlo.' },
+	{ q: '¿Incluye la etiqueta energética?', a: 'Sí, y esto importa: la ley española exige la calificación de eficiencia energética (de A a G) en cualquier publicidad inmobiliaria, incluidos los folletos, y omitirla puede acarrear una multa de 300 a 6.000 euros. Folleto Instantáneo integra la etiqueta directamente, así que tus folletos cumplen la norma sin que tengas que pensarlo.' },
+	{ q: '¿Para qué es la versión sin marca?', a: 'Para compartir una propiedad con otro agente en el MLS sin tu marca en la hoja que le enseña a su cliente, o como documento de marca blanca. La versión con marca es para tu propio marketing de cara al cliente.' },
+	{ q: '¿Puedo compartirlo como enlace en vez de PDF?', a: 'Sí - cada folleto viene en los dos formatos. El PDF listo para imprimir está para escaparates, visitas y todo lo que quieras en papel; el enlace web en vivo se abre perfecto en un móvil o portátil, ideal para WhatsApp, email y redes. Un clic, los dos formatos, sin coste extra.' },
+	{ q: '¿El enlace compartido se mantiene actualizado y puedo ver quién lo abre?', a: 'Sí a las dos cosas. La versión web en vivo refleja el anuncio en el portal, así que si el precio cambia o la propiedad pasa a reservada, el enlace que un comprador ya tiene se actualiza solo - sin reenviar nada. También ves cuándo se ha abierto y cuántas veces, y su botón de consulta envía cualquier interés nuevo directo a tu pipeline del CRM. El PDF, en cambio, es una foto fija del momento en que lo exportas.' },
+	{ q: '¿Puedo imprimirlo y compartirlo?', a: 'Sí. El PDF listo para imprimir está hecho para escaparates y visitas, y el enlace en vivo para compartir en digital. Cada folleto con tu marca lleva un código QR que devuelve a tu ficha en vivo.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+		{ '@type': 'ListItem', position: 3, name: 'Folleto Instantáneo', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Folleto Instantáneo',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
+	description: 'Muy pronto: genera un folleto de propiedad para cualquier anuncio con un clic - un PDF listo para imprimir más una página web en vivo que se actualiza sola cuando cambian el precio, las fotos y los datos en el portal, y capta consultas. Los agentes los crean en la plataforma desde unos créditos; el público en propertylist.es/brochures por 20 euros. Con etiqueta energética y código QR integrados.',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'en', href: `${origin}/instant-brochure/` },
+		{ hreflang: 'x-default', href: `${origin}/instant-brochure/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Folleto Instantáneo - Muy pronto</div>
+				<h1>Cámbialo una vez. Cada folleto se actualiza solo.</h1>
+				<p class="lead">
+					Cambia el precio, sube fotos nuevas o marca una propiedad como reservada en el portal - y cada enlace de folleto en
+					vivo que ya has compartido se actualiza solo, al instante, en cada móvil donde ya está. Sin reenviar nada, sin un
+					folleto que queda mal en cuanto cambia el precio. Un clic te da una página web para compartir que nunca se queda
+					desfasada, además de un PDF listo para imprimir para escaparates y visitas. Los agentes los crean en la plataforma
+					desde unos créditos; cualquier otra persona en <strong>propertylist.es/brochures</strong> por 20 euros.
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta de agente gratis</a>
+					<a class="btnSecondary" href="#how">Ver cómo funcionará</a>
+				</div>
+				<div class="note">Muy pronto. Los agentes lo tendrán en su panel con créditos de pago por uso; todos los demás en propertylist.es/brochures. Crea tu cuenta gratis ahora y estarás listo desde el primer día.</div>
+			</div>
+
+			<div class="bcWrap" aria-hidden="true">
+				<div class="bcSheet">
+					<div class="bcPhoto"><span class="bcPrice">695.000 &euro;</span></div>
+					<div class="bcBody">
+						<div class="bcTitle">Villa de 3 dorm. &middot; Nueva Andaluc&iacute;a</div>
+						<div class="bcChips"><span>3 dorm.</span><span>2 ba&ntilde;os</span><span>180 m&sup2;</span><span>Piscina</span></div>
+						<div class="bcRow">
+							<div class="bcThumbs"><span></span><span></span><span></span></div>
+							<div class="bcEnergy">
+								<span class="bcEnergyLabel">Energía</span>
+								<span class="bcEnergyBadge">B</span>
+							</div>
+						</div>
+					</div>
+					<div class="bcFooter"><span class="bcLogo">tu agencia</span><span class="bcQr"></span></div>
+				</div>
+				<div class="bcSheet bcBehind"></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Una propiedad bonita merece algo mejor que un folleto improvisado</h2>
+			<p>Un comprador decide en segundos si una casa merece su tiempo - y una hoja improvisada dice, en voz baja, "no del todo". Un diseñador le hace justicia, pero eso son de 50 a 150 euros y días de espera. Hazlo tú y pierdes una tarde dentro de un software incómodo. Y si dejas fuera la etiqueta energética, en España el anuncio va contra la ley. Folleto Instantáneo resuelve las tres cosas en un clic.</p>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Cuatro pasos, un folleto profesional</h2>
+			<p>Sin software de diseño, sin pelearte con plantillas, sin volver a teclear lo que ya está. De la propiedad a un PDF terminado sin salir de la página.</p>
+		</div>
+		<div class="grid4 steps">
+			<div class="card step"><div class="stepNum">1</div><h3>Abre la propiedad</h3><p>Toda propiedad en el MLS y en el portal público tendrá un botón de Folleto Instantáneo.</p></div>
+			<div class="card step"><div class="stepNum">2</div><h3>Elige tema y marca</h3><p>Escoge un tema, con o sin tu marca, y el idioma. El resto se rellena por ti.</p></div>
+			<div class="card step"><div class="stepNum">3</div><h3>Míralo tomar forma</h3><p>Previsualiza el folleto terminado - fotos, características, mapa, etiqueta energética y datos de contacto, bien maquetados.</p></div>
+			<div class="card step"><div class="stepNum">4</div><h3>Descarga y comparte</h3><p>Exporta un PDF listo para imprimir para visitas, escaparates, email y WhatsApp. En segundos.</p></div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Todo lo que un buen folleto necesita, ya integrado</h2>
+			<p>Creado a partir de la propiedad que tienes delante - no otra plantilla en blanco que rellenar a mano.</p>
+		</div>
+		<div class="grid3">
+			{
+				gets.map((g) => (
+					<div class="card">
+						<h3>{g.name}</h3>
+						<p>{g.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>El folleto que se mantiene actualizado solo</h2>
+			<p>Un clic te da un PDF listo para imprimir para la pared y el escaparate, y un enlace web para el móvil, un correo o un chat de WhatsApp. El enlace es donde está la magia - se mantiene sincronizado con el anuncio, él solo.</p>
+		</div>
+		<div class="grid3">
+			<div class="card">
+				<h3>Perfecto en cualquier pantalla</h3>
+				<p>La página en vivo se abre al instante en un móvil o un portátil, maquetada para cada uno - sin descargas, sin hacer zoom, sin un PDF de 10 MB que no se puede enviar. Justo como un comprador quiere recibir una propiedad hoy.</p>
+			</div>
+			<div class="card accent">
+				<h3>Siempre al día - precio, fotos, todo</h3>
+				<p>La versión web es una vista en vivo del anuncio en el portal. Cambia el precio, añade fotos nuevas, edita la descripción o márcala como reservada, y el folleto lo refleja - así el enlace que un comprador ya tiene nunca tiene el precio equivocado ni una foto vieja. Un PDF queda congelado al exportarlo; este enlace nunca se queda desfasado. Ningún otro folleto puede hacer esto.</p>
+			</div>
+			<div class="card">
+				<h3>Ve quién está interesado</h3>
+				<p>Sabe cuándo un comprador abre el folleto y cuántas veces - una señal discreta de quién se está interesando - con un botón de consulta que deja un lead nuevo directo en tu pipeline del CRM.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Mira un ejemplo real</h2>
+			<p>Una casa de lujo en el casco antiguo de Estepona, como Folleto Instantáneo. Abre la versión web en vivo en tu móvil, o descarga el PDF para imprimir - el mismo folleto, los dos formatos.</p>
+		</div>
+		<div class="ctaRow" style="padding: 4px 2px 2px;">
+			<a class="btnPrimary" href="/examples/estepona-old-town-townhouse.html" target="_blank" rel="noopener">Ver el folleto web en vivo &rarr;</a>
+			<a class="btnSecondary" href="/examples/estepona-old-town-townhouse.pdf" target="_blank" rel="noopener">Descargar el PDF</a>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Dos formas de conseguirlo</h2>
+			<p>El mismo folleto profesional, lo cree quien lo cree - con el precio adecuado a cómo lo usas.</p>
+		</div>
+		<div class="grid2">
+			<div class="card">
+				<div class="tierTag">Para todos</div>
+				<h3>¿Vendes por tu cuenta? Que parezca que lo hizo una agencia.</h3>
+				<p>Crea un folleto profesional de una propiedad en <strong>propertylist.es/brochures</strong> - sin membresía, sin nada que configurar. Una fracción de lo que cobra un diseñador, listo en minutos, tuyo para imprimir y compartir.</p>
+				<div class="priceTag"><b>20 &euro;</b><span>por folleto</span></div>
+			</div>
+			<div class="card accent">
+				<div class="tierTag">Para agentes</div>
+				<h3>Integrado en tu plataforma, a una fracción del precio.</h3>
+				<p>Dentro de tu panel de PropertyList, los folletos cuestan solo unos créditos - unos 5 euros, una cuarta parte del precio público - con el primero a precio de estreno. Un motivo más para que tus anuncios luzcan mejor que el resto.</p>
+				<div class="priceTag accentTag"><b>~5 &euro;</b><span>unos créditos</span></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Correcto ante la ley, siempre</h2>
+				<p>
+					En España, la calificación de eficiencia energética (de A a G) es obligatoria en cualquier publicidad inmobiliaria,
+					incluidos los folletos, y omitirla puede acarrear una multa de 300 a 6.000 euros. Folleto Instantáneo integra la
+					etiqueta energética directamente - así, un riesgo real de cumplimiento se convierte en una cosa menos en la que
+					pensar.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Con marca para clientes, sin marca para agentes</h2>
+				<p>
+					Muestra tu propia marca a los compradores - tu logo, tus colores y tus datos. O entrega a un agente colaborador una
+					hoja limpia sin marca para que se la enseñe a su cliente sin tu nombre. Una propiedad, la versión adecuada para cada
+					público.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Imagina cada anuncio con este aspecto.</h2>
+			<p>
+				Un folleto impecable hace que la propiedad - y quien la comercializa - luzcan, en la pared, en un correo o en la mano
+				de un comprador. Folleto Instantáneo convierte 30 minutos de pelea en un clic, en cualquier propiedad, por un precio
+				que se paga solo la primera vez que consigues el encargo.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas, respondidas</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Prepárate para el día del lanzamiento.</h2>
+			<p>Folleto Instantáneo llega muy pronto a cada propiedad. Agentes: crea tu cuenta gratis ahora y estará esperándote en tu panel desde el primer día, dentro de la plataforma gratuita de <a href="/es/funciones/">PropertyList</a>. Todos los demás: estará en propertylist.es/brochures.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta de agente gratis</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.lead strong { color: var(--pl-ink); }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.bcWrap { position: relative; display: grid; place-items: center; min-height: 340px; }
+		.bcSheet { position: relative; width: 78%; max-width: 320px; aspect-ratio: 3 / 4; background: #fff; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 18px 44px rgba(16, 24, 40, 0.18); overflow: hidden; transform: rotate(-2.5deg); z-index: 2; }
+		.bcBehind { position: absolute; transform: rotate(4deg); z-index: 1; background: linear-gradient(180deg, #f4f7f6, #e9efed); }
+		.bcPhoto { position: relative; height: 46%; background: linear-gradient(150deg, #b9d8d0 0%, #7fb8ac 55%, #5aa093 100%); }
+		.bcPrice { position: absolute; left: 12px; bottom: 10px; background: var(--pl-ink); color: #fff; font-weight: 900; font-size: 15px; padding: 5px 11px; border-radius: 8px; box-shadow: 0 4px 12px rgba(10, 109, 97, 0.35); }
+		.bcBody { padding: 12px 14px 8px; }
+		.bcTitle { font-weight: 900; font-size: 14px; color: #101828; letter-spacing: -0.01em; }
+		.bcChips { display: flex; flex-wrap: wrap; gap: 5px; margin: 9px 0 12px; }
+		.bcChips span { font-size: 10.5px; font-weight: 700; color: rgba(16, 24, 40, 0.7); background: rgba(16, 24, 40, 0.06); border-radius: 999px; padding: 3px 9px; }
+		.bcRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+		.bcThumbs { display: flex; gap: 5px; }
+		.bcThumbs span { width: 34px; height: 26px; border-radius: 5px; background: linear-gradient(150deg, #d7e6e2, #a9cfc6); }
+		.bcEnergy { display: flex; align-items: center; gap: 6px; }
+		.bcEnergyLabel { font-size: 10px; font-weight: 800; color: rgba(16, 24, 40, 0.55); text-transform: uppercase; letter-spacing: 0.06em; }
+		.bcEnergyBadge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 22px; border-radius: 4px; background: #4caf50; color: #fff; font-weight: 900; font-size: 13px; box-shadow: 0 2px 6px rgba(76, 175, 80, 0.4); }
+		.bcFooter { position: absolute; left: 0; right: 0; bottom: 0; height: 16%; background: var(--pl-ink); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
+		.bcLogo { color: #fff; font-weight: 900; font-size: 12px; letter-spacing: 0.02em; opacity: 0.95; }
+		.bcQr { width: 24px; height: 24px; border-radius: 4px; background:
+			repeating-conic-gradient(#0a6d61 0% 25%, #fff 0% 50%) 50% / 8px 8px; border: 2px solid #fff; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.card p strong { color: var(--pl-ink); }
+		.tierTag { display: inline-block; font-size: 11px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); border-radius: 999px; padding: 4px 10px; margin-bottom: 10px; }
+		.priceTag { display: flex; align-items: baseline; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 24, 40, 0.08); }
+		.priceTag b { font-size: 26px; font-weight: 900; color: #101828; letter-spacing: -0.02em; }
+		.priceTag.accentTag b { color: var(--pl-ink); }
+		.priceTag span { font-size: 12.5px; font-weight: 700; color: rgba(16, 24, 40, 0.55); }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+			.grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+	<AgentInterestCta lang="es" page="/es/folleto-instantaneo/" />
+</Layout>

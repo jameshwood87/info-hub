@@ -161,6 +161,7 @@ export const setKbMeta = async (
 		featuredImageCaption?: string | null;
 		featuredImageCredit?: string | null;
 		scheduledAt?: string | null;
+		reviewedAt?: string | null;
 		docCategory?: 'estate-agent' | 'developer' | 'property-service' | 'public' | null;
 		docCategories?: Array<'estate-agent' | 'developer' | 'property-service' | 'public'> | null;
 		areaStats?: AreaStats | null;
@@ -195,6 +196,8 @@ export const setKbMeta = async (
 	else if (typeof patch.featuredImageCredit === 'string') next.featuredImageCredit = patch.featuredImageCredit;
 	if (patch.scheduledAt === null) delete next.scheduledAt;
 	else if (typeof patch.scheduledAt === 'string') next.scheduledAt = patch.scheduledAt;
+	if (patch.reviewedAt === null) delete next.reviewedAt;
+	else if (typeof patch.reviewedAt === 'string') next.reviewedAt = patch.reviewedAt;
 	if (patch.docCategory === null) delete next.docCategory;
 	else if (typeof patch.docCategory === 'string') next.docCategory = patch.docCategory;
 	if (patch.docCategories === null) delete next.docCategories;

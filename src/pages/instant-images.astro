@@ -9,7 +9,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/instant-images/`;
 const title = 'Instant Images - AI photo enhancement and marketing images | PropertyList';
 const description =
-	'Twilight conversions, blue skies, virtual staging and branded social cards for your listings - one click, from the photos you already have. Honest by design: labels on staged images, originals always kept.';
+	'Twilight conversion, blue skies, labelled virtual staging and branded social cards from your own listing photos - one click. Coming soon.';
 
 const steps = [
 	{ n: 1, t: 'Pick a listing or photo', d: 'From the Marketing tab, or straight from the listing - enhance one photo or the whole set in one run.' },
@@ -48,8 +48,8 @@ const faqs = [
 	{ q: 'Does it replace my original photos?', a: 'Never. Enhanced photos are saved alongside your originals as extra versions you can choose from, and you can revert in one click. Your original photos always stay on the listing record.' },
 	{ q: 'My imported photos are small and blurry - can it fix them?', a: 'Yes. The upscaler raises small, compressed photos (common on feed-imported listings) to sharp portal quality. It is one credit per photo like any other enhancement.' },
 	{ q: 'What does it cost?', a: LIVE
-		? 'Pay as you go with your PropertyList credits: 1 credit per enhanced photo, 10 credits for a whole listing, 5 credits per staged room, and social cards from 2 credits. 1 credit = 1 euro, no subscription.'
-		: 'Planned pricing is pay-as-you-go with your PropertyList credits: 1 credit per enhanced photo, 10 credits for a whole listing, 5 credits per staged room, and social cards from 2 credits. 1 credit = 1 euro, no subscription. Final pricing is confirmed at launch.' },
+		? 'Pay as you go with your PropertyList credits: 1 credit per enhanced photo, 10 credits for a whole listing, 5 credits per staged room, and social cards from 2 credits. 1 credit (~1€), no subscription.'
+		: 'Planned pricing is pay-as-you-go with your PropertyList credits: 1 credit per enhanced photo, 10 credits for a whole listing, 5 credits per staged room, and social cards from 2 credits. 1 credit (~1€), no subscription. Final pricing is confirmed at launch.' },
 	{ q: 'When can I use it?', a: LIVE
 		? 'It is live now - open the Marketing section in your PropertyList account. New agencies get started free at propertylist.es.'
 		: 'Very soon - it ships alongside Instant Video in the new Marketing section. Join the waitlist below and we will send one email the day it goes live. Not on PropertyList yet? Your free account takes minutes to set up.' },
@@ -72,10 +72,9 @@ const softwareLd = {
 	name: 'PropertyList Instant Images',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
 	description: 'AI photo enhancement, virtual staging and branded marketing images for estate agencies, generated from the agency’s own listing photos and data.',
-	offers: { '@type': 'Offer', price: '1', priceCurrency: 'EUR' },
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 ---
 
 <Layout
@@ -192,7 +191,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 	<section class="section" id="pricing">
 		<div class="sectionHead">
 			<h2>Priced to use every week</h2>
-			<p>1 credit = 1 euro, from the same credit balance your agency already uses. No subscription.{LIVE ? '' : ' Planned pricing, confirmed at launch.'}</p>
+			<p>1 credit (~1€), from the same credit balance your agency already uses. No subscription.{LIVE ? '' : ' Planned pricing, confirmed at launch.'}</p>
 		</div>
 		<div class="grid4">
 			{prices.map((p) => (

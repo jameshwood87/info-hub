@@ -1,0 +1,534 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/activar/`;
+const title = 'Tu cuenta de PropertyList ya está activa | PropertyList';
+const description =
+	'Ya tienes cuenta de agencia. Estos son los sesenta segundos que la convierten en una agencia que funciona: una propiedad, vista por toda la red de agentes.';
+
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
+
+// Quien lee esto ya tiene cuenta. En esta página no hay ningún enlace de registro.
+const LOGIN = 'https://agents.propertylist.es/login?locale=es';
+
+const steps = [
+	{
+		n: '1',
+		h: 'Entra en tu cuenta',
+		p: 'Tu agencia, tus usuarios, tu CRM y tu MicroSite de marca ya están creados y siguen siendo gratis. No hay nada que configurar ni nada que elegir.',
+	},
+	{
+		n: '2',
+		h: 'Añade una propiedad',
+		p: 'Sube las fotos del móvil y describe la propiedad en voz alta. Instant Listing redacta el tipo, las habitaciones, los metros, las características y la descripción en español e inglés. Tú lo revisas antes de que se publique nada.',
+	},
+	{
+		n: '3',
+		h: 'Ese es todo el trabajo',
+		p: `El anuncio queda delante de ${plAgents} agentes que pueden venderlo contigo, y en el portal público delante de compradores. Las consultas entran en tu CRM.`,
+	},
+];
+
+const after = [
+	{
+		h: 'Otros agentes pueden venderla esa misma tarde',
+		p: `Tu anuncio se suma a ${plListings} en la red compartida. Cualquier agente puede traerte un comprador, y las referencias entre agentes nunca cuestan un crédito.`,
+	},
+	{
+		h: 'Los compradores la ven en el portal',
+		p: 'Sale en propertylist.es al mismo tiempo, sin comisión por publicar. La consulta de un comprador llega directamente a ti.',
+	},
+	{
+		h: 'Tu MicroSite deja de estar vacío',
+		p: 'Tu web de marca en tuagencia.estate-agency.co se construye sola a partir de tus anuncios. Una propiedad en el MLS es una propiedad en tu web, sin nada más que actualizar.',
+	},
+	{
+		h: 'Puedes buscar en el stock de los demás',
+		p: `La red funciona en los dos sentidos. Una vez dentro puedes vender de los ${plListings} anuncios, no solo de los tuyos, y AI Property Match encuentra el encaje a partir del WhatsApp de un cliente.`,
+	},
+];
+
+// Los bloqueos reales. Cada uno es un motivo por el que una cuenta se queda vacía.
+const stuck = [
+	{
+		q: 'No me acuerdo de la contraseña',
+		a: `Usa el enlace de recuperación en la <a href="${LOGIN}" target="_blank" rel="noopener">página de acceso</a>. Llega al correo con el que te registraste. Si ese buzón ya no existe, responde a quien te haya escrito y el equipo traslada la cuenta.`,
+	},
+	{
+		q: 'Ya tengo 40 propiedades y no las voy a meter a mano',
+		a: 'No las metas. Envía la URL de tu feed XML actual a <a href="mailto:xml@propertylist.es">xml@propertylist.es</a> y el equipo lo conecta por ti. Tu stock entra solo y se mantiene sincronizado. Importar es gratis, y sacar tus anuncios hacia otros portales también.',
+	},
+	{
+		q: 'No quiero que otros agentes vean mis propiedades',
+		a: 'Entonces déjalas fuera de la red. Un anuncio privado está publicado en el portal público y es invisible para otras agencias. Los 5 primeros son gratis, después son 5 créditos cada uno. La mayoría comparte el stock que quiere vender y se guarda uno o dos.',
+	},
+	{
+		q: 'No tengo claro qué cuesta todo esto',
+		a: 'Publicar, el CRM, usuarios ilimitados, el MicroSite, la presencia en el portal y el XML en los dos sentidos son gratis, sin límite y sin tarjeta. Solo pagas un crédito cuando decides pasar un lead de comprador cualificado a tu pipeline de pago, y nada se cobra solo. <a href="/es/gratis/">Aquí está la lista completa de lo gratuito.</a>',
+	},
+	{
+		q: 'Me registré hace tiempo y no recuerdo qué hace',
+		a: 'La versión corta: es un MLS compartido para agencias en España con un CRM gratuito incorporado, así que un anuncio tuyo lo puede vender cualquier agente de la red y la consulta de un comprador llega ya dentro de tu pipeline. <a href="/es/lanza-tu-agencia/">Aquí está la versión de nueve minutos.</a>',
+	},
+];
+
+// Agrupado para que se vea la amplitud de un vistazo. Cada línea es "certain" en el
+// inventario de gratis/pago; lo que las fuentes contradicen se queda fuera de esta página.
+const freeGroups = [
+	{
+		h: 'Sacar la propiedad al mercado',
+		items: [
+			'Anuncios ilimitados en el MLS compartido y en el portal público, sin comisión por publicar.',
+			'Instant Listing: fotos y una nota de voz se convierten en un anuncio terminado en español e inglés.',
+			'Tu feed XML actual importado por nosotros, y tus anuncios enviados de vuelta a otros portales.',
+			'Hasta 25 fotos y un vídeo en cada propiedad.',
+			'Tus 5 primeros anuncios privados, si quieres dejar alguno fuera de la red.',
+		],
+	},
+	{
+		h: 'Llevar la agencia',
+		items: [
+			'El CRM: contactos ilimitados, usuarios ilimitados, calendario y almacenamiento de documentos.',
+			'Los tableros de Leads, Vendedores y Propiedades, configurados y cargados con lo que ya tienes.',
+			'Mensajería, solicitudes de visita y el historial completo de cada contacto.',
+			'La app de Android, para publicar una propiedad en la propia visita.',
+			'Los grupos de WhatsApp de agentes.',
+		],
+	},
+	{
+		h: 'Encontrar al comprador',
+		items: [
+			'AI Property Match: pega el mensaje de un cliente y salen las propiedades, primero las tuyas y luego las de la red.',
+			'Alertas sobre el perfil guardado de un cliente, en todos los anuncios de la red.',
+			'Datos de mercado mensuales de más de 20 municipios de la Costa del Sol, con precios de venta registrados.',
+			'Tu MicroSite de marca, con alojamiento, y todas las consultas que entren por él.',
+			'Referencias y reparto de comisión con otras agencias, nunca se cobran.',
+		],
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	robots="noindex,follow"
+	existingUser
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Tu cuenta ya está activa</div>
+			<h1>Tu agencia existe. Lo único que le falta es contenido.</h1>
+			<p class="lead">
+				Te registraste y después llegó una semana normal. Todo lo que creaste sigue ahí, sigue siendo tuyo y sigue siendo gratis. Empieza a
+				funcionar en cuanto haya una propiedad dentro, y meter una lleva alrededor de un minuto.
+			</p>
+			<div class="ctaRow" aria-label="Entrar en PropertyList">
+				<a class="btnPrimary" href={LOGIN} target="_blank" rel="noopener" data-umami-event="activate-login-hero-es">
+					Entrar y añadir una propiedad
+				</a>
+				<a class="btnSecondary" href="#stuck">Algo me lo está impidiendo</a>
+			</div>
+			<div class="note">Sin tarjeta, sin reactivar nada, sin nada que cancelar. Hoy hay {plAgencies} agencias en la red.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Sesenta segundos, tres pasos</h2>
+			<p>La parte que exigía una decisión ya la hiciste.</p>
+		</div>
+		<div class="grid3">
+			{
+				steps.map((s) => (
+					<div class="card stepCard">
+						<div class="stepNum">{s.n}</div>
+						<h3>{s.h}</h3>
+						<p>{s.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que activa una sola propiedad</h2>
+			<p>Nada de esto ocurre mientras la cuenta está vacía. Todo esto ocurre el mismo día en que deja de estarlo.</p>
+		</div>
+		<div class="grid2">
+			{
+				after.map((a) => (
+					<div class="card">
+						<h3>{a.h}</h3>
+						<p>{a.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section" id="stuck">
+		<div class="sectionHead">
+			<h2>Si algo te lo está impidiendo</h2>
+			<p>Estos son los cinco motivos por los que una cuenta se queda vacía. Cuatro de ellos los resuelve otro.</p>
+		</div>
+		<div class="faqList">
+			{
+				stuck.map((s) => (
+					<details class="faqItem">
+						<summary>{s.q}</summary>
+						<p set:html={s.a} />
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que ya está pagado en tu cuenta</h2>
+			<p>No es una prueba, no es un plan de entrada y no son cinco cosas. Es la cuenta gratuita de siempre, y parte de esto no existía cuando te registraste.</p>
+		</div>
+		<div class="grid3">
+			{
+				freeGroups.map((g) => (
+					<div class="card">
+						<h3>{g.h}</h3>
+						<ul class="tickList">
+							{g.items.map((i) => <li>{i}</li>)}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Por qué todo eso es la mitad gratuita</h2>
+				<p>
+					PropertyList cobra por la demanda, no por la oferta. Todo lo de arriba es lo que tú aportas a la red, y la red vale más para
+					todas las agencias que están dentro, incluida la tuya, cuanto más llena está.
+				</p>
+				<p>
+					Lo que cuesta dinero es lo que la red te devuelve: un crédito cuando decides pasar un lead de comprador cualificado a tu pipeline
+					de pago, y los módulos mensuales opcionales de alquileres, seguimiento automático y web propia. Nada se activa solo y los
+					créditos que compras no caducan.
+				</p>
+				<p>Por eso mismo una cuenta vacía no te cuesta nada y tampoco te da nada. Lo único que falta es stock.</p>
+				<div class="ctaRow">
+					<a class="btnSecondary" href="/es/gratis/">La lista completa de lo gratuito</a>
+					<a class="btnSecondary" href="/es/precios/">Lo que cuesta la parte de pago</a>
+				</div>
+			</div>
+			<div class="card">
+				<h2>Una cosa que merece dos minutos</h2>
+				<p>
+					Si nunca terminaste la verificación: es gratis, lleva unos dos minutos, y las agencias aprobadas reciben
+					<strong>20 créditos</strong> en el saldo.
+				</p>
+				<p>
+					Además pone un tick de verificación en tu agencia y en cada propiedad que publiques, y cuando la misma propiedad está dos veces
+					en la red, el anuncio de la agencia verificada tiene prioridad.
+				</p>
+				<p>Son 20 leads de comprador, o cuatro informes de valoración, por un formulario sobre una empresa que ya es tuya.</p>
+				<div class="ctaRow">
+					<a class="btnSecondary" href="/es/verifica-tu-agencia/">Cómo funciona la verificación</a>
+					<a class="btnSecondary" href="/es/pipelines/">Los seis pipelines</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section cta">
+		<div class="ctaInner">
+			<h2>Una propiedad es la diferencia entre una cuenta y una agencia.</h2>
+			<p>
+				Todo lo demás lo hiciste hace meses. Añade la propiedad que más te gustaría vender y deja que {plAgents} agentes te ayuden a
+				venderla.
+			</p>
+			<div class="ctaRow" aria-label="Entrar en PropertyList">
+				<a class="btnPrimary" href={LOGIN} target="_blank" rel="noopener" data-umami-event="activate-login-footer-es">
+					Entrar y añadir una propiedad
+				</a>
+				<a class="btnSecondary" href="/es/docs/propertylist-mls-manual-de-usuario/core-workflow/listing-a-property/">Cómo se publica</a>
+			</div>
+			<p class="quiet"><a href="/activate/">Read this page in English</a></p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+	}
+
+	.hero {
+		border-radius: 22px;
+		padding: 16px;
+		margin: 0 0 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background:
+			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.75);
+		max-width: 78ch;
+		line-height: 1.6;
+	}
+
+	.note {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.section {
+		margin: 0 0 14px;
+		scroll-margin-top: 90px;
+	}
+
+	.sectionHead {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 12px;
+	}
+
+	.sectionHead p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.6;
+		max-width: 88ch;
+	}
+
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.card.accent {
+		border-color: rgba(var(--pl-accent-rgb), 0.25);
+		background:
+			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
+			rgba(255, 255, 255, 0.86);
+	}
+
+	.card h2 {
+		margin: 0 0 10px;
+	}
+
+	.card h3 {
+		margin: 0 0 6px;
+		font-size: 16.5px;
+	}
+
+	.card p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+
+	.card p:last-child {
+		margin-bottom: 0;
+	}
+
+	.stepCard {
+		position: relative;
+		padding-top: 18px;
+	}
+
+	.stepNum {
+		width: 30px;
+		height: 30px;
+		border-radius: 999px;
+		background: #101828;
+		color: #fff;
+		font-weight: 800;
+		font-size: 14px;
+		display: grid;
+		place-items: center;
+		margin-bottom: 10px;
+	}
+
+	.tickList {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 8px;
+	}
+
+	.tickList li {
+		position: relative;
+		padding-left: 26px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.55;
+		font-size: 14.5px;
+	}
+
+	.tickList li::before {
+		content: '\2713';
+		position: absolute;
+		left: 0;
+		top: 0;
+		color: #0a6d61;
+		font-weight: 900;
+	}
+
+	.quiet {
+		color: rgba(16, 24, 40, 0.62);
+		font-size: 14px;
+		line-height: 1.6;
+		margin: 14px 0 0;
+	}
+
+	.faqList {
+		display: grid;
+		gap: 10px;
+	}
+
+	.faqItem {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		padding: 14px 18px;
+	}
+
+	.faqItem summary {
+		cursor: pointer;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: #101828;
+	}
+
+	.faqItem p {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.65;
+	}
+
+	.cta {
+		border-radius: 22px;
+		padding: 16px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.ctaInner {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	.ctaInner p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.6;
+		max-width: 90ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 14px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 950;
+		color: rgba(16, 24, 40, 0.88);
+	}
+
+	.btnPrimary {
+		border-color: rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.14);
+	}
+
+	.btnPrimary:hover,
+	.btnSecondary:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	@media (max-width: 980px) {
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

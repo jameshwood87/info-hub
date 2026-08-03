@@ -1,0 +1,219 @@
+---
+// Exit-intent capture. Deliberately constrained:
+//  - desktop only (pointer:fine + >=1024px). Google penalises intrusive mobile interstitials
+//    and most of this site's traffic is mobile.
+//  - fires once per visitor per 30 days, and never again once they submit or dismiss.
+//  - never while the cookie banner is still unanswered (we already had a double-popup bug).
+//  - never on blog posts or docs - those pages capture inline instead.
+// Agent prospects, so it routes to the agent CRM tagged 'agent-interested', same as the
+// inline AgentInterestCta.
+interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t =
+	lang === 'es'
+		? {
+				title: 'Antes de irte',
+				body: '¿Te mando el resumen? Qué está incluido gratis, qué cuesta créditos y a qué sustituye. Un email, sin compromiso.',
+				ph: 'tu@email.com',
+				btn: 'Envíamelo',
+				close: 'Cerrar',
+				ok: 'Hecho. Va camino de tu bandeja.',
+				bad: 'Introduce un email válido.',
+				err: 'Algo ha fallado. Inténtalo de nuevo.',
+				note: 'Un email. Puedes darte de baja cuando quieras.',
+			}
+		: {
+				title: 'Before you go',
+				body: 'Want the summary emailed to you? What is included free, what costs credits, and what it replaces. One email, no obligation.',
+				ph: 'your@email.com',
+				btn: 'Send it to me',
+				close: 'Close',
+				ok: 'Done. It is on its way to your inbox.',
+				bad: 'Please enter a valid email address.',
+				err: 'Something went wrong. Please try again.',
+				note: 'One email. Unsubscribe any time.',
+			};
+---
+
+<div
+	class="xiWrap"
+	data-exit-intent
+	data-lang={lang}
+	data-ok={t.ok}
+	data-bad={t.bad}
+	data-err={t.err}
+	hidden
+>
+	<div class="xiBackdrop" data-xi-close></div>
+	<div class="xiCard" role="dialog" aria-modal="true" aria-labelledby="xiTitle">
+		<button class="xiX" type="button" data-xi-close aria-label={t.close}>&times;</button>
+		<h2 class="xiTitle" id="xiTitle">{t.title}</h2>
+		<p class="xiBody">{t.body}</p>
+		<form class="xiForm" data-xi-form>
+			<input
+				class="xiInput"
+				type="email"
+				name="email"
+				required
+				placeholder={t.ph}
+				aria-label={t.ph}
+				autocomplete="email"
+			/>
+			<button class="xiBtn" type="submit">{t.btn}</button>
+		</form>
+		<p class="xiNote">{t.note}</p>
+		<p class="xiMsg" data-xi-msg role="status" aria-live="polite"></p>
+	</div>
+</div>
+
+<script>
+	(function () {
+		const box = document.querySelector('[data-exit-intent]');
+		if (!box) return;
+
+		const KEY = 'pl_exit_intent';
+		const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+		// desktop only: a real mouse, and a wide viewport
+		const isDesktop =
+			window.matchMedia('(pointer: fine)').matches && window.matchMedia('(min-width: 1024px)').matches;
+		if (!isDesktop) return;
+
+		// already seen, dismissed or submitted recently?
+		try {
+			const seen = Number(localStorage.getItem(KEY) || 0);
+			if (seen && Date.now() - seen < THIRTY_DAYS) return;
+		} catch (e) {
+			return; // no storage means no frequency cap, so do not show at all
+		}
+
+		// never stack on the cookie banner while it is still unanswered
+		const consentPending = () => {
+			try {
+				return !localStorage.getItem('pl_ga_consent') && !!document.querySelector('[data-ga-consent]');
+			} catch (e) {
+				return false;
+			}
+		};
+
+		const remember = () => {
+			try {
+				localStorage.setItem(KEY, String(Date.now()));
+			} catch (e) {}
+		};
+
+		let shown = false;
+		const show = () => {
+			if (shown || consentPending()) return;
+			shown = true;
+			remember();
+			box.hidden = false;
+			const input = box.querySelector('input[type=email]');
+			if (input) setTimeout(() => input.focus(), 60);
+			if (window.umami && window.umami.track) {
+				window.umami.track('exit-intent-shown', { page: location.pathname });
+			}
+		};
+
+		const hide = () => {
+			box.hidden = true;
+		};
+
+		// the trigger: pointer leaving through the top of the viewport
+		document.addEventListener('mouseout', (e) => {
+			if (e.relatedTarget || e.clientY > 8) return;
+			show();
+		});
+
+		box.querySelectorAll('[data-xi-close]').forEach((el) => el.addEventListener('click', hide));
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && !box.hidden) hide();
+		});
+
+		const form = box.querySelector('[data-xi-form]');
+		const msg = box.querySelector('[data-xi-msg]');
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const input = form.querySelector('input[type=email]');
+			const btn = form.querySelector('button');
+			const email = String(input.value || '').trim();
+			if (!email || !email.includes('@')) {
+				msg.textContent = box.dataset.bad;
+				msg.className = 'xiMsg bad';
+				return;
+			}
+			btn.disabled = true;
+			msg.textContent = '';
+			try {
+				const res = await fetch('/api/subscribe', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({
+						email,
+						audience: 'agent',
+						tag: 'agent-interested',
+						lang: box.dataset.lang || 'en',
+						page: location.pathname,
+					}),
+				});
+				const data = await res.json().catch(() => ({}));
+				if (!res.ok || !data.ok) {
+					msg.textContent = box.dataset.err;
+					msg.className = 'xiMsg bad';
+					btn.disabled = false;
+					return;
+				}
+				msg.textContent = box.dataset.ok;
+				msg.className = 'xiMsg ok';
+				input.value = '';
+				if (window.umami && window.umami.track) {
+					window.umami.track('exit-intent-submit', { page: location.pathname });
+				}
+				setTimeout(hide, 1600);
+			} catch (err) {
+				msg.textContent = box.dataset.err;
+				msg.className = 'xiMsg bad';
+			}
+			btn.disabled = false;
+		});
+	})();
+</script>
+
+<style>
+	.xiWrap { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; }
+	.xiWrap[hidden] { display: none; }
+	.xiBackdrop { position: absolute; inset: 0; background: rgba(11, 18, 32, 0.45); }
+	.xiCard {
+		position: relative; width: 100%; max-width: 460px; padding: 30px 32px 26px;
+		background: #fff; border-radius: 18px; box-shadow: 0 30px 70px -20px rgba(11, 18, 32, 0.55);
+		animation: xiIn 180ms ease-out both;
+	}
+	@keyframes xiIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+	@media (prefers-reduced-motion: reduce) { .xiCard { animation: none; } }
+	.xiX {
+		position: absolute; top: 10px; right: 12px; width: 34px; height: 34px; border: 0;
+		background: transparent; font-size: 26px; line-height: 1; color: rgba(16, 24, 40, 0.45); cursor: pointer;
+	}
+	.xiX:hover { color: #101828; }
+	.xiTitle { margin: 0 0 8px; font-size: 21px; font-weight: 800; color: #101828; }
+	.xiBody { margin: 0 0 16px; font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); }
+	.xiForm { display: flex; gap: 8px; flex-wrap: wrap; }
+	.xiInput {
+		flex: 1 1 200px; min-width: 0; padding: 11px 14px; font-size: 15px;
+		border: 1px solid rgba(16, 24, 40, 0.2); border-radius: 10px; color: #101828;
+	}
+	.xiInput:focus { outline: 2px solid rgba(0, 174, 154, 0.5); outline-offset: 1px; }
+	.xiBtn {
+		flex: 0 0 auto; padding: 11px 20px; font-size: 15px; font-weight: 800; color: #fff;
+		background: #00ae9a; border: 0; border-radius: 10px; cursor: pointer;
+	}
+	.xiBtn:hover { background: #0a9285; }
+	.xiBtn:disabled { opacity: 0.6; cursor: default; }
+	.xiNote { margin: 10px 0 0; font-size: 12.5px; color: rgba(16, 24, 40, 0.5); }
+	.xiMsg { margin: 8px 0 0; font-size: 13.5px; min-height: 1em; }
+	.xiMsg.ok { color: #0a6d61; font-weight: 700; }
+	.xiMsg.bad { color: #b42318; }
+</style>

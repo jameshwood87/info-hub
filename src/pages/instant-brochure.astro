@@ -1,0 +1,336 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AgentInterestCta from '../components/AgentInterestCta.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/instant-brochure/`;
+const title = 'Instant Brochure (coming soon) - a print-ready property brochure in one click | PropertyList';
+const description =
+	'Coming soon: one-click property brochures - a print-ready PDF plus a live web page that updates itself when the price, photos or details change.';
+
+const gets = [
+	{ name: 'Print-ready in one click', desc: 'A professional A4 PDF, built from the listing photos and details - no design software, no waiting on a designer.' },
+	{ name: 'A look that fits the home', desc: 'Choose a clean theme - Classic, Modern or Luxury - so the brochure suits the property and, for agents, your brand.' },
+	{ name: 'Branded or unbranded', desc: 'Your agency logo, colours and contact details, or a clean unbranded version to share or hand to a collaborating agent.' },
+	{ name: 'Legally compliant, automatically', desc: 'The energy label (A to G) is built in, so every brochure meets the legal requirement for property advertising in Spain.' },
+	{ name: 'Photos, features and the area', desc: 'The gallery, the key features, a map and local context - all laid out for you from the data already on the listing.' },
+	{ name: 'A QR code straight to the listing', desc: 'Every branded brochure carries a QR code to your live property page, so even a printed sheet sends a buyer straight to it online.' },
+];
+
+const faqs = [
+	{ q: 'Can I use it if I am not an estate agent?', a: 'Yes. Anyone can create a professional brochure for a property at propertylist.es/brochures for 20 euros each - ideal if you are selling privately and want your home to look like an agency listed it. Estate agents get it built into their platform at a lower, credit-based price.' },
+	{ q: 'Why do agents pay less than the public?', a: 'Agents are platform members - brochures are one of the tools inside their dashboard, priced in credits (about a quarter of the public price), with the first at an intro price. The 20 euro price is the one-off, no-membership option for everyone else.' },
+	{ q: 'Which properties can have a brochure?', a: 'Any property on the MLS or the public portal - sale or rental, resale or new development. If it has photos and details, it can become a brochure in seconds.' },
+	{ q: 'What do I actually choose?', a: 'A theme, whether it is branded or unbranded, and the language. Everything else - photos, price, features, map, energy label - is filled in automatically. You review it before you share it.' },
+	{ q: 'Does it include the energy rating?', a: 'Yes, and this matters: Spanish law requires the energy efficiency rating (A to G) in any property advertising, including brochures, and leaving it out can mean a fine of 300 to 6,000 euros. Instant Brochure builds the label straight in, so your brochures stay on the right side of the law without you thinking about it.' },
+	{ q: 'What is the unbranded version for?', a: 'Sharing a property with another agent on the MLS without your branding on the sheet they show their client, or as a clean white-label document. Branded is for your own client-facing marketing.' },
+	{ q: 'Can I share it as a link instead of a PDF?', a: 'Yes - every brochure comes as both. The print-ready PDF is there for windows, viewings and anything you want on paper; the live web link opens beautifully on a phone or laptop, so it is ideal for WhatsApp, email and social. One click, both formats, no extra cost.' },
+	{ q: 'Does the shared link stay up to date, and can I see who opens it?', a: 'Yes to both. The live web version reflects the listing on the portal, so if the price changes or the property goes under offer, the link a buyer already has updates itself - no need to resend anything. You can also see when it has been opened and how often, and its enquiry button sends any new interest straight into your CRM pipeline. The PDF, by contrast, is a fixed snapshot from the moment you export it.' },
+	{ q: 'Can I print it and share it?', a: 'Yes. The print-ready PDF is made for window displays and viewings, while the live link is made for digital sharing. Each branded brochure carries a QR code back to your live listing.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 3, name: 'Instant Brochure', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Instant Brochure',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
+	description: 'Coming soon: generate a property brochure for any listing in one click - a print-ready PDF plus a shareable live web page that updates itself as the price, photos and details change on the portal, and captures enquiries. Agents create them in-platform from a few credits; the public at propertylist.es/brochures for 20 euros. Energy label and QR code built in.',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/folleto-instantaneo/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Instant Brochure - Coming soon</div>
+				<h1>Change it once. Every brochure updates itself.</h1>
+				<p class="lead">
+					Update the price, swap in new photos or mark a property under offer on the portal - and every live brochure link
+					you have already shared updates itself, instantly, on every phone it is already on. No resending, no brochure that
+					is wrong the moment the price moves. One click gives you a shareable web page that is never out of date, plus a
+					print-ready PDF for windows and viewings. Agents create them in-platform from a few credits; anyone else at
+					<strong>propertylist.es/brochures</strong> for 20 euros.
+				</p>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free agent account</a>
+					<a class="btnSecondary" href="#how">See how it will work</a>
+				</div>
+				<div class="note">Coming soon. Agents get it in their dashboard on pay-as-you-go credits; everyone else at propertylist.es/brochures. Create your free account now and be ready on day one.</div>
+			</div>
+
+			<div class="bcWrap" aria-hidden="true">
+				<div class="bcSheet">
+					<div class="bcPhoto"><span class="bcPrice">&euro;695,000</span></div>
+					<div class="bcBody">
+						<div class="bcTitle">3-bed villa &middot; Nueva Andaluc&iacute;a</div>
+						<div class="bcChips"><span>3 bed</span><span>2 bath</span><span>180 m&sup2;</span><span>Pool</span></div>
+						<div class="bcRow">
+							<div class="bcThumbs"><span></span><span></span><span></span></div>
+							<div class="bcEnergy">
+								<span class="bcEnergyLabel">Energy</span>
+								<span class="bcEnergyBadge">B</span>
+							</div>
+						</div>
+					</div>
+					<div class="bcFooter"><span class="bcLogo">your agency</span><span class="bcQr"></span></div>
+				</div>
+				<div class="bcSheet bcBehind"></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>A beautiful property deserves better than a rushed brochure</h2>
+			<p>A buyer decides in seconds whether a home feels worth their time - and a thrown-together sheet quietly says "not quite". A designer does it justice, but that is 50 to 150 euros and days of waiting. Do it yourself and you lose an afternoon inside fiddly software. And leave off the energy rating and, in Spain, the advert is against the law. Instant Brochure clears all three in one click.</p>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Four steps, one professional brochure</h2>
+			<p>No design software, no template wrangling, no re-typing what is already there. From property to a finished PDF without leaving the page.</p>
+		</div>
+		<div class="grid4 steps">
+			<div class="card step"><div class="stepNum">1</div><h3>Open the property</h3><p>Every property on the MLS and the public portal will have an Instant Brochure button.</p></div>
+			<div class="card step"><div class="stepNum">2</div><h3>Pick theme and branding</h3><p>Choose a theme, branded or unbranded, and the language. Everything else is filled in for you.</p></div>
+			<div class="card step"><div class="stepNum">3</div><h3>See it come together</h3><p>Preview the finished brochure - photos, features, map, energy label and contact details, laid out cleanly.</p></div>
+			<div class="card step"><div class="stepNum">4</div><h3>Download and share</h3><p>Export a print-ready PDF for viewings, windows, email and WhatsApp. Done in seconds.</p></div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Everything a great brochure needs, built in</h2>
+			<p>Made from the property in front of you - not another blank template to fill in by hand.</p>
+		</div>
+		<div class="grid3">
+			{
+				gets.map((g) => (
+					<div class="card">
+						<h3>{g.name}</h3>
+						<p>{g.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>The brochure that keeps itself up to date</h2>
+			<p>One click gives you a print-ready PDF for the wall and the window, and a shareable web link for a phone, an inbox or a WhatsApp chat. The link is where the magic is - it stays in sync with the listing, all by itself.</p>
+		</div>
+		<div class="grid3">
+			<div class="card">
+				<h3>Perfect on any screen</h3>
+				<p>The live page opens instantly on a phone or a laptop, laid out for each - no download, no pinch-to-zoom, no 10 MB PDF that will not send. Exactly how a buyer wants to receive a property today.</p>
+			</div>
+			<div class="card accent">
+				<h3>Always up to date - price, photos, everything</h3>
+				<p>The web version is a live view of the listing on the portal. Change the price, add new photos, edit the description or mark it under offer, and the brochure reflects it - so the link a buyer already has is never the wrong price or an old photo. A PDF is frozen the moment you export it; this link never goes stale. No other brochure can do this.</p>
+			</div>
+			<div class="card">
+				<h3>See who is interested</h3>
+				<p>Know when a buyer opens the brochure and how often - a quiet signal of who is warming up - with an enquiry button that drops a fresh lead straight into your CRM pipeline.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>See a real example</h2>
+			<p>A luxury townhouse in Estepona Old Town, as an Instant Brochure. Open the live web version on your phone, or download the print PDF - the same brochure, both formats.</p>
+		</div>
+		<div class="ctaRow" style="padding: 4px 2px 2px;">
+			<a class="btnPrimary" href="/examples/estepona-old-town-townhouse.html" target="_blank" rel="noopener">View the live web brochure &rarr;</a>
+			<a class="btnSecondary" href="/examples/estepona-old-town-townhouse.pdf" target="_blank" rel="noopener">Download the PDF</a>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Two ways to get one</h2>
+			<p>The same professional brochure, whoever makes it - priced for how you use it.</p>
+		</div>
+		<div class="grid2">
+			<div class="card">
+				<div class="tierTag">For everyone</div>
+				<h3>Selling privately? Make it look like an agency did.</h3>
+				<p>Create a professional brochure for a property at <strong>propertylist.es/brochures</strong> - no membership, nothing to set up. A fraction of a designer's fee, ready in minutes, yours to print and share.</p>
+				<div class="priceTag"><b>&euro;20</b><span>per brochure</span></div>
+			</div>
+			<div class="card accent">
+				<div class="tierTag">For agents</div>
+				<h3>Built into your platform, at a fraction of the price.</h3>
+				<p>Inside your PropertyList dashboard, brochures cost just a few credits - around 5 euros, a quarter of the public price - with your first at an intro price. One more reason your listings look sharper than the rest.</p>
+				<div class="priceTag accentTag"><b>~&euro;5</b><span>a few credits</span></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Legally correct, every time</h2>
+				<p>
+					In Spain, the energy efficiency rating (A to G) is required in any property advertising, including brochures, and
+					missing it can mean a fine of 300 to 6,000 euros. Instant Brochure builds the energy label straight in - so a real
+					compliance risk becomes one less thing to ever think about.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Branded for clients, unbranded for agents</h2>
+				<p>
+					Show your own brand to buyers - your logo, colours and contact details. Or hand a collaborating agent a clean,
+					unbranded sheet to show their client without your name on it. One property, the right version for every audience.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Picture every listing looking like this.</h2>
+			<p>
+				A crisp brochure makes a property - and the person marketing it - look the part, on the wall, in an inbox or in a
+				buyer's hand. Instant Brochure turns 30 minutes of fiddling into one click, on any property, for a price that pays for
+				itself the first time you win the instruction.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Be ready the day it launches.</h2>
+			<p>Instant Brochure is coming soon to every property. Agents: create your free account now and it is waiting in your dashboard on day one, inside the free <a href="/features/">PropertyList platform</a>. Everyone else: it will be at propertylist.es/brochures.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free agent account</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.lead strong { color: var(--pl-ink); }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		/* brochure sheet mockup */
+		.bcWrap { position: relative; display: grid; place-items: center; min-height: 340px; }
+		.bcSheet { position: relative; width: 78%; max-width: 320px; aspect-ratio: 3 / 4; background: #fff; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.1); box-shadow: 0 18px 44px rgba(16, 24, 40, 0.18); overflow: hidden; transform: rotate(-2.5deg); z-index: 2; }
+		.bcBehind { position: absolute; transform: rotate(4deg); z-index: 1; background: linear-gradient(180deg, #f4f7f6, #e9efed); }
+		.bcPhoto { position: relative; height: 46%; background: linear-gradient(150deg, #b9d8d0 0%, #7fb8ac 55%, #5aa093 100%); }
+		.bcPrice { position: absolute; left: 12px; bottom: 10px; background: var(--pl-ink); color: #fff; font-weight: 900; font-size: 15px; padding: 5px 11px; border-radius: 8px; box-shadow: 0 4px 12px rgba(10, 109, 97, 0.35); }
+		.bcBody { padding: 12px 14px 8px; }
+		.bcTitle { font-weight: 900; font-size: 14px; color: #101828; letter-spacing: -0.01em; }
+		.bcChips { display: flex; flex-wrap: wrap; gap: 5px; margin: 9px 0 12px; }
+		.bcChips span { font-size: 10.5px; font-weight: 700; color: rgba(16, 24, 40, 0.7); background: rgba(16, 24, 40, 0.06); border-radius: 999px; padding: 3px 9px; }
+		.bcRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+		.bcThumbs { display: flex; gap: 5px; }
+		.bcThumbs span { width: 34px; height: 26px; border-radius: 5px; background: linear-gradient(150deg, #d7e6e2, #a9cfc6); }
+		.bcEnergy { display: flex; align-items: center; gap: 6px; }
+		.bcEnergyLabel { font-size: 10px; font-weight: 800; color: rgba(16, 24, 40, 0.55); text-transform: uppercase; letter-spacing: 0.06em; }
+		.bcEnergyBadge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 22px; border-radius: 4px; background: #4caf50; color: #fff; font-weight: 900; font-size: 13px; box-shadow: 0 2px 6px rgba(76, 175, 80, 0.4); }
+		.bcFooter { position: absolute; left: 0; right: 0; bottom: 0; height: 16%; background: var(--pl-ink); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; }
+		.bcLogo { color: #fff; font-weight: 900; font-size: 12px; letter-spacing: 0.02em; opacity: 0.95; }
+		.bcQr { width: 24px; height: 24px; border-radius: 4px; background:
+			repeating-conic-gradient(#0a6d61 0% 25%, #fff 0% 50%) 50% / 8px 8px; border: 2px solid #fff; }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.card p strong { color: var(--pl-ink); }
+		.tierTag { display: inline-block; font-size: 11px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pl-ink); background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.2); border-radius: 999px; padding: 4px 10px; margin-bottom: 10px; }
+		.priceTag { display: flex; align-items: baseline; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 24, 40, 0.08); }
+		.priceTag b { font-size: 26px; font-weight: 900; color: #101828; letter-spacing: -0.02em; }
+		.priceTag.accentTag b { color: var(--pl-ink); }
+		.priceTag span { font-size: 12.5px; font-weight: 700; color: rgba(16, 24, 40, 0.55); }
+		.step { position: relative; }
+		.stepNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+			.grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+		}
+	</style>
+	<AgentInterestCta lang="en" page="/instant-brochure/" />
+</Layout>

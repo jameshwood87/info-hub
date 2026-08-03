@@ -1,0 +1,4450 @@
+[
+{
+"lat": 36.005,
+"lon": -5.6108
+},
+{
+"lat": 36.00528,
+"lon": -5.60904,
+"name": "Playa Isla de Las Palomas"
+},
+{
+"lat": 36.00839,
+"lon": -5.6065,
+"name": "Playa Chica"
+},
+{
+"lat": 36.0113,
+"lon": -5.60088
+},
+{
+"lat": 36.01196,
+"lon": -5.59811
+},
+{
+"lat": 36.02988,
+"lon": -5.62978,
+"name": "Playa de Los Lances"
+},
+{
+"lat": 36.03693,
+"lon": -5.51994
+},
+{
+"lat": 36.05434,
+"lon": -5.48494
+},
+{
+"lat": 36.06133,
+"lon": -5.71733
+},
+{
+"lat": 36.06309,
+"lon": -5.68381,
+"name": "Playa de Valdevaqueros"
+},
+{
+"lat": 36.06429,
+"lon": -5.72818
+},
+{
+"lat": 36.06524,
+"lon": -5.72938
+},
+{
+"lat": 36.06667,
+"lon": -5.733
+},
+{
+"lat": 36.06855,
+"lon": -5.74057,
+"name": "Baños de Baelo"
+},
+{
+"lat": 36.07198,
+"lon": -5.74828
+},
+{
+"lat": 36.08215,
+"lon": -5.77281,
+"name": "Playa de Bolonia"
+},
+{
+"lat": 36.08731,
+"lon": -5.80484,
+"name": "Playa del Cañuelo"
+},
+{
+"lat": 36.09083,
+"lon": -5.44383,
+"name": "Playa de Getares"
+},
+{
+"lat": 36.09585,
+"lon": -5.81516,
+"name": "Playa de los Alemanes"
+},
+{
+"lat": 36.09791,
+"lon": -5.44218,
+"name": "Playa de Getares"
+},
+{
+"lat": 36.10293,
+"lon": -5.82475,
+"name": "Playa del Búnker"
+},
+{
+"lat": 36.10541,
+"lon": -5.43567
+},
+{
+"lat": 36.11215,
+"lon": -5.43722,
+"name": "Playa de El Chinarral"
+},
+{
+"lat": 36.11491,
+"lon": -5.34945
+},
+{
+"lat": 36.11579,
+"lon": -5.83326,
+"name": "Playa de Atlanterra"
+},
+{
+"lat": 36.11649,
+"lon": -5.3427,
+"name": "Windmill Hill Beach"
+},
+{
+"lat": 36.119,
+"lon": -5.35109
+},
+{
+"lat": 36.11959,
+"lon": -5.35146,
+"name": "Camp Bay"
+},
+{
+"lat": 36.12939,
+"lon": -5.34143
+},
+{
+"lat": 36.13094,
+"lon": -5.34108,
+"name": "Algarrobo Beach"
+},
+{
+"lat": 36.13901,
+"lon": -5.34065,
+"name": "Catalan Bay"
+},
+{
+"lat": 36.14811,
+"lon": -5.33989,
+"name": "Eastern Beach"
+},
+{
+"lat": 36.15169,
+"lon": -5.33914
+},
+{
+"lat": 36.1542,
+"lon": -5.87434,
+"name": "Playa de Zahara"
+},
+{
+"lat": 36.15684,
+"lon": -5.33888,
+"name": "Playa de Santa Bárbara"
+},
+{
+"lat": 36.16125,
+"lon": -5.43851,
+"name": "Playa del Rinconcillo"
+},
+{
+"lat": 36.16213,
+"lon": -5.3577,
+"name": "Playa de Poniente"
+},
+{
+"lat": 36.16939,
+"lon": -5.37059,
+"name": "Playa Príncipe Alfonso"
+},
+{
+"lat": 36.17001,
+"lon": -5.3367,
+"name": "Playa de Levante"
+},
+{
+"lat": 36.17485,
+"lon": -5.428,
+"name": "Playa de Palmones"
+},
+{
+"lat": 36.17754,
+"lon": -5.38395,
+"name": "Playa de Puente Mayorga-Campamento"
+},
+{
+"lat": 36.17916,
+"lon": -5.99009,
+"name": "Playa de la Cortina"
+},
+{
+"lat": 36.18045,
+"lon": -5.4084,
+"name": "Playa de Los Roncalillo"
+},
+{
+"lat": 36.18048,
+"lon": -5.40013,
+"name": "Playa de Refinería"
+},
+{
+"lat": 36.18087,
+"lon": -5.39345,
+"name": "Playa de La Colonia"
+},
+{
+"lat": 36.18153,
+"lon": -6.03292,
+"name": "Playa Faro de Trafalgar"
+},
+{
+"lat": 36.1822,
+"lon": -6.00057,
+"name": "Playa del Castillejo"
+},
+{
+"lat": 36.18362,
+"lon": -5.91655,
+"name": "Playa del Carmen"
+},
+{
+"lat": 36.18388,
+"lon": -6.02943,
+"name": "Playa de Mari Sucia"
+},
+{
+"lat": 36.18435,
+"lon": -6.01635,
+"name": "Playa de los Caños de Meca"
+},
+{
+"lat": 36.18493,
+"lon": -6.00905,
+"name": "Playa de Guadalupe"
+},
+{
+"lat": 36.18517,
+"lon": -5.94222,
+"name": "Playa de la Hierbabuena"
+},
+{
+"lat": 36.19153,
+"lon": -6.04153,
+"name": "Playa de Zahora"
+},
+{
+"lat": 36.203,
+"lon": -6.05171,
+"name": "Playa La Mangueta"
+},
+{
+"lat": 36.20571,
+"lon": -5.32592,
+"name": "Playa de La Atunara"
+},
+{
+"lat": 36.22464,
+"lon": -6.06635,
+"name": "Playa de El Palmar"
+},
+{
+"lat": 36.23679,
+"lon": -5.30953,
+"name": "Playa de La Alcaidesa"
+},
+{
+"lat": 36.25653,
+"lon": -6.08455,
+"name": "Playa de Castilnovo"
+},
+{
+"lat": 36.26435,
+"lon": -5.28757
+},
+{
+"lat": 36.27285,
+"lon": -6.0927,
+"name": "Playa de los Bateles"
+},
+{
+"lat": 36.28062,
+"lon": -5.27978
+},
+{
+"lat": 36.28064,
+"lon": -6.10002,
+"name": "Playa de la Fontanilla"
+},
+{
+"lat": 36.28337,
+"lon": -5.27712
+},
+{
+"lat": 36.28569,
+"lon": -5.27469
+},
+{
+"lat": 36.29695,
+"lon": -5.26892
+},
+{
+"lat": 36.30391,
+"lon": -5.26311
+},
+{
+"lat": 36.30914,
+"lon": -5.25792
+},
+{
+"lat": 36.31088,
+"lon": -5.24775
+},
+{
+"lat": 36.31133,
+"lon": -5.25265
+},
+{
+"lat": 36.31219,
+"lon": -5.24683
+},
+{
+"lat": 36.31747,
+"lon": -5.24455
+},
+{
+"lat": 36.33559,
+"lon": -5.23783,
+"name": "Playa de la Chullera"
+},
+{
+"lat": 36.35312,
+"lon": -5.23075,
+"name": "La Duquesa"
+},
+{
+"lat": 36.36798,
+"lon": -5.22231
+},
+{
+"lat": 36.37988,
+"lon": -5.21323
+},
+{
+"lat": 36.38691,
+"lon": -5.20492
+},
+{
+"lat": 36.40154,
+"lon": -5.19125
+},
+{
+"lat": 36.40589,
+"lon": -5.18759
+},
+{
+"lat": 36.40837,
+"lon": -5.1851
+},
+{
+"lat": 36.4106,
+"lon": -5.18261
+},
+{
+"lat": 36.41389,
+"lon": -5.17715,
+"name": "Playa de Guadalobón"
+},
+{
+"lat": 36.41569,
+"lon": -5.16658,
+"name": "Playa del Cristo"
+},
+{
+"lat": 36.42139,
+"lon": -5.14422,
+"name": "La Rada"
+},
+{
+"lat": 36.42804,
+"lon": -5.12773,
+"name": "Playa del Angel"
+},
+{
+"lat": 36.43082,
+"lon": -5.11745,
+"name": "Playa de Punta Plata"
+},
+{
+"lat": 36.43717,
+"lon": -5.10353,
+"name": "Playa del Padron"
+},
+{
+"lat": 36.44623,
+"lon": -5.08674
+},
+{
+"lat": 36.45241,
+"lon": -5.05481,
+"name": "Playa de Guadalmansa"
+},
+{
+"lat": 36.45273,
+"lon": -5.05416,
+"name": "Playa de Guadalmansa"
+},
+{
+"lat": 36.45518,
+"lon": -5.04741,
+"name": "Playa del Sol Villacana"
+},
+{
+"lat": 36.4581,
+"lon": -5.04218,
+"name": "Playa del Saladillo"
+},
+{
+"lat": 36.4606,
+"lon": -5.01215,
+"name": "Playa Atalaya"
+},
+{
+"lat": 36.46096,
+"lon": -5.01835,
+"name": "Salduna"
+},
+{
+"lat": 36.46112,
+"lon": -5.03135
+},
+{
+"lat": 36.46207,
+"lon": -5.01655,
+"name": "Playa Isdabe"
+},
+{
+"lat": 36.46458,
+"lon": -4.99841
+},
+{
+"lat": 36.47404,
+"lon": -4.98179,
+"name": "Playa de San Pedro"
+},
+{
+"lat": 36.47958,
+"lon": -4.97066
+},
+{
+"lat": 36.48354,
+"lon": -4.96152,
+"name": "Playas del Duque"
+},
+{
+"lat": 36.48422,
+"lon": -4.74221,
+"name": "Playa de Cabopino"
+},
+{
+"lat": 36.48441,
+"lon": -4.74105
+},
+{
+"lat": 36.48444,
+"lon": -4.74215
+},
+{
+"lat": 36.48562,
+"lon": -4.73575,
+"name": "Playa de Calahonda"
+},
+{
+"lat": 36.48678,
+"lon": -4.72667,
+"name": "Playa de Calahonda - La Luna / Royal Beach"
+},
+{
+"lat": 36.48692,
+"lon": -4.72427,
+"name": "La Luna-Royale Beach"
+},
+{
+"lat": 36.48728,
+"lon": -4.71645,
+"name": "Playa de Calahonda - Calahonda"
+},
+{
+"lat": 36.48901,
+"lon": -4.70739,
+"name": "Playa de Calahonda - Riviera"
+},
+{
+"lat": 36.49001,
+"lon": -4.77178,
+"name": "Playa de Artola"
+},
+{
+"lat": 36.49002,
+"lon": -4.6989,
+"name": "Playa de Calahonda - Rocas del Mar"
+},
+{
+"lat": 36.49137,
+"lon": -4.69271,
+"name": "Playa El Bombo - Cabo Rocoso"
+},
+{
+"lat": 36.4932,
+"lon": -4.94405,
+"name": "Playa de Levante"
+},
+{
+"lat": 36.49491,
+"lon": -4.68862,
+"name": "Playa El Bombo - El Bombo"
+},
+{
+"lat": 36.49743,
+"lon": -4.8099,
+"name": "El Alicate"
+},
+{
+"lat": 36.49899,
+"lon": -4.68403,
+"name": "Playa de La Cala - La Butibamba"
+},
+{
+"lat": 36.49978,
+"lon": -4.93054,
+"name": "Playa del Ancón"
+},
+{
+"lat": 36.50069,
+"lon": -4.82777,
+"name": "Playa Bahía de Marbella"
+},
+{
+"lat": 36.50245,
+"lon": -4.67836,
+"name": "Playa de La Cala - El Torreón"
+},
+{
+"lat": 36.50248,
+"lon": -4.83838,
+"name": "Playa de Los Monteros"
+},
+{
+"lat": 36.50293,
+"lon": -4.91907,
+"name": "Playa de Nagüeles"
+},
+{
+"lat": 36.50387,
+"lon": -4.84504
+},
+{
+"lat": 36.50417,
+"lon": -4.90828,
+"name": "Playa de la Fontanilla"
+},
+{
+"lat": 36.50438,
+"lon": -4.67099,
+"name": "Playa de Las Doradas"
+},
+{
+"lat": 36.50575,
+"lon": -4.91127,
+"name": "Playa de Casablanca"
+},
+{
+"lat": 36.50609,
+"lon": -4.66035,
+"name": "Playa El Chaparral - El Chaparral"
+},
+{
+"lat": 36.50618,
+"lon": -4.65167,
+"name": "Playa del Charcón - Playa Marina"
+},
+{
+"lat": 36.50619,
+"lon": -4.85385
+},
+{
+"lat": 36.50659,
+"lon": -4.88412,
+"name": "Playa de Venus"
+},
+{
+"lat": 36.50662,
+"lon": -4.8915,
+"name": "Playa del Faro"
+},
+{
+"lat": 36.50708,
+"lon": -4.64722,
+"name": "Playa del Charcón - El Charcón"
+},
+{
+"lat": 36.50741,
+"lon": -4.86608,
+"name": "Playa del Cable"
+},
+{
+"lat": 36.50742,
+"lon": -4.64045,
+"name": "Playa del Faro - Punta Calaburras"
+},
+{
+"lat": 36.50756,
+"lon": -4.8777,
+"name": "Playa de la Bajadilla"
+},
+{
+"lat": 36.51166,
+"lon": -4.63495,
+"name": "Playa del Faro - El Faro"
+},
+{
+"lat": 36.51608,
+"lon": -4.63163,
+"name": "Playa Rocas del Cura"
+},
+{
+"lat": 36.51812,
+"lon": -4.63013,
+"name": "Playa El Ejido"
+},
+{
+"lat": 36.5225,
+"lon": -4.62819,
+"name": "Playa Mati"
+},
+{
+"lat": 36.52995,
+"lon": -4.62494,
+"name": "Playa del Castillo"
+},
+{
+"lat": 36.53635,
+"lon": -4.62152,
+"name": "Playa de Santa Amalia"
+},
+{
+"lat": 36.54471,
+"lon": -4.61721,
+"name": "Playa de San Francisco"
+},
+{
+"lat": 36.55262,
+"lon": -4.61201,
+"name": "Playa de los Boliches"
+},
+{
+"lat": 36.56133,
+"lon": -4.60518,
+"name": "Playa Torreblanca-Carvajal"
+},
+{
+"lat": 36.56872,
+"lon": -4.5924,
+"name": "Playa de Torreblanca"
+},
+{
+"lat": 36.57532,
+"lon": -4.57659
+},
+{
+"lat": 36.57642,
+"lon": -4.5736
+},
+{
+"lat": 36.57906,
+"lon": -4.56188,
+"name": "Playa Bonita"
+},
+{
+"lat": 36.57931,
+"lon": -4.54337
+},
+{
+"lat": 36.58012,
+"lon": -4.55387,
+"name": "Playa Benalnatura"
+},
+{
+"lat": 36.58025,
+"lon": -4.55855,
+"name": "Playa de Arroyo Hondo"
+},
+{
+"lat": 36.58032,
+"lon": -4.55614,
+"name": "Playa Las Viborillas"
+},
+{
+"lat": 36.58044,
+"lon": -4.55152
+},
+{
+"lat": 36.58057,
+"lon": -4.53917,
+"name": "Playa de Torre Vigía"
+},
+{
+"lat": 36.58074,
+"lon": -4.55014,
+"name": "Playa de la Yuca"
+},
+{
+"lat": 36.58096,
+"lon": -4.54869
+},
+{
+"lat": 36.58406,
+"lon": -4.53376,
+"name": "Playa de las Verdas"
+},
+{
+"lat": 36.58652,
+"lon": -4.53172,
+"name": "Playa del Arroyo de la Miel y los Melilleros"
+},
+{
+"lat": 36.58938,
+"lon": -4.52822,
+"name": "Playa de Bil Bil"
+},
+{
+"lat": 36.59208,
+"lon": -4.52347,
+"name": "Playa de Santa Ana"
+},
+{
+"lat": 36.59489,
+"lon": -4.5181,
+"name": "Playa Malapesquera"
+},
+{
+"lat": 36.60728,
+"lon": -4.50436,
+"name": "Playa de la Carihuela"
+},
+{
+"lat": 36.61835,
+"lon": -4.49691,
+"name": "El Gato Beach"
+},
+{
+"lat": 36.6199,
+"lon": -4.49575,
+"name": "Playa del Bajondillo"
+},
+{
+"lat": 36.62404,
+"lon": -4.49313,
+"name": "Playa del Lido"
+},
+{
+"lat": 36.63787,
+"lon": -4.48221,
+"name": "Playa de los Álamos"
+},
+{
+"lat": 36.6508,
+"lon": -4.4715,
+"name": "Playa Campo de Golf"
+},
+{
+"lat": 36.6546,
+"lon": -4.46786,
+"name": "Playa Campo de Golf"
+},
+{
+"lat": 36.6598,
+"lon": -4.4628,
+"name": "Playa Campo de Golf"
+},
+{
+"lat": 36.66349,
+"lon": -4.457,
+"name": "Playa de Guadalmar"
+},
+{
+"lat": 36.67044,
+"lon": -4.45162,
+"name": "Playa del Guadalhorce"
+},
+{
+"lat": 36.67954,
+"lon": -4.44588,
+"name": "Playa Sacaba Beach"
+},
+{
+"lat": 36.68247,
+"lon": -2.75859
+},
+{
+"lat": 36.68344,
+"lon": -2.74255
+},
+{
+"lat": 36.6846,
+"lon": -2.70523,
+"name": "Playa Punta Entinas Sabinar"
+},
+{
+"lat": 36.6847,
+"lon": -2.72762
+},
+{
+"lat": 36.68713,
+"lon": -2.77545
+},
+{
+"lat": 36.6906,
+"lon": -2.68312
+},
+{
+"lat": 36.69123,
+"lon": -4.44041,
+"name": "Playa de la Misericordia"
+},
+{
+"lat": 36.6916,
+"lon": -2.78341,
+"name": "Playa de Levante"
+},
+{
+"lat": 36.69625,
+"lon": -3.47392,
+"name": "Playa de la Joya"
+},
+{
+"lat": 36.69655,
+"lon": -2.66483
+},
+{
+"lat": 36.69656,
+"lon": -3.46084,
+"name": "Playa Salmonete"
+},
+{
+"lat": 36.69701,
+"lon": -3.47824,
+"name": "Cala de los Pobres"
+},
+{
+"lat": 36.69873,
+"lon": -3.43676
+},
+{
+"lat": 36.69905,
+"lon": -2.8411,
+"name": "Los Baños"
+},
+{
+"lat": 36.70085,
+"lon": -2.8013,
+"name": "Playa Poniente de Almerimar"
+},
+{
+"lat": 36.70222,
+"lon": -3.48856,
+"name": "Playa de Torrenueva Costa"
+},
+{
+"lat": 36.70246,
+"lon": -4.43226,
+"name": "Playa de San Andrés"
+},
+{
+"lat": 36.70331,
+"lon": -2.82392,
+"name": "San Miguel"
+},
+{
+"lat": 36.70391,
+"lon": -4.78879
+},
+{
+"lat": 36.70588,
+"lon": -2.64701,
+"name": "Playa Cerrillos"
+},
+{
+"lat": 36.70801,
+"lon": -3.49647,
+"name": "Playa de la Pelá"
+},
+{
+"lat": 36.70946,
+"lon": -3.39104,
+"name": "La Rijana"
+},
+{
+"lat": 36.71022,
+"lon": -3.49902,
+"name": "Playa del Cañón"
+},
+{
+"lat": 36.71118,
+"lon": -4.25746,
+"name": "Playa Los Claros"
+},
+{
+"lat": 36.7114,
+"lon": -4.24193,
+"name": "Playa Los Rubios"
+},
+{
+"lat": 36.71216,
+"lon": -4.26853,
+"name": "Playa Victoria"
+},
+{
+"lat": 36.71244,
+"lon": -4.32463,
+"name": "Playa de La Araña"
+},
+{
+"lat": 36.71248,
+"lon": -2.86949
+},
+{
+"lat": 36.7125,
+"lon": -3.50182,
+"name": "Playa Maruja"
+},
+{
+"lat": 36.71262,
+"lon": -4.3372
+},
+{
+"lat": 36.71281,
+"lon": -4.33516,
+"name": "Playa del Peñón del Cuervo"
+},
+{
+"lat": 36.71281,
+"lon": -4.31701
+},
+{
+"lat": 36.7129,
+"lon": -4.23099
+},
+{
+"lat": 36.71316,
+"lon": -4.32975,
+"name": "Playa de la Fábrica"
+},
+{
+"lat": 36.71363,
+"lon": -4.30777
+},
+{
+"lat": 36.71368,
+"lon": -4.28243,
+"name": "Playa Victoria"
+},
+{
+"lat": 36.71369,
+"lon": -4.21994
+},
+{
+"lat": 36.71393,
+"lon": -4.34331,
+"name": "Playa de El Candado"
+},
+{
+"lat": 36.71491,
+"lon": -4.20203,
+"name": "Playa de Benajarafe"
+},
+{
+"lat": 36.71525,
+"lon": -3.50535,
+"name": "Playa de la Chincheta"
+},
+{
+"lat": 36.71605,
+"lon": -4.17906
+},
+{
+"lat": 36.7164,
+"lon": -4.40831,
+"name": "Playa de La Malagueta"
+},
+{
+"lat": 36.71647,
+"lon": -4.34958,
+"name": "Playa de El Dedo"
+},
+{
+"lat": 36.71662,
+"lon": -3.55968,
+"name": "Playa Granada"
+},
+{
+"lat": 36.7179,
+"lon": -3.51,
+"name": "Playa de las Azucenas"
+},
+{
+"lat": 36.71793,
+"lon": -4.35976,
+"name": "Playa de El Palo"
+},
+{
+"lat": 36.71893,
+"lon": -3.54223,
+"name": "Playa de Poniente"
+},
+{
+"lat": 36.71938,
+"lon": -4.16335,
+"name": "Playa Valle de Niza"
+},
+{
+"lat": 36.71939,
+"lon": -4.36831,
+"name": "Playa de las Acacias"
+},
+{
+"lat": 36.71952,
+"lon": -2.62889,
+"name": "Playa Serena"
+},
+{
+"lat": 36.72007,
+"lon": -4.37419,
+"name": "Playa de Pedregalejo"
+},
+{
+"lat": 36.72032,
+"lon": -4.15555,
+"name": "Playa Valle de Niza"
+},
+{
+"lat": 36.72064,
+"lon": -2.18416,
+"name": "Cala Arena"
+},
+{
+"lat": 36.72069,
+"lon": -4.39672,
+"name": "Playa de La Caleta"
+},
+{
+"lat": 36.72116,
+"lon": -4.38268,
+"name": "Playa de los Baños del Carmen"
+},
+{
+"lat": 36.72118,
+"lon": -3.53081,
+"name": "Playa Can"
+},
+{
+"lat": 36.72158,
+"lon": -2.19,
+"name": "La Calilla"
+},
+{
+"lat": 36.7216,
+"lon": -4.14494
+},
+{
+"lat": 36.72173,
+"lon": -2.18688
+},
+{
+"lat": 36.72184,
+"lon": -2.18733,
+"name": "Cala de las Sirenas"
+},
+{
+"lat": 36.72185,
+"lon": -2.18906,
+"name": "Cala de las Sirenas"
+},
+{
+"lat": 36.72192,
+"lon": -2.18804,
+"name": "Cala de las Sirenas"
+},
+{
+"lat": 36.72196,
+"lon": -3.57282,
+"name": "Playa Punta del Río"
+},
+{
+"lat": 36.7225,
+"lon": -4.13962,
+"name": "Playa de Almayate"
+},
+{
+"lat": 36.72267,
+"lon": -3.72818,
+"name": "Playa de los Berengueles"
+},
+{
+"lat": 36.72333,
+"lon": -2.18106
+},
+{
+"lat": 36.7234,
+"lon": -3.35715
+},
+{
+"lat": 36.72357,
+"lon": -2.16854,
+"name": "Cala de Punta Negra"
+},
+{
+"lat": 36.72364,
+"lon": -4.12819,
+"name": "Costa del Sol"
+},
+{
+"lat": 36.72427,
+"lon": -2.17686,
+"name": "Cala Rajá"
+},
+{
+"lat": 36.72445,
+"lon": -4.11814,
+"name": "Costa del Sol"
+},
+{
+"lat": 36.72484,
+"lon": -2.19463,
+"name": "Playa del Corralete"
+},
+{
+"lat": 36.72512,
+"lon": -3.581,
+"name": "Playa del Mayorazgo"
+},
+{
+"lat": 36.7255,
+"lon": -4.11129,
+"name": "Playa naturista de Almayate"
+},
+{
+"lat": 36.7266,
+"lon": -3.958,
+"name": "Playa Chica"
+},
+{
+"lat": 36.72662,
+"lon": -3.95584
+},
+{
+"lat": 36.72723,
+"lon": -3.95448,
+"name": "Playa los Cuartos"
+},
+{
+"lat": 36.72729,
+"lon": -3.95387,
+"name": "Playa del Sillón"
+},
+{
+"lat": 36.72764,
+"lon": -4.10481
+},
+{
+"lat": 36.72821,
+"lon": -4.10231
+},
+{
+"lat": 36.72855,
+"lon": -3.58454,
+"name": "Playa de Salomar"
+},
+{
+"lat": 36.72862,
+"lon": -2.88679
+},
+{
+"lat": 36.72946,
+"lon": -2.13952,
+"name": "Playa del Barronal"
+},
+{
+"lat": 36.72951,
+"lon": -2.14326,
+"name": "Cala Palmito"
+},
+{
+"lat": 36.72956,
+"lon": -2.14191,
+"name": "Cala Peineta"
+},
+{
+"lat": 36.72975,
+"lon": -2.15674,
+"name": "Cala Carbón"
+},
+{
+"lat": 36.72977,
+"lon": -2.13553,
+"name": "Playa del Barronal"
+},
+{
+"lat": 36.72979,
+"lon": -2.15519,
+"name": "Cala Chicré"
+},
+{
+"lat": 36.73008,
+"lon": -3.68771,
+"name": "Playa Puerta del Mar"
+},
+{
+"lat": 36.73043,
+"lon": -2.14605,
+"name": "Playa de Mónsul"
+},
+{
+"lat": 36.73056,
+"lon": -3.97139,
+"name": "Playa de Ferrara"
+},
+{
+"lat": 36.73113,
+"lon": -2.15232,
+"name": "Cala de la Media Luna"
+},
+{
+"lat": 36.73116,
+"lon": -3.69917,
+"name": "Playa de San Cristóbal"
+},
+{
+"lat": 36.73126,
+"lon": -3.34928,
+"name": "Playa de Cambriles"
+},
+{
+"lat": 36.73129,
+"lon": -2.13155,
+"name": "Cala Grande"
+},
+{
+"lat": 36.73141,
+"lon": -3.97275
+},
+{
+"lat": 36.73146,
+"lon": -3.94346,
+"name": "Playa El Peñoncillo"
+},
+{
+"lat": 36.7315,
+"lon": -3.97595,
+"name": "Playa de las Lindes"
+},
+{
+"lat": 36.73157,
+"lon": -3.72105,
+"name": "Playa del Muerto"
+},
+{
+"lat": 36.73223,
+"lon": -3.58824,
+"name": "Playa del Molino"
+},
+{
+"lat": 36.73241,
+"lon": -2.2033,
+"name": "Cala del Búnker"
+},
+{
+"lat": 36.73243,
+"lon": -2.12761,
+"name": "Cala Chica"
+},
+{
+"lat": 36.73262,
+"lon": -3.71844
+},
+{
+"lat": 36.73293,
+"lon": -3.71525,
+"name": "Playa de Cotobro"
+},
+{
+"lat": 36.73296,
+"lon": -3.70731,
+"name": "La Veintiuna"
+},
+{
+"lat": 36.73338,
+"lon": -2.12364,
+"name": "Cala Príncipe"
+},
+{
+"lat": 36.73339,
+"lon": -3.74505,
+"name": "Playa de la Herradura"
+},
+{
+"lat": 36.73342,
+"lon": -2.6166,
+"name": "Playa de la Urbanización de Roquetas de Mar"
+},
+{
+"lat": 36.73358,
+"lon": -3.98225,
+"name": "Playa del Cenicero"
+},
+{
+"lat": 36.73375,
+"lon": -3.70514,
+"name": "El Rincón de la China"
+},
+{
+"lat": 36.73473,
+"lon": -2.89379
+},
+{
+"lat": 36.73493,
+"lon": -3.98423,
+"name": "Dunas de la Carraca"
+},
+{
+"lat": 36.73495,
+"lon": -3.76202
+},
+{
+"lat": 36.73525,
+"lon": -3.59132,
+"name": "Playa de La Charca"
+},
+{
+"lat": 36.73613,
+"lon": -3.93139
+},
+{
+"lat": 36.73638,
+"lon": -2.11901,
+"name": "Cala de los Amarillos"
+},
+{
+"lat": 36.73657,
+"lon": -3.59314,
+"name": "Playa del Peñón"
+},
+{
+"lat": 36.73669,
+"lon": -3.92873
+},
+{
+"lat": 36.7371,
+"lon": -3.77603,
+"name": "Playa Cantarriján"
+},
+{
+"lat": 36.73744,
+"lon": -2.20742,
+"name": "Playa de la Fabriquilla"
+},
+{
+"lat": 36.73766,
+"lon": -3.99259,
+"name": "Playa del Morche"
+},
+{
+"lat": 36.73804,
+"lon": -3.66831,
+"name": "Playa de Velilla"
+},
+{
+"lat": 36.73849,
+"lon": -4.08725,
+"name": "Playa de Torre del Mar"
+},
+{
+"lat": 36.73948,
+"lon": -3.92235,
+"name": "Playa El Calacile"
+},
+{
+"lat": 36.74024,
+"lon": -3.59628,
+"name": "Playa de La Guardia"
+},
+{
+"lat": 36.7403,
+"lon": -4.00165
+},
+{
+"lat": 36.74097,
+"lon": -4.00441
+},
+{
+"lat": 36.74103,
+"lon": -3.3155,
+"name": "El Lance"
+},
+{
+"lat": 36.74153,
+"lon": -3.886,
+"name": "Playa El Chucho"
+},
+{
+"lat": 36.74162,
+"lon": -4.01056
+},
+{
+"lat": 36.74164,
+"lon": -3.8827,
+"name": "Playa La Torrecilla"
+},
+{
+"lat": 36.74164,
+"lon": -3.78598,
+"name": "Cala de las Doncellas"
+},
+{
+"lat": 36.74206,
+"lon": -3.62482,
+"name": "Cala del Cambrón"
+},
+{
+"lat": 36.74237,
+"lon": -3.00982
+},
+{
+"lat": 36.74241,
+"lon": -3.91239,
+"name": "Playa de Vilches"
+},
+{
+"lat": 36.74268,
+"lon": -3.89569,
+"name": "Playa El Playazo"
+},
+{
+"lat": 36.74272,
+"lon": -2.96349,
+"name": "Las Cañadas"
+},
+{
+"lat": 36.74295,
+"lon": -3.90643
+},
+{
+"lat": 36.7432,
+"lon": -4.01771
+},
+{
+"lat": 36.74341,
+"lon": -3.66297,
+"name": "Playa del Tesorillo"
+},
+{
+"lat": 36.74345,
+"lon": -3.6117,
+"name": "Cala el Pargo"
+},
+{
+"lat": 36.74365,
+"lon": -3.64427,
+"name": "Playa Barranco de Enmedio"
+},
+{
+"lat": 36.74381,
+"lon": -3.87764,
+"name": "Playa El Salón"
+},
+{
+"lat": 36.74403,
+"lon": -2.12044,
+"name": "Playa de los Genoveses"
+},
+{
+"lat": 36.74407,
+"lon": -3.60523,
+"name": "Playa del Caletón"
+},
+{
+"lat": 36.7441,
+"lon": -3.87614,
+"name": "Playa La Caletilla"
+},
+{
+"lat": 36.74419,
+"lon": -3.02199
+},
+{
+"lat": 36.74432,
+"lon": -3.02814,
+"name": "Sirena Loca"
+},
+{
+"lat": 36.74434,
+"lon": -3.01461
+},
+{
+"lat": 36.74468,
+"lon": -4.04631,
+"name": "Playa de Mezquitilla"
+},
+{
+"lat": 36.74484,
+"lon": -3.78994,
+"name": "Playa del Cañuelo"
+},
+{
+"lat": 36.74486,
+"lon": -3.64886,
+"name": "Playa del Curumbico"
+},
+{
+"lat": 36.74503,
+"lon": -3.87487,
+"name": "Playa Calahonda"
+},
+{
+"lat": 36.7454,
+"lon": -3.65188,
+"name": "Playa de Cabria"
+},
+{
+"lat": 36.74565,
+"lon": -3.87396,
+"name": "Playa del Chorrillo"
+},
+{
+"lat": 36.74577,
+"lon": -3.66052,
+"name": "Playa del Pozuelo"
+},
+{
+"lat": 36.74591,
+"lon": -4.05381,
+"name": "Playa de La Caleta"
+},
+{
+"lat": 36.746,
+"lon": -3.1512,
+"name": "Playa de El Pozuelo"
+},
+{
+"lat": 36.74609,
+"lon": -3.07279
+},
+{
+"lat": 36.7461,
+"lon": -3.06847
+},
+{
+"lat": 36.74611,
+"lon": -3.79782
+},
+{
+"lat": 36.74611,
+"lon": -3.1598
+},
+{
+"lat": 36.74615,
+"lon": -3.27901,
+"name": "Playa de La Mamola"
+},
+{
+"lat": 36.74642,
+"lon": -3.87258,
+"name": "Playa Carabeo"
+},
+{
+"lat": 36.74652,
+"lon": -3.80023,
+"name": "Cala del Pino"
+},
+{
+"lat": 36.74655,
+"lon": -3.6569,
+"name": "Playa Calabajío"
+},
+{
+"lat": 36.7466,
+"lon": -2.91219,
+"name": "Playa de Balanegra"
+},
+{
+"lat": 36.74663,
+"lon": -3.14119,
+"name": "Playa Iguazú"
+},
+{
+"lat": 36.74667,
+"lon": -3.07487
+},
+{
+"lat": 36.7468,
+"lon": -3.16932
+},
+{
+"lat": 36.74692,
+"lon": -2.60938,
+"name": "Playa de la Bajadilla"
+},
+{
+"lat": 36.7471,
+"lon": -3.05049
+},
+{
+"lat": 36.7472,
+"lon": -3.04454,
+"name": "La Rana"
+},
+{
+"lat": 36.74733,
+"lon": -4.06032,
+"name": "Playa de La Caleta"
+},
+{
+"lat": 36.74745,
+"lon": -3.21805
+},
+{
+"lat": 36.74779,
+"lon": -3.80371
+},
+{
+"lat": 36.74784,
+"lon": -3.87064,
+"name": "Playa Carabeillo"
+},
+{
+"lat": 36.74798,
+"lon": -3.09091,
+"name": "Playa de la Barbacoa"
+},
+{
+"lat": 36.74858,
+"lon": -4.07174
+},
+{
+"lat": 36.74868,
+"lon": -3.22077
+},
+{
+"lat": 36.74906,
+"lon": -3.18193,
+"name": "Playa El Ruso"
+},
+{
+"lat": 36.74933,
+"lon": -3.809,
+"name": "Playa de las Alberquillas"
+},
+{
+"lat": 36.74948,
+"lon": -2.11881,
+"name": "Cala del Ave María"
+},
+{
+"lat": 36.74958,
+"lon": -3.22299
+},
+{
+"lat": 36.74986,
+"lon": -3.19662,
+"name": "Cala Chilches"
+},
+{
+"lat": 36.74994,
+"lon": -3.86649,
+"name": "Playa Burriana"
+},
+{
+"lat": 36.75011,
+"lon": -3.18647,
+"name": "La Playiya"
+},
+{
+"lat": 36.75032,
+"lon": -2.21847,
+"name": "Playa de la Almadraba"
+},
+{
+"lat": 36.75067,
+"lon": -3.26706,
+"name": "Playa Los Yesos"
+},
+{
+"lat": 36.75073,
+"lon": -3.23596,
+"name": "Playa de Melicena"
+},
+{
+"lat": 36.75091,
+"lon": -3.81461,
+"name": "Playa de las Alberquillas"
+},
+{
+"lat": 36.75105,
+"lon": -3.85097,
+"name": "Cala Barranco de Maro"
+},
+{
+"lat": 36.75127,
+"lon": -3.22899,
+"name": "Playa de El Gaiterillo"
+},
+{
+"lat": 36.75153,
+"lon": -3.86147
+},
+{
+"lat": 36.75183,
+"lon": -3.86217,
+"name": "Playa Piedra de Tarzán"
+},
+{
+"lat": 36.75266,
+"lon": -3.82494
+},
+{
+"lat": 36.75302,
+"lon": -3.24159,
+"name": "Playa de las Cañas"
+},
+{
+"lat": 36.75338,
+"lon": -3.84504,
+"name": "Playa de La Caleta"
+},
+{
+"lat": 36.75345,
+"lon": -3.25864
+},
+{
+"lat": 36.75369,
+"lon": -3.83432,
+"name": "Playa de Maro"
+},
+{
+"lat": 36.75452,
+"lon": -3.24676
+},
+{
+"lat": 36.75631,
+"lon": -2.10992,
+"name": "Playa de La Calilla"
+},
+{
+"lat": 36.76122,
+"lon": -2.10674,
+"name": "Playa de San José"
+},
+{
+"lat": 36.76445,
+"lon": -2.60435,
+"name": "Playa La Romanilla"
+},
+{
+"lat": 36.76502,
+"lon": -2.09383,
+"name": "Cala Higuera"
+},
+{
+"lat": 36.76644,
+"lon": -5.78438,
+"name": "Playa fluvial embalse de Arcos de la Frontera"
+},
+{
+"lat": 36.76804,
+"lon": -2.08009,
+"name": "Cala Tomate"
+},
+{
+"lat": 36.77026,
+"lon": -2.07467,
+"name": "Cala de las Hermanicas"
+},
+{
+"lat": 36.7751,
+"lon": -2.06992
+},
+{
+"lat": 36.77655,
+"lon": -2.06382
+},
+{
+"lat": 36.77728,
+"lon": -2.24329,
+"name": "Playa de San Miguel de Cabo de Gata"
+},
+{
+"lat": 36.77804,
+"lon": -2.59739,
+"name": "Playa Las Salinas"
+},
+{
+"lat": 36.78037,
+"lon": -2.06356
+},
+{
+"lat": 36.78204,
+"lon": -2.06331,
+"name": "Cala Tomate"
+},
+{
+"lat": 36.78657,
+"lon": -2.06342,
+"name": "Cala Chica"
+},
+{
+"lat": 36.79079,
+"lon": -2.58689
+},
+{
+"lat": 36.79141,
+"lon": -2.06271,
+"name": "Cala Cortada"
+},
+{
+"lat": 36.79418,
+"lon": -2.25967,
+"name": "Playa del Charco"
+},
+{
+"lat": 36.79494,
+"lon": -2.06224,
+"name": "Playa de Piedra Galera"
+},
+{
+"lat": 36.79832,
+"lon": -2.06247,
+"name": "El Embarcadero"
+},
+{
+"lat": 36.80281,
+"lon": -2.57599,
+"name": "Playa de Aguadulce"
+},
+{
+"lat": 36.8064,
+"lon": -2.06194,
+"name": "Playa del Arco"
+},
+{
+"lat": 36.80645,
+"lon": -2.27402,
+"name": "Playa de las Amoladeras"
+},
+{
+"lat": 36.8089,
+"lon": -2.06067,
+"name": "Playa del Esparto"
+},
+{
+"lat": 36.81158,
+"lon": -2.56691
+},
+{
+"lat": 36.81392,
+"lon": -2.05075
+},
+{
+"lat": 36.81594,
+"lon": -2.05048,
+"name": "Playa del Peñón Blanco"
+},
+{
+"lat": 36.81718,
+"lon": -2.43747,
+"name": "Playa de Nueva Almería"
+},
+{
+"lat": 36.81918,
+"lon": -2.5355
+},
+{
+"lat": 36.82153,
+"lon": -2.44342,
+"name": "Playa de la Térmica"
+},
+{
+"lat": 36.82176,
+"lon": -2.04214,
+"name": "Cala de los Toros"
+},
+{
+"lat": 36.8218,
+"lon": -2.53111,
+"name": "El Palmer"
+},
+{
+"lat": 36.82442,
+"lon": -2.44779,
+"name": "Playa de El Zapillo"
+},
+{
+"lat": 36.82449,
+"lon": -2.30061,
+"name": "Playa de Torregarcía"
+},
+{
+"lat": 36.82484,
+"lon": -2.52147,
+"name": "Playa de la Cueva del Cura"
+},
+{
+"lat": 36.82526,
+"lon": -2.51603,
+"name": "Cala de La Garrofa"
+},
+{
+"lat": 36.82536,
+"lon": -2.51086,
+"name": "Cala de los Ahogados"
+},
+{
+"lat": 36.82815,
+"lon": -2.45409,
+"name": "Playa de San Miguel"
+},
+{
+"lat": 36.82853,
+"lon": -2.49421,
+"name": "Cala del Lobo Marino"
+},
+{
+"lat": 36.82907,
+"lon": -2.03385,
+"name": "Cala de los Monteses"
+},
+{
+"lat": 36.82909,
+"lon": -2.49062,
+"name": "Cala de San Telmo"
+},
+{
+"lat": 36.82996,
+"lon": -2.45667
+},
+{
+"lat": 36.83004,
+"lon": -2.03124
+},
+{
+"lat": 36.831,
+"lon": -2.4881,
+"name": "Las Olas"
+},
+{
+"lat": 36.83311,
+"lon": -2.3197,
+"name": "Playa de Retamar"
+},
+{
+"lat": 36.83539,
+"lon": -2.01291,
+"name": "Cala del Carnaje"
+},
+{
+"lat": 36.83608,
+"lon": -2.38163,
+"name": "Playa de Costacabana"
+},
+{
+"lat": 36.83649,
+"lon": -2.33033
+},
+{
+"lat": 36.83796,
+"lon": -2.34147
+},
+{
+"lat": 36.83996,
+"lon": -2.351
+},
+{
+"lat": 36.84019,
+"lon": -2.36387,
+"name": "Playa del Perdigal"
+},
+{
+"lat": 36.84607,
+"lon": -2.00105,
+"name": "Cala de la Polacra"
+},
+{
+"lat": 36.85164,
+"lon": -1.99957,
+"name": "Cala del Bergantín"
+},
+{
+"lat": 36.86001,
+"lon": -2.00569,
+"name": "Playa del Playazo de Rodalquilar"
+},
+{
+"lat": 36.86281,
+"lon": -2.00484,
+"name": "Calilla del Playazo"
+},
+{
+"lat": 36.87305,
+"lon": -2.00331,
+"name": "Cala del Cuervo"
+},
+{
+"lat": 36.87973,
+"lon": -2.00328,
+"name": "Playa de las Negras"
+},
+{
+"lat": 36.88492,
+"lon": -1.99867
+},
+{
+"lat": 36.88843,
+"lon": -1.99355,
+"name": "Cala Montoya"
+},
+{
+"lat": 36.89182,
+"lon": -1.99338,
+"name": "Cala Hernández"
+},
+{
+"lat": 36.90309,
+"lon": -1.97909,
+"name": "Cala de San Pedro"
+},
+{
+"lat": 36.90806,
+"lon": -1.96357,
+"name": "Cala Montoya"
+},
+{
+"lat": 36.91545,
+"lon": -1.95797,
+"name": "Cala Chumba"
+},
+{
+"lat": 36.91804,
+"lon": -1.95629,
+"name": "Cala Puente"
+},
+{
+"lat": 36.92262,
+"lon": -1.95496,
+"name": "Cala del Plomo"
+},
+{
+"lat": 36.93227,
+"lon": -1.94637,
+"name": "Cala de Enmedio"
+},
+{
+"lat": 36.93579,
+"lon": -1.91798,
+"name": "Cala Arena"
+},
+{
+"lat": 36.93634,
+"lon": -1.94041,
+"name": "Cala del Sol"
+},
+{
+"lat": 36.9366,
+"lon": -1.91369,
+"name": "Cala Los Mendrugos"
+},
+{
+"lat": 36.93689,
+"lon": -1.90895,
+"name": "Cala Sorbas"
+},
+{
+"lat": 36.93867,
+"lon": -1.93452,
+"name": "Playa de Agua Amarga"
+},
+{
+"lat": 36.94282,
+"lon": -1.90391,
+"name": "Cala Castillo"
+},
+{
+"lat": 36.95363,
+"lon": -1.89852,
+"name": "Playa de los Muertos"
+},
+{
+"lat": 36.95889,
+"lon": -1.89965,
+"name": "Playa de las Salinicas"
+},
+{
+"lat": 36.96239,
+"lon": -1.89961,
+"name": "Playa del Corral"
+},
+{
+"lat": 36.97002,
+"lon": -1.90073,
+"name": "Playa de la Torre Vieja"
+},
+{
+"lat": 36.98491,
+"lon": -1.90042,
+"name": "Playa de las Marinicas"
+},
+{
+"lat": 36.99436,
+"lon": -1.89426,
+"name": "Playa de los Cocones"
+},
+{
+"lat": 37.00013,
+"lon": -1.89282,
+"name": "Playa de los Barquicos"
+},
+{
+"lat": 37.01858,
+"lon": -1.87868,
+"name": "Playa de la Galera"
+},
+{
+"lat": 37.03084,
+"lon": -1.87732,
+"name": "Playa del Algarrobico"
+},
+{
+"lat": 37.04738,
+"lon": -1.86297,
+"name": "Cala de la Granatilla"
+},
+{
+"lat": 37.05474,
+"lon": -1.8598,
+"name": "Playa Las Escalicas"
+},
+{
+"lat": 37.05731,
+"lon": -1.85734,
+"name": "Cala del Sombrerico"
+},
+{
+"lat": 37.06061,
+"lon": -1.85514,
+"name": "Cala de Bordenares"
+},
+{
+"lat": 37.06664,
+"lon": -1.85137,
+"name": "Playa Fuente las Cabras"
+},
+{
+"lat": 37.07641,
+"lon": -1.84987,
+"name": "Playa El Perulejo"
+},
+{
+"lat": 37.08352,
+"lon": -1.85008,
+"name": "Playa de Macenas"
+},
+{
+"lat": 37.09153,
+"lon": -1.85001,
+"name": "Playa La Mena"
+},
+{
+"lat": 37.10195,
+"lon": -1.84678,
+"name": "Playa Venta del Bancal"
+},
+{
+"lat": 37.10785,
+"lon": -1.84487,
+"name": "Playa de las Ventanicas"
+},
+{
+"lat": 37.11112,
+"lon": -1.84289,
+"name": "Playa Cueva del Lobo"
+},
+{
+"lat": 37.11698,
+"lon": -1.83631,
+"name": "Playa del Lance Nuevo"
+},
+{
+"lat": 37.12349,
+"lon": -1.83211,
+"name": "Playa del Cantal"
+},
+{
+"lat": 37.12924,
+"lon": -1.83052,
+"name": "Playa de Vista de los Ángeles"
+},
+{
+"lat": 37.13263,
+"lon": -1.82959,
+"name": "Playa de la Piedra Villazar"
+},
+{
+"lat": 37.13861,
+"lon": -1.82808,
+"name": "Playa del Descargador"
+},
+{
+"lat": 37.14531,
+"lon": -1.82596,
+"name": "Playa del Palmeral"
+},
+{
+"lat": 37.15085,
+"lon": -1.82376,
+"name": "Playa de Rumina"
+},
+{
+"lat": 37.16074,
+"lon": -1.8243,
+"name": "Playa de Marina de la Torre"
+},
+{
+"lat": 37.17553,
+"lon": -1.82203,
+"name": "Playa de Garrucha"
+},
+{
+"lat": 37.18019,
+"lon": -1.82053,
+"name": "Playa Pósito Garrucha"
+},
+{
+"lat": 37.18783,
+"lon": -1.81614,
+"name": "Playa El Playazo Garrucha"
+},
+{
+"lat": 37.19351,
+"lon": -1.81442,
+"name": "Playa de Las Marinas-Bolaga"
+},
+{
+"lat": 37.20864,
+"lon": -1.80831,
+"name": "Playa de Puerto Rey"
+},
+{
+"lat": 37.22371,
+"lon": -1.80132,
+"name": "Playa El Playazo"
+},
+{
+"lat": 37.22958,
+"lon": -1.7976,
+"name": "Cala Marqués"
+},
+{
+"lat": 37.23256,
+"lon": -1.79399,
+"name": "Playa de Quitapellejos"
+},
+{
+"lat": 37.24197,
+"lon": -1.77507,
+"name": "Playazo de Villaricos"
+},
+{
+"lat": 37.24575,
+"lon": -1.7732,
+"name": "Playa de Luis Siret"
+},
+{
+"lat": 37.24722,
+"lon": -1.77124
+},
+{
+"lat": 37.24932,
+"lon": -1.76952,
+"name": "Cala Verde"
+},
+{
+"lat": 37.25476,
+"lon": -1.76419,
+"name": "Cala de los Dolores"
+},
+{
+"lat": 37.25871,
+"lon": -1.76202
+},
+{
+"lat": 37.26122,
+"lon": -4.32888,
+"name": "Playa de Valdearenas"
+},
+{
+"lat": 37.26135,
+"lon": -1.75998,
+"name": "Cala La Invencible"
+},
+{
+"lat": 37.27408,
+"lon": -1.74555,
+"name": "Cala Mal Paso"
+},
+{
+"lat": 37.27855,
+"lon": -1.74018
+},
+{
+"lat": 37.28176,
+"lon": -1.73444,
+"name": "Cala del Peñón Cortado"
+},
+{
+"lat": 37.28346,
+"lon": -1.73248
+},
+{
+"lat": 37.28522,
+"lon": -1.7314,
+"name": "Cala de las Conchas"
+},
+{
+"lat": 37.29878,
+"lon": -1.71636,
+"name": "Cala Cristal"
+},
+{
+"lat": 38.65966,
+"lon": 1.51771,
+"name": "Platja Caló d'es Morts"
+},
+{
+"lat": 38.66463,
+"lon": 1.51181,
+"name": "Platja d'es Copinyar"
+},
+{
+"lat": 38.66785,
+"lon": 1.5067
+},
+{
+"lat": 38.6684,
+"lon": 1.50604
+},
+{
+"lat": 38.6689,
+"lon": 1.50485
+},
+{
+"lat": 38.6719,
+"lon": 1.49916
+},
+{
+"lat": 38.67421,
+"lon": 1.49512,
+"name": "Platja Es Valencians"
+},
+{
+"lat": 38.67748,
+"lon": 1.48757,
+"name": "Platja Es Códol Foradat"
+},
+{
+"lat": 38.67882,
+"lon": 1.51362,
+"name": "Platja Ses Platetes"
+},
+{
+"lat": 38.68211,
+"lon": 1.47552
+},
+{
+"lat": 38.68416,
+"lon": 1.4675
+},
+{
+"lat": 38.68501,
+"lon": 1.45532,
+"name": "Platja de Migjorn"
+},
+{
+"lat": 38.69314,
+"lon": 1.38932,
+"name": "Platja cala Saona"
+},
+{
+"lat": 38.72139,
+"lon": 1.41233
+},
+{
+"lat": 38.72186,
+"lon": 1.40857
+},
+{
+"lat": 38.72194,
+"lon": 1.4169
+},
+{
+"lat": 38.72206,
+"lon": 1.41769
+},
+{
+"lat": 38.72396,
+"lon": 1.45845,
+"name": "Platja d'es Pujols"
+},
+{
+"lat": 38.72684,
+"lon": 1.45495,
+"name": "Platja d'es Pujols"
+},
+{
+"lat": 38.72894,
+"lon": 1.45298
+},
+{
+"lat": 38.73015,
+"lon": 1.45229
+},
+{
+"lat": 38.73019,
+"lon": 1.45027,
+"name": "Platja de ses Canyes"
+},
+{
+"lat": 38.73102,
+"lon": 1.41597
+},
+{
+"lat": 38.73203,
+"lon": 1.41362
+},
+{
+"lat": 38.73269,
+"lon": 1.44678,
+"name": "platja de Sa Roqueta"
+},
+{
+"lat": 38.73665,
+"lon": 1.44366,
+"name": "Platja de ses Salines"
+},
+{
+"lat": 38.73779,
+"lon": 1.44442,
+"name": "Playa Llevante"
+},
+{
+"lat": 38.74057,
+"lon": 1.4293,
+"name": "Platja Cavall d'en Borràs"
+},
+{
+"lat": 38.74263,
+"lon": 1.44109,
+"name": "Platja de ses Salines"
+},
+{
+"lat": 38.75177,
+"lon": 1.43766,
+"name": "Platja de ses Salines"
+},
+{
+"lat": 38.75364,
+"lon": 1.43416,
+"name": "Platja de s'Illeta"
+},
+{
+"lat": 38.76021,
+"lon": 1.4356
+},
+{
+"lat": 38.779,
+"lon": 1.42814,
+"name": "s'Alga"
+},
+{
+"lat": 38.77934,
+"lon": 1.43191
+},
+{
+"lat": 38.79309,
+"lon": 1.41934
+},
+{
+"lat": 38.83517,
+"lon": 1.37693,
+"name": "Es Canal de s'Olla"
+},
+{
+"lat": 38.83566,
+"lon": 1.40058,
+"name": "Cala Ses Salines"
+},
+{
+"lat": 38.84106,
+"lon": 1.38969,
+"name": "Platja de ses Salines"
+},
+{
+"lat": 38.84445,
+"lon": 1.40265,
+"name": "Platja des Cavallet"
+},
+{
+"lat": 38.85531,
+"lon": 1.36431,
+"name": "Platja Pont de Baix"
+},
+{
+"lat": 38.86274,
+"lon": 1.25372
+},
+{
+"lat": 38.86521,
+"lon": 1.35236,
+"name": "Platja des Codolar"
+},
+{
+"lat": 38.86653,
+"lon": 1.30941
+},
+{
+"lat": 38.86665,
+"lon": 1.30492,
+"name": "Cala de Porroig"
+},
+{
+"lat": 38.86797,
+"lon": 1.3299
+},
+{
+"lat": 38.86799,
+"lon": 1.31537,
+"name": "Cala des Jondal"
+},
+{
+"lat": 38.86801,
+"lon": 1.33201,
+"name": "Es Bol Nou"
+},
+{
+"lat": 38.86818,
+"lon": 1.3052
+},
+{
+"lat": 38.8683,
+"lon": 1.31049,
+"name": "Es Xarco"
+},
+{
+"lat": 38.86852,
+"lon": 1.33495,
+"name": "sa Caleta"
+},
+{
+"lat": 38.86879,
+"lon": 1.25866,
+"name": "Platja de S'Esqueneta Arenesta"
+},
+{
+"lat": 38.8702,
+"lon": 1.30362,
+"name": "Cala Es Cuco"
+},
+{
+"lat": 38.87027,
+"lon": 1.34053
+},
+{
+"lat": 38.87183,
+"lon": 1.30037
+},
+{
+"lat": 38.87254,
+"lon": 1.23061,
+"name": "Atlantis"
+},
+{
+"lat": 38.87478,
+"lon": 1.29897,
+"name": "Es Torrent"
+},
+{
+"lat": 38.87604,
+"lon": 1.26526,
+"name": "Ses Boques"
+},
+{
+"lat": 38.87677,
+"lon": 1.29596
+},
+{
+"lat": 38.8768,
+"lon": 1.28218
+},
+{
+"lat": 38.87705,
+"lon": 1.28428,
+"name": "Platja de ses Ovelles"
+},
+{
+"lat": 38.87759,
+"lon": 1.26691,
+"name": "Platjeta de S'Ullastre"
+},
+{
+"lat": 38.87809,
+"lon": 1.26789
+},
+{
+"lat": 38.87842,
+"lon": 1.2694
+},
+{
+"lat": 38.88549,
+"lon": 1.409,
+"name": "Platja d'en Bossa"
+},
+{
+"lat": 38.88994,
+"lon": 1.22404,
+"name": "Cala d'Hort"
+},
+{
+"lat": 38.89479,
+"lon": 1.21813,
+"name": "Platja de Cala Carbó"
+},
+{
+"lat": 38.89693,
+"lon": 1.41684
+},
+{
+"lat": 38.90325,
+"lon": 1.43244,
+"name": "Platja dels Molins"
+},
+{
+"lat": 38.90368,
+"lon": 1.42239,
+"name": "Platja de ses Figueretes"
+},
+{
+"lat": 38.90441,
+"lon": 1.42762
+},
+{
+"lat": 38.90675,
+"lon": 1.4385
+},
+{
+"lat": 38.91346,
+"lon": 1.22402,
+"name": "Platja de Cala Vedella"
+},
+{
+"lat": 38.91439,
+"lon": 1.47407
+},
+{
+"lat": 38.91548,
+"lon": 1.45473,
+"name": "Platja de Talamanca"
+},
+{
+"lat": 38.91629,
+"lon": 1.47582
+},
+{
+"lat": 38.91774,
+"lon": 1.4612,
+"name": "Platja de Benirràs"
+},
+{
+"lat": 38.91821,
+"lon": 1.46013,
+"name": "Platja de Figueres"
+},
+{
+"lat": 38.92549,
+"lon": 1.48659,
+"name": "Platja s'Estanyol"
+},
+{
+"lat": 38.92975,
+"lon": 1.49147,
+"name": "Cala Espart"
+},
+{
+"lat": 38.93001,
+"lon": 1.23301,
+"name": "Cala Molí"
+},
+{
+"lat": 38.9339,
+"lon": 1.5027,
+"name": "Cala Olivera"
+},
+{
+"lat": 38.94008,
+"lon": 1.2362,
+"name": "Cala Tarida"
+},
+{
+"lat": 38.94707,
+"lon": 1.51154,
+"name": "Sol d’en Serra"
+},
+{
+"lat": 38.94818,
+"lon": 1.2279,
+"name": "Cala llentia"
+},
+{
+"lat": 38.95013,
+"lon": 1.22764,
+"name": "Cala Codolar"
+},
+{
+"lat": 38.95257,
+"lon": 1.51977,
+"name": "Cala Llonga"
+},
+{
+"lat": 38.9534,
+"lon": 1.52077
+},
+{
+"lat": 38.9607,
+"lon": 1.21976,
+"name": "es Racó d'en Xic"
+},
+{
+"lat": 38.96261,
+"lon": 1.22028,
+"name": "Platges de Comte"
+},
+{
+"lat": 38.96288,
+"lon": 1.22134,
+"name": "Platges de Comte"
+},
+{
+"lat": 38.96666,
+"lon": 1.26833,
+"name": "Platja Port d'es Torrent"
+},
+{
+"lat": 38.96803,
+"lon": 1.24013,
+"name": "Cala Bassa"
+},
+{
+"lat": 38.96811,
+"lon": 1.29981,
+"name": "Platja de s'Estanyol"
+},
+{
+"lat": 38.96838,
+"lon": 1.30123
+},
+{
+"lat": 38.9684,
+"lon": 1.29591,
+"name": "Platja d’en Serral"
+},
+{
+"lat": 38.96996,
+"lon": 1.30311,
+"name": "Platja des Pouet"
+},
+{
+"lat": 38.97102,
+"lon": 1.2922,
+"name": "Platja Es Pinet"
+},
+{
+"lat": 38.97194,
+"lon": 1.28601,
+"name": "Platja d'en Xinxó"
+},
+{
+"lat": 38.97443,
+"lon": 1.53143,
+"name": "Caló de s'Alga"
+},
+{
+"lat": 38.97577,
+"lon": 1.30697,
+"name": "s'Arenal de San Antonio"
+},
+{
+"lat": 38.97894,
+"lon": 1.29853
+},
+{
+"lat": 38.97959,
+"lon": 1.53135,
+"name": "Platja del riu de Santa Eulària"
+},
+{
+"lat": 38.98286,
+"lon": 1.53476,
+"name": "Platja de Santa Eulària"
+},
+{
+"lat": 38.98405,
+"lon": 1.54265,
+"name": "Ses Estaques"
+},
+{
+"lat": 38.9852,
+"lon": 1.29667,
+"name": "Caló des Moro"
+},
+{
+"lat": 38.99129,
+"lon": 1.57319,
+"name": "Platja de Cala Martina"
+},
+{
+"lat": 38.99162,
+"lon": 1.5692,
+"name": "S'Argamassa"
+},
+{
+"lat": 38.992,
+"lon": 1.29067,
+"name": "Cala Grassio"
+},
+{
+"lat": 38.99237,
+"lon": 1.567
+},
+{
+"lat": 38.99256,
+"lon": 1.55252,
+"name": "Platja des Niu Blau"
+},
+{
+"lat": 38.993,
+"lon": 1.28914,
+"name": "Cala Grassionetta"
+},
+{
+"lat": 38.99321,
+"lon": 1.56159,
+"name": "Cala Pada"
+},
+{
+"lat": 38.99956,
+"lon": 1.57947
+},
+{
+"lat": 39.0018,
+"lon": 1.57899,
+"name": "Platja es Canar"
+},
+{
+"lat": 39.00249,
+"lon": 1.29289,
+"name": "Platja de sa Galera"
+},
+{
+"lat": 39.0088,
+"lon": 1.58202,
+"name": "Cala Nova"
+},
+{
+"lat": 39.00952,
+"lon": 1.29908,
+"name": "Cala Salada"
+},
+{
+"lat": 39.01128,
+"lon": 1.29774,
+"name": "Cala Saladeta"
+},
+{
+"lat": 39.01555,
+"lon": 1.58483,
+"name": "Cala Llenya"
+},
+{
+"lat": 39.02472,
+"lon": 1.5954,
+"name": "Cala Mastella"
+},
+{
+"lat": 39.02971,
+"lon": 1.6066,
+"name": "Cala de Boix"
+},
+{
+"lat": 39.03486,
+"lon": 1.60843,
+"name": "Platja Pou des Lleó"
+},
+{
+"lat": 39.04558,
+"lon": 1.60489,
+"name": "Platja de s'Illot de s'Ora"
+},
+{
+"lat": 39.05319,
+"lon": 1.5939,
+"name": "Platja es Figueral"
+},
+{
+"lat": 39.05978,
+"lon": 1.5894,
+"name": "Aigües Blanques"
+},
+{
+"lat": 39.0744,
+"lon": 1.39809,
+"name": "Es Portitxol"
+},
+{
+"lat": 39.07543,
+"lon": 1.59241,
+"name": "Platja Cala Sant Vicent"
+},
+{
+"lat": 39.08034,
+"lon": 1.44039,
+"name": "Cala Sant Miquel"
+},
+{
+"lat": 39.08106,
+"lon": 1.43771
+},
+{
+"lat": 39.08571,
+"lon": 1.43746,
+"name": "Cala d'en Ferrer"
+},
+{
+"lat": 39.08947,
+"lon": 1.4538,
+"name": "Cala Benirràs"
+},
+{
+"lat": 39.09663,
+"lon": 1.55325,
+"name": "Cala Nadja"
+},
+{
+"lat": 39.09851,
+"lon": 1.49688,
+"name": "Cala Xarraca"
+},
+{
+"lat": 39.09959,
+"lon": 1.46479
+},
+{
+"lat": 39.10019,
+"lon": 1.50271,
+"name": "S' Illiot des Rencli"
+},
+{
+"lat": 39.10264,
+"lon": 1.50918,
+"name": "Cala de Xuclar"
+},
+{
+"lat": 39.10663,
+"lon": 1.53727
+},
+{
+"lat": 39.10759,
+"lon": 1.5371,
+"name": "Cala d'en Serra"
+},
+{
+"lat": 39.1086,
+"lon": 1.51536,
+"name": "Portinatx S'Arenal Petit"
+},
+{
+"lat": 39.10978,
+"lon": 1.5175,
+"name": "Portinatx S'Arenal Gros"
+},
+{
+"lat": 39.11395,
+"lon": 1.52068,
+"name": "Portinatx Playa Porto"
+},
+{
+"lat": 39.27841,
+"lon": 3.04283,
+"name": "Platja des Caragol"
+},
+{
+"lat": 39.28889,
+"lon": 3.08974,
+"name": "Cala Màrmols"
+},
+{
+"lat": 39.30515,
+"lon": 3.01241
+},
+{
+"lat": 39.30629,
+"lon": 3.01696,
+"name": "Platja d'es Carbó"
+},
+{
+"lat": 39.31216,
+"lon": 3.00977,
+"name": "platja del Dofí"
+},
+{
+"lat": 39.31224,
+"lon": 3.00597,
+"name": "platja de Can Curt"
+},
+{
+"lat": 39.31261,
+"lon": 3.11955,
+"name": "Caló dels Mariners"
+},
+{
+"lat": 39.3132,
+"lon": 3.11806,
+"name": "es Maquer"
+},
+{
+"lat": 39.3137,
+"lon": 3.12162,
+"name": "Caló des Moro"
+},
+{
+"lat": 39.31623,
+"lon": 3.00437,
+"name": "Platja d'es Dolç"
+},
+{
+"lat": 39.31711,
+"lon": 2.99826,
+"name": "Platja d'es Port"
+},
+{
+"lat": 39.3213,
+"lon": 2.98677,
+"name": "Bassa Cabots"
+},
+{
+"lat": 39.32383,
+"lon": 3.13869,
+"name": "Cala Llombards"
+},
+{
+"lat": 39.32562,
+"lon": 2.9868,
+"name": "Platja d'es Coto"
+},
+{
+"lat": 39.32692,
+"lon": 2.98922,
+"name": "Platja des Estanys"
+},
+{
+"lat": 39.33057,
+"lon": 3.1463,
+"name": "Cala Santanyí"
+},
+{
+"lat": 39.33255,
+"lon": 2.9918,
+"name": "Platja Es Peregons"
+},
+{
+"lat": 39.34332,
+"lon": 2.98276,
+"name": "Platja d'es Trenc"
+},
+{
+"lat": 39.34975,
+"lon": 3.18567,
+"name": "S'Amarador"
+},
+{
+"lat": 39.35236,
+"lon": 3.18834,
+"name": "Ses Fonts de n'Alis"
+},
+{
+"lat": 39.35256,
+"lon": 3.19296
+},
+{
+"lat": 39.3528,
+"lon": 3.1981,
+"name": "sa Barca Trencada"
+},
+{
+"lat": 39.35396,
+"lon": 2.97175,
+"name": "Platja des Freu"
+},
+{
+"lat": 39.35558,
+"lon": 3.20948,
+"name": "Caló de sa Torre"
+},
+{
+"lat": 39.35709,
+"lon": 2.96788,
+"name": "Platja de Ses Covetes"
+},
+{
+"lat": 39.35776,
+"lon": 2.91459,
+"name": "Racó de s’Arena"
+},
+{
+"lat": 39.35801,
+"lon": 3.20855,
+"name": "Caló des Homos Morts"
+},
+{
+"lat": 39.36113,
+"lon": 2.96082,
+"name": "Arenal de sa Ràpita"
+},
+{
+"lat": 39.3614,
+"lon": 3.22438
+},
+{
+"lat": 39.36435,
+"lon": 2.83623,
+"name": "Platja de Cala Pi"
+},
+{
+"lat": 39.36599,
+"lon": 3.22838,
+"name": "Caló des Pou"
+},
+{
+"lat": 39.37118,
+"lon": 3.23,
+"name": "Caló de ses Dones"
+},
+{
+"lat": 39.37338,
+"lon": 3.23236,
+"name": "Cala Gran"
+},
+{
+"lat": 39.37619,
+"lon": 3.23743,
+"name": "Cala Esmeralda"
+},
+{
+"lat": 39.37958,
+"lon": 3.2417,
+"name": "Cala Serena"
+},
+{
+"lat": 39.37981,
+"lon": 3.23898,
+"name": "Cala Ferrera"
+},
+{
+"lat": 39.38882,
+"lon": 3.24696,
+"name": "Cala Mitjana"
+},
+{
+"lat": 39.39318,
+"lon": 3.2471,
+"name": "Cala sa Nau"
+},
+{
+"lat": 39.40352,
+"lon": 3.25403,
+"name": "Cala Brafi"
+},
+{
+"lat": 39.40979,
+"lon": 3.25768,
+"name": "Cala Marçal"
+},
+{
+"lat": 39.41859,
+"lon": 3.27099,
+"name": "S'Arenal Petit"
+},
+{
+"lat": 39.41949,
+"lon": 3.27054,
+"name": "S'Arenal Gran"
+},
+{
+"lat": 39.42289,
+"lon": 3.268,
+"name": "Arenal dels Ases"
+},
+{
+"lat": 39.45149,
+"lon": 3.27702
+},
+{
+"lat": 39.45676,
+"lon": 3.2768,
+"name": "Cala Domingos Petit"
+},
+{
+"lat": 39.45859,
+"lon": 3.27802,
+"name": "Cala Domingos Gran"
+},
+{
+"lat": 39.46265,
+"lon": 2.51912
+},
+{
+"lat": 39.46695,
+"lon": 3.27911
+},
+{
+"lat": 39.47156,
+"lon": 2.52144,
+"name": "Cala Portals Vells"
+},
+{
+"lat": 39.47232,
+"lon": 2.52018,
+"name": "Cala Portals Vells"
+},
+{
+"lat": 39.47286,
+"lon": 2.48728,
+"name": "sa Cala de s'Art"
+},
+{
+"lat": 39.47513,
+"lon": 2.52015,
+"name": "El Mago"
+},
+{
+"lat": 39.47536,
+"lon": 3.28588
+},
+{
+"lat": 39.47638,
+"lon": 2.52079,
+"name": "caló dels Reis"
+},
+{
+"lat": 39.47652,
+"lon": 2.48175,
+"name": "Racó de sa Fragata"
+},
+{
+"lat": 39.47904,
+"lon": 2.52561,
+"name": "Cala Xada"
+},
+{
+"lat": 39.48246,
+"lon": 2.73391
+},
+{
+"lat": 39.48258,
+"lon": 3.28636
+},
+{
+"lat": 39.48397,
+"lon": 2.53049,
+"name": "Platja de Cala Bella Dona"
+},
+{
+"lat": 39.48414,
+"lon": 3.28617
+},
+{
+"lat": 39.48458,
+"lon": 2.73576
+},
+{
+"lat": 39.48459,
+"lon": 2.7358,
+"name": "Caló de ses Lleonardes"
+},
+{
+"lat": 39.48657,
+"lon": 3.28731
+},
+{
+"lat": 39.48684,
+"lon": 2.47718,
+"name": "Caleta d'El Toro"
+},
+{
+"lat": 39.48699,
+"lon": 2.73688,
+"name": "Cala Mosques"
+},
+{
+"lat": 39.48821,
+"lon": 2.53265,
+"name": "Cala Falcó"
+},
+{
+"lat": 39.49138,
+"lon": 3.29167,
+"name": "Caló des Serral"
+},
+{
+"lat": 39.4915,
+"lon": 2.4789,
+"name": "Platja del Toro"
+},
+{
+"lat": 39.49369,
+"lon": 2.47428,
+"name": "Platja de ses Penyes Roges"
+},
+{
+"lat": 39.4943,
+"lon": 3.29184
+},
+{
+"lat": 39.49494,
+"lon": 2.53375
+},
+{
+"lat": 39.49604,
+"lon": 2.53449
+},
+{
+"lat": 39.49654,
+"lon": 2.74523,
+"name": "Es Calonet des Fornàs"
+},
+{
+"lat": 39.49708,
+"lon": 2.74557,
+"name": "Sa Cova Baixa"
+},
+{
+"lat": 39.49832,
+"lon": 3.2967,
+"name": "platja Petita"
+},
+{
+"lat": 39.49868,
+"lon": 2.74797,
+"name": "Caló de Sant Antoni"
+},
+{
+"lat": 39.49997,
+"lon": 3.29599,
+"name": "Cala Varques"
+},
+{
+"lat": 39.50079,
+"lon": 3.29863,
+"name": "es Caló Blanc"
+},
+{
+"lat": 39.50237,
+"lon": 2.75037,
+"name": "Platja de s'Arenal de Llucmajor"
+},
+{
+"lat": 39.50389,
+"lon": 3.30002
+},
+{
+"lat": 39.50611,
+"lon": 2.53746,
+"name": "Platja de Magaluf"
+},
+{
+"lat": 39.51179,
+"lon": 2.4733,
+"name": "Caló d'en Pellicer"
+},
+{
+"lat": 39.51323,
+"lon": 2.74673,
+"name": "Platja de s'Arenal"
+},
+{
+"lat": 39.51437,
+"lon": 2.53936,
+"name": "Platja de Son Maties"
+},
+{
+"lat": 39.51619,
+"lon": 2.48013,
+"name": "Platja de Santa Ponça"
+},
+{
+"lat": 39.51644,
+"lon": 3.30977,
+"name": "Cala de s'Estany d'en Mas"
+},
+{
+"lat": 39.5178,
+"lon": 2.73628,
+"name": "Platja de Palma"
+},
+{
+"lat": 39.51882,
+"lon": 2.47738
+},
+{
+"lat": 39.51907,
+"lon": 2.53714,
+"name": "Platja de na Nadala"
+},
+{
+"lat": 39.52047,
+"lon": 3.31365,
+"name": "Cala Mendia"
+},
+{
+"lat": 39.52169,
+"lon": 2.73837,
+"name": "Platja de les Meravelles"
+},
+{
+"lat": 39.52241,
+"lon": 2.46841,
+"name": "Platja Cala Blanca"
+},
+{
+"lat": 39.52318,
+"lon": 3.31784,
+"name": "Cala Anguila"
+},
+{
+"lat": 39.5236,
+"lon": 2.53971,
+"name": "Platja de Porto Novo o d'es Carregador"
+},
+{
+"lat": 39.52418,
+"lon": 2.54323,
+"name": "Platja del Lleó"
+},
+{
+"lat": 39.5243,
+"lon": 2.54505,
+"name": "Sa Foradada"
+},
+{
+"lat": 39.52478,
+"lon": 2.4662,
+"name": "Monte de oro"
+},
+{
+"lat": 39.52535,
+"lon": 2.46561
+},
+{
+"lat": 39.5257,
+"lon": 2.55269,
+"name": "Punta Negra"
+},
+{
+"lat": 39.52585,
+"lon": 2.55304
+},
+{
+"lat": 39.52592,
+"lon": 2.46493,
+"name": "platja de la Punta dels Gats"
+},
+{
+"lat": 39.52603,
+"lon": 2.54618,
+"name": "Platja de Son Caliu"
+},
+{
+"lat": 39.52871,
+"lon": 2.55437,
+"name": "Platja de Ses Penyes Roges"
+},
+{
+"lat": 39.52876,
+"lon": 2.4302,
+"name": "Platja des Caló d'en Monjo"
+},
+{
+"lat": 39.5291,
+"lon": 2.55567,
+"name": "Platja des Cap des Gegant"
+},
+{
+"lat": 39.53011,
+"lon": 2.5573,
+"name": "Platja de la Punta des Carregador"
+},
+{
+"lat": 39.53036,
+"lon": 2.55797,
+"name": "Platja de s'Hostalet"
+},
+{
+"lat": 39.53096,
+"lon": 2.43831
+},
+{
+"lat": 39.53125,
+"lon": 2.72653,
+"name": "Platja de Palma"
+},
+{
+"lat": 39.53182,
+"lon": 2.56093
+},
+{
+"lat": 39.53183,
+"lon": 2.56437,
+"name": "Platja de Punta Portals"
+},
+{
+"lat": 39.53186,
+"lon": 2.57333,
+"name": "Platja de l'Oratori"
+},
+{
+"lat": 39.53208,
+"lon": 2.56201,
+"name": "Platja de la Costa d'en Blanes"
+},
+{
+"lat": 39.5326,
+"lon": 2.43809
+},
+{
+"lat": 39.53267,
+"lon": 3.33187
+},
+{
+"lat": 39.53308,
+"lon": 2.45846,
+"name": "Platja de La Romana"
+},
+{
+"lat": 39.53311,
+"lon": 2.58386,
+"name": "Cala Oli"
+},
+{
+"lat": 39.53321,
+"lon": 2.58888,
+"name": "Cala Xinxell"
+},
+{
+"lat": 39.53362,
+"lon": 2.58734
+},
+{
+"lat": 39.53384,
+"lon": 2.57648
+},
+{
+"lat": 39.53404,
+"lon": 2.38811,
+"name": "Cala Llamp"
+},
+{
+"lat": 39.53435,
+"lon": 2.71313
+},
+{
+"lat": 39.53441,
+"lon": 2.71809,
+"name": "Platja de Can Pastilla"
+},
+{
+"lat": 39.53445,
+"lon": 2.5919,
+"name": "sa Caleta"
+},
+{
+"lat": 39.53453,
+"lon": 2.71828,
+"name": "Platja de Can Pastilla"
+},
+{
+"lat": 39.53464,
+"lon": 2.58942,
+"name": "Cala Comtesa"
+},
+{
+"lat": 39.53472,
+"lon": 2.45612,
+"name": "Platja Gran de Torà"
+},
+{
+"lat": 39.53526,
+"lon": 2.36626
+},
+{
+"lat": 39.53527,
+"lon": 2.70994
+},
+{
+"lat": 39.53632,
+"lon": 2.45118,
+"name": "Platja de Palmira"
+},
+{
+"lat": 39.5364,
+"lon": 2.44863
+},
+{
+"lat": 39.5369,
+"lon": 2.40571,
+"name": "Cala Blanca"
+},
+{
+"lat": 39.53694,
+"lon": 2.59055,
+"name": "Platja d'Illetes"
+},
+{
+"lat": 39.53725,
+"lon": 2.37104,
+"name": "Racó des Murter"
+},
+{
+"lat": 39.53736,
+"lon": 2.37741,
+"name": "Cala Mermessèn"
+},
+{
+"lat": 39.53743,
+"lon": 2.42297,
+"name": "es Camp de Mar"
+},
+{
+"lat": 39.53764,
+"lon": 2.7079
+},
+{
+"lat": 39.5383,
+"lon": 2.70748
+},
+{
+"lat": 39.5385,
+"lon": 2.41916,
+"name": "platja de ses Dones"
+},
+{
+"lat": 39.53879,
+"lon": 2.41308,
+"name": "Cala en Cranc"
+},
+{
+"lat": 39.5394,
+"lon": 2.59271
+},
+{
+"lat": 39.54128,
+"lon": 3.33657
+},
+{
+"lat": 39.54186,
+"lon": 2.38457
+},
+{
+"lat": 39.54221,
+"lon": 2.59557,
+"name": "Es Genetó"
+},
+{
+"lat": 39.54373,
+"lon": 2.7002
+},
+{
+"lat": 39.54392,
+"lon": 2.5969,
+"name": "Cova de sa Grava"
+},
+{
+"lat": 39.54412,
+"lon": 2.3871,
+"name": "platja de ses Bassetes"
+},
+{
+"lat": 39.54463,
+"lon": 2.37714,
+"name": "Cala en Fonoll"
+},
+{
+"lat": 39.54477,
+"lon": 2.59603
+},
+{
+"lat": 39.54606,
+"lon": 2.59575,
+"name": "Caló dels Macs"
+},
+{
+"lat": 39.54622,
+"lon": 2.61829,
+"name": "Caló des Grells"
+},
+{
+"lat": 39.54644,
+"lon": 2.37949,
+"name": "sa cova Rotja"
+},
+{
+"lat": 39.5467,
+"lon": 2.59568,
+"name": "Platja de Cas Català"
+},
+{
+"lat": 39.5474,
+"lon": 2.69291,
+"name": "La Calita"
+},
+{
+"lat": 39.54842,
+"lon": 3.35299,
+"name": "Cala Petita"
+},
+{
+"lat": 39.54863,
+"lon": 2.69149,
+"name": "El Penyó"
+},
+{
+"lat": 39.55007,
+"lon": 2.59902,
+"name": "Platja de Calanova"
+},
+{
+"lat": 39.55045,
+"lon": 2.60004,
+"name": "Cala del Guix"
+},
+{
+"lat": 39.55168,
+"lon": 2.68911,
+"name": "Ciutat Jardí"
+},
+{
+"lat": 39.55208,
+"lon": 2.6065,
+"name": "Platja de Cala Major"
+},
+{
+"lat": 39.55229,
+"lon": 2.68939,
+"name": "Platja de Ciutat Jardí"
+},
+{
+"lat": 39.55368,
+"lon": 2.6864
+},
+{
+"lat": 39.55516,
+"lon": 2.6828
+},
+{
+"lat": 39.55521,
+"lon": 2.36554
+},
+{
+"lat": 39.55591,
+"lon": 2.6812,
+"name": "Platja des Molinar"
+},
+{
+"lat": 39.55608,
+"lon": 3.36695,
+"name": "Caló d'en Rafelino"
+},
+{
+"lat": 39.55654,
+"lon": 2.67928,
+"name": "Platja des molinar"
+},
+{
+"lat": 39.5575,
+"lon": 3.371,
+"name": "Cala Morlanda"
+},
+{
+"lat": 39.55994,
+"lon": 2.67248,
+"name": "Es Portitxolet"
+},
+{
+"lat": 39.55995,
+"lon": 2.67252,
+"name": "Platja des Portitxolet"
+},
+{
+"lat": 39.56212,
+"lon": 2.66269,
+"name": "Platja de Ca'n Pere Antoni"
+},
+{
+"lat": 39.56252,
+"lon": 2.66197,
+"name": "Platja de Can Pere Antoni"
+},
+{
+"lat": 39.56387,
+"lon": 2.65765,
+"name": "Punta des Gas"
+},
+{
+"lat": 39.56573,
+"lon": 3.37316,
+"name": "s'Illot"
+},
+{
+"lat": 39.57368,
+"lon": 3.37766,
+"name": "Platja de sa Coma"
+},
+{
+"lat": 39.57673,
+"lon": 2.35446,
+"name": "sa Platja Petita"
+},
+{
+"lat": 39.57794,
+"lon": 2.3537,
+"name": "Platja d'Es Geperut"
+},
+{
+"lat": 39.58421,
+"lon": 2.34864,
+"name": "s'Algar"
+},
+{
+"lat": 39.59475,
+"lon": 3.38545,
+"name": "Platja de Cala Millor"
+},
+{
+"lat": 39.59634,
+"lon": 2.35468,
+"name": "Cala en Basset"
+},
+{
+"lat": 39.61024,
+"lon": 3.3907
+},
+{
+"lat": 39.61283,
+"lon": 3.39204,
+"name": "Platja de na Marins"
+},
+{
+"lat": 39.63536,
+"lon": 3.40476,
+"name": "platja de sa Marjal"
+},
+{
+"lat": 39.64337,
+"lon": 2.43684,
+"name": "platja de sa Clota"
+},
+{
+"lat": 39.64612,
+"lon": 2.44495,
+"name": "platjola de sa Figuera"
+},
+{
+"lat": 39.64637,
+"lon": 3.43699
+},
+{
+"lat": 39.64864,
+"lon": 2.45051,
+"name": "Platja de Can Pruaga"
+},
+{
+"lat": 39.65683,
+"lon": 3.44164,
+"name": "platja de Canyamel"
+},
+{
+"lat": 39.65689,
+"lon": 3.44673,
+"name": "Cala Serch"
+},
+{
+"lat": 39.65856,
+"lon": 2.47146,
+"name": "Cala d'Estellencs"
+},
+{
+"lat": 39.66962,
+"lon": 3.45248
+},
+{
+"lat": 39.68188,
+"lon": 3.45198,
+"name": "Cala de sa Font"
+},
+{
+"lat": 39.68388,
+"lon": 3.45491,
+"name": "cala de n´Aladern"
+},
+{
+"lat": 39.69073,
+"lon": 2.51611
+},
+{
+"lat": 39.69395,
+"lon": 2.52009
+},
+{
+"lat": 39.69569,
+"lon": 3.45469,
+"name": "Caló des Beato"
+},
+{
+"lat": 39.69947,
+"lon": 2.55073,
+"name": "platja de Son Bunyola"
+},
+{
+"lat": 39.69996,
+"lon": 2.55495
+},
+{
+"lat": 39.7006,
+"lon": 2.55301,
+"name": "Cala Gata"
+},
+{
+"lat": 39.70294,
+"lon": 2.5612,
+"name": "platja de Can Sales"
+},
+{
+"lat": 39.70512,
+"lon": 3.45648,
+"name": "Son Moll"
+},
+{
+"lat": 39.70752,
+"lon": 3.45961,
+"name": "na Ferradura"
+},
+{
+"lat": 39.71188,
+"lon": 3.47271
+},
+{
+"lat": 39.71309,
+"lon": 3.47,
+"name": "Cala Gat"
+},
+{
+"lat": 39.71825,
+"lon": 2.58833,
+"name": "Sa Marina"
+},
+{
+"lat": 39.72007,
+"lon": 3.46163
+},
+{
+"lat": 39.72267,
+"lon": 3.45295,
+"name": "Cala Agulla"
+},
+{
+"lat": 39.72594,
+"lon": 3.45207,
+"name": "Cala Moltó"
+},
+{
+"lat": 39.73045,
+"lon": 3.24659,
+"name": "S’Arenal de Sa Canova"
+},
+{
+"lat": 39.73166,
+"lon": 3.45477,
+"name": "Cala na Llòbriga"
+},
+{
+"lat": 39.73204,
+"lon": 3.25659,
+"name": "Platja de s’Estanyol"
+},
+{
+"lat": 39.7322,
+"lon": 3.23532,
+"name": "Platja de Son Serra de Marina"
+},
+{
+"lat": 39.73221,
+"lon": 3.2362,
+"name": "Platja de Son Serra de Marina"
+},
+{
+"lat": 39.73362,
+"lon": 3.26281
+},
+{
+"lat": 39.73748,
+"lon": 3.22463,
+"name": "Platja de s’Home Mort"
+},
+{
+"lat": 39.7389,
+"lon": 3.27707,
+"name": "Platja Colònia de Sant Pere"
+},
+{
+"lat": 39.73996,
+"lon": 3.28138
+},
+{
+"lat": 39.74138,
+"lon": 3.21228,
+"name": "Platja de Son Real"
+},
+{
+"lat": 39.74437,
+"lon": 3.43385,
+"name": "Cala Mesquida"
+},
+{
+"lat": 39.74677,
+"lon": 3.29366,
+"name": "S'Arenalet de Son Colom"
+},
+{
+"lat": 39.74801,
+"lon": 3.3011,
+"name": "Ca los Camps"
+},
+{
+"lat": 39.74976,
+"lon": 3.19488,
+"name": "Arenal d’en Casat"
+},
+{
+"lat": 39.74983,
+"lon": 3.4173,
+"name": "Cala Torta"
+},
+{
+"lat": 39.7519,
+"lon": 3.41371
+},
+{
+"lat": 39.75423,
+"lon": 3.4114,
+"name": "Cala Estreta"
+},
+{
+"lat": 39.75616,
+"lon": 3.1778,
+"name": "Cala s'Arralot"
+},
+{
+"lat": 39.75619,
+"lon": 3.32031
+},
+{
+"lat": 39.75759,
+"lon": 3.1752,
+"name": "Na Patana"
+},
+{
+"lat": 39.75909,
+"lon": 3.17035,
+"name": "Platja de Son Bauló"
+},
+{
+"lat": 39.7591,
+"lon": 3.17056,
+"name": "Platja de Son Bauló"
+},
+{
+"lat": 39.75921,
+"lon": 3.40345,
+"name": "Cala es Matzocs"
+},
+{
+"lat": 39.76006,
+"lon": 3.16925,
+"name": "Platja de na Patana"
+},
+{
+"lat": 39.76027,
+"lon": 2.64154
+},
+{
+"lat": 39.76272,
+"lon": 3.16468,
+"name": "Cala de s'Escar"
+},
+{
+"lat": 39.76309,
+"lon": 3.38475,
+"name": "Cala de sa Font Salada"
+},
+{
+"lat": 39.76512,
+"lon": 3.37966,
+"name": "s'Arenalet d'es Verger"
+},
+{
+"lat": 39.76545,
+"lon": 3.15795,
+"name": "Platja Petita"
+},
+{
+"lat": 39.76631,
+"lon": 3.15628
+},
+{
+"lat": 39.76726,
+"lon": 3.15454,
+"name": "Platja de Santa Margalida"
+},
+{
+"lat": 39.76741,
+"lon": 2.65312,
+"name": "es Canyaret"
+},
+{
+"lat": 39.76931,
+"lon": 3.15053,
+"name": "Platja de Ca'n Picafort"
+},
+{
+"lat": 39.7701,
+"lon": 3.15043,
+"name": "Platja de Ca'n Picafort"
+},
+{
+"lat": 39.77443,
+"lon": 3.14412,
+"name": "Platja de Capellans"
+},
+{
+"lat": 39.78025,
+"lon": 3.13802,
+"name": "Es Comú - Platja de Muro"
+},
+{
+"lat": 39.79162,
+"lon": 2.69184,
+"name": "platja d'en Repic"
+},
+{
+"lat": 39.79199,
+"lon": 2.69496,
+"name": "platja des Través"
+},
+{
+"lat": 39.79404,
+"lon": 3.12628
+},
+{
+"lat": 39.79556,
+"lon": 2.69621,
+"name": "platja de Can Generós"
+},
+{
+"lat": 39.80819,
+"lon": 3.11888,
+"name": "Platja de Muro"
+},
+{
+"lat": 39.80873,
+"lon": 2.70455
+},
+{
+"lat": 39.8209,
+"lon": 3.11732,
+"name": "platja dels Francesos"
+},
+{
+"lat": 39.8279,
+"lon": 3.11845
+},
+{
+"lat": 39.83537,
+"lon": 3.12573,
+"name": "Platja d'Alcúdia"
+},
+{
+"lat": 39.83583,
+"lon": 3.17019
+},
+{
+"lat": 39.83749,
+"lon": 3.15674
+},
+{
+"lat": 39.83773,
+"lon": 3.15759,
+"name": "Cala Poncet"
+},
+{
+"lat": 39.83845,
+"lon": 3.16454,
+"name": "Platja d'Alcanada"
+},
+{
+"lat": 39.84005,
+"lon": 3.17497,
+"name": "platja dels Secs"
+},
+{
+"lat": 39.84009,
+"lon": 2.77602,
+"name": "Cala Tuent"
+},
+{
+"lat": 39.84211,
+"lon": 3.17875,
+"name": "caló de sa Bassa Blanca"
+},
+{
+"lat": 39.85099,
+"lon": 2.80007
+},
+{
+"lat": 39.85223,
+"lon": 2.80583,
+"name": "platja del Torrent de Pareis"
+},
+{
+"lat": 39.85825,
+"lon": 3.1095,
+"name": "Platja del Corral d'en Bennàssar"
+},
+{
+"lat": 39.8625,
+"lon": 3.18747,
+"name": "Platja des Coll Baix"
+},
+{
+"lat": 39.86282,
+"lon": 3.12075,
+"name": "Es Clot"
+},
+{
+"lat": 39.86304,
+"lon": 3.12456,
+"name": "Platja des Morer Vermell"
+},
+{
+"lat": 39.86459,
+"lon": 3.13793,
+"name": "Platja de sa font de Sant Pere"
+},
+{
+"lat": 39.86463,
+"lon": 3.09274
+},
+{
+"lat": 39.86543,
+"lon": 3.13548,
+"name": "Platja de sa Font de Sant Joan"
+},
+{
+"lat": 39.87102,
+"lon": 3.15411,
+"name": "Racó de ses Barreres"
+},
+{
+"lat": 39.87153,
+"lon": 3.15929,
+"name": "Caleta des Capellans"
+},
+{
+"lat": 39.87245,
+"lon": 3.16021
+},
+{
+"lat": 39.87282,
+"lon": 3.16184
+},
+{
+"lat": 39.87299,
+"lon": 3.08573,
+"name": "Platja de Can Cullerassa"
+},
+{
+"lat": 39.87367,
+"lon": 3.16372
+},
+{
+"lat": 39.87725,
+"lon": 3.18801
+},
+{
+"lat": 39.88608,
+"lon": 3.18923,
+"name": "sa Platja Petita"
+},
+{
+"lat": 39.88703,
+"lon": 3.19029,
+"name": "sa Platja Gran"
+},
+{
+"lat": 39.88794,
+"lon": 3.1886
+},
+{
+"lat": 39.89514,
+"lon": 3.08011,
+"name": "platja del Port de Pollença"
+},
+{
+"lat": 39.90578,
+"lon": 3.10751,
+"name": "La Platjola"
+},
+{
+"lat": 39.90717,
+"lon": 3.08371
+},
+{
+"lat": 39.90777,
+"lon": 3.0841
+},
+{
+"lat": 39.90931,
+"lon": 3.08586
+},
+{
+"lat": 39.90971,
+"lon": 3.09494
+},
+{
+"lat": 39.91017,
+"lon": 3.087
+},
+{
+"lat": 39.91026,
+"lon": 3.09393
+},
+{
+"lat": 39.91078,
+"lon": 3.08826
+},
+{
+"lat": 39.91111,
+"lon": 3.08991
+},
+{
+"lat": 39.91116,
+"lon": 3.09131
+},
+{
+"lat": 39.91179,
+"lon": 3.11076
+},
+{
+"lat": 39.91942,
+"lon": 3.06048,
+"name": "Cala Carbó"
+},
+{
+"lat": 39.91995,
+"lon": 3.05746,
+"name": "Cala Molins"
+},
+{
+"lat": 39.9208,
+"lon": 3.05604,
+"name": "Cala Clara"
+},
+{
+"lat": 39.92153,
+"lon": 3.05448,
+"name": "Cala Barques"
+},
+{
+"lat": 39.92702,
+"lon": 3.13809,
+"name": "Platja de Formentor"
+},
+{
+"lat": 39.92786,
+"lon": 3.0974,
+"name": "Font de Cala Bóquer"
+},
+{
+"lat": 39.92907,
+"lon": 3.09468,
+"name": "Cala Bóquer"
+},
+{
+"lat": 39.92993,
+"lon": 3.03848
+},
+{
+"lat": 39.92994,
+"lon": 3.16349,
+"name": "Cala en Feliu"
+},
+{
+"lat": 39.93089,
+"lon": 3.03204,
+"name": "Cala Castell"
+},
+{
+"lat": 39.94023,
+"lon": 3.18004,
+"name": "Cala Murta"
+},
+{
+"lat": 39.94404,
+"lon": 3.18926,
+"name": "Cala en Gossalba"
+},
+{
+"lat": 39.95197,
+"lon": 3.17356,
+"name": "Cala Figuera"
+}
+]

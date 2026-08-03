@@ -170,13 +170,16 @@ const IMAGE_RULES = [
     ['/blog-img/itp-tax-euros.jpg', 'Taxes and paperwork for Spanish property buyers'],
     ['/blog-img/eu-regulation-flags.jpg', 'EU and Spanish regulation affecting property buyers'],
     ['/blog-img/law-scales-decision.jpg', 'Legal scales representing Spanish property tax rules'],
+    ['/blog-img/court-fine-signing.jpg', 'A judge signs documents beside a gavel'],
   ]],
   [/rent-cap|landlord|tenant|renting|rental|\brent\b|alquiler|housing law|ley de vivienda/i, [
     ['/blog-img/rent-law-signing.jpg', 'Signing a Spanish rental agreement'],
     ['/blog-img/rental-contract.jpg', 'A Spanish rental contract'],
     ['/blog-img/rental-keys-handover.jpg', 'Handing over the keys to a Spanish rental'],
     ['/blog-img/holiday-rental-apartments.jpg', 'Holiday rental apartments on the Costa del Sol'],
+    ['/blog-img/holiday-apartments-sea.jpg', 'Mediterranean seafront holiday apartments in Spain'],
     ['/blog-img/law-scales-decision.jpg', 'Legal scales representing Spanish housing law'],
+    ['/blog-img/court-fine-signing.jpg', 'A judge signs documents beside a gavel'],
   ]],
   [/invest/i, [
     ['/blog-img/property-investment.jpg', 'Property investment in Spain'],

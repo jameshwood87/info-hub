@@ -1,4 +1,9 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
 import Layout from '../../layouts/Layout.astro';
 
 const title = 'Developers • PropertyList Info Hub';
@@ -6,8 +11,8 @@ const description =
 	'Distribute your new developments through registered estate agents. Receive confirmed viewings and a direct handoff to your sales team.';
 
 const stats: Array<{ value: string; label: string }> = [
-	{ value: '2,000+', label: 'Estate agents signed up' },
-	{ value: '5,777', label: 'Real estate listings' },
+	{ value: `${plAgents}`, label: 'Estate agents signed up' },
+	{ value: `${plListings}`, label: 'Real estate listings' },
 ];
 ---
 
@@ -25,7 +30,7 @@ const stats: Array<{ value: string; label: string }> = [
 	<section class="hero">
 		<div class="heroInner">
 			<div class="badge">For property developers</div>
-			<h1>Reach 2,000+ agents and direct public buyers. Get the best of both worlds.</h1>
+			<h1>Reach {plAgents} agents and direct public buyers. Get the best of both worlds.</h1>
 			<p class="lead">
 				While our agent network markets your properties to their buyers, our automated system seamlessly books your public portal viewings. We hand the
 				buyer directly to your in-house sales team, giving you 100% control to manage the relationship and close the deal.
@@ -33,6 +38,7 @@ const stats: Array<{ value: string; label: string }> = [
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://developers.propertylist.es/login">Join as a developer</a>
 				<a class="btnSecondary" href="#get-updates">Get updates</a>
+				<a class="btnSecondary" href="/docs/developers/">Read the developer docs</a>
 			</div>
 			<div class="trustRow" aria-label="Platform stats">
 				{stats.map((s) => (
@@ -115,7 +121,7 @@ const stats: Array<{ value: string; label: string }> = [
 			<div class="panel channel">
 				<h3>The Agency Network</h3>
 				<p class="muted">
-					Our network of 2,000+ estate agents gets immediate free access to your developments. They act as an external distribution channel - sharing
+					Our network of {plAgents} estate agents gets immediate free access to your developments. They act as an external distribution channel - sharing
 					your promotions with their buyer lists and bringing qualified clients to you for viewings.
 				</p>
 			</div>
@@ -201,7 +207,7 @@ const stats: Array<{ value: string; label: string }> = [
 					</details>
 					<details class="faqItem">
 						<summary class="faqQ">Where can I learn more?</summary>
-						<div class="faqA">Read the docs and guides at <a href="/docs/?role=developer">/docs/?role=developer</a>.</div>
+						<div class="faqA">Read the docs and guides at <a href="/docs/developers/">/docs/developers/</a>.</div>
 					</details>
 				</div>
 			</div>
@@ -214,7 +220,7 @@ const stats: Array<{ value: string; label: string }> = [
 			<p class="finalSub">Join as a developer and start distributing your units through the agent network.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://developers.propertylist.es/login">Join as a developer</a>
-				<a class="btnSecondary" href="/docs/?role=developer">View developer docs</a>
+				<a class="btnSecondary" href="/docs/developers/">View developer docs</a>
 			</div>
 		</div>
 	</section>
@@ -260,7 +266,7 @@ const stats: Array<{ value: string; label: string }> = [
 					const res = await fetch('/api/subscribe', {
 						method: 'POST',
 						headers: { 'content-type': 'application/json' },
-						body: JSON.stringify({ email, lang: 'en', page: '/developers/', utm }),
+						body: JSON.stringify({ audience: 'agent', tag: 'developer-interested', email, lang: 'en', page: '/developers/', utm }),
 					});
 					const data = await res.json().catch(() => ({}));
 					if (!res.ok || !data?.ok) {

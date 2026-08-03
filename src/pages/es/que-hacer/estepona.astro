@@ -476,7 +476,7 @@ const townLabel = (k: string) =>
 			</div>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="/es/barrios/estepona/">Guía de Estepona</a>
-				<a class="btnSecondary" href="/es/buscador-propiedades">Encuentra tu hogar &rarr;</a>
+				<a class="btnSecondary" href="/es/buscador-propiedades/">Encuentra tu hogar &rarr;</a>
 			</div>
 		</div>
 	</section>
@@ -538,6 +538,7 @@ const townLabel = (k: string) =>
 			const byId = Object.fromEntries([...planEvents, ...planPlaces, ...planMarkets].map((e) => [e.id, e]));
 			// entradas del plan: {id} para eventos, {id,d,tm?} para lugares/mercadillos con fecha
 			const norm = (x) => (typeof x === 'string' ? { id: x } : x || {});
+			const trk = (n) => { try { window.umami && window.umami.track(n); } catch {} };
 			const load = () => { try { return (JSON.parse(localStorage.getItem(KEY)) || []).map(norm).filter((p) => byId[p.id]); } catch { return []; } };
 			const save = (ids) => { try { localStorage.setItem(KEY, JSON.stringify(ids)); } catch {} };
 			let plan = load();
@@ -555,7 +556,7 @@ const townLabel = (k: string) =>
 					if (m[3]) entry.tm = `${m[3].slice(0, 2)}:${m[3].slice(2, 4)}`;
 					plan.push(entry);
 				}
-				save(plan);
+				save(plan); trk('plan-import');
 			}
 
 			const pill = document.querySelector('[data-plan-pill]');
@@ -690,7 +691,7 @@ const townLabel = (k: string) =>
 				const entry = { id: wId, d: day.getAttribute('data-wd') };
 				const tm = (wTimes.querySelector('.isActive') || {}).getAttribute ? wTimes.querySelector('.isActive').getAttribute('data-wt') : '';
 				if (tm) entry.tm = tm;
-				plan = [...plan.filter((p) => p.id !== wId), entry];
+				plan = [...plan.filter((p) => p.id !== wId), entry]; trk('plan-add');
 				save(plan); sync();
 				wOverlay.hidden = true;
 			});
@@ -703,7 +704,7 @@ const townLabel = (k: string) =>
 					// solo los eventos de un día con hora conocida entran directos;
 					// el resto (lugares, mercadillos, eventos multi-día o sin hora) pregunta cuándo
 					if (it && it.start && it.time && (!it.end || it.end === it.start)) {
-						plan = [...plan, { id }];
+						plan = [...plan, { id }]; trk('plan-add');
 						save(plan); sync();
 						return;
 					}
@@ -720,7 +721,7 @@ const townLabel = (k: string) =>
 			const plusDay = (iso) => new Date(new Date(iso + 'T00:00:00Z').getTime() + 86400000).toISOString().slice(0, 10);
 			document.querySelector('[data-plan-ics]').addEventListener('click', () => {
 				const entries = plan.map((p) => ({ p, e: byId[p.id] })).filter((x) => x.e && !x.p.ns && (x.e.start || x.p.d));
-				if (!entries.length) return;
+				if (!entries.length) return; trk('plan-calendar');
 				const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PropertyList//WhatsOn//ES'];
 				for (const { p, e } of entries) {
 					lines.push('BEGIN:VEVENT', `UID:${e.id}@info.propertylist.es`);
@@ -753,7 +754,7 @@ const townLabel = (k: string) =>
 
 			// share plan
 			document.querySelector('[data-plan-share]').addEventListener('click', async () => {
-				if (!plan.length) return;
+				if (!plan.length) return; trk('plan-share');
 				const tok = (p) => p.id + (p.ns ? '@ns' : p.d ? '@' + p.d.replace(/-/g, '') + (p.tm ? '-' + p.tm.replace(':', '') : '') : '');
 				const url = location.origin + location.pathname + '#plan=' + plan.map(tok).join(',');
 				try {

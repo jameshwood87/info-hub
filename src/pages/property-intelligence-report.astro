@@ -1,0 +1,237 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Property Intelligence Report | PropertyList';
+const description =
+	'Notary-verified valuation reports for any listing in seconds: agent brief with objection handlers, PDF, and a client share link you control and track.';
+
+const faqs = [
+	{
+		q: 'What is a Property Intelligence Report?',
+		a: 'It is a full comparative market analysis (CMA) for one specific property: what the market says it is worth, how its segment is behaving, comparable listings, location context and investment outlook. It is built on live MLS data plus notary-verified transaction prices from the official Spanish register, so the numbers are defensible in front of a vendor.',
+	},
+	{
+		q: 'How much does it cost?',
+		a: '5 credits per report. Reports are cached for 30 days, and teammates in your agency can view a report you generated for free - so a busy office is not paying twice for the same property.',
+	},
+	{
+		q: 'What is the agent brief?',
+		a: 'A section at the top of your copy marked "AGENT BRIEF - DO NOT SHARE". It tells you what this specific report proves, what to lead with, how to answer the objections you will actually hear ("my property is worth more", "I am not in a hurry"), and which figures in this report need careful handling. It is coaching for the appointment, written from this property’s own numbers.',
+	},
+	{
+		q: 'Can I send the report to my client?',
+		a: 'Yes, but not the agent PDF - that contains your coaching notes. Instead you create a share link and choose which sections the client sees. The cover and disclaimer are always included, the agent brief never is. You can add a personal note, have us email the link, or paste it into WhatsApp yourself.',
+	},
+	{
+		q: 'Can I see if the client opened it?',
+		a: 'Yes. Every link you create is listed with the sections it exposes and whether it has been opened yet, so you know whether to follow up. You can revoke any link instantly.',
+	},
+	{
+		q: 'What if there is not enough data for a property?',
+		a: 'The report says so. Where a sample is too thin to support a claim it prints "Not available" and explains why, rather than inventing a figure. That is deliberate: it is what makes the numbers it does report safe to present.',
+	},
+	{
+		q: 'Can I produce the report in my client’s language?',
+		a: 'Yes. Set the report language before you generate. It defaults to your own language and can be switched so the whole report comes out in the language your client reads.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const appLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'PropertyList Property Intelligence Report',
+	applicationCategory: 'BusinessApplication',
+	operatingSystem: 'Web',
+	description:
+		'Property-specific CMA reports for Spanish estate agents: notary-verified market value, comparables, pricing strategy, investment outlook, an agent coaching brief with objection handlers, PDF export and a section-controlled, trackable client share link.',
+	offers: { '@type': 'Offer', price: '5', priceCurrency: 'EUR', description: '5 credits per report.' + ' Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum.' },
+	url: 'https://info.propertylist.es/property-intelligence-report/',
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Property Intelligence Report', item: 'https://info.propertylist.es/property-intelligence-report/' },
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/property-intelligence-report/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/property-intelligence-report/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/informe-inteligencia-propiedad/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/property-intelligence-report/' },
+	]}
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(appLd)} />
+	<main class="wrap">
+		<section class="hero">
+			<div class="badge"><span class="dot"></span> Live in the MLS &middot; 5 credits per report</div>
+			<h1>The vendor thinks it is worth 20% more.<br /><span class="accent">Bring the register.</span></h1>
+			<p class="lead">
+				The Property Intelligence Report turns any listing into an evidence-based valuation in seconds - built on live MLS
+				data and <strong>notary-verified sale prices</strong> from the official Spanish register. It also tells you what to
+				say, handles the objections you will hear, and gives your client a clean version you control and can track.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Generate a report</a>
+				<a class="btnGhost" href="https://propertylist.es/r/xWo56fq3wC4RRUAI" target="_blank" rel="noopener nofollow">See a real client report &#8599;</a>
+			</div>
+			<p class="micro">Free MLS + CRM &middot; reports cached 30 days &middot; teammates view yours free &middot; <a href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">no account? join free</a></p>
+		</section>
+
+		<section class="block">
+			<h2>One click from any listing</h2>
+			<p>
+				Open a property in the MLS and hit <strong>Property Intelligence Report</strong>. Pick the report language - it
+				defaults to yours, but switch it and the whole report comes out in your client&rsquo;s language - then generate. It
+				is ready in seconds.
+			</p>
+			<figure><img src="/docs-images/cma/generate-modal.jpg" alt="The Property Intelligence Report panel showing 5 credits per report, the agency credit balance and the report language selector" loading="lazy" /><figcaption>5 credits, your balance, and the language your client reads. Reports cache for 30 days.</figcaption></figure>
+		</section>
+
+		<section class="block">
+			<h2>What the report proves</h2>
+			<ul class="points">
+				<li><strong>Verified value, not opinion.</strong> The notarial register &euro;/m&sup2; sits next to the asking &euro;/m&sup2; - what properties actually closed at, versus what sellers hoped for.</li>
+				<li><strong>The asking-price reality.</strong> Median asking, year-on-year trend, median days on market, and the share of listings that have already conceded on price.</li>
+				<li><strong>Three pricing options, costed.</strong> Conservative for a fast sale, target for typical days on market, aggressive for a patient vendor - each with its trade-off spelled out.</li>
+				<li><strong>Comparables, location and district context.</strong> Where this property sits inside its segment.</li>
+				<li><strong>An institutional reading.</strong> Gross and net yield, median rent, 12-month volatility, and an investor risk register covering data reliability, exit liquidity, short-term-let regulation and currency exposure.</li>
+			</ul>
+			<figure><img src="/docs-images/cma/pricing-strategy.jpg" alt="Asking-price quartile spread with a how-to-read key, three asking-price strategy tiers, and launch, 30-day and reduction-trigger guidance" loading="lazy" /><figcaption>The quartile spread, three costed pricing tiers, and what should trigger a reduction.</figcaption></figure>
+			<figure><img src="/docs-images/cma/institutional.jpg" alt="Institutional reading showing gross rental yield, net yield range, median rent, 12-month volatility and a colour-coded investor risk register" loading="lazy" /><figcaption>For investor clients: yield, volatility and a colour-coded risk register.</figcaption></figure>
+			<p class="note">
+				Where the data is too thin, the report says "Not available" and explains why, instead of inventing a number. That
+				is the point: everything it does report, you can defend.
+			</p>
+		</section>
+
+		<section class="block">
+			<h2>It tells you what to say</h2>
+			<p>
+				Your copy opens with an <strong>agent brief</strong> - the part no other valuation tool gives you. It names the
+				strongest line in this specific report, scripts the answers to the objections you will actually hear, and flags
+				which figures need careful handling before you put them in front of anyone.
+			</p>
+			<figure><img src="/docs-images/cma/agent-brief.jpg" alt="The agent brief marked do not share: what this report does, when to use it, what to lead with, and scripted vendor objection handlers" loading="lazy" /><figcaption>"Agent brief - do not share": when to use it, what to lead with, and objection handlers built from this property&rsquo;s numbers.</figcaption></figure>
+			<figure><img src="/docs-images/cma/metrics-glossary.jpg" alt="Red flags for this specific report and a plain-language definition of every metric including median DOM, quartile spread and the official notarial register" loading="lazy" /><figcaption>Every metric defined in plain language - so you never present a figure you cannot explain.</figcaption></figure>
+			<p>
+				Download it as a PDF and take it to the appointment. As the brief puts it: leave it behind after a pitch, because
+				the report outlasts the meeting.
+			</p>
+		</section>
+
+		<section class="block">
+			<h2>Your client gets a different report - and you know when they read it</h2>
+			<p>
+				The agent PDF stays yours. For the client you create a share link and decide exactly what it contains: market value
+				and conditions, comparables, location, investment outlook, analyst narrative. Add a personal note, have us email it,
+				or paste the link into WhatsApp.
+			</p>
+			<figure><img src="/docs-images/cma/active-links.jpg" alt="Share panel with section checkboxes, optional client note, client email field and an active link showing whether it has been opened, with copy and revoke" loading="lazy" /><figcaption>Choose the sections, add a note, create the link. It is copied to your clipboard instantly.</figcaption></figure>
+			<ul class="points">
+				<li><strong>You control the story.</strong> Share the verdict and market conditions alone, or the whole analysis - the agent brief is never included.</li>
+				<li><strong>You see the open.</strong> Active links show whether your client has opened it yet, so you know whether to chase.</li>
+				<li><strong>You can pull it back.</strong> Revoke any link and it stops working immediately.</li>
+				<li><strong>No friction for them.</strong> No login, no account, no credits - it opens on a phone with the verdict first and its own PDF download.</li>
+			</ul>
+			<figure><img src="/docs-images/cma/client-verdict.jpg" alt="The client-facing report opening with a plain-language verdict about the property position against the market, with a download PDF button" loading="lazy" /><figcaption>What your client opens: the verdict in one line, then the sections you chose.</figcaption></figure>
+			<div class="demoBox">
+				<div class="demoLabel">Live example</div>
+				<p>
+					This is a real shared report, exactly as a client receives it - a townhouse in Estepona, priced against the
+					notarial register for its segment.
+				</p>
+				<a class="btnPrimary" href="https://propertylist.es/r/xWo56fq3wC4RRUAI" target="_blank" rel="noopener nofollow">Open the example report &#8599;</a>
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>Where it earns its keep</h2>
+			<ul class="points">
+				<li><strong>Winning the instruction.</strong> Two agents flatter the vendor; you bring the notarial register and a printed report they keep on the kitchen table.</li>
+				<li><strong>The overpriced vendor.</strong> Open with the quartile spread and the share of sellers already conceding, before anyone says a number.</li>
+				<li><strong>The reduction conversation.</strong> Days on market against the segment median, with the trigger agreed in advance.</li>
+				<li><strong>The buyer asking if it is fair.</strong> Show where the asking price sits in the band versus verified closings.</li>
+			</ul>
+		</section>
+
+		<section class="block">
+			<h2>Common questions</h2>
+			<div class="faq">
+				{faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+			<p class="note">
+				Full walkthrough in the <a href="/docs/propertylist-mls-user-manual/reports-statistics/generating-property-reports/">Property Intelligence Report guide</a>,
+				or see <a href="/docs/propertylist-mls-user-manual/reports-statistics/area-market-reports/">Area Market Reports</a> for whole-area analysis.
+			</p>
+		</section>
+
+		<section class="final">
+			<h2>Your next valuation appointment is on Thursday.</h2>
+			<p>Walk in with the register, the objection handlers and a report they will keep.</p>
+			<div class="ctaRow center">
+				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Generate a report</a>
+				<a class="btnGhost" href="/pricing/">See credits &amp; pricing</a>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.wrap { max-width: 860px; margin: 0 auto; padding: 42px 20px 72px; }
+	.hero { text-align: center; margin-bottom: 10px; }
+	.badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0, 174, 154, 0.35); background: rgba(0, 174, 154, 0.07); color: #0a6d61; font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; margin-bottom: 18px; }
+	.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; }
+	h1 { font-size: clamp(30px, 4.6vw, 46px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 14px; }
+	.accent { color: #00ae9a; }
+	.lead { max-width: 660px; margin: 0 auto 20px; color: rgba(16, 24, 40, 0.72); font-size: 17px; line-height: 1.62; }
+	.micro { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin: 12px 0 0; }
+	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 6px 0 8px; }
+	.ctaRow.center { justify-content: center; }
+	.btnPrimary { background: #00ae9a; color: #fff; font-weight: 800; font-size: 15px; padding: 13px 24px; border-radius: 11px; text-decoration: none; }
+	.btnPrimary:hover { background: #008a7a; }
+	.btnGhost { background: #fff; color: #0a6d61; border: 1px solid rgba(0, 174, 154, 0.4); font-weight: 700; font-size: 15px; padding: 12px 22px; border-radius: 11px; text-decoration: none; }
+	.block { margin-top: 40px; }
+	.block h2 { font-size: clamp(21px, 2.6vw, 27px); letter-spacing: -0.01em; margin: 0 0 10px; }
+	.block p { color: rgba(16, 24, 40, 0.74); font-size: 15.5px; line-height: 1.65; }
+	figure { margin: 18px 0; }
+	figure img { max-width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.12); box-shadow: 0 10px 28px rgba(15, 42, 60, 0.08); }
+	figcaption { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin-top: 7px; }
+	.note { font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.demoBox { margin: 22px 0 6px; background: #fff; border: 1px solid rgba(0, 174, 154, 0.28); border-radius: 16px; padding: 22px 24px; text-align: center; }
+	.demoLabel { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #0a6d61; background: rgba(0, 174, 154, 0.12); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+	.demoBox p { margin: 0 0 14px; font-size: 15px; color: rgba(16, 24, 40, 0.7); line-height: 1.6; }
+	.micro a { color: #0a6d61; font-weight: 700; text-decoration: none; }
+	.micro a:hover { text-decoration: underline; }
+
+	.points { list-style: none; margin: 14px 0 18px; padding: 0; display: grid; gap: 10px; }
+	.points li { position: relative; padding-left: 26px; font-size: 15px; color: rgba(16, 24, 40, 0.74); line-height: 1.55; }
+	.points li::before { content: ''; position: absolute; left: 2px; top: 7px; width: 9px; height: 9px; border: 2.5px solid #00ae9a; border-radius: 50%; }
+	.points li strong { color: #0b1220; }
+	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); }
+	.faq summary { cursor: pointer; padding: 14px 2px; font-weight: 700; font-size: 15.5px; list-style: none; }
+	.faq summary::-webkit-details-marker { display: none; }
+	.faq p { padding: 0 2px 14px; margin: 0; font-size: 14.5px; }
+	.final { margin-top: 48px; text-align: center; background: #fff; border: 1px solid rgba(0, 174, 154, 0.25); border-radius: 18px; padding: 30px 24px; }
+	.final h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 8px; }
+	.final p { color: rgba(16, 24, 40, 0.65); margin: 0 0 16px; }
+</style>

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import beachData from '../../data/beaches.json';
 import { adminGetKbPageById, adminGetKbPageByPath } from '../../lib/directus';
 import { getKbMeta, getKbMetaSnapshot, setKbMeta } from '../../lib/adminMeta';
 
@@ -101,9 +102,38 @@ const provinceHintFromTags = (tags: any): string | null => {
 	return loose ? canonicalProvinceLabel(loose) : null;
 };
 
-const NEIGHBOURHOOD_GEO_QUERY_OVERRIDES: Record<string, string> = {
-	[slugify('La Quinta')]: 'La Quinta, Benahavís, Málaga, Spain',
+type NeighbourhoodGeoOverride = { lat: number; lon: number; municipality: string; region: string };
+
+// Areas Nominatim cannot place correctly, pinned by hand. Free-text geocoding either
+// missed these entirely ("La Quinta, Benahavís, Málaga, Spain" and "Sotogrande, San
+// Roque, Cádiz, Spain" both return no result) or answered with somewhere else - it put
+// Sotogrande in Estepona, 30km up the coast in the wrong province, and both Balearic
+// islands plus Madrid on the Costa del Sol. Coordinates below were each checked against
+// Nominatim by name; edit one and that area re-pins on the next refresh.
+const NEIGHBOURHOOD_GEO_OVERRIDES: Record<string, NeighbourhoodGeoOverride> = {
+	[slugify('Sotogrande')]: { lat: 36.2820648, lon: -5.2970604, municipality: 'San Roque', region: 'Cádiz' },
+	[slugify('Alcaidesa')]: { lat: 36.2565300, lon: -5.3543500, municipality: 'San Roque', region: 'Cádiz' },
+	[slugify('La Duquesa')]: { lat: 36.3571751, lon: -5.2320702, municipality: 'Manilva', region: 'Málaga' },
+	[slugify('Torreblanca')]: { lat: 36.5649600, lon: -4.6065700, municipality: 'Fuengirola', region: 'Málaga' },
+	// keeps the position already in production - only the municipality was wrong, as the
+	// generic lookup labelled it Artola (which is the far side of Marbella)
+	[slugify('La Quinta')]: { lat: 36.5185231, lon: -5.0019978, municipality: 'Benahavís', region: 'Málaga' },
+	[slugify('Mallorca')]: { lat: 39.5532200, lon: 2.7290310, municipality: 'Palma', region: 'Illes Balears' },
+	[slugify('Ibiza')]: { lat: 38.9743900, lon: 1.4197460, municipality: 'Eivissa', region: 'Illes Balears' },
+	[slugify('Madrid')]: { lat: 40.4167800, lon: -3.7035000, municipality: 'Madrid', region: 'Madrid' },
+	// bare "Calahonda" matched the one near Motril, 82km east in Granada province, and
+	// stored this area as Nerja; ours is Sitio de Calahonda in Mijas
+	[slugify('Calahonda')]: { lat: 36.4910310, lon: -4.7267880, municipality: 'Mijas', region: 'Málaga' },
+	// was pinned in Málaga city, ~38km from the real Las Chapas
+	[slugify('Las Chapas')]: { lat: 36.5355070, lon: -4.8083800, municipality: 'Marbella', region: 'Málaga' },
 };
+
+const geoOverrideMatches = (geo: any, o: NeighbourhoodGeoOverride) =>
+	!!geo &&
+	Number(geo.lat) === o.lat &&
+	Number(geo.lon) === o.lon &&
+	String(geo.municipality || '') === o.municipality &&
+	String(geo.region || '') === o.region;
 
 export const municipalityFromCommaLocation = (raw: string) => {
 	const parts = String(raw || '')
@@ -146,10 +176,20 @@ export const portalPathFor = (slug: string, municipality?: string | null) => {
 	return `/portal/for-sale/${s}`;
 };
 
+let geocodeGate: Promise<void> = Promise.resolve();
+// Nominatim's usage policy is one request per second; queue calls so a multi-area
+// refresh can never burst past it.
+const waitForGeocodeSlot = () => {
+	const next = geocodeGate.then(() => new Promise<void>((resolve) => setTimeout(resolve, 1200)));
+	geocodeGate = next.catch(() => undefined);
+	return next;
+};
+
 const geocodePlace = async (q: string) => {
 	const query = String(q || '').trim();
 	if (!query) return null;
 	const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&q=${encodeURIComponent(query)}`;
+	await waitForGeocodeSlot();
 	const res = await fetch(url, {
 		headers: { 'user-agent': 'PropertyListInfoHub/1.0', accept: 'application/json' },
 	}).catch(() => null);
@@ -172,7 +212,13 @@ const geocodePlace = async (q: string) => {
 					: addr && typeof addr.village === 'string'
 						? String(addr.village).trim()
 						: null;
-	return { lat, lon, displayName: name || null, municipality: municipality || null };
+	const province =
+		addr && typeof addr.province === 'string'
+			? String(addr.province).trim()
+			: addr && typeof addr.state === 'string'
+				? String(addr.state).trim()
+				: null;
+	return { lat, lon, displayName: name || null, municipality: municipality || null, province: province || null };
 };
 
 const fetchClimate = async (lat: number, lon: number, nowMs: number) => {
@@ -242,36 +288,28 @@ const osrmDrive = async (fromLat: number, fromLon: number, toLat: number, toLon:
 	return { distanceKm: distanceM / 1000, durationMin: durationS / 60 };
 };
 
-const fetchNearestBeach = async (lat: number, lon: number) => {
-	const query = `
-[out:json][timeout:20];
-(
-  nwr["natural"="beach"](around:35000,${lat},${lon});
-  nwr["tourism"="beach_resort"](around:35000,${lat},${lon});
-);
-out center 25;`;
-	const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-	const res = await fetch(url, { headers: { 'user-agent': 'PropertyListInfoHub/1.0', accept: 'application/json' } }).catch(() => null);
-	if (!res || !res.ok) return null;
-	const json = (await res.json().catch(() => null)) as any;
-	const els = Array.isArray(json?.elements) ? json.elements : [];
-	let best: any = null;
+// Beaches do not move, and overpass-api.de refuses connections from this host, so the
+// nearest one is resolved from a snapshot of OpenStreetMap rather than a live query.
+// Rebuild the snapshot with scripts/fetch-beaches.py (run it from a host Overpass will
+// talk to - the Contabo box works). Unnamed entries are kept deliberately: most of the
+// Sotogrande shoreline is untagged in OSM, and dropping those would have reported its
+// nearest beach as 5km away in the next town instead of the 1.6km that is true.
+type BeachRecord = { lat: number; lon: number; name?: string };
+const BEACHES = beachData as BeachRecord[];
+
+const nearestBeach = (lat: number, lon: number) => {
+	let best: BeachRecord | null = null;
 	let bestKm = Infinity;
-	for (const el of els) {
-		const eLat = Number(el?.lat ?? el?.center?.lat);
-		const eLon = Number(el?.lon ?? el?.center?.lon);
-		if (!Number.isFinite(eLat) || !Number.isFinite(eLon)) continue;
-		const km = haversineKm(lat, lon, eLat, eLon);
+	for (const b of BEACHES) {
+		const km = haversineKm(lat, lon, b.lat, b.lon);
 		if (km < bestKm) {
 			bestKm = km;
-			best = el;
+			best = b;
 		}
 	}
-	if (!best || !Number.isFinite(bestKm)) return null;
-	const name = typeof best?.tags?.name === 'string' ? String(best.tags.name).trim() : '';
-	const bLat = Number(best?.lat ?? best?.center?.lat);
-	const bLon = Number(best?.lon ?? best?.center?.lon);
-	return { name: name || null, lat: bLat, lon: bLon, distanceKm: bestKm };
+	// same 35km cut-off the live query used, so inland areas report no beach at all
+	if (!best || !Number.isFinite(bestKm) || bestKm > 35) return null;
+	return { name: best.name || null, lat: best.lat, lon: best.lon, distanceKm: bestKm };
 };
 
 const median = (nums: number[]) => {
@@ -395,15 +433,9 @@ export const refreshKbStatsForKeyWithSnapshot = async (
 		const wantsGeoOverrideRefresh = (() => {
 			if (kind !== 'neighbourhood') return false;
 			const title = stripGuideSuffix(String(page?.title || ''));
-			const overrideQuery = NEIGHBOURHOOD_GEO_QUERY_OVERRIDES[slugify(title || '')] || '';
-			if (!overrideQuery) return false;
-			const rawGeo: any = (existing as any)?.neighbourhoodGeo || null;
-			const lat = typeof rawGeo?.lat === 'number' ? rawGeo.lat : Number(rawGeo?.lat);
-			const lon = typeof rawGeo?.lon === 'number' ? rawGeo.lon : Number(rawGeo?.lon);
-			if (!Number.isFinite(lat) || !Number.isFinite(lon)) return true;
-			const MARBELLA = { lat: 36.5101, lon: -4.8853 };
-			const km = haversineKm(lat, lon, MARBELLA.lat, MARBELLA.lon);
-			return Number.isFinite(km) && km > 120;
+			const override = NEIGHBOURHOOD_GEO_OVERRIDES[slugify(title || '')] || null;
+			if (!override) return false;
+			return !geoOverrideMatches((existing as any)?.neighbourhoodGeo || null, override);
 		})();
 
 		const due = force
@@ -436,7 +468,7 @@ export const refreshKbStatsForKeyWithSnapshot = async (
 		let geoPatch: any = null;
 
 		const title = stripGuideSuffix(String(page?.title || ''));
-		const overrideQuery = NEIGHBOURHOOD_GEO_QUERY_OVERRIDES[slugify(title || '')] || '';
+		const override = NEIGHBOURHOOD_GEO_OVERRIDES[slugify(title || '')] || null;
 		const provinceHint =
 			provinceHintFromTags((currentMeta as any)?.tags) ||
 			provinceHintFromTags((existing as any)?.tags) ||
@@ -446,29 +478,29 @@ export const refreshKbStatsForKeyWithSnapshot = async (
 			'Málaga';
 
 		const municipalityHint =
+			(override ? override.municipality : '') ||
 			String(currentMeta?.neighbourhoodGeo?.municipality || '').trim() ||
 			String((existing as any)?.neighbourhoodGeo?.municipality || '').trim() ||
-			(overrideQuery ? municipalityFromCommaLocation(overrideQuery) : '') ||
 			'';
 
-		if (overrideQuery) {
-			const hit = await geocodePlace(overrideQuery).catch(() => null);
-			if (hit) {
-				lat = hit.lat;
-				lon = hit.lon;
-				const muni = String(hit.municipality || '').trim() || municipalityHint || municipalityFromCommaLocation(overrideQuery);
-				geoPatch = {
-					lat,
-					lon,
-					placeName: title || undefined,
-					municipality: muni || undefined,
-					region: provinceHint || 'Andalucía',
-					country: 'Spain',
-				};
-			}
+		if (override) {
+			lat = override.lat;
+			lon = override.lon;
+			geoPatch = {
+				lat,
+				lon,
+				placeName: title || undefined,
+				municipality: override.municipality,
+				region: override.region,
+				country: 'Spain',
+			};
 		}
 
-		if ((!Number.isFinite(lat) || !Number.isFinite(lon) || !String(rawGeo?.municipality || '').trim() || force) && !geoPatch) {
+		if (
+			!override &&
+			(!Number.isFinite(lat) || !Number.isFinite(lon) || !String(rawGeo?.municipality || '').trim() || force) &&
+			!geoPatch
+		) {
 			const query = [title || '', provinceHint || '', 'Andalucía', 'Spain'].filter(Boolean).join(', ');
 			const hit = await geocodePlace(query).catch(() => null);
 			if (hit) {
@@ -492,6 +524,25 @@ export const refreshKbStatsForKeyWithSnapshot = async (
 		const prevStats: any = currentMeta?.neighbourhoodStats && typeof currentMeta.neighbourhoodStats === 'object' ? currentMeta.neighbourhoodStats : {};
 		const nextStats: any = climate ? { ...prevStats, ...climate } : { ...prevStats };
 
+		const pinMoved =
+			!!geoPatch &&
+			(Number(rawGeo?.lat) !== Number(geoPatch.lat) || Number(rawGeo?.lon) !== Number(geoPatch.lon));
+		if (pinMoved) {
+			// these all describe the old position - drop them so a lookup that fails this run
+			// leaves a gap rather than the previous area's answer
+			for (const k of [
+				'nearestBeachName',
+				'beachDistanceKm',
+				'driveToBeachMin',
+				'airportDistanceKm',
+				'driveToMalagaAirportMin',
+				'driveToMarbellaMin',
+				'driveToPuertoBanusMin',
+			]) {
+				delete nextStats[k];
+			}
+		}
+
 		const slug = (() => {
 			return neighbourhoodSlugFromPath(pagePath);
 		})();
@@ -513,7 +564,7 @@ export const refreshKbStatsForKeyWithSnapshot = async (
 			const banus = await osrmDrive(lat, lon, PUERTO_BANUS.lat, PUERTO_BANUS.lon).catch(() => null);
 			if (banus) nextStats.driveToPuertoBanusMin = Math.round(banus.durationMin);
 
-			const beach = await fetchNearestBeach(lat, lon).catch(() => null);
+			const beach = nearestBeach(lat, lon);
 			if (beach) {
 				nextStats.nearestBeachName = beach.name;
 				nextStats.beachDistanceKm = Math.round(beach.distanceKm * 10) / 10;

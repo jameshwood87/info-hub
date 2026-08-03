@@ -6,18 +6,48 @@ type SubscribeRequest = {
 	lang?: string;
 	page?: string;
 	utm?: Record<string, string>;
+	/** 'agent' routes to the agent/developer CRM; anything else uses the consumer audience */
+	audience?: 'agent' | 'consumer';
+	/** extra Mailchimp tag, e.g. 'seller' or 'blog' */
+	tag?: string;
 };
 
 function md5Lower(input: string): string {
 	return crypto.createHash('md5').update(input.trim().toLowerCase()).digest('hex');
 }
 
-export const POST: APIRoute = async ({ request }) => {
-	const apiKey = (process.env.MAILCHIMP_API_KEY as string | undefined) || import.meta.env.MAILCHIMP_API_KEY || '';
-	const audienceId =
-		(process.env.MAILCHIMP_AUDIENCE_ID as string | undefined) || import.meta.env.MAILCHIMP_AUDIENCE_ID || '';
+// best-effort in-process rate limit: 5 submissions per IP per hour
+const recent = new Map<string, number[]>();
+const allow = (ip: string) => {
+	const now = Date.now();
+	const list = (recent.get(ip) || []).filter((t) => now - t < 3600_000);
+	if (list.length >= 5) return false;
+	list.push(now);
+	recent.set(ip, list);
+	return true;
+};
+// behind Cloudflare the real client IP is cf-connecting-ip (spoofed values are stripped)
+const clientIpOf = (request: Request, clientAddress?: string) =>
+	String(request.headers.get('cf-connecting-ip') || clientAddress || 'unknown');
 
-	if (!apiKey || !audienceId) {
+export const POST: APIRoute = async ({ request, clientAddress }) => {
+	if (!allow(clientIpOf(request, clientAddress)))
+		return new Response(JSON.stringify({ ok: false, error: 'rate_limited' }), {
+			status: 429,
+			headers: { 'content-type': 'application/json; charset=utf-8' },
+		});
+	const apiKey = (process.env.MAILCHIMP_API_KEY as string | undefined) || import.meta.env.MAILCHIMP_API_KEY || '';
+	// Two audiences on purpose: the original list is a CRM mirror whose CTYPE field only
+	// permits agent|developer and whose engagement fields are synced from the platform, so
+	// buyers/sellers/renters must never land in it.
+	const agentAudienceId =
+		(process.env.MAILCHIMP_AUDIENCE_ID as string | undefined) || import.meta.env.MAILCHIMP_AUDIENCE_ID || '';
+	const consumerAudienceId =
+		(process.env.MAILCHIMP_CONSUMER_AUDIENCE_ID as string | undefined) ||
+		import.meta.env.MAILCHIMP_CONSUMER_AUDIENCE_ID ||
+		'';
+
+	if (!apiKey || (!agentAudienceId && !consumerAudienceId)) {
 		return new Response(JSON.stringify({ ok: false, error: 'not_configured' }), {
 			status: 501,
 			headers: { 'content-type': 'application/json; charset=utf-8' },
@@ -52,8 +82,18 @@ export const POST: APIRoute = async ({ request }) => {
 
 	const lang = (body.lang || 'en').trim().toLowerCase();
 	const page = (body.page || '').trim();
+	const audienceId =
+		body.audience === 'agent' ? agentAudienceId || consumerAudienceId : consumerAudienceId || agentAudienceId;
+	if (!audienceId) {
+		return new Response(JSON.stringify({ ok: false, error: 'not_configured' }), {
+			status: 501,
+			headers: { 'content-type': 'application/json; charset=utf-8' },
+		});
+	}
 
 	const tags: string[] = [];
+	const extraTag = (body.tag || '').trim();
+	if (extraTag) tags.push(extraTag);
 	if (lang) tags.push(`lang:${lang}`);
 	if (page) tags.push(`page:${page}`);
 	if (body.utm) {

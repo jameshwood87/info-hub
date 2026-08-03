@@ -1,0 +1,238 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const title = 'Property Intelligence Report | PropertyList';
+const description =
+	'Valoraciones verificadas ante notario en segundos: brief con manejo de objeciones, PDF y enlace para el cliente que controlas y rastreas.';
+
+const faqs = [
+	{
+		q: '¿Qué es un Property Intelligence Report?',
+		a: 'Es un análisis comparativo de mercado (CMA) completo de una propiedad concreta: lo que el mercado dice que vale, cómo se comporta su segmento, anuncios comparables, contexto de ubicación y perspectiva de inversión. Se construye con datos en vivo del MLS más precios de transacción verificados ante notario del registro oficial español, así que las cifras se pueden defender delante de un vendedor.',
+	},
+	{
+		q: '¿Cuánto cuesta?',
+		a: '5 créditos por informe. Los informes se guardan en caché 30 días y tus compañeros de agencia pueden ver gratis uno que tú hayas generado, así que una oficina con actividad no paga dos veces por la misma propiedad.',
+	},
+	{
+		q: '¿Qué es el brief del agente?',
+		a: 'Una sección al inicio de tu copia marcada como "AGENT BRIEF - DO NOT SHARE". Te dice qué demuestra este informe concreto, con qué abrir, cómo responder a las objeciones que vas a oír de verdad ("mi propiedad vale más", "no tengo prisa") y qué cifras de este informe hay que manejar con cuidado. Es preparación para la cita, redactada con los números de esta propiedad.',
+	},
+	{
+		q: '¿Puedo enviarle el informe a mi cliente?',
+		a: 'Sí, pero no el PDF del agente: ese contiene tus notas de preparación. En su lugar creas un enlace compartido y eliges qué secciones ve el cliente. La portada y el descargo siempre se incluyen; el brief del agente nunca. Puedes añadir una nota personal, pedirnos que enviemos el enlace por email, o pegarlo tú en WhatsApp.',
+	},
+	{
+		q: '¿Puedo ver si el cliente lo ha abierto?',
+		a: 'Sí. Cada enlace que creas aparece listado con las secciones que muestra y si ya se ha abierto, para que sepas si toca hacer seguimiento. Puedes revocar cualquier enlace al instante.',
+	},
+	{
+		q: '¿Y si no hay datos suficientes de una propiedad?',
+		a: 'El informe lo dice. Cuando una muestra es demasiado pequeña para sostener una afirmación, imprime "Not available" y explica por qué, en lugar de inventar una cifra. Es deliberado: es lo que hace seguras de presentar las cifras que sí ofrece.',
+	},
+	{
+		q: '¿Puedo generar el informe en el idioma de mi cliente?',
+		a: 'Sí. Elige el idioma del informe antes de generarlo. Por defecto usa el tuyo y puedes cambiarlo para que todo el informe salga en el idioma que lee tu cliente.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const appLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'PropertyList Property Intelligence Report',
+	applicationCategory: 'BusinessApplication',
+	operatingSystem: 'Web',
+	description:
+		'Informes CMA por propiedad para agentes inmobiliarios en España: valor de mercado verificado ante notario, comparables, estrategia de precio, perspectiva de inversión, brief de preparación para el agente con manejo de objeciones, exportación a PDF y enlace para el cliente con secciones configurables y seguimiento de apertura.',
+	offers: { '@type': 'Offer', price: '5', priceCurrency: 'EUR', description: '5 créditos por informe.' + ' Se paga con créditos de un saldo prepago, comprados por adelantado a 1,00 EUR cada uno y menos en packs grandes, así que la cifra en euros es el máximo.' },
+	url: 'https://info.propertylist.es/es/informe-inteligencia-propiedad/',
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Property Intelligence Report', item: 'https://info.propertylist.es/es/informe-inteligencia-propiedad/' },
+	],
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/es/informe-inteligencia-propiedad/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/property-intelligence-report/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/informe-inteligencia-propiedad/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/property-intelligence-report/' },
+	]}
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(appLd)} />
+	<main class="wrap">
+		<section class="hero">
+			<div class="badge"><span class="dot"></span> Disponible en el MLS &middot; 5 cr&eacute;ditos por informe</div>
+			<h1>El vendedor cree que vale un 20% m&aacute;s.<br /><span class="accent">Ll&eacute;vale el registro.</span></h1>
+			<p class="lead">
+				El Property Intelligence Report convierte cualquier anuncio en una valoraci&oacute;n basada en evidencia en segundos,
+				con datos en vivo del MLS y <strong>precios de venta verificados ante notario</strong> del registro oficial espa&ntilde;ol.
+				Adem&aacute;s te dice qu&eacute; decir, resuelve las objeciones que vas a o&iacute;r y le da a tu cliente una versi&oacute;n
+				limpia que t&uacute; controlas y puedes rastrear.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Generar un informe</a>
+				<a class="btnGhost" href="https://propertylist.es/r/xWo56fq3wC4RRUAI" target="_blank" rel="noopener nofollow">Ver un informe real de cliente &#8599;</a>
+			</div>
+			<p class="micro">MLS + CRM gratis &middot; informes en cach&eacute; 30 d&iacute;as &middot; tus compa&ntilde;eros ven los tuyos gratis &middot; <a href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">&iquest;sin cuenta? &uacute;nete gratis</a></p>
+		</section>
+
+		<section class="block">
+			<h2>A un clic desde cualquier anuncio</h2>
+			<p>
+				Abre una propiedad en el MLS y pulsa <strong>Property Intelligence Report</strong>. Elige el idioma del informe (por
+				defecto el tuyo, pero c&aacute;mbialo y el informe entero sale en el idioma de tu cliente) y gen&eacute;ralo. Est&aacute;
+				listo en segundos.
+			</p>
+			<figure><img src="/docs-images/cma/generate-modal.jpg" alt="Panel del Property Intelligence Report con 5 cr&eacute;ditos por informe, el saldo de la agencia y el selector de idioma" loading="lazy" /><figcaption>5 cr&eacute;ditos, tu saldo y el idioma que lee tu cliente. Los informes se cachean 30 d&iacute;as.</figcaption></figure>
+		</section>
+
+		<section class="block">
+			<h2>Qu&eacute; demuestra el informe</h2>
+			<ul class="points">
+				<li><strong>Valor verificado, no opini&oacute;n.</strong> El &euro;/m&sup2; del registro notarial junto al &euro;/m&sup2; de asking: a cu&aacute;nto se cerr&oacute; de verdad, frente a lo que esperaban los vendedores.</li>
+				<li><strong>La realidad del precio de salida.</strong> Mediana de asking, tendencia interanual, mediana de d&iacute;as en mercado y qu&eacute; porcentaje de anuncios ya ha bajado de precio.</li>
+				<li><strong>Tres opciones de precio, con su coste.</strong> Conservadora para vender r&aacute;pido, objetivo para los d&iacute;as en mercado t&iacute;picos, agresiva para un vendedor paciente, cada una con su contrapartida explicada.</li>
+				<li><strong>Comparables, ubicaci&oacute;n y contexto de distrito.</strong> D&oacute;nde encaja esta propiedad dentro de su segmento.</li>
+				<li><strong>Una lectura institucional.</strong> Rentabilidad bruta y neta, renta mediana, volatilidad a 12 meses y un registro de riesgos del inversor: fiabilidad de datos, liquidez de salida, regulaci&oacute;n del alquiler tur&iacute;stico y exposici&oacute;n a divisa.</li>
+			</ul>
+			<figure><img src="/docs-images/cma/pricing-strategy.jpg" alt="Distribuci&oacute;n por cuartiles con clave de lectura, tres niveles de estrategia de precio de salida y gu&iacute;a de lanzamiento, 30 d&iacute;as y disparador de bajada" loading="lazy" /><figcaption>Los cuartiles, tres niveles de precio con su coste y qu&eacute; debe disparar una bajada.</figcaption></figure>
+			<figure><img src="/docs-images/cma/institutional.jpg" alt="Lectura institucional con rentabilidad bruta, rango de rentabilidad neta, renta mediana, volatilidad a 12 meses y registro de riesgos del inversor por colores" loading="lazy" /><figcaption>Para clientes inversores: rentabilidad, volatilidad y un registro de riesgos por colores.</figcaption></figure>
+			<p class="note">
+				Cuando los datos son escasos, el informe pone "Not available" y explica por qu&eacute;, en lugar de inventar un
+				n&uacute;mero. Ese es justo el punto: todo lo que s&iacute; publica, lo puedes defender.
+			</p>
+		</section>
+
+		<section class="block">
+			<h2>Te dice qu&eacute; decir</h2>
+			<p>
+				Tu copia abre con un <strong>brief del agente</strong>, la parte que ninguna otra herramienta de valoraci&oacute;n te
+				da. Se&ntilde;ala la frase m&aacute;s potente de este informe concreto, redacta las respuestas a las objeciones que
+				vas a o&iacute;r de verdad y avisa de qu&eacute; cifras hay que manejar con cuidado antes de ponerlas delante de nadie.
+			</p>
+			<figure><img src="/docs-images/cma/agent-brief.jpg" alt="Brief del agente marcado como no compartir: qu&eacute; hace el informe, cu&aacute;ndo usarlo, con qu&eacute; abrir y respuestas a las objeciones del vendedor" loading="lazy" /><figcaption>"Agent brief - do not share": cu&aacute;ndo usarlo, con qu&eacute; abrir y objeciones resueltas con los n&uacute;meros de esta propiedad.</figcaption></figure>
+			<figure><img src="/docs-images/cma/metrics-glossary.jpg" alt="Avisos sobre este informe concreto y definici&oacute;n en lenguaje claro de cada m&eacute;trica, incluidos d&iacute;as en mercado, cuartiles y el registro notarial oficial" loading="lazy" /><figcaption>Cada m&eacute;trica definida en lenguaje claro, para no presentar nunca una cifra que no puedas explicar.</figcaption></figure>
+			<p>
+				Desc&aacute;rgalo en PDF y ll&eacute;valo a la cita. Como dice el propio brief: d&eacute;jalo tras la captaci&oacute;n,
+				porque el informe dura m&aacute;s que la reuni&oacute;n.
+			</p>
+		</section>
+
+		<section class="block">
+			<h2>Tu cliente recibe otro informe, y sabes cu&aacute;ndo lo lee</h2>
+			<p>
+				El PDF del agente es tuyo. Para el cliente creas un enlace compartido y decides exactamente qu&eacute; contiene: valor
+				y condiciones de mercado, comparables, ubicaci&oacute;n, perspectiva de inversi&oacute;n, narrativa del analista.
+				A&ntilde;ade una nota personal, pide que lo enviemos por email, o pega el enlace en WhatsApp.
+			</p>
+			<figure><img src="/docs-images/cma/active-links.jpg" alt="Panel de compartir con casillas de secciones, nota opcional al cliente, campo de email y un enlace activo que indica si se ha abierto, con copiar y revocar" loading="lazy" /><figcaption>Elige las secciones, a&ntilde;ade una nota, crea el enlace. Se copia a tu portapapeles al instante.</figcaption></figure>
+			<ul class="points">
+				<li><strong>T&uacute; controlas el relato.</strong> Comparte solo el veredicto y las condiciones de mercado, o el an&aacute;lisis entero: el brief del agente nunca se incluye.</li>
+				<li><strong>Ves la apertura.</strong> Los enlaces activos indican si tu cliente ya lo ha abierto, para saber si toca insistir.</li>
+				<li><strong>Puedes retirarlo.</strong> Revoca cualquier enlace y deja de funcionar de inmediato.</li>
+				<li><strong>Sin fricci&oacute;n para &eacute;l.</strong> Sin login, sin cuenta y sin cr&eacute;ditos: se abre en el m&oacute;vil con el veredicto primero y su propia descarga en PDF.</li>
+			</ul>
+			<figure><img src="/docs-images/cma/client-verdict.jpg" alt="El informe del cliente abriendo con un veredicto en lenguaje claro sobre la posici&oacute;n de la propiedad frente al mercado, con bot&oacute;n de descarga en PDF" loading="lazy" /><figcaption>Lo que abre tu cliente: el veredicto en una l&iacute;nea y despu&eacute;s las secciones que elegiste.</figcaption></figure>
+			<div class="demoBox">
+				<div class="demoLabel">Ejemplo real</div>
+				<p>
+					Este es un informe compartido de verdad, tal y como lo recibe un cliente: un adosado en Estepona, valorado
+					frente al registro notarial de su segmento.
+				</p>
+				<a class="btnPrimary" href="https://propertylist.es/r/xWo56fq3wC4RRUAI" target="_blank" rel="noopener nofollow">Abrir el informe de ejemplo &#8599;</a>
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>D&oacute;nde se paga solo</h2>
+			<ul class="points">
+				<li><strong>Ganar la captaci&oacute;n.</strong> Dos agencias halagan al vendedor; t&uacute; llevas el registro notarial y un informe impreso que se queda en la mesa de la cocina.</li>
+				<li><strong>El vendedor con precio inflado.</strong> Abre con los cuartiles y el porcentaje de vendedores que ya han cedido, antes de que nadie diga una cifra.</li>
+				<li><strong>La conversaci&oacute;n de la bajada.</strong> D&iacute;as en mercado frente a la mediana del segmento, con el disparador pactado de antemano.</li>
+				<li><strong>El comprador que pregunta si es justo.</strong> Ens&eacute;&ntilde;ale d&oacute;nde cae el precio dentro de la banda frente a los cierres verificados.</li>
+			</ul>
+		</section>
+
+		<section class="block">
+			<h2>Preguntas frecuentes</h2>
+			<div class="faq">
+				{faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+			<p class="note">
+				Gu&iacute;a completa en <a href="/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/generating-property-reports/">la documentaci&oacute;n del Property Intelligence Report</a>,
+				o mira los <a href="/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/area-market-reports/">Informes de Mercado por Zona</a> para an&aacute;lisis de zona completa.
+			</p>
+		</section>
+
+		<section class="final">
+			<h2>Tu pr&oacute;xima cita de valoraci&oacute;n es el jueves.</h2>
+			<p>Entra con el registro, las objeciones resueltas y un informe que se van a quedar.</p>
+			<div class="ctaRow center">
+				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Generar un informe</a>
+				<a class="btnGhost" href="/es/precios/">Ver cr&eacute;ditos y precios</a>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.wrap { max-width: 860px; margin: 0 auto; padding: 42px 20px 72px; }
+	.hero { text-align: center; margin-bottom: 10px; }
+	.badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0, 174, 154, 0.35); background: rgba(0, 174, 154, 0.07); color: #0a6d61; font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; margin-bottom: 18px; }
+	.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; }
+	h1 { font-size: clamp(30px, 4.6vw, 46px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 14px; }
+	.accent { color: #00ae9a; }
+	.lead { max-width: 660px; margin: 0 auto 20px; color: rgba(16, 24, 40, 0.72); font-size: 17px; line-height: 1.62; }
+	.micro { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin: 12px 0 0; }
+	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 6px 0 8px; }
+	.ctaRow.center { justify-content: center; }
+	.btnPrimary { background: #00ae9a; color: #fff; font-weight: 800; font-size: 15px; padding: 13px 24px; border-radius: 11px; text-decoration: none; }
+	.btnPrimary:hover { background: #008a7a; }
+	.btnGhost { background: #fff; color: #0a6d61; border: 1px solid rgba(0, 174, 154, 0.4); font-weight: 700; font-size: 15px; padding: 12px 22px; border-radius: 11px; text-decoration: none; }
+	.block { margin-top: 40px; }
+	.block h2 { font-size: clamp(21px, 2.6vw, 27px); letter-spacing: -0.01em; margin: 0 0 10px; }
+	.block p { color: rgba(16, 24, 40, 0.74); font-size: 15.5px; line-height: 1.65; }
+	figure { margin: 18px 0; }
+	figure img { max-width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.12); box-shadow: 0 10px 28px rgba(15, 42, 60, 0.08); }
+	figcaption { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin-top: 7px; }
+	.note { font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.demoBox { margin: 22px 0 6px; background: #fff; border: 1px solid rgba(0, 174, 154, 0.28); border-radius: 16px; padding: 22px 24px; text-align: center; }
+	.demoLabel { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #0a6d61; background: rgba(0, 174, 154, 0.12); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+	.demoBox p { margin: 0 0 14px; font-size: 15px; color: rgba(16, 24, 40, 0.7); line-height: 1.6; }
+	.micro a { color: #0a6d61; font-weight: 700; text-decoration: none; }
+	.micro a:hover { text-decoration: underline; }
+
+	.points { list-style: none; margin: 14px 0 18px; padding: 0; display: grid; gap: 10px; }
+	.points li { position: relative; padding-left: 26px; font-size: 15px; color: rgba(16, 24, 40, 0.74); line-height: 1.55; }
+	.points li::before { content: ''; position: absolute; left: 2px; top: 7px; width: 9px; height: 9px; border: 2.5px solid #00ae9a; border-radius: 50%; }
+	.points li strong { color: #0b1220; }
+	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); }
+	.faq summary { cursor: pointer; padding: 14px 2px; font-weight: 700; font-size: 15.5px; list-style: none; }
+	.faq summary::-webkit-details-marker { display: none; }
+	.faq p { padding: 0 2px 14px; margin: 0; font-size: 14.5px; }
+	.final { margin-top: 48px; text-align: center; background: #fff; border: 1px solid rgba(0, 174, 154, 0.25); border-radius: 18px; padding: 30px 24px; }
+	.final h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 8px; }
+	.final p { color: rgba(16, 24, 40, 0.65); margin: 0 0 16px; }
+</style>

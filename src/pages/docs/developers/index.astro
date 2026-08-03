@@ -8,7 +8,7 @@ import {
 
 const title = 'Developers Docs • PropertyList Info Hub';
 const description =
-	'Developer-focused documentation for integrating with PropertyList: CRM, listings, importing/exporting, and promotion.';
+	'Everything property developers and promoters need to list new developments on PropertyList: getting started, listing a development, photos and documents, XML feeds, reaching agents and buyers, managing leads, and how commission works.';
 
 const base = '/docs/developers/';
 const itemsRaw = await listKbPagesByPrefixes({
@@ -153,7 +153,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 								<a class="cardTitle" href={seg.path}>
 									{seg.title}
 								</a>
-								<span class="cardMeta">{pages.length} guides</span>
+								{pages.length > 0 && <span class="cardMeta">{pages.length} guides</span>}
 							</div>
 							<p class="cardDesc">{desc}</p>
 							{featured.length ? (
@@ -167,7 +167,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 									))}
 								</ul>
 							) : (
-								<div class="emptySmall">No guides yet.</div>
+								<a class="listRow" href={seg.path}><span class="listRowTitle">Read this guide</span></a>
 							)}
 							{remaining.length ? (
 								<details class="more" data-more="1">

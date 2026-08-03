@@ -1,0 +1,677 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+
+const __ps = await getPortalStats();
+const plListings = statPlus(__ps.listings, 'es');
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+
+const title = 'Lanza tu agencia inmobiliaria en minutos | PropertyList';
+const description =
+	'Mira cómo una agencia pasa de cero a publicada, visible y con leads en nueve minutos: MLS gratis, portal, web con tu marca, CRM e IA. Sin tarjeta ni contrato.';
+
+// The nine beats. Times are narrative markers; every feature shown is live and free.
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+
+const checklist = [
+	'Agencia creada',
+	'Anuncio publicado',
+	`En el MLS de ${plAgents} agentes`,
+	'En el portal',
+	'Web online',
+	'Feeds activos',
+	'Lead captado',
+	'IA emparejando',
+	'Alertas armadas',
+];
+
+// fan-out mini cards: x, y offsets from centre + a hue for the photo block
+const minis = [
+	[-300, -150, 172], [-180, -215, 200], [-40, -245, 38], [115, -225, 172],
+	[255, -160, 210], [335, -45, 45], [305, 95, 185], [185, 175, 26],
+	[40, 215, 195], [-115, 205, 210], [-265, 155, 40], [-355, 15, 178],
+	[365, -140, 205], [-350, -80, 30],
+];
+
+const howToLd = {
+	'@context': 'https://schema.org',
+	'@type': 'HowTo',
+	name: 'Lanza una agencia inmobiliaria con PropertyList',
+	description: 'Los pasos que completa una agencia nueva con el stack gratuito de PropertyList: cuenta, primer anuncio, red MLS, portal, web con marca, feeds, leads en el CRM, IA y alertas.',
+	step: [
+		{ '@type': 'HowToStep', position: 1, name: 'Crea tu cuenta de agencia gratis', text: 'Regístrate en agents.propertylist.es. Sin tarjeta ni contrato.' },
+		{ '@type': 'HowToStep', position: 2, name: 'Crea tu primer anuncio con Instant Listing', text: 'Sube fotos del móvil y describe la propiedad en voz alta. El anuncio se redacta solo, en español e inglés.' },
+		{ '@type': 'HowToStep', position: 3, name: 'Compártelo en la red MLS', text: `Tu anuncio aparece en los paneles de más de ${plAgents} agentes de ${plAgencies} agencias, que pueden venderlo contigo.` },
+		{ '@type': 'HowToStep', position: 4, name: 'Llega a compradores en el portal', text: `El anuncio se publica en propertylist.es junto a más de ${plListings} viviendas.` },
+		{ '@type': 'HowToStep', position: 5, name: 'Consigue tu MicroSite gratis', text: 'Una web con tu marca en tuagencia.estate-agency.co con todos tus anuncios cargados. Gratis.' },
+		{ '@type': 'HowToStep', position: 6, name: 'Envía tu cartera a otros portales', text: 'El envío XML a otros portales es gratis.' },
+		{ '@type': 'HowToStep', position: 7, name: 'Capta leads en el CRM', text: 'Las consultas del portal y del MLS llegan solas a tu pipeline.' },
+		{ '@type': 'HowToStep', position: 8, name: 'Empareja clientes con AI Property Match', text: 'Pega el mensaje del cliente. Busca primero en tu cartera y después en toda la red compartida. Gratis en beta.' },
+		{ '@type': 'HowToStep', position: 9, name: 'Configura alertas de propiedades', text: 'Guarda el encargo del cliente y recibe un email en cuanto aparezca una propiedad que encaje.' },
+	],
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Lanza tu agencia', item: 'https://info.propertylist.es/es/lanza-tu-agencia/' },
+	],
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/es/lanza-tu-agencia/"
+	ogImage="https://info.propertylist.es/og/og-launch.jpg"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/launch/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/lanza-tu-agencia/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/launch/' },
+	]}
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(howToLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<div class="launch">
+		<!-- ================= INTRO (dark) ================= -->
+		<section class="lIntro">
+			<div class="lIntroInner">
+				<p class="eyebrow">Para agentes que se independizan</p>
+				<h1>Nueve minutos para<br /><span class="accent">una agencia en marcha.</span></h1>
+				<p class="lead">
+					Acabas de dejar la gran agencia. Tienes un móvil, tus contactos y cero anuncios. Esto es lo que hace con eso el
+					stack gratuito de PropertyList.
+				</p>
+				<div class="clockZero" aria-hidden="true">00:00</div>
+				<p class="cue"><span class="wheel" aria-hidden="true"><i></i></span> Desplázate para arrancar el reloj</p>
+			</div>
+		</section>
+
+		<!-- ================= THE CLOCK (pinned) ================= -->
+		<div class="journey">
+			<div class="stage">
+				<div class="aur a1" aria-hidden="true"></div>
+				<div class="aur a2" aria-hidden="true" style="animation-range: contain 30% contain 44%;"></div>
+				<div class="aur a3" aria-hidden="true" style="animation-range: contain 62% contain 78%;"></div>
+				<div class="dots" aria-hidden="true"></div>
+
+				<div class="clockBox" aria-hidden="true">
+					<span class="clockLabel">En el reloj</span>
+					<span class="clockDigits"></span>
+					<span class="progTrack"><i class="progFill"></i></span>
+				</div>
+
+				<div class="checklist" aria-hidden="true">
+					{checklist.map((c, i) => (
+						<div class="ck" style={`animation-range: contain ${(i * 11.11 + 0.6).toFixed(2)}% contain ${(i * 11.11 + 2.4).toFixed(2)}%;`}>
+							<i style={`animation-range: contain ${(i * 11.11 + 0.6).toFixed(2)}% contain ${(i * 11.11 + 2.6).toFixed(2)}%;`}>&#10003;</i>
+							<span>{c}</span>
+						</div>
+					))}
+				</div>
+
+				<!-- 00:30 signup -->
+				<section class="beat b0" style="animation-range: contain 0% contain 2%, contain 8.6% contain 11.9%;">
+					<div class="beatInner">
+						<p class="chip">00:30 en el reloj</p>
+						<h2>Tu agencia ya existe.</h2>
+						<p class="beatLead">Sin tarjeta. Sin contrato. Gratis para siempre: el MLS y el CRM no son una prueba.</p>
+						<div class="uiCard signCard">
+							<div class="skel w70"></div>
+							<div class="skel w90"></div>
+							<div class="skel w60"></div>
+							<span class="uiBtn">Crear cuenta gratis</span>
+						</div>
+					</div>
+				</section>
+
+				<!-- 01:30 instant listing -->
+				<section class="beat b1" style="animation-range: contain 9.9% contain 12.9%, contain 19.7% contain 23%;">
+					<div class="beatInner">
+						<p class="chip">01:30</p>
+						<h2>El primer anuncio, hablado.</h2>
+						<p class="beatLead">Fotos del móvil y descríbelo en voz alta. Instant Listing lo redacta, en español e inglés.</p>
+						<div class="voiceRow">
+							<div class="phone">
+								<span class="mic">&#127908;</span>
+								<span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+								<span class="phoneHint">"Adosado en el casco antiguo de Estepona, cuatro dormitorios, solárium..."</span>
+							</div>
+							<span class="arrow" aria-hidden="true">&rarr;</span>
+							<div class="listingCard">
+								<img src="/coast/estepona-800.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" />
+								<b>Adosado en Estepona</b>
+								<span>4 dorm &middot; 3 ba&ntilde;os &middot; &euro;1.350.000</span>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 02:30 fan-out -->
+				<section class="beat b2" style="animation-range: contain 21% contain 24%, contain 30.8% contain 34.1%;">
+					<div class="beatInner">
+						<p class="chip">02:30</p>
+						<h2>Publica una vez. <span class="accent">{plAgents} agentes</span> pueden venderlo.</h2>
+						<p class="beatLead">Tu anuncio acaba de aterrizar en todos los paneles MLS de la costa: m&aacute;s de 920 agencias que pueden traerte al comprador.</p>
+						<div class="fanWrap">
+							<div class="listingCard heroCard">
+								<img src="/coast/estepona-800.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" />
+								<b>Adosado en Estepona</b>
+								<span>Compartido con la red</span>
+							</div>
+							<div class="fanRing" aria-hidden="true">
+								{minis.map(([x, y, h], j) => (
+									<i class="mini" style={`--mx:${x}px; --my:${y}px; --mh:${h}; animation-range: contain ${(23.6 + j * 0.26).toFixed(2)}% contain ${(25.2 + j * 0.26).toFixed(2)}%;`}></i>
+								))}
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 03:30 portal -->
+				<section class="beat b3" style="animation-range: contain 32.1% contain 35.1%, contain 41.9% contain 45.2%;">
+					<div class="beatInner">
+						<p class="chip">03:30</p>
+						<h2>Los compradores ya pueden verlo.</h2>
+						<p class="beatLead">En vivo en propertylist.es junto a m&aacute;s de {plListings} viviendas, sin cuotas de publicaci&oacute;n, nunca.</p>
+						<div class="browser">
+							<span class="bDots" aria-hidden="true"><i></i><i></i><i></i></span>
+							<span class="bUrl">propertylist.es</span>
+							<div class="bGrid">
+								<figure class="bCard isYours"><img src="/coast/estepona-800.jpg" alt="" loading="lazy" decoding="async" /><figcaption>El tuyo &middot; &euro;1.350.000</figcaption></figure>
+								<figure class="bCard"><img src="/coast/marbella-800.jpg" alt="" loading="lazy" decoding="async" /><figcaption>&euro;2.400.000</figcaption></figure>
+								<figure class="bCard"><img src="/coast/benalmadena-800.jpg" alt="" loading="lazy" decoding="async" /><figcaption>&euro;690.000</figcaption></figure>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 04:30 microsite -->
+				<section class="beat b4" style="animation-range: contain 43.2% contain 46.2%, contain 53% contain 56.3%;">
+					<div class="beatInner">
+						<p class="chip">04:30 &middot; gratis</p>
+						<h2>Tu web con tu marca, en vivo.</h2>
+						<p class="beatLead">Cada agencia recibe un MicroSite con su propia direcci&oacute;n y todos sus anuncios cargados. Incluido, gratis.</p>
+						<div class="browser">
+							<span class="bDots" aria-hidden="true"><i></i><i></i><i></i></span>
+							<span class="bUrl">youragency.estate-agency.co</span>
+							<div class="msHero"><span class="msLogo"></span><b>Tu Agencia</b></div>
+							<div class="bGrid two">
+								<figure class="bCard"><img src="/coast/estepona-800.jpg" alt="" loading="lazy" decoding="async" /><figcaption>Adosado &middot; Estepona</figcaption></figure>
+								<figure class="bCard"><img src="/coast/mijas-800.jpg" alt="" loading="lazy" decoding="async" /><figcaption>Casa de pueblo &middot; Mijas</figcaption></figure>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 05:30 xml -->
+				<section class="beat b5" style="animation-range: contain 54.3% contain 57.3%, contain 64.1% contain 67.4%;">
+					<div class="beatInner">
+						<p class="chip">05:30 &middot; gratis</p>
+						<h2>Tu cartera sale a todas partes.</h2>
+						<p class="beatLead">Un solo feed XML env&iacute;a tus anuncios a otros portales. En PropertyList, ese env&iacute;o es gratis.</p>
+						<div class="xmlWrap">
+							<span class="xmlHub">Tu cartera MLS</span>
+							<div class="feeds" aria-hidden="true">
+								<span class="feed"><i class="feedLine"><b></b></i><span class="feedChip">&#127760; Portal</span></span>
+								<span class="feed"><i class="feedLine"><b></b></i><span class="feedChip">&#127760; Portal</span></span>
+								<span class="feed"><i class="feedLine"><b></b></i><span class="feedChip">&#127760; Portal</span></span>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 06:30 lead -->
+				<section class="beat b6" style="animation-range: contain 65.5% contain 68.5%, contain 75.2% contain 78.5%;">
+					<div class="beatInner">
+						<p class="chip">06:30</p>
+						<h2>Primer lead. Ya en tu CRM.</h2>
+						<p class="beatLead">Las consultas del portal y del MLS llegan solas a tu pipeline: contactos, compradores, vendedores, transacciones.</p>
+						<div class="browser crm">
+							<span class="bDots" aria-hidden="true"><i></i><i></i><i></i></span>
+							<span class="bUrl">agents.propertylist.es</span>
+							<img class="crmShot" src="/img/crm-dashboard.jpg" alt="The PropertyList CRM dashboard with pipeline boards and AI Property Match" width="1600" height="792" loading="lazy" decoding="async" />
+							<div class="toast" style="animation-range: contain 68.6% contain 70.2%;">&#128276; Nuevo lead &middot; Sof&iacute;a G. &middot; Adosado en Estepona</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 07:30 ai match -->
+				<section class="beat b7" style="animation-range: contain 76.6% contain 79.6%, contain 86.3% contain 89.6%;">
+					<div class="beatInner">
+						<p class="chip">07:30 &middot; gratis en beta</p>
+						<h2>Un cliente escribe. La IA encuentra el match.</h2>
+						<p class="beatLead">Pega el mensaje en AI Property Match. Primero tu cartera, despu&eacute;s toda la red compartida.</p>
+						<div class="waRow">
+							<div class="waBubble">"3 dormitorios cerca de la playa en Estepona, menos de 500.000 &euro;... flexible si hay vistas al mar" <span class="waMeta">Cliente &middot; WhatsApp</span></div>
+							<span class="arrow" aria-hidden="true">&rarr;</span>
+							<div class="browser aiShot">
+								<span class="bDots" aria-hidden="true"><i></i><i></i><i></i></span>
+								<span class="bUrl">AI Property Match</span>
+								<img src="/docs-images/ai-search/mls-results.jpg" alt="AI Property Match ranking matching listings for a pasted client brief" loading="lazy" decoding="async" />
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 08:30 alerts -->
+				<section class="beat b8" style="animation-range: contain 87.7% contain 90.7%;">
+					<div class="beatInner">
+						<p class="chip">08:30</p>
+						<h2>La red trabaja mientras duermes.</h2>
+						<p class="beatLead">Guarda el encargo como alerta. Cuando aparezca una vivienda que encaje en cualquier punto de la red, el email te encuentra.</p>
+						<div class="uiCard alertCard">
+							<span class="bell" aria-hidden="true">&#128276;</span>
+							<b>Alerta guardada</b>
+							<span>3 dorm &middot; Estepona &middot; menos de 500.000 &euro;</span>
+							<em>Vigilando {plListings} anuncios en vivo</em>
+						</div>
+					</div>
+				</section>
+
+				<div class="grain" aria-hidden="true"></div>
+			</div>
+		</div>
+
+		<!-- ================= CLOCK STOPS ================= -->
+		<section class="stopSec">
+			<p class="stopTime" aria-hidden="true">09:12</p>
+			<h2>Tiempo.</h2>
+			<div class="tally">
+				<div><b>1</b><span>anuncio en vivo en el portal</span></div>
+				<div><b>{plAgents}</b><span>agentes que pueden venderlo</span></div>
+				<div><b>1</b><span>web online, gratis</span></div>
+				<div><b>{plListings}</b><span>viviendas que puedes vender desde el d&iacute;a uno</span></div>
+			</div>
+			<p class="zero">Total gastado: <b>0 &euro;</b></p>
+			<div class="ctaRow">
+				<a class="btnBig" href={SIGNUP} target="_blank" rel="noopener">Arranca tu reloj - &uacute;nete gratis</a>
+			</div>
+			<p class="fine">Un recorrido guiado por funciones reales de PropertyList, con pantallas reales del producto. La mayor&iacute;a de los agentes le gana al reloj.</p>
+		</section>
+
+		<!-- ================= PAID, OPENLY ================= -->
+		<section class="growSec">
+			<h3>Cuando quieras crecer</h3>
+			<p class="growLead">La base sigue siendo gratis. Estos son los extras opcionales, con su precio en cr&eacute;ditos, a la vista.</p>
+			<div class="growGrid">
+				<a href="/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/generating-property-reports/"><b>Property Intelligence Report</b><span>Valoraciones verificadas ante notario con brief para el agente</span><em>5 cr&eacute;ditos</em></a>
+				<a href="/es/precios/"><b>Destacar un anuncio</b><span>Arriba del MLS o del portal</span><em>desde 10 cr&eacute;ditos</em></a>
+				<a href="/es/constructor-de-webs/"><b>Creador de Webs</b><span>Web completa a medida: crear y previsualizar es gratis</span><em>50 cr&eacute;ditos/mes</em></a>
+				<a href="/es/precios/"><b>Anuncios privados</b><span>Mant&eacute;n una venta fuera de la red compartida</span><em>los 5 primeros gratis</em></a>
+			</div>
+			<p class="growMore"><a href="/es/precios/">Precios completos</a> &middot; <a href="/es/docs/">Documentaci&oacute;n</a> &middot; <a href="/es/costa-del-sol/">Recorre la costa</a></p>
+		</section>
+	</div>
+</Layout>
+
+<script is:inline>
+	(function () {
+		var seen = {};
+		var q = [];
+		function track(n) { try { if (window.umami && umami.track) umami.track(n, {}); else q.push(n); } catch (e) {} }
+		var flushT = setInterval(function () { try { if (window.umami && umami.track) { q.splice(0).forEach(function (n) { umami.track(n, {}); }); clearInterval(flushT); } } catch (e) {} }, 400);
+		function mark(k) { if (k && !seen[k]) { seen[k] = 1; track('launch-sec-' + k); } }
+		var keys = ['b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8'];
+		var journey = document.querySelector('.journey');
+		var stage = document.querySelector('.stage');
+		var sticky = stage && getComputedStyle(stage).position === 'sticky';
+		if (journey && sticky) {
+			// pinned mode: beats share the same geometry, so depth = scroll progress through the journey
+			var onScroll = function () {
+				var r = journey.getBoundingClientRect();
+				var total = r.height - innerHeight;
+				if (total <= 0) return;
+				var p = Math.min(1, Math.max(0, -r.top / total));
+				var idx = Math.min(8, Math.floor((p * 100) / 11.11));
+				for (var i = 0; i <= idx; i++) mark(keys[i]);
+			};
+			addEventListener('scroll', onScroll, { passive: true });
+			onScroll();
+		} else if ('IntersectionObserver' in window) {
+			// static fallback: beats are in normal flow, geometry works
+			var io = new IntersectionObserver(function (es) {
+				es.forEach(function (e) { if (e.isIntersecting) mark(e.target.className.split(' ')[1]); });
+			}, { threshold: 0.3 });
+			document.querySelectorAll('.beat').forEach(function (s) { io.observe(s); });
+		}
+		if ('IntersectionObserver' in window) {
+			var io2 = new IntersectionObserver(function (es) {
+				es.forEach(function (e) { if (e.isIntersecting) mark(e.target.className.split(' ')[0]); });
+			}, { threshold: 0.3 });
+			document.querySelectorAll('.stopSec, .growSec').forEach(function (s) { io2.observe(s); });
+		}
+		document.addEventListener('click', function (ev) {
+			var a = ev.target.closest && ev.target.closest('a');
+			if (a && (a.href || '').indexOf('new_agency') > -1) track('launch-signup-click');
+		});
+	})();
+</script>
+
+<style is:global>
+	@property --lm { syntax: '<integer>'; initial-value: 0; inherits: true; }
+	@property --ls { syntax: '<integer>'; initial-value: 0; inherits: true; }
+</style>
+
+<style>
+	/* ============ shell ============ */
+	.launch {
+		width: 100vw; margin-left: calc(50% - 50vw); margin-top: -28px; margin-bottom: -40px;
+		color: #0b1220;
+		--teal: #00ae9a; --deep: #0a6d61; --gold: #e6a94e; --ink: #0b1220;
+		background: #eef4fa;
+	}
+	.eyebrow { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; font-weight: 800; margin: 0 0 16px; }
+	.accent { color: var(--teal); }
+
+	/* ============ intro (dark) ============ */
+	.lIntro {
+		position: relative; min-height: 100svh; display: grid; place-items: center;
+		text-align: center; padding: 90px 20px 110px; overflow: hidden;
+		background:
+			radial-gradient(90% 70% at 50% 110%, rgba(0, 174, 154, .16) 0%, rgba(0, 174, 154, 0) 60%),
+			linear-gradient(180deg, #060a18 0%, #0b1226 60%, #101a34 100%);
+		color: #fff;
+	}
+	.lIntroInner { max-width: 780px; }
+	.lIntro .eyebrow { color: rgba(255, 255, 255, .6); }
+	.lIntro h1 { font-size: clamp(40px, 7.6vw, 84px); line-height: 1.02; letter-spacing: -.035em; font-weight: 900; margin: 0 0 20px; }
+	.lIntro .lead { max-width: 560px; margin: 0 auto 34px; font-size: 17px; line-height: 1.66; color: rgba(255, 255, 255, .82); }
+	.clockZero {
+		font-variant-numeric: tabular-nums; font-weight: 900; letter-spacing: .02em;
+		font-size: clamp(56px, 10vw, 104px); line-height: 1; margin-bottom: 30px;
+		background: linear-gradient(120deg, #7ee8d8, #ffd79a); -webkit-background-clip: text; background-clip: text; color: transparent;
+	}
+	.cue { display: inline-flex; align-items: center; gap: 11px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .7); font-weight: 700; margin: 0; }
+	.wheel { width: 22px; height: 34px; border: 1.6px solid rgba(255, 255, 255, .45); border-radius: 999px; position: relative; display: inline-block; }
+	.wheel i { position: absolute; left: 50%; top: 7px; translate: -50% 0; width: 3px; height: 7px; border-radius: 2px; background: rgba(255, 255, 255, .85); animation: wheelCue 1.9s ease-in-out infinite; }
+	@keyframes wheelCue { 0%, 100% { transform: translateY(0); opacity: 1; } 55% { transform: translateY(11px); opacity: .25; } }
+
+	/* ============ pinned stage ============ */
+	.journey { position: relative; height: calc(12 * 100svh); }
+	.stage { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; background: #eef4fa; }
+
+	.aur { position: absolute; inset: -12%; z-index: -4; opacity: 1; }
+	.a1 { background:
+		radial-gradient(46% 38% at 22% 26%, rgba(0, 174, 154, .30) 0%, rgba(0, 174, 154, 0) 70%),
+		radial-gradient(50% 42% at 82% 20%, rgba(126, 165, 255, .24) 0%, rgba(126, 165, 255, 0) 70%),
+		radial-gradient(56% 46% at 55% 92%, rgba(0, 174, 154, .16) 0%, rgba(0, 174, 154, 0) 70%); }
+	.a2 { opacity: 0; background:
+		radial-gradient(50% 40% at 74% 30%, rgba(90, 140, 255, .30) 0%, rgba(90, 140, 255, 0) 70%),
+		radial-gradient(46% 40% at 18% 78%, rgba(0, 190, 170, .26) 0%, rgba(0, 190, 170, 0) 70%); }
+	.a3 { opacity: 0; background:
+		radial-gradient(52% 42% at 30% 24%, rgba(255, 190, 110, .34) 0%, rgba(255, 190, 110, 0) 70%),
+		radial-gradient(48% 40% at 80% 76%, rgba(255, 150, 120, .22) 0%, rgba(255, 150, 120, 0) 70%); }
+	@media (prefers-reduced-motion: no-preference) {
+		.aur { animation: aurBreathe 9s ease-in-out infinite alternate; }
+		@keyframes aurBreathe { from { scale: 1; } to { scale: 1.035; } }
+	}
+	.dots {
+		position: absolute; left: -10%; right: -10%; bottom: -6%; height: 44%; z-index: -3;
+		background-image: radial-gradient(rgba(11, 18, 32, .13) 1.3px, transparent 1.3px);
+		background-size: 26px 26px;
+		transform: perspective(700px) rotateX(58deg);
+		transform-origin: 50% 100%;
+		-webkit-mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, .9) 55%);
+		mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, .9) 55%);
+	}
+
+	.clockBox { position: absolute; top: 76px; left: 50%; translate: -50% 0; z-index: 5; text-align: center; display: grid; gap: 7px; justify-items: center; }
+	.clockLabel { font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase; font-weight: 800; color: rgba(11, 18, 32, .45); }
+	.clockDigits::after {
+		counter-reset: lm var(--lm) ls var(--ls);
+		content: counter(lm, decimal-leading-zero) ":" counter(ls, decimal-leading-zero);
+	}
+	.clockDigits {
+		font-variant-numeric: tabular-nums; font-weight: 900; font-size: clamp(34px, 4.6vw, 52px);
+		line-height: 1; letter-spacing: .01em; color: var(--ink);
+	}
+	.progTrack { width: 210px; height: 3px; border-radius: 2px; background: rgba(11, 18, 32, .12); overflow: hidden; display: block; }
+	.progFill { display: block; height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold)); transform-origin: left; scale: 0 1; }
+
+	.checklist { position: absolute; left: 34px; top: 50%; translate: 0 -50%; z-index: 5; display: grid; gap: 11px; }
+	.ck { display: flex; align-items: center; gap: 9px; font-size: 12.5px; font-weight: 700; color: rgba(11, 18, 32, .85); opacity: .32; }
+	.ck i {
+		width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+		background: var(--teal); color: #fff; font-size: 10px; font-style: normal; scale: 0;
+	}
+
+	/* ============ beats ============ */
+	.beat { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 150px 22px 70px; opacity: 0; }
+	.beatInner { max-width: 860px; text-align: center; }
+	.chip {
+		display: inline-block; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 800;
+		color: var(--deep); background: rgba(0, 174, 154, .12); border: 1px solid rgba(0, 174, 154, .25);
+		padding: 6px 13px; border-radius: 999px; margin: 0 0 16px;
+	}
+	.beat h2 { font-size: clamp(30px, 4.6vw, 54px); line-height: 1.04; letter-spacing: -.03em; font-weight: 900; margin: 0 0 12px; }
+	.beatLead { max-width: 560px; margin: 0 auto 26px; font-size: 16px; line-height: 1.6; color: rgba(11, 18, 32, .66); }
+
+	.uiCard {
+		display: inline-grid; gap: 12px; background: rgba(255, 255, 255, .78); backdrop-filter: blur(14px);
+		border: 1px solid rgba(255, 255, 255, .9); border-radius: 18px; padding: 26px 28px;
+		box-shadow: 0 24px 60px -22px rgba(15, 42, 60, .35), 0 2px 8px rgba(15, 42, 60, .06);
+		min-width: min(340px, 84vw);
+	}
+	.skel { height: 13px; border-radius: 7px; background: rgba(11, 18, 32, .1); }
+	.w70 { width: 70%; } .w90 { width: 90%; } .w60 { width: 60%; }
+	.uiBtn { display: block; background: var(--teal); color: #fff; font-weight: 800; font-size: 14.5px; padding: 12px 18px; border-radius: 11px; margin-top: 4px; }
+
+	.voiceRow, .waRow { display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; }
+	.arrow { font-size: 26px; color: rgba(11, 18, 32, .35); font-weight: 900; }
+	.phone {
+		width: 200px; border-radius: 26px; background: #0d1424; color: #fff; padding: 26px 16px 20px;
+		display: grid; gap: 12px; justify-items: center;
+		box-shadow: 0 24px 60px -22px rgba(15, 42, 60, .45);
+	}
+	.mic { width: 52px; height: 52px; border-radius: 50%; background: rgba(0, 174, 154, .2); display: grid; place-items: center; font-size: 22px; }
+	.wave { display: flex; gap: 4px; align-items: flex-end; height: 26px; }
+	.wave i { width: 4px; border-radius: 2px; background: #7ee8d8; height: 8px; }
+	@media (prefers-reduced-motion: no-preference) {
+		.wave i { animation: waveUp .9s ease-in-out infinite alternate; }
+		.wave i:nth-child(2) { animation-delay: .12s; } .wave i:nth-child(3) { animation-delay: .24s; }
+		.wave i:nth-child(4) { animation-delay: .36s; } .wave i:nth-child(5) { animation-delay: .48s; }
+		@keyframes waveUp { from { height: 6px; } to { height: 24px; } }
+	}
+	.phoneHint { font-size: 11.5px; line-height: 1.5; color: rgba(255, 255, 255, .6); text-align: center; }
+
+	.listingCard {
+		width: 230px; background: #fff; border-radius: 14px; overflow: hidden; text-align: left;
+		box-shadow: 0 24px 60px -22px rgba(15, 42, 60, .4);
+		display: grid;
+	}
+	.listingCard img { width: 100%; height: 130px; object-fit: cover; display: block; }
+	.listingCard b { font-size: 14px; padding: 10px 13px 2px; }
+	.listingCard span { font-size: 12px; color: rgba(11, 18, 32, .58); padding: 0 13px 12px; }
+
+	.fanWrap { position: relative; display: grid; place-items: center; min-height: 300px; }
+	.heroCard { position: relative; z-index: 2; }
+	.fanRing { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+	.mini {
+		position: absolute; left: 50%; top: 50%; width: 66px; height: 82px; margin: -41px 0 0 -33px;
+		border-radius: 9px; background: #fff; box-shadow: 0 10px 26px -10px rgba(15, 42, 60, .35);
+		opacity: 0; display: grid; grid-template-rows: 1fr auto auto; padding: 5px; gap: 3px;
+	}
+	.mini::before { content: ''; border-radius: 5px; background: hsl(var(--mh), 45%, 62%); }
+	.mini::after { content: ''; height: 5px; border-radius: 3px; background: rgba(11, 18, 32, .14); width: 78%; box-shadow: 0 9px 0 -3px rgba(11, 18, 32, .09); margin-bottom: 5px; }
+
+	.browser {
+		display: inline-block; width: min(680px, 92vw); background: #fff; border-radius: 16px; overflow: hidden;
+		box-shadow: 0 28px 70px -24px rgba(15, 42, 60, .4), 0 2px 8px rgba(15, 42, 60, .07);
+		text-align: left; position: relative;
+	}
+	.bDots { position: absolute; top: 13px; left: 14px; display: flex; gap: 5px; }
+	.bDots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(11, 18, 32, .14); }
+	.bUrl {
+		display: block; margin: 9px auto; width: fit-content; font-size: 12px; font-weight: 700;
+		color: rgba(11, 18, 32, .55); background: rgba(11, 18, 32, .06); border-radius: 999px; padding: 4px 16px;
+	}
+	.bGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 6px 14px 14px; }
+	.bGrid.two { grid-template-columns: repeat(2, 1fr); }
+	.bCard { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11, 18, 32, .08); }
+	.bCard img { width: 100%; height: 92px; object-fit: cover; display: block; }
+	.bCard figcaption { font-size: 11px; font-weight: 700; padding: 7px 9px; color: rgba(11, 18, 32, .7); }
+	.bCard.isYours { outline: 2.5px solid var(--teal); outline-offset: -2.5px; }
+	.bCard.isYours figcaption { color: var(--deep); }
+	.msHero { display: flex; align-items: center; gap: 10px; margin: 4px 14px 10px; padding: 16px; border-radius: 10px; background: linear-gradient(120deg, rgba(0, 174, 154, .14), rgba(126, 165, 255, .12)); font-size: 14px; }
+	.msLogo { width: 26px; height: 26px; border-radius: 8px; background: var(--teal); }
+
+	.xmlWrap { display: grid; justify-items: center; gap: 18px; }
+	.xmlHub { background: var(--ink); color: #fff; font-weight: 800; font-size: 14px; padding: 12px 22px; border-radius: 12px; box-shadow: 0 18px 44px -18px rgba(11, 18, 32, .5); }
+	.feeds { display: flex; gap: 26px; flex-wrap: wrap; justify-content: center; }
+	.feed { display: grid; justify-items: center; gap: 8px; }
+	.feedLine { display: block; width: 3px; height: 44px; overflow: hidden; border-radius: 2px; background: rgba(0, 174, 154, .18); position: relative; }
+	.feedLine b { position: absolute; left: 0; top: -100%; width: 100%; height: 100%; background: repeating-linear-gradient(180deg, var(--teal) 0 6px, transparent 6px 12px); }
+	@media (prefers-reduced-motion: no-preference) {
+		.feedLine b { animation: feedFlow 1.1s linear infinite; }
+		@keyframes feedFlow { from { transform: translateY(0); } to { transform: translateY(100%); } }
+	}
+	.feedChip { font-size: 12px; font-weight: 800; background: #fff; border: 1px solid rgba(11, 18, 32, .1); padding: 7px 13px; border-radius: 999px; box-shadow: 0 8px 22px -10px rgba(15, 42, 60, .25); }
+
+	.crm { padding-bottom: 0; }
+	.crmShot { display: block; width: 100%; height: auto; }
+	.toast {
+		position: absolute; right: 14px; top: 46px; z-index: 2;
+		background: #fff; border: 1px solid rgba(0, 174, 154, .35); border-left: 4px solid var(--teal);
+		font-size: 12.5px; font-weight: 700; padding: 10px 14px; border-radius: 11px;
+		box-shadow: 0 16px 40px -14px rgba(15, 42, 60, .4); opacity: 0;
+	}
+
+	.waBubble {
+		max-width: 250px; background: #e7fbd8; border-radius: 16px 16px 16px 4px; padding: 14px 16px;
+		font-size: 13.5px; line-height: 1.5; text-align: left; box-shadow: 0 14px 36px -16px rgba(15, 42, 60, .3);
+	}
+	.waMeta { display: block; margin-top: 8px; font-size: 10.5px; color: rgba(11, 18, 32, .45); font-weight: 700; }
+	.aiShot { width: min(430px, 88vw); }
+	.aiShot img { display: block; width: 100%; height: auto; }
+
+	.alertCard { justify-items: center; text-align: center; }
+	.bell { font-size: 30px; }
+	.alertCard b { font-size: 17px; }
+	.alertCard span { font-size: 13.5px; color: rgba(11, 18, 32, .6); }
+	.alertCard em { font-style: normal; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--deep); background: rgba(0, 174, 154, .1); padding: 5px 11px; border-radius: 999px; }
+
+	.grain {
+		position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: .04; mix-blend-mode: multiply;
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E") repeat;
+	}
+
+	/* ============ finale ============ */
+	.stopSec { text-align: center; padding: 110px 20px 70px; max-width: 860px; margin: 0 auto; }
+	.stopTime { font-variant-numeric: tabular-nums; font-weight: 900; font-size: clamp(64px, 11vw, 128px); line-height: 1; margin: 0 0 4px; background: linear-gradient(120deg, var(--teal), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+	.stopSec h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 900; letter-spacing: -.02em; margin: 0 0 34px; }
+	.tally { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 0 0 26px; }
+	.tally div { background: #fff; border: 1px solid rgba(11, 18, 32, .08); border-radius: 16px; padding: 20px 14px; display: grid; gap: 4px; }
+	.tally b { font-size: 26px; font-weight: 900; color: var(--deep); }
+	.tally span { font-size: 12.5px; color: rgba(11, 18, 32, .6); font-weight: 600; }
+	.zero { font-size: 19px; margin: 0 0 26px; color: rgba(11, 18, 32, .75); }
+	.zero b { color: var(--deep); font-size: 24px; }
+	.ctaRow { display: flex; justify-content: center; }
+	.btnBig {
+		background: linear-gradient(120deg, var(--teal), #00c9b0); color: #fff; font-weight: 900; font-size: 17px;
+		padding: 17px 34px; border-radius: 999px; text-decoration: none;
+		box-shadow: 0 18px 44px -14px rgba(0, 174, 154, .55);
+	}
+	.btnBig:hover { filter: brightness(1.05); text-decoration: none; }
+	.fine { margin: 22px 0 0; font-size: 12.5px; color: rgba(11, 18, 32, .45); }
+
+	.growSec { max-width: 860px; margin: 0 auto; padding: 30px 20px 96px; text-align: center; }
+	.growSec h3 { font-size: 21px; font-weight: 900; letter-spacing: -.01em; margin: 0 0 8px; }
+	.growLead { font-size: 14.5px; color: rgba(11, 18, 32, .6); margin: 0 0 22px; }
+	.growGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+	.growGrid a { display: grid; gap: 6px; text-align: left; background: #fff; border: 1px solid rgba(11, 18, 32, .09); border-radius: 14px; padding: 17px 17px 15px; text-decoration: none; color: inherit; }
+	.growGrid a:hover { border-color: rgba(0, 174, 154, .45); text-decoration: none; }
+	.growGrid b { font-size: 14px; }
+	.growGrid span { font-size: 12px; color: rgba(11, 18, 32, .55); line-height: 1.45; }
+	.growGrid em { font-style: normal; font-size: 12.5px; font-weight: 800; color: var(--deep); }
+	.growMore { margin: 24px 0 0; font-size: 13.5px; color: rgba(11, 18, 32, .55); }
+	.growMore a { color: var(--deep); font-weight: 700; }
+
+	/* ============ choreography ============ */
+	@supports (animation-timeline: view()) {
+		@media (prefers-reduced-motion: no-preference) {
+			.journey { view-timeline-name: --clockTL; view-timeline-axis: block; }
+			.beat, .ck, .ck i, .mini, .toast, .a2, .a3, .clockBox, .progFill {
+				animation-timeline: --clockTL;
+				animation-fill-mode: both;
+				animation-timing-function: linear;
+			}
+			.beat { animation-name: beatIn, beatOut; animation-timeline: --clockTL, --clockTL; animation-fill-mode: both, forwards; }
+			.b8 { animation-name: beatIn; animation-timeline: --clockTL; }
+			.ck { animation-name: ckOn; }
+			.ck i { animation-name: ckPop; animation-timing-function: cubic-bezier(.2, 1.4, .4, 1); }
+			.mini { animation-name: miniPop; animation-timing-function: cubic-bezier(.2, 1.2, .35, 1); }
+			.toast { animation-name: toastIn; animation-timing-function: cubic-bezier(.2, 1.3, .4, 1); }
+			.a2, .a3 { animation-name: fadeInAur; }
+			.clockBox { animation-name: clockRun; animation-range: contain 0% contain 100%; }
+			.progFill { animation-name: progGrow; animation-range: contain 0% contain 100%; }
+		}
+	}
+	@keyframes beatIn { from { opacity: 0; transform: translateY(36px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+	@keyframes beatOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-26px) scale(.99); } }
+	@keyframes ckOn { from { opacity: .32; } to { opacity: 1; } }
+	@keyframes ckPop { from { scale: 0; } to { scale: 1; } }
+	@keyframes miniPop { from { opacity: 0; transform: translate(0, 0) scale(.25); } to { opacity: 1; transform: translate(var(--mx), var(--my)) scale(1); } }
+	@keyframes toastIn { from { opacity: 0; transform: translateY(-14px) scale(.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+	@keyframes fadeInAur { from { opacity: 0; } to { opacity: 1; } }
+	@keyframes progGrow { from { scale: 0 1; } to { scale: 1 1; } }
+	@keyframes clockRun {
+		0% { --lm: 0; --ls: 0; }
+		10.86% { --lm: 0; --ls: 59; } 10.88% { --lm: 1; --ls: 0; }
+		21.72% { --lm: 1; --ls: 59; } 21.76% { --lm: 2; --ls: 0; }
+		32.59% { --lm: 2; --ls: 59; } 32.63% { --lm: 3; --ls: 0; }
+		43.46% { --lm: 3; --ls: 59; } 43.5% { --lm: 4; --ls: 0; }
+		54.33% { --lm: 4; --ls: 59; } 54.37% { --lm: 5; --ls: 0; }
+		65.2% { --lm: 5; --ls: 59; } 65.24% { --lm: 6; --ls: 0; }
+		76.07% { --lm: 6; --ls: 59; } 76.11% { --lm: 7; --ls: 0; }
+		86.94% { --lm: 7; --ls: 59; } 86.98% { --lm: 8; --ls: 0; }
+		97.81% { --lm: 8; --ls: 59; } 97.85% { --lm: 9; --ls: 0; }
+		100% { --lm: 9; --ls: 12; }
+	}
+
+	/* ============ responsive ============ */
+	@media (max-width: 1100px), (max-height: 620px) {
+		.checklist { display: none; }
+	}
+	@media (max-width: 900px) {
+		.beat { padding: 128px 16px 46px; }
+		.beat h2 { font-size: clamp(25px, 7vw, 34px); }
+		.beatLead { font-size: 14.5px; margin-bottom: 18px; }
+		.clockBox { top: 66px; }
+		.clockDigits { font-size: 30px; }
+		.progTrack { width: 150px; }
+		.mini:nth-child(n+8) { display: none; }
+		.mini { width: 52px; height: 66px; margin: -33px 0 0 -26px; }
+		.fanWrap { min-height: 240px; }
+		.fanRing { scale: .55; }
+		.browser { width: 94vw; }
+		.bCard img { height: 64px; }
+		.voiceRow .arrow, .waRow .arrow { display: none; }
+		.phone { width: 168px; }
+		.toast { right: 8px; top: 40px; font-size: 11px; }
+	}
+
+	/* ============ static fallback (no support, or reduced motion) ============ */
+	@supports not (animation-timeline: view()) {
+		.journey { height: auto; }
+		.stage { position: relative; height: auto; overflow: visible; }
+		.clockBox, .checklist, .fanRing, .grain, .dots { display: none; }
+		.a2, .a3 { display: none; }
+		.beat { position: relative; inset: auto; opacity: 1; padding: 60px 20px; }
+		.toast { opacity: 1; }
+		.mini { opacity: 1; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.journey { height: auto; }
+		.stage { position: relative; height: auto; overflow: visible; }
+		.clockBox, .checklist, .fanRing, .grain, .dots { display: none; }
+		.a2, .a3 { display: none; }
+		.beat { position: relative; inset: auto; opacity: 1; padding: 60px 20px; }
+		.toast { opacity: 1; }
+		.wheel i { animation: none; }
+	}
+</style>

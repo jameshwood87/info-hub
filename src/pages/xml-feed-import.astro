@@ -1,0 +1,121 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AgentInterestCta from '../components/AgentInterestCta.astro';
+
+const MANUAL = 'https://info.propertylist.es/docs/propertylist-mls-user-manual/';
+
+const faqs = [
+	{
+		q: 'What if my feed is in a format you have never seen?',
+		a: 'That is the normal case, and it is the point of this page. Send it over and we build the mapping at our end. Most feeds are some flavour of the same handful of fields with different names, and we have not yet met one we could not read.',
+	},
+	{
+		q: 'How long does it take?',
+		a: 'Usually one working day from the moment we have a feed URL we can reach. If yours is unusual enough to take longer we will tell you that up front rather than leave you waiting.',
+	},
+	{
+		q: 'What does it cost?',
+		a: 'Nothing. Importing your listings is free, and so is exporting them back out to other portals or your own website. We would rather your stock was on the network than charge you for putting it there.',
+	},
+	{
+		q: 'Do I have to leave my current system?',
+		a: 'No. The feed keeps running wherever it already runs. PropertyList sits alongside it and stays in sync, so nothing you currently do has to stop.',
+	},
+	{
+		q: 'What do you actually need from me?',
+		a: 'A URL we can fetch, and a note of anything unusual in it. If your feed sits behind a login or an IP allowlist, tell us and we will sort the access out with whoever maintains it.',
+	},
+	{
+		q: 'What happens when a property changes?',
+		a: 'The feed re-reads daily, so a price change or a sale on your side shows up here without anyone re-typing it.',
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title="Send us your XML feed and we will make it work | PropertyList"
+	description="Whatever system or format your listings are in, send us the feed URL and we build the mapping. Usually working within one day, and importing is free."
+	canonical="https://info.propertylist.es/xml-feed-import/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/xml-feed-import/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/importar-feed-xml/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/xml-feed-import/' },
+	]}
+>
+	<section class="xfHero">
+		<h1 class="xfH1">Send us your feed. We will make it work.</h1>
+		<p class="xfLead">
+			Whatever system your listings live in, and whatever shape the file is, send us the URL. We build the mapping
+			at our end so you do not have to change anything, re-type anything, or ask your web developer for a favour.
+		</p>
+		<p class="xfLeadSmall">Usually working within one day. Importing is free.</p>
+	</section>
+
+	<section class="xfSteps" aria-labelledby="xfStepsTitle">
+		<h2 class="xfH2" id="xfStepsTitle">How it works</h2>
+		<ol class="xfList">
+			<li>
+				<strong>You send the feed URL.</strong> From your current CRM, portal or website. If you already have an
+				account, the button is under <strong>Import &amp; Exports</strong> in the menu.
+			</li>
+			<li>
+				<strong>We read it and build the mapping.</strong> Your field names, your categories, your quirks - we
+				match them to ours. This is our job, not yours.
+			</li>
+			<li>
+				<strong>Your listings appear.</strong> Typically within one working day, and then the feed re-reads daily
+				so it stays current on its own.
+			</li>
+		</ol>
+	</section>
+
+	<section class="xfHonest" aria-labelledby="xfHonestTitle">
+		<h2 class="xfH2" id="xfHonestTitle">Where we will be straight with you</h2>
+		<p>
+			We have not met a feed we could not read, but we are not going to pretend it is magic. If yours is genuinely
+			broken, or the access cannot be sorted, we will tell you plainly rather than string you along for a fortnight.
+			And if the answer is "this will take a few days, not one", you will hear that on day one.
+		</p>
+	</section>
+
+	<AgentInterestCta
+		lang="en"
+		page="/xml-feed-import/"
+		tag="xml-feed-import"
+		title="Send us your feed"
+		body="Leave your email and we will come back to you about getting your listings in. Or if you already have an account, go straight to Import & Exports in the menu and click Create Import Feed."
+	/>
+
+	<section class="xfFaq" aria-labelledby="xfFaqTitle">
+		<h2 class="xfH2" id="xfFaqTitle">Straight answers</h2>
+		{faqs.map((f) => (
+			<details class="xfFaqItem">
+				<summary class="xfFaqQ">{f.q}</summary>
+				<p class="xfFaqA">{f.a}</p>
+			</details>
+		))}
+		<p class="xfMore">
+			The step-by-step version lives in the manual: <a href={MANUAL + 'core-workflow/import-properties/'}>Import
+			properties</a> and <a href={MANUAL + 'managing-listings/export-listings-xml/'}>Export listings (XML)</a>.
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.xfHero { max-width: 720px; margin: 0 auto; padding: 46px 20px 6px; text-align: center; }
+	.xfH1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 42px); line-height: 1.12; font-weight: 900; color: #101828; }
+	.xfLead { margin: 0 0 10px; font-size: 17px; line-height: 1.6; color: rgba(16, 24, 40, 0.72); }
+	.xfLeadSmall { margin: 0; font-size: 15px; font-weight: 700; color: #0a6d61; }
+	.xfSteps, .xfHonest, .xfFaq { max-width: 720px; margin: 30px auto 0; padding: 0 20px; }
+	.xfH2 { margin: 0 0 14px; font-size: 21px; font-weight: 800; color: #101828; }
+	.xfList { margin: 0; padding-left: 20px; }
+	.xfList li { margin-bottom: 12px; font-size: 15.5px; line-height: 1.62; color: rgba(16, 24, 40, 0.75); }
+	.xfHonest p { margin: 0; font-size: 15.5px; line-height: 1.65; color: rgba(16, 24, 40, 0.75); }
+	.xfFaq { padding-bottom: 52px; }
+	.xfFaqItem { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 12px 0; }
+	.xfFaqQ { font-weight: 700; font-size: 15.5px; color: #101828; cursor: pointer; }
+	.xfFaqA { margin: 8px 0 0; font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); }
+	.xfMore { margin: 18px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.xfMore a { color: #0a6d61; font-weight: 700; }
+</style>

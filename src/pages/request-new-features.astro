@@ -1,0 +1,167 @@
+---
+import Layout from '../layouts/Layout.astro';
+import fs from 'node:fs/promises';
+
+const title = 'Feature Requests & Roadmap Voting • PropertyList';
+const description =
+	'Suggest new features for PropertyList and vote on what we build next. See what is under review, planned, being built, and already live.';
+
+type Idea = { id: string; title: string; detail: string; status: string; votes: number };
+const STORE = '/opt/info-hub/var/admin/feature-requests.json';
+const PUBLIC = new Set(['under-review', 'planned', 'building', 'improving', 'live']);
+let ideas: Idea[] = [];
+try {
+	const all = JSON.parse(await fs.readFile(STORE, 'utf8'));
+	ideas = (Array.isArray(all) ? all : [])
+		.filter((i: any) => PUBLIC.has(i.status))
+		.sort((a: any, b: any) => (b.votes - a.votes) || String(a.at).localeCompare(String(b.at)))
+		.map(({ id, title, detail, status, votes }: any) => ({ id, title, detail, status, votes }));
+} catch {
+	ideas = [];
+}
+const statusLabel: Record<string, string> = { 'under-review': 'Under review', planned: 'Planned', building: 'Building', improving: 'Upgrades in progress', live: 'Live' };
+const sent = Astro.url.searchParams.get('sent') === '1';
+const error = Astro.url.searchParams.get('error') === '1';
+---
+
+<Layout lang="en" title={title} description={description} canonical="https://info.propertylist.es/request-new-features/">
+	<main class="wrap">
+		<section class="hero">
+			<div class="badge">Community roadmap</div>
+			<h1>You ask. We build. You vote.</h1>
+			<p class="lead">
+				PropertyList is shaped by the agents, developers and buyers who use it. Suggest a feature below, or vote for the
+				ideas you want most - the most-voted ideas get prioritised, and you can watch them move from
+				<strong>Under review</strong> to <strong>Live</strong>.
+			</p>
+			<p class="roadmapLink">
+				<a href="/docs/propertylist-mls-user-manual/release-notes-and-roadmap/new-features-roadmap/">See the full product roadmap &rarr;</a>
+			</p>
+		</section>
+
+		{sent ? <div class="note ok">Thank you - your idea is in. We review every suggestion before it appears on the board.</div> : null}
+		{error ? <div class="note err">Something went wrong - please check your idea has a short title and try again.</div> : null}
+
+		<section class="board" aria-label="Feature requests">
+			<h2>Vote on what we build next</h2>
+			{ideas.length ? (
+				<ul class="ideas">
+					{ideas.map((i) => (
+						<li class="idea" data-idea={i.id}>
+							<button class="voteBtn" type="button" data-vote={i.id} aria-label={`Vote for ${i.title}`}>
+								<span class="arrow">▲</span>
+								<span class="count" data-count={i.id}>{i.votes}</span>
+							</button>
+							<div class="ideaBody">
+								<div class="ideaTop">
+									<h3 class="ideaTitle">{i.title}</h3>
+									<span class={`chip s-${i.status}`}>{statusLabel[i.status] || i.status}</span>
+								</div>
+								{i.detail ? <p class="ideaDetail">{i.detail}</p> : null}
+							</div>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p class="empty">The board is warming up - be the first to suggest a feature below.</p>
+			)}
+		</section>
+
+		<section class="suggest" id="suggest">
+			<h2>Suggest a feature</h2>
+			<p class="sub">The more specific, the better. What problem would it solve for you?</p>
+			<form method="post" action="/api/feature-requests">
+				<input type="hidden" name="lang" value="en" />
+				<p class="hp"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
+				<label class="field">
+					<span>Feature idea</span>
+					<input type="text" name="title" required minlength="8" maxlength="120" placeholder="e.g. WhatsApp templates for new-lead replies" />
+				</label>
+				<label class="field">
+					<span>Tell us more <em>(optional)</em></span>
+					<textarea name="detail" maxlength="1500" rows="4" placeholder="What problem does it solve? How would it work for you?"></textarea>
+				</label>
+				<label class="field">
+					<span>Email <em>(optional - only to update you on this idea)</em></span>
+					<input type="email" name="email" maxlength="160" placeholder="you@youragency.com" />
+				</label>
+				<button class="submitBtn" type="submit">Submit idea</button>
+			</form>
+		</section>
+	</main>
+</Layout>
+
+<script>
+	const voted: Record<string, boolean> = JSON.parse(localStorage.getItem('plfr_voted') || '{}');
+	const mark = (id: string) => {
+		const btn = document.querySelector(`[data-vote="${id}"]`) as HTMLButtonElement | null;
+		if (btn) {
+			btn.classList.add('voted');
+			btn.disabled = true;
+		}
+	};
+	Object.keys(voted).forEach(mark);
+	document.querySelectorAll('[data-vote]').forEach((el) => {
+		el.addEventListener('click', async () => {
+			const id = (el as HTMLElement).getAttribute('data-vote') || '';
+			if (!id || voted[id]) return;
+			voted[id] = true;
+			localStorage.setItem('plfr_voted', JSON.stringify(voted));
+			mark(id);
+			try {
+				const r = await fetch('/api/feature-requests', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ action: 'vote', id }),
+				});
+				const j = await r.json();
+				const c = document.querySelector(`[data-count="${id}"]`);
+				if (c && j && typeof j.votes === 'number') c.textContent = String(j.votes);
+			} catch {}
+		});
+	});
+</script>
+
+<style>
+	.wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 72px; }
+	.hero { text-align: center; margin-bottom: 26px; }
+	.badge { display: inline-block; background: rgba(0, 174, 154, 0.12); color: #0a6d61; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px; }
+	h1 { font-size: clamp(30px, 4.5vw, 44px); letter-spacing: -0.02em; line-height: 1.08; margin: 0 0 12px; }
+	.lead { max-width: 620px; margin: 0 auto; color: rgba(16, 24, 40, 0.7); font-size: 16.5px; line-height: 1.6; }
+	.roadmapLink { margin: 12px 0 0; }
+	.roadmapLink a { color: #0a6d61; font-weight: 700; text-decoration: none; font-size: 14.5px; }
+	.roadmapLink a:hover { text-decoration: underline; }
+	.note { border-radius: 12px; padding: 13px 16px; font-size: 14.5px; margin: 0 0 18px; }
+	.note.ok { background: rgba(0, 174, 154, 0.1); border: 1px solid rgba(0, 174, 154, 0.35); color: #0a6d61; }
+	.note.err { background: rgba(226, 104, 60, 0.08); border: 1px solid rgba(226, 104, 60, 0.4); color: #a24020; }
+	.board h2, .suggest h2 { font-size: 22px; letter-spacing: -0.01em; margin: 26px 0 4px; }
+	.ideas { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+	.idea { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 14px 16px; }
+	.voteBtn { flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; padding: 8px 6px; background: #f7f6f2; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 10px; cursor: pointer; font: inherit; transition: border-color 0.15s, background 0.15s; }
+	.voteBtn:hover { border-color: #00ae9a; }
+	.voteBtn.voted { background: rgba(0, 174, 154, 0.12); border-color: #00ae9a; color: #0a6d61; cursor: default; }
+	.voteBtn .arrow { font-size: 13px; line-height: 1; }
+	.voteBtn .count { font-weight: 800; font-size: 15px; }
+	.ideaBody { min-width: 0; }
+	.ideaTop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+	.ideaTitle { font-size: 16.5px; margin: 0; letter-spacing: -0.01em; }
+	.ideaDetail { margin: 5px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.66); line-height: 1.5; }
+	.chip { font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+	.s-under-review { background: rgba(16, 24, 40, 0.07); color: rgba(16, 24, 40, 0.62); }
+	.s-planned { background: rgba(31, 58, 95, 0.1); color: #1f3a5f; }
+	.s-building { background: rgba(169, 138, 85, 0.14); color: #7a5f33; }
+	/* deeper tone of the live teal: the feature is usable now, just being improved */
+	.s-improving { background: rgba(0, 174, 154, 0.2); color: #07514a; }
+	.s-live { background: rgba(0, 174, 154, 0.14); color: #0a6d61; }
+	.empty { color: rgba(16, 24, 40, 0.6); }
+	.suggest { margin-top: 34px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 22px 24px 24px; }
+	.suggest .sub { margin: 0 0 14px; color: rgba(16, 24, 40, 0.62); font-size: 14.5px; }
+	.field { display: block; margin-bottom: 13px; }
+	.field span { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; }
+	.field em { font-weight: 400; color: rgba(16, 24, 40, 0.5); font-style: normal; }
+	.field input, .field textarea { width: 100%; border: 1px solid rgba(16, 24, 40, 0.16); border-radius: 10px; padding: 10px 13px; font: inherit; font-size: 15px; box-sizing: border-box; }
+	.field input:focus, .field textarea:focus { outline: none; border-color: #00ae9a; box-shadow: 0 0 0 3px rgba(0, 174, 154, 0.14); }
+	.hp { position: absolute; left: -9999px; }
+	.submitBtn { background: #00ae9a; color: #fff; border: 0; border-radius: 10px; font-weight: 800; font-size: 15px; padding: 12px 24px; cursor: pointer; }
+	.submitBtn:hover { background: #008a7a; }
+</style>

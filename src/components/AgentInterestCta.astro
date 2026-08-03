@@ -1,0 +1,176 @@
+---
+// Soft capture for agents who are evaluating but not ready to create an account.
+// These are AGENT prospects, so they route to the agent/developer CRM tagged
+// 'agent-interested' - never the consumer audience (see src/pages/api/subscribe.ts).
+interface Props {
+	lang?: 'en' | 'es';
+	page?: string;
+	/** Mailchimp tag, so a specific offer can be segmented from generic interest */
+	tag?: string;
+	title?: string;
+	body?: string;
+}
+const { lang = 'en', page = '', tag = 'agent-interested', title, body } = Astro.props;
+
+const t =
+	lang === 'es'
+		? {
+				title: '¿Aún no quieres crear la cuenta?',
+				body: 'Te enviamos el resumen por email: qué está incluido gratis, qué cuesta créditos y a qué sustituye. Así lo miras con calma o se lo pasas a tu socio.',
+				ph: 'tu@email.com',
+				btn: 'Envíame los detalles',
+				ok: 'Hecho. Va camino de tu bandeja de entrada.',
+				bad: 'Introduce un email válido.',
+				err: 'Algo ha fallado. Inténtalo de nuevo.',
+				note: 'Un email. Puedes darte de baja cuando quieras.',
+			}
+		: {
+				title: 'Not ready to create an account?',
+				body: 'We will email you the summary: what is included free, what costs credits, and what it replaces. Read it in your own time, or forward it to your business partner.',
+				ph: 'your@email.com',
+				btn: 'Email me the details',
+				ok: 'Done. It is on its way to your inbox.',
+				bad: 'Please enter a valid email address.',
+				err: 'Something went wrong. Please try again.',
+				note: 'One email. Unsubscribe any time.',
+			};
+---
+
+<section class="aiCta" data-agent-cta data-lang={lang} data-page={page} data-tag={tag} aria-labelledby="aiCtaTitle">
+	<h2 class="aiCtaTitle" id="aiCtaTitle">{title || t.title}</h2>
+	<p class="aiCtaBody">{body || t.body}</p>
+	<form class="aiCtaForm" data-agent-cta-form>
+		<input
+			class="aiCtaInput"
+			type="email"
+			name="email"
+			required
+			placeholder={t.ph}
+			aria-label={t.ph}
+			autocomplete="email"
+		/>
+		<button class="aiCtaBtn" type="submit">{t.btn}</button>
+	</form>
+	<p class="aiCtaNote">{t.note}</p>
+	<p class="aiCtaMsg" data-agent-cta-msg role="status" aria-live="polite"></p>
+	<span hidden data-ok={t.ok} data-bad={t.bad} data-err={t.err}></span>
+</section>
+
+<script>
+	document.querySelectorAll('[data-agent-cta]').forEach((box) => {
+		const form = box.querySelector('[data-agent-cta-form]');
+		const msg = box.querySelector('[data-agent-cta-msg]');
+		const strings = box.querySelector('[data-ok]');
+		if (!form || !msg || !strings) return;
+		const input = form.querySelector('input[type=email]');
+		const btn = form.querySelector('button');
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const email = String(input.value || '').trim();
+			if (!email || !email.includes('@')) {
+				msg.textContent = strings.dataset.bad;
+				msg.className = 'aiCtaMsg bad';
+				return;
+			}
+			btn.disabled = true;
+			msg.textContent = '';
+			try {
+				const res = await fetch('/api/subscribe', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({
+						email,
+						// agent prospects belong in the agent CRM, not the consumer audience
+						audience: 'agent',
+						tag: box.dataset.tag || 'agent-interested',
+						lang: box.dataset.lang || 'en',
+						page: box.dataset.page || location.pathname,
+					}),
+				});
+				const data = await res.json().catch(() => ({}));
+				if (!res.ok || !data.ok) {
+					msg.textContent = strings.dataset.err;
+					msg.className = 'aiCtaMsg bad';
+					btn.disabled = false;
+					return;
+				}
+				msg.textContent = strings.dataset.ok;
+				msg.className = 'aiCtaMsg ok';
+				input.value = '';
+				if (window.umami && window.umami.track) {
+					window.umami.track('agent-interested', { page: box.dataset.page || location.pathname });
+				}
+			} catch {
+				msg.textContent = strings.dataset.err;
+				msg.className = 'aiCtaMsg bad';
+			}
+			btn.disabled = false;
+		});
+	});
+</script>
+
+<style>
+	.aiCta {
+		max-width: 680px;
+		margin: 40px auto;
+		padding: 26px 28px;
+		border: 1px solid rgba(0, 174, 154, 0.26);
+		border-radius: 16px;
+		background: linear-gradient(180deg, rgba(0, 174, 154, 0.07), rgba(0, 174, 154, 0.02));
+		text-align: left;
+	}
+	.aiCtaTitle {
+		margin: 0 0 8px;
+		font-size: 20px;
+		line-height: 1.25;
+		font-weight: 800;
+		color: #101828;
+	}
+	.aiCtaBody {
+		margin: 0 0 16px;
+		font-size: 14.5px;
+		line-height: 1.6;
+		color: rgba(16, 24, 40, 0.7);
+	}
+	.aiCtaForm {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.aiCtaInput {
+		flex: 1 1 240px;
+		min-width: 0;
+		padding: 11px 14px;
+		font-size: 15px;
+		border: 1px solid rgba(16, 24, 40, 0.18);
+		border-radius: 10px;
+		background: #fff;
+		color: #101828;
+	}
+	.aiCtaInput:focus {
+		outline: 2px solid rgba(0, 174, 154, 0.5);
+		outline-offset: 1px;
+	}
+	.aiCtaBtn {
+		flex: 0 0 auto;
+		padding: 11px 22px;
+		font-size: 15px;
+		font-weight: 800;
+		color: #fff;
+		background: #00ae9a;
+		border: 0;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+	.aiCtaBtn:hover { background: #0a9285; }
+	.aiCtaBtn:disabled { opacity: 0.6; cursor: default; }
+	.aiCtaNote {
+		margin: 10px 0 0;
+		font-size: 12.5px;
+		color: rgba(16, 24, 40, 0.5);
+	}
+	.aiCtaMsg { margin: 8px 0 0; font-size: 13.5px; min-height: 1em; }
+	.aiCtaMsg.ok { color: #0a6d61; font-weight: 700; }
+	.aiCtaMsg.bad { color: #b42318; }
+</style>

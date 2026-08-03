@@ -1,4 +1,9 @@
 ---
+import { statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
 import Layout from '../layouts/Layout.astro';
 import background from '../assets/background.svg';
 import { getPortalStats } from '../lib/portalStats';
@@ -21,12 +26,117 @@ const hrefForPersona = (nextPersona: string) => {
 	params.set('persona', nextPersona);
 	return `/?${params.toString()}`;
 };
+
+const softwareAppLd = {
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "PropertyList",
+ "applicationCategory": "BusinessApplication",
+ "applicationSubCategory": "Estate agency CRM, agent-to-agent MLS and property portal",
+ "operatingSystem": "Web browser, Android",
+ "url": "https://propertylist.es/",
+ "sameAs": [
+  "https://agents.propertylist.es/",
+  "https://info.propertylist.es/"
+ ],
+ "inLanguage": [
+  "en",
+  "es"
+ ],
+ "areaServed": {
+  "@type": "Country",
+  "name": "Spain"
+ },
+ "provider": {
+  "@type": "Organization",
+  "name": "PropertyList"
+ },
+ "description": "Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by 1,300+ agents across 930+ agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.",
+ "featureList": [
+  "Six CRM pipelines: Leads, Buyers, Sellers, Property, Tenants, Nurture",
+  "Agent-to-agent MLS with co-broking across 930+ agencies",
+  "Public property portal listing and direct buyer enquiries",
+  "AI Property Match: plain-language search across own stock and the whole MLS",
+  "Automated lead acknowledgement and a day 0, 1, 3, 7 follow-up cadence",
+  "Nurture: automated past-client follow-up with intent detection",
+  "Rentals Module: tenancies, renewals, annual rent review, deposit compliance, maintenance",
+  "Free branded MicroSite for every agency",
+  "AI website builder with automated SEO content",
+  "Notary-verified register prices and per-property CMA reports",
+  "XML feed import and export",
+  "Android app",
+  "MCP server for AI-native property queries"
+ ],
+ "offers": [
+  {
+   "@type": "Offer",
+   "name": "Free plan",
+   "price": "0",
+   "priceCurrency": "EUR",
+   "description": "MLS and CRM, unlimited listings, unlimited staff accounts, the Lead, Seller and Property pipelines, a branded MicroSite and XML push to other portals. No card, no time limit."
+  },
+  {
+   "@type": "Offer",
+   "name": "Portal direct lead",
+   "price": "0",
+   "priceCurrency": "EUR",
+   "description": "Enquiries from the public property portal are free to open, taking no credits. Free for a limited time; expected to move to a pay-per-lead model in future, with notice."
+  },
+  {
+   "@type": "Offer",
+   "name": "Buyer lead",
+   "price": "1",
+   "priceCurrency": "EUR",
+   "description": "Costs 1 credit, charged only when the agent chooses to move a qualified contact into one of the paid pipeline boards, and the first 5 are free. Everything up to that point is free and declining costs nothing. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+  },
+  {
+   "@type": "Offer",
+   "name": "Automation and Nurture",
+   "priceCurrency": "EUR",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "20",
+    "priceCurrency": "EUR",
+    "unitText": "MONTH"
+   },
+   "description": "20 credits a month from the same prepaid credit balance as everything else. Includes the Nurture pipeline, all automated emails, Hot-lead detection and the Daily Action Queue. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+  },
+  {
+   "@type": "Offer",
+   "name": "Rentals Module",
+   "priceCurrency": "EUR",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "50",
+    "priceCurrency": "EUR",
+    "unitText": "MONTH"
+   },
+   "description": "50 credits per 30-day period, taken from your prepaid credit balance, bought in advance at 1.00 EUR per credit and less in larger packs. Free 30-day trial with no charge until you renew. Includes the Tenants pipeline, Tenancies, Maintenance and renewal email reminders."
+  },
+  {
+   "@type": "Offer",
+   "name": "Website Builder",
+   "priceCurrency": "EUR",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "50",
+    "priceCurrency": "EUR",
+    "unitText": "MONTH"
+   },
+   "description": "50 credits a month. Add-ons are separate monthly credit costs, for example pop-up lead capture at 8 and auto meta descriptions at 5. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+  }
+ ],
+ "paymentAccepted": "Credits from a single prepaid balance",
+ "termsOfService": "https://info.propertylist.es/docs/propertylist-mls-user-manual/credits/how-billing-works/"
+};
+
 ---
 
 <Layout
+	schema={softwareAppLd}
 	lang="en"
 	title="PropertyList - Free MLS, CRM & Property Portal for Spain"
-	description="PropertyList is Europe's free Smart MLS, CRM & Property Portal. The MLS and CRM are 100% free forever for estate agents and developers. No hidden fees, no setup fees, no lock-ins."
+	description="PropertyList is Europe's free Smart MLS, CRM & Property Portal. The MLS and the CRM core are free forever for estate agents and developers, with 1 credit charged only when you move a qualified buyer lead into a paid pipeline. No setup fees, no lock-ins."
 	canonical="https://info.propertylist.es/"
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/' },
@@ -42,14 +152,14 @@ const hrefForPersona = (nextPersona: string) => {
 			<a class="btnSecondary topCta" href="/docs/">How to use PropertyList</a>
 			<div class="heroCopy">
 				<div class="heroEyebrow">Free forever for estate agents and developers</div>
-				<h1>List once. Let 1,200 agents sell it.</h1>
+				<h1>List once. Let {plAgents} agents sell it.</h1>
 				<p class="lead">
-					PropertyList is Spain's free Smart MLS, CRM and property portal. List a property once and it reaches 1,200+
+					PropertyList is Spain's free Smart MLS, CRM and property portal. List a property once and it reaches {plAgents}
 					registered agents and thousands of buyers - no setup fees, no monthly rent, no lock-ins. Add AI and marketing
 					power only when a specific deal calls for it.
 				</p>
 				<div class="heroCtas">
-					<a class="btnPrimary heroCtaPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a>
+					<a class="btnPrimary heroCtaPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">Create your free account</a>
 					<a class="btnSecondary" href="https://propertylist.es/" target="_blank" rel="noopener">Browse the property portal</a>
 				</div>
 
@@ -119,9 +229,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
 							<div class="personaTitle">For Estate Agents</div>
 						<div class="personaSummary">
-								Stop paying monthly rent just to host your own listings. List them free on PropertyList, and 1,200+ registered agents can sell them for you - you set the commission and keep control.<br /><br />Match your buyers instantly against thousands of shared listings across the network. The MLS and CRM stay free forever - no setup fees, no lock-ins.<br /><br />Only pay when you want an edge on a specific deal: an AI CMA to price it, or the Gemini-powered Renovation Agent to unblock it. No fixed overheads, ever.
+								Stop paying monthly rent just to host your own listings. List them free on PropertyList, and {plAgents} registered agents can sell them for you - you set the commission and keep control.<br /><br />Match your buyers instantly against thousands of shared listings across the network. The MLS and CRM stay free forever - no setup fees, no lock-ins.<br /><br />Only pay when you want an edge on a specific deal: an AI CMA to price it, or the Gemini-powered Renovation Agent to unblock it. No fixed overheads, ever.
 						</div>
-						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a></div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">Create your free account</a></div>
 						<div class="personaLinks">
 							<a href="/docs/propertylist-mls-user-manual/">MLS &amp; CRM User Guide</a>
 							<a href="/docs/laws-procedures/">Laws &amp; Procedures</a>
@@ -131,9 +241,9 @@ const hrefForPersona = (nextPersona: string) => {
 					<div class={`personaPanel ${persona === 'developers' ? 'isActive' : ''}`} data-persona-panel="developers">
 							<div class="personaTitle">For Developers</div>
 						<div class="personaSummary">
-								Put your whole development in front of 1,200+ registered agents the day you list it - for free. Your portfolio becomes shared inventory across the network, so a real sales force is selling your units, not just an advert parked on a portal.<br /><br />You only pay the commission you set, and only when an agent actually brings a buyer. Every euro is tied to a confirmed sale - no upfront ad spend, no wasted budget.
+								Put your whole development in front of {plAgents} registered agents the day you list it - for free. Your portfolio becomes shared inventory across the network, so a real sales force is selling your units, not just an advert parked on a portal.<br /><br />You only pay the commission you set, and only when an agent actually brings a buyer. Every euro is tied to a confirmed sale - no upfront ad spend, no wasted budget.
 						</div>
-						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a></div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">Create your free account</a></div>
 						<div class="personaLinks">
 							<a href="https://info.propertylist.es/developers#get-updates">How it works?</a>
 							<a href="/docs/developers/">Developers Docs</a>
@@ -145,7 +255,7 @@ const hrefForPersona = (nextPersona: string) => {
 						<div class="personaSummary">
 								Reach agents and buyers at the exact moment they need you - not with a generic directory ad, but inside the deal itself. Your service shows up in the workflow when a transaction calls for it.<br /><br />Our AI does the introducing: the Renovation Agent, for example, prices a project on the spot and puts your profile in front of the right people. You only pay for qualified connections tied to a real property deal.
 						</div>
-						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">Create your free account</a></div>
+						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">Create your free account</a></div>
 						<div class="personaLinks">
 							<a href="/docs/property-services/">Property Service Docs</a>
 							<a href="/neighbourhood/">Area Guides</a>
@@ -184,15 +294,33 @@ When you want to move faster, stand out, or build your own agency website - tap 
 		<div class="wbHeroCard">
 			<div class="wbHeroInner">
 				<div class="wbHeroText">
+					<div class="wbBadge">Six pipelines - three of them free</div>
+					<h3 class="wbHeadline">Most lost deals were never lost.<br />They were never followed up.</h3>
+					<p class="wbSub">
+						Leads, Sellers and Property run free with no limit. A lead is answered the moment it lands, a follow-up plan is
+						written for you, and a listing that goes quiet raises its own price-review task.<br />
+						Everything up to qualifying a buyer is free. You decide which ones are worth a credit, and saying no costs you
+						nothing.<br />
+						Past clients keep themselves warm in <a href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/nurture/" style="color:inherit;text-decoration:underline;font-weight:600">Nurture</a>,
+						and you get handed the one who just showed interest.
+					</p>
+					<a href="/pipelines/" class="wbCta">See the six pipelines &rarr;</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="wbHeroCard">
+			<div class="wbHeroInner">
+				<div class="wbHeroText">
 					<div class="wbBadge">Website Builder - 50 credits/month</div>
 					<h3 class="wbHeadline">Your agency website.<br />Built and written by AI.</h3>
 					<p class="wbSub">
 						Describe what you want in plain words and the AI builds the pages and writes the copy - your listings, your
 						brand, no developer needed.<br />
 						Fine-tune it with drag-and-drop, preview it like a client for free, only pay and publish when you're happy.<br />
-						And it keeps working: <a href="/instant-content" style="color:inherit;text-decoration:underline;font-weight:600">Instant Content</a> writes ongoing SEO blogs and area guides from your own listings and notary-verified prices - so you rank without writing a word.
+						And it keeps working: <a href="/instant-content/" style="color:inherit;text-decoration:underline;font-weight:600">Instant Content</a> writes ongoing SEO blogs and area guides from your own listings and notary-verified prices - so you rank without writing a word.
 					</p>
-					<a href="/website-builder" class="wbCta">See how it works &rarr;</a>
+					<a href="/website-builder/" class="wbCta">See how it works &rarr;</a>
 				</div>
 				<div class="wbHeroImage">
 					<img
@@ -219,6 +347,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 					<div class="aiCtaRow">
 						<a href="/instant-listing/" class="aiCta">Try Instant Listing &rarr;</a>
 						<a href="https://propertylist.es/" target="_blank" rel="noopener" class="aiCtaGhost">Search the portal &rarr;</a>
+						<a href="/ai-property-search/" class="aiCtaGhost">How AI search works &rarr;</a>
 					</div>
 				</div>
 				<div class="aiHeroDemo" aria-hidden="true">
@@ -233,6 +362,46 @@ When you want to move faster, stand out, or build your own agency website - tap 
 						<div class="aiMockChips"><span>4 matches</span><span>Marbella</span><span>&euro;480,000</span></div>
 					</div>
 				</div>
+			</div>
+		</div>
+
+		<div class="instantSuite">
+			<div class="instantSuiteHead">
+				<div class="instantBadge">The Instant suite</div>
+				<h3 class="instantHeadline">One click. Studio-quality marketing.</h3>
+				<p class="instantSub">A growing set of AI tools that turn a listing into brochures, videos, renders and content - built from your own photos and real data, never invented. New ones arrive often.</p>
+			</div>
+			<div class="instantGrid">
+				<a class="instantTile" href="/instant-listing/">
+					<span class="itTop"><span class="itIcon">&#127908;</span><span class="itTag isLive">Live</span></span>
+					<span class="itName">Instant Listing</span>
+					<span class="itDesc">Photos plus a voice note become a complete, ready-to-publish listing.</span>
+				</a>
+				<a class="instantTile" href="/instant-content/">
+					<span class="itTop"><span class="itIcon">&#9997;&#65039;</span><span class="itTag isLive">Live</span></span>
+					<span class="itName">Instant Content</span>
+					<span class="itDesc">SEO blog posts and area guides written from your own listings.</span>
+				</a>
+				<a class="instantTile" href="/instant-brochure/">
+					<span class="itTop"><span class="itIcon">&#128196;</span><span class="itTag isSoon">Coming soon</span></span>
+					<span class="itName">Instant Brochure</span>
+					<span class="itDesc">A print-ready PDF and a live web page for any property, in one click.</span>
+				</a>
+				<a class="instantTile" href="/instant-renovation/">
+					<span class="itTop"><span class="itIcon">&#128736;&#65039;</span><span class="itTag isSoon">Coming soon</span></span>
+					<span class="itName">Instant Renovation</span>
+					<span class="itDesc">AI before-and-after renders with local, itemised cost estimates.</span>
+				</a>
+				<a class="instantTile" href="/instant-video/">
+					<span class="itTop"><span class="itIcon">&#127916;</span><span class="itTag isSoon">Coming soon</span></span>
+					<span class="itName">Instant Video</span>
+					<span class="itDesc">Branded listing, area and market videos in full HD.</span>
+				</a>
+				<a class="instantTile" href="/instant-images/">
+					<span class="itTop"><span class="itIcon">&#128247;</span><span class="itTag isSoon">Coming soon</span></span>
+					<span class="itName">Instant Images</span>
+					<span class="itDesc">Twilight, sky-swap, virtual staging and branded social cards.</span>
+				</a>
 			</div>
 		</div>
 
@@ -288,11 +457,12 @@ When you want to move faster, stand out, or build your own agency website - tap 
 							</span>
 							<span class="featureText">
 								<span class="featureName">CRM Pipelines</span>
-								<span class="featureHint">Seven boards from lead to close - four free forever</span>
+								<span class="featureHint">Six pipelines from lead to close - Leads, Sellers and Property are free</span>
 							</span>
 						</a>
 					</li>
 				<li><a class="featureLink" href="/mobile-app/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Mobile app</span><span class="featureHint">The MLS and CRM on your phone - free on Google Play</span></span></a></li>
+				<li><a class="featureLink" href="/ai-property-search/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l1.9 5.1L19 11l-5.1 1.9L12 18l-1.9-5.1L5 11l5.1-1.9L12 4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M18.5 3.5v3M17 5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">AI Property Match</span><span class="featureHint">Plain-words search for buyers and agents - your stock first, then the whole MLS</span></span></a></li>
 					<li>
 						<a
 							class="featureLink"
@@ -508,7 +678,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 						</a>
 					</li>
 					<li>
-						<a class="featureLink" href="/website-builder">
+						<a class="featureLink" href="/website-builder/">
 							<span class="featureIcon" aria-hidden="true">
 								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<rect x="2.5" y="4" width="19" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
@@ -596,7 +766,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 					<li>
 						<a
 							class="featureLink"
-							href="https://info.propertylist.es/docs/propertylist-mls-user-manual/managing-your-leads/new-page/portal-leads/"
+							href="https://info.propertylist.es/pipelines/"
 							target="_blank"
 							rel="noopener"
 						>
@@ -619,8 +789,8 @@ When you want to move faster, stand out, or build your own agency website - tap 
 								</svg>
 							</span>
 							<span class="featureText">
-								<span class="featureName">Open Direct Leads</span>
-								<span class="featureHint">Public Portal enquiries only</span>
+								<span class="featureName">Buyer pipeline</span>
+								<span class="featureHint">1 credit per qualified lead you choose to move in</span>
 							</span>
 						</a>
 					</li>
@@ -757,7 +927,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 				<strong style="display:block;font-size:16px;letter-spacing:-.01em;color:rgba(16,24,40,0.92);">Are you an agent? Help shape what we build next.</strong>
 				<span style="display:block;font-size:14px;color:rgba(16,24,40,0.66);margin-top:3px;">A 2-minute survey - tell us what you want from a property portal, and we'll add 20 credits (worth &euro;20) to your account.</span>
 			</div>
-			<a href="/agents-survey" style="flex:none;white-space:nowrap;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Take the 2-min survey &rarr;</a>
+			<a href="/agents-survey/" style="flex:none;white-space:nowrap;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Take the 2-min survey &rarr;</a>
 		</div>
 	</section>
 
@@ -1380,6 +1550,104 @@ When you want to move faster, stand out, or build your own agency website - tap 
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 12px;
+	}
+
+	.instantSuite {
+		background: linear-gradient(135deg, rgba(15, 58, 95, 0.06), rgba(169, 138, 85, 0.05));
+		border: 1px solid rgba(15, 58, 95, 0.16);
+		border-radius: 16px;
+		padding: 28px 32px;
+		margin-bottom: 28px;
+	}
+	.instantSuiteHead {
+		max-width: 680px;
+		margin-bottom: 20px;
+	}
+	.instantBadge {
+		display: inline-block;
+		background: #1f3a5f;
+		color: #fff;
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		padding: 4px 10px;
+		border-radius: 20px;
+		margin-bottom: 12px;
+	}
+	.instantHeadline {
+		font-family: 'DM Serif Display', Georgia, serif;
+		font-size: 26px;
+		line-height: 1.15;
+		margin: 0 0 10px;
+		color: #0b1220;
+	}
+	.instantSub {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.72);
+		font-size: 14.5px;
+		line-height: 1.6;
+	}
+	.instantGrid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+		gap: 14px;
+	}
+	.instantTile {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 12px;
+		padding: 16px 18px 18px;
+		text-decoration: none;
+		transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+	}
+	.instantTile:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 10px 26px rgba(15, 58, 95, 0.1);
+		border-color: rgba(15, 58, 95, 0.3);
+	}
+	.itTop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.itIcon {
+		font-size: 22px;
+		line-height: 1;
+	}
+	.itTag {
+		font-size: 10.5px;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		padding: 3px 8px;
+		border-radius: 20px;
+	}
+	.itTag.isLive {
+		background: rgba(0, 174, 154, 0.14);
+		color: #0a6d61;
+	}
+	.itTag.isSoon {
+		background: rgba(16, 24, 40, 0.07);
+		color: rgba(16, 24, 40, 0.6);
+	}
+	.itName {
+		font-size: 16px;
+		font-weight: 700;
+		color: #0b1220;
+	}
+	.itDesc {
+		font-size: 13px;
+		line-height: 1.5;
+		color: rgba(16, 24, 40, 0.66);
+	}
+	@media (max-width: 560px) {
+		.instantSuite {
+			padding: 22px 18px;
+		}
 	}
 
 	.featureGrid {

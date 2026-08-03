@@ -1,0 +1,175 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/video-guias/`;
+const enUrl = `${origin}/video-guides/`;
+const title = 'Vídeo guías - Aprende PropertyList en minutos | PropertyList';
+const description =
+	'Vídeo guías breves de PropertyList, la red MLS gratuita para agentes inmobiliarios en toda España y Portugal. Aprende a buscar en el MLS, publicar una propiedad, buscar con IA y ganar créditos, en minutos.';
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+
+type Guia = { slug: string; n: number; title: string; blurb: string; dur: string; iso: string; transcript: string };
+
+const guias: Guia[] = [
+	{ slug: 'overview', n: 1, title: 'Primeros pasos',
+	  blurb: 'Un recorrido por tu panel: contactos, anuncios, visitas y herramientas, en un solo lugar.',
+	  dur: '0:29', iso: 'PT29S',
+	  transcript: 'Tu panel es tu punto de partida: cifras en directo arriba, y el MLS compartido, tus anuncios y tus herramientas a un lado. Todo para colaborar en la costa.' },
+	{ slug: 'search', n: 2, title: 'Encuentra cualquier propiedad',
+	  blurb: 'Busca en el MLS compartido, filtra por precio, habitaciones y tipo, y ve tu comisión por delante.',
+	  dur: '0:26', iso: 'PT26S',
+	  transcript: 'Empieza en el MLS, con miles de anuncios compartidos por agencias locales reales. Busca o filtra, y cada ficha muestra los datos y tu comisión, siempre por delante.' },
+	{ slug: 'list', n: 3, title: 'Publica una propiedad en minutos',
+	  blurb: 'Convierte fotos y una nota de voz en un anuncio completo con Empieza con la IA, revisa y publica.',
+	  dur: '0:33', iso: 'PT33S',
+	  transcript: 'Abre Publicar una propiedad y empieza con la IA. Sube fotos o una nota de voz y la IA redacta el anuncio. Solo rellena lo que puede ver u oír, y nada se publica sin ti.' },
+	{ slug: 'ai-match', n: 4, title: 'Búsqueda con IA',
+	  blurb: 'Describe a un cliente en lenguaje natural y deja que PropertyList ordene las mejores propiedades de tu red.',
+	  dur: '0:31', iso: 'PT31S',
+	  transcript: 'Describe a tu cliente en lenguaje natural y la IA lo convierte en una búsqueda, ordenando las mejores propiedades de tu propia red en segundos.' },
+	{ slug: 'credits', n: 5, title: 'Gana créditos con referidos',
+	  blurb: 'Invita a otras agencias y ambos recibís veinte créditos gratis para destacar anuncios, informes y más.',
+	  dur: '0:25', iso: 'PT25S',
+	  transcript: 'Los créditos activan las herramientas de pago. Invita a otras agencias, y cuando una se une con tu enlace, ambos recibís veinte créditos gratis.' },
+];
+
+const featured = guias[0];
+const rest = guias.slice(1);
+const uploadDate = '2026-07-15';
+
+const videoLd = guias.map((g) => ({
+	'@context': 'https://schema.org', '@type': 'VideoObject',
+	name: `${g.title} - vídeo guía de PropertyList`,
+	description: g.blurb,
+	thumbnailUrl: [`${origin}/videos/pl-tutorial-es-${g.slug}.jpg`],
+	uploadDate, duration: g.iso, inLanguage: 'es',
+	contentUrl: `${origin}/videos/pl-tutorial-es-${g.slug}.mp4`,
+	embedUrl: canonical,
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+}));
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Documentación', item: `${origin}/es/docs/` },
+		{ '@type': 'ListItem', position: 3, name: 'Vídeo guías', item: canonical },
+	],
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'en', href: enUrl },
+		{ hreflang: 'x-default', href: enUrl },
+	]}
+>
+	{videoLd.map((ld) => (
+		<script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
+	))}
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<main class="vg">
+		<section class="hero">
+			<p class="eyebrow">Vídeo guías</p>
+			<h1>Aprende PropertyList <em>en minutos</em></h1>
+			<p class="lede">
+				Cinco guías breves que te muestran la plataforma, desde encontrar una propiedad
+				hasta publicarla y encontrarle un comprador. Sin registro para verlas.
+			</p>
+			<div class="heroMeta">
+				<span>5 guías</span><span class="dot">&middot;</span><span>unos 2 minutos en total</span>
+				<span class="dot">&middot;</span><span>plataforma gratuita</span>
+			</div>
+		</section>
+
+		<section class="featured">
+			<div class="player">
+				<video controls preload="metadata" playsinline poster={`/videos/pl-tutorial-es-${featured.slug}.jpg`}>
+					<source src={`/videos/pl-tutorial-es-${featured.slug}.mp4`} type="video/mp4" />
+				</video>
+			</div>
+			<div class="fmeta">
+				<p class="num">Guía {featured.n}</p>
+				<h2>{featured.title}</h2>
+				<p class="blurb">{featured.blurb}</p>
+				<p class="tx">{featured.transcript}</p>
+				<span class="badge">{featured.dur}</span>
+			</div>
+		</section>
+
+		<section class="grid">
+			{rest.map((g) => (
+				<article class="card">
+					<div class="player">
+						<video controls preload="metadata" playsinline poster={`/videos/pl-tutorial-es-${g.slug}.jpg`}>
+							<source src={`/videos/pl-tutorial-es-${g.slug}.mp4`} type="video/mp4" />
+						</video>
+						<span class="badge">{g.dur}</span>
+					</div>
+					<p class="num">Guía {g.n}</p>
+					<h3>{g.title}</h3>
+					<p class="blurb">{g.blurb}</p>
+				</article>
+			))}
+		</section>
+
+		<section class="cta">
+			<h2>¿Listo para probarlo?</h2>
+			<p>Tu cuenta de PropertyList, el MLS y el CRM son gratis para siempre. Crea una cuenta de agencia y empieza a colaborar en toda España y Portugal.</p>
+			<div class="ctaRow">
+				<a class="btn primary" href={SIGNUP}>Crear una cuenta gratis</a>
+				<a class="btn ghost" href="/es/docs/">Leer el manual completo</a>
+			</div>
+		</section>
+		<script is:inline>
+		document.addEventListener('play', function (e) {
+			document.querySelectorAll('video').forEach(function (v) { if (v !== e.target) v.pause(); });
+		}, true);
+	</script>
+</main>
+
+	<style>
+		.vg { max-width: 1120px; margin: 0 auto; padding: 56px 22px 96px; }
+		.vg em { font-style: italic; color: #0f8f8a; }
+		.hero { text-align: center; max-width: 800px; margin: 0 auto 54px; }
+		.eyebrow { font-size: 14px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #0f8f8a; margin-bottom: 16px; }
+		.hero h1 { font-family: 'Lora', Georgia, serif; font-size: 54px; line-height: 1.08; font-weight: 700; color: #0b1b22; letter-spacing: -.01em; }
+		.lede { font-size: 21px; line-height: 1.55; color: #47555b; margin-top: 22px; }
+		.heroMeta { margin-top: 22px; font-size: 15px; font-weight: 700; color: #5b6b73; display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+		.heroMeta .dot { color: #b8c6cc; }
+		.featured { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: center; margin-bottom: 64px; }
+		.player { position: relative; border-radius: 18px; overflow: hidden; background: #0b1b22; box-shadow: 0 30px 80px -34px rgba(11,27,34,.5); border: 1px solid #e7eef1; }
+		.player video { width: 100%; display: block; aspect-ratio: 16/9; background: #0b1b22; }
+		.badge { position: absolute; right: 12px; bottom: 12px; background: rgba(11,27,34,.86); color: #fff; font-size: 14px; font-weight: 800; padding: 6px 12px; border-radius: 999px; }
+		.featured .badge { position: static; display: inline-block; margin-top: 20px; background: #eef6f4; color: #0f8f8a; }
+		.fmeta .num { font-size: 14px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #0f8f8a; }
+		.fmeta h2 { font-family: 'Lora', Georgia, serif; font-size: 34px; font-weight: 700; color: #0b1b22; margin: 8px 0 16px; }
+		.blurb { font-size: 18px; line-height: 1.5; color: #47555b; }
+		.tx { font-size: 15px; line-height: 1.55; color: #78868c; margin-top: 14px; font-style: italic; }
+		.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 40px; }
+		.card .num { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #0f8f8a; margin: 16px 0 6px; }
+		.card h3 { font-family: 'Lora', Georgia, serif; font-size: 24px; font-weight: 700; color: #0b1b22; margin-bottom: 10px; }
+		.card .blurb { font-size: 16px; }
+		.cta { margin-top: 84px; text-align: center; background: linear-gradient(135deg, #0b1b22, #0f3a3a); border-radius: 24px; padding: 56px 30px; color: #fff; }
+		.cta h2 { font-family: 'Lora', Georgia, serif; font-size: 36px; font-weight: 700; }
+		.cta p { font-size: 18px; color: rgba(255,255,255,.82); max-width: 640px; margin: 16px auto 0; line-height: 1.55; }
+		.ctaRow { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+		.btn { display: inline-block; padding: 16px 34px; border-radius: 999px; font-size: 17px; font-weight: 800; text-decoration: none; }
+		.btn.primary { background: linear-gradient(135deg, #00ae9a, #0f8f8a); color: #fff; }
+		.btn.ghost { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.28); }
+		@media (max-width: 860px) {
+			.hero h1 { font-size: 40px; }
+			.featured { grid-template-columns: 1fr; gap: 24px; }
+			.grid { grid-template-columns: 1fr; }
+		}
+	</style>
+</Layout>

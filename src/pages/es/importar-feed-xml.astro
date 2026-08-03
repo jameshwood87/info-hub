@@ -1,0 +1,121 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
+
+const MANUAL = 'https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/';
+
+const faqs = [
+	{
+		q: '¿Y si mi feed está en un formato que no habéis visto nunca?',
+		a: 'Ese es el caso normal, y es justo para esto la página. Envíanoslo y hacemos el mapeo por nuestro lado. Casi todos los feeds son variaciones de los mismos campos con otros nombres, y todavía no hemos encontrado uno que no pudiéramos leer.',
+	},
+	{
+		q: '¿Cuánto tarda?',
+		a: 'Normalmente un día laborable desde que tenemos una URL a la que podamos acceder. Si el tuyo es lo bastante raro como para tardar más, te lo decimos desde el principio en lugar de dejarte esperando.',
+	},
+	{
+		q: '¿Qué cuesta?',
+		a: 'Nada. Importar tus anuncios es gratis, y exportarlos a otros portales o a tu propia web también. Preferimos tener tu cartera en la red antes que cobrarte por ponerla.',
+	},
+	{
+		q: '¿Tengo que dejar mi sistema actual?',
+		a: 'No. Tu feed sigue funcionando donde ya funciona. PropertyList convive con él y se mantiene sincronizado, así que nada de lo que haces ahora tiene que parar.',
+	},
+	{
+		q: '¿Qué necesitáis exactamente de mí?',
+		a: 'Una URL que podamos leer y un aviso de cualquier cosa rara que tenga. Si tu feed está detrás de un login o de una lista de IPs permitidas, dínoslo y lo gestionamos con quien lo mantenga.',
+	},
+	{
+		q: '¿Qué pasa cuando cambia una propiedad?',
+		a: 'El feed se vuelve a leer a diario, así que un cambio de precio o una venta por tu lado aparece aquí sin que nadie tenga que reescribir nada.',
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title="Envíanos tu feed XML y lo hacemos funcionar | PropertyList"
+	description="Sea cual sea el sistema o el formato de tus anuncios, envíanos la URL del feed y hacemos el mapeo nosotros. Normalmente funcionando en un día, e importar es gratis."
+	canonical="https://info.propertylist.es/es/importar-feed-xml/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/xml-feed-import/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/importar-feed-xml/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/xml-feed-import/' },
+	]}
+>
+	<section class="xfHero">
+		<h1 class="xfH1">Envíanos tu feed. Nosotros lo hacemos funcionar.</h1>
+		<p class="xfLead">
+			Da igual en qué sistema estén tus anuncios y qué forma tenga el archivo: envíanos la URL. El mapeo lo hacemos
+			nosotros, así que tú no tienes que cambiar nada, ni reescribir nada, ni pedirle un favor a tu informático.
+		</p>
+		<p class="xfLeadSmall">Normalmente funcionando en un día. Importar es gratis.</p>
+	</section>
+
+	<section class="xfSteps" aria-labelledby="xfStepsTitle">
+		<h2 class="xfH2" id="xfStepsTitle">Cómo funciona</h2>
+		<ol class="xfList">
+			<li>
+				<strong>Nos envías la URL del feed.</strong> De tu CRM, portal o web actual. Si ya tienes cuenta, el botón
+				está en <strong>Import &amp; Exports</strong> en el menú.
+			</li>
+			<li>
+				<strong>Lo leemos y hacemos el mapeo.</strong> Tus nombres de campo, tus categorías, tus rarezas: los
+				encajamos con los nuestros. Ese trabajo es nuestro, no tuyo.
+			</li>
+			<li>
+				<strong>Tus anuncios aparecen.</strong> Normalmente en un día laborable, y a partir de ahí el feed se
+				vuelve a leer a diario y se mantiene solo.
+			</li>
+		</ol>
+	</section>
+
+	<section class="xfHonest" aria-labelledby="xfHonestTitle">
+		<h2 class="xfH2" id="xfHonestTitle">Dónde vamos a ser sinceros contigo</h2>
+		<p>
+			No hemos encontrado un feed que no pudiéramos leer, pero tampoco vamos a venderte magia. Si el tuyo está
+			realmente roto, o no hay forma de conseguir el acceso, te lo decimos claramente en lugar de tenerte quince
+			días esperando. Y si la respuesta es "esto son unos días, no uno", lo sabrás el primer día.
+		</p>
+	</section>
+
+	<AgentInterestCta
+		lang="es"
+		page="/es/importar-feed-xml/"
+		tag="xml-feed-import"
+		title="Envíanos tu feed"
+		body="Déjanos tu email y te contactamos para meter tus anuncios. O si ya tienes cuenta, ve directamente a Import & Exports en el menú y pulsa Create Import Feed."
+	/>
+
+	<section class="xfFaq" aria-labelledby="xfFaqTitle">
+		<h2 class="xfH2" id="xfFaqTitle">Respuestas claras</h2>
+		{faqs.map((f) => (
+			<details class="xfFaqItem">
+				<summary class="xfFaqQ">{f.q}</summary>
+				<p class="xfFaqA">{f.a}</p>
+			</details>
+		))}
+		<p class="xfMore">
+			La versión paso a paso está en el manual: <a href={MANUAL + 'core-workflow/import-properties/'}>Importar
+			propiedades</a> y <a href={MANUAL + 'managing-listings/export-listings-xml/'}>Exportar anuncios (XML)</a>.
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.xfHero { max-width: 720px; margin: 0 auto; padding: 46px 20px 6px; text-align: center; }
+	.xfH1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 42px); line-height: 1.12; font-weight: 900; color: #101828; }
+	.xfLead { margin: 0 0 10px; font-size: 17px; line-height: 1.6; color: rgba(16, 24, 40, 0.72); }
+	.xfLeadSmall { margin: 0; font-size: 15px; font-weight: 700; color: #0a6d61; }
+	.xfSteps, .xfHonest, .xfFaq { max-width: 720px; margin: 30px auto 0; padding: 0 20px; }
+	.xfH2 { margin: 0 0 14px; font-size: 21px; font-weight: 800; color: #101828; }
+	.xfList { margin: 0; padding-left: 20px; }
+	.xfList li { margin-bottom: 12px; font-size: 15.5px; line-height: 1.62; color: rgba(16, 24, 40, 0.75); }
+	.xfHonest p { margin: 0; font-size: 15.5px; line-height: 1.65; color: rgba(16, 24, 40, 0.75); }
+	.xfFaq { padding-bottom: 52px; }
+	.xfFaqItem { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 12px 0; }
+	.xfFaqQ { font-weight: 700; font-size: 15.5px; color: #101828; cursor: pointer; }
+	.xfFaqA { margin: 8px 0 0; font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); }
+	.xfMore { margin: 18px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.xfMore a { color: #0a6d61; font-weight: 700; }
+</style>

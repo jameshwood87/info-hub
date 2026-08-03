@@ -1,10 +1,15 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
 import Layout from '../layouts/Layout.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/about-us/`;
 const title = 'About PropertyList • PropertyList Info Hub';
-const description = 'Built for agents — not to compete with them. PropertyList combines MLS efficiency, CRM workflows, and public portal visibility.';
+const description = 'Built for agents - not to compete with them. PropertyList combines MLS efficiency, CRM workflows, and public portal visibility.';
 ---
 
 <Layout
@@ -34,10 +39,10 @@ const description = 'Built for agents — not to compete with them. PropertyList
 				portal visibility.
 			</p>
 			<div class="ctaRow" aria-label="Get started">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
 					Agents: Get Started FREE
 				</a>
-				<a class="btnSecondary" href="https://developers.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
+				<a class="btnSecondary" href="https://developers.propertylist.es/signup/new" target="_blank" rel="noopener">
 					Developers: Get Started FREE
 				</a>
 			</div>
@@ -80,7 +85,7 @@ const description = 'Built for agents — not to compete with them. PropertyList
 			<h2>The Agent-First Approach</h2>
 			<p>
 				PropertyList is engineered to protect your pipeline, not drain your marketing budget. We empower real estate professionals by providing a
-				comprehensive Smart MLS and automated CRM completely free of charge - with unlimited property uploads, unlimited staff accounts, and
+				comprehensive Smart MLS and automated CRM free of charge at its core - with unlimited property uploads, unlimited staff accounts, and
 				absolutely no hidden fees, no setup fees and no cancelation fees.
 			</p>
 			<p class="subHead">We operate on a foundation of absolute transparency:</p>
@@ -92,7 +97,7 @@ const description = 'Built for agents — not to compete with them. PropertyList
 				<p>
 					We guarantee an exclusive protection window for every buyer lead generated from the PropertyList.es Public Portal on your specific listing
 					mandate. Unlike traditional portals, we will never instantly hijack your hard-earned buyer and sell them to the highest bidder. You hold
-					the exclusive first right to unlock and claim that direct lead.
+					the exclusive first right to open and claim that direct lead, and opening it costs nothing today.
 				</p>
 				<p class="muted">
 					To maintain a high standard of service for property seekers, if a lead remains unopened and inactive for 5 working days, our automated
@@ -112,8 +117,8 @@ const description = 'Built for agents — not to compete with them. PropertyList
 				<h3>You only pay for what you use</h3>
 				<p>
 					We have eliminated tied contracts, setup fees, cancellation fees, and hidden costs. You operate on a flexible, pay-as-you-go credit system.
-					You only invest when you strategically choose to unlock premium tools - such as featuring listings, generating AI-powered market reports, or
-					opening direct leads from the public portal.
+					You only invest when you strategically choose to unlock premium tools, such as featuring listings or generating AI-powered market reports. Opening a
+					direct lead from the public portal is free for a limited time.
 				</p>
 			</div>
 		</div>
@@ -141,15 +146,15 @@ const description = 'Built for agents — not to compete with them. PropertyList
 				</p>
 				<div class="statGrid" aria-label="Platform stats">
 					<div class="stat">
-						<div class="statNum">900+</div>
+						<div class="statNum">{plAgencies}</div>
 						<div class="statLabel">Agencies</div>
 					</div>
 					<div class="stat">
-						<div class="statNum">1,200+</div>
+						<div class="statNum">{plAgents}</div>
 						<div class="statLabel">Active agents</div>
 					</div>
 					<div class="stat">
-						<div class="statNum">6,000+</div>
+						<div class="statNum">{plListings}</div>
 						<div class="statLabel">Active listings</div>
 					</div>
 				</div>
@@ -161,19 +166,19 @@ const description = 'Built for agents — not to compete with them. PropertyList
 		<div class="ctaInner">
 			<h2>Join the Movement</h2>
 			<p>
-				The industry is shifting, and the smartest agencies are already securing their positions. Today, PropertyList is trusted by over 800 agencies
-				and 1,200+ active agents across Spain, with over 6,000 properties actively listed.
+				The industry is shifting, and the smartest agencies are already securing their positions. Today, PropertyList is trusted by {plAgencies} agencies
+				and {plAgents} active agents across Spain, with {plListings} properties actively listed.
 			</p>
 			<p>
 				If you are ready to step into a professional network designed to protect your deals, reduce your costs, and amplify your success - rather
 				than compete with you - you are exactly where you need to be.
 			</p>
 			<div class="ctaRow" aria-label="Join PropertyList">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Agents Get Started FREE — No Credit Card Required
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
+					Agents Get Started FREE - No Credit Card Required
 				</a>
-				<a class="btnSecondary" href="https://developers.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Developers Get Started FREE — No Credit Card Required
+				<a class="btnSecondary" href="https://developers.propertylist.es/signup/new" target="_blank" rel="noopener">
+					Developers Get Started FREE - No Credit Card Required
 				</a>
 			</div>
 		</div>

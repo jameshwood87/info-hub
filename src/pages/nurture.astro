@@ -1,0 +1,625 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../lib/portalStats';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/nurture/`;
+const title = 'Nurture: keep every past client, automatically | PropertyList';
+const description =
+	'Past clients and quiet buyers stay in touch on their own, and you get told the moment one of them is ready to move. 20 credits a month, and you can watch it work before you pay.';
+
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+
+const owed = [
+	{
+		h: 'The client from four years ago',
+		p: 'They bought through you. At some point they will sell, and they will call whoever they heard from most recently. Often that is the agency that sent them a market update, not the one that handed them the keys.',
+	},
+	{
+		h: 'The buyer who went quiet',
+		p: 'Financing fell through in March and you stopped hearing from them. By October they are a buyer again, with a deposit and a mortgage in principle, and they are somebody else’s client now.',
+	},
+	{
+		h: 'The landlord you never called',
+		p: 'Landlords buy again, refer other landlords, and eventually sell. They are the most valuable people in your database and the easiest to go quiet on, because nothing is ever urgent with them.',
+	},
+];
+
+const streams = [
+	{
+		h: 'The ones that ask for nothing',
+		p: 'Birthdays, including their partner’s. A note on the anniversary of the day they signed. Christmas. A referral ask while the good experience is still fresh. All under your name and your signature, so it reads like you remembered.',
+	},
+	{
+		h: 'The ones that find the next deal',
+		p: 'A homeowner gets an honest annual valuation of their own house. An investor gets what their portfolio is worth and what similar units rent for now. A landlord gets yield, rule changes and a renew, re-let or sell analysis at every renewal. A long-term tenant gets a quiet comparison between their rent and a mortgage.',
+	},
+];
+
+const control = [
+	'One email per contact per week, however many sequences they are in. If two fall in the same week, the personal one wins.',
+	'Consent is recorded per contact, unsubscribes are honoured, and a contact who opts out stays on the board and receives nothing.',
+	'Every contact has a timeline of what has been sent and what is scheduled next. You can read, edit or skip anything on it.',
+	'You can switch it off for one person, or for one type of email, when you know something the system does not.',
+	'Anyone detected as another agent is excluded from all of it, so a valuation never goes to a co-broker.',
+	'Emails go out in the language the client chose when the deal was won.',
+];
+
+const faqs = [
+	{
+		q: 'What does it cost?',
+		a: 'Nurture is part of the Automation and Nurture subscription: 20 credits a month, about 20 EUR, from the same credit balance you already use for featuring a listing or pulling a report. One price covers the Nurture pipeline, every automated email, Hot-lead detection and the Daily Action Queue. It is one product, so there is nothing to configure or add on.',
+	},
+	{
+		q: 'Will it send things I would be embarrassed by?',
+		a: 'You can see every email before it goes. Each contact has a timeline of what has been sent and what is scheduled, and anything upcoming can be read, edited or skipped. Nobody gets more than one email a week, agent contacts are excluded entirely, and you can switch a person off completely without removing them from the board.',
+	},
+	{
+		q: 'Where does the information come from?',
+		a: 'From the moment a deal is won. The system asks for the sign date, birthdays, whether they are living there or investing, the language they prefer, and marketing consent. That is what makes the emails specific rather than generic. If something is missing it asks you for it rather than guessing.',
+	},
+	{
+		q: 'What happens when someone shows interest?',
+		a: 'The automated emails for that contact stop, they are tagged Hot, and a call goes to the top of your Daily Action Queue with the reason attached, for example that they opened a valuation email three times this week. A contact coming back to you out of Nurture never costs a credit. You paid for them once already.',
+	},
+	{
+		q: 'Can I try it before subscribing?',
+		a: 'The board fills up whether you subscribe or not. Every won deal puts the contact on it and the details are collected as normal, but nothing sends, and a counter shows what the month would have gone out. When you do subscribe it starts with everything it has been gathering rather than from an empty screen.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/nurture/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Automation and Nurture</div>
+			<h1>Your database is your pension.</h1>
+			<p class="lead">
+				You already know hundreds of buyers, sellers and landlords. Some of them are moving this year. Nurture stays in touch with all of
+				them without you, and tells you the moment one of them is ready.
+			</p>
+			<div class="ctaRow" aria-label="Join PropertyList">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
+					Create your free agency account
+				</a>
+				<a class="btnSecondary" href="#what-it-costs">See what it costs</a>
+			</div>
+			<div class="note">{plAgencies} agencies and {plAgents} agents are already on the network. The board fills up before you pay anything.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>The deals you have already earned</h2>
+			<p>Nobody loses these on purpose. They go quiet one week at a time, while you are busy with the deal in front of you.</p>
+		</div>
+		<div class="grid3">
+			{
+				owed.map((o) => (
+					<div class="card leakCard">
+						<h3>{o.h}</h3>
+						<p>{o.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>It runs on dates you already have</h2>
+			<p>
+				When a deal is won you are asked for the sign date, the birthdays, whether they are living there or investing, and the language they
+				prefer. Nothing else needs setting up. What moves a contact after that is time and behaviour, not you.
+			</p>
+		</div>
+		<div class="grid2">
+			{
+				streams.map((s) => (
+					<div class="card">
+						<h3>{s.h}</h3>
+						<p>{s.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>The part that actually earns</h2>
+				<p>
+					The system watches for intent. A click on a valuation link, a reply, the same "thinking of selling?" email opened three times in a
+					week.
+				</p>
+				<p>
+					When that happens the automated emails for that person <strong>stop</strong>, they are tagged Hot, and a call goes to the top of your
+					Daily Action Queue with the reason on the card. You are handed a warm client instead of the machine carrying on regardless.
+				</p>
+				<p><strong>A contact coming back out of Nurture never costs a credit.</strong> You paid for them once already.</p>
+			</div>
+			<div class="card">
+				<h2>Watch it work before you pay</h2>
+				<p>
+					Without the subscription the board still fills up. Every won deal still puts the contact on it, the sign dates and birthdays are
+					still collected, and a counter tells you what that month would have sent.
+				</p>
+				<p>
+					Nothing goes out until you decide it should. When you subscribe, it starts with everything it has been gathering rather than from an
+					empty screen.
+				</p>
+				<div class="pillRow">
+					<span class="pill">Nothing sends until you say so</span>
+					<span class="pill">Starts already loaded</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>You stay in control of every message</h2>
+			<p>Automation is only worth having if you would be happy for a client to read the whole thing back to you.</p>
+		</div>
+		<ol class="flowList">
+			{control.map((c) => <li>{c}</li>)}
+		</ol>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card" id="what-it-costs">
+				<h2>What it costs</h2>
+				<ul class="priceList">
+					<li><span>Automation and Nurture</span><strong>20 credits a month</strong></li>
+					<li><span>Automated emails, Hot detection, Daily Action Queue</span><strong>Included</strong></li>
+					<li><span>A contact returning to you from Nurture</span><strong>Never charged</strong></li>
+					<li><span>Watching the board fill up before you subscribe</span><strong>Free</strong></li>
+				</ul>
+				<p class="quiet">
+					One product at one price, out of the same credit balance you already use. Credits you buy do not expire. See the
+					<a href="/pricing/">full pricing</a> or the <a href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/nurture/">setup guide</a>.
+				</p>
+			</div>
+			<div class="card">
+				<h2>It only works because the rest is free</h2>
+				<p>
+					Nurture is fed by the pipelines, and the pipelines that fill it cost nothing. Leads, Sellers and Property run free with no limit, so
+					every deal you close lands in Nurture whether or not you ever subscribe.
+				</p>
+				<p>
+					That is the point of charging for demand and not for supply: the more you run your agency here, the more valuable the database
+					becomes, and it is yours either way.
+				</p>
+				<div class="ctaRow">
+					<a class="btnSecondary" href="/pipelines/">See the six pipelines</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>The questions agents ask</h2>
+		</div>
+		<div class="faqList">
+			{
+				faqs.map((f) => (
+					<details class="faqItem">
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section cta">
+		<div class="ctaInner">
+			<h2>The clients you already have are the cheapest ones you will ever win again.</h2>
+			<p>
+				The MLS, the CRM and the pipelines that feed Nurture are free. Switch the follow-up on when the board has enough people on it to be
+				worth 20 credits a month.
+			</p>
+			<div class="ctaRow" aria-label="Join PropertyList">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
+					Create your free agency account
+				</a>
+				<a class="btnSecondary" href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/nurture/">Read the guide</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+	}
+
+	.hero {
+		border-radius: 22px;
+		padding: 16px;
+		margin: 0 0 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background:
+			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.75);
+		max-width: 78ch;
+		line-height: 1.6;
+	}
+
+	.note {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.section {
+		margin: 0 0 14px;
+	}
+
+	.sectionHead {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 12px;
+	}
+
+	.sectionHead p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.6;
+		max-width: 88ch;
+	}
+
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.card.accent {
+		border-color: rgba(var(--pl-accent-rgb), 0.25);
+		background:
+			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
+			rgba(255, 255, 255, 0.86);
+	}
+
+	.card h2 {
+		margin: 0 0 10px;
+	}
+
+	.card h3 {
+		margin: 0;
+		font-size: 16px;
+	}
+
+	.card p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+
+	.boardHead {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		margin-bottom: 8px;
+	}
+
+	.tag {
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 8px;
+		border-radius: 999px;
+		font-weight: 900;
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+	}
+
+	.tagFree {
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.3);
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		color: rgba(16, 24, 40, 0.82);
+	}
+
+	.tagCredit {
+		border: 1px solid rgba(16, 24, 40, 0.16);
+		background: rgba(247, 248, 250, 0.9);
+		color: rgba(16, 24, 40, 0.66);
+	}
+
+	.pillRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 4px;
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		padding: 8px 10px;
+		border-radius: 999px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: rgba(var(--pl-accent-rgb), 0.1);
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.86);
+		font-size: 13px;
+	}
+
+	.cta {
+		border-radius: 22px;
+		padding: 16px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.ctaInner {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	.ctaInner p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.6;
+		max-width: 90ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 14px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 950;
+		color: rgba(16, 24, 40, 0.88);
+	}
+
+	.btnPrimary {
+		border-color: rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.14);
+	}
+
+	.btnPrimary:hover,
+	.btnSecondary:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	@media (max-width: 980px) {
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* ---- sales-page components (rewrite 2026-07-28) ---- */
+	.leakCard h3 {
+		margin: 0 0 6px;
+		font-size: 16.5px;
+	}
+	.leakCard p {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.7);
+		line-height: 1.6;
+	}
+
+	.flowList {
+		list-style: none;
+		counter-reset: flow;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 10px;
+	}
+	.flowList li {
+		counter-increment: flow;
+		position: relative;
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		padding: 14px 18px 14px 56px;
+		color: rgba(16, 24, 40, 0.8);
+		line-height: 1.6;
+	}
+	.flowList li::before {
+		content: counter(flow);
+		position: absolute;
+		left: 16px;
+		top: 13px;
+		width: 26px;
+		height: 26px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.14);
+		color: #0a6d61;
+		font-weight: 800;
+		font-size: 13px;
+		display: grid;
+		place-items: center;
+	}
+
+	.queueCard {
+		display: flex;
+		gap: 14px;
+		align-items: flex-start;
+	}
+	.queueNum {
+		flex: 0 0 auto;
+		width: 30px;
+		height: 30px;
+		border-radius: 999px;
+		background: #101828;
+		color: #fff;
+		font-weight: 800;
+		font-size: 14px;
+		display: grid;
+		place-items: center;
+	}
+	.queueCard h3 {
+		margin: 2px 0 5px;
+		font-size: 16px;
+	}
+	.queueCard p {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.7);
+		line-height: 1.55;
+	}
+
+	.quiet {
+		color: rgba(16, 24, 40, 0.62);
+		font-size: 14.5px;
+		line-height: 1.6;
+		margin: 14px 0 0;
+	}
+
+	.priceList {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.priceList li {
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 11px 0;
+		border-bottom: 1px dashed rgba(16, 24, 40, 0.14);
+		font-size: 14.5px;
+	}
+	.priceList li:last-child {
+		border-bottom: 0;
+	}
+	.priceList span {
+		color: rgba(16, 24, 40, 0.72);
+	}
+	.priceList strong {
+		white-space: nowrap;
+		color: #0a6d61;
+	}
+
+	.faqList {
+		display: grid;
+		gap: 10px;
+	}
+	.faqItem {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		padding: 14px 18px;
+	}
+	.faqItem summary {
+		cursor: pointer;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: #101828;
+	}
+	.faqItem p {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.65;
+	}
+
+	@media (max-width: 680px) {
+		.priceList li {
+			flex-direction: column;
+			gap: 4px;
+		}
+		.priceList strong {
+			white-space: normal;
+		}
+	}
+</style>

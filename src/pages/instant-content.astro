@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AgentInterestCta from '../components/AgentInterestCta.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/instant-content/`;
 const title = 'Instant Content - AI blogs and area guides for your agency | PropertyList';
 const description =
-	'Now live in the PropertyList Website Builder: AI writes SEO blog posts and area guides for your agency, built from your own listings and notary-verified market data, in your buyers’ languages.';
+	'AI blog posts and area guides for your agency website, grounded in your own listings and verified market data. Unlimited and automated - 30 credits/month.';
 
 const steps = [
 	{ n: 1, t: 'Connect', d: 'It reads the listings and areas already on your Website Builder site - nothing to import.' },
@@ -48,10 +49,10 @@ const softwareLd = {
 	name: 'PropertyList Instant Content',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
 	description: 'AI writes SEO blog posts and area guides for estate agencies, grounded in the agency’s own listings and notary-verified market data, published to their Website Builder site.',
-	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	offers: { '@type': 'Offer', price: '30', priceCurrency: 'EUR', description: '30 credits a month.' + ' Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum.' },
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 ---
 
 <Layout
@@ -268,4 +269,5 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			.grid3 { grid-template-columns: repeat(2, 1fr); }
 		}
 	</style>
+	<AgentInterestCta lang="en" page="/instant-content/" />
 </Layout>

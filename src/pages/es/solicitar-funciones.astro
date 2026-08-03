@@ -1,0 +1,167 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import fs from 'node:fs/promises';
+
+const title = 'Solicita funciones y vota el roadmap • PropertyList';
+const description =
+	'Sugiere nuevas funciones para PropertyList y vota lo que construimos a continuación. Mira qué está en revisión, planificado, en construcción y ya disponible.';
+
+type Idea = { id: string; title: string; detail: string; status: string; votes: number };
+const STORE = '/opt/info-hub/var/admin/feature-requests.json';
+const PUBLIC = new Set(['under-review', 'planned', 'building', 'improving', 'live']);
+let ideas: Idea[] = [];
+try {
+	const all = JSON.parse(await fs.readFile(STORE, 'utf8'));
+	ideas = (Array.isArray(all) ? all : [])
+		.filter((i: any) => PUBLIC.has(i.status))
+		.sort((a: any, b: any) => (b.votes - a.votes) || String(a.at).localeCompare(String(b.at)))
+		.map(({ id, title, detail, status, votes }: any) => ({ id, title, detail, status, votes }));
+} catch {
+	ideas = [];
+}
+const statusLabel: Record<string, string> = { 'under-review': 'En revisión', planned: 'Planificado', building: 'En construcción', improving: 'Mejoras en curso', live: 'Disponible' };
+const sent = Astro.url.searchParams.get('sent') === '1';
+const error = Astro.url.searchParams.get('error') === '1';
+---
+
+<Layout lang="es" title={title} description={description} canonical="https://info.propertylist.es/es/solicitar-funciones/">
+	<main class="wrap">
+		<section class="hero">
+			<div class="badge">Roadmap de la comunidad</div>
+			<h1>Tú lo pides. Nosotros lo construimos. Tú votas.</h1>
+			<p class="lead">
+				PropertyList lo moldean los agentes, promotores y compradores que lo usan. Sugiere una función abajo o vota las
+				ideas que más quieras - las más votadas se priorizan, y puedes verlas pasar de
+				<strong>En revisión</strong> a <strong>Disponible</strong>.
+			</p>
+			<p class="roadmapLink">
+				<a href="/es/docs/propertylist-mls-manual-de-usuario/release-notes-and-roadmap/new-features-roadmap/">Ver la hoja de ruta completa &rarr;</a>
+			</p>
+		</section>
+
+		{sent ? <div class="note ok">Gracias - tu idea está registrada. Revisamos cada sugerencia antes de que aparezca en el tablón.</div> : null}
+		{error ? <div class="note err">Algo salió mal - comprueba que tu idea tiene un título breve e inténtalo de nuevo.</div> : null}
+
+		<section class="board" aria-label="Solicitudes de funciones">
+			<h2>Vota lo que construimos a continuación</h2>
+			{ideas.length ? (
+				<ul class="ideas">
+					{ideas.map((i) => (
+						<li class="idea" data-idea={i.id}>
+							<button class="voteBtn" type="button" data-vote={i.id} aria-label={`Votar por ${i.title}`}>
+								<span class="arrow">▲</span>
+								<span class="count" data-count={i.id}>{i.votes}</span>
+							</button>
+							<div class="ideaBody">
+								<div class="ideaTop">
+									<h3 class="ideaTitle">{i.title}</h3>
+									<span class={`chip s-${i.status}`}>{statusLabel[i.status] || i.status}</span>
+								</div>
+								{i.detail ? <p class="ideaDetail">{i.detail}</p> : null}
+							</div>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p class="empty">El tablón está arrancando - sé el primero en sugerir una función abajo.</p>
+			)}
+		</section>
+
+		<section class="suggest" id="suggest">
+			<h2>Sugiere una función</h2>
+			<p class="sub">Cuanto más concreta, mejor. ¿Qué problema te resolvería?</p>
+			<form method="post" action="/api/feature-requests">
+				<input type="hidden" name="lang" value="es" />
+				<p class="hp"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
+				<label class="field">
+					<span>Idea de función</span>
+					<input type="text" name="title" required minlength="8" maxlength="120" placeholder="p. ej. Plantillas de WhatsApp para responder a leads nuevos" />
+				</label>
+				<label class="field">
+					<span>Cuéntanos más <em>(opcional)</em></span>
+					<textarea name="detail" maxlength="1500" rows="4" placeholder="¿Qué problema resuelve? ¿Cómo funcionaría para ti?"></textarea>
+				</label>
+				<label class="field">
+					<span>Email <em>(opcional - solo para avisarte sobre esta idea)</em></span>
+					<input type="email" name="email" maxlength="160" placeholder="tu@tuagencia.com" />
+				</label>
+				<button class="submitBtn" type="submit">Enviar idea</button>
+			</form>
+		</section>
+	</main>
+</Layout>
+
+<script>
+	const voted: Record<string, boolean> = JSON.parse(localStorage.getItem('plfr_voted') || '{}');
+	const mark = (id: string) => {
+		const btn = document.querySelector(`[data-vote="${id}"]`) as HTMLButtonElement | null;
+		if (btn) {
+			btn.classList.add('voted');
+			btn.disabled = true;
+		}
+	};
+	Object.keys(voted).forEach(mark);
+	document.querySelectorAll('[data-vote]').forEach((el) => {
+		el.addEventListener('click', async () => {
+			const id = (el as HTMLElement).getAttribute('data-vote') || '';
+			if (!id || voted[id]) return;
+			voted[id] = true;
+			localStorage.setItem('plfr_voted', JSON.stringify(voted));
+			mark(id);
+			try {
+				const r = await fetch('/api/feature-requests', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ action: 'vote', id }),
+				});
+				const j = await r.json();
+				const c = document.querySelector(`[data-count="${id}"]`);
+				if (c && j && typeof j.votes === 'number') c.textContent = String(j.votes);
+			} catch {}
+		});
+	});
+</script>
+
+<style>
+	.wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 72px; }
+	.hero { text-align: center; margin-bottom: 26px; }
+	.badge { display: inline-block; background: rgba(0, 174, 154, 0.12); color: #0a6d61; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px; }
+	h1 { font-size: clamp(30px, 4.5vw, 44px); letter-spacing: -0.02em; line-height: 1.08; margin: 0 0 12px; }
+	.lead { max-width: 620px; margin: 0 auto; color: rgba(16, 24, 40, 0.7); font-size: 16.5px; line-height: 1.6; }
+	.roadmapLink { margin: 12px 0 0; }
+	.roadmapLink a { color: #0a6d61; font-weight: 700; text-decoration: none; font-size: 14.5px; }
+	.roadmapLink a:hover { text-decoration: underline; }
+	.note { border-radius: 12px; padding: 13px 16px; font-size: 14.5px; margin: 0 0 18px; }
+	.note.ok { background: rgba(0, 174, 154, 0.1); border: 1px solid rgba(0, 174, 154, 0.35); color: #0a6d61; }
+	.note.err { background: rgba(226, 104, 60, 0.08); border: 1px solid rgba(226, 104, 60, 0.4); color: #a24020; }
+	.board h2, .suggest h2 { font-size: 22px; letter-spacing: -0.01em; margin: 26px 0 4px; }
+	.ideas { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+	.idea { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 14px 16px; }
+	.voteBtn { flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; padding: 8px 6px; background: #f7f6f2; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 10px; cursor: pointer; font: inherit; transition: border-color 0.15s, background 0.15s; }
+	.voteBtn:hover { border-color: #00ae9a; }
+	.voteBtn.voted { background: rgba(0, 174, 154, 0.12); border-color: #00ae9a; color: #0a6d61; cursor: default; }
+	.voteBtn .arrow { font-size: 13px; line-height: 1; }
+	.voteBtn .count { font-weight: 800; font-size: 15px; }
+	.ideaBody { min-width: 0; }
+	.ideaTop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+	.ideaTitle { font-size: 16.5px; margin: 0; letter-spacing: -0.01em; }
+	.ideaDetail { margin: 5px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.66); line-height: 1.5; }
+	.chip { font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+	.s-under-review { background: rgba(16, 24, 40, 0.07); color: rgba(16, 24, 40, 0.62); }
+	.s-planned { background: rgba(31, 58, 95, 0.1); color: #1f3a5f; }
+	.s-building { background: rgba(169, 138, 85, 0.14); color: #7a5f33; }
+	/* deeper tone of the live teal: the feature is usable now, just being improved */
+	.s-improving { background: rgba(0, 174, 154, 0.2); color: #07514a; }
+	.s-live { background: rgba(0, 174, 154, 0.14); color: #0a6d61; }
+	.empty { color: rgba(16, 24, 40, 0.6); }
+	.suggest { margin-top: 34px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 22px 24px 24px; }
+	.suggest .sub { margin: 0 0 14px; color: rgba(16, 24, 40, 0.62); font-size: 14.5px; }
+	.field { display: block; margin-bottom: 13px; }
+	.field span { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; }
+	.field em { font-weight: 400; color: rgba(16, 24, 40, 0.5); font-style: normal; }
+	.field input, .field textarea { width: 100%; border: 1px solid rgba(16, 24, 40, 0.16); border-radius: 10px; padding: 10px 13px; font: inherit; font-size: 15px; box-sizing: border-box; }
+	.field input:focus, .field textarea:focus { outline: none; border-color: #00ae9a; box-shadow: 0 0 0 3px rgba(0, 174, 154, 0.14); }
+	.hp { position: absolute; left: -9999px; }
+	.submitBtn { background: #00ae9a; color: #fff; border: 0; border-radius: 10px; font-weight: 800; font-size: 15px; padding: 12px 24px; cursor: pointer; }
+	.submitBtn:hover { background: #008a7a; }
+</style>

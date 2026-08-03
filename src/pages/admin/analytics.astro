@@ -52,6 +52,73 @@ import Layout from '../../layouts/Layout.astro';
 			<div class="tableWrap"><table id="docsTable" class="dataTable"></table></div>
 			<button class="moreBtn" data-more="docsTable" type="button">Show all</button>
 
+			<h2 id="whatson">What's On engagement</h2>
+			<p class="explain">Cookieless Umami counts (every visitor, no consent needed) since 12 July. Plan-action tracking went live 17 July, so plan numbers start from then.</p>
+			<div class="cols">
+				<div>
+					<h3 class="tableH">Page views</h3>
+					<div class="tableWrap"><table id="woViews">
+						<thead><tr><th>Page</th><th>Views</th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+				</div>
+				<div>
+					<h3 class="tableH">Day-planner actions</h3>
+					<div class="tableWrap"><table id="woEvents">
+						<thead><tr><th>Action</th><th>Count</th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+					<p class="muted" id="woNote" style="font-size:12.5px;"></p>
+				</div>
+			</div>
+
+			<h2 id="traffic">Traffic - last 7 days</h2>
+			<p class="explain">Cookieless Umami (every visitor, no consent gate). "Real visitors" strips countries that are overwhelmingly datacenter/scraper traffic for a Costa del Sol site (Singapore, China, etc.) so the number reflects actual prospects.</p>
+			<div id="trafficCards" class="cols" style="gap:12px;flex-wrap:wrap;"></div>
+			<div class="cols" style="margin-top:10px;">
+				<div>
+					<h3 class="tableH">By country (visitors)</h3>
+					<div class="tableWrap"><table id="trafficCountry"><thead><tr><th>Country</th><th>Visitors</th><th></th></tr></thead><tbody></tbody></table></div>
+				</div>
+				<div></div>
+			</div>
+
+			<h2 id="landings">Landing pages</h2>
+			<p class="explain">Cookieless Umami counts since 12 July, EN + ES combined per page. The scroll funnels for the two showpieces started 20 July - they show how many visitors reached each stage.</p>
+			<div class="cols">
+				<div>
+					<h3 class="tableH">Views</h3>
+					<div class="tableWrap"><table id="lpViews">
+						<thead><tr><th>Page</th><th>Views</th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+				</div>
+				<div>
+					<h3 class="tableH">Signup clicks from showpieces</h3>
+					<div class="tableWrap"><table id="lpClicks">
+						<thead><tr><th>From</th><th>Clicks</th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+					<p class="muted" id="lpNote" style="font-size:12.5px;"></p>
+				</div>
+			</div>
+			<div class="cols">
+				<div>
+					<h3 class="tableH">Costa del Sol - how far they drive</h3>
+					<div class="tableWrap"><table id="lpCoast">
+						<thead><tr><th>Stage</th><th>Reached</th><th></th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+				</div>
+				<div>
+					<h3 class="tableH">9-Minute Agency - how far they scroll</h3>
+					<div class="tableWrap"><table id="lpLaunch">
+						<thead><tr><th>Beat</th><th>Reached</th><th></th></tr></thead>
+						<tbody></tbody>
+					</table></div>
+				</div>
+			</div>
+
 			<h2>Title experiments</h2>
 			<p class="explain">Every Monday the system rewrites the title of the page Google shows most but people click least, then reports back 14 days later.</p>
 			<div class="tableWrap"><table id="expTable">
@@ -169,7 +236,7 @@ import Layout from '../../layouts/Layout.astro';
 
 	(async () => {
 		const res = await fetch('/api/admin/analytics/insights', { credentials: 'same-origin' });
-		if (res.status === 401 || res.status === 403) { $('status').innerHTML = 'Session expired - <a href="/admin/login">log in</a> and reload.'; return; }
+		if (res.status === 401 || res.status === 403) { $('status').innerHTML = 'Session expired - <a href="/admin/login/">log in</a> and reload.'; return; }
 		if (!res.ok) { $('status').textContent = 'Failed to load (' + res.status + ').'; return; }
 		const d = await res.json();
 		$('status').hidden = true;
@@ -398,6 +465,86 @@ import Layout from '../../layouts/Layout.astro';
 
 		load();
 	})();
+
+	(async () => {
+		try {
+			const r = await fetch('/api/admin/analytics/whatson', { credentials: 'same-origin' });
+			if (!r.ok) return;
+			const d = await r.json();
+			if (!d.ok) return;
+			const vb = document.querySelector('#woViews tbody');
+			const rows = Object.entries(d.views).sort((a, b) => b[1] - a[1]);
+			vb.innerHTML = rows.length
+				? rows.map(([p, n]) => '<tr><td><a href="' + p + '" target="_blank" rel="noopener">' + p + '</a></td><td>' + n + '</td></tr>').join('')
+				: '<tr><td colspan="2" class="muted">No views recorded yet.</td></tr>';
+			const labels = { 'plan-add': 'Added to a plan', 'plan-share': 'Shared a plan', 'plan-calendar': 'Exported to calendar', 'plan-import': 'Opened a shared plan' };
+			const eb = document.querySelector('#woEvents tbody');
+			const names = ['plan-add', 'plan-share', 'plan-calendar', 'plan-import'];
+			eb.innerHTML = names.map((n) => '<tr><td>' + labels[n] + '</td><td>' + (d.planTotals[n] || 0) + '</td></tr>').join('');
+			const total = names.reduce((a, n) => a + (d.planTotals[n] || 0), 0);
+			const note = document.getElementById('woNote');
+			if (!total) note.textContent = 'No plan actions yet - the counter started 17 July.';
+			else {
+				const towns = Object.entries(d.byPage).map(([p, evs]) => p.replace(/^\/(es\/)?(whats-on|que-hacer)\//, '').replace(/\/$/, '') || 'hub')
+					.filter((v, i, a) => a.indexOf(v) === i);
+				note.textContent = 'Pages with plan activity: ' + towns.join(', ');
+			}
+		} catch {}
+	})();
+
+	(async () => {
+		try {
+			const r = await fetch('/api/admin/analytics/landings', { credentials: 'same-origin' });
+			if (!r.ok) return;
+			const d = await r.json();
+			if (!d.ok) return;
+			const vb = document.querySelector('#lpViews tbody');
+			const rows = Object.entries(d.views).sort((a, b) => b[1] - a[1]);
+			vb.innerHTML = rows.length
+				? rows.map(([p, n]) => '<tr><td><a href="' + p + '" target="_blank" rel="noopener">' + p + '</a></td><td>' + n + '</td></tr>').join('')
+				: '<tr><td colspan="2" class="muted">No views recorded yet.</td></tr>';
+			const cb = document.querySelector('#lpClicks tbody');
+			const clickRows = [
+				['Costa del Sol - join free', d.clicks['coast-signup-click'] || 0],
+				['Costa del Sol - browse portal', d.clicks['coast-portal-click'] || 0],
+				['9-Minute Agency - join free', d.clicks['launch-signup-click'] || 0],
+			];
+			cb.innerHTML = clickRows.map(([l, n]) => '<tr><td>' + l + '</td><td>' + n + '</td></tr>').join('');
+			const coastLabels = { malaga: 'Malaga', torremolinos: 'Torremolinos', benalmadena: 'Benalmadena', fuengirola: 'Fuengirola', mijas: 'Mijas', marbella: 'Marbella', 'puerto-banus': 'Puerto Banus', estepona: 'Estepona', sotogrande: 'Sotogrande', interlude: 'The register message', finale: 'Finale + CTA' };
+			const launchLabels = { b0: '00:30 Signup', b1: '01:30 Instant Listing', b2: '02:30 MLS fan-out', b3: '03:30 Portal', b4: '04:30 MicroSite', b5: '05:30 XML feeds', b6: '06:30 CRM lead', b7: '07:30 AI Match', b8: '08:30 Alerts', stopSec: '09:12 Clock stop + CTA', growSec: 'Paid extras strip' };
+			const funnel = (sel, list, labels) => {
+				const tb = document.querySelector(sel + ' tbody');
+				const max = Math.max.apply(null, list.map((x) => x.n).concat([1]));
+				const any = list.some((x) => x.n > 0);
+				tb.innerHTML = any
+					? list.map((x) => '<tr><td>' + (labels[x.k] || x.k) + '</td><td>' + x.n + '</td><td style="width:38%"><span style="display:block;height:8px;border-radius:4px;background:#00ae9a;opacity:.75;width:' + Math.round((x.n / max) * 100) + '%"></span></td></tr>').join('')
+					: '<tr><td colspan="3" class="muted">No scroll data yet - tracking started 20 July.</td></tr>';
+			};
+			funnel('#lpCoast', d.coast, coastLabels);
+			funnel('#lpLaunch', d.launch, launchLabels);
+			const note = document.getElementById('lpNote');
+			const tot = clickRows.reduce((a, x) => a + x[1], 0);
+			note.textContent = tot ? '' : 'No signup clicks recorded yet.';
+			if (d.traffic) {
+				const t = d.traffic;
+				const nf = (x) => new Intl.NumberFormat('en-GB').format(x);
+				const card = (label, val, sub) => '<div style="flex:1 1 150px;background:#fff;border:1px solid rgba(16,24,40,0.09);border-radius:14px;padding:16px 18px;"><div style="font-size:26px;font-weight:900;color:#0a6d61;">' + val + '</div><div style="font-size:12px;font-weight:700;color:rgba(16,24,40,0.7);margin-top:2px;">' + label + '</div>' + (sub ? '<div style="font-size:11px;color:rgba(16,24,40,0.5);margin-top:3px;">' + sub + '</div>' : '') + '</div>';
+				const tc = document.getElementById('trafficCards');
+				if (tc) tc.innerHTML = [
+					card('Real visitors (7d)', nf(t.prospectVisitors), 'excludes likely-bot regions'),
+					card('All visitors', nf(t.visitors), t.botCountryShare + '% from bot-heavy regions'),
+					card('Pageviews', nf(t.pageviews), ''),
+					card('Visits', nf(t.visits), ''),
+				].join('');
+				const ctb = document.querySelector('#trafficCountry tbody');
+				if (ctb) {
+					const max = Math.max.apply(null, (t.countries || []).map((r) => r.n).concat([1]));
+					ctb.innerHTML = (t.countries || []).map((r) => '<tr><td>' + r.c + (r.bot ? ' <span style="font-size:10px;color:#b42318;font-weight:700;">bot?</span>' : '') + '</td><td>' + nf(r.n) + '</td><td style="width:40%"><span style="display:block;height:8px;border-radius:4px;background:' + (r.bot ? '#e4b4b4' : '#00ae9a') + ';opacity:.8;width:' + Math.round((r.n / max) * 100) + '%"></span></td></tr>').join('') || '<tr><td colspan="3" class="muted">No data.</td></tr>';
+				}
+			}
+		} catch {}
+	})();
+
 </script>
 <style is:global>
 	.shell .propWrap { background: radial-gradient(700px 200px at 15% 0%, rgba(234,179,8,0.10), #fff); border: 1px solid rgba(234,179,8,0.35); border-radius: 12px; padding: 14px 16px; margin: 8px 0 14px; }

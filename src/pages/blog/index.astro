@@ -229,7 +229,7 @@ const thumbFor = (p: KbPageListItem) => {
 	if (/\b(agente|agent|mls|crm)\b/.test(text)) return '/blog/hero-agent-meeting.jpg';
 	if (/\b(villa|luxury|luj[oa])\b/.test(text)) return '/blog/hero-villa-spain.jpg';
 	if (/\bcosta del sol\b/.test(text)) return '/blog/hero-costa-del-sol.jpg';
-	if (/\bandaluc[ií]a\b/.test(text)) return '/blog/hero-andalucia.svg';
+	if (/\bandaluc[ií]a\b/.test(text)) return '/blog/hero-andalucia.jpg';
 	return defaultThumb;
 };
 
@@ -482,7 +482,7 @@ const ldJson = JSON.stringify({
 			<strong style="display:block;font-size:17px;letter-spacing:-.01em;margin-bottom:3px">Looking for a home, not a blog post?</strong>
 			<span style="font-size:14px;opacity:.95">See what's available right now on the Costa del Sol - homes for sale &amp; to rent from registered agents.</span>
 		</div>
-		<a href="/property-finder" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap">Find your place →</a>
+		<a href="/property-finder/" style="flex:none;background:#fff;color:#0b7d6d;font-weight:800;text-decoration:none;border-radius:10px;padding:12px 20px;font-size:15px;white-space:nowrap">Find your place →</a>
 	</aside>
 
 	{sorted.length ? (

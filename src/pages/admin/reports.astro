@@ -94,7 +94,7 @@ import Layout from '../../layouts/Layout.astro';
 
 	(async () => {
 		const res = await fetch('/api/admin/reports', { credentials: 'same-origin' });
-		if (res.status === 401 || res.status === 403) { $('status').innerHTML = 'Session expired - <a href="/admin/login">log in</a> and reload.'; return; }
+		if (res.status === 401 || res.status === 403) { $('status').innerHTML = 'Session expired - <a href="/admin/login/">log in</a> and reload.'; return; }
 		if (!res.ok) { $('status').textContent = 'Failed to load (' + res.status + ').'; return; }
 		DATA = await res.json();
 		$('status').hidden = true; $('content').hidden = false; render();

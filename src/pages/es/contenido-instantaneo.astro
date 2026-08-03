@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/contenido-instantaneo/`;
 const title = 'Contenido Instantáneo - Blogs y guías de zona con IA para tu agencia | PropertyList';
 const description =
-	'Ya disponible en el Constructor de Webs de PropertyList: la IA escribe entradas de blog y guías de zona SEO para tu agencia, a partir de tus propios inmuebles y datos de mercado verificados en notaría, en los idiomas de tus compradores.';
+	'Blogs y guías de zona escritos por IA para tu web, basados en tus propios anuncios y datos verificados. Ilimitado y automatizado - 30 créditos/mes.';
 
 const steps = [
 	{ n: 1, t: 'Conecta', d: 'Lee los inmuebles y zonas que ya tienes en tu web del Constructor - sin importar nada.' },
@@ -48,10 +49,10 @@ const softwareLd = {
 	name: 'PropertyList Contenido Instantáneo',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
 	description: 'La IA escribe entradas de blog y guías de zona SEO para agencias inmobiliarias, a partir de sus propios inmuebles y datos de mercado verificados en notaría, publicadas en su web del Constructor.',
-	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	offers: { '@type': 'Offer', price: '30', priceCurrency: 'EUR', description: '30 créditos al mes.' + ' Se paga con créditos de un saldo prepago, comprados por adelantado a 1,00 EUR cada uno y menos en packs grandes, así que la cifra en euros es el máximo.' },
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 ---
 
 <Layout
@@ -273,4 +274,5 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			.grid3 { grid-template-columns: repeat(2, 1fr); }
 		}
 	</style>
+	<AgentInterestCta lang="es" page="/es/contenido-instantaneo/" />
 </Layout>

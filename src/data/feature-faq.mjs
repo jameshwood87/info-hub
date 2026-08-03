@@ -20,7 +20,7 @@ export const featureFaqItems = [
     id: 'custom-domain',
     q: 'Can I use my own domain with the PropertyList website builder?',
     aHtml:
-      'Yes. Connect your own domain (your-agency.com) to your PropertyList website. The custom domain add-on costs €20/month on top of the base plan.',
+      'Yes. Connect your own domain (your-agency.com) to your PropertyList website. The custom domain add-on costs 20 credits/month (about €20) on top of the base plan.',
   },
   {
     id: 'seo-features',
@@ -64,13 +64,13 @@ export const featureFaqItems = [
     id: 'xml-portals',
     q: 'Can I use the XML feed to push listings to other portals like Idealista?',
     aHtml:
-      'Yes. Both feeds push to your own website and to third-party portals simultaneously - Idealista, Fotocasa, or any platform that accepts XML.',
+      'Yes, and pushing to third-party portals is free - Idealista, Fotocasa, or any platform that accepts XML. The feed subscription only applies when you use it to power your own website.',
   },
   {
     id: 'xml-cost',
     q: 'How much does the XML feed cost?',
     aHtml:
-      'The resale and rentals feed costs 35 credits/month or 250 credits/year. The new developments feed costs 25 credits/month or 250 credits/year. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
+      'Pushing your listings to other portals - Idealista, Fotocasa, or any platform that accepts XML - is free. The paid feed is for powering your own website: 35 credits a month (about €35) for the resale and rentals feed, and 25 credits/month for the new developments feed. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────
@@ -104,13 +104,13 @@ export const featureFaqItems = [
     id: 'crm-free',
     q: 'Is the PropertyList CRM really free?',
     aHtml:
-      'The core MLS and CRM are free forever. Four of the seven pipeline boards - Leads, Property Lifecycle, Transactions, and Nurture - are completely free with no limits. Paid upgrades for Buyers, Sellers, and Tenants use the credit system. <a href="https://info.propertylist.es/pricing">See full pricing</a>.',
+      'The core MLS and CRM are free forever. That includes the Lead, Seller and Property pipelines, with no limits. You pay only for demand: 1 credit for each qualified lead you decide to move into the Buyer pipeline, taken from your credit balance. The Tenants pipeline comes with the Rentals Module subscription and the Nurture pipeline with the Automation and Nurture subscription. <a href="https://info.propertylist.es/pricing">See full pricing</a>.',
   },
   {
     id: 'pipeline-boards',
     q: 'What pipeline boards does the PropertyList CRM include?',
     aHtml:
-      'Seven specialised Kanban boards that work together automatically: Leads (new enquiry triage), Buyers (qualified purchasers), Sellers (vendor journey), Tenants (rental pipeline), Property Lifecycle (stock status), Transactions (legal phase), and Nurture (past clients and referral opportunities).',
+      'Six pipelines that work together automatically: Lead (every new lead lands in New Lead), Buyer (qualified purchasers), Seller (vendor journey), Property (stock status, new listings auto-land in Active Listing), Tenants (rental pipeline, part of the Rentals Module subscription) and Nurture (past clients and referrals, part of the Automation and Nurture subscription). The Buyer and Property pipelines also carry the legal phase: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed. Lead and Seller are fixed; Buyer and Property are editable.',
   },
   {
     id: 'pipeline-setup',
@@ -120,12 +120,23 @@ export const featureFaqItems = [
   },
   {
     id: 'pipeline-pricing',
-    q: 'How does the pipeline pricing work - is it really pay-per-conversion?',
+    q: 'How does the pipeline pricing work - what do I actually pay for?',
     aHtml:
-      'Buyers, Sellers, and Tenants boards: first 5 conversions free forever. After that, 1 credit per conversion - only charged when you tag a contact as a real opportunity, never for unqualified leads. No subscription, no lock-in. Leads, Property Lifecycle, Transactions, and Nurture are free without limit.',
+      'You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with the Automation and Nurture subscription at 20 credits/month (about €20), which also covers all automated emails, Hot-lead detection and the Daily Action Queue.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────
+  {
+    id: 'private-listings',
+    q: 'Can I keep a listing private and not share it with other agents?',
+    aHtml:
+      'Yes. On My Listings, select any properties and use Bulk actions &gt; "Do not share with other agents". The property is hidden from other agencies in the MLS, kept off their microsites and removed from all export feeds - but stays live on the public portal, so direct buyers still find it and every lead comes to you. Your first 5 live private listings are free, then 5 credits each, and you can re-enable sharing any time. <a href="https://info.propertylist.es/docs/propertylist-mls-user-manual/managing-listings/private-listings/">Read the guide</a>.',
+  },
+  {
+    id: 'crm-email-integration',
+    q: 'Can I connect my own email (Gmail or Outlook) to the CRM?',
+    aHtml: 'Inbox integration is in build now: you will securely OAuth-connect Gmail/Google Workspace or Outlook/Microsoft 365, get two-way sync, and send from your own address while conversations thread automatically against the right lead. <a href="https://info.propertylist.es/docs/propertylist-mls-user-manual/contacts-crm/connect-your-email/">See the setup guide</a> to get your Google Workspace or Microsoft 365 ready today.',
+  },
   {
     id: 'rentals-module',
     q: 'Does PropertyList have a rentals management module?',
@@ -142,7 +153,7 @@ export const featureFaqItems = [
     id: 'rentals-cost',
     q: 'How much does the Rentals module cost?',
     aHtml:
-      'Free 30-day trial, no credit card required. After the trial: 50 credits per 30-day period, no auto-charge.',
+      'Free 30-day trial, no credit card required. After the trial it is 50 credits per 30-day period, with no charge until you renew.',
   },
   {
     id: 'rentals-deposit-disputes',
@@ -156,7 +167,7 @@ export const featureFaqItems = [
     id: 'credits-work',
     q: 'How do PropertyList credits work?',
     aHtml:
-      '1 credit = €1. Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. <a href="https://info.propertylist.es/pricing">See credit pricing</a>.',
+      '1 credit (~1€). Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. <a href="https://info.propertylist.es/pricing">See credit pricing</a>.',
   },
   {
     id: 'credits-expire',
@@ -167,7 +178,7 @@ export const featureFaqItems = [
     id: 'earn-free-credits',
     q: 'Can I earn free credits on PropertyList?',
     aHtml:
-      'Yes. New verified agencies receive 20 free credits on signup. Agents also earn 20 credits for each agency that signs up via their referral link - and the new signup gets 10 credits.',
+      'Yes. Get your agency verified (free, and any time you like) and receive 20 free credits. Agents also earn 20 credits for each agency that signs up via their referral link - and the new signup gets 10 credits.',
   },
 
   // ─── MCP / Developers ─────────────────────────────────────────────────

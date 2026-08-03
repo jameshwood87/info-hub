@@ -125,7 +125,7 @@ const CARD_DESC_BY_SLUG: Record<string, string> = {
 	'estepona-old-town': 'Estepona Old Town: flowered lanes, tapas squares and charming homes.',
 	estepona: 'Estepona: renovated centre, marina, and promenade with year-round life.',
 	fuengirola: 'Fuengirola: long beachfront, train to Málaga, and an amenity-rich promenade.',
-	'golden-mile': 'Golden Mile: Marbella–Banús prime strip with luxury villas and beach resorts.',
+	'golden-mile': 'Golden Mile: Marbella-Banús prime strip with luxury villas and beach resorts.',
 	guadalmina: 'Guadalmina: established golf area by San Pedro; gated homes and beach access.',
 	'la-cala-de-mijas': 'La Cala de Mijas: walkable beach village, markets, chiringuitos and cafés.',
 	'la-quinta': 'La Quinta: Benahavís golf valley with views and secure communities near Marbella.',
@@ -135,7 +135,7 @@ const CARD_DESC_BY_SLUG: Record<string, string> = {
 	marbella: 'Marbella: beach town glamour, dining, and prime districts from centre to hills.',
 	'mijas-costa': 'Mijas Costa: stretch between Fuengirola and Marbella with varied homes by sea.',
 	nerja: 'Nerja: coves, caves and Balcón de Europa views with relaxed Andalusian charm.',
-	'new-golden-mile': 'New Golden Mile: Marbella–Estepona coast with modern complexes and beaches.',
+	'new-golden-mile': 'New Golden Mile: Marbella-Estepona coast with modern complexes and beaches.',
 	'nueva-andalucia': 'Nueva Andalucía: Golf Valley behind Banús; villas, gated flats and schools.',
 	pedregalejo: 'Pedregalejo (Málaga): relaxed promenade, chiringuitos and low-rise beach living.',
 	'puerto-banus': 'Puerto Banús: marina, nightlife and designer shops; high-end flats and rentals.',
@@ -241,7 +241,7 @@ const priceRangeFor = (p: any) => {
 	const minOk = Number.isFinite(min) && min > 0;
 	const maxOk = Number.isFinite(max) && max > 0;
 	const avgOk = Number.isFinite(avg) && avg > 0;
-	if (minOk && maxOk) return `${formatEurCompact(min)}–${formatEurCompact(max)}`;
+	if (minOk && maxOk) return `${formatEurCompact(min)}-${formatEurCompact(max)}`;
 	if (avgOk) return `Around ${formatEurCompact(avg)}`;
 	return 'Estimate unavailable';
 };

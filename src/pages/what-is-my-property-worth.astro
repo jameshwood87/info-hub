@@ -1,0 +1,268 @@
+---
+import Layout from '../layouts/Layout.astro';
+import fs from 'node:fs/promises';
+
+export const prerender = false;
+
+// Areas come from the same store the property finder uses, so the two stay in step.
+let areas: Array<{ slug: string; name: string }> = [];
+try {
+	const d = JSON.parse(await fs.readFile('/opt/info-hub/var/admin/finder-counts.json', 'utf8'));
+	areas = (d.areas || []).map((a: any) => ({ slug: a.slug, name: a.name })).filter((a: any) => a.slug && a.name);
+} catch {}
+
+const faqs = [
+	{
+		q: 'Is this a valuation?',
+		a: 'No. A formal valuation (tasacion) in Spain can only be produced by a licensed valuation company under Orden ECO/805/2003, usually for a mortgage. This is an indicative market guide built from real transaction data, to help you understand roughly where your property sits before you speak to anyone.',
+	},
+	{
+		q: 'Where do the numbers come from?',
+		a: 'Registered sale prices from the Spanish notarial register, published through our Price Oracle, plus live asking prices from the PropertyList network. Most portals can only show you asking prices, which is what sellers hope for rather than what buyers paid.',
+	},
+	{
+		q: 'Why is the registered price lower than what I see advertised?',
+		a: 'Because asking prices are a starting position. The gap between the two is the single most useful number a seller can know before setting a price, and it is why a property priced off portal listings alone often sits on the market.',
+	},
+	{
+		q: 'Do I have to speak to an estate agent?',
+		a: 'No. The guide is free and automatic, and you get the fuller written breakdown by email whether or not you want anything else. Being contacted by a local registered agent is a separate box you tick only if you want it.',
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title="What is your property worth on the Costa del Sol? | PropertyList"
+	description="See what properties like yours actually sold for, using registered sale prices from the Spanish notarial register - not asking prices. Free indicative guide, no agent call unless you ask."
+	canonical="https://info.propertylist.es/what-is-my-property-worth/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/what-is-my-property-worth/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/cuanto-vale-mi-propiedad/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/what-is-my-property-worth/' },
+	]}
+>
+	<section class="wHero">
+		<h1 class="wH1">What is your property actually worth?</h1>
+		<p class="wLead">
+			Most price checks show you what neighbours are <em>asking</em>. This one starts with what buyers actually
+			<strong>paid</strong> - registered sale prices from the Spanish notarial register. Two questions, no account,
+			no agent call unless you ask for one.
+		</p>
+	</section>
+
+	<section class="wCard" aria-labelledby="wFormTitle">
+		<h2 class="wCardTitle" id="wFormTitle">Tell us about the property</h2>
+		<form class="wForm" data-w-form>
+			<label class="wField">
+				<span class="wLabel">Area</span>
+				<select class="wInput" name="area" required>
+					<option value="">Choose an area</option>
+					{areas.map((a) => <option value={a.name}>{a.name}</option>)}
+				</select>
+			</label>
+			<label class="wField">
+				<span class="wLabel">Built size (m²)</span>
+				<input class="wInput" name="builtSqm" type="number" min="20" max="2000" required placeholder="e.g. 120" />
+			</label>
+			<label class="wField">
+				<span class="wLabel">Type</span>
+				<select class="wInput" name="propertyType">
+					<option value="">Any</option>
+					<option>Apartment</option>
+					<option>Townhouse</option>
+					<option>Villa</option>
+					<option>Plot</option>
+				</select>
+			</label>
+			<label class="wField">
+				<span class="wLabel">Bedrooms</span>
+				<select class="wInput" name="bedrooms">
+					<option value="">Any</option>
+					<option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+				</select>
+			</label>
+			<div class="wSubmitRow">
+				<button class="wBtn" type="submit">Show me the numbers</button>
+			</div>
+		</form>
+	</section>
+
+	<section class="wResult" data-w-result hidden aria-live="polite"></section>
+
+	<section class="wFaq">
+		<h2 class="wFaqTitle">Straight answers</h2>
+		{faqs.map((f) => (
+			<details class="wFaqItem">
+				<summary class="wFaqQ">{f.q}</summary>
+				<p class="wFaqA">{f.a}</p>
+			</details>
+		))}
+		<p class="wLegal">
+			This is a market guide, not a formal valuation or <em>tasacion</em>, and it is not legal, tax or financial
+			advice. Figures are estimates from available market data and are not guaranteed. Seek independent professional
+			advice before making a decision.
+		</p>
+	</section>
+</Layout>
+
+<script is:inline>
+	(function () {
+		var form = document.querySelector('[data-w-form]');
+		var out = document.querySelector('[data-w-result]');
+		if (!form || !out) return;
+		var started = Date.now();
+		var last = null;
+
+		var eur = function (n) {
+			try { return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n); }
+			catch (e) { return '€' + n; }
+		};
+		var esc = function (v) { return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+
+		form.addEventListener('submit', async function (e) {
+			e.preventDefault();
+			var fd = new FormData(form);
+			var area = String(fd.get('area') || '');
+			var builtSqm = Number(fd.get('builtSqm') || 0);
+			if (!area || !builtSqm) return;
+
+			out.hidden = false;
+			out.innerHTML = '<p class="wMuted">Checking the register…</p>';
+
+			var d = {};
+			try {
+				var res = await fetch('/api/seller-estimate', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ area: area, builtSqm: builtSqm }),
+				});
+				d = await res.json();
+			} catch (_) {
+				out.innerHTML = '<p class="wMuted">Could not reach the data right now. Please try again.</p>';
+				return;
+			}
+
+			if (!d.ok || !d.enough) {
+				out.innerHTML =
+					'<div class="wBox"><h2 class="wCardTitle">Not enough registered sales in ' + esc(area) + ' yet</h2>' +
+					'<p class="wMuted">We would rather tell you that than invent a number. A local agent can still put a proper report together from comparable evidence nearby.</p>' +
+					'<p><a class="wLink" href="/property-intelligence-report/">See how the full report works →</a></p></div>';
+				return;
+			}
+
+			last = d;
+			var basisLine = d.basis === 'registered'
+				? 'Based on <strong>' + eur(d.perSqm) + '/m² registered</strong> in ' + esc(d.area) +
+				  (d.oracle && d.oracle.sampleSize ? ' across ' + Number(d.oracle.sampleSize).toLocaleString('en-GB') + ' notarised sales' : '') + '.'
+				: 'Based on <strong>' + eur(d.perSqm) + '/m² asking</strong> in ' + esc(d.area) +
+				  '. No notary-verified figure is published for this area yet, so treat this as a weaker signal.';
+
+			out.innerHTML =
+				'<div class="wBox">' +
+				'<div class="wRangeLabel">Indicative guide for ' + esc(d.builtSqm) + ' m² in ' + esc(d.area) + '</div>' +
+				'<div class="wRange">' + eur(d.low) + ' - ' + eur(d.high) + '</div>' +
+				'<p class="wBasis">' + basisLine + '</p>' +
+				(d.basis === 'registered'
+					? '<p class="wMuted">This is what buyers actually paid. Asking prices in the same area sit higher, which is the gap most sellers get caught by.</p>'
+					: '') +
+				'<form class="wEmail" data-w-email>' +
+				'<p class="wEmailPitch"><strong>Want the fuller written breakdown?</strong> We will email you the area detail behind this number - registered prices, how they have moved, and what it means for pricing.</p>' +
+				'<div class="wEmailRow">' +
+				'<input class="wInput" name="name" type="text" placeholder="Your name (optional)" autocomplete="name" />' +
+				'<input class="wInput" name="email" type="email" required placeholder="your@email.com" autocomplete="email" />' +
+				'</div>' +
+				'<input type="text" name="company_fax" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />' +
+				'<label class="wOptIn"><input type="checkbox" name="agentOptIn" /> <span>I would also like a local registered agent to contact me about selling. Optional - untick and you will still get the breakdown.</span></label>' +
+				'<button class="wBtn" type="submit">Email me the breakdown</button>' +
+				'<p class="wMsg" data-w-msg role="status" aria-live="polite"></p>' +
+				'</form>' +
+				'</div>';
+
+			var ef = out.querySelector('[data-w-email]');
+			var msg = out.querySelector('[data-w-msg]');
+			ef.addEventListener('submit', async function (ev) {
+				ev.preventDefault();
+				var f2 = new FormData(ef);
+				var email = String(f2.get('email') || '').trim();
+				if (!email || email.indexOf('@') < 0) { msg.textContent = 'Please enter a valid email address.'; msg.className = 'wMsg bad'; return; }
+				var btn = ef.querySelector('button');
+				btn.disabled = true;
+				msg.textContent = '';
+				try {
+					var r2 = await fetch('/api/seller-lead', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({
+							email: email,
+							name: String(f2.get('name') || ''),
+							company_fax: String(f2.get('company_fax') || ''),
+							t: Date.now() - started,
+							area: area,
+							propertyType: String(fd.get('propertyType') || ''),
+							bedrooms: String(fd.get('bedrooms') || ''),
+							builtSqm: String(builtSqm),
+							estimateLow: String(last.low),
+							estimateHigh: String(last.high),
+							basis: String(last.basis || ''),
+							agentOptIn: !!f2.get('agentOptIn'),
+							lang: 'en',
+							page: location.pathname,
+						}),
+					});
+					var j2 = await r2.json().catch(function () { return {}; });
+					if (!r2.ok || !j2.ok) { msg.textContent = 'Something went wrong. Please try again.'; msg.className = 'wMsg bad'; btn.disabled = false; return; }
+					ef.innerHTML = '<p class="wMsg ok"><strong>Done.</strong> The breakdown is on its way to ' + esc(email) + '.</p>';
+					if (window.umami && window.umami.track) window.umami.track('seller-lead', { area: area, agent: !!f2.get('agentOptIn') });
+				} catch (_) {
+					msg.textContent = 'Network error. Please try again.';
+					msg.className = 'wMsg bad';
+					btn.disabled = false;
+				}
+			});
+
+			if (window.umami && window.umami.track) window.umami.track('seller-estimate', { area: area, basis: d.basis });
+			out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+	})();
+</script>
+
+<style is:global>
+	.wHero { max-width: 760px; margin: 0 auto; padding: 44px 20px 8px; text-align: center; }
+	.wH1 { margin: 0 0 12px; font-size: clamp(28px, 5vw, 42px); line-height: 1.12; font-weight: 900; color: #101828; }
+	.wLead { margin: 0; font-size: 17px; line-height: 1.6; color: rgba(16, 24, 40, 0.72); }
+	.wCard, .wResult, .wFaq { max-width: 760px; margin: 22px auto 0; padding: 0 20px; }
+	.wCardTitle { margin: 0 0 14px; font-size: 20px; font-weight: 800; color: #101828; }
+	.wForm { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 22px; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 16px; background: #fff; }
+	.wField { display: flex; flex-direction: column; gap: 6px; }
+	.wLabel { font-size: 13px; font-weight: 700; color: rgba(16, 24, 40, 0.7); }
+	.wInput { padding: 11px 13px; font-size: 15px; border: 1px solid rgba(16, 24, 40, 0.2); border-radius: 10px; background: #fff; width: 100%; }
+	.wInput:focus { outline: 2px solid rgba(0, 174, 154, 0.5); outline-offset: 1px; }
+	.wSubmitRow { grid-column: 1 / -1; }
+	.wBtn { width: 100%; padding: 13px 20px; font-size: 16px; font-weight: 800; color: #fff; background: #00ae9a; border: 0; border-radius: 10px; cursor: pointer; }
+	.wBtn:hover { background: #0a9285; }
+	.wBtn:disabled { opacity: 0.6; cursor: default; }
+	.wBox { padding: 24px; border: 1px solid rgba(0, 174, 154, 0.3); border-radius: 16px; background: linear-gradient(180deg, rgba(0, 174, 154, 0.07), rgba(0, 174, 154, 0.02)); }
+	.wRangeLabel { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(16, 24, 40, 0.55); }
+	.wRange { margin: 6px 0 10px; font-size: clamp(26px, 5vw, 36px); font-weight: 900; color: #0a6d61; }
+	.wBasis { margin: 0 0 8px; font-size: 15px; color: #101828; }
+	.wMuted { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.66); }
+	.wLink { font-weight: 800; color: #0a6d61; text-decoration: none; }
+	.wEmail { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(16, 24, 40, 0.12); }
+	.wEmailPitch { margin: 0 0 12px; font-size: 14.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.78); }
+	.wEmailRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+	.wOptIn { display: flex; gap: 9px; align-items: flex-start; margin: 0 0 14px; font-size: 13.5px; line-height: 1.5; color: rgba(16, 24, 40, 0.7); }
+	.wOptIn input { margin-top: 3px; flex: 0 0 auto; }
+	.wMsg { margin: 10px 0 0; font-size: 14px; min-height: 1em; }
+	.wMsg.ok { color: #0a6d61; }
+	.wMsg.bad { color: #b42318; }
+	.wFaq { margin-top: 34px; padding-bottom: 48px; }
+	.wFaqTitle { margin: 0 0 12px; font-size: 20px; font-weight: 800; color: #101828; }
+	.wFaqItem { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 12px 0; }
+	.wFaqQ { font-weight: 700; font-size: 15.5px; color: #101828; cursor: pointer; }
+	.wFaqA { margin: 8px 0 0; font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); }
+	.wLegal { margin: 18px 0 0; font-size: 12.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.5); }
+	@media (max-width: 560px) {
+		.wForm, .wEmailRow { grid-template-columns: 1fr; }
+	}
+</style>

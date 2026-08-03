@@ -1,4 +1,9 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
 import Layout from '../../layouts/Layout.astro';
 import { featureFaqItemsEs, featureFaqLdEs } from '../../data/es-feature-faq.mjs';
 
@@ -6,7 +11,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/funciones/`;
 const title = 'Funciones de PropertyList | Precios, Constructor Web, XML, CRM y Más';
 const description =
-	'Todo lo que incluye PropertyList y lo que cuesta: MLS y CRM gratis, más de 6.500 propiedades compartidas, constructor de webs, feeds XML, Market Intelligence, API MCP y Oracle.';
+	`Todo lo que incluye PropertyList y lo que cuesta: MLS y CRM gratis, ${plListings} propiedades compartidas, constructor de webs, feeds XML, Market Intelligence, API MCP y Oracle.`;
 
 const breadcrumbLd = {
 	'@context': 'https://schema.org',
@@ -42,11 +47,11 @@ const featureCards = [
 	{ icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>', title: 'Renovación Instantánea', badge: 'Muy pronto', desc: 'Muy pronto: en cualquier anuncio de segunda mano, genera visuales de antes y después con IA y un desglose de costes por zona - materiales y mano de obra - en PDF.', href: '/es/renovacion-instantanea/', cta: 'Cómo funciona' },
 	{ icon: ic.web, title: 'Constructor de Webs', desc: 'Tu propia web de agencia con tu marca, online en minutos. Cada anuncio del MLS se carga solo, un asistente de IA crea tus páginas y las consultas entran directas en tu CRM.', href: '/es/constructor-de-webs/', cta: 'Ver cómo funciona' },
 	{ icon: ic.crm, title: 'MLS y CRM Inteligente', desc: 'Gratis para siempre. Siete tableros Kanban desde el primer lead hasta el cierre, configurados y rellenados desde el primer día. Solo pagas un crédito cuando conviertes de verdad.', href: '/es/docs/propertylist-mls-manual-de-usuario/', cta: 'Explorar el CRM' },
-	{ icon: ic.share, title: '6.500+ Propiedades Compartidas', desc: 'Gratis para agentes inmobiliarios. Accede a un pool compartido de más de 6.500 anuncios en toda la red - vende propiedades de otros miembros, colabora en operaciones y reparte la comisión, sin coste adicional.', href: 'https://propertylist.es', cta: 'Ver la red' },
+	{ icon: ic.share, title: `${plListings} Propiedades Compartidas`, desc: `Gratis para agentes inmobiliarios. Accede a un pool compartido de ${plListings} anuncios en toda la red - vende propiedades de otros miembros, colabora en operaciones y reparte la comisión, sin coste adicional.`, href: 'https://propertylist.es', cta: 'Ver la red' },
 	{ icon: ic.key, title: 'Módulo de Alquileres', desc: 'Gestiona el alquiler de principio a fin: inquilinos, contratos, correos de renovación automáticos, flujos de mantenimiento y un registro de auditoría a prueba de disputas de fianzas.', href: '#topic-rentals', cta: 'Saber más' },
 	{ icon: ic.chart, title: 'Market Intelligence', desc: 'Datos de mercado reales, basados en transacciones, de la Costa del Sol. Resúmenes de ciudad gratis, informes forenses en PDF y paneles en directo para inversores serios.', href: 'https://intelligence.propertylist.es', cta: 'Ver los datos' },
 	{ icon: ic.feed, title: 'Feeds XML', desc: '¿Ya tienes web? Envía cada anuncio a tu web y a portales como Idealista y Fotocasa a la vez, sincronizado en directo.', href: '#topic-xml', cta: 'Ver feeds' },
-	{ icon: ic.euro, title: 'Créditos Sencillos', desc: 'Paga solo por lo que usas. 1 crédito = 1 € y nunca caducan. Las agencias nuevas reciben 20 gratis, y ganas más cada vez que recomiendas.', href: '/es/precios/', cta: 'Ver precios' },
+	{ icon: ic.euro, title: 'Créditos Sencillos', desc: 'Paga solo por lo que usas. 1 crédito (~1€) y nunca caducan. Completa la verificación gratuita y recibe 20, y ganas más cada vez que recomiendas.', href: '/es/precios/', cta: 'Ver precios' },
 	{ icon: ic.code, title: 'MCP y Desarrolladores', desc: 'Una capa de API en directo - el mismo Model Context Protocol que impulsa Claude, Cursor y Perplexity - sobre tus datos MLS en vivo.', href: 'https://mcp.propertylist.es', cta: 'Para desarrolladores' },
 	{ icon: ic.shield, title: 'Oracle', desc: 'Un suministro de precios €/m² firmado, de calidad notarial y ya disponible, creado para plataformas de tokenización, prestamistas on-chain y protocolos RWA.', href: 'https://oracle.propertylist.es', cta: 'Explorar Oracle' },
 ];
@@ -55,7 +60,7 @@ const topics = [
 	{ key: 'website-builder', label: 'Constructor de Webs', ids: ['website-builder-exists', 'auto-property-upload', 'custom-domain', 'seo-features', 'leads-to-crm', 'cancel-website-builder'] },
 	{ key: 'xml', label: 'Feeds XML', ids: ['xml-own-website', 'xml-property-types', 'xml-new-developments', 'xml-portals', 'xml-cost'] },
 	{ key: 'market', label: 'Market Intelligence', ids: ['market-reports', 'market-reports-free', 'forensic-reports', 'live-dashboard'] },
-	{ key: 'crm', label: 'CRM y Pipelines', ids: ['crm-free', 'pipeline-boards', 'pipeline-setup', 'pipeline-pricing'] },
+	{ key: 'crm', label: 'CRM y Pipelines', ids: ['crm-free', 'pipeline-boards', 'pipeline-setup', 'pipeline-pricing', 'private-listings', 'crm-email-integration'] },
 	{ key: 'rentals', label: 'Módulo de Alquileres', ids: ['rentals-module', 'rentals-includes', 'rentals-cost', 'rentals-deposit-disputes'] },
 	{ key: 'credits', label: 'Créditos y Precios', ids: ['credits-work', 'credits-expire', 'earn-free-credits'] },
 	{ key: 'mcp', label: 'MCP y Desarrolladores', ids: ['api-developers', 'ai-tools', 'mcp-free'] },
@@ -92,7 +97,7 @@ const byId = Object.fromEntries(featureFaqItemsEs.map((i) => [i.id, i]));
 	<section class="trust" aria-label="Por qué PropertyList">
 		<div class="trustGrid">
 			<div class="trustCell"><span class="trustNum">Gratis</span><span class="trustLabel">MLS + CRM, para siempre</span></div>
-			<div class="trustCell"><span class="trustNum">6.500+</span><span class="trustLabel">Propiedades compartidas</span></div>
+			<div class="trustCell"><span class="trustNum">{plListings}</span><span class="trustLabel">Propiedades compartidas</span></div>
 			<div class="trustCell"><span class="trustNum">1 = 1 €</span><span class="trustLabel">Los créditos nunca caducan</span></div>
 			<div class="trustCell"><span class="trustNum">Minutos</span><span class="trustLabel">Para lanzar tu web</span></div>
 		</div>
@@ -153,7 +158,7 @@ const byId = Object.fromEntries(featureFaqItemsEs.map((i) => [i.id, i]));
 	<section class="ctaBanner">
 		<div class="ctaBannerInner">
 			<h2>¿Listo para empezar?</h2>
-			<p>El MLS y el CRM son gratis. Las funciones de pago opcionales usan un sencillo sistema de créditos - 1 crédito = 1 €, comprado en volumen, sin caducidad.</p>
+			<p>El MLS y el CRM son gratis. Las funciones de pago opcionales usan un sencillo sistema de créditos: 1 crédito (~1€), comprado en volumen, sin caducidad.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://propertylist.es" target="_blank" rel="noopener">Abrir una cuenta gratis</a>
 				<a class="btnSecondary" href="/es/precios/">Ver precios</a>

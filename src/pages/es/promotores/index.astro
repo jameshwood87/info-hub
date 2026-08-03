@@ -1,4 +1,9 @@
 ---
+import { getPortalStats, statPlus } from '../../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
 import Layout from '../../../layouts/Layout.astro';
 
 const title = 'Promotores Inmobiliarios | PropertyList Info Hub';
@@ -6,8 +11,8 @@ const description =
 	'Distribuye tus nuevas promociones a través de agentes inmobiliarios registrados. Recibe visitas confirmadas y un traspaso directo a tu equipo de ventas.';
 
 const stats: Array<{ value: string; label: string }> = [
-	{ value: '2.000+', label: 'Agentes inmobiliarios registrados' },
-	{ value: '5.777', label: 'Anuncios inmobiliarios' },
+	{ value: `${plAgents}`, label: 'Agentes inmobiliarios registrados' },
+	{ value: `${plListings}`, label: 'Anuncios inmobiliarios' },
 ];
 ---
 
@@ -25,7 +30,7 @@ const stats: Array<{ value: string; label: string }> = [
 	<section class="hero">
 		<div class="heroInner">
 			<div class="badge">Para promotores inmobiliarios</div>
-			<h1>Llega a más de 2.000 agentes y a compradores directos. Lo mejor de ambos mundos.</h1>
+			<h1>Llega a {plAgents} agentes y a compradores directos. Lo mejor de ambos mundos.</h1>
 			<p class="lead">
 				Mientras nuestra red de agentes comercializa tus propiedades entre sus compradores, nuestro sistema automatizado reserva sin fricción las
 				visitas de tu portal público. Entregamos el comprador directamente a tu equipo de ventas interno, dándote el 100% del control para gestionar la relación y cerrar la operación.
@@ -33,6 +38,7 @@ const stats: Array<{ value: string; label: string }> = [
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://developers.propertylist.es/login">Únete como promotor</a>
 				<a class="btnSecondary" href="#get-updates">Recibir novedades</a>
+				<a class="btnSecondary" href="/es/docs/developers/">Ver la documentación</a>
 			</div>
 			<div class="trustRow" aria-label="Estadísticas de la plataforma">
 				{stats.map((s) => (
@@ -115,7 +121,7 @@ const stats: Array<{ value: string; label: string }> = [
 			<div class="panel channel">
 				<h3>La Red de Agencias</h3>
 				<p class="muted">
-					Nuestra red de más de 2.000 agentes inmobiliarios obtiene acceso gratis inmediato a tus promociones. Actúan como un canal de distribución
+					Nuestra red de {plAgents} agentes inmobiliarios obtiene acceso gratis inmediato a tus promociones. Actúan como un canal de distribución
 					externo - compartiendo tus promociones con sus listas de compradores y trayéndote clientes cualificados a las visitas.
 				</p>
 			</div>
@@ -201,7 +207,7 @@ const stats: Array<{ value: string; label: string }> = [
 					</details>
 					<details class="faqItem">
 						<summary class="faqQ">¿Dónde puedo saber más?</summary>
-						<div class="faqA">Lee la documentación y las guías en <a href="/es/docs/?role=developer">/es/docs/?role=developer</a>.</div>
+						<div class="faqA">Lee la documentación y las guías en <a href="/es/docs/developers/">/es/docs/developers/</a>.</div>
 					</details>
 				</div>
 			</div>
@@ -214,7 +220,7 @@ const stats: Array<{ value: string; label: string }> = [
 			<p class="finalSub">Únete como promotor y empieza a distribuir tus unidades a través de la red de agentes.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://developers.propertylist.es/login">Únete como promotor</a>
-				<a class="btnSecondary" href="/es/docs/?role=developer">Ver documentación para promotores</a>
+				<a class="btnSecondary" href="/es/docs/developers/">Ver documentación para promotores</a>
 			</div>
 		</div>
 	</section>
@@ -260,7 +266,7 @@ const stats: Array<{ value: string; label: string }> = [
 					const res = await fetch('/api/subscribe', {
 						method: 'POST',
 						headers: { 'content-type': 'application/json' },
-						body: JSON.stringify({ email, lang: 'es', page: '/es/promotores/', utm }),
+						body: JSON.stringify({ audience: 'agent', tag: 'developer-interested', email, lang: 'es', page: '/es/promotores/', utm }),
 					});
 					const data = await res.json().catch(() => ({}));
 					if (!res.ok || !data?.ok) {

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { notifySubmission } from '../../lib/notify';
 import fs from 'node:fs/promises';
 
 // "Add your place" + "Add your event feed" intake for the What's-On pages.
@@ -61,6 +62,10 @@ export const POST: APIRoute = async ({ request }) => {
 			if (web && !URL_RE.test(web)) return json({ ok: false, error: 'invalid_url' }, 400);
 			const res = await appendTo(PLACES_QUEUE, { ...base, name, cat, town, area: area || null, web: web || null, desc },
 				(r) => `${String(r?.name || '').toLowerCase()}|${r?.town || ''}`);
+			await notifySubmission({
+				kind: 'place suggestion',
+				fields: [['Name', name], ['Category', cat], ['Town', town], ['Website', web], ['Description', desc]],
+			});
 			return json({ ok: true, duplicate: res === 'duplicate' });
 		}
 		if (kind === 'feed') {
@@ -71,6 +76,10 @@ export const POST: APIRoute = async ({ request }) => {
 			if (!URL_RE.test(url)) return json({ ok: false, error: 'invalid_url' }, 400);
 			const res = await appendTo(FEEDS_STORE, { ...base, organizer, url, town },
 				(r) => String(r?.url || '').toLowerCase().replace(/\/+$/, ''));
+			await notifySubmission({
+				kind: 'event feed suggestion',
+				fields: [['Organizer', organizer], ['Feed URL', url], ['Town', town]],
+			});
 			return json({ ok: true, duplicate: res === 'duplicate' });
 		}
 		return json({ ok: false, error: 'invalid_kind' }, 400);

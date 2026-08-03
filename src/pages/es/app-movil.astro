@@ -1,11 +1,16 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
 import Layout from '../../layouts/Layout.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/app-movil/`;
 const title = 'App móvil de PropertyList para agentes inmobiliarios (iOS y Android) | PropertyList';
 const description =
-	'El MLS y CRM de PropertyList, diseñado para tu móvil. Busca propiedades, gestiona tu pipeline y responde a los leads en cuanto llegan. Descarga la app de Android gratis en Google Play; iOS en revisión final.';
+	'El MLS y CRM de PropertyList en tu móvil: capta anuncios in situ, gestiona tu pipeline y responde a los leads al instante. Gratis en Google Play.';
 
 const features = [
 	{ name: 'Magic Match', desc: 'Describe a tu cliente con tus palabras y la IA encuentra los anuncios que encajan - sin filtrar a mano.' },
@@ -84,7 +89,7 @@ const faqLd = {
 	</section>
 
 	<section class="trustbar" aria-label="Por qué PropertyList">
-		<div><b>6.000+</b><span>anuncios activos en el MLS</span></div>
+		<div><b>{plListings}</b><span>anuncios activos en el MLS</span></div>
 		<div><b>35+</b><span>zonas cubiertas</span></div>
 		<div><b>Verificado</b><span>precios ante notario</span></div>
 		<div><b>Gratis</b><span>para empezar</span></div>

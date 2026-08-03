@@ -1,51 +1,120 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/pipelines/`;
 const title = 'Pipelines de CRM para Inmobiliarias | PropertyList';
 const description =
-	'Siete tableros de pipeline de CRM especializados que hacen avanzar cada operación - Leads, Buyers, Sellers, Tenants, Property Lifecycle, Transactions y Nurture. Cuatro gratis para siempre, pago por conversión en el resto.';
+	'Seis pipelines de CRM que hacen avanzar solos cada lead, cada anuncio y cada cliente antiguo. Tus anuncios y tus vendedores son gratis. Tú eliges cuál de ellos merece un crédito.';
 
-const boards = [
-	{ name: 'Leads', tag: 'Free', desc: 'Clasificación de nuevas consultas. Cada lead entrante llega aquí para una cualificación rápida antes de ir a cualquier otro sitio.' },
-	{ name: 'Buyers', tag: 'Credit', desc: 'Compradores cualificados, seguidos desde la primera visita hasta la oferta y la venta cerrada.' },
-	{ name: 'Sellers', tag: 'Credit', desc: 'El recorrido completo del vendedor, desde la valoración al mandato firmado y la firma final.' },
-	{ name: 'Tenants', tag: 'Credit', desc: 'El pipeline de alquiler - candidatos avanzando hasta un contrato firmado.' },
-	{ name: 'Property Lifecycle', tag: 'Free', desc: 'Estado del stock en directo para cada anuncio que gestionas, de un vistazo.' },
-	{ name: 'Transactions', tag: 'Free', desc: 'La fase legal de cada operación, seguida limpiamente hasta la firma.' },
-	{ name: 'Nurture', tag: 'Free', desc: 'Clientes pasados y oportunidades de referidos, mantenidos activos automáticamente.' },
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+
+const leaks = [
+	{
+		h: 'La consulta que esperó una hora',
+		p: 'Entra mientras estás en una visita. Cuando respondes, ya han hablado con tres agencias más. El primero que dice algo útil suele quedarse con el cliente.',
+	},
+	{
+		h: 'El seguimiento que hiciste de memoria',
+		p: 'El primer día llamas. El tercero piensas hacerlo. El séptimo ya se fue. Nadie decide abandonar un lead. Pasa en los huecos entre visitas.',
+	},
+	{
+		h: 'El cliente que ya cerraste',
+		p: 'Te compró hace cuatro años. Cuando venda, llamará a quien siguió en contacto. Muchas veces no es el agente que le vendió la casa.',
+	},
+];
+
+const pipelines = [
+	{
+		name: 'Leads',
+		tag: 'Gratis',
+		desc: 'Cada consulta entra aquí y recibe respuesta antes de que cojas el teléfono. Las etapas son fijas, así que nada se desvía.',
+	},
+	{
+		name: 'Buyers',
+		tag: '1 crédito por lead',
+		desc: 'Financiación confirmada, visitas, oferta, negociación, arras, notaría y escritura firmada. Todo hasta cualificarlo es gratis. El crédito solo se gasta si decides que ese contacto merece entrar. Si dices que no, no pasa nada: se queda en tus contactos, simplemente no entra en el pipeline de pago.',
+	},
+	{
+		name: 'Sellers',
+		tag: 'Gratis',
+		desc: 'Valoración agendada, valoración hecha, contrato firmado, fotos y anuncio publicado. Gratis a propósito: los anuncios son lo que más queremos.',
+	},
+	{
+		name: 'Property',
+		tag: 'Gratis',
+		desc: 'Tu stock, de fuera de mercado hasta completado, con los días en mercado en cada tarjeta y recuperación en un clic si una venta se cae.',
+	},
+	{
+		name: 'Tenants',
+		tag: 'Módulo de Alquileres',
+		desc: 'El camino hasta el contrato firmado, y después una tenancy que se renueva sola, revisa su renta y mantiene la fianza en regla.',
+	},
+	{
+		name: 'Nurture',
+		tag: 'Automatización',
+		desc: 'Todos los que ya cerraste, en contacto, y devueltos a ti en cuanto muestran interés por volver a moverse.',
+	},
+];
+
+const automatic = [
+	'Entra un lead y recibe acuse al momento por email y WhatsApp, mientras a ti te llega una notificación.',
+	'Se escribe por ti un plan de seguimiento en forma de tareas: día 0, día 1, día 3 y día 7, entre llamadas, WhatsApp y email.',
+	'Cualificas el lead y se mueve solo al pipeline correcto, con la alerta de propiedad del cliente ya configurada con lo que te contó.',
+	'Un anuncio se queda quieto y el tablero crea una tarea de revisión de precio en el intervalo que tú marques.',
+	'Una tenancy se acerca a su fin, pasa a Renewal Pending y hace al inquilino y al propietario la pregunta correcta en el momento correcto.',
+	'Una renta de larga duración le toca actualización anual, así que se calcula la renta permitida y se redacta la notificación al inquilino.',
+];
+
+const queue = [
+	{ h: 'Primero los contactos calientes', p: 'Alguien que acaba de pinchar un enlace de valoración o ha abierto el mismo email tres veces esta semana, con el motivo en la tarjeta.' },
+	{ h: 'Leads nuevos todavía a tiempo', p: 'Aquellos en los que responder en los próximos minutos aún decide quién se queda al cliente.' },
+	{ h: 'Operaciones que se enfrían', p: 'Un comprador que lleva diez días en Viewings Booked y necesita un empujón hoy.' },
+	{ h: 'Las personales', p: 'Es el cumpleaños de un cliente antiguo. El email ya salió. Veinte segundos de WhatsApp valen más.' },
+];
+
+const prices = [
+	{ what: 'Pipelines de Leads, Sellers y Property', cost: 'Gratis, sin límite' },
+	{ what: 'Lead de comprador', cost: '1 crédito, y solo si lo metes' },
+	{ what: 'Módulo de Alquileres: Tenants, Tenancies y Maintenance', cost: '50 créditos / 30 días, prueba gratis de 30 días' },
+	{ what: 'Automation y Nurture, con la Daily Action Queue incluida', cost: '20 créditos al mes' },
+	{ what: 'Una consulta que resulta ser de otro agente', cost: 'Nunca se cobra' },
+];
+
+const faqs = [
+	{
+		q: '¿Qué cuesta realmente?',
+		a: 'Los pipelines de Leads, Sellers y Property son gratis y sin límite. Un lead de comprador cuesta 1 crédito, que solo se gasta si decides meter el contacto en el pipeline, nunca por una consulta y nunca por cualificarla. Dos suscripciones cubren lo que funciona solo: el Módulo de Alquileres por 50 créditos por período de 30 días, gratis los primeros 30 días, y Automation y Nurture por 20 créditos al mes. Todo sale del mismo saldo de créditos que ya usas para destacar anuncios o sacar informes.',
+	},
+	{
+		q: '¿Tengo que configurar algo de esto?',
+		a: 'No. Los seis pipelines se configuran por ti, y tus contactos y propiedades actuales se colocan en el correcto desde el primer día. Los leads nuevos entran en New Lead y los anuncios nuevos en Active Listing. Puedes editar las etapas de Buyers y Property. Leads y Sellers son fijos para que los datos sigan siendo comparables entre agencias.',
+	},
+	{
+		q: '¿Va a escribir a mis clientes sin que yo lo sepa?',
+		a: 'Enviará, y siempre podrás ver exactamente qué. Cada contacto tiene un historial con lo que ha salido y lo que está programado, y puedes verlo, editarlo o saltártelo. El consentimiento de marketing se registra por contacto, se respetan las bajas, y ningún contacto recibe más de un email por semana, esté en las secuencias que esté. También puedes desactivar Nurture para una sola persona, o para un tipo de email, si sabes algo que el sistema no sabe.',
+	},
+	{
+		q: '¿Qué pasa cuando otro agente pregunta por mi anuncio?',
+		a: 'Se detecta solo, se etiqueta en rojo y nunca te cuesta un crédito. Además queda fuera de todos los emails automáticos, así que no le mandamos una valoración de vivienda a un agente colaborador. La etiqueta es un aviso, no un borrado, y se quita en un clic si nos equivocamos.',
+	},
+	{
+		q: '¿Y si no contrato la suscripción de Automatización?',
+		a: 'El tablero de Nurture se llena igual. Cada operación cerrada sigue colocando al contacto en él y los datos se siguen recogiendo, pero no se envía nada, y un contador te dice lo que ese mes habría salido. Si te suscribes más adelante, la máquina arranca con todo lo que lleva recogido y no desde cero.',
+	},
 ];
 
 const faqLd = {
 	'@context': 'https://schema.org',
 	'@type': 'FAQPage',
-	mainEntity: [
-		{
-			'@type': 'Question',
-			name: '¿Qué tableros de pipeline incluye el CRM de PropertyList?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Siete tableros Kanban especializados que funcionan juntos automáticamente: Leads, Buyers, Sellers, Tenants, Property Lifecycle, Transactions y Nurture.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: '¿Cómo funciona el precio de los pipelines?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Los tableros Buyers, Sellers y Tenants te dan tus primeras 5 conversiones gratis para siempre, después 1 crédito por conversión - solo se cobra cuando etiquetas a un contacto como una oportunidad real. Leads, Property Lifecycle, Transactions y Nurture son gratis sin límite.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: '¿Tengo que configurar los tableros de pipeline manualmente?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'No. Todos los tableros se configuran automáticamente y cada contacto y propiedad existente se distribuye en el tablero correcto desde el primer día.',
-			},
-		},
-	],
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
 };
 ---
 
@@ -64,37 +133,51 @@ const faqLd = {
 
 	<section class="hero">
 		<div class="heroInner">
-			<div class="kicker">Pipelines de CRM</div>
-			<h1>Siete tableros que hacen avanzar cada operación.</h1>
+			<div class="kicker">El CRM de PropertyList</div>
+			<h1>Casi ninguna operación se pierde contra otra agencia. Se pierde porque nadie hizo el seguimiento.</h1>
 			<p class="lead">
-				PropertyList da a cada agencia un sistema completo de pipelines de CRM - siete tableros Kanban especializados que funcionan juntos
-				automáticamente, desde la primera consulta hasta el cierre y más allá. Cuatro son gratis para siempre. Solo pagas cuando un lead se convierte en una oportunidad real.
+				Seis pipelines que llevan hacia adelante, por su cuenta, cada lead, cada anuncio y cada cliente antiguo. Tus anuncios y tus vendedores
+				siguen gratis. Tú eliges cuál de ellos merece un crédito.
 			</p>
-			<div class="ctaRow" aria-label="Empezar">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Empieza gratis
+			<div class="ctaRow" aria-label="Únete a PropertyList">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
+					Crea tu cuenta de agencia gratis
 				</a>
-				<a class="btnSecondary" href="/es/precios/">Ver precios completos</a>
+				<a class="btnSecondary" href="#que-cuesta">Ver qué cuesta</a>
 			</div>
-			<div class="note">Sin tarjeta de crédito.</div>
+			<div class="note">{plAgencies} agencias y {plAgents} agentes ya están en la red. Sin tarjeta y sin coste de alta.</div>
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHead">
-			<h2>Siete tableros, un solo flujo</h2>
-			<p>
-				Cada tablero está creado a medida para una etapa del flujo de la agencia, y los contactos fluyen entre ellos automáticamente a medida que
-				avanza la operación. Sin hojas de cálculo, sin duplicar datos, sin leads que se escapan.
-			</p>
+			<h2>Por dónde se escapa el dinero</h2>
+			<p>No por ser mal agente. Por la semana normal de uno que va lleno.</p>
 		</div>
-		<div class="grid3" aria-label="Tableros de pipeline">
+		<div class="grid3">
 			{
-				boards.map((b) => (
+				leaks.map((l) => (
+					<div class="card leakCard">
+						<h3>{l.h}</h3>
+						<p>{l.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Seis pipelines, un solo flujo</h2>
+			<p>Cada uno cubre una parte del trabajo, y los contactos pasan de uno a otro según avanza la operación. Sin hojas de cálculo y sin teclear dos veces.</p>
+		</div>
+		<div class="grid3" aria-label="Pipelines del CRM">
+			{
+				pipelines.map((b) => (
 					<div class="card">
 						<div class="boardHead">
 							<h3>{b.name}</h3>
-							<span class={b.tag === 'Free' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag === 'Free' ? 'Gratis para siempre' : 'Pago por conversión'}</span>
+							<span class={b.tag === 'Gratis' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag}</span>
 						</div>
 						<p>{b.desc}</p>
 					</div>
@@ -104,44 +187,138 @@ const faqLd = {
 	</section>
 
 	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que pasa mientras estás en una visita</h2>
+			<p>No son ajustes que tengas que acordarte de activar. Es lo que hacen los pipelines.</p>
+		</div>
+		<ol class="flowList">
+			{automatic.map((a) => <li>{a}</li>)}
+		</ol>
+	</section>
+
+	<section class="section">
 		<div class="grid2">
 			<div class="card">
-				<h2>Nada que configurar</h2>
+				<h2>La parte que casi nadie hace</h2>
 				<p>
-					Los siete tableros se configuran automáticamente. Desde el primer día, cada contacto y propiedad existente se distribuye en el tablero
-					correcto - sin configuración manual, sin migración de datos, sin pantallas en blanco que rellenar.
+					Toda agencia sabe que debería mantener el contacto con sus clientes antiguos. Casi ninguna lo hace más allá del primer mes, porque
+					siempre hay una operación viva que hoy importa más.
 				</p>
+				<p>
+					Nurture los mantiene sin ti. Cumpleaños, el aniversario del día que firmaron, una nota honesta sobre cuánto vale ahora su casa. Cuando
+					uno pincha un enlace de valoración o abre el mismo email tres veces en una semana, los emails automáticos se paran y se te avisa de
+					que llames, con el motivo delante.
+				</p>
+				<p>Un lead que se apaga en marzo compra muchas veces en octubre, normalmente con quien siguió en contacto.</p>
 			</div>
 			<div class="card accent">
-				<h2>Pago por conversión, no por usuario</h2>
+				<h2>Puedes verlo antes de pagarlo</h2>
 				<p>
-					Los tableros Leads, Property Lifecycle, Transactions y Nurture son gratis, sin límites, para siempre.
+					Sin la suscripción, el tablero de Nurture se llena igual. Cada operación cerrada sigue entrando, los datos se siguen recogiendo, y un
+					contador te dice lo que ese mes habría enviado.
 				</p>
 				<p>
-					Los tableros Buyers, Sellers y Tenants te dan tus primeras 5 conversiones gratis para siempre. Después son 1 crédito por conversión - y
-					solo se te cobra cuando etiquetas a un contacto como una oportunidad real. Nunca por un lead no cualificado. Sin suscripción, sin permanencia.
+					No sale nada hasta que tú decides que salga. Y cuando te suscribes, arranca con todo lo que lleva recogido en vez de con una pantalla
+					vacía.
 				</p>
 				<div class="pillRow">
-					<span class="pill">5 conversiones gratis</span>
-					<span class="pill">1 crédito cada una después</span>
-					<span class="pill">4 tableros gratis para siempre</span>
+					<span class="pill">20 créditos al mes</span>
+					<span class="pill">Un email por contacto y semana</span>
+					<span class="pill">Interruptor por contacto</span>
 				</div>
 			</div>
 		</div>
 	</section>
 
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Una pantalla que responde "qué hago hoy"</h2>
+			<p>
+				El email es la parte que se puede automatizar. Las llamadas y WhatsApp son las que cierran. Así que la automatización envía lo que puede
+				enviar y después te dice las pocas cosas que solo puedes hacer tú, ordenadas por lo que más probablemente genere dinero.
+			</p>
+		</div>
+		<div class="grid2">
+			{
+				queue.map((q, i) => (
+					<div class="card queueCard">
+						<div class="queueNum">{i + 1}</div>
+						<div>
+							<h3>{q.h}</h3>
+							<p>{q.p}</p>
+						</div>
+					</div>
+				))
+			}
+		</div>
+		<p class="quiet">
+			La lista se limita a unas diez acciones al día, a propósito. Una cola corta que terminas es mejor que una completa que aprendes a ignorar.
+			Cada tarjeta llama o abre WhatsApp con el mensaje ya escrito, y un toque registra cómo fue.
+		</p>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card">
+				<h2>Otros agentes nunca te cuestan un crédito</h2>
+				<p>
+					Agentes de otras agencias preguntan por tus anuncios todo el día, que es justo para lo que existe una red compartida. Cada lead que entra se comprueba contra el registro de agentes de la red, por
+					email, por teléfono y por dominio de agencia.
+				</p>
+				<p>
+					Una coincidencia se etiqueta en rojo, nunca cuesta un crédito y queda fuera de todos los emails automáticos, así que nadie manda una
+					valoración de vivienda a un agente colaborador. Si nos equivocamos, un clic quita la etiqueta, y tu corrección se queda en tu cuenta en lugar de seguir a esa
+					persona por toda la red.
+				</p>
+			</div>
+			<div class="card" id="que-cuesta">
+				<h2>Qué cuesta</h2>
+				<ul class="priceList">
+					{
+						prices.map((p) => (
+							<li>
+								<span>{p.what}</span>
+								<strong>{p.cost}</strong>
+							</li>
+						))
+					}
+				</ul>
+				<p class="quiet">
+					Un solo saldo de créditos cubre todo, el mismo que usas para destacar un anuncio o sacar un informe. Los créditos que compras no
+					caducan.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Las preguntas que hacen los agentes</h2>
+		</div>
+		<div class="faqList">
+			{
+				faqs.map((f) => (
+					<details class="faqItem">
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
 	<section class="section cta">
 		<div class="ctaInner">
-			<h2>Gestiona toda tu agencia en un solo lugar</h2>
+			<h2>Gratis para llevar tu agencia. Pagas cuando te traemos un comprador.</h2>
 			<p>
-				El MLS y el CRM core son gratis para siempre - anuncios ilimitados, personal ilimitado, sin cuota de alta. Añade los tableros de conversión
-				solo cuando un lead lo merezca.
+				El MLS, el CRM, los anuncios ilimitados y las cuentas de equipo ilimitadas no cuestan nada. Activa las partes que trabajan mientras
+				duermes cuando te merezcan la pena.
 			</p>
 			<div class="ctaRow" aria-label="Únete a PropertyList">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Agentes: Empieza GRATIS
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
+					Crea tu cuenta de agencia gratis
 				</a>
-				<a class="btnSecondary" href="/es/funciones/">Ver todas las funciones</a>
+				<a class="btnSecondary" href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/pipeline/">Leer la guía de pipelines</a>
 			</div>
 		</div>
 	</section>
@@ -380,6 +557,141 @@ const faqLd = {
 	@media (max-width: 860px) {
 		.grid2 {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	/* ---- sales-page components (rewrite 2026-07-28) ---- */
+	.leakCard h3 {
+		margin: 0 0 6px;
+		font-size: 16.5px;
+	}
+	.leakCard p {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.7);
+		line-height: 1.6;
+	}
+
+	.flowList {
+		list-style: none;
+		counter-reset: flow;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 10px;
+	}
+	.flowList li {
+		counter-increment: flow;
+		position: relative;
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		padding: 14px 18px 14px 56px;
+		color: rgba(16, 24, 40, 0.8);
+		line-height: 1.6;
+	}
+	.flowList li::before {
+		content: counter(flow);
+		position: absolute;
+		left: 16px;
+		top: 13px;
+		width: 26px;
+		height: 26px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.14);
+		color: #0a6d61;
+		font-weight: 800;
+		font-size: 13px;
+		display: grid;
+		place-items: center;
+	}
+
+	.queueCard {
+		display: flex;
+		gap: 14px;
+		align-items: flex-start;
+	}
+	.queueNum {
+		flex: 0 0 auto;
+		width: 30px;
+		height: 30px;
+		border-radius: 999px;
+		background: #101828;
+		color: #fff;
+		font-weight: 800;
+		font-size: 14px;
+		display: grid;
+		place-items: center;
+	}
+	.queueCard h3 {
+		margin: 2px 0 5px;
+		font-size: 16px;
+	}
+	.queueCard p {
+		margin: 0;
+		color: rgba(16, 24, 40, 0.7);
+		line-height: 1.55;
+	}
+
+	.quiet {
+		color: rgba(16, 24, 40, 0.62);
+		font-size: 14.5px;
+		line-height: 1.6;
+		margin: 14px 0 0;
+	}
+
+	.priceList {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.priceList li {
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 11px 0;
+		border-bottom: 1px dashed rgba(16, 24, 40, 0.14);
+		font-size: 14.5px;
+	}
+	.priceList li:last-child {
+		border-bottom: 0;
+	}
+	.priceList span {
+		color: rgba(16, 24, 40, 0.72);
+	}
+	.priceList strong {
+		white-space: nowrap;
+		color: #0a6d61;
+	}
+
+	.faqList {
+		display: grid;
+		gap: 10px;
+	}
+	.faqItem {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		padding: 14px 18px;
+	}
+	.faqItem summary {
+		cursor: pointer;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: #101828;
+	}
+	.faqItem p {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.65;
+	}
+
+	@media (max-width: 680px) {
+		.priceList li {
+			flex-direction: column;
+			gap: 4px;
+		}
+		.priceList strong {
+			white-space: normal;
 		}
 	}
 </style>

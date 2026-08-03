@@ -1,11 +1,16 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
 import Layout from '../../layouts/Layout.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/sobre-nosotros/`;
 const title = 'Sobre PropertyList • PropertyList Info Hub';
 const description =
-	'Creado para agentes — no para competir con ellos. PropertyList combina la eficiencia de un MLS con la visibilidad de un portal público.';
+	'Creado para agentes - no para competir con ellos. PropertyList combina la eficiencia de un MLS con la visibilidad de un portal público.';
 ---
 
 <Layout
@@ -35,10 +40,10 @@ const description =
 				un portal inmobiliario de alto nivel.
 			</p>
 			<div class="ctaRow" aria-label="Empezar">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
 					Agentes: Empieza GRATIS
 				</a>
-				<a class="btnSecondary" href="https://developers.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
+				<a class="btnSecondary" href="https://developers.propertylist.es/signup/new" target="_blank" rel="noopener">
 					Promotores: Empieza GRATIS
 				</a>
 			</div>
@@ -77,7 +82,7 @@ const description =
 			<h2>El enfoque Agent-First</h2>
 			<p>
 				PropertyList está diseñado para proteger tu pipeline, no para drenar tu presupuesto de marketing. Empoderamos a los profesionales
-				inmobiliarios ofreciendo un Smart MLS completo y un CRM automatizado totalmente gratis, con subidas ilimitadas de propiedades, cuentas
+				inmobiliarios ofreciendo un Smart MLS completo y un CRM automatizado gratis en su núcleo, con subidas ilimitadas de propiedades, cuentas
 				ilimitadas para tu equipo y absolutamente sin tarifas ocultas, sin tarifas de alta y sin tarifas de cancelación.
 			</p>
 			<p class="subHead">Operamos sobre una base de transparencia absoluta:</p>
@@ -89,7 +94,7 @@ const description =
 				<p>
 					Garantizamos una ventana de protección exclusiva para cada lead de comprador generado desde el Portal Público de PropertyList.es en tu
 					mandato específico. A diferencia de los portales tradicionales, nunca secuestraremos al comprador y lo venderemos al mejor postor. Tú tienes
-					el derecho exclusivo, en primer lugar, de desbloquear y reclamar ese lead directo.
+					el derecho exclusivo, en primer lugar, de abrir y reclamar ese lead directo, y abrirlo hoy no cuesta nada.
 				</p>
 				<p class="muted">
 					Para mantener un alto estándar de servicio, si un lead permanece sin abrir e inactivo durante 5 días laborables, nuestro sistema
@@ -109,8 +114,8 @@ const description =
 				<h3>Solo pagas por lo que usas</h3>
 				<p>
 					Eliminamos contratos atados, tarifas de alta, tarifas de cancelación y costes ocultos. Operas con un sistema flexible de créditos “paga
-					según uses”. Solo inviertes cuando decides desbloquear herramientas premium, como destacar anuncios, generar informes de mercado con IA u
-					abrir leads directos del portal público.
+					según uses”. Solo inviertes cuando decides desbloquear herramientas premium, como destacar anuncios o generar informes de mercado con IA. Abrir un lead
+					directo del portal público es gratis por tiempo limitado.
 				</p>
 			</div>
 		</div>
@@ -138,15 +143,15 @@ const description =
 				</p>
 				<div class="statGrid" aria-label="Datos de la plataforma">
 					<div class="stat">
-						<div class="statNum">900+</div>
+						<div class="statNum">{plAgencies}</div>
 						<div class="statLabel">Agencias</div>
 					</div>
 					<div class="stat">
-						<div class="statNum">1.200+</div>
+						<div class="statNum">{plAgents}</div>
 						<div class="statLabel">Agentes activos</div>
 					</div>
 					<div class="stat">
-						<div class="statNum">6.000+</div>
+						<div class="statNum">{plListings}</div>
 						<div class="statLabel">Propiedades activas</div>
 					</div>
 				</div>
@@ -159,18 +164,18 @@ const description =
 			<h2>Únete al movimiento</h2>
 			<p>
 				La industria está cambiando y las agencias más inteligentes ya están asegurando su posición. Hoy, PropertyList es de confianza para más de
-				900 agencias y 1.200+ agentes activos en España, con más de 6.000 propiedades activas.
+				{plAgencies} agencias y {plAgents} agentes activos en España, con {plListings} propiedades activas.
 			</p>
 			<p>
-				Si estás listo para entrar en una red profesional diseñada para proteger tus operaciones, reducir tus costes y amplificar tu éxito — en lugar
-				de competir contigo — estás exactamente donde debes estar.
+				Si estás listo para entrar en una red profesional diseñada para proteger tus operaciones, reducir tus costes y amplificar tu éxito - en lugar
+				de competir contigo - estás exactamente donde debes estar.
 			</p>
 			<div class="ctaRow" aria-label="Unirse a PropertyList">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Agentes: Empieza GRATIS — Sin tarjeta
+				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
+					Agentes: Empieza GRATIS - Sin tarjeta
 				</a>
-				<a class="btnSecondary" href="https://developers.propertylist.es/new-agent-signup/new" target="_blank" rel="noopener">
-					Promotores: Empieza GRATIS — Sin tarjeta
+				<a class="btnSecondary" href="https://developers.propertylist.es/signup/new" target="_blank" rel="noopener">
+					Promotores: Empieza GRATIS - Sin tarjeta
 				</a>
 			</div>
 		</div>

@@ -1,4 +1,9 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
 export const prerender = false;
 ---
 <!doctype html>
@@ -66,16 +71,16 @@ export const prerender = false;
   <div class="hd">
     <a href="https://info.propertylist.es/" class="brand" aria-label="PropertyList"><img src="/og/logo-default.png" alt="PropertyList - be free to share" width="130" height="42" style="height:42px;width:auto;display:block" /></a>
     <nav class="langs" aria-label="Language">
-      <a href="/agents-survey" class="on" hreflang="en">EN</a>
-      <a href="/es/encuesta-agentes" hreflang="es">ES</a>
-      <a href="/nl/agenten-enquete" hreflang="nl">NL</a>
+      <a href="/agents-survey/" class="on" hreflang="en">EN</a>
+      <a href="/es/encuesta-agentes/" hreflang="es">ES</a>
+      <a href="/nl/agenten-enquete/" hreflang="nl">NL</a>
     </nav>
   </div>
 
   <div id="form">
     <div class="hero">
       <h1>What do you really want from a property portal?</h1>
-      <p>PropertyList is live and already home to 1,200+ agents - and we're building what comes next around what agents like you actually want. We'd rather hear it from you than guess.</p>
+      <p>PropertyList is live and already home to {plAgents} agents - and we're building what comes next around what agents like you actually want. We'd rather hear it from you than guess.</p>
       <span class="perk">&#127873; Finish it and we'll add 20 credits (worth &euro;20) to your account - use them to feature your listings, plus first access to what's coming</span>
     </div>
     <div class="meta">6 quick questions &middot; about 2 minutes &middot; answers stay private</div>

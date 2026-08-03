@@ -1,5 +1,11 @@
 ---
+import { statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
 import Layout from '../../layouts/Layout.astro';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
 import { getPortalStats } from '../../lib/portalStats';
 
 const stats = await getPortalStats();
@@ -8,7 +14,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/listado-instantaneo/`;
 const title = 'Listado Instantáneo - crea un anuncio completo con fotos y tu voz | PropertyList';
 const description =
-	'Crea un anuncio desde fotos y una nota de voz. Listado Instantáneo de PropertyList rellena cada campo - m2, dormitorios, características y una descripción pulida - para que los agentes revisen y publiquen en un minuto.';
+	'Crea un anuncio desde fotos y una nota de voz. Instant Listing rellena tipo, m2, dormitorios y descripción - tú revisas y publicas. Gratis.';
 
 const fills = [
 	{ name: 'Tipo y estado de la propiedad', desc: 'Villa, apartamento, ático, obra nueva o reventa - identificado por ti.' },
@@ -57,7 +63,7 @@ const softwareLd = {
 	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 ---
 
 <Layout
@@ -165,7 +171,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			<div class="card promo">
 				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.7 5.5 6 .9-4.3 4.2 1 6L12 17.8 6.6 20.1l1-6L3.3 9.9l6-.9z" /></svg></span>
 				<h3>Destácalo en el MLS</h3>
-				<p>Sube tu anuncio a lo más alto donde navegan más de 1.200 agentes, para que toda la red lo vea primero.</p>
+				<p>Sube tu anuncio a lo más alto donde navegan {plAgents} agentes, para que toda la red lo vea primero.</p>
 			</div>
 			<div class="card promo">
 				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18" /></svg></span>
@@ -322,4 +328,5 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			.grid4 { grid-template-columns: repeat(2, 1fr); }
 		}
 	</style>
+	<AgentInterestCta lang="es" page="/es/listado-instantaneo/" />
 </Layout>

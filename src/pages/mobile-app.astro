@@ -1,11 +1,16 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
 import Layout from '../layouts/Layout.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/mobile-app/`;
 const title = 'PropertyList Mobile App for Estate Agents (iOS and Android) | PropertyList';
 const description =
-	'The PropertyList MLS and CRM, built for your phone. Search listings, manage your pipeline and reply to leads the moment they land. Download the Android app free on Google Play; iOS is in final review.';
+	'The PropertyList MLS and CRM on your phone: capture listings on-site, manage your pipeline and reply to leads instantly. Free on Google Play.';
 
 const features = [
 	{ name: 'Magic Match', desc: 'Describe your client in plain words and the AI surfaces the listings that fit - no manual filtering.' },
@@ -85,7 +90,7 @@ const faqLd = {
 	</section>
 
 	<section class="trustbar" aria-label="Why PropertyList">
-		<div><b>6,000+</b><span>live MLS listings</span></div>
+		<div><b>{plListings}</b><span>live MLS listings</span></div>
 		<div><b>35+</b><span>areas covered</span></div>
 		<div><b>Notary-verified</b><span>pricing data</span></div>
 		<div><b>Free</b><span>to get started</span></div>

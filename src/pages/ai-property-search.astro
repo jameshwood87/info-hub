@@ -1,0 +1,180 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'AI Property Search - Describe It, Find It | PropertyList';
+const description =
+	'Describe the home you want in plain words and AI finds it: buyers search the whole portal free; agents match client briefs to their stock, then the MLS.';
+
+const faqs = [
+	{
+		q: 'How does AI property search work?',
+		a: 'You type what you want in plain words - like "2-bed apartment in Estepona near the beach, under €400k". The AI reads your brief, turns it into a structured search (bedrooms, type, area, budget, must-haves) and shows the closest live matches. You can see exactly what it understood as filter chips.',
+	},
+	{
+		q: 'Is the AI search free?',
+		a: 'Yes. AI property search on the propertylist.es portal is free for everyone - no account needed. AI Property Match for agents is included in the free MLS while in beta.',
+	},
+	{
+		q: 'What is AI Property Match for agents?',
+		a: 'It is the same idea pointed at your inventory: paste your client’s request - even a forwarded WhatsApp message - and it searches your own stock first, then the whole MLS network of shared properties, ranking the best matches and showing what it understood as chips. It lives in your agent dashboard and is in beta.',
+	},
+	{
+		q: 'Does the AI invent properties?',
+		a: 'No. It only searches real, live listings. The AI’s job is understanding your words - the results are always actual properties on the portal or in your MLS stock, each with its reference number.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const appLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'PropertyList AI Property Search',
+	applicationCategory: 'BusinessApplication',
+	operatingSystem: 'Web',
+	description: 'Natural-language property search for Spain: describe the home in plain words and the AI returns matching live listings. Free on propertylist.es; agents also get AI Property Match (beta) to match client briefs against their own stock and the shared MLS.',
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+	url: 'https://propertylist.es/',
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: 'AI Property Search', item: 'https://info.propertylist.es/ai-property-search/' },
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/ai-property-search/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/ai-property-search/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/busqueda-ia/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/ai-property-search/' },
+	]}
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(appLd)} />
+	<main class="wrap">
+		<section class="hero">
+			<div class="badge"><span class="dot"></span> Live on the portal · Beta for agents</div>
+			<h1>Stop translating wishes into filters.<br /><span class="accent">Just say what you want.</span></h1>
+			<p class="lead">
+				"2-bed apartment in Estepona near the beach, under &euro;400k." That sentence is a finished search. PropertyList's
+				AI reads plain words - yours or your client's - and brings back the right homes from real, live listings. No
+				dropdowns, no checkboxes, no lost buyers.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://propertylist.es/" target="_blank" rel="noopener">Try it on the portal - free</a>
+				<a class="btnGhost" href="#agents">For agents: match your clients &darr;</a>
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>For buyers and renters: search the whole portal by describing your home</h2>
+			<p>
+				On <a href="https://propertylist.es/" target="_blank" rel="noopener">propertylist.es</a>, type what you are looking
+				for the way you would tell a friend. The AI reads your brief and finds the closest matches across every live
+				listing on the portal - free, no account needed.
+			</p>
+			<figure><img src="/docs-images/ai-search/portal-empty.png" alt="AI property search box on the PropertyList portal with the prompt: describe your ideal home in plain words" loading="lazy" /><figcaption>The search box on the portal - describe your ideal home in plain words.</figcaption></figure>
+			<figure><img src="/docs-images/ai-search/portal-results.jpg" alt="AI search results for a 2-bed apartment in Estepona near the beach under 400k, showing the understood filters as chips and matching apartments" loading="lazy" /><figcaption>The AI shows what it understood - 2 bedrooms &middot; Apartment &middot; Estepona &middot; Under &euro;400k &middot; Near the beach - then the closest live matches.</figcaption></figure>
+			<p class="note">You always see what the AI understood, shown as chips above the results. Refine your sentence and search again - it is a conversation, not a form.</p>
+		</section>
+
+		<section class="block" id="agents">
+			<h2>For agents: AI Property Match <span class="beta">BETA</span></h2>
+			<p>
+				Your client sends a WhatsApp: <em>"3-bed near an international school, budget around &euro;1.2M but flexible if
+				there's a sea view."</em> Paste it into <strong>AI Property Match</strong> in your dashboard, and it searches
+				<strong>your own stock first, then the whole MLS network</strong> - and ranks the best matches before another agent has
+				finished setting filters. If you don't have the perfect property, another agency on the network
+				might, and you can still close the deal.
+			</p>
+			<figure><img src="/docs-images/ai-search/mls-empty.png" alt="AI Property Match box in the agent dashboard: describe your client in plain English and it searches your stock" loading="lazy" /><figcaption>AI Property Match in the agent dashboard - describe your client in plain English.</figcaption></figure>
+			<figure><img src="/docs-images/ai-search/mls-results.jpg" alt="AI Property Match results ranking an agency's own ground-floor apartments in Estepona under 500k" loading="lazy" /><figcaption>It sets up the search, sticks to the budget, and ranks your own listings as the primary matches.</figcaption></figure>
+			<ul class="points">
+				<li><strong>Paste, don't re-type.</strong> The client's own words are the input - a forwarded message is enough.</li>
+				<li><strong>Your stock first, network second.</strong> Your own listings lead the ranking ("Primary search"), with matches from the whole shared MLS behind them - so there is always something to show.</li>
+				<li><strong>Transparent.</strong> The chips show exactly what it understood, so you can correct course instantly.</li>
+				<li><strong>Free in beta.</strong> Included with the free MLS while AI Property Match is in beta.</li>
+			</ul>
+			<div class="ctaRow">
+				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Open your dashboard</a>
+				<a class="btnGhost" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">No account? Join free</a>
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>Why this beats filter search</h2>
+			<ul class="points">
+				<li><strong>Nothing gets lost in translation.</strong> "Near the beach" and "flexible if sea view" are real search criteria here - filters can't say that.</li>
+				<li><strong>Faster to the right homes.</strong> One sentence replaces a dozen clicks, on any device.</li>
+				<li><strong>Real listings only.</strong> The AI never invents a property - it understands your words, then searches live stock.</li>
+			</ul>
+		</section>
+
+		<section class="block">
+			<h2>Common questions</h2>
+			<div class="faq">
+				{faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+		</section>
+
+		<section class="final">
+			<h2>Your next client already wrote the search.</h2>
+			<p>Try it with a real brief - yours, or the last one a client sent you.</p>
+			<div class="ctaRow center">
+				<a class="btnPrimary" href="https://propertylist.es/" target="_blank" rel="noopener">Search the portal with AI</a>
+				<a class="btnGhost" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Match your clients (agents)</a>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.wrap { max-width: 860px; margin: 0 auto; padding: 42px 20px 72px; }
+	.hero { text-align: center; margin-bottom: 10px; }
+	.badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0, 174, 154, 0.35); background: rgba(0, 174, 154, 0.07); color: #0a6d61; font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; margin-bottom: 18px; }
+	.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; }
+	h1 { font-size: clamp(30px, 4.6vw, 46px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 14px; }
+	.accent { color: #00ae9a; }
+	.lead { max-width: 640px; margin: 0 auto 20px; color: rgba(16, 24, 40, 0.72); font-size: 17px; line-height: 1.62; }
+	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 6px 0 8px; }
+	.ctaRow.center { justify-content: center; }
+	.btnPrimary { background: #00ae9a; color: #fff; font-weight: 800; font-size: 15px; padding: 13px 24px; border-radius: 11px; text-decoration: none; }
+	.btnPrimary:hover { background: #008a7a; }
+	.btnGhost { background: #fff; color: #0a6d61; border: 1px solid rgba(0, 174, 154, 0.4); font-weight: 700; font-size: 15px; padding: 12px 22px; border-radius: 11px; text-decoration: none; }
+	.block { margin-top: 40px; }
+	.block h2 { font-size: clamp(21px, 2.6vw, 27px); letter-spacing: -0.01em; margin: 0 0 10px; }
+	.block p { color: rgba(16, 24, 40, 0.74); font-size: 15.5px; line-height: 1.65; }
+	.beta { vertical-align: middle; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; background: rgba(0, 174, 154, 0.14); color: #0a6d61; padding: 3px 9px; border-radius: 999px; margin-left: 6px; }
+	figure { margin: 18px 0; }
+	figure img { max-width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.12); box-shadow: 0 10px 28px rgba(15, 42, 60, 0.08); }
+	figcaption { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin-top: 7px; }
+	.note { font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.points { list-style: none; margin: 14px 0 18px; padding: 0; display: grid; gap: 10px; }
+	.points li { position: relative; padding-left: 26px; font-size: 15px; color: rgba(16, 24, 40, 0.74); line-height: 1.55; }
+	.points li::before { content: ''; position: absolute; left: 2px; top: 7px; width: 9px; height: 9px; border: 2.5px solid #00ae9a; border-radius: 50%; }
+	.points li strong { color: #0b1220; }
+	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); }
+	.faq summary { cursor: pointer; padding: 14px 2px; font-weight: 700; font-size: 15.5px; list-style: none; }
+	.faq summary::-webkit-details-marker { display: none; }
+	.faq p { padding: 0 2px 14px; margin: 0; font-size: 14.5px; }
+	.final { margin-top: 48px; text-align: center; background: #fff; border: 1px solid rgba(0, 174, 154, 0.25); border-radius: 18px; padding: 30px 24px; }
+	.final h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 8px; }
+	.final p { color: rgba(16, 24, 40, 0.65); margin: 0 0 16px; }
+</style>

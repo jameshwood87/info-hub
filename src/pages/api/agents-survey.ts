@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { notifySubmission } from '../../lib/notify';
 import fs from 'node:fs/promises';
 
 // Agents survey intake (2026-07-08). Stores a local durable copy AND forwards to the Operations
@@ -64,5 +65,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 				body: JSON.stringify(rec) });
 		} catch { /* best effort - local copy is the backup */ }
 	}
+	await notifySubmission({
+		kind: 'agents survey response',
+		fields: [['Name', rec.name], ['Email', rec.email], ['Phone', rec.phone], ['Agency', rec.agency], ['Language', rec.lang]],
+		link: '/admin/analytics',
+	});
 	return json({ ok: true });
 };

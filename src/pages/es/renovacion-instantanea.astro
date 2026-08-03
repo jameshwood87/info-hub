@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/renovacion-instantanea/`;
 const title = 'Renovación Instantánea (muy pronto) - antes y después con IA y costes por zona | PropertyList';
 const description =
-	'Muy pronto en PropertyList: Renovación Instantánea mostrará un antes y después con deslizador y un desglose de costes específico de la zona para cualquier propiedad de segunda mano - materiales y mano de obra - descargable en PDF.';
+	'Muy pronto: visuales de antes y después con IA para cualquier reventa, con costes desglosados por zona y exportación a PDF. Créditos de pago por uso.';
 
 const gets = [
 	{ name: 'Antes y después, lado a lado', desc: 'Un deslizador de comparación muestra la estancia tal cual está y ya reformada.' },
@@ -42,10 +43,9 @@ const softwareLd = {
 	name: 'PropertyList Renovación Instantánea',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
 	description: 'Muy pronto: genera visuales de reforma antes y después con IA y un desglose de costes completo y específico de la zona (materiales y mano de obra) para cualquier propiedad de segunda mano, exportable en PDF.',
-	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 ---
 
 <Layout
@@ -244,4 +244,5 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			.grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
 		}
 	</style>
+	<AgentInterestCta lang="es" page="/es/renovacion-instantanea/" />
 </Layout>

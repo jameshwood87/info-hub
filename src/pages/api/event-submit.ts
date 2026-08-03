@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { notifySubmission } from '../../lib/notify';
 import fs from 'node:fs/promises';
 
 // Public "Add your event" intake for the What's-On pages. Honeypot + strict
@@ -78,5 +79,10 @@ export const POST: APIRoute = async ({ request }) => {
 	} catch {
 		return json({ ok: false, error: 'store_failed' }, 500);
 	}
+	await notifySubmission({
+		kind: 'event submission',
+		fields: [['Title', rec.title], ['Town', rec.town], ['Starts', rec.start], ['Venue', rec.venue], ['Link', rec.link]],
+		link: '/admin/analytics',
+	});
 	return json({ ok: true });
 };

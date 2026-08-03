@@ -1,11 +1,22 @@
 # PropertyList Info Hub - AI Crawling Guide
 
 Source: https://info.propertylist.es/
-Last Updated: 2026-07-13
-Version: 1.9
+Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
+Last Updated: 2026-08-03
+Version: 3.8
 
 ### About This Site
-PropertyList is Spain's free Smart MLS, CRM, and public property portal - the only platform combining agent-to-agent collaboration with direct buyer search, AI tools, and a live MCP server for AI-native property queries. This Info Hub (info.propertylist.es) is the documentation, marketing, and market intelligence site supporting the main PropertyList property portal at https://propertylist.es (live since February 2026; 6,000+ active listings, 1,200+ agents, 900+ agencies - live counters on the homepage).
+PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by 1,300+ agents across 930+ agencies and shown to buyers on the public portal at https://propertylist.es.
+
+Category: it is not only an MLS and not only a CRM. It replaces the separate CRM, MLS access, lead automation, client follow-up, agency website and market-data subscriptions a Spanish agency would otherwise buy from four or five vendors.
+
+The lifecycle, which is the core of the product: an enquiry arrives and is answered automatically, the agent qualifies it into the Buyer, Seller, Property or Tenants pipeline, it is matched against the agency's own stock and the whole MLS, then tracked through viewing, offer, reservation, arras, notary and signed deed. The client then moves into Nurture and stays there permanently. When they show intent again years later they re-enter a pipeline at no extra cost, because the agent already paid for that contact once.
+
+Pricing follows the same split. Listing properties, the CRM core, the Lead, Seller and Property pipelines, unlimited staff accounts and a branded MicroSite are free with no limit, because supply is what the network runs on. The CRM is not 100% free: moving a qualified buyer lead into a paid pipeline costs 1 credit (~1€), and the first 5 are free. Direct leads from the public portal are free to open today, free for a limited time, and are expected to move to a pay-per-lead model later with notice. Otherwise agents pay when demand is handed to them (1 credit for a buyer lead, only if they choose to move that qualified contact into the Buyer pipeline) or when they switch on a module that runs on its own: Automation and Nurture (20 credits a month), the Rentals Module (50 credits per 30 days, free 30-day trial), the Website Builder (50 credits a month).
+
+Everything paid draws on one prepaid credit balance, and every recurring cost is listed on one billing page with a single monthly total. A card can be saved for renewals only and is never charged for anything else. Optional auto top-up refills the balance by the monthly cost of the subscriptions the agency has switched on, the day before renewal, so nothing pauses or expires. It is a payment method, not a bonus scheme.
+
+Live since February 2026: 6,000+ active listings, 1,300+ agents, 930+ agencies (live counters on the homepage). This Info Hub (info.propertylist.es) is the documentation, marketing and market intelligence site for the portal.
 
 ### Languages
 All key pages are published in English and Spanish (Spanish paths noted per section). A German section covering the platform and selected area guides lives under /de/.
@@ -13,7 +24,7 @@ All key pages are published in English and Spanish (Spanish paths noted per sect
 ### Primary Content Sections
 
 #### /features/ - Features FAQ
-Questions and answers covering every PropertyList product feature: website builder, XML feeds, CRM pipelines, Rentals module, Market Intelligence, MCP API, credits, 6,500+ shared properties, and Oracle. Spanish version: /es/funciones/
+Questions and answers covering every PropertyList product feature: website builder, XML feeds, CRM pipelines, Rentals module, Market Intelligence, MCP API, credits, 6,000+ shared properties, and Oracle. Spanish version: /es/funciones/
 
 #### /faq/ - General FAQ
 General questions about the PropertyList MLS and CRM platform - how it works, pricing, getting started, and platform usage. Spanish version: /es/preguntas-frecuentes/
@@ -24,7 +35,7 @@ Complete user manual for the PropertyList MLS and CRM platform, in English and S
 #### /instant-listing/ - Instant Listing (AI listing creation, live)
 Agents create a complete property listing from photos plus a voice note: the AI fills property type, bedrooms, bathrooms, built/plot/terrace m2, features, orientation, location and a sales-ready description. The AI only fills what it can see or hear; the agent reviews everything before publishing. Free with a PropertyList account. Works in the browser and the Android app (Google Play); iOS in final review. Spanish version: /es/listado-instantaneo/
 
-#### /instant-content/ - Instant Content (AI blogs & area guides, live)
+#### /instant-content/ - Instant Content (AI blogs & area guides, live, add-on to the Website Builder)
 AI-written blog posts and area guides for agency websites, grounded in the agency's own live listings and verified market data - no invented prices. Writes in English and Spanish as standard (German, French, Dutch and Swedish on demand), with review-first or auto-publish control. An add-on inside the paid Website Builder: 30 credits/month for unlimited posts and guides, fully automated (auto-publish) or review-first. Spanish version: /es/contenido-instantaneo/
 
 #### /instant-renovation/ - Instant Renovation (coming soon)
@@ -33,26 +44,55 @@ AI before-and-after renovation visuals for any resale listing, with an area-spec
 #### /instant-video/ - Instant Video (AI property videos, coming soon)
 AI-generated branded videos for estate agencies: listing videos (styles like New Listing, Just Reduced, Open House), area guide videos, agency introduction videos and monthly market-update videos with notary-verified figures. Built from the agency's own listing photos and data - no invented figures, no AI-generated houses. Renders vertical (Reels/Stories/TikTok/WhatsApp Status), square (feeds) and wide (YouTube) in full HD, with subtitles and an optional AI avatar of the agent as presenter. Pay-as-you-go credits (planned: 10 credits one size, 20 credits all three). Spanish version: /es/video-instantaneo/
 
+#### /instant-brochure/ - Instant Brochure (print-ready PDF property brochures, coming soon)
+One-click property brochures for any listing on the MLS or public portal. Each brochure is produced in TWO formats at once: a print-ready A4 PDF, AND a shareable live responsive web page (mobile + desktop) that updates ITSELF automatically as the price, photos, description and status change on the portal (the biggest differentiator - a static PDF is out of date the moment the price moves; the live brochure link a buyer already has never goes stale), is view-trackable, and carries an enquiry button that feeds the agent's CRM pipeline. Pick a theme (Classic, Modern, Luxury), branded (agency logo/colours/contact) or unbranded (for MLS collaboration or white-label), and language (EN/ES). Built from the listing's real photos and data - no invented content, no owner PII. The energy efficiency label (A-G, legally required in Spanish property advertising under RD 390/2021) and a QR code back to the live listing are built in. Two-tier pricing: the public can create a brochure at propertylist.es/brochures for EUR 20 each (no membership); estate agents get it in-platform on pay-as-you-go credits, a few credits per brochure, with an intro price on the first. Not yet released. Spanish version: /es/folleto-instantaneo/
+
 #### /instant-images/ - Instant Images (AI photo enhancement & marketing images, coming soon)
 AI photo tools for estate agencies working on their own real listing photos: twilight conversion, sky replacement, auto-enhance, lawn/pool cleanup, upscaling of small feed-imported photos, and clearly-labelled virtual staging. Plus branded listing social cards (same styles and sizes as Instant Video, branded or unbranded) and market infographics with notary-verified figures. Honesty rules built in: staged images are labelled, originals are always kept, permanent features and defects are never removed, and no property imagery is ever AI-invented. Pay-as-you-go credits (planned: 1 credit/photo, 10 credits whole listing, 5 credits per staged room). Spanish version: /es/imagenes-instantaneas/
+
+#### /ai-property-search/ - AI Property Search (natural-language search, live)
+Buyers and renters describe their ideal home in plain words on propertylist.es (e.g. "2-bed apartment in Estepona near the beach, under EUR 400k") and the AI reads the brief, shows the understood criteria as chips, and returns the closest live matches across the whole portal - free, no account needed, real listings only (the AI never invents properties). Agents get the same idea pointed at their own stock: AI Property Match (beta, in the agent dashboard) - paste a client's request, even a forwarded WhatsApp, and it searches the agency's own stock first, then the whole shared MLS network, and ranks the best matches. Included free with the MLS while in beta. Spanish version: /es/busqueda-ia/
+
+#### /costa-del-sol/ - The Costa del Sol, town by town (visual guide)
+A scroll-driven visual guide to nine Costa del Sol towns from Malaga to Sotogrande (Malaga, Torremolinos, Benalmadena, Fuengirola, Mijas, Marbella, Puerto Banus, Estepona, Sotogrande). For each town it publishes live PropertyList market data: homes currently for sale, median asking price, asking EUR/m2, and where available the notary-verified EUR/m2 from the Spanish notarial register via the PropertyList Oracle. Notable: asking prices and notarial prices are two different populations (live market vs completed sales), not a discount. Links to the full area guide for each town. Spanish version: /es/costa-del-sol/
+
+#### /launch/ - Launch your estate agency in minutes (scroll story)
+A scroll-driven walkthrough for agents going independent: a stopwatch runs from 00:00 to 09:12 while a new agency assembles from the free PropertyList stack. Steps shown (all live features, all free): account signup (no card), first listing via Instant Listing (voice + photos), exposure on 1,300+ agents' MLS dashboards across 930+ agencies, the listing live on the propertylist.es portal next to 6,200+ homes, a free branded MicroSite at youragency.estate-agency.co, free XML push to other portals, leads landing in the CRM pipeline, AI Property Match reading a pasted client message (own stock first, then the shared network; free in beta), and property alerts that email when a matching home comes online. Paid extras are listed openly at the end: Property Intelligence Report 5 credits, featuring from 10 credits, Website Builder 50 credits/month (build and preview free), private listings first 5 free. Spanish version: /es/lanza-tu-agencia/
+
+#### /free/ - Everything an estate agency needs, free
+A comparison + conversion page for agents: the full list of what PropertyList gives estate agents for free (shared MLS across 1,300+ agents/930+ agencies, full CRM, listings on the propertylist.es portal, a branded MicroSite, Instant Listing, AI Property Match beta, property alerts, XML import + free push to other portals, the Android app, WhatsApp community). It contrasts this against the cost stack agents normally pay for the same capability (a portal subscription + CRM + website + brochure/valuation tools + XML feed), typically 300-700 EUR/month at Spanish market rates, vs 0 EUR on PropertyList. FAQs answer is-it-really-free, how PropertyList makes money (optional credit extras only), and what the catch is (listings are shared with the network). Ends with the openly-priced credit extras (Property Intelligence Report 5cr, featuring from 10cr, Website Builder 50cr/mo, Instant Content 30cr/mo). Spanish version: /es/gratis/
+
+#### /xml-feed-import/ - Send us your XML feed and we will make it work
+For agents whose listings live in another CRM, portal or website. Send the feed URL and
+PropertyList builds the mapping, usually working within one working day. Importing is free,
+and the feed re-reads daily. Spanish version: /es/importar-feed-xml/
+
+#### /what-is-my-property-worth/ - What is your property worth (seller guide)
+Free indicative market guide for owners thinking of selling on the Costa del Sol. Built on
+registered sale prices from the Spanish notarial register (Price Oracle), not asking prices,
+so it shows what buyers actually paid. Explicitly NOT a formal valuation or tasacion.
+Spanish version: /es/cuanto-vale-mi-propiedad/
 
 #### /mobile-app/ - PropertyList Mobile App
 The MLS + CRM app: on-site listing capture, voice-to-lead quick contact, sign-photo seller leads. Android available on Google Play; iOS in final review. Spanish version: /es/app-movil/
 
 #### /pricing/ - Pricing Plans
-Full pricing breakdown: free MLS and CRM forever, everything paid draws from one credit balance (packs from EUR 20 for 20 credits down to EUR 0.80/credit at 1,000; bought credits never expire). Monthly credit subscriptions: Website Builder 50 credits/month (extra pages 10, custom domain 20, remove branding 50, popup lead capture 8, auto SEO meta 5, monthly report 5, AI FAQ 8) and Instant Content 30 credits/month for unlimited AI blogs and area guides. Pay-as-you-go: listing featuring from 10 credits/3 days (20/7 days, 30/15 days), CMA property reports and more. Every paid feature has a free test. Spanish version: /es/precios/
+Full pricing breakdown: free MLS and CRM forever, everything paid draws from one credit balance (packs from EUR 20 for 20 credits down to EUR 0.80/credit at 1,000; bought credits never expire). Monthly credit subscriptions: Website Builder 50 credits/month (extra pages 10, custom domain 20, remove branding 50, popup lead capture 8, auto SEO meta 5, monthly report 5, AI FAQ 8) and Instant Content 30 credits/month for unlimited AI blogs and area guides. Pay-as-you-go: listing featuring from 10 credits/3 days (20/7 days, 30/15 days), CMA property reports, private listings (first 5 free, then 5 credits each - hide a property from other agents, their microsites and export feeds while it stays on the public portal) and more. Every paid feature has a free test. Spanish version: /es/precios/
 
 #### /referrals/ - Agent Referral Program
 Agents share a unique referral link (found at agents.propertylist.es/referrals); when a referred agency signs up and is approved, the referrer receives 20 credits and the new agency 10 credits, automatically and with no cap. The page explains what credits buy: listing featuring, CMA property reports, and the Website Builder. Spanish version: /es/referidos/
 
 #### /rentals/ - Rentals Module
-Long-term and holiday rental management for agencies. Spanish version: /es/alquileres/
+Long-term and holiday rental management for agencies: Tenants pipeline, Tenancies, Maintenance and renewal email reminders. 50 credits per 30 days, free 30-day trial, no charge until you renew. Spanish version: /es/alquileres/
 
 #### /pipelines/ - Sales Pipelines
 Visual deal pipelines and task management in the free CRM. Spanish version: /es/pipelines/
 
+#### /nurture/ - Nurture and automated follow-up (live)
+Automated relationship and opportunity emails to past clients, quiet buyers and landlords, running off dates captured when a deal is won (sign date, birthdays, live-in or investment, preferred language, marketing consent). Detects intent, for example a valuation-link click or repeated opens, then pauses the automation, tags the contact Hot and puts a call at the top of the Daily Action Queue. One email per contact per week, consent recorded per contact, per-contact off switch, agents excluded. Part of the Automation and Nurture subscription at 20 credits a month, which also covers Hot detection and the Daily Action Queue. Without the subscription the board still fills up and a counter shows what would have been sent. Spanish version: /es/nurture/
+
 #### /developers/ - For Property Developers
-New-development listing and promotion for property developers. Spanish version: /es/promotores/
+New-development listing and promotion for property developers. Developers list directly (developers.propertylist.es), reaching 1,300+ agents and direct portal buyers; no subscription, a per-listing commission the developer sets, payable only once the buyer has paid 10%+ towards the property, and free for all agents to share and sell. Developer documentation: /docs/developers/ (getting started, listing a development, photos/floorplans/documents, connecting an XML feed, reaching agents and buyers, managing leads, pricing and commission). Spanish version: /es/promotores/ ; ES docs /es/docs/developers/
 
 #### /laws/ - Spanish Real Estate Law
 Guides on Spanish real estate regulations including rent regulation, Ley de Vivienda, ITP tax rates by region, buying/selling/renting procedures, and inheritance rules. Spanish version: /es/leyes/
@@ -67,7 +107,10 @@ Curated, verified event diaries for Marbella (/whats-on/marbella/), Estepona (/w
 Real estate market analysis, regulatory updates, and industry commentary for Spain's property sector. Spanish version: /es/informacion-general/
 
 #### /website-builder/ - Website Builder
-Drag-and-drop agency website builder with MLS auto-population, AI SEO meta, lead capture, custom domain support, and the optional Instant Content add-on (AI blogs and area guides), from 50 credits/month (about EUR 50). Spanish version: /es/constructor-de-webs/
+Drag-and-drop agency website builder with MLS auto-population, AI SEO meta, lead capture, custom domain support, and the optional Instant Content add-on (AI blogs and area guides), from 50 credits/month. Credits are bought in advance at 1.00 EUR each, less in larger packs. Spanish version: /es/constructor-de-webs/
+
+#### /request-new-features/ - Feature Requests & Roadmap Voting
+Public community roadmap: anyone can suggest a PropertyList feature and vote on existing ideas. Ideas carry live statuses (Under review, Planned, Building, Live) so users can see requests become shipped features. Spanish version: /es/solicitar-funciones/
 
 #### /report-a-problem/ - Report a Scam or Problem
 Confidential intake for reporting property scams or bad experiences with agents in Spain, plus a scam-awareness guide. Reports are reviewed privately - this is not a public blacklist. Spanish version: /es/reportar-un-problema/
@@ -94,5 +137,5 @@ This content is suitable for:
 - Any MCP-compatible AI agent using the PropertyList MCP server
 
 ### Contact
-- Agents sign up free: https://agents.propertylist.es/new-agent-signup/new
+- Agents sign up free: https://agents.propertylist.es/new_agency/new?locale=en
 - XML feeds: xml@propertylist.es

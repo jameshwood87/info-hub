@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { notifySubmission } from '../../lib/notify';
 import fs from 'node:fs/promises';
 
 // Mobile-app early-access waitlist. Public endpoint (no admin auth) with a
@@ -12,7 +13,22 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const json = (obj: unknown, status = 200) =>
 	new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
 
-export const POST: APIRoute = async ({ request }) => {
+// best-effort in-process rate limit: 5 submissions per IP per hour
+const recent = new Map<string, number[]>();
+const allow = (ip: string) => {
+	const now = Date.now();
+	const list = (recent.get(ip) || []).filter((t) => now - t < 3600_000);
+	if (list.length >= 5) return false;
+	list.push(now);
+	recent.set(ip, list);
+	return true;
+};
+// behind Cloudflare the real client IP is cf-connecting-ip (spoofed values are stripped)
+const clientIpOf = (request: Request, clientAddress?: string) =>
+	String(request.headers.get('cf-connecting-ip') || clientAddress || 'unknown');
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
+	if (!allow(clientIpOf(request, clientAddress))) return json({ ok: false, error: 'rate_limited' }, 429);
 	const ct = request.headers.get('content-type') || '';
 	let email = '';
 	let website = '';
@@ -70,5 +86,9 @@ export const POST: APIRoute = async ({ request }) => {
 			/* best effort */
 		}
 	}
+	await notifySubmission({
+		kind: 'app waitlist signup',
+		fields: [['Email', email], ['Source', source], ['Language', lang]],
+	});
 	return json({ ok: true });
 };

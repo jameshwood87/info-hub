@@ -38,6 +38,10 @@ const COMPETITOR_FEEDS = [
   ['Kyero blog', 'https://www.kyero.com/blog/feed'],
   ['ThinkSpain', 'https://www.thinkspain.com/rss'],
   ['SUR in English', 'https://www.surinenglish.com/rss/2.0/portada'],
+  // official + regulation-focused: catch actual law/tax changes, not just market chatter
+  ['Google News ES (BOE / ley alquiler / IRPF vivienda)', 'https://news.google.com/rss/search?q=(BOE+OR+%22real+decreto%22+OR+IRPF+OR+ITP+OR+plusval%C3%ADa)+(vivienda+OR+alquiler+OR+inmobiliario)+when:10d&hl=es&gl=ES&ceid=ES:es'],
+  ['Google News ES (Junta de Andalucia vivienda / turistico)', 'https://news.google.com/rss/search?q=(%22Junta+de+Andaluc%C3%ADa%22+OR+BOJA)+(vivienda+OR+%22alquiler+tur%C3%ADstico%22+OR+VFT)+when:10d&hl=es&gl=ES&ceid=ES:es'],
+  ['Google News EN (Spain property tax / law change)', 'https://news.google.com/rss/search?q=Spain+property+(tax+OR+law+OR+regulation+OR+%22non-resident%22)+change+when:10d&hl=en-GB&gl=GB&ceid=GB:en'],
 ];
 
 const fetchText = async (url) => {
@@ -132,7 +136,7 @@ WE ALREADY COVER (do not duplicate):
 ${ours.map((t) => `- ${t}`).join('\n')}
 ${planned.length ? 'ALREADY QUEUED:\n' + planned.map((t) => `- ${t}`).join('\n') : ''}
 
-Give extra weight to the SEARCH CONSOLE sections: a striking-distance query is the strongest possible signal (real demand where we nearly rank). Propose the 5 best NEW blog-post ideas for next week. Prefer: (a) breaking law/regulation changes affecting Spanish or Andalucian property (mark hot=true), (b) topics competitors rank on where we can write a better, data-backed version, (c) strong buyer/landlord search intent. Avoid anything we already cover or that is queued.
+Give extra weight to the SEARCH CONSOLE sections: a striking-distance query is the strongest possible signal (real demand where we nearly rank). Propose the 5 best NEW blog-post ideas for next week. PRIORITISE, in order: (a) breaking or recent law / tax / regulation changes affecting Spanish or Andalucian property - rental caps, tourist-licence rules, ITP/IRPF/plusvalia, non-resident tax, new decrees (ALWAYS mark these hot=true; a dated, specific regulation post is our single best SEO bet because it ranks fast and earns for months), (b) topics competitors rank on where we can write a better, data-backed version, (c) strong buyer/landlord search intent. Avoid anything we already cover or that is queued.
 
 Write every topic, angle and keyword in ENGLISH (articles are written in English first, then translated to Spanish). Return JSON: {"ideas":[{"topic":"full working title","angle":"1 sentence: our unique angle / why we win","target_keyword":"main search phrase","hot":true|false,"source":"which headline/competitor inspired it"}]} with exactly 5 ideas, best first. Plain hyphens only, no em-dashes.`;
 
@@ -143,9 +147,10 @@ for (const i of ideas) console.log(`${i.hot ? '[HOT] ' : ''}${i.topic} | ${i.tar
 
 if (DRY) { console.log('--- dry run: not queueing / posting ---'); process.exit(0); }
 
-// ---- queue top 2 (hot ones first) ----
-const ranked = [...ideas.filter((i) => i.hot), ...ideas.filter((i) => !i.hot)];
-const toQueue = ranked.slice(0, 2);
+// ---- queue ALL hot (breaking law/regulation) ideas + best evergreen; cap at 4 so we do not overfill ----
+const hot = ideas.filter((i) => i.hot);
+const evergreen = ideas.filter((i) => !i.hot);
+const toQueue = [...hot, ...evergreen].slice(0, Math.max(2, Math.min(4, hot.length + 1)));
 const now = new Date().toISOString();
 for (const i of toQueue) queue.push({ topic: String(i.topic), hot: Boolean(i.hot), keyword: String(i.target_keyword || ''), added: now, source: 'ideas-cron' });
 fs.writeFileSync(QUEUE_PATH, JSON.stringify(queue, null, 2));

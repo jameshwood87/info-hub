@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { notifySubmission } from '../../lib/notify';
 
 type VerifyRequest = {
 	agency_name?: string;
@@ -90,5 +91,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		return json(502, { ok: false, error: 'store_failed' });
 	}
 
+	await notifySubmission({
+		kind: 'agency verification request',
+		fields: [['Agency', payload.agency_name], ['MLS email', payload.mls_email], ['Website', payload.website], ['Contact', payload.contact_name], ['Phone', payload.phone]],
+	});
 	return json(200, { ok: true });
 };

@@ -13,6 +13,7 @@ type Props = {
 	twitterCard?: 'summary' | 'summary_large_image';
 	schema?: unknown;
 	minimal?: boolean;
+	existingUser?: boolean;
 	hideSearch?: boolean;
 };
 
@@ -28,12 +29,16 @@ const {
 	twitterCard,
 	schema,
 	minimal = false,
+	existingUser = false,
 	hideSearch = false,
 } = Astro.props;
 
 // Seasonal assets import
 import { getSeasonalAssets } from "../lib/seasonalLogo";
+import { getPortalStats, statPlus } from '../lib/portalStats';
 import { canonicalAreaPath } from "../lib/areaProvince";
+
+const __lps = await getPortalStats();
 const { logo, og, icon } = getSeasonalAssets();
 
 const stripInfoHubSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
@@ -114,6 +119,9 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/about-us', es: '/es/sobre-nosotros/' },
 	{ en: '/about-us/', es: '/es/sobre-nosotros/' },
 	{ en: '/about-us/', es: '/es/sobre-nosotros' },
+	{ en: '/what-we-offer/', es: '/es/lo-que-ofrecemos/' },
+	{ en: '/what-is-my-property-worth/', es: '/es/cuanto-vale-mi-propiedad/' },
+	{ en: '/xml-feed-import/', es: '/es/importar-feed-xml/' },
 	{ en: '/blog/', es: '/es/blog/' },
 	{ en: '/general-information/', es: '/es/informacion-general/' },
 	{ en: '/community/', es: '/es/comunidad/' },
@@ -129,9 +137,17 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/referrals/', es: '/es/referidos/' },
 	{ en: '/whats-on/', es: '/es/que-hacer/' },
 	{ en: '/mobile-app/', es: '/es/app-movil/' },
+	{ en: '/request-new-features/', es: '/es/solicitar-funciones/' },
+	{ en: '/ai-property-search/', es: '/es/busqueda-ia/' },
 	{ en: '/instant-listing/', es: '/es/listado-instantaneo/' },
 	{ en: '/instant-renovation/', es: '/es/renovacion-instantanea/' },
 	{ en: '/instant-content/', es: '/es/contenido-instantaneo/' },
+	{ en: '/video-guides/', es: '/es/video-guias/' },
+	{ en: '/property-intelligence-report/', es: '/es/informe-inteligencia-propiedad/' },
+	{ en: '/costa-del-sol/', es: '/es/costa-del-sol/' },
+	{ en: '/launch/', es: '/es/lanza-tu-agencia/' },
+	{ en: '/free/', es: '/es/gratis/' },
+	{ en: '/instant-brochure/', es: '/es/folleto-instantaneo/' },
 	{ en: '/instant-video/', es: '/es/video-instantaneo/' },
 	{ en: '/instant-images/', es: '/es/imagenes-instantaneas/' },
 	{ en: '/search', es: '/es/search' },
@@ -147,8 +163,9 @@ const toEnglishSwitchPath = (p: string) => {
 		const slug = parts.length >= 3 ? parts[2] : '';
 		return slug ? canonicalAreaPath(slug) : '/neighbourhood/';
 	}
+	const _np = path.endsWith('/') ? path : path + '/';
 	for (const pair of mapPairs) {
-		if (path.startsWith(pair.es)) return `${pair.en}${path.slice(pair.es.length)}`;
+		if (_np.startsWith(pair.es)) return `${pair.en}${_np.slice(pair.es.length)}`;
 	}
 	return path.replace(/^\/es\//, '/');
 };
@@ -163,8 +180,9 @@ const toSpanishSwitchPath = (p: string) => {
 		const slug = parts.length >= 4 ? parts[3] : (parts.length === 2 && parts[1] !== 'andalucia' && parts[1] !== 'spain' ? parts[1] : '');
 		return slug ? `/es/barrios/${slug}/` : '/es/barrios/';
 	}
+	const _np = path.endsWith('/') ? path : path + '/';
 	for (const pair of mapPairs) {
-		if (path.startsWith(pair.en)) return `${pair.es}${path.slice(pair.en.length)}`;
+		if (_np.startsWith(pair.en)) return `${pair.es}${_np.slice(pair.en.length)}`;
 	}
 	return `/es${path}`;
 };
@@ -184,7 +202,7 @@ const hreflangLinks = hreflangs.map((h) => ({ ...h, href: normalizeCanonical(h.h
 const effectiveRobots = robots ? robots : isAdminPath ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
 const effectiveOgUrl = canonicalUrl ?? toAbsoluteUrl(Astro.url?.pathname ? `${siteOrigin}${Astro.url.pathname}` : null);
-const effectiveOgImage = ogImage || `${siteOrigin}/og/og-default.png`;
+const effectiveOgImage = toAbsoluteUrl(ogImage) || `${siteOrigin}/og/og-brand.png`;
 
 const effectiveOgType = String(ogType || '').trim() || 'website';
 const effectiveTwitterCard: 'summary' | 'summary_large_image' = twitterCard
@@ -203,6 +221,12 @@ const organizationLd = siteOrigin
 			name: 'PropertyList',
 			url: 'https://propertylist.es/',
 			logo: `${siteOrigin}${logo}`,
+			description:
+				'Spain\'s free Smart MLS, CRM and public property portal for estate agents - agent-to-agent collaboration, AI tools, and notary-verified market data.',
+			sameAs: [
+				'https://www.instagram.com/propertylist.es',
+				'https://www.facebook.com/propertyList.es/',
+			],
 		}
 	: null;
 
@@ -371,17 +395,28 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 										<svg class="navDropChev" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
 									</button>
 									<div class="navDropMenu" role="menu">
+										<div class="ndHead">{lang === 'de' ? 'Plattform' : lang === 'es' ? 'Plataforma' : 'Platform'}</div>
 										<a role="menuitem" href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'de' ? 'Funktionen' : lang === 'es' ? 'Funciones' : 'Features'}</a>
 										<a role="menuitem" href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'de' ? 'Website-Baukasten' : lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 										<a role="menuitem" href="/pipelines/">Pipelines</a>
+										<a role="menuitem" href="/nurture/">Nurture</a>
 										<a role="menuitem" href="/rentals/">{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
 										<a role="menuitem" href="https://agents.propertylist.es/">{lang === 'es' ? 'MLS (compartir propiedades)' : 'MLS (Property Sharing)'}</a>
 										<a role="menuitem" href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile App'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/listado-instantaneo/' : '/instant-listing/'}>{lang === 'de' ? 'Instant Listing' : lang === 'es' ? 'Listado Instantáneo' : 'Instant Listing'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/renovacion-instantanea/' : '/instant-renovation/'}>{lang === 'de' ? 'Instant Renovation' : lang === 'es' ? 'Renovación Instantánea' : 'Instant Renovation'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/contenido-instantaneo/' : '/instant-content/'}>{lang === 'de' ? 'Instant Content' : lang === 'es' ? 'Contenido Instantáneo' : 'Instant Content'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/video-instantaneo/' : '/instant-video/'}>{lang === 'de' ? 'Instant Video' : lang === 'es' ? 'Vídeo Instantáneo' : 'Instant Video'}</a>
-										<a role="menuitem" href={lang === 'es' ? '/es/imagenes-instantaneas/' : '/instant-images/'}>{lang === 'de' ? 'Instant Images' : lang === 'es' ? 'Imágenes Instantáneas' : 'Instant Images'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/gratis/' : '/free/'}>{lang === 'de' ? 'Kostenlos - alles inklusive' : lang === 'es' ? 'Todo gratis' : "What's free"}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/lanza-tu-agencia/' : '/launch/'}>{lang === 'de' ? 'In Minuten starten' : lang === 'es' ? 'Lanza tu agencia' : 'Launch your agency'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/busqueda-ia/' : '/ai-property-search/'}>{lang === 'de' ? 'KI-Immobiliensuche' : lang === 'es' ? 'Búsqueda con IA' : 'AI Property Search'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/informe-inteligencia-propiedad/' : '/property-intelligence-report/'}>{lang === 'de' ? 'Immobilien-Analysebericht' : lang === 'es' ? 'Informe de Inteligencia' : 'Property Intelligence Report'}</a>
+										<div class="ndHead">{lang === 'de' ? 'Instant-KI-Tools' : lang === 'es' ? 'Herramientas Instant' : 'Instant AI tools'}</div>
+										<div class="ndGrid">
+											<a role="menuitem" href={lang === 'es' ? '/es/listado-instantaneo/' : '/instant-listing/'}>{lang === 'de' ? 'Instant Listing' : lang === 'es' ? 'Listado Instantáneo' : 'Instant Listing'}</a>
+											<a role="menuitem" href={lang === 'es' ? '/es/contenido-instantaneo/' : '/instant-content/'}>{lang === 'de' ? 'Instant Content' : lang === 'es' ? 'Contenido Instantáneo' : 'Instant Content'}</a>
+											<a role="menuitem" href={lang === 'es' ? '/es/folleto-instantaneo/' : '/instant-brochure/'}>{lang === 'de' ? 'Instant Brochure' : lang === 'es' ? 'Folleto Instantáneo' : 'Instant Brochure'}</a>
+											<a role="menuitem" href={lang === 'es' ? '/es/renovacion-instantanea/' : '/instant-renovation/'}>{lang === 'de' ? 'Instant Renovation' : lang === 'es' ? 'Renovación Instantánea' : 'Instant Renovation'}</a>
+											<a role="menuitem" href={lang === 'es' ? '/es/video-instantaneo/' : '/instant-video/'}>{lang === 'de' ? 'Instant Video' : lang === 'es' ? 'Vídeo Instantáneo' : 'Instant Video'}</a>
+											<a role="menuitem" href={lang === 'es' ? '/es/imagenes-instantaneas/' : '/instant-images/'}>{lang === 'de' ? 'Instant Images' : lang === 'es' ? 'Imágenes Instantáneas' : 'Instant Images'}</a>
+										</div>
+										<div class="ndDivider"></div>
 										<a role="menuitem" href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
 									</div>
 								</div>
@@ -393,7 +428,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 										<svg class="navDropChev" viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
 									</button>
 									<div class="navDropMenu" role="menu">
+										<a role="menuitem" href={lang === 'es' ? '/es/video-guias/' : '/video-guides/'}>{lang === 'de' ? 'Video-Anleitungen' : lang === 'es' ? 'Vídeo guías' : 'Video Guides'}</a>
 										<a role="menuitem" href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
+										<a role="menuitem" href={lang === 'es' ? '/es/costa-del-sol/' : '/costa-del-sol/'}>{lang === 'de' ? 'Costa del Sol' : 'Costa del Sol'}</a>
 										<a role="menuitem" href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebietsführer' : lang === 'es' ? 'Guías de zonas' : 'Area Guides'}</a>
 									<a role="menuitem" href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
 									</div>
@@ -467,17 +504,26 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								{lang === 'de' ? 'Anmelden / Registrieren' : lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
 							</button>
 							<a href={lang === 'es' ? '/es/' : '/'}>{lang === 'de' ? 'Startseite' : lang === 'es' ? 'Inicio' : 'Home'}</a>
+							<div class="mobHead">{lang === 'de' ? 'Plattform' : lang === 'es' ? 'Plataforma' : 'Platform'}</div>
 							<a href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'de' ? 'Funktionen' : lang === 'es' ? 'Funciones' : 'Features'}</a>
 							<a href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'de' ? 'Website-Baukasten' : lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 							<a href="/pipelines/">Pipelines</a>
+							<a href="/nurture/">Nurture</a>
 							<a href="/rentals/">{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
 							<a href="https://agents.propertylist.es/">{lang === 'es' ? 'MLS (compartir propiedades)' : 'MLS (Property Sharing)'}</a>
 							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile App'}</a>
+							<a href={lang === 'es' ? '/es/busqueda-ia/' : '/ai-property-search/'}>{lang === 'de' ? 'KI-Immobiliensuche' : lang === 'es' ? 'Búsqueda con IA' : 'AI Property Search'}</a>
+							<a href={lang === 'es' ? '/es/informe-inteligencia-propiedad/' : '/property-intelligence-report/'}>{lang === 'de' ? 'Immobilien-Analysebericht' : lang === 'es' ? 'Informe de Inteligencia' : 'Property Intelligence Report'}</a>
+							<a href={lang === 'es' ? '/es/gratis/' : '/free/'}>{lang === 'de' ? 'Kostenlos - alles inklusive' : lang === 'es' ? 'Todo gratis' : 'Whats free'.replace('Whats','What’s')}</a>
+							<a href={lang === 'es' ? '/es/lanza-tu-agencia/' : '/launch/'}>{lang === 'de' ? 'In Minuten starten' : lang === 'es' ? 'Lanza tu agencia' : 'Launch your agency'}</a>
+							<div class="mobHead">{lang === 'de' ? 'Instant-KI-Tools' : lang === 'es' ? 'Herramientas Instant' : 'Instant AI tools'}</div>
 							<a href={lang === 'es' ? '/es/listado-instantaneo/' : '/instant-listing/'}>{lang === 'de' ? 'Instant Listing' : lang === 'es' ? 'Listado Instantáneo' : 'Instant Listing'}</a>
-							<a href={lang === 'es' ? '/es/renovacion-instantanea/' : '/instant-renovation/'}>{lang === 'de' ? 'Instant Renovation' : lang === 'es' ? 'Renovación Instantánea' : 'Instant Renovation'}</a>
 							<a href={lang === 'es' ? '/es/contenido-instantaneo/' : '/instant-content/'}>{lang === 'de' ? 'Instant Content' : lang === 'es' ? 'Contenido Instantáneo' : 'Instant Content'}</a>
+							<a href={lang === 'es' ? '/es/folleto-instantaneo/' : '/instant-brochure/'}>{lang === 'de' ? 'Instant Brochure' : lang === 'es' ? 'Folleto Instantáneo' : 'Instant Brochure'}</a>
+							<a href={lang === 'es' ? '/es/renovacion-instantanea/' : '/instant-renovation/'}>{lang === 'de' ? 'Instant Renovation' : lang === 'es' ? 'Renovación Instantánea' : 'Instant Renovation'}</a>
 							<a href={lang === 'es' ? '/es/video-instantaneo/' : '/instant-video/'}>{lang === 'de' ? 'Instant Video' : lang === 'es' ? 'Vídeo Instantáneo' : 'Instant Video'}</a>
 							<a href={lang === 'es' ? '/es/imagenes-instantaneas/' : '/instant-images/'}>{lang === 'de' ? 'Instant Images' : lang === 'es' ? 'Imágenes Instantáneas' : 'Instant Images'}</a>
+							<div class="mobDivider"></div>
 							<a href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : 'Docs'}</a>
 							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
@@ -527,58 +573,29 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 			<slot />
 		</main>
 		{minimal ? null : (
-			<footer class="footer">
-				<div class="footerInner">
-					<div class="footerBrand">
-						<a href="https://propertylist.es/" class="footerLogoLink">
-							<img src="/favicon.png" alt="PropertyList" width="36" height="36" loading="lazy" decoding="async" />
-							<span>PropertyList</span>
-						</a>
-						<p class="footerTagline">
-							{lang === 'es'
-								? 'La MLS gratuita de agente a agente para España'
-								: 'The free agent-to-agent MLS for Spain'}
-						</p>
+			<section class="footerCta" aria-label={lang === 'de' ? 'Kostenlos starten' : lang === 'es' ? 'Empieza gratis' : 'Get started free'}>
+				<div class="footerCtaInner">
+					<div>
+						<div class="footerCtaTitle">{existingUser ? (lang === 'de' ? 'Ihr Konto ist bereits aktiv.' : lang === 'es' ? 'Tu cuenta ya está activa.' : 'Your account is already live.') : lang === 'de' ? `Einmal listen. ${statPlus(__lps.agents, 'de')} Makler verkaufen mit.` : lang === 'es' ? `Publica una vez. ${statPlus(__lps.agents, 'es')} agentes venden contigo.` : `List once. ${statPlus(__lps.agents, 'en')} agents sell with you.`}</div>
+						<div class="footerCtaSub">{existingUser ? (lang === 'de' ? 'Anmelden und eine Immobilie hinzufügen.' : lang === 'es' ? 'Entra y añade una propiedad.' : 'Log in and add one property.') : lang === 'de' ? 'Kostenloses MLS + CRM. Keine Verträge, keine Einrichtungsgebühren.' : lang === 'es' ? 'MLS + CRM gratis. Sin contratos, sin costes de alta.' : 'Free MLS + CRM. No contracts, no setup fees.'}</div>
 					</div>
-					<nav class="footerNav" aria-label={lang === 'de' ? 'Fußzeilen-Navigation' : lang === 'es' ? 'Navegación del pie de página' : 'Footer navigation'}>
-						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'de' ? 'Produkt' : lang === 'es' ? 'Producto' : 'Product'}</div>
-							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : lang === 'es' ? 'Documentación' : 'Docs'}</a>
-							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
-							<a href="https://propertylist.es/">{lang === 'de' ? 'Immobilien suchen' : lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
-							<a href="https://intelligence.propertylist.es/">Market Intelligence</a>
-							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile app'}</a>
-							<a href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
-						</div>
-						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'de' ? 'Unternehmen' : lang === 'es' ? 'Empresa' : 'Company'}</div>
-							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
-							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
-							<a href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebiete' : lang === 'es' ? 'Zonas' : 'Areas'}</a>
-							<a href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
-							<a href="/de/" hreflang="de">Deutsch</a>
-							<a href={lang === 'es' ? '/es/preguntas-frecuentes/' : '/faq/'}>FAQ</a>
-						</div>
-						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'de' ? 'Konto' : lang === 'es' ? 'Cuenta' : 'Account'}</div>
-							<a href="https://agents.propertylist.es/">{lang === 'de' ? 'Makler-Login' : lang === 'es' ? 'Acceso agentes' : 'Agents Login'}</a>
-							<a href="https://developers.propertylist.es/login">{lang === 'de' ? 'Entwickler-Login' : lang === 'es' ? 'Acceso desarrolladores' : 'Developers Login'}</a>
-						</div>
-						<div class="footerCol">
-							<div class="footerColTitle">{lang === 'de' ? 'Rechtliches' : lang === 'es' ? 'Legal' : 'Legal'}</div>
-							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/privacy-policy/' : '/docs/propertylist-mls-user-manual/privacy-policy/'}>
-								{lang === 'de' ? 'Datenschutzerklärung' : lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}
+					<a class="footerCtaBtn" href={existingUser ? `https://agents.propertylist.es/login${lang === 'es' ? '?locale=es' : lang === 'de' ? '?locale=de' : ''}` : `https://agents.propertylist.es/new_agency/new?locale=${lang === 'es' ? 'es' : lang === 'de' ? 'de' : 'en'}`} target="_blank" rel="noopener">{existingUser ? (lang === 'de' ? 'Anmelden' : lang === 'es' ? 'Entrar' : 'Log in') : (lang === 'de' ? 'Kostenlos starten' : lang === 'es' ? 'Crea tu cuenta gratis' : 'Create your free account')} &rarr;</a>
+				</div>
+			</section>
+			<footer class="footer">
+				<div class="footerInner2">
+					<div class="footer2Grid">
+						<div class="footer2Brand">
+							<a href="https://propertylist.es/" class="footerLogoLink">
+								<img src="/favicon.png" alt="PropertyList" width="34" height="34" loading="lazy" decoding="async" />
+								<span>PropertyList</span>
 							</a>
-							<a class="footerLink" href={lang === 'es' ? '/es/reportar-un-problema/' : '/report-a-problem/'}>{lang === 'de' ? 'Betrug melden' : lang === 'es' ? 'Reportar una estafa' : 'Report a scam'}</a>
-							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/terms-conditions/' : '/docs/propertylist-mls-user-manual/terms-conditions/'}>
-								{lang === 'de' ? 'Allgemeine Geschäftsbedingungen' : lang === 'es' ? 'Términos y condiciones' : 'Terms & Conditions'}
-							</a>
-						</div>
-					</nav>
-					<div class="footerBottom">
-						<span class="footerFine" style="display:block;font-size:11.5px;opacity:0.6;margin-top:6px;">{lang === 'de' ? 'Die Informationen auf dieser Website sind allgemeine Hinweise, keine professionelle Beratung.' : lang === 'es' ? 'La informacion de este sitio es orientacion general, no asesoramiento profesional.' : 'Information on this site is general guidance, not professional advice.'}</span>
-						<span class="footerCopy">&copy; {new Date().getFullYear()} PropertyList.es. {lang === 'de' ? 'Alle Rechte vorbehalten' : lang === 'es' ? 'Todos los derechos reservados' : 'All rights reserved'}.</span>
-						<div class="footerSocial">
+							<p class="footerTagline">
+								{lang === 'es'
+									? 'La MLS gratuita de agente a agente para España'
+									: 'The free agent-to-agent MLS for Spain'}
+							</p>
+							<div class="footerSocial">
 							<a href="https://www.facebook.com/PropertyList.es" aria-label="Facebook" target="_blank" rel="noopener">
 								<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
 							</a>
@@ -591,7 +608,55 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a href="https://www.youtube.com/@PropertyList_es" aria-label="YouTube" target="_blank" rel="noopener">
 								<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
 							</a>
+							</div>
 						</div>
+						<div class="footerCol">
+							<div class="footerColTitle">{lang === 'de' ? 'Produkt' : lang === 'es' ? 'Producto' : 'Product'}</div>
+							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : lang === 'es' ? 'Documentación' : 'Docs'}</a>
+							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
+							<a href="https://propertylist.es/">{lang === 'de' ? 'Immobilien suchen' : lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
+							<a href={lang === 'es' ? '/es/busqueda-ia/' : '/ai-property-search/'}>{lang === 'de' ? 'KI-Immobiliensuche' : lang === 'es' ? 'Búsqueda con IA' : 'AI Property Search'}</a>
+							<a href={lang === 'es' ? '/es/informe-inteligencia-propiedad/' : '/property-intelligence-report/'}>{lang === 'de' ? 'Immobilien-Analysebericht' : lang === 'es' ? 'Informe de Inteligencia' : 'Property Intelligence Report'}</a>
+							<a href={lang === 'es' ? '/es/gratis/' : '/free/'}>{lang === 'de' ? 'Kostenlos - alles inklusive' : lang === 'es' ? 'Todo gratis' : 'Whats free'.replace('Whats','What’s')}</a>
+							<a href={lang === 'es' ? '/es/lanza-tu-agencia/' : '/launch/'}>{lang === 'de' ? 'In Minuten starten' : lang === 'es' ? 'Lanza tu agencia' : 'Launch your agency'}</a>
+							<a href="https://intelligence.propertylist.es/">Market Intelligence</a>
+							<a href="https://oracle.propertylist.es/" target="_blank" rel="noopener">{lang === 'es' ? 'Oracle (precios verificados)' : 'PropertyList Oracle'}</a>
+							<a href="https://mcp.propertylist.es/" target="_blank" rel="noopener">MCP (Data API)</a>
+							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile app'}</a>
+							<a href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
+						</div>
+						<div class="footerCol">
+							<div class="footerColTitle">{lang === 'de' ? 'Unternehmen' : lang === 'es' ? 'Empresa' : 'Company'}</div>
+							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
+							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
+							<a href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebiete' : lang === 'es' ? 'Zonas' : 'Areas'}</a>
+							<a href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
+							<a href={lang === 'es' ? '/es/solicitar-funciones/' : '/request-new-features/'}>{lang === 'de' ? 'Feature-Voting' : lang === 'es' ? 'Solicitar funciones' : 'Feature requests'}</a>
+							<a href="/de/" hreflang="de">Deutsch</a>
+							<a href={lang === 'es' ? '/es/preguntas-frecuentes/' : '/faq/'}>FAQ</a>
+						</div>
+						<div class="footerCol">
+							<div class="footerColTitle">{lang === 'de' ? 'Konto' : lang === 'es' ? 'Cuenta' : 'Account'}</div>
+							<a href="https://agents.propertylist.es/">{lang === 'de' ? 'Makler-Login' : lang === 'es' ? 'Acceso agentes' : 'Agents Login'}</a>
+							<a class="footerColCta" href={`https://agents.propertylist.es/new_agency/new?locale=${lang === 'es' ? 'es' : lang === 'de' ? 'de' : 'en'}`} target="_blank" rel="noopener">{lang === 'de' ? 'Makler: kostenlos starten' : lang === 'es' ? 'Agentes: únete gratis' : 'Agents: join free'}</a>
+							<a href="https://developers.propertylist.es/login">{lang === 'de' ? 'Entwickler-Login' : lang === 'es' ? 'Acceso promotores' : 'Developers Login'}</a>
+							<a href={lang === 'es' ? '/es/docs/developers/' : '/docs/developers/'}>{lang === 'de' ? 'Entwickler-Dokumentation' : lang === 'es' ? 'Docs para promotores' : 'Developer docs'}</a>
+						</div>
+						<div class="footerCol">
+							<div class="footerColTitle">{lang === 'de' ? 'Rechtliches' : lang === 'es' ? 'Legal' : 'Legal'}</div>
+							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/privacy-policy/' : '/docs/propertylist-mls-user-manual/privacy-policy/'}>
+								{lang === 'de' ? 'Datenschutzerklärung' : lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}
+							</a>
+							<a class="footerLink" href={lang === 'es' ? '/es/reportar-un-problema/' : '/report-a-problem/'}>{lang === 'de' ? 'Betrug melden' : lang === 'es' ? 'Reportar una estafa' : 'Report a scam'}</a>
+							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/community-guidelines/' : '/docs/propertylist-mls-user-manual/community-guidelines/'}>{lang === 'de' ? 'Community-Richtlinien' : lang === 'es' ? 'Normas de la comunidad' : 'Community Guidelines'}</a>
+							<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/terms-conditions/' : '/docs/propertylist-mls-user-manual/terms-conditions/'}>
+								{lang === 'de' ? 'Allgemeine Geschäftsbedingungen' : lang === 'es' ? 'Términos y condiciones' : 'Terms & Conditions'}
+							</a>
+						</div>
+					</div>
+					<div class="footerBottom2">
+						<span class="footerCopy">&copy; {new Date().getFullYear()} PropertyList.es &middot; {lang === 'de' ? 'Alle Rechte vorbehalten' : lang === 'es' ? 'Todos los derechos reservados' : 'All rights reserved'}</span>
+						<span class="footerFine2">{lang === 'de' ? 'Die Informationen auf dieser Website sind allgemeine Hinweise, keine professionelle Beratung.' : lang === 'es' ? 'La información de este sitio es orientación general, no asesoramiento profesional.' : 'Information on this site is general guidance, not professional advice.'}</span>
 					</div>
 				</div>
 			</footer>
@@ -634,7 +699,21 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				if (!el) return;
 				try { if (localStorage.getItem('pl_app_promo_dismissed') === '1') return; } catch (e) {}
 				var dismiss = function () { el.classList.remove('show'); setTimeout(function () { el.hidden = true; }, 300); try { localStorage.setItem('pl_app_promo_dismissed', '1'); } catch (e) {} };
-				setTimeout(function () { el.hidden = false; requestAnimationFrame(function () { el.classList.add('show'); }); }, 2500);
+				var reveal = function () { el.hidden = false; requestAnimationFrame(function () { el.classList.add('show'); }); };
+				// never stack on top of the cookie banner: wait until consent has been answered
+				var consentPending = function () {
+					var c = document.querySelector('[data-ga-consent]');
+					if (!c || c.hidden) return false;
+					try { return !localStorage.getItem('pl_ga_consent'); } catch (e) { return false; }
+				};
+				var waited = 0;
+				var tick = function () {
+					if (!consentPending()) { reveal(); return; }
+					waited += 600;
+					if (waited > 120000) return; // give up quietly after 2 minutes
+					setTimeout(tick, 600);
+				};
+				setTimeout(tick, 2500);
 				var x = el.querySelector('[data-app-promo-close]'); if (x) x.addEventListener('click', dismiss);
 				var g = el.querySelector('[data-app-promo-get]'); if (g) g.addEventListener('click', function () { try { localStorage.setItem('pl_app_promo_dismissed', '1'); } catch (e) {} });
 			})();
@@ -650,6 +729,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 			.appPromoBtn:hover { background: #086055; }
 			.appPromoX { position: absolute; top: -9px; right: -9px; width: 24px; height: 24px; border-radius: 999px; border: 1px solid rgba(16, 24, 40, 0.15); background: #fff; color: rgba(16, 24, 40, 0.6); font-size: 16px; line-height: 1; cursor: pointer; }
 			@media (min-width: 560px) { .appPromo { left: auto; right: 20px; bottom: 20px; margin: 0; } }
+			body:has(.gaConsent:not([hidden])) .appPromo { bottom: 108px; }
+			@media (min-width: 560px) { body:has(.gaConsent:not([hidden])) .appPromo { bottom: 112px; } }
 		</style>
 		{consentEnabled ? (
 			<div class="gaConsent" data-ga-consent hidden>
@@ -1220,20 +1301,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				const path = normalise(window.location.pathname);
 				if (!isTrackable(path)) return;
 
-				try {
-					if (navigator.sendBeacon) {
-						const blob = new Blob([JSON.stringify({ path })], { type: 'application/json' });
-						navigator.sendBeacon('/api/views', blob);
-					} else {
-						fetch('/api/views', {
-							method: 'POST',
-							headers: { 'content-type': 'application/json' },
-							body: JSON.stringify({ path }),
-							keepalive: true,
-						}).catch(() => undefined);
-					}
-				} catch {
-				}
+				// View counting is server-side in middleware (single count, bot-filtered, per-IP deduped).
 
 				const els = Array.prototype.slice.call(document.querySelectorAll('[data-view-count]'));
 				if (!els.length) return;
@@ -1257,6 +1325,21 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						})
 						.catch(() => undefined);
 				}, 500);
+			})();
+		</script>
+		<script is:inline>
+			(() => {
+				// Sitewide signup-click tracking -> Umami signup-click{from:<path>} so conversion is readable per landing page.
+				const q = [];
+				const track = (n, d) => { try { if (window.umami && umami.track) umami.track(n, d); else q.push([n, d]); } catch (e) {} };
+				const t = setInterval(() => { try { if (window.umami && umami.track) { q.splice(0).forEach((a) => umami.track(a[0], a[1])); clearInterval(t); } } catch (e) {} }, 400);
+				document.addEventListener("click", (ev) => {
+					const a = ev.target && ev.target.closest && ev.target.closest("a[href]");
+					if (!a) return;
+					const h = a.getAttribute("href") || "";
+					if (h.indexOf("new_agency") > -1 || h.indexOf("developers.propertylist.es/signup") > -1) track("signup-click", { from: location.pathname });
+					if (h.indexOf("agents.propertylist.es/login") > -1) track("login-click", { from: location.pathname });
+				}, true);
 			})();
 		</script>
 		<script is:inline>
@@ -1842,7 +1925,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		top: 100%;
 		left: 0;
 		margin-top: 10px;
-		min-width: 210px;
+		min-width: 344px;
 		display: flex;
 		flex-direction: column;
 		background: #fff;
@@ -1864,6 +1947,25 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		transform: translateY(0);
 	}
 
+	.ndHead {
+		font-size: 10.5px;
+		font-weight: 800;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		color: rgba(11, 18, 32, 0.42);
+		padding: 9px 11px 4px;
+		user-select: none;
+	}
+	.ndGrid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0 2px;
+	}
+	.ndDivider {
+		height: 1px;
+		background: rgba(11, 18, 32, 0.08);
+		margin: 6px 8px;
+	}
 	.navDropMenu a {
 		padding: 9px 11px;
 		border-radius: 9px;
@@ -2114,24 +2216,77 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		align-items: center;
 	}
 
+	@property --plangle {
+		syntax: '<angle>';
+		initial-value: 0deg;
+		inherits: false;
+	}
+
 	.navAuthBtn {
+		position: relative;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		padding: 10px 14px;
 		border-radius: 999px;
-		border: 1px solid rgba(var(--accent-rgb), 0.35);
-		background: rgba(var(--accent-rgb), 0.12);
+		border: 1px solid transparent;
+		background:
+			linear-gradient(rgb(var(--accent-rgb)), rgb(var(--accent-rgb))) bottom / 100% 0% no-repeat,
+			rgba(var(--accent-rgb), 0.12);
 		color: rgba(11, 18, 32, 0.92);
 		font-weight: 900;
 		letter-spacing: -0.01em;
 		font: inherit;
 		cursor: pointer;
 		white-space: nowrap;
+		transition: color 0.16s ease, background-size 0.22s ease-in;
+	}
+
+	/* slowly rotating teal-to-gold ring */
+	.navAuthBtn::before {
+		content: '';
+		position: absolute;
+		inset: -2px;
+		border-radius: 999px;
+		padding: 2px;
+		background: conic-gradient(
+			from var(--plangle),
+			rgba(0, 174, 154, 0.95),
+			rgba(169, 138, 85, 0.85),
+			rgba(0, 174, 154, 0.15),
+			rgba(0, 174, 154, 0.95)
+		);
+		-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		mask-composite: exclude;
+		animation: plAuthSpin 6s linear infinite;
+		pointer-events: none;
+	}
+
+	@keyframes plAuthSpin {
+		to {
+			--plangle: 360deg;
+		}
 	}
 
 	.navAuthBtn:hover {
-		background: rgba(var(--accent-rgb), 0.18);
+		color: #fff;
+		background-size: 100% 100%, auto;
+		transition: color 0.2s ease 0.08s, background-size 0.3s cubic-bezier(0.33, 1, 0.5, 1);
+	}
+
+	.navAuthBtn:hover::before {
+		animation-duration: 1.6s;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.navAuthBtn::before {
+			animation: none;
+		}
+		.navAuthBtn {
+			transition: none;
+		}
 	}
 
 	.navAuthBtn:focus-visible {
@@ -2306,6 +2461,19 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		padding-bottom: max(14px, env(safe-area-inset-bottom));
 	}
 
+	.mobHead {
+		font-size: 11px;
+		font-weight: 800;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: rgba(11, 18, 32, 0.42);
+		padding: 14px 2px 4px;
+	}
+	.mobDivider {
+		height: 1px;
+		background: rgba(11, 18, 32, 0.1);
+		margin: 8px 0;
+	}
 	.mobileMenuLinks a,
 	.mobileMenuAuth {
 		display: flex;
@@ -2530,6 +2698,116 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 
 	.footerCol a:hover {
 		color: var(--accent);
+	}
+
+	/* redesigned footer (2026-07-18) */
+	.footerCta {
+		border-top: 1px solid rgba(11, 18, 32, 0.08);
+		background: linear-gradient(135deg, rgba(0, 174, 154, 0.1), rgba(0, 174, 154, 0.03));
+	}
+	.footerCtaInner {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 26px 18px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 18px;
+		flex-wrap: wrap;
+	}
+	.footerCtaTitle {
+		font-weight: 900;
+		font-size: 19px;
+		letter-spacing: -0.01em;
+		color: #0b1220;
+	}
+	.footerCtaSub {
+		margin-top: 3px;
+		font-size: 14px;
+		color: rgba(11, 18, 32, 0.6);
+	}
+	.footerCtaBtn {
+		flex: none;
+		background: #00ae9a;
+		color: #fff;
+		font-weight: 800;
+		font-size: 15px;
+		padding: 13px 24px;
+		border-radius: 999px;
+		text-decoration: none;
+		transition: background 0.15s, transform 0.1s;
+	}
+	.footerCtaBtn:hover {
+		background: #008a7a;
+		transform: translateY(-1px);
+	}
+	.footerInner2 {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 40px max(18px, env(safe-area-inset-right)) 22px max(18px, env(safe-area-inset-left));
+	}
+	.footer2Grid {
+		display: grid;
+		grid-template-columns: 1.35fr 1fr 1fr 1fr 1fr;
+		gap: 32px;
+	}
+	.footer2Brand .footerTagline {
+		margin-top: 10px;
+	}
+	.footer2Brand .footerSocial {
+		display: flex;
+		gap: 10px;
+		margin-top: 16px;
+	}
+	.footer2Brand .footerSocial a {
+		display: grid;
+		place-items: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 10px;
+		border: 1px solid rgba(11, 18, 32, 0.12);
+		color: rgba(11, 18, 32, 0.55);
+		transition: color 0.15s, border-color 0.15s, background 0.15s;
+	}
+	.footer2Brand .footerSocial a:hover {
+		color: #00ae9a;
+		border-color: rgba(0, 174, 154, 0.5);
+		background: rgba(0, 174, 154, 0.06);
+	}
+	.footerColCta {
+		color: #0a6d61 !important;
+		font-weight: 800 !important;
+	}
+	.footerBottom2 {
+		margin-top: 34px;
+		padding-top: 18px;
+		border-top: 1px solid rgba(11, 18, 32, 0.08);
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+		flex-wrap: wrap;
+	}
+	.footerBottom2 .footerCopy {
+		font-size: 13px;
+		color: rgba(11, 18, 32, 0.6);
+	}
+	.footerFine2 {
+		font-size: 12px;
+		color: rgba(11, 18, 32, 0.45);
+	}
+	@media (max-width: 960px) {
+		.footer2Grid {
+			grid-template-columns: 1fr 1fr;
+		}
+		.footer2Brand {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 540px) {
+		.footer2Grid {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	.footerBottom {
@@ -3615,6 +3893,13 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 	@media (max-width: 520px) {
 		.docTitle {
 			font-size: 30px;
+		}
+
+		/* article.blogPost .docTitle sets 40px and outranks the .docTitle rule above on
+		   specificity, so blog titles never shrank on a phone. Match the specificity here. */
+		article.blogPost .docTitle {
+			font-size: 28px;
+			line-height: 1.15;
 		}
 
 		.docPager {

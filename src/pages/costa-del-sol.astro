@@ -1,0 +1,1326 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const es = false;
+const t = (en: string, esx: string) => (es ? esx : en);
+
+// Live figures pulled from the PropertyList MCP (area_market_summary) 2026-07-19.
+// asking = median asking price of live listings; verified = notarial register EUR/m2.
+const towns = [
+	{
+		slug: 'malaga',
+		name: 'Málaga',
+		guide: '/neighbourhood/spain/malaga/malaga-centre/',
+		kicker: 'Dawn · km 0',
+		blurb: 'The coast begins in a working city: a cathedral, a Picasso, a port that became a promenade. Buyers come for the airport and stay for the restaurants.',
+		listings: 79,
+		median: '790,000',
+		asking: '5,479',
+		verified: '3,089',
+		sky: ['#151a3d', '#4a3a63', '#c4708a'],
+		sun: { x: 18, y: 78, size: 120, glow: '#ffb27a' },
+		sea: ['#1d2b4a', '#26365a'],
+		ridge: '#0e1430',
+		text: 'light',
+	},
+	{
+		slug: 'torremolinos',
+		name: 'Torremolinos',
+		guide: '/neighbourhood/spain/malaga/torremolinos/',
+		kicker: 'Sunrise · km 14',
+		blurb: 'Where the Costa del Sol was invented. Six kilometres of beach, a cliff-top old town, and the shortest airport run on the coast.',
+		listings: 61,
+		median: '449,000',
+		asking: '4,661',
+		verified: '3,282',
+		sky: ['#2b3a6b', '#7d6a9e', '#f0a07e'],
+		sun: { x: 26, y: 66, size: 108, glow: '#ffc48f' },
+		sea: ['#22406b', '#2c5175'],
+		ridge: '#16224a',
+		text: 'light',
+	},
+	{
+		slug: 'benalmadena',
+		name: 'Benalmádena',
+		guide: '/neighbourhood/spain/malaga/benalmadena/',
+		kicker: 'Morning · km 20',
+		blurb: 'Three towns in one: a marina that looks like a film set, a beach strip, and a white village in the hills above it all.',
+		listings: 158,
+		median: '690,000',
+		asking: '4,738',
+		verified: '3,155',
+		sky: ['#3f6ea8', '#7fb3d8', '#dbe9f2'],
+		sun: { x: 36, y: 46, size: 96, glow: '#ffe6b8' },
+		sea: ['#2f6a99', '#3f86ad'],
+		ridge: '#26456b',
+		text: 'light',
+	},
+	{
+		slug: 'fuengirola',
+		name: 'Fuengirola',
+		guide: '/neighbourhood/spain/malaga/fuengirola/',
+		kicker: 'Midday · km 30',
+		blurb: 'The coast at its most everyday, in the best sense: a seven-kilometre paseo, a train to the airport, and neighbours who actually live here all year.',
+		listings: 192,
+		median: '499,000',
+		asking: '4,759',
+		verified: '3,782',
+		sky: ['#3d86c6', '#8fc4e6', '#eef6fb'],
+		sun: { x: 50, y: 22, size: 84, glow: '#fff4d0' },
+		sea: ['#2f7fb4', '#4d9cc4'],
+		ridge: '#2b5c85',
+		text: 'light',
+	},
+	{
+		slug: 'mijas',
+		name: 'Mijas',
+		guide: '/neighbourhood/spain/malaga/mijas-pueblo/',
+		kicker: 'Afternoon · km 34',
+		blurb: 'A white village pinned to the mountainside, with the whole coast laid out below it, and a municipality that runs from those streets down to the sea.',
+		listings: 548,
+		median: '599,950',
+		asking: '3,892',
+		verified: '2,922',
+		sky: ['#4a90c9', '#9ccbe4', '#f6f1e2'],
+		sun: { x: 62, y: 28, size: 90, glow: '#ffeec2' },
+		sea: ['#337fae', '#57a3c4'],
+		ridge: '#2f6288',
+		text: 'light',
+	},
+	{
+		slug: 'marbella',
+		name: 'Marbella',
+		guide: '/neighbourhood/spain/malaga/marbella/',
+		kicker: 'Golden hour · km 45',
+		blurb: 'The name that sells the coast. La Concha behind it, the Golden Mile in front, and more homes changing hands than anywhere else on this list.',
+		listings: 1570,
+		median: '1,450,000',
+		asking: '6,270',
+		verified: '4,582',
+		sky: ['#5b7fc0', '#d99f7d', '#f7d9a8'],
+		sun: { x: 72, y: 44, size: 104, glow: '#ffd79a' },
+		sea: ['#3a6f9e', '#5f6d9e'],
+		ridge: '#3a4a72',
+		text: 'light',
+	},
+	{
+		slug: 'puerto-banus',
+		name: 'Puerto Banús',
+		guide: '/neighbourhood/spain/malaga/puerto-banus/',
+		kicker: 'Sundown · km 51',
+		blurb: 'A marina built for yachts in 1970 that never stopped being the reason people fly in. The most expensive asking prices on the coast, by some distance.',
+		listings: 137,
+		median: '1,300,000',
+		asking: '7,799',
+		verified: null,
+		sky: ['#4a5590', '#d97f6a', '#ffb887'],
+		sun: { x: 82, y: 58, size: 116, glow: '#ff9e6b' },
+		sea: ['#3c4f7d', '#4a3f74'],
+		ridge: '#2c3560',
+		text: 'light',
+	},
+	{
+		slug: 'estepona',
+		name: 'Estepona',
+		guide: '/neighbourhood/spain/malaga/estepona/',
+		kicker: 'Sunset · km 74',
+		blurb: 'The old town that planted flowers on every street and became the coast’s prettiest walk. Second only to Marbella for homes on the market.',
+		listings: 903,
+		median: '825,000',
+		asking: '5,036',
+		verified: '3,352',
+		sky: ['#2f3468', '#a4517a', '#f08a5d'],
+		sun: { x: 90, y: 74, size: 130, glow: '#ff7e4d' },
+		sea: ['#2a3260', '#2a2350'],
+		ridge: '#1c2048',
+		text: 'light',
+	},
+	{
+		slug: 'sotogrande',
+		name: 'Sotogrande',
+		guide: '/neighbourhood/spain/cadiz/sotogrande/',
+		kicker: 'Dusk · km 105',
+		blurb: 'Where the coast runs out and the polo starts. Big plots, older money, and the highest median asking price of any town on this route.',
+		listings: 116,
+		median: '1,975,000',
+		asking: '4,596',
+		verified: null,
+		sky: ['#0b1030', '#1d2350', '#3c3b6b'],
+		sun: { x: 96, y: 92, size: 90, glow: '#6f6bb0' },
+		sea: ['#080d24', '#141a3c'],
+		ridge: '#05081c',
+		text: 'light',
+		night: true,
+	},
+];
+
+const totalListings = towns.reduce((a, b) => a + b.listings, 0);
+
+const title = 'The Costa del Sol, Town by Town | PropertyList';
+const description =
+	'Scroll the coast from Málaga to Sotogrande: live listing counts, median prices and notary-verified EUR/m2 for nine Costa del Sol towns.';
+
+const itemListLd = {
+	'@context': 'https://schema.org',
+	'@type': 'ItemList',
+	name: 'Costa del Sol towns',
+	description: 'Nine towns along the Costa del Sol with live property market data from PropertyList.',
+	itemListElement: towns.map((town, i) => ({
+		'@type': 'ListItem',
+		position: i + 1,
+		item: {
+			'@type': 'Place',
+			name: town.name,
+			address: { '@type': 'PostalAddress', addressRegion: 'Andalucía', addressCountry: 'ES' },
+			url: `https://info.propertylist.es${town.guide}`,
+		},
+	})),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Costa del Sol', item: 'https://info.propertylist.es/costa-del-sol/' },
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/costa-del-sol/"
+	ogImage="https://info.propertylist.es/og/og-coast.jpg"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/costa-del-sol/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/costa-del-sol/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/costa-del-sol/' },
+	]}
+>
+	<link rel="preload" slot="head" href="/fonts/playfair-500.woff2" as="font" type="font/woff2" crossorigin />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(itemListLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<div class="coast">
+		<!-- ================= INTRO ================= -->
+		<section class="intro">
+			<div class="introSky" aria-hidden="true"><div class="stars"></div></div>
+			<div class="shoot" aria-hidden="true"></div>
+			<div class="grain" aria-hidden="true"></div>
+			<div class="introInner">
+				<p class="eyebrow">Málaga &rarr; Sotogrande &middot; 105 km</p>
+				<h1>The Costa del Sol,<br /><em>town by town.</em></h1>
+				<p class="heroLead">
+					Nine towns, one coastline, and the only numbers that matter: what homes are listed at, and what they
+					actually sold for in the notarial register.
+				</p>
+				<div class="heroStats">
+					<div><b data-count={totalListings}>{totalListings.toLocaleString('en-GB')}</b><span>homes for sale right now</span></div>
+					<div><b>9</b><span>towns, west to east</span></div>
+					<div><b>7</b><span>with notary-verified &euro;/m&sup2;</span></div>
+				</div>
+				<p class="driveCue"><span class="wheel" aria-hidden="true"><i></i></span> Scroll to drive the coast</p>
+			</div>
+		</section>
+
+		<!-- ================= THE DRIVE (pinned, pans horizontally) ================= -->
+		<div class="journey" style={`--towns:${towns.length};`}>
+			<div class="stage">
+				<!-- sky: six vertical skies that cross-fade dawn -> night across the drive -->
+				<div class="skyPhases" aria-hidden="true">
+					<div class="sky p0"></div>
+					<div class="sky p1"></div>
+					<div class="sky p2"></div>
+					<div class="sky p3"></div>
+					<div class="sky p4"></div>
+					<div class="sky p5"></div>
+				</div>
+				<div class="nightVeil" aria-hidden="true"></div>
+				<div class="starsLayer" aria-hidden="true"><div class="stars"></div></div>
+				<div class="moon" aria-hidden="true"></div>
+				<div class="cloudLayer" aria-hidden="true"><i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i><i class="cl c4"></i></div>
+				<!-- the sun arcs across the whole journey -->
+				<div class="sunTrack" aria-hidden="true"><div class="sunBody"></div></div>
+				<!-- parallax scenery, each layer pans at its own rate -->
+				<div class="ridgeStrip far" aria-hidden="true"></div>
+				<div class="ridgeStrip mid" aria-hidden="true"></div>
+				<div class="landmarkStrip" aria-hidden="true">
+					<svg class="lm lmCathedral" viewBox="0 0 90 110" preserveAspectRatio="none"><path d="M8 110 L8 64 L30 64 L30 110 Z M34 110 L34 40 L40 34 L46 18 L52 34 L58 40 L58 110 Z M62 110 L62 70 L84 70 L84 110 Z" /></svg>
+					<svg class="lm lmTower" viewBox="0 0 40 70" preserveAspectRatio="none"><path d="M12 70 L15 24 Q20 14 25 24 L28 70 Z" /></svg>
+					<svg class="lm lmConcha" viewBox="0 0 300 120" preserveAspectRatio="none"><path d="M0 120 L40 78 L78 92 L120 34 L150 22 L172 40 L210 30 L245 70 L272 58 L300 120 Z" /></svg>
+					<svg class="lm lmLight" viewBox="0 0 36 90" preserveAspectRatio="none"><path d="M13 90 L16 30 L20 30 L23 90 Z M12 30 L24 30 L24 22 L12 22 Z M14 22 L22 22 L18 12 Z" /><circle cx="18" cy="26" r="2.6" fill="#ffd79a" /></svg>
+					<svg class="lm lmRock" viewBox="0 0 160 100" preserveAspectRatio="none"><path d="M0 100 L30 84 L60 20 L84 12 L110 40 L134 74 L160 100 Z" /></svg>
+				</div>
+				<div class="seaStrip" aria-hidden="true"><span class="shimmer"></span></div>
+				<div class="glitterTrack" aria-hidden="true"><div class="glitter"></div></div>
+				<div class="boatLayer" aria-hidden="true">
+					<div class="boat b1"><i class="sail"></i><i class="hull"></i></div>
+					<div class="boat b2"><i class="sail"></i><i class="hull"></i></div>
+					<div class="boat yacht"><i class="cab"></i><i class="hullY"></i></div>
+				</div>
+				<div class="ridgeStrip near" aria-hidden="true"></div>
+				<div class="flock f1" aria-hidden="true">
+					<svg viewBox="0 0 24 9"><path d="M1 7 Q6.5 1 12 7 Q17.5 1 23 7" /></svg>
+					<svg viewBox="0 0 24 9"><path d="M1 7 Q6.5 1 12 7 Q17.5 1 23 7" /></svg>
+					<svg viewBox="0 0 24 9"><path d="M1 7 Q6.5 1 12 7 Q17.5 1 23 7" /></svg>
+				</div>
+				<div class="flock f2" aria-hidden="true">
+					<svg viewBox="0 0 24 9"><path d="M1 7 Q6.5 1 12 7 Q17.5 1 23 7" /></svg>
+					<svg viewBox="0 0 24 9"><path d="M1 7 Q6.5 1 12 7 Q17.5 1 23 7" /></svg>
+					<svg viewBox="0 0 24 9"><path d="M1 7 Q6.5 1 12 7 Q17.5 1 23 7" /></svg>
+				</div>
+
+				<!-- the towns themselves -->
+				<div class="townStrip">
+					{towns.map((town, i) => (
+						<section class="stop" id={town.slug} style={`--n:${i};`}>
+							<figure class="postcard" data-km={town.kicker.split('km ')[1]}>
+								<picture>
+									<source type="image/avif" srcset={`/coast/${town.slug}-800.avif 800w, /coast/${town.slug}-1200.avif 1200w`} sizes="(max-width: 900px) 78vw, 34vw" />
+									<source type="image/webp" srcset={`/coast/${town.slug}-800.webp 800w, /coast/${town.slug}-1200.webp 1200w`} sizes="(max-width: 900px) 78vw, 34vw" />
+									<img
+										src={`/coast/${town.slug}-800.jpg`}
+										width="800"
+										height="600"
+										alt={`${town.name}, Costa del Sol`}
+										loading={i < 2 ? 'eager' : 'lazy'}
+										decoding="async"
+										fetchpriority={i === 0 ? 'high' : 'auto'}
+									/>
+								</picture>
+								<figcaption>{town.name}</figcaption>
+							</figure>
+							<div class="panel">
+								<p class="kicker">{town.kicker}</p>
+								<h2>{town.name}</h2>
+								<p class="blurb">{town.blurb}</p>
+								<dl class="stats">
+									<div>
+										<dt>Homes for sale</dt>
+										<dd><b data-count={town.listings}>{town.listings.toLocaleString('en-GB')}</b></dd>
+									</div>
+									<div>
+										<dt>Median asking</dt>
+										<dd>&euro;{town.median}</dd>
+									</div>
+									<div>
+										<dt>Asking &euro;/m&sup2;</dt>
+										<dd>&euro;{town.asking}</dd>
+									</div>
+									<div class={town.verified ? 'verified' : 'unverified'}>
+										<dt>Notary-verified &euro;/m&sup2;</dt>
+										<dd>{town.verified ? <>&euro;{town.verified}<span class="tick">✓</span></> : <span class="soon">Not yet attested</span>}</dd>
+									</div>
+								</dl>
+								<a class="townLink" href={town.guide}>Open the {town.name} guide &rarr;</a>
+							</div>
+						</section>
+					))}
+				</div>
+
+				<div class="grain" aria-hidden="true"></div>
+				<!-- road / progress ribbon -->
+				<div class="road" aria-hidden="true">
+					<div class="roadFill"></div>
+					<div class="odo" aria-hidden="true"></div>
+					<div class="roadMarks">
+						{towns.map((town) => <span><i></i>{town.name}</span>)}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ================= THE POINT ================= -->
+		<section class="scene interlude">
+			<div class="skyFlat" aria-hidden="true"><div class="stars"></div></div>
+			<div class="interludeInner">
+				<h2>An asking price is an opinion.<br /><em>The register is a fact.</em></h2>
+				<p>
+					Every number on that drive comes from two places. The asking prices are live listings on PropertyList,
+					updated as agents post them. The verified &euro;/m&sup2; comes from the Spanish notarial register through the
+					<a href="https://oracle.propertylist.es/" target="_blank" rel="noopener">PropertyList Oracle</a> - the prices
+					buyers and sellers actually signed for.
+				</p>
+				<p class="fineprint">
+					They are two different populations, not a discount: asking prices describe what is on the market today, the
+					register describes completed sales across all property types. Read together they tell you where a town&rsquo;s
+					expectations sit against its reality - which is exactly the conversation a good agent has with a seller.
+				</p>
+			</div>
+		</section>
+
+		<!-- ================= FINALE ================= -->
+		<section class="scene finale">
+			<div class="skyFlat dark" aria-hidden="true"><div class="stars"></div></div>
+			<div class="lh" aria-hidden="true"><i class="lhBeam"></i><i class="lhTower"></i><i class="lhLamp"></i></div>
+			<div class="grain" aria-hidden="true"></div>
+			<div class="finaleInner">
+				<p class="eyebrow">The coast runs out here</p>
+				<h2>Your agency belongs on it.</h2>
+				<p class="finaleLead">
+					PropertyList is the agent-owned network behind these numbers. List your properties free, share them with
+					every other agency on the coast, and let buyers find them on the portal - no listing fees, ever.
+				</p>
+				<div class="heroCta">
+					<a class="btnGold" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">List your agency free</a>
+					<a class="btnQuiet" href="https://propertylist.es/" target="_blank" rel="noopener">Browse the homes instead</a>
+				</div>
+				<div class="guideGrid">
+					<p class="guideTitle">Every town, in depth</p>
+					<div class="guideLinks">
+						{towns.map((town) => <a href={town.guide}>{town.name}</a>)}
+					</div>
+					<p class="guideMore">
+						<a href="/neighbourhood/">All area guides</a> &middot; <a href="/pricing/">What it costs agents</a> &middot;
+						<a href="/docs/propertylist-mls-user-manual/reports-statistics/generating-property-reports/">How we value a property</a>
+					</p>
+				</div>
+				<p class="dataNote">
+					Market figures from the PropertyList network, July 2026. Listing counts move daily; the guides above stay
+					current.
+				</p>
+			</div>
+		</section>
+	</div>
+
+</Layout>
+
+<script is:inline>
+	(function () {
+		var seen = {};
+		var q = [];
+		function track(n, d) { try { if (window.umami && umami.track) umami.track(n, d); else q.push(n); } catch (e) {} }
+		var flushT = setInterval(function () { try { if (window.umami && umami.track) { q.splice(0).forEach(function (n) { umami.track(n, {}); }); clearInterval(flushT); } } catch (e) {} }, 400);
+		if ('IntersectionObserver' in window) {
+			var io = new IntersectionObserver(function (es) {
+				es.forEach(function (e) {
+					if (!e.isIntersecting) return;
+					var k = e.target.id || e.target.className.split(' ')[1] || 'sec';
+					if (!seen[k]) { seen[k] = 1; track('coast-sec-' + k, {}); }
+				});
+			}, { threshold: 0.35 });
+			document.querySelectorAll('.stop[id], .interlude, .finale').forEach(function (s) { io.observe(s); });
+		}
+		document.addEventListener('click', function (ev) {
+			var a = ev.target.closest && ev.target.closest('a');
+			if (!a) return;
+			if ((a.href || '').indexOf('new_agency') > -1) track('coast-signup-click', {});
+			else if ((a.href || '').indexOf('propertylist.es/') > -1 && a.classList.contains('btnGold')) track('coast-portal-click', {});
+		});
+	})();
+</script>
+
+<script is:inline>
+	// Count-up on first view. Values are already in the DOM (SEO-safe); this only animates them.
+	(function () {
+		var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (reduce || !('IntersectionObserver' in window)) return;
+		var nodes = document.querySelectorAll('[data-count]');
+		if (!nodes.length) return;
+		var io = new IntersectionObserver(
+			function (entries) {
+				entries.forEach(function (e) {
+					if (!e.isIntersecting) return;
+					var el = e.target;
+					io.unobserve(el);
+					var target = parseInt(el.getAttribute('data-count'), 10);
+					if (!target || target < 2) return;
+					var dur = 900;
+					var start = performance.now();
+					var fmt = new Intl.NumberFormat('en-GB');
+					function tick(now) {
+						var p = Math.min(1, (now - start) / dur);
+						var eased = 1 - Math.pow(1 - p, 3);
+						el.textContent = fmt.format(Math.round(target * eased));
+						if (p < 1) requestAnimationFrame(tick);
+					}
+					requestAnimationFrame(tick);
+				});
+			},
+			{ threshold: 0.6 }
+		);
+		nodes.forEach(function (n) {
+			io.observe(n);
+		});
+	})();
+</script>
+
+<style is:global>
+	@property --km { syntax: '<integer>'; initial-value: 0; inherits: true; }
+	@property --gc { syntax: '<color>'; initial-value: rgba(255,180,110,0); inherits: false; }
+	@font-face {
+		font-family: 'PL Display';
+		src: url('/fonts/playfair-500.woff2') format('woff2');
+		font-weight: 500;
+		font-style: normal;
+		font-display: swap;
+	}
+</style>
+
+<style>
+	/* ============ shell ============ */
+	.coast {
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-top: -28px;
+		margin-bottom: -40px;
+		color: #fff;
+		--display: 'PL Display', ui-serif, Georgia, 'Times New Roman', serif;
+		--gold: #ffd79a;
+		--mint: #9fe8d4;
+		background: #060a1c;
+	}
+
+	.stars {
+		position: absolute;
+		inset: 0;
+		background-image:
+			radial-gradient(1.4px 1.4px at 12% 18%, rgba(255,255,255,.9), transparent 60%),
+			radial-gradient(1.2px 1.2px at 28% 42%, rgba(255,255,255,.6), transparent 60%),
+			radial-gradient(1.6px 1.6px at 46% 12%, rgba(255,255,255,.8), transparent 60%),
+			radial-gradient(1.1px 1.1px at 63% 33%, rgba(255,255,255,.55), transparent 60%),
+			radial-gradient(1.5px 1.5px at 78% 9%, rgba(255,255,255,.85), transparent 60%),
+			radial-gradient(1.2px 1.2px at 88% 38%, rgba(255,255,255,.5), transparent 60%),
+			radial-gradient(1.3px 1.3px at 8% 58%, rgba(255,255,255,.45), transparent 60%),
+			radial-gradient(1.1px 1.1px at 55% 62%, rgba(255,255,255,.4), transparent 60%),
+			radial-gradient(1.4px 1.4px at 34% 74%, rgba(255,255,255,.35), transparent 60%),
+			radial-gradient(1.2px 1.2px at 72% 68%, rgba(255,255,255,.4), transparent 60%);
+	}
+
+	/* ============ intro ============ */
+	.intro {
+		position: relative;
+		min-height: 100svh;
+		display: grid;
+		place-items: center;
+		text-align: center;
+		padding: 90px 20px 110px;
+		overflow: hidden;
+	}
+	.introSky {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		background:
+			radial-gradient(120% 80% at 12% 96%, rgba(255,150,90,.5) 0%, rgba(255,150,90,0) 55%),
+			linear-gradient(180deg, #06091f 0%, #131a44 46%, #3a2f66 76%, #7c4a6d 100%);
+	}
+	.introInner { position: relative; z-index: 2; max-width: 800px; }
+	.eyebrow {
+		font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+		color: rgba(255,255,255,.68); margin: 0 0 16px; font-weight: 700;
+	}
+	.intro h1 {
+		font-family: var(--display); font-weight: 500;
+		font-size: clamp(42px, 8.4vw, 92px); line-height: 1.02; letter-spacing: -.02em;
+		margin: 0 0 20px; text-shadow: 0 4px 44px rgba(0,0,0,.4);
+	}
+	.intro h1 em { font-style: italic; color: var(--gold); }
+	.heroLead {
+		max-width: 560px; margin: 0 auto 30px;
+		font-size: 17px; line-height: 1.66; color: rgba(255,255,255,.84);
+	}
+	.heroStats { display: flex; gap: 34px; justify-content: center; flex-wrap: wrap; margin: 0 0 34px; }
+	.heroStats div { display: grid; gap: 3px; }
+	.heroStats b {
+		font-family: var(--display); font-size: clamp(26px, 4vw, 40px);
+		font-weight: 500; line-height: 1; color: var(--gold);
+	}
+	.heroStats span { font-size: 12.5px; color: rgba(255,255,255,.6); }
+	.driveCue {
+		display: inline-flex; align-items: center; gap: 11px;
+		font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+		color: rgba(255,255,255,.72); font-weight: 700; margin: 0;
+	}
+	.wheel {
+		width: 22px; height: 34px; border: 1.6px solid rgba(255,255,255,.45);
+		border-radius: 999px; position: relative; display: inline-block;
+	}
+	.wheel i {
+		position: absolute; left: 50%; top: 7px; translate: -50% 0;
+		width: 3px; height: 7px; border-radius: 2px; background: rgba(255,255,255,.85);
+		animation: wheel 1.9s ease-in-out infinite;
+	}
+	@keyframes wheel {
+		0%, 100% { transform: translateY(0); opacity: 1; }
+		55% { transform: translateY(11px); opacity: .25; }
+	}
+
+	/* ============ the pinned drive ============ */
+	.journey {
+		position: relative;
+		/* one screen of scroll per town, plus a lead-in and lead-out */
+		height: calc((var(--towns) + 3) * 100svh);
+	}
+	.stage {
+		position: sticky;
+		top: 0;
+		height: 100svh;
+		overflow: hidden;
+		isolation: isolate;
+		background: #0a1130;
+	}
+	/* readability scrim: the panel always sits on the right */
+	.stage::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		background:
+			linear-gradient(90deg, rgba(4,8,22,0) 30%, rgba(4,8,22,.5) 56%, rgba(4,8,22,.8) 80%, rgba(4,8,22,.86) 100%),
+			linear-gradient(180deg, rgba(4,8,22,.38) 0%, rgba(4,8,22,0) 28%),
+			radial-gradient(120% 92% at 50% 42%, rgba(0,0,0,0) 56%, rgba(2,4,12,.42) 100%);
+	}
+
+	/* sky: stacked vertical gradients, cross-faded across the drive */
+	.skyPhases { position: absolute; inset: 0; z-index: -6; }
+	.skyPhases .sky { position: absolute; inset: 0; opacity: 0; }
+	/* dawn */
+	.skyPhases .p0 {
+		opacity: 1;
+		background:
+			radial-gradient(90% 60% at 8% 92%, rgba(255,140,90,.45) 0%, rgba(255,140,90,0) 60%),
+			linear-gradient(180deg, #05081c 0%, #121944 44%, #3d2f66 72%, #8a5570 100%);
+	}
+	/* sunrise */
+	.skyPhases .p1 {
+		background:
+			radial-gradient(80% 55% at 18% 86%, rgba(255,170,110,.5) 0%, rgba(255,170,110,0) 62%),
+			linear-gradient(180deg, #0d1a45 0%, #2f4a86 42%, #6f92bd 74%, #e8ae87 100%);
+	}
+	/* morning */
+	.skyPhases .p2 {
+		background: linear-gradient(180deg, #1c4a8e 0%, #4a90c9 42%, #90c4e4 74%, #e2f2fa 100%);
+	}
+	/* midday */
+	.skyPhases .p3 {
+		background: linear-gradient(180deg, #2a6cb0 0%, #55a3d6 40%, #93cdea 72%, #e8f6fd 100%);
+	}
+	/* golden hour */
+	.skyPhases .p4 {
+		background:
+			radial-gradient(85% 60% at 82% 78%, rgba(255,178,105,.62) 0%, rgba(255,178,105,0) 62%),
+			linear-gradient(180deg, #23509a 0%, #8a7aa0 34%, #d99a6e 68%, #f7bc74 100%);
+	}
+	/* dusk into night */
+	.skyPhases .p5 {
+		background:
+			radial-gradient(70% 45% at 88% 86%, rgba(255,110,70,.32) 0%, rgba(255,110,70,0) 58%),
+			linear-gradient(180deg, #03060f 0%, #0a1130 46%, #21214e 76%, #4a2d55 100%);
+	}
+	.nightVeil {
+		position: absolute; inset: 0; z-index: -5;
+		background: linear-gradient(180deg, rgba(4,8,24,.55) 0%, rgba(4,8,24,0) 42%);
+	}
+	.starsLayer { position: absolute; inset: 0 0 40% 0; z-index: -5; opacity: 0; }
+
+	/* the sun crosses the whole journey */
+	.sunTrack { position: absolute; inset: 0; z-index: -5; }
+	.sunBody {
+		position: absolute; left: 6%; top: 74%;
+		width: 132px; height: 132px; margin: -66px 0 0 -66px; border-radius: 50%;
+		background: radial-gradient(circle, #fff 0%, #ffca86 38%, rgba(255,190,120,0) 70%);
+		filter: blur(1px);
+	}
+
+	/* scenery strips */
+	.ridgeStrip {
+		position: absolute; left: 0; bottom: 28%; height: 34vh; width: 300%;
+		background: #101838; z-index: -4;
+		-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2880 320' preserveAspectRatio='none'%3E%3Cpath d='M0,230 L120,182 L240,224 L360,150 L480,206 L600,128 L720,196 L840,140 L960,204 L1080,158 L1200,214 L1320,166 L1440,210 L1560,170 L1680,216 L1800,152 L1920,200 L2040,146 L2160,208 L2280,160 L2400,212 L2520,168 L2640,206 L2760,174 L2880,198 L2880,320 L0,320 Z' fill='%23000'/%3E%3C/svg%3E");
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2880 320' preserveAspectRatio='none'%3E%3Cpath d='M0,230 L120,182 L240,224 L360,150 L480,206 L600,128 L720,196 L840,140 L960,204 L1080,158 L1200,214 L1320,166 L1440,210 L1560,170 L1680,216 L1800,152 L1920,200 L2040,146 L2160,208 L2280,160 L2400,212 L2520,168 L2640,206 L2760,174 L2880,198 L2880,320 L0,320 Z' fill='%23000'/%3E%3C/svg%3E");
+		-webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+	}
+	.ridgeStrip.far { opacity: .55; filter: brightness(1.5); bottom: 30%; height: 40vh; }
+	.ridgeStrip.mid { opacity: .8; bottom: 27%; height: 30vh; }
+	.ridgeStrip.near {
+		bottom: 0; height: 30vh; z-index: -2; opacity: 1; background: #070c20;
+		-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2880 320' preserveAspectRatio='none'%3E%3Cpath d='M0,268 L160,244 L320,272 L480,238 L640,270 L800,240 L960,274 L1120,246 L1280,276 L1440,242 L1600,272 L1760,244 L1920,274 L2080,248 L2240,276 L2400,246 L2560,272 L2720,250 L2880,268 L2880,320 L0,320 Z' fill='%23000'/%3E%3C/svg%3E");
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2880 320' preserveAspectRatio='none'%3E%3Cpath d='M0,268 L160,244 L320,272 L480,238 L640,270 L800,240 L960,274 L1120,246 L1280,276 L1440,242 L1600,272 L1760,244 L1920,274 L2080,248 L2240,276 L2400,246 L2560,272 L2720,250 L2880,268 L2880,320 L0,320 Z' fill='%23000'/%3E%3C/svg%3E");
+		-webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+	}
+	.seaStrip {
+		position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: -3;
+		background: linear-gradient(180deg, rgba(12,26,52,.86) 0%, rgba(6,14,32,.96) 100%);
+	}
+	.seaStrip .shimmer {
+		position: absolute; inset: 0 0 auto 0; height: 52%;
+		background: repeating-linear-gradient(180deg, rgba(255,255,255,.1) 0 1px, transparent 1px 7px);
+		-webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.9), transparent);
+		mask-image: linear-gradient(180deg, rgba(0,0,0,.9), transparent);
+	}
+
+	/* ============ the towns, laid out horizontally ============ */
+	.townStrip {
+		position: absolute; inset: 0; z-index: 2;
+		display: flex; align-items: center;
+		width: calc(var(--towns) * 100vw);
+		will-change: transform;
+	}
+	.stop {
+		flex: 0 0 100vw;
+		max-width: none;
+		background: transparent;
+		border: 0;
+		border-radius: 0;
+		margin: 0;
+		height: 100%;
+		display: grid;
+		grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+		align-items: center;
+		gap: clamp(24px, 4vw, 60px);
+		padding: 78px clamp(24px, 7vw, 110px) 150px;
+	}
+	.postcard {
+		margin: 0; background: #fff; padding: 12px 12px 0; border-radius: 6px;
+		box-shadow: 0 36px 80px -24px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.3);
+		rotate: -1.6deg; justify-self: center; max-width: 540px; width: 100%;
+	}
+	.stop:nth-child(even) .postcard { rotate: 1.8deg; }
+	.postcard img {
+		display: block; width: 100%; height: auto; aspect-ratio: 4/3;
+		object-fit: cover; border-radius: 2px;
+	}
+	.postcard figcaption {
+		font-family: var(--display); font-size: 15px; color: #1a2438;
+		text-align: center; padding: 11px 4px 13px; letter-spacing: .06em;
+	}
+	.panel { max-width: 480px; }
+	.kicker {
+		font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase;
+		color: var(--gold); margin: 0 0 10px; font-weight: 700;
+		text-shadow: 0 2px 14px rgba(0,0,0,.7);
+	}
+	.panel h2 {
+		font-family: var(--display); font-weight: 500;
+		font-size: clamp(36px, 5.8vw, 68px); line-height: 1.02; margin: 0 0 14px;
+		letter-spacing: -.015em; text-shadow: 0 4px 40px rgba(0,0,0,.75), 0 2px 6px rgba(0,0,0,.5);
+	}
+	.blurb {
+		font-size: 16.5px; line-height: 1.66; color: rgba(255,255,255,.94);
+		margin: 0 0 20px; text-shadow: 0 2px 18px rgba(0,0,0,.75), 0 1px 3px rgba(0,0,0,.6);
+	}
+	.stats {
+		display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 0 0 18px;
+		background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.18);
+		border-radius: 12px; overflow: hidden; backdrop-filter: blur(12px);
+	}
+	.stats > div { background: rgba(6,11,26,.72); padding: 12px 15px; }
+	.stats dt {
+		font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+		color: rgba(255,255,255,.62); margin: 0 0 5px; font-weight: 700;
+	}
+	.stats dd { margin: 0; font-family: var(--display); font-size: 22px; line-height: 1.1; color: #fff; }
+	.stats .verified dd { color: var(--mint); }
+	.stats .tick { font-size: 12px; margin-left: 6px; vertical-align: 2px; }
+	.stats .soon { font-family: inherit; font-size: 13px; color: rgba(255,255,255,.55); }
+	.townLink {
+		display: inline-block; font-weight: 800; font-size: 14.5px; color: var(--gold);
+		text-decoration: none; border-bottom: 1px solid rgba(255,215,154,.4); padding-bottom: 2px;
+	}
+	.townLink:hover { border-bottom-color: var(--gold); text-decoration: none; }
+
+	/* ============ road ribbon ============ */
+	.road {
+		position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+		height: 66px; background: linear-gradient(180deg, rgba(4,8,20,0), rgba(4,8,20,.88) 52%);
+		display: flex; align-items: flex-end;
+	}
+	.roadFill {
+		position: absolute; left: 0; bottom: 24px; height: 2px; width: 100%;
+		background: var(--gold); transform-origin: left; scale: 0 1;
+	}
+	.road::after {
+		content: ''; position: absolute; left: 0; right: 0; bottom: 24px; height: 2px;
+		background: rgba(255,255,255,.18);
+	}
+	.roadMarks {
+		position: relative; z-index: 1; display: flex; width: 100%;
+		padding: 0 clamp(24px, 7vw, 110px) 8px;
+	}
+	.roadMarks span {
+		flex: 1; display: grid; justify-items: center; gap: 6px;
+		font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+		color: rgba(255,255,255,.72); font-weight: 700; white-space: nowrap;
+		text-shadow: 0 1px 6px rgba(0,0,0,.9);
+	}
+	.roadMarks i {
+		width: 7px; height: 7px; border-radius: 50%;
+		background: rgba(255,255,255,.35); display: block;
+	}
+
+	/* ============ closing scenes ============ */
+	.scene {
+		position: relative; min-height: 100svh; display: grid; place-items: center;
+		padding: 96px 20px; overflow: hidden; text-align: center;
+	}
+	.skyFlat {
+		position: absolute; inset: 0; z-index: 0;
+		background: linear-gradient(180deg, #061227 0%, #0b1c36 55%, #123354 100%);
+	}
+	.skyFlat.dark { background: linear-gradient(180deg, #04081a 0%, #080f26 60%, #101a3c 100%); }
+	.interludeInner, .finaleInner { position: relative; z-index: 2; max-width: 760px; }
+	.interlude h2, .finale h2 {
+		font-family: var(--display); font-weight: 500;
+		font-size: clamp(30px, 5vw, 58px); line-height: 1.06; margin: 0 0 20px; letter-spacing: -.015em;
+	}
+	.interlude h2 em, .finale h2 em { font-style: italic; color: var(--mint); }
+	.interlude p {
+		font-size: 16.5px; line-height: 1.72; color: rgba(255,255,255,.84);
+		margin: 0 auto 16px; max-width: 620px;
+	}
+	.interlude a { color: var(--mint); }
+	.fineprint { font-size: 14px !important; color: rgba(255,255,255,.55) !important; }
+	.finaleLead {
+		font-size: 17px; line-height: 1.68; color: rgba(255,255,255,.84);
+		margin: 0 auto 28px; max-width: 580px;
+	}
+	.heroCta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+	.btnGold {
+		background: linear-gradient(180deg, #ffd79a, #e6b46a); color: #2a1d05;
+		font-weight: 800; font-size: 15px; padding: 14px 26px; border-radius: 999px;
+		text-decoration: none; box-shadow: 0 10px 30px -8px rgba(255,190,110,.5);
+	}
+	.btnGold:hover { filter: brightness(1.06); text-decoration: none; }
+	.btnQuiet {
+		color: rgba(255,255,255,.9); border: 1px solid rgba(255,255,255,.34);
+		font-weight: 700; font-size: 15px; padding: 13px 24px; border-radius: 999px; text-decoration: none;
+	}
+	.btnQuiet:hover { background: rgba(255,255,255,.12); text-decoration: none; }
+	.guideGrid { margin-top: 54px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,.14); }
+	.guideTitle {
+		font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase;
+		color: rgba(255,255,255,.55); margin: 0 0 16px; font-weight: 700;
+	}
+	.guideLinks { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+	.guideLinks a {
+		font-size: 13.5px; font-weight: 700; color: rgba(255,255,255,.9); text-decoration: none;
+		border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 8px 15px;
+	}
+	.guideLinks a:hover { background: rgba(255,255,255,.13); text-decoration: none; }
+	.guideMore { margin: 20px 0 0; font-size: 13.5px; color: rgba(255,255,255,.6); }
+	.guideMore a { color: rgba(255,255,255,.88); }
+	.dataNote { margin: 34px 0 0; font-size: 12.5px; color: rgba(255,255,255,.42); }
+
+	/* ============ THE CHOREOGRAPHY ============ */
+	@supports (animation-timeline: view()) {
+		@media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
+			.journey { view-timeline-name: --drive; view-timeline-axis: block; }
+
+			.townStrip, .ridgeStrip, .sunTrack, .roadFill, .starsLayer, .sunBody, .nightVeil,
+			.skyPhases .sky {
+				animation-timeline: --drive;
+				animation-range: contain 0% contain 100%;
+				animation-fill-mode: both;
+				animation-timing-function: linear;
+			}
+			.townStrip, .ridgeStrip {
+				animation-timing-function: cubic-bezier(.55, 0, .3, 1);
+			}
+			.cloudLayer, .landmarkStrip, .glitterTrack, .glitter, .boatLayer, .flock, .moon, .odo {
+				animation-timeline: --drive;
+				animation-range: contain 0% contain 100%;
+				animation-fill-mode: both;
+				animation-timing-function: linear;
+			}
+			.landmarkStrip { animation-name: panMid; animation-timing-function: cubic-bezier(.55, 0, .3, 1); }
+			.cloudLayer { animation-name: cloudsPan; }
+			.glitterTrack { animation-name: sunAcross; }
+			.glitter { animation-name: glitterPhase; }
+			.boatLayer { animation-name: boatsPan; }
+			.flock.f1 { animation-name: flock1Go; }
+			.flock.f2 { animation-name: flock2Go; }
+			.moon { animation-name: moonIn; }
+			.odo { animation-name: kmTick; }
+			.skyPhases .p0 { animation-name: sky0; }
+			.skyPhases .p1 { animation-name: sky1; }
+			.skyPhases .p2 { animation-name: sky2; }
+			.skyPhases .p3 { animation-name: sky3; }
+			.skyPhases .p4 { animation-name: sky4; }
+			.skyPhases .p5 { animation-name: sky5; }
+			@keyframes sky0 { 0%, 100% { opacity: 1; } }
+			@keyframes sky1 { 0%, 6.5% { opacity: 0; } 11.11%, 100% { opacity: 1; } }
+			@keyframes sky2 { 0%, 17.61% { opacity: 0; } 22.22%, 100% { opacity: 1; } }
+			@keyframes sky3 { 0%, 28.72% { opacity: 0; } 33.33%, 100% { opacity: 1; } }
+			@keyframes sky4 { 0%, 50.94% { opacity: 0; } 55.56%, 100% { opacity: 1; } }
+			@keyframes sky5 { 0%, 84.28% { opacity: 0; } 88.89%, 100% { opacity: 1; } }
+			/* towns travel a full screen per stop */
+			.townStrip { animation-name: panTowns; }
+			@keyframes panTowns {
+				0.00%, 6.50% { transform: translate3d(calc(-100vw * 0), 0, 0); }
+				11.11%, 17.61% { transform: translate3d(calc(-100vw * 1), 0, 0); }
+				22.22%, 28.72% { transform: translate3d(calc(-100vw * 2), 0, 0); }
+				33.33%, 39.83% { transform: translate3d(calc(-100vw * 3), 0, 0); }
+				44.44%, 50.94% { transform: translate3d(calc(-100vw * 4), 0, 0); }
+				55.56%, 62.06% { transform: translate3d(calc(-100vw * 5), 0, 0); }
+				66.67%, 73.17% { transform: translate3d(calc(-100vw * 6), 0, 0); }
+				77.78%, 84.28% { transform: translate3d(calc(-100vw * 7), 0, 0); }
+				88.89%, 100% { transform: translate3d(calc(-100vw * 8), 0, 0); }
+			}
+			/* sky drifts slowest -> real depth */
+			@keyframes panSkyUnused {
+				0.00%, 6.50% { transform: translate3d(0.000%, 0, 0); }
+				11.11%, 17.61% { transform: translate3d(-6.813%, 0, 0); }
+				22.22%, 28.72% { transform: translate3d(-13.625%, 0, 0); }
+				33.33%, 39.83% { transform: translate3d(-20.438%, 0, 0); }
+				44.44%, 50.94% { transform: translate3d(-27.250%, 0, 0); }
+				55.56%, 62.06% { transform: translate3d(-34.063%, 0, 0); }
+				66.67%, 73.17% { transform: translate3d(-40.875%, 0, 0); }
+				77.78%, 84.28% { transform: translate3d(-47.688%, 0, 0); }
+				88.89%, 100% { transform: translate3d(-54.500%, 0, 0); }
+			}
+			/* ridges: far slower than near */
+			.ridgeStrip.far { animation-name: panFar; }
+			@keyframes panFar {
+				0.00%, 6.50% { transform: translate3d(0.000%, 0, 0); }
+				11.11%, 17.61% { transform: translate3d(-2.750%, 0, 0); }
+				22.22%, 28.72% { transform: translate3d(-5.500%, 0, 0); }
+				33.33%, 39.83% { transform: translate3d(-8.250%, 0, 0); }
+				44.44%, 50.94% { transform: translate3d(-11.000%, 0, 0); }
+				55.56%, 62.06% { transform: translate3d(-13.750%, 0, 0); }
+				66.67%, 73.17% { transform: translate3d(-16.500%, 0, 0); }
+				77.78%, 84.28% { transform: translate3d(-19.250%, 0, 0); }
+				88.89%, 100% { transform: translate3d(-22.000%, 0, 0); }
+			}
+			.ridgeStrip.mid { animation-name: panMid; }
+			@keyframes panMid {
+				0.00%, 6.50% { transform: translate3d(0.000%, 0, 0); }
+				11.11%, 17.61% { transform: translate3d(-5.250%, 0, 0); }
+				22.22%, 28.72% { transform: translate3d(-10.500%, 0, 0); }
+				33.33%, 39.83% { transform: translate3d(-15.750%, 0, 0); }
+				44.44%, 50.94% { transform: translate3d(-21.000%, 0, 0); }
+				55.56%, 62.06% { transform: translate3d(-26.250%, 0, 0); }
+				66.67%, 73.17% { transform: translate3d(-31.500%, 0, 0); }
+				77.78%, 84.28% { transform: translate3d(-36.750%, 0, 0); }
+				88.89%, 100% { transform: translate3d(-42.000%, 0, 0); }
+			}
+			.ridgeStrip.near { animation-name: panNear; }
+			@keyframes panNear {
+				0.00%, 6.50% { transform: translate3d(0.000%, 0, 0); }
+				11.11%, 17.61% { transform: translate3d(-8.000%, 0, 0); }
+				22.22%, 28.72% { transform: translate3d(-16.000%, 0, 0); }
+				33.33%, 39.83% { transform: translate3d(-24.000%, 0, 0); }
+				44.44%, 50.94% { transform: translate3d(-32.000%, 0, 0); }
+				55.56%, 62.06% { transform: translate3d(-40.000%, 0, 0); }
+				66.67%, 73.17% { transform: translate3d(-48.000%, 0, 0); }
+				77.78%, 84.28% { transform: translate3d(-56.000%, 0, 0); }
+				88.89%, 100% { transform: translate3d(-64.000%, 0, 0); }
+			}
+			/* the sun arcs over the whole drive */
+			.sunTrack { animation-name: sunAcross; }
+			@keyframes sunAcross {
+				from { transform: translate3d(0, 0, 0); }
+				to { transform: translate3d(84vw, 0, 0); }
+			}
+			.sunBody { animation-name: sunArc; }
+			@keyframes sunArc {
+				0%   { transform: translateY(0);      background: radial-gradient(circle, #fff 0%, #ff9e5e 38%, rgba(255,158,94,0) 70%); }
+				18%  { transform: translateY(-30vh);  background: radial-gradient(circle, #fff 0%, #ffd08a 40%, rgba(255,208,138,0) 70%); }
+				36%  { transform: translateY(-46vh);  background: radial-gradient(circle, #fff 0%, #fff0c4 42%, rgba(255,240,196,0) 70%); }
+				56%  { transform: translateY(-42vh);  background: radial-gradient(circle, #fff 0%, #ffe2ae 41%, rgba(255,226,174,0) 70%); }
+				78%  { transform: translateY(-24vh);  background: radial-gradient(circle, #fff 0%, #ffb173 40%, rgba(255,177,115,0) 70%); }
+				92%  { transform: translateY(-6vh);   background: radial-gradient(circle, #fff 0%, #ff8a55 38%, rgba(255,138,85,0) 69%); }
+				100% { transform: translateY(8vh);    background: radial-gradient(circle, #fff 0%, #ff7e4d 36%, rgba(255,126,77,0) 68%); }
+			}
+			/* night falls at the end */
+			.starsLayer { animation-name: starsIn; }
+			@keyframes starsIn {
+				0% { opacity: .85; }
+				12% { opacity: .35; }
+				22%, 80% { opacity: 0; }
+				90% { opacity: .6; }
+				100% { opacity: .95; }
+			}
+			.nightVeil { animation-name: veil; }
+			@keyframes veil {
+				0% { opacity: 1; }
+				18%, 82% { opacity: 0; }
+				100% { opacity: 1; }
+			}
+			/* progress ribbon */
+			.roadFill { animation-name: roadGrow; }
+			@keyframes roadGrow {
+				from { scale: 0 1; }
+				to { scale: 1 1; }
+			}
+		}
+	}
+
+	/* ============ fallback + mobile: honest vertical stack ============ */
+	@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+		.journey { height: auto; }
+		.stage { position: relative; height: auto; overflow: visible; padding-bottom: 40px; }
+		.skyPhases .sky { opacity: 0; }
+		.skyPhases .p2 {
+			opacity: 1;
+			background: linear-gradient(180deg, #0a1030 0%, #23407e 24%, #3a7cb8 48%, #7fb6dc 70%, #c99a7c 88%, #2a2a5e 100%);
+		}
+		.starsLayer { opacity: .5; }
+		.sunTrack, .ridgeStrip, .road { display: none; }
+		.seaStrip { display: none; }
+		.townStrip { position: relative; inset: auto; display: block; width: 100%; }
+		.stop {
+			flex: none; width: 100%; height: auto; display: grid;
+			grid-template-columns: 1fr; gap: 22px; padding: 54px 20px;
+			border-bottom: 1px solid rgba(255,255,255,.09);
+		}
+		.postcard { max-width: 100%; rotate: -.8deg; }
+		.panel { max-width: none; }
+		.stats { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 420px) {
+		.stats { grid-template-columns: 1fr; }
+	}
+	/* ============ atmosphere & life ============ */
+	.grain {
+		position: absolute; inset: 0; z-index: 3; pointer-events: none;
+		opacity: .055; mix-blend-mode: overlay;
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E") repeat;
+	}
+	.intro .grain, .finale .grain { z-index: 1; }
+
+	.moon {
+		position: absolute; left: 78%; top: 14%; width: 44px; height: 44px;
+		border-radius: 50%; z-index: -5; opacity: 0;
+		box-shadow: inset -11px 7px 0 0 #efe6cf;
+		filter: drop-shadow(0 0 14px rgba(239, 230, 207, .35));
+	}
+
+	.cloudLayer { position: absolute; inset: 0; width: 220%; z-index: -5; opacity: 0; }
+	.cl {
+		position: absolute; border-radius: 999px; filter: blur(7px);
+		background: radial-gradient(closest-side, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0));
+	}
+	.cl.c1 { left: 24vw; top: 13%; width: 300px; height: 64px; }
+	.cl.c2 { left: 66vw; top: 24%; width: 200px; height: 46px; opacity: .8; }
+	.cl.c3 { left: 118vw; top: 10%; width: 360px; height: 76px; }
+	.cl.c4 { left: 170vw; top: 20%; width: 240px; height: 52px; opacity: .75; }
+
+	.landmarkStrip { position: absolute; left: 0; bottom: 30%; width: 300%; height: 0; z-index: -4; }
+	.lm { position: absolute; bottom: 0; fill: #1d2a5c; opacity: .9; }
+	.lmCathedral { left: 50vw; width: 74px; height: 92px; margin-left: -37px; }
+	.lmTower { left: 65.75vw; width: 34px; height: 60px; margin-left: -17px; }
+	.lmConcha { left: 128.75vw; width: 300px; height: 120px; margin-left: -150px; fill: #26356b; opacity: .85; }
+	.lmLight { left: 160.25vw; width: 34px; height: 86px; margin-left: -17px; }
+	.lmRock { left: 176vw; width: 150px; height: 94px; margin-left: -75px; fill: #16204a; }
+
+	.glitterTrack { position: absolute; inset: 0; z-index: -3; pointer-events: none; }
+	.glitter {
+		position: absolute; left: 6%; top: 70%; height: 30%;
+		width: 130px; margin-left: -65px; opacity: 0;
+		clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+		background: repeating-linear-gradient(180deg, var(--gc) 0 2px, transparent 2px 9px);
+		-webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .95), rgba(0, 0, 0, .3));
+		mask-image: linear-gradient(180deg, rgba(0, 0, 0, .95), rgba(0, 0, 0, .3));
+	}
+	.glitter::after {
+		content: ''; position: absolute; inset: 0; background: inherit; opacity: .55;
+		animation: glitterFlow 1.6s linear infinite;
+	}
+
+	.boatLayer { position: absolute; inset: 0; width: 300%; z-index: -3; }
+	.boat { position: absolute; bottom: 27%; animation: bob 4.4s ease-in-out infinite alternate; }
+	.boat .sail {
+		display: block; width: 0; height: 0;
+		border-left: 11px solid rgba(240, 246, 255, .9); border-top: 24px solid transparent;
+	}
+	.boat .hull { display: block; width: 26px; height: 5px; margin-top: 1px; border-radius: 0 0 8px 8px; background: #0d1534; }
+	.boat.b1 { left: 64.4vw; scale: .7; animation-delay: -1.6s; }
+	.boat.b2 { left: 86vw; }
+	.boat.yacht { left: 134vw; animation-delay: -2.8s; }
+	.boat.yacht .cab { display: block; width: 14px; height: 7px; margin-left: 9px; border-radius: 3px 3px 0 0; background: #eef2f8; }
+	.boat.yacht .hullY { display: block; width: 40px; height: 7px; border-radius: 2px 0 10px 10px; background: #f4f7fb; }
+
+	.flock { position: absolute; z-index: 1; opacity: 0; }
+	.flock svg { position: absolute; width: 22px; height: 9px; fill: none; stroke: rgba(8, 14, 30, .75); stroke-width: 1.5px; stroke-linecap: round; animation: flap .95s ease-in-out infinite; }
+	.flock svg:nth-child(2) { left: 30px; top: 15px; animation-delay: .18s; scale: .85; }
+	.flock svg:nth-child(3) { left: 58px; top: 4px; animation-delay: .36s; scale: .7; }
+	.flock.f1 { left: 70vw; top: 25%; }
+	.flock.f2 { left: 106vw; top: 18%; }
+
+	.odo {
+		position: absolute; right: 26px; bottom: 78px; z-index: 4;
+		border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px;
+		padding: 7px 14px; backdrop-filter: blur(8px);
+		background: rgba(6, 10, 24, .35);
+		color: var(--gold); font-weight: 800; font-size: 12.5px; letter-spacing: .12em;
+		font-variant-numeric: tabular-nums;
+	}
+	.odo::after { counter-reset: km var(--km); content: "KM " counter(km); }
+
+	.postcard { position: relative; }
+	.postcard::before {
+		content: "CDS\A km " attr(data-km);
+		white-space: pre; text-align: center;
+		position: absolute; top: -16px; right: -16px; z-index: 2;
+		width: 62px; height: 62px; border-radius: 50%;
+		border: 2px solid rgba(158, 64, 52, .5);
+		box-shadow: inset 0 0 0 5px rgba(158, 64, 52, .22);
+		display: grid; place-items: center;
+		font: 800 11px/1.3 ui-sans-serif, system-ui, sans-serif;
+		letter-spacing: .06em; color: rgba(158, 64, 52, .62);
+		rotate: 12deg;
+		background: rgba(250, 247, 240, .85);
+	}
+
+	.shoot {
+		position: absolute; top: 16%; left: 64%; width: 130px; height: 2px; z-index: 1;
+		background: linear-gradient(90deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0));
+		border-radius: 2px; opacity: 0; rotate: -24deg;
+		animation: shoot 9s ease-in 4s infinite;
+	}
+
+	.lh { position: absolute; right: 15%; bottom: 22%; z-index: 1; width: 18px; }
+	.lh i { display: block; }
+	.lhTower {
+		width: 16px; height: 78px; margin: 0 auto;
+		background: linear-gradient(180deg, #1b2246 0%, #10162f 100%);
+		clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
+	}
+	.lhLamp {
+		position: absolute; top: -8px; left: 50%; width: 8px; height: 8px; margin-left: -4px;
+		border-radius: 50%; background: #ffd79a;
+		box-shadow: 0 0 14px 3px rgba(255, 215, 154, .65);
+		animation: lampPulse 3s ease-in-out infinite;
+	}
+	.lhBeam {
+		position: absolute; top: -7px; left: 9px; width: 280px; height: 54px;
+		transform-origin: 0 50%;
+		background: linear-gradient(90deg, rgba(255, 225, 160, .32), rgba(255, 225, 160, 0) 85%);
+		clip-path: polygon(0 46%, 100% 0, 100% 100%, 0 54%);
+		opacity: .55; rotate: -6deg;
+		animation: beamSweep 11s ease-in-out infinite alternate;
+	}
+
+	@keyframes bob { from { transform: translateY(0) rotate(-.6deg); } to { transform: translateY(-3px) rotate(.8deg); } }
+	@keyframes flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.5); } }
+	@keyframes glitterFlow { from { transform: translateY(0); } to { transform: translateY(9px); } }
+	@keyframes shoot {
+		0%, 90% { opacity: 0; translate: 0 0; }
+		92% { opacity: .9; }
+		97%, 100% { opacity: 0; translate: -220px 110px; }
+	}
+	@keyframes beamSweep { from { rotate: -22deg; } to { rotate: 10deg; } }
+	@keyframes lampPulse { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+	@keyframes pcFloat { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+	@media (prefers-reduced-motion: no-preference) {
+		.postcard { animation: pcFloat 6.5s ease-in-out infinite alternate; }
+		.stop:nth-child(even) .postcard { animation-delay: -3.2s; }
+	}
+
+	@keyframes cloudsPan {
+		0% { transform: translate3d(0, 0, 0); opacity: 0; }
+		7% { opacity: .75; }
+		85% { opacity: .75; }
+		96% { opacity: 0; }
+		100% { transform: translate3d(-45%, 0, 0); opacity: 0; }
+	}
+	@keyframes boatsPan { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-120vw, 0, 0); } }
+	@keyframes moonIn {
+		0%, 82% { opacity: 0; translate: 0 26px; }
+		94%, 100% { opacity: 1; translate: 0 0; }
+	}
+	@keyframes flock1Go {
+		0% { transform: translate3d(0, 0, 0); opacity: 0; }
+		7% { opacity: .95; }
+		30% { opacity: .95; }
+		38% { opacity: 0; }
+		100% { transform: translate3d(-95vw, -7vh, 0); opacity: 0; }
+	}
+	@keyframes flock2Go {
+		0% { transform: translate3d(0, 0, 0); opacity: 0; }
+		52% { opacity: 0; }
+		58% { opacity: .95; }
+		74% { opacity: .95; }
+		80% { opacity: 0; }
+		100% { transform: translate3d(-85vw, 5vh, 0); opacity: 0; }
+	}
+	@keyframes glitterPhase {
+		0% { --gc: rgba(255, 150, 80, .5); opacity: .9; }
+		18% { --gc: rgba(255, 205, 130, .4); opacity: .55; }
+		36% { --gc: rgba(255, 242, 205, .3); opacity: .4; }
+		56% { --gc: rgba(255, 226, 174, .35); opacity: .45; }
+		78% { --gc: rgba(255, 160, 90, .5); opacity: .85; }
+		92% { --gc: rgba(255, 110, 70, .45); opacity: .7; }
+		100% { --gc: rgba(150, 110, 160, 0); opacity: 0; }
+	}
+	@keyframes kmTick {
+		0%, 6.5% { --km: 0; }
+		11.11%, 17.61% { --km: 14; }
+		22.22%, 28.72% { --km: 20; }
+		33.33%, 39.83% { --km: 30; }
+		44.44%, 50.94% { --km: 34; }
+		55.56%, 62.06% { --km: 45; }
+		66.67%, 73.17% { --km: 51; }
+		77.78%, 84.28% { --km: 74; }
+		88.89%, 100% { --km: 105; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wheel i { animation: none; }
+	}
+
+	/* ============ MOBILE: a vertical pinned journey ============ */
+	@supports (animation-timeline: view()) {
+		@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+			.journey {
+				height: calc((var(--towns) + 1.6) * 100svh);
+				view-timeline-name: --drive;
+				view-timeline-axis: block;
+			}
+			.stage {
+				position: sticky;
+				top: 0;
+				height: 100svh;
+				overflow: hidden;
+				padding-bottom: 0;
+			}
+			/* the scenery comes back to life */
+			.seaStrip { display: block; }
+			.ridgeStrip { display: block; }
+			.sunTrack { display: block; }
+			.ridgeStrip.far { bottom: 34%; height: 26vh; }
+			.ridgeStrip.mid { bottom: 31%; height: 20vh; }
+			.ridgeStrip.near { bottom: 0; height: 18vh; }
+			.seaStrip { height: 34%; }
+			.sunBody { width: 96px; height: 96px; margin: -48px 0 0 -48px; }
+
+			/* cards stack vertically inside the pinned stage and rise one at a time */
+			.townStrip {
+				position: absolute;
+				inset: 0;
+				display: block;
+				width: 100vw;
+				height: calc(var(--towns) * 100svh);
+			}
+			.stop {
+				display: grid;
+				grid-template-columns: 1fr;
+				grid-template-rows: auto auto;
+				align-content: center;
+				justify-items: center;
+				width: 100vw;
+				height: 100svh;
+				padding: 58px 18px 74px;
+				gap: 14px;
+				border-bottom: 0;
+			}
+			.postcard {
+				max-width: min(80vw, 355px);
+				padding: 9px 9px 0;
+				rotate: -1.4deg;
+			}
+			.postcard img { max-height: 34svh; object-fit: cover; }
+			.postcard figcaption { font-size: 13px; padding: 8px 4px 10px; }
+			.panel { max-width: 100%; text-align: center; }
+			.panel h2 { font-size: clamp(30px, 9.5vw, 46px); margin: 0 0 8px; }
+			.kicker { margin: 0 0 6px; font-size: 10.5px; }
+			.blurb {
+				font-size: 14.5px; line-height: 1.5; margin: 0 0 14px;
+				display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+			}
+			.stats { grid-template-columns: 1fr 1fr; margin: 0 auto 14px; max-width: 400px; }
+			.stats > div { padding: 9px 11px; }
+			.stats dt { font-size: 9.5px; letter-spacing: .08em; margin-bottom: 3px; }
+			.stats dd { font-size: 18px; }
+			.townLink { font-size: 14px; }
+
+			/* slim progress bar, no room for nine labels */
+			.road { display: block; height: 42px; }
+			.roadMarks { display: none; }
+			.roadFill, .road::after { bottom: 14px; }
+
+			/* the scrim reads top-to-bottom on a phone */
+			.stage::after {
+				background:
+					linear-gradient(180deg, rgba(4,8,22,.5) 0%, rgba(4,8,22,.12) 26%, rgba(4,8,22,.35) 62%, rgba(4,8,22,.8) 100%);
+			}
+
+			/* choreography */
+			.townStrip, .ridgeStrip, .sunTrack, .roadFill, .starsLayer, .sunBody, .nightVeil,
+			.skyPhases .sky {
+				animation-timeline: --drive;
+				animation-range: contain 0% contain 100%;
+				animation-fill-mode: both;
+				animation-timing-function: linear;
+			}
+			.townStrip, .ridgeStrip { animation-timing-function: cubic-bezier(.55, 0, .3, 1); }
+			.townStrip { animation-name: panTownsY; }
+			@keyframes panTownsY {
+				0%, 6.5% { transform: translate3d(0, 0, 0); }
+				11.11%, 17.61% { transform: translate3d(0, -100svh, 0); }
+				22.22%, 28.72% { transform: translate3d(0, -200svh, 0); }
+				33.33%, 39.83% { transform: translate3d(0, -300svh, 0); }
+				44.44%, 50.94% { transform: translate3d(0, -400svh, 0); }
+				55.56%, 62.06% { transform: translate3d(0, -500svh, 0); }
+				66.67%, 73.17% { transform: translate3d(0, -600svh, 0); }
+				77.78%, 84.28% { transform: translate3d(0, -700svh, 0); }
+				88.89%, 100% { transform: translate3d(0, -800svh, 0); }
+			}
+			/* the coast still slides past, gently */
+			.ridgeStrip.far { animation-name: panFarM; }
+			@keyframes panFarM { from { transform: translate3d(0,0,0); } to { transform: translate3d(-14%, 0, 0); } }
+			.ridgeStrip.mid { animation-name: panMidM; }
+			@keyframes panMidM { from { transform: translate3d(0,0,0); } to { transform: translate3d(-26%, 0, 0); } }
+			.ridgeStrip.near { animation-name: panNearM; }
+			@keyframes panNearM { from { transform: translate3d(0,0,0); } to { transform: translate3d(-40%, 0, 0); } }
+			.sunTrack { animation-name: sunAcrossM; }
+			@keyframes sunAcrossM { from { transform: translate3d(0,0,0); } to { transform: translate3d(76vw, 0, 0); } }
+			.sunBody { animation-name: sunArc; }
+			.starsLayer { animation-name: starsIn; }
+			.nightVeil { animation-name: veil; }
+			.roadFill { animation-name: roadGrow; }
+			.skyPhases .p0 { animation-name: sky0; }
+			.skyPhases .p1 { animation-name: sky1; }
+			.skyPhases .p2 { animation-name: sky2; background: none; }
+			.skyPhases .p3 { animation-name: sky3; }
+			.skyPhases .p4 { animation-name: sky4; }
+			.skyPhases .p5 { animation-name: sky5; }
+			.skyPhases .p2 {
+				background: linear-gradient(180deg, #1c4a8e 0%, #4a90c9 42%, #90c4e4 74%, #e2f2fa 100%);
+			}
+		}
+	}
+
+
+	/* decorative layers off wherever the pinned journey is off */
+	@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+		.cloudLayer, .landmarkStrip, .glitterTrack, .boatLayer, .flock, .moon, .odo, .grain { display: none; }
+	}
+
+	/* desktop browsers without scroll-driven animations get the honest stack too */
+	@supports not (animation-timeline: view()) {
+		@media (min-width: 901px) {
+			.journey { height: auto; }
+			.stage { position: relative; height: auto; overflow: visible; }
+			.skyPhases .sky { opacity: 0; }
+			.skyPhases .p2 { opacity: 1; background: linear-gradient(180deg, #0a1030 0%, #23407e 24%, #3a7cb8 48%, #7fb6dc 70%, #c99a7c 88%, #2a2a5e 100%); }
+			.sunTrack, .ridgeStrip, .road, .seaStrip, .cloudLayer, .landmarkStrip, .glitterTrack, .boatLayer, .flock, .moon, .odo, .grain { display: none; }
+			.townStrip { position: relative; inset: auto; display: block; width: 100%; height: auto; }
+			.stop { width: 100%; height: auto; padding: 64px 24px; max-width: 1120px; margin: 0 auto; border-bottom: 1px solid rgba(255, 255, 255, .09); }
+		}
+	}
+
+	/* mobile enhanced journey gets the lightweight subset */
+	@supports (animation-timeline: view()) {
+		@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+			.cloudLayer, .glitterTrack, .flock.f1, .moon, .odo, .grain { display: block; }
+			.cloudLayer, .glitterTrack, .glitter, .flock.f1, .moon, .odo {
+				animation-timeline: --drive;
+				animation-range: contain 0% contain 100%;
+				animation-fill-mode: both;
+				animation-timing-function: linear;
+			}
+			.cloudLayer { animation-name: cloudsPan; }
+			.glitterTrack { animation-name: sunAcrossM; }
+			.glitter { animation-name: glitterPhase; width: 86px; margin-left: -43px; }
+			.flock.f1 { animation-name: flock1Go; }
+			.moon { animation-name: moonIn; left: 70%; top: 10%; }
+			.odo { animation-name: kmTick; right: 12px; bottom: 54px; padding: 5px 10px; font-size: 11px; }
+			.postcard::before { width: 50px; height: 50px; top: -10px; right: -10px; font-size: 9.5px; }
+		}
+	}
+</style>
+

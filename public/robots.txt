@@ -1,7 +1,15 @@
 # Welcome to PropertyList - the free agent-to-agent MLS for Spain.
 # Hello, curious human or robot. Search engines and AI assistants are welcome here.
 # A guided map for AI models: https://info.propertylist.es/llms.txt
+# Full page text for AI models: https://info.propertylist.es/llms-full.txt
 # Want to join us or list your properties? https://agents.propertylist.es
+
+# Bulk scrapers that hammer the site without citing back are not welcome.
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
 
 User-agent: *
 Disallow: /admin

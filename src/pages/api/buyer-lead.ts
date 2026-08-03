@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { notifySubmission } from '../../lib/notify';
 import fs from 'node:fs/promises';
 
 // Buyer/renter alert lead from the property finder (2026-07-08). Stores a local durable copy
@@ -67,5 +68,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 				body: JSON.stringify(rec) });
 		} catch { /* best effort - local copy is the backup */ }
 	}
+	await notifySubmission({
+		kind: 'buyer lead',
+		fields: [['Name', rec.name], ['Email', rec.email], ['Phone', rec.phone], ['Looking for', rec.op], ['Area', rec.area_name || rec.area], ['Budget', rec.budget]],
+		link: '/admin/analytics',
+	});
 	return json({ ok: true });
 };

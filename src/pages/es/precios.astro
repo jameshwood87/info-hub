@@ -1,5 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
+
+const __ps = await getPortalStats();
+const plListings = statPlus(__ps.listings, 'es');
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
 
 const title = 'Precios | PropertyList Info Hub';
 const description =
@@ -18,12 +25,13 @@ const sections: Array<{
 			{ feature: 'Publica con la voz (Instant Listing)', price: 'Gratis' },
 			{ feature: 'Usuarios/Personal', price: 'Gratis' },
 			{ feature: 'MicroSite con tu marca', price: 'Gratis' },
-			{ feature: 'Destacar un anuncio', price: 'desde 10 €' },
+			{ feature: 'Destacar un anuncio', price: 'desde 10 créditos (~10€)' },
 			{ feature: 'Alertas de propiedades', price: 'Gratis' },
+			{ feature: 'Anuncios Privados (no compartir)', price: '5 gratis, después 5 créditos cada uno' },
 			{ feature: 'LeadBoard', price: 'Próximamente' },
 			{ feature: 'Importación XML', price: 'Gratis' },
-			{ feature: 'Exportación XML', price: '35 créditos/mes o 350 €/año' },
-			{ feature: 'Anuncios privados', price: 'Próximamente' },
+			{ feature: 'Envío XML a otros portales', price: 'Gratis' },
+			{ feature: 'Exportación XML a tu propia web', price: '35 créditos/mes o 350 €/año' },
 		],
 	},
 	{
@@ -32,8 +40,12 @@ const sections: Array<{
 		items: [
 			{ feature: 'Contactos ilimitados', price: 'Gratis' },
 			{ feature: 'Eventos de calendario', price: 'Gratis' },
-			{ feature: 'Pipeline de leads', price: 'Gratis' },
-			{ feature: 'Pipelines de operaciones (Compradores/Vendedores/Inquilinos)', price: 'Primeras 5 gratis, luego 1 crédito' },
+			{ feature: 'Pipeline de Leads', price: 'Gratis' },
+			{ feature: 'Pipeline de Buyers (tú eliges quién entra)', price: '1 crédito por lead que metas' },
+			{ feature: 'Pipeline de Sellers', price: 'Gratis' },
+			{ feature: 'Pipeline de Property', price: 'Gratis' },
+			{ feature: 'Pipeline de Tenants (Rentals Module)', price: '50 créditos / 30 días, prueba gratis de 30 días' },
+			{ feature: 'Pipeline de Nurture (Automation & Nurture)', price: '20 créditos/mes' },
 			{ feature: 'Subida de documentos', price: 'Gratis' },
 			{ feature: 'Embudos de IA', price: 'Próximamente' },
 			{ feature: 'Chatbot de IA', price: 'Próximamente' },
@@ -44,7 +56,7 @@ const sections: Array<{
 		title: 'Portal Público',
 		subtitle: 'Anunciamos por ti',
 		items: [
-			{ feature: 'Destacar un anuncio', price: 'desde 10 €' },
+			{ feature: 'Destacar un anuncio', price: 'desde 10 créditos (~10€)' },
 			{ feature: 'Búsqueda con IA (busca escribiendo)', price: 'Gratis' },
 			{ feature: 'Abrir un lead directo', price: 'Gratis por tiempo limitado' },
 			{ feature: 'Agentes destacados', price: 'Próximamente' },
@@ -58,7 +70,7 @@ const sections: Array<{
 		items: [
 			{ feature: 'Constructor drag-and-drop', price: '50 créditos/mes' },
 			{ feature: 'SEO y meta con IA', price: '5 créditos/mes' },
-			{ feature: 'Instant Content: blogs y guías de zona con IA ilimitados', price: '30 créditos/mes' },
+			{ feature: 'Instant Content: blogs y guías de zona con IA ilimitados', price: '30 créditos/mes, requiere el Constructor de Webs' },
 			{ feature: 'Captura de leads con popup', price: '8 créditos/mes' },
 			{ feature: 'Dominio personalizado', price: '20 créditos/mes' },
 			{ feature: 'Quitar la marca PropertyList', price: '50 créditos/mes' },
@@ -71,7 +83,7 @@ const sections: Array<{
 const pricingFaqItems = [
 	{
 		q: '¿PropertyList es realmente gratis para agentes inmobiliarios?',
-		a: 'Sí. El MLS, el CRM, los anuncios ilimitados, las cuentas de equipo y la gestión de contactos son 100% gratis para siempre. Solo pagas por mejoras opcionales como destacar anuncios (desde 10 €) o el Constructor de Webs (50 créditos/mes).',
+		a: 'El núcleo es gratis y sin límite: el MLS, los anuncios ilimitados, las cuentas de equipo, la gestión de contactos y los pipelines de Leads, Vendedores y Propiedades. El CRM no es 100% gratis: pasar un lead de comprador cualificado a un pipeline de pago cuesta 1 crédito (~1€). Los 5 primeros son gratis, después es 1 crédito cada uno. Lo demás que se paga es opcional: destacar anuncios (10 créditos (~10€) por 3 días), el Módulo de Alquileres (50 créditos / 30 días, con prueba gratis de 30 días), Automation y Nurture (20 créditos al mes) o el Constructor de Webs (50 créditos al mes).',
 	},
 	{
 		q: '¿Cómo funcionan los créditos?',
@@ -79,7 +91,7 @@ const pricingFaqItems = [
 	},
 	{
 		q: '¿Qué pasa si me quedo sin créditos?',
-		a: 'No se pierde nada. Si tu saldo no cubre una renovación, tu web personalizada se pausa y los visitantes ven la página estándar, mientras todas tus páginas y ajustes quedan guardados como borrador. Recarga y republica con un clic. Muy pronto: Auto-Renovación opcional, que recarga tu saldo automáticamente antes de cada renovación para que tu web nunca se caiga - con 5 créditos gratis cada mes de regalo.',
+		a: 'No se pierde nada. Si tu saldo no cubre una renovación, tu web personalizada se pausa y los visitantes ven la página estándar, mientras todas tus páginas y ajustes quedan guardados como borrador. Recarga y republica con un clic. Activa la Auto-Renovación y tu saldo se recarga automáticamente antes de cada renovación, por el coste mensual de lo que tengas activo, para que nada se pause ni caduque.',
 	},
 	{
 		q: '¿Puedo cancelar mi suscripción al constructor de webs en cualquier momento?',
@@ -91,7 +103,7 @@ const pricingFaqItems = [
 	},
 	{
 		q: '¿Cómo funcionan los pipelines del CRM?',
-		a: 'PropertyList incluye siete tableros de pipeline en el CRM que mueven los contactos desde la primera consulta hasta el cierre de forma automática. Cuatro - Leads, Ciclo de la propiedad, Transacciones y Seguimiento - son gratis para siempre. Los tableros de Compradores, Vendedores e Inquilinos te dan las primeras 5 conversiones gratis, luego 1 crédito por conversión, que se cobra solo cuando marcas un contacto como una oportunidad real.',
+		a: 'PropertyList incluye seis pipelines de CRM. Lead, Seller y Property son gratis. Buyer cuesta 1 crédito (~1€) por lead de comprador, que solo se gasta si decides meter ese contacto en el pipeline, y los 5 primeros son gratis. Tenants va incluido en el Rentals Module (pipeline de Tenants, Tenancies y Maintenance): 50 créditos por período de 30 días, con prueba gratis de 30 días y sin cargo hasta que renueves. Nurture va incluido en Automation & Nurture por 20 créditos/mes (unos 20 €), un solo producto a un solo precio, que cubre además los emails automáticos, la detección de leads calientes y la Daily Action Queue. Los leads nuevos entran en New Lead y los anuncios nuevos en Active Listing. Lead y Seller son fijos; Buyer y Property los puedes editar. La fase legal está dentro de los pipelines de Buyer y Property: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment y WON - Deed Signed.',
 	},
 	{
 		q: '¿Cuánto cuesta el Constructor de Webs?',
@@ -103,7 +115,7 @@ const pricingFaqItems = [
 	},
 	{
 		q: '¿Hay una prueba gratis para las funciones de pago?',
-		a: 'Sí. Cada función de pago incluye una prueba gratuita, así que puedes probarla antes de gastar créditos. Las Agencias Verificadas también reciben 20 créditos gratis, y ganas otros 20 créditos para usar en funciones de pago por cada agencia que se registre con tu enlace de referido único.',
+		a: 'Sí. Cada función de pago incluye una prueba gratuita, así que puedes probarla antes de gastar créditos: tus 5 primeros leads de comprador son gratis, el informe de mercado por propiedad te da 3 informes gratis, el Módulo de Alquileres tiene una prueba de 30 días, y el Constructor de Webs es gratis para crear y previsualizar hasta que lo publiques. Las Agencias Verificadas también reciben 20 créditos gratis, y ganas otros 20 créditos por cada agencia que se registre con tu enlace de referido, mientras que la agencia nueva empieza con 10.',
 		link: { href: 'https://agents.propertylist.es/referrals', label: 'Consigue tu enlace de referido' },
 	},
 ];
@@ -117,6 +129,110 @@ const pricingFaqLd = {
 		acceptedAnswer: { '@type': 'Answer', text: f.a },
 	})),
 };
+
+const softwareAppLd = {
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "PropertyList",
+ "applicationCategory": "BusinessApplication",
+ "applicationSubCategory": "Estate agency CRM, agent-to-agent MLS and property portal",
+ "operatingSystem": "Web browser, Android",
+ "url": "https://propertylist.es/",
+ "sameAs": [
+  "https://agents.propertylist.es/",
+  "https://info.propertylist.es/"
+ ],
+ "inLanguage": [
+  "en",
+  "es"
+ ],
+ "areaServed": {
+  "@type": "Country",
+  "name": "Spain"
+ },
+ "provider": {
+  "@type": "Organization",
+  "name": "PropertyList"
+ },
+ "description": "Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by 1,300+ agents across 930+ agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.",
+ "featureList": [
+  "Six CRM pipelines: Leads, Buyers, Sellers, Property, Tenants, Nurture",
+  "Agent-to-agent MLS with co-broking across 930+ agencies",
+  "Public property portal listing and direct buyer enquiries",
+  "AI Property Match: plain-language search across own stock and the whole MLS",
+  "Automated lead acknowledgement and a day 0, 1, 3, 7 follow-up cadence",
+  "Nurture: automated past-client follow-up with intent detection",
+  "Rentals Module: tenancies, renewals, annual rent review, deposit compliance, maintenance",
+  "Free branded MicroSite for every agency",
+  "AI website builder with automated SEO content",
+  "Notary-verified register prices and per-property CMA reports",
+  "XML feed import and export",
+  "Android app",
+  "MCP server for AI-native property queries"
+ ],
+ "offers": [
+  {
+   "@type": "Offer",
+   "name": "Free plan",
+   "price": "0",
+   "priceCurrency": "EUR",
+   "description": "MLS and CRM, unlimited listings, unlimited staff accounts, the Lead, Seller and Property pipelines, a branded MicroSite and XML push to other portals. No card, no time limit."
+  },
+  {
+   "@type": "Offer",
+   "name": "Portal direct lead",
+   "price": "0",
+   "priceCurrency": "EUR",
+   "description": "Enquiries from the public property portal are free to open, taking no credits. Free for a limited time; expected to move to a pay-per-lead model in future, with notice."
+  },
+  {
+   "@type": "Offer",
+   "name": "Buyer lead",
+   "price": "1",
+   "priceCurrency": "EUR",
+   "description": "Costs 1 credit, charged only when the agent chooses to move a qualified contact into one of the paid pipeline boards, and the first 5 are free. Everything up to that point is free and declining costs nothing. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+  },
+  {
+   "@type": "Offer",
+   "name": "Automation and Nurture",
+   "priceCurrency": "EUR",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "20",
+    "priceCurrency": "EUR",
+    "unitText": "MONTH"
+   },
+   "description": "20 credits a month from the same prepaid credit balance as everything else. Includes the Nurture pipeline, all automated emails, Hot-lead detection and the Daily Action Queue. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+  },
+  {
+   "@type": "Offer",
+   "name": "Rentals Module",
+   "priceCurrency": "EUR",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "50",
+    "priceCurrency": "EUR",
+    "unitText": "MONTH"
+   },
+   "description": "50 credits per 30-day period, taken from your prepaid credit balance, bought in advance at 1.00 EUR per credit and less in larger packs. Free 30-day trial with no charge until you renew. Includes the Tenants pipeline, Tenancies, Maintenance and renewal email reminders."
+  },
+  {
+   "@type": "Offer",
+   "name": "Website Builder",
+   "priceCurrency": "EUR",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "50",
+    "priceCurrency": "EUR",
+    "unitText": "MONTH"
+   },
+   "description": "50 credits a month. Add-ons are separate monthly credit costs, for example pop-up lead capture at 8 and auto meta descriptions at 5. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+  }
+ ],
+ "paymentAccepted": "Credits from a single prepaid balance",
+ "termsOfService": "https://info.propertylist.es/docs/propertylist-mls-user-manual/credits/how-billing-works/"
+};
+
 ---
 
 <Layout
@@ -129,7 +245,7 @@ const pricingFaqLd = {
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/precios/' },
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/pricing/' },
 	]}
-	schema={pricingFaqLd}
+	schema={[pricingFaqLd, softwareAppLd]}
 >
 	<section class="hero">
 		<div class="heroInner">
@@ -152,7 +268,16 @@ const pricingFaqLd = {
 		</div>
 	</section>
 
-	<section class="section">
+	<section aria-label="Precios por perfil" style="max-width:1120px;margin:6px auto 0;padding:0 20px;">
+		<div style="display:flex;gap:12px;flex-wrap:wrap;">
+			<a href="#agents" style="flex:1 1 200px;display:block;background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:16px 18px;text-decoration:none;color:inherit;"><span style="font-size:20px;">🏠</span><span style="display:block;font-weight:800;font-size:15.5px;margin-top:6px;color:#0b1220;">Agentes inmobiliarios</span><span style="display:block;font-size:13px;color:rgba(16,24,40,0.62);margin-top:3px;line-height:1.45;">MLS + CRM gratis para siempre. Créditos solo para mejoras opcionales.</span></a>
+			<a href="#developers" style="flex:1 1 200px;display:block;background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:16px 18px;text-decoration:none;color:inherit;"><span style="font-size:20px;">🏗️</span><span style="display:block;font-weight:800;font-size:15.5px;margin-top:6px;color:#0b1220;">Promotores</span><span style="display:block;font-size:13px;color:rgba(16,24,40,0.62);margin-top:3px;line-height:1.45;">Sin suscripción. Tú fijas la comisión, pagadera solo con ventas reales.</span></a>
+			<a href="#buyers" style="flex:1 1 200px;display:block;background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:16px 18px;text-decoration:none;color:inherit;"><span style="font-size:20px;">🔑</span><span style="display:block;font-weight:800;font-size:15.5px;margin-top:6px;color:#0b1220;">Compradores y vendedores</span><span style="display:block;font-size:13px;color:rgba(16,24,40,0.62);margin-top:3px;line-height:1.45;">Buscar, la búsqueda con IA y las consultas son gratis. Sin cuenta.</span></a>
+			<a href="#services" style="flex:1 1 200px;display:block;background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:16px 18px;text-decoration:none;color:inherit;"><span style="font-size:20px;">🧰</span><span style="display:block;font-weight:800;font-size:15.5px;margin-top:6px;color:#0b1220;">Servicios inmobiliarios</span><span style="display:block;font-size:13px;color:rgba(16,24,40,0.62);margin-top:3px;line-height:1.45;">Muy pronto - un lugar para los oficios de cada mudanza.</span></a>
+		</div>
+	</section>
+
+	<section class="section" id="agents">
 		<div class="twoCol">
 			<div class="panel">
 				<h2>Por qué el MLS es gratis</h2>
@@ -167,6 +292,10 @@ const pricingFaqLd = {
 				<figure class="panelMock">
 					<img src="/img/mls-preview-es.jpg" alt="Anuncios de propiedades en vivo en el portal público de PropertyList - villas y apartamentos en venta en Marbella" loading="lazy" width="980" height="700" />
 					<figcaption>El MLS como lo ven los compradores - anuncios en vivo ahora mismo en <a href="https://propertylist.es/portal/for-sale/marbella" target="_blank" rel="noopener">propertylist.es</a>.</figcaption>
+				</figure>
+				<figure class="panelMock">
+					<img src="/img/crm-dashboard.jpg" alt="El panel del CRM de PropertyList: pipelines de leads, compradores, vendedores y transacciones, AI Property Match, agenda y saldo de créditos" loading="lazy" width="1600" height="792" />
+					<figcaption>...y el CRM en el que trabajan los agentes: pipelines, AI Property Match, agenda y leads. El núcleo es gratis; mover un lead cualificado a un pipeline de pago cuesta 1 crédito.</figcaption>
 				</figure>
 			</div>
 			<div class="panel">
@@ -193,8 +322,8 @@ const pricingFaqLd = {
 					<div class="calloutBody">Cada Agencia Verificada recibe 20 créditos gratis.</div>
 				</div>
 				<div class="callout muted">
-					<div class="calloutTitle">Muy pronto: Auto-Renovación</div>
-					<div class="calloutBody">Guarda una tarjeta y recargamos tu saldo automáticamente antes de cada renovación, para que tu web nunca se caiga - y de regalo, 5 créditos gratis cada mes.</div>
+					<div class="calloutTitle">Novedad: Auto-Renovación</div>
+					<div class="calloutBody">Guarda una tarjeta y recargamos tu saldo automáticamente antes de cada renovación, por el coste mensual de tus suscripciones activas, para que nada se caiga. Es una forma de pagar, no un cargo extra.</div>
 				</div>
 			</div>
 		</div>
@@ -245,7 +374,7 @@ const pricingFaqLd = {
 					<li>Hosting y SSL gratis</li>
 					<li>Construye y previsualiza antes de pagar</li>
 				</ul>
-				<a class="btnPrimary" href="/es/website-builder">Ver cómo funciona</a>
+				<a class="btnPrimary" href="/es/website-builder/">Ver cómo funciona</a>
 			</div>
 			<div class="wbAddons">
 				<div class="wbAddonsTitle">Potenciadores - añade a medida que creces</div>
@@ -297,6 +426,29 @@ const pricingFaqLd = {
 		</div>
 	</section>
 
+	<section class="section" id="developers">
+		<div class="sectionHeader"><h2>Para promotores</h2></div>
+		<div style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:16px;padding:22px 24px;">
+			<p style="margin:0 0 10px;color:rgba(16,24,40,0.74);">Sin suscripción y sin cuotas de publicación. Publica tus promociones gratis, llega a más de {plAgents} agentes y a compradores directos del portal, y <strong>tú fijas la comisión de cada anuncio</strong>. Solo se debe cuando el comprador ha pagado un <strong>10% o más</strong> del inmueble - nunca pagas por marketing que no ha convertido. Y no hay barrera de pago para los agentes: <strong>todo agente con cuenta de PropertyList tiene acceso completo y gratuito a todas las promociones</strong> - para compartirlas con sus clientes y venderlas. Tu proyecto llega a toda la red desde el primer día.</p>
+			<p style="margin:0;"><a href="/es/docs/developers/" style="color:#0a6d61;font-weight:700;">Ver la documentación para promotores &rarr;</a> &nbsp;·&nbsp; <a href="https://developers.propertylist.es/login" target="_blank" rel="noopener" style="color:#0a6d61;font-weight:700;">Únete como promotor &rarr;</a></p>
+		</div>
+	</section>
+
+	<section class="section" id="buyers">
+		<div class="sectionHeader"><h2>Para compradores y vendedores</h2></div>
+		<div style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:16px;padding:22px 24px;">
+			<p style="margin:0 0 10px;color:rgba(16,24,40,0.74);">Usar el portal no cuesta nada: navega por todos los anuncios, usa la <a href="/es/busqueda-ia/">búsqueda con IA</a>, contacta con agentes y crea alertas - gratis y sin cuenta. Los extras de pago son puntuales: un <strong>informe de mercado</strong> verificado ante notario en cualquier anuncio, y muy pronto el <a href="/es/folleto-instantaneo/"><strong>Folleto Instantáneo</strong></a> para particulares (20 &euro;, muy pronto).</p>
+			<p style="margin:0;"><a href="https://propertylist.es/" target="_blank" rel="noopener" style="color:#0a6d61;font-weight:700;">Buscar en el portal &rarr;</a></p>
+		</div>
+	</section>
+
+	<section class="section" id="services">
+		<div class="sectionHeader"><h2>Servicios inmobiliarios <span style="vertical-align:middle;font-size:11px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;background:rgba(16,24,40,0.07);color:rgba(16,24,40,0.6);padding:3px 9px;border-radius:999px;">Muy pronto</span></h2></div>
+		<div style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:16px;padding:22px 24px;">
+			<p style="margin:0;color:rgba(16,24,40,0.74);">Un lugar en PropertyList para los profesionales de cada mudanza - limpieza, abogados, mudanzas, fotógrafos y más. Los precios se publicarán en el lanzamiento. ¿Lo quieres antes? <a href="/es/solicitar-funciones/" style="color:#0a6d61;font-weight:700;">Vótalo en el tablón de funciones &rarr;</a></p>
+		</div>
+	</section>
+
 	<section class="section">
 		<div class="sectionHeader">
 			<h2>Preguntas frecuentes</h2>
@@ -311,6 +463,7 @@ const pricingFaqLd = {
 			))}
 		</div>
 	</section>
+	<AgentInterestCta lang="es" page="/es/precios/" />
 </Layout>
 
 <style>

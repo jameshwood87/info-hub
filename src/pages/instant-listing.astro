@@ -1,5 +1,11 @@
 ---
+import { statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
 import Layout from '../layouts/Layout.astro';
+import AgentInterestCta from '../components/AgentInterestCta.astro';
 import { getPortalStats } from '../lib/portalStats';
 
 const stats = await getPortalStats();
@@ -8,7 +14,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/instant-listing/`;
 const title = 'Instant Listing - a full property listing from photos and your voice | PropertyList';
 const description =
-	'Add a property listing from photos and a voice note. PropertyList Instant Listing auto-fills every field - m2, bedrooms, features and a polished description - for estate agents to review and publish in a minute.';
+	'Add a property listing from photos and a voice note. Instant Listing auto-fills type, m2, bedrooms, features and the description - you review, then publish.';
 
 const fills = [
 	{ name: 'Property type & condition', desc: 'Villa, apartment, penthouse, new-build or resale - identified for you.' },
@@ -57,7 +63,7 @@ const softwareLd = {
 	offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 ---
 
 <Layout
@@ -165,7 +171,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			<div class="card promo">
 				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.7 5.5 6 .9-4.3 4.2 1 6L12 17.8 6.6 20.1l1-6L3.3 9.9l6-.9z" /></svg></span>
 				<h3>Feature it in the MLS</h3>
-				<p>Boost your listing to the top where 1,200+ agents browse, so the whole network sees it first.</p>
+				<p>Boost your listing to the top where {plAgents} agents browse, so the whole network sees it first.</p>
 			</div>
 			<div class="card promo">
 				<span class="promoIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18" /></svg></span>
@@ -236,6 +242,7 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			<div class="ctaRow">
 				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
 			</div>
+			<p class="ctaMore" style="margin-top:22px;font-size:14px;opacity:.75;">Keep exploring: <a href="/launch/">launch a whole agency in minutes</a> &middot; <a href="/pricing/">what it costs</a> &middot; <a href="/instant-content/">AI blogs &amp; area guides</a> &middot; <a href="/features/">all the free tools</a></p>
 		</div>
 	</section>
 
@@ -322,4 +329,5 @@ const SIGNUP = 'https://agents.propertylist.es/new-agent-signup/new';
 			.grid4 { grid-template-columns: repeat(2, 1fr); }
 		}
 	</style>
+	<AgentInterestCta lang="en" page="/instant-listing/" />
 </Layout>

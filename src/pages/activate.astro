@@ -1,0 +1,533 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../lib/portalStats';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/activate/`;
+const title = 'Your PropertyList account is already live | PropertyList';
+const description =
+	'You already have an agency account. This is the sixty seconds that turns it into a working agency: one property, seen by every agent on the network.';
+
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
+
+// Everyone reading this already has an account. Nothing on this page points at signup.
+const LOGIN = 'https://agents.propertylist.es/login';
+
+const steps = [
+	{
+		n: '1',
+		h: 'Log in',
+		p: 'Your agency, your staff accounts, your CRM and your branded MicroSite are already built and already free. There is nothing to set up and nothing to choose.',
+	},
+	{
+		n: '2',
+		h: 'Add one property',
+		p: 'Upload the photos from your phone and describe the property out loud. Instant Listing writes the type, the rooms, the sizes, the features and the description in English and Spanish. You read it back before anything goes live.',
+	},
+	{
+		n: '3',
+		h: 'That is the whole job',
+		p: `The listing is in front of ${plAgents} agents who can sell it with you, and on the public portal in front of buyers. Enquiries land in your CRM.`,
+	},
+];
+
+const after = [
+	{
+		h: 'Other agents can sell it that afternoon',
+		p: `Your listing joins ${plListings} on the shared network. Any agent on it can bring you a buyer, and referrals between agents never cost a credit.`,
+	},
+	{
+		h: 'Buyers see it on the portal',
+		p: 'It is live on propertylist.es at the same time, with no listing fee. A buyer enquiry comes straight to you.',
+	},
+	{
+		h: 'Your MicroSite stops being empty',
+		p: 'Your branded site at youragency.estate-agency.co builds itself from your listings. One property in the MLS is one property on your website, with nothing else to update.',
+	},
+	{
+		h: 'You can search everyone else’s stock',
+		p: `The network runs both ways. Once you are in it you can sell from all ${plListings} listings, not just your own, and AI Property Match will find the fit from a client’s WhatsApp message.`,
+	},
+];
+
+// The genuine blockers. Every one of these is a reason an account sits empty.
+const stuck = [
+	{
+		q: 'I cannot remember my password',
+		a: `Use the reset link on the <a href="${LOGIN}" target="_blank" rel="noopener">login page</a>. It goes to the email address you registered with. If that inbox is gone, reply to whoever contacted you and the team will move the account across.`,
+	},
+	{
+		q: 'I already have 40 properties and I am not typing them in',
+		a: 'Do not type them in. Send the URL of your existing XML feed to <a href="mailto:xml@propertylist.es">xml@propertylist.es</a> and the team connects it for you. Your stock arrives on its own and stays in sync. Importing is free, and so is pushing your listings back out to other portals.',
+	},
+	{
+		q: 'I do not want other agents seeing my listings',
+		a: 'Then keep them off the network. A private listing is live on the public portal and invisible to other agencies. Your first 5 are free, after that it is 5 credits each. Most agents share the stock they want sold and keep one or two back.',
+	},
+	{
+		q: 'I am not sure what any of this costs',
+		a: 'Listing, the CRM, unlimited staff accounts, the MicroSite, portal presence and XML both ways are free with no limit and no card. You pay one credit only when you decide to move a qualified buyer lead into your paid pipeline, and nothing charges itself. <a href="/free/">The full free list is here.</a>',
+	},
+	{
+		q: 'I signed up a while ago and cannot remember what it does',
+		a: 'The short version: it is a shared MLS for Spanish agencies with a free CRM attached, so a listing you add can be sold by any agent on the network and a buyer enquiry arrives already in your pipeline. <a href="/launch/">The nine-minute version is here.</a>',
+	},
+];
+
+// Grouped so the breadth reads at a glance. Every line is "certain" in the free-vs-paid
+// ledger; anything the sources disagree on is deliberately left off this page.
+const freeGroups = [
+	{
+		h: 'Getting the property out',
+		items: [
+			'Unlimited listings on the shared MLS and on the public portal, with no listing fee.',
+			'Instant Listing: photos and a voice note become a finished listing in English and Spanish.',
+			'Your existing XML feed imported for you, and your listings pushed back out to other portals.',
+			'Up to 25 photos and a video on every property.',
+			'Your first 5 private listings, if you want one kept off the network.',
+		],
+	},
+	{
+		h: 'Running the agency',
+		items: [
+			'The CRM: unlimited contacts, unlimited staff accounts, calendar and document storage.',
+			'The Lead, Seller and Property boards, set up and backfilled with what you already have.',
+			'Messaging, viewing requests and a full timeline on every contact.',
+			'The Android app, so a property can be listed at the viewing.',
+			'The agent WhatsApp groups.',
+		],
+	},
+	{
+		h: 'Finding the buyer',
+		items: [
+			'AI Property Match: paste a client message and get the properties, yours first, then the network.',
+			'Property alerts on a saved client brief, across every listing on the network.',
+			'Monthly market data for 20+ Costa del Sol towns, from registered sale prices.',
+			'Your branded MicroSite, hosted, and every enquiry that comes through it.',
+			'Referrals and commission splits with other agencies, never charged.',
+		],
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	robots="noindex,follow"
+	existingUser
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Your account is already live</div>
+			<h1>Your agency exists. It just has nothing in it.</h1>
+			<p class="lead">
+				You registered, and then a normal week happened. Everything you set up is still there, still yours and still free. It starts
+				working the moment there is one property in it, and putting one in takes about a minute.
+			</p>
+			<div class="ctaRow" aria-label="Open PropertyList">
+				<a class="btnPrimary" href={LOGIN} target="_blank" rel="noopener" data-umami-event="activate-login-hero">
+					Log in and add one property
+				</a>
+				<a class="btnSecondary" href="#stuck">Something is stopping me</a>
+			</div>
+			<div class="note">No card, nothing to reactivate, nothing to cancel. {plAgencies} agencies are on the network today.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Sixty seconds, three steps</h2>
+			<p>You have already done the part that needed a decision.</p>
+		</div>
+		<div class="grid3">
+			{
+				steps.map((s) => (
+					<div class="card stepCard">
+						<div class="stepNum">{s.n}</div>
+						<h3>{s.h}</h3>
+						<p>{s.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What one property switches on</h2>
+			<p>None of this happens while the account is empty. All of it happens the same day it is not.</p>
+		</div>
+		<div class="grid2">
+			{
+				after.map((a) => (
+					<div class="card">
+						<h3>{a.h}</h3>
+						<p>{a.p}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section" id="stuck">
+		<div class="sectionHead">
+			<h2>If something is in the way</h2>
+			<p>These are the five reasons an account sits empty. Four of them are somebody else’s job.</p>
+		</div>
+		<div class="faqList">
+			{
+				stuck.map((s) => (
+					<details class="faqItem">
+						<summary>{s.q}</summary>
+						<p set:html={s.a} />
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What is already paid for on your account</h2>
+			<p>Not a trial, not a starter tier, and not five things. This is the standing free account, and some of it did not exist when you registered.</p>
+		</div>
+		<div class="grid3">
+			{
+				freeGroups.map((g) => (
+					<div class="card">
+						<h3>{g.h}</h3>
+						<ul class="tickList">
+							{g.items.map((i) => <li>{i}</li>)}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Why all of that is the free half</h2>
+				<p>
+					PropertyList charges for demand, not supply. Everything above is what you put into the network, and the network is worth more to
+					every agency in it, including yours, the fuller it gets.
+				</p>
+				<p>
+					What costs money is what the network hands back: one credit when you decide to move a qualified buyer lead into your paid
+					pipeline, and the optional monthly modules for rentals, automated follow-up and a custom website. Nothing switches itself on and
+					credits you buy do not expire.
+				</p>
+				<p>That is also why an empty account costs you nothing and earns you nothing. The only thing missing is stock.</p>
+				<div class="ctaRow">
+					<a class="btnSecondary" href="/free/">The full free list</a>
+					<a class="btnSecondary" href="/pricing/">What the paid parts cost</a>
+				</div>
+			</div>
+			<div class="card">
+				<h2>One thing worth two minutes</h2>
+				<p>
+					If you never finished verification, it is free, it takes about two minutes, and approved agencies get
+					<strong>20 credits</strong> on the balance.
+				</p>
+				<p>
+					It also puts a check mark on your agency and on every property you list, and when the same property is on the network twice, the
+					verified agency's listing takes priority.
+				</p>
+				<p>That is 20 buyer leads, or four valuation reports, for a form about a company you already own.</p>
+				<div class="ctaRow">
+					<a class="btnSecondary" href="/verify-your-agency/">How verification works</a>
+					<a class="btnSecondary" href="/pipelines/">The six pipelines</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section cta">
+		<div class="ctaInner">
+			<h2>One property is the difference between an account and an agency.</h2>
+			<p>
+				Everything else was done months ago. Add the property you would most like sold, and let {plAgents} agents help you sell it.
+			</p>
+			<div class="ctaRow" aria-label="Open PropertyList">
+				<a class="btnPrimary" href={LOGIN} target="_blank" rel="noopener" data-umami-event="activate-login-footer">
+					Log in and add one property
+				</a>
+				<a class="btnSecondary" href="/docs/propertylist-mls-user-manual/core-workflow/listing-a-property/">Read how listing works</a>
+			</div>
+			<p class="quiet"><a href="/es/activar/">Ver esta página en español</a></p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+	}
+
+	.hero {
+		border-radius: 22px;
+		padding: 16px;
+		margin: 0 0 16px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background:
+			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+	}
+
+	.heroInner {
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 18px;
+	}
+
+	.kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		color: rgba(16, 24, 40, 0.86);
+		font-weight: 900;
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	h1 {
+		margin: 10px 0 10px;
+		line-height: 1.06;
+	}
+
+	.lead {
+		margin: 0 0 14px;
+		color: rgba(16, 24, 40, 0.75);
+		max-width: 78ch;
+		line-height: 1.6;
+	}
+
+	.note {
+		color: rgba(16, 24, 40, 0.65);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.section {
+		margin: 0 0 14px;
+		scroll-margin-top: 90px;
+	}
+
+	.sectionHead {
+		background: rgba(255, 255, 255, 0.7);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+		margin-bottom: 12px;
+	}
+
+	.sectionHead p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.72);
+		line-height: 1.6;
+		max-width: 88ch;
+	}
+
+	.grid2 {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 18px;
+		padding: 14px;
+	}
+
+	.card.accent {
+		border-color: rgba(var(--pl-accent-rgb), 0.25);
+		background:
+			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
+			rgba(255, 255, 255, 0.86);
+	}
+
+	.card h2 {
+		margin: 0 0 10px;
+	}
+
+	.card h3 {
+		margin: 0 0 6px;
+		font-size: 16.5px;
+	}
+
+	.card p {
+		margin: 0 0 10px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.6;
+	}
+
+	.card p:last-child {
+		margin-bottom: 0;
+	}
+
+	.stepCard {
+		position: relative;
+		padding-top: 18px;
+	}
+
+	.stepNum {
+		width: 30px;
+		height: 30px;
+		border-radius: 999px;
+		background: #101828;
+		color: #fff;
+		font-weight: 800;
+		font-size: 14px;
+		display: grid;
+		place-items: center;
+		margin-bottom: 10px;
+	}
+
+	.tickList {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 8px;
+	}
+
+	.tickList li {
+		position: relative;
+		padding-left: 26px;
+		color: rgba(16, 24, 40, 0.78);
+		line-height: 1.55;
+		font-size: 14.5px;
+	}
+
+	.tickList li::before {
+		content: '\2713';
+		position: absolute;
+		left: 0;
+		top: 0;
+		color: #0a6d61;
+		font-weight: 900;
+	}
+
+	.quiet {
+		color: rgba(16, 24, 40, 0.62);
+		font-size: 14px;
+		line-height: 1.6;
+		margin: 14px 0 0;
+	}
+
+	.faqList {
+		display: grid;
+		gap: 10px;
+	}
+
+	.faqItem {
+		background: #fff;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		padding: 14px 18px;
+	}
+
+	.faqItem summary {
+		cursor: pointer;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+		color: #101828;
+	}
+
+	.faqItem p {
+		margin: 10px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.65;
+	}
+
+	.cta {
+		border-radius: 22px;
+		padding: 16px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
+	}
+
+	.ctaInner {
+		background: rgba(255, 255, 255, 0.82);
+		border: 1px solid rgba(16, 24, 40, 0.06);
+		border-radius: 18px;
+		padding: 16px;
+	}
+
+	.ctaInner p {
+		margin: 8px 0 0;
+		color: rgba(16, 24, 40, 0.75);
+		line-height: 1.6;
+		max-width: 90ch;
+	}
+
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.btnPrimary,
+	.btnSecondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 12px 14px;
+		border-radius: 14px;
+		border: 1px solid rgba(16, 24, 40, 0.14);
+		background: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		font-weight: 950;
+		color: rgba(16, 24, 40, 0.88);
+	}
+
+	.btnPrimary {
+		border-color: rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.14);
+	}
+
+	.btnPrimary:hover,
+	.btnSecondary:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	@media (max-width: 980px) {
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.grid2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

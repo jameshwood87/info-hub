@@ -48,3 +48,13 @@ export async function getPortalStats(): Promise<PortalStats> {
 	if (cache) return cache.v;
 	return FALLBACK;
 }
+
+// Format a live count as a safe marketing figure that rounds DOWN and adds "+",
+// e.g. 6210 -> "6,200+", 922 -> "920+", 1290 -> "1,200+". Never overstates; grows on its own.
+export function statPlus(n: number, lang: 'en' | 'es' | 'de' = 'en'): string {
+	if (!Number.isFinite(n) || n <= 0) return '0';
+	const mag = Math.pow(10, Math.max(1, Math.floor(Math.log10(n)) - 1));
+	const floored = Math.floor(n / mag) * mag;
+	const sep = lang === 'en' ? ',' : '.';
+	return String(floored).replace(/\B(?=(\d{3})+(?!\d))/g, sep) + '+';
+}

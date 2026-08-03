@@ -22,7 +22,7 @@ const stack = [
 
 const free = [
 	{ t: 'The shared MLS', d: `List once and ${plAgents} agents can sell it with you, and you can sell from all ${plListings} listings on the network - not just your own. Leads and referrals between agents are free, forever.` },
-	{ t: 'A free CRM', d: 'Unlimited contacts, calendar and document storage, plus the Lead, Seller and Property pipelines - all free, with nothing to pay per deal. Buyer leads are 1 credit each, charged when the lead reaches Qualified. The Tenants and Nurture pipelines sit inside the paid monthly modules, Rentals and Automation & Nurture.' },
+	{ t: 'A free CRM', d: 'Unlimited contacts, calendar and document storage, plus the Lead, Seller and Property pipelines - all free, with nothing to pay per deal. Buyer leads are 1 credit (~1€) each, charged only when you choose to move a qualified lead into a paid pipeline, and your first 5 are free. Reaching Qualified costs nothing. The Tenants and Nurture pipelines sit inside the paid modules, Rentals and Automation & Nurture.' },
 	{ t: 'Your listings on the portal', d: `Live on propertylist.es in front of buyers, next to ${plListings} homes. No listing fees, ever.` },
 	{ t: 'A branded MicroSite', d: 'Your own site at youragency.estate-agency.co, auto-built from your listings, with free hosting. Enquiries from it come straight to you, free forever. (Fully custom site and domain? That is the Website Builder.)' },
 	{ t: 'Instant Listing', d: 'Add your images then describe the property out loud - and the full listing writes itself, ready to review and publish.' },
@@ -41,7 +41,7 @@ const faqs = [
 	},
 	{
 		q: 'Then how does PropertyList make money?',
-		a: 'Two ways. Credits, for demand and one-offs: 1 credit for each qualified lead you decide to move into your Buyer pipeline, taken from your credit balance, plus featuring a listing to the top, notary-verified valuation reports, a full custom website builder, or keeping a sale off the shared network. And monthly subscriptions for the modules that run in the background: Automation & Nurture at 20 credits a month (about €20), and the Rentals Module from 20 credits a month (about €20). Your listings and your sellers stay free, so you pay for demand and never for supply. The core stays free because a bigger, shared network is worth more to everyone on it.',
+		a: 'Two ways. Credits, for demand and one-offs: 1 credit for each qualified lead you decide to move into your Buyer pipeline, taken from your credit balance, plus featuring a listing to the top, notary-verified valuation reports, a full custom website builder, or keeping a sale off the shared network. And monthly subscriptions for the modules that run in the background: Automation & Nurture at 20 credits a month (about €20), and the Rentals Module at 50 credits per 30 days, with a free 30-day trial. Your listings and your sellers stay free, so you pay for demand and never for supply. The core stays free because a bigger, shared network is worth more to everyone on it.',
 	},
 	{
 		q: 'What is the catch?',
@@ -179,11 +179,11 @@ const breadcrumbLd = {
 			<div class="growGrid">
 				<a href="/pricing/"><b>Buyer leads</b><span>1 credit per qualified lead you decide to move in, from your credit balance</span><em>1 credit each</em></a>
 				<a href="/pricing/"><b>Automation &amp; Nurture</b><span>Nurture pipeline, automated emails, Hot-lead detection and the Daily Action Queue</span><em>20 credits/mo</em></a>
-				<a href="/pricing/"><b>Rentals Module</b><span>Tenants pipeline, Tenancies and Maintenance. Starter up to 10 active tenancies; Unlimited 50 credits/mo</span><em>from 20 credits/mo</em></a>
+				<a href="/pricing/"><b>Rentals Module</b><span>Tenants pipeline, Tenancies, Maintenance and renewal reminders. Free 30-day trial</span><em>50 credits / 30 days</em></a>
 				<a href="/property-intelligence-report/"><b>Property Intelligence Report</b><span>Notary-verified valuations with an agent brief</span><em>5 credits</em></a>
 				<a href="/pricing/"><b>Feature a listing</b><span>Top of the MLS or the portal</span><em>from 10 credits</em></a>
 				<a href="/website-builder/"><b>Website Builder</b><span>Full custom site - build &amp; preview free</span><em>50 credits/mo</em></a>
-				<a href="/instant-content/"><b>Instant Content</b><span>Unlimited AI blogs &amp; area guides</span><em>30 credits/mo</em></a>
+				<a href="/instant-content/"><b>Instant Content</b><span>Unlimited AI blogs &amp; area guides. Add-on to the Website Builder</span><em>30 credits/mo</em></a>
 			</div>
 			<p class="growMore"><a href="/pricing/">Full pricing</a> &middot; <a href="/features/">All the tools</a> &middot; <a href="/costa-del-sol/">Drive the coast</a></p>
 		</section>

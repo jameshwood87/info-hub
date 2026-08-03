@@ -1,0 +1,232 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/video-guides/`;
+const title = 'Video Guides - Learn PropertyList in minutes | PropertyList';
+const description =
+	'Short video guides to PropertyList, the free MLS network for estate agents across Spain and Portugal. Learn to search the MLS, share properties with your client and build a shortlist, in minutes.';
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+
+type Guide = {
+	slug: string;
+	n: number;
+	title: string;
+	blurb: string;
+	dur: string;
+	iso: string;
+	transcript: string;
+	hide?: boolean;
+};
+
+const allGuides: Guide[] = [
+	{
+		slug: 'dashboard', n: 1, title: 'Your dashboard',
+		blurb: 'A guided tour of your dashboard: AI Property Match, the shared MLS, your listings and leads, all in one place.',
+		dur: '0:43', iso: 'PT43S',
+		transcript: 'Everything in one place. Start with AI Property Match, search the MLS with every filter, and open any listing for the full picture, from real local agents across Spain and Portugal.',
+	},
+	{
+		slug: 'mls-search', n: 2, title: 'Search the MLS',
+		blurb: 'Search the shared network by area, price, beds and type, then open the full filters for orientation, features and more.',
+		dur: '0:46', iso: 'PT46S',
+		transcript: 'Start with where, and it completes as you type. Choose sale, long let or short let, narrow by price, beds and type, and open the full filters for the detail that matters. The list updates as you go.',
+	},
+	{
+		slug: 'share', n: 3, title: 'Share a property',
+		blurb: 'Share any listing on a branded link that carries your agency’s name, log it to a client, and keep the lead.',
+		dur: '0:47', iso: 'PT47S',
+		transcript: 'Hit Share and copy the link. It opens on your own branded site and carries your agency’s name. Log it to a client so it lands in their history, and when they enquire, the lead comes to you.',
+	},
+	{
+		slug: 'shortlist', n: 4, title: 'Save and share a shortlist',
+		blurb: 'Save the properties that fit, share the whole shortlist on one branded link, and every enquiry comes back to you.',
+		dur: '0:49', iso: 'PT49S',
+		transcript: 'Save the ones that fit and they build a shortlist. Share the whole list on one link, add your client’s name to save it to their history, and every enquiry comes straight back to you.',
+	},
+	{
+		slug: 'intelligence', n: 5, title: 'Property Intelligence', hide: true,
+		blurb: 'Generate a notary-verified market report in seconds, with a private agent brief, and win the pricing conversation.',
+		dur: '1:23', iso: 'PT1M23S',
+		transcript: 'Generate a Property Intelligence Report in seconds for five credits. It gives you the verified market, actual notary sale prices, not asking prices, plus a private agent brief with objection handlers. Share it, choosing which sections they see.',
+	},
+	{
+		slug: 'website', n: 6, title: 'Publish your website', hide: true,
+		blurb: 'Turn your listings into a live agency website with built-in property search, editable sections and one-click publish.',
+		dur: '0:54', iso: 'PT54S',
+		transcript: 'Your agency website, built from the listings you already have. The property search is built in, every section is editable live, and you can add area pages on request. Then hit publish.',
+	},
+	{
+		slug: 'builder', n: 7, title: 'Website Builder: the full tour', hide: true,
+		blurb: 'The complete walkthrough: templates, AI SEO content, an SEO health score, pop-up lead capture and your own domain.',
+		dur: '1:58', iso: 'PT1M58S',
+		transcript: 'Start from a live preview and build the page from sections. Switch on AI meta descriptions and feature summaries, watch the SEO health score climb, add pop-up lead capture into your CRM, and point your own domain at it.',
+	},
+	{
+		slug: 'export', n: 8, title: 'Export your listings', hide: true,
+		blurb: 'Send your listings to Idealista, Fotocasa, Rightmove and more with automatic XML feeds.',
+		dur: '0:41', iso: 'PT41S',
+		transcript: 'Open Imports and Exports, add a feed, and choose where it goes. Pick the format and copy the URL. Your listings then stay in sync automatically, for Idealista, Fotocasa, Rightmove, Zoopla and more.',
+	},
+	{
+		slug: 'api', n: 9, title: 'The Website API', hide: true,
+		blurb: 'Build your own front end on your live PropertyList data with a read-only, public-safe JSON API.',
+		dur: '0:48', iso: 'PT48S',
+		transcript: 'The API page gives you two keys. This is the Website API: create a key and build your own site on your live data. Read-only JSON, scoped to public-safe data only, so your CRM is never exposed. Thirty-five credits a month.',
+	},
+	{
+		slug: 'mcp', n: 10, title: 'PropertyList MCP',
+		blurb: 'Connect Claude, Cursor or Perplexity to the Spanish property network through the Model Context Protocol.',
+		dur: '0:35', iso: 'PT35S',
+		transcript: 'PropertyList MCP is the official Model Context Protocol server for the Spanish property network. Plug it into Claude, Cursor, Zed or Perplexity for search, matching and market summaries. First-party listings, not scraped.',
+	},
+];
+
+// Hidden guides (hide: true) are kept in source for easy restore but not shown.
+const guides = allGuides.filter((g) => !g.hide).map((g, i) => ({ ...g, n: i + 1 }));
+
+const featured = guides[0];
+const rest = guides.slice(1);
+const uploadDate = '2026-07-20';
+
+const videoLd = guides.map((g) => ({
+	'@context': 'https://schema.org',
+	'@type': 'VideoObject',
+	name: `${g.title} - PropertyList video guide`,
+	description: g.blurb,
+	thumbnailUrl: [`${origin}/videos/pl-tutorial-${g.slug}.jpg`],
+	uploadDate,
+	duration: g.iso,
+	contentUrl: `${origin}/videos/pl-tutorial-${g.slug}.mp4`,
+	embedUrl: canonical,
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+}));
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Docs', item: `${origin}/docs/` },
+		{ '@type': 'ListItem', position: 3, name: 'Video Guides', item: canonical },
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/video-guias/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	{videoLd.map((ld) => (
+		<script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
+	))}
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<main class="vg">
+		<section class="hero">
+			<p class="eyebrow">Video Guides</p>
+			<h1>Learn PropertyList <em>in minutes</em></h1>
+			<p class="lede">
+				Short guides that walk you through the platform, from finding a property to
+				sharing it with your client and building a shortlist. No sign-up needed to watch.
+			</p>
+			<div class="heroMeta">
+				<span>5 guides</span><span class="dot">&middot;</span><span>about 4 minutes total</span>
+				<span class="dot">&middot;</span><span>free platform</span>
+			</div>
+		</section>
+
+		<section class="featured">
+			<div class="player">
+				<video controls preload="metadata" playsinline poster={`/videos/pl-tutorial-${featured.slug}.jpg`}>
+					<source src={`/videos/pl-tutorial-${featured.slug}.mp4`} type="video/mp4" />
+				</video>
+			</div>
+			<div class="fmeta">
+				<p class="num">Guide {featured.n}</p>
+				<h2>{featured.title}</h2>
+				<p class="blurb">{featured.blurb}</p>
+				<p class="tx">{featured.transcript}</p>
+				<span class="badge">{featured.dur}</span>
+			</div>
+		</section>
+
+		<section class="grid">
+			{rest.map((g) => (
+				<article class="card">
+					<div class="player">
+						<video controls preload="metadata" playsinline poster={`/videos/pl-tutorial-${g.slug}.jpg`}>
+							<source src={`/videos/pl-tutorial-${g.slug}.mp4`} type="video/mp4" />
+						</video>
+						<span class="badge">{g.dur}</span>
+					</div>
+					<p class="num">Guide {g.n}</p>
+					<h3>{g.title}</h3>
+					<p class="blurb">{g.blurb}</p>
+				</article>
+			))}
+		</section>
+
+		<section class="cta">
+			<h2>Ready to try it yourself?</h2>
+			<p>Your PropertyList account, MLS and CRM are free forever. Create an agency account and start co-broking across Spain and Portugal.</p>
+			<div class="ctaRow">
+				<a class="btn primary" href={SIGNUP}>Create a free account</a>
+				<a class="btn ghost" href="/docs/">Read the full manual</a>
+			</div>
+		</section>
+		<script is:inline>
+		document.addEventListener('play', function (e) {
+			document.querySelectorAll('video').forEach(function (v) { if (v !== e.target) v.pause(); });
+		}, true);
+	</script>
+</main>
+
+	<style>
+		.vg { max-width: 1120px; margin: 0 auto; padding: 56px 22px 96px; }
+		.vg em { font-style: italic; color: #0f8f8a; }
+		.hero { text-align: center; max-width: 780px; margin: 0 auto 54px; }
+		.eyebrow { font-size: 14px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #0f8f8a; margin-bottom: 16px; }
+		.hero h1 { font-family: 'Lora', Georgia, serif; font-size: 58px; line-height: 1.06; font-weight: 700; color: #0b1b22; letter-spacing: -.01em; }
+		.lede { font-size: 21px; line-height: 1.55; color: #47555b; margin-top: 22px; }
+		.heroMeta { margin-top: 22px; font-size: 15px; font-weight: 700; color: #5b6b73; display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+		.heroMeta .dot { color: #b8c6cc; }
+
+		.featured { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: center; margin-bottom: 64px; }
+		.player { position: relative; border-radius: 18px; overflow: hidden; background: #0b1b22; box-shadow: 0 30px 80px -34px rgba(11,27,34,.5); border: 1px solid #e7eef1; }
+		.player video { width: 100%; display: block; aspect-ratio: 16/9; background: #0b1b22; }
+		.badge { position: absolute; right: 12px; bottom: 12px; background: rgba(11,27,34,.86); color: #fff; font-size: 14px; font-weight: 800; padding: 6px 12px; border-radius: 999px; }
+		.featured .badge { position: static; display: inline-block; margin-top: 20px; background: #eef6f4; color: #0f8f8a; }
+		.fmeta .num { font-size: 14px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #0f8f8a; }
+		.fmeta h2 { font-family: 'Lora', Georgia, serif; font-size: 38px; font-weight: 700; color: #0b1b22; margin: 8px 0 16px; }
+		.blurb { font-size: 18px; line-height: 1.5; color: #47555b; }
+		.tx { font-size: 15px; line-height: 1.55; color: #78868c; margin-top: 14px; font-style: italic; }
+
+		.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 40px; }
+		.card .num { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #0f8f8a; margin: 16px 0 6px; }
+		.card h3 { font-family: 'Lora', Georgia, serif; font-size: 26px; font-weight: 700; color: #0b1b22; margin-bottom: 10px; }
+		.card .blurb { font-size: 16px; }
+
+		.cta { margin-top: 84px; text-align: center; background: linear-gradient(135deg, #0b1b22, #0f3a3a); border-radius: 24px; padding: 56px 30px; color: #fff; }
+		.cta h2 { font-family: 'Lora', Georgia, serif; font-size: 38px; font-weight: 700; }
+		.cta p { font-size: 18px; color: rgba(255,255,255,.82); max-width: 640px; margin: 16px auto 0; line-height: 1.55; }
+		.ctaRow { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+		.btn { display: inline-block; padding: 16px 34px; border-radius: 999px; font-size: 17px; font-weight: 800; text-decoration: none; }
+		.btn.primary { background: linear-gradient(135deg, #00ae9a, #0f8f8a); color: #fff; }
+		.btn.ghost { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.28); }
+
+		@media (max-width: 860px) {
+			.hero h1 { font-size: 42px; }
+			.featured { grid-template-columns: 1fr; gap: 24px; }
+			.grid { grid-template-columns: 1fr; }
+		}
+	</style>
+</Layout>

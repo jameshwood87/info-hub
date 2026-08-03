@@ -20,7 +20,7 @@ export const featureFaqItemsEs = [
     id: 'custom-domain',
     q: '¿Puedo usar mi propio dominio con el creador de webs de PropertyList?',
     aHtml:
-      'Sí. Conecta tu propio dominio (tu-agencia.com) a tu web PropertyList. El extra de dominio personalizado cuesta 20 €/mes adicionales.',
+      'Sí. Conecta tu propio dominio (tu-agencia.com) a tu web PropertyList. El extra de dominio personalizado cuesta 20 créditos/mes (unos 20 €) adicionales.',
   },
   {
     id: 'seo-features',
@@ -46,7 +46,18 @@ export const featureFaqItemsEs = [
     id: 'xml-own-website',
     q: 'Ya tengo una web - ¿puedo incluir mis propiedades de PropertyList?',
     aHtml:
-      'Sí. Los feeds XML de PropertyList te permiten enviar tus anuncios a cualquier web. Ambos feeds también pueden enviarse a portales de terceros simultáneamente.',
+      'Sí, y enviar a portales de terceros es gratis - Idealista, Fotocasa o cualquier plataforma que acepte XML. La suscripción del feed solo aplica cuando lo usas para alimentar tu propia web.',
+  },
+  {
+    id: 'private-listings',
+    q: '¿Puedo mantener un anuncio privado y no compartirlo con otros agentes?',
+    aHtml:
+      'Sí. En My Listings, selecciona las propiedades y usa Bulk actions &gt; "Do not share with other agents". La propiedad se oculta a otras agencias en el MLS, no aparece en sus microsites y queda fuera de todos los feeds de exportación - pero sigue activa en el portal público, así los compradores directos la encuentran y cada lead te llega a ti. Tus primeros 5 anuncios privados activos son gratis, después 5 créditos cada uno, y puedes reactivar la compartición cuando quieras. <a href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/managing-listings/private-listings/">Lee la guía</a>.',
+  },
+  {
+    id: 'crm-email-integration',
+    q: '¿Puedo conectar mi propio correo (Gmail u Outlook) al CRM?',
+    aHtml: 'La integración del correo está en construcción: conectarás de forma segura (OAuth) Gmail/Google Workspace u Outlook/Microsoft 365, con sincronización bidireccional y envío desde tu propia dirección, mientras las conversaciones se enlazan automáticamente con el lead correcto. <a href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/connect-your-email/">Consulta la guía</a> para preparar hoy tu Google Workspace o Microsoft 365.',
   },
   {
     id: 'xml-property-types',
@@ -70,7 +81,7 @@ export const featureFaqItemsEs = [
     id: 'xml-cost',
     q: '¿Cuánto cuesta el feed XML?',
     aHtml:
-      'El feed de segunda mano y alquiler cuesta 35 créditos/mes o 250 créditos/año. El feed de nuevos desarrollos cuesta 25 créditos/mes o 250 créditos/año. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
+      'Enviar tus anuncios a otros portales - Idealista, Fotocasa o cualquier plataforma que acepte XML - es gratis. El feed de pago es para alimentar tu propia web: 35 créditos/mes (unos 35 €) el feed de reventa y alquileres, y 25 créditos/mes el de obra nueva. <a href="https://info.propertylist.es/es/precios">Precios completos</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────
@@ -104,13 +115,13 @@ export const featureFaqItemsEs = [
     id: 'crm-free',
     q: '¿El CRM de PropertyList es realmente gratis?',
     aHtml:
-      'El MLS core y el CRM son gratis para siempre. Cuatro de los siete tableros de pipeline - Leads, Property Lifecycle, Transactions y Nurture - son completamente gratis sin límites. Las mejoras de pago para Buyers, Sellers y Tenants usan el sistema de créditos. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
+      'El MLS core y el CRM son gratis para siempre. Eso incluye los pipelines de Lead, Seller y Property, sin límites. Solo pagas por la demanda: 1 crédito por cada lead cualificado que decidas meter en el pipeline de Buyer, que se descuenta de tu saldo de créditos. El pipeline de Tenants va con la suscripción del Módulo de Alquileres y el de Nurture con la suscripción de Automatización y Nurture. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
   },
   {
     id: 'pipeline-boards',
     q: '¿Qué tableros de pipeline incluye el CRM de PropertyList?',
     aHtml:
-      'Siete tableros Kanban especializados que funcionan juntos automáticamente: Leads (evaluación de nuevas consultas), Buyers (compradores cualificados), Sellers (recorrido del vendedor), Tenants (pipeline de alquiler), Property Lifecycle (estado del stock), Transactions (fase legal) y Nurture (clientes pasados y oportunidades de referrals).',
+      'Seis pipelines que funcionan juntos automáticamente: Lead (todos los leads nuevos entran en New Lead), Buyer (compradores cualificados), Seller (recorrido del vendedor), Property (estado del stock, los anuncios nuevos entran en Active Listing), Tenants (pipeline de alquiler, incluido en la suscripción del Módulo de Alquileres) y Nurture (clientes pasados y referrals, incluido en la suscripción de Automatización y Nurture). Los pipelines de Buyer y Property también incluyen la fase legal: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment y WON - Deed Signed. Lead y Seller son fijos; Buyer y Property son editables.',
   },
   {
     id: 'pipeline-setup',
@@ -120,9 +131,9 @@ export const featureFaqItemsEs = [
   },
   {
     id: 'pipeline-pricing',
-    q: '¿Cómo funciona el precio de los pipelines - es realmente pago por conversión?',
+    q: '¿Cómo funciona el precio de los pipelines - qué pago exactamente?',
     aHtml:
-      'Los tableros de Buyers, Sellers y Tenants: primeras 5 conversiones gratis para siempre. Después, 1 crédito por conversión - solo se cobra cuando etiquetas a un contacto como una oportunidad real, nunca por leads no cualificados. Sin suscripción, sin permanencia. Leads, Property Lifecycle, Transactions y Nurture son gratis sin límite.',
+      'Pagas por la demanda, no por el inventario. Los pipelines de Lead, Seller y Property son gratis. El pipeline de Buyer cuesta 1 crédito por cada lead cualificado que decidas meter en él, y los créditos se descuentan de tu saldo de créditos. El pipeline de Tenants va incluido en el Módulo de Alquileres: 50 créditos por período de 30 días, con prueba gratis de 30 días. El pipeline de Nurture va incluido en la suscripción de Automatización y Nurture, 20 créditos/mes (unos 20 €), que cubre además todos los correos automáticos, la detección de leads calientes (Hot-lead) y la Daily Action Queue.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────
@@ -142,7 +153,7 @@ export const featureFaqItemsEs = [
     id: 'rentals-cost',
     q: '¿Cuánto cuesta el módulo de Alquileres?',
     aHtml:
-      'Prueba gratis de 30 días, sin tarjeta de crédito necesaria. Después de la prueba: 50 créditos por período de 30 días, sin cargo automático.',
+      'Prueba gratis de 30 días, sin tarjeta de crédito necesaria. Después de la prueba son 50 créditos por período de 30 días, sin cargo hasta que renueves.',
   },
   {
     id: 'rentals-deposit-disputes',
@@ -156,7 +167,7 @@ export const featureFaqItemsEs = [
     id: 'credits-work',
     q: '¿Cómo funcionan los créditos de PropertyList?',
     aHtml:
-      '1 crédito = 1 €. Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
+      '1 crédito (~1€). Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
   },
   {
     id: 'credits-expire',
@@ -167,7 +178,7 @@ export const featureFaqItemsEs = [
     id: 'earn-free-credits',
     q: '¿Puedo ganar créditos gratis en PropertyList?',
     aHtml:
-      'Sí. Las agencias verificadas nuevas reciben 20 créditos gratis al registrarse. Los agentes también ganan 20 créditos por cada agencia que se registra a través de su enlace de referido - y el nuevo usuario recibe 10 créditos.',
+      'Sí. Verifica tu agencia (gratis, y cuando quieras) y recibe 20 créditos gratis. Los agentes también ganan 20 créditos por cada agencia que se registra a través de su enlace de referido - y el nuevo usuario recibe 10 créditos.',
   },
 
   // ─── MCP / Developers ─────────────────────────────────────────────────

@@ -16,9 +16,10 @@ export const POST: APIRoute = async ({ request }) => {
 	}
 	const id = String(body?.id || '').trim();
 	if (!id) return new Response('Bad Request', { status: 400 });
-	const patch: { featuredImageUrl?: string; featuredImageAlt?: string } = {};
+	const patch: { featuredImageUrl?: string; featuredImageAlt?: string; reviewedAt?: string } = {};
 	if (typeof body.featuredImageUrl === 'string' && body.featuredImageUrl.trim()) patch.featuredImageUrl = body.featuredImageUrl.trim();
 	if (typeof body.featuredImageAlt === 'string' && body.featuredImageAlt.trim()) patch.featuredImageAlt = body.featuredImageAlt.trim();
+	if (typeof body.reviewedAt === 'string' && body.reviewedAt.trim()) patch.reviewedAt = body.reviewedAt.trim();
 	if (!Object.keys(patch).length) return new Response('Bad Request', { status: 400 });
 	await setKbMeta(id, patch);
 	return new Response(JSON.stringify({ ok: true, id, ...patch }), { headers: { 'content-type': 'application/json' } });
