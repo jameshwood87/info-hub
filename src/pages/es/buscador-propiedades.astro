@@ -78,6 +78,10 @@ const AREAS = data.areas || [];
   .setbtn:disabled{opacity:.5}
   .fine{color:var(--ink2);font-size:11px;text-align:center;margin-top:16px}
   .done2{display:none;background:#f0faf8;border:1px solid var(--pl);border-radius:12px;padding:16px;text-align:center;font-weight:600;color:var(--pl-d);margin-top:14px}
+.xlink{display:block;max-width:760px;margin:8px auto 32px;padding:18px 20px;border:2px solid #d5e2e0;border-radius:16px;text-decoration:none;color:#0d2b2e;transition:border-color .15s}
+.xlink:hover{border-color:#00ae9a}
+.xlinkKick{display:block;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#00ae9a;margin-bottom:4px}
+.xlinkLine{font-size:16px;font-weight:700}
 </style>
 </head>
 <body>
@@ -98,6 +102,10 @@ const AREAS = data.areas || [];
   <div id="stage"></div>
 
   <div class="fine">Recuentos actualizados a diario desde PropertyList. Las viviendas se muestran en propertylist.es.</div>
+  <a class="xlink" href="/es/presupuesto/" data-umami-event="finder-budget">
+    <span class="xlinkKick">¿Aún no sabes en qué pueblo?</span>
+    <span class="xlinkLine">Mira lo que compra tu presupuesto en toda la costa &rarr;</span>
+  </a>
 </div>
 
 <script is:inline define:vars={{ areas: AREAS }}>

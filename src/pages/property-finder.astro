@@ -78,6 +78,10 @@ const AREAS = data.areas || [];
   .fine{color:var(--ink2);font-size:11px;text-align:center;margin-top:16px}
   .done2{display:none;background:#f0faf8;border:1px solid var(--pl);border-radius:12px;padding:16px;text-align:center;font-weight:600;color:var(--pl-d);margin-top:14px}
   .thin{background:#fff8ec;border:1px solid #f0dcae;border-radius:12px;padding:12px 14px;font-size:13px;color:#7a5c14;margin-top:14px}
+.xlink{display:block;max-width:760px;margin:8px auto 32px;padding:18px 20px;border:2px solid #d5e2e0;border-radius:16px;text-decoration:none;color:#0d2b2e;transition:border-color .15s}
+.xlink:hover{border-color:#00ae9a}
+.xlinkKick{display:block;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#00ae9a;margin-bottom:4px}
+.xlinkLine{font-size:16px;font-weight:700}
 </style>
 </head>
 <body>
@@ -98,6 +102,10 @@ const AREAS = data.areas || [];
   <div id="stage"></div>
 
   <div class="fine">Live counts refreshed daily from PropertyList. Listings shown on propertylist.es.</div>
+  <a class="xlink" href="/budget/" data-umami-event="finder-budget">
+    <span class="xlinkKick">Not sure which town yet?</span>
+    <span class="xlinkLine">See what your budget buys across the whole coast &rarr;</span>
+  </a>
 </div>
 
 <script is:inline define:vars={{ areas: AREAS }}>

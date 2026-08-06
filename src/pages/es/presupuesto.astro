@@ -1,0 +1,481 @@
+---
+// Gemelo español de /budget/ - misma mecánica, mismos datos, mismos umbrales.
+// Ver src/pages/budget.astro para las notas de arquitectura.
+import { readFile } from 'node:fs/promises';
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/presupuesto/`;
+
+type Town = {
+	slug: string;
+	name: string;
+	n: number;
+	m2eur: number;
+	minPrice: number;
+	counts: number[];
+	oracle: { m2: number; n: number | null } | null;
+};
+type BudgetData = { updatedAt: string; grid: number[]; towns: Town[] };
+
+let data: BudgetData | null = null;
+for (const p of ['/opt/info-hub/var/admin/budget-data.json', 'var/admin/budget-data.json']) {
+	try {
+		data = JSON.parse(await readFile(p, 'utf8'));
+		break;
+	} catch {}
+}
+const grid: number[] = data?.grid ?? [];
+const towns: Town[] = data?.towns ?? [];
+const totalListings = towns.reduce((a, t) => a + t.n, 0);
+
+const MIN_B = 100000;
+const MAX_B = 10000000;
+const rawB = parseInt(Astro.url.searchParams.get('b') || '0', 10) || 0;
+const shared = rawB >= MIN_B && rawB <= MAX_B;
+const b = shared ? rawB : 500000;
+
+const nf = (v: number) => v.toLocaleString('es-ES');
+const fmtEur = (v: number) => `${nf(v)} €`;
+
+const countAt = (t: Town, budget: number): { n: number; exact: boolean } => {
+	if (!grid.length) return { n: 0, exact: false };
+	if (budget <= grid[0]) return { n: t.counts[0], exact: budget === grid[0] };
+	for (let i = grid.length - 1; i >= 0; i--) {
+		if (grid[i] === budget) return { n: t.counts[i], exact: true };
+		if (grid[i] < budget) {
+			if (i === grid.length - 1) return { n: t.counts[i], exact: true };
+			const f = (budget - grid[i]) / (grid[i + 1] - grid[i]);
+			return { n: Math.round(t.counts[i] + f * (t.counts[i + 1] - t.counts[i])), exact: false };
+		}
+	}
+	return { n: 0, exact: false };
+};
+
+const sizeLabel = (sqm: number): string => {
+	if (sqm < 40) return 'un estudio';
+	if (sqm < 60) return 'un piso de 1 dormitorio';
+	if (sqm < 80) return 'un piso pequeño de 2 dormitorios';
+	if (sqm < 100) return 'un piso de 2 dormitorios';
+	if (sqm < 130) return 'un piso de 3 dormitorios';
+	if (sqm < 170) return 'un adosado de 3 dormitorios';
+	if (sqm < 220) return 'un adosado o una villa pequeña';
+	if (sqm < 300) return 'una villa';
+	if (sqm < 450) return 'una villa grande';
+	if (sqm < 700) return 'una villa muy grande';
+	return 'una finca señorial';
+};
+
+const rows = towns.map((t) => {
+	const sqm = Math.round(b / t.m2eur);
+	const c = countAt(t, b);
+	return { ...t, sqm, count: c.n, exact: c.exact, none: b < t.minPrice };
+});
+const maxSqm = rows.length ? rows[0].sqm : 1;
+const best = rows[0];
+const worst = rows[rows.length - 1];
+const ratio = best && worst ? (worst.m2eur / best.m2eur).toFixed(1) : '0';
+const ratioStr = ratio.replace('.', ',');
+
+const title = shared
+	? `Qué compra ${fmtEur(b)} de verdad en la Costa del Sol`
+	: '¿Qué compra tu presupuesto de verdad? 14 pueblos de la Costa del Sol comparados';
+const description = best
+	? `${fmtEur(b)} son ${best.sqm}m2 en ${best.name} pero ${worst.sqm}m2 en ${worst.name}. Precios medianos de venta de ${nf(totalListings)} anuncios activos en 14 pueblos, actualizados a diario, con cada vivienda dentro de tu presupuesto a un toque.`
+	: 'Precios medianos de venta en 14 pueblos de la Costa del Sol, actualizados a diario.';
+const ogImage = `${origin}/api/og-budget.png?b=${b}&lang=es`;
+
+const mIdx = grid.indexOf(500000);
+const marbella = towns.find((t) => t.slug === 'marbella');
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: [
+		best && worst
+			? {
+					'@type': 'Question',
+					name: '¿Dónde rinde más un presupuesto en la Costa del Sol?',
+					acceptedAnswer: {
+						'@type': 'Answer',
+						text: `De los 14 pueblos comparados, ${best.name} tiene ahora la mediana de precio de venta más baja, ${nf(best.m2eur)} € por m2, y ${worst.name} la más alta, ${nf(worst.m2eur)} € por m2. El mismo presupuesto compra alrededor de ${ratioStr} veces más superficie construida en ${best.name}, según todos los anuncios de venta activos de agencias registradas en la MLS de PropertyList.`,
+					},
+				}
+			: null,
+		marbella && mIdx >= 0
+			? {
+					'@type': 'Question',
+					name: '¿Qué compra 500.000 € en Marbella?',
+					acceptedAnswer: {
+						'@type': 'Answer',
+						text: `Unos ${Math.round(500000 / marbella.m2eur)}m2 construidos a la mediana actual de ${nf(marbella.m2eur)} € por m2 en Marbella. ${marbella.counts[mIdx]} de las ${nf(marbella.n)} viviendas actualmente en venta en Marbella tienen un precio igual o inferior a 500.000 €.`,
+					},
+				}
+			: null,
+		{
+			'@type': 'Question',
+			name: '¿Son precios anunciados o precios de venta?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Anunciados: la mediana del precio por m2 de todos los anuncios de venta activos de agencias registradas, actualizada a diario. Anunciado no es vendido. Donde el registro notarial español cubre un pueblo, se muestra al lado el precio por m2 verificado de las ventas reales, que suele quedar bastante por debajo del anunciado.',
+			},
+		},
+	].filter(Boolean),
+};
+
+const updated = data ? new Date(data.updatedAt) : null;
+const updatedStr = updated
+	? `${String(updated.getDate()).padStart(2, '0')}-${String(updated.getMonth() + 1).padStart(2, '0')}-${String(updated.getFullYear()).slice(2)}`
+	: '';
+
+const oracleRows = towns.filter((t) => t.oracle);
+const payload = JSON.stringify({
+	grid,
+	towns: towns.map((t) => ({ slug: t.slug, name: t.name, n: t.n, m2eur: t.m2eur, minPrice: t.minPrice, counts: t.counts })),
+});
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage={ogImage}
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/budget/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/budget/` },
+	]}
+	schema={faqLd}
+>
+	<div class="bp" data-b={String(b)} data-lang="es">
+		<section class="hero">
+			<p class="eyebrow">El mismo dinero. Distinto código postal.</p>
+			<h1>¿Qué compra tu presupuesto <span class="und">de verdad</span>?</h1>
+			<p class="sub">
+				Precios medianos de venta de <strong>{nf(totalListings)} anuncios activos</strong> en 14 pueblos de la Costa del Sol, actualizados a diario. Elige una cifra y mira cuánto se estira.
+			</p>
+			<div class="amount" role="group" aria-label="Tu presupuesto">
+				<button class="step" data-step="-1" aria-label="Bajar presupuesto">&minus;</button>
+				<label class="amtBox">
+					<input id="amt" inputmode="numeric" autocomplete="off" spellcheck="false" value={nf(b)} aria-label="Presupuesto en euros" />
+					<span class="cur">&euro;</span>
+				</label>
+				<button class="step" data-step="1" aria-label="Subir presupuesto">+</button>
+			</div>
+			<div class="chips" role="group" aria-label="Presupuestos rápidos">
+				{[250000, 350000, 500000, 750000, 1000000, 2000000].map((v) => (
+					<button class:list={['chip', { on: v === b }]} data-chip={String(v)}>
+						{v >= 1000000 ? `${v / 1000000}M €` : `${v / 1000}k €`}
+					</button>
+				))}
+			</div>
+		</section>
+
+		<section class="board" aria-label="Qué compra tu presupuesto en cada pueblo">
+			{rows.map((r) => (
+				<div class:list={['row', { none: r.none }]} data-town={r.slug}>
+					<div class="rowTop">
+						<span class="town">{r.name}</span>
+						<span class="ppm">{nf(r.m2eur)} &euro;/m&sup2; anunciado</span>
+					</div>
+					<div class="barWrap">
+						<div class="bar" style={`--w:${Math.max(4, Math.round((r.sqm / maxSqm) * 100))}%`}></div>
+						<span class="sqm"><b data-sqm>{r.sqm}</b>m&sup2;</span>
+					</div>
+					<p class="meta">
+						<span class="metaFit" data-fit hidden={r.none}>
+							&asymp; <span data-desc>{sizeLabel(r.sqm)}</span> &middot;{' '}
+							<a data-link href={`https://propertylist.es/es/portal/for-sale/${r.slug}?price_max=${b}`} rel="noopener" target="_blank" data-umami-event="budget-town" data-umami-event-town={r.slug}>
+								<span data-count>{r.exact ? nf(r.count) : `~${nf(r.count)}`}</span> de {nf(r.n)} viviendas encajan en tu presupuesto &rarr;
+							</a>
+						</span>
+						<span class="metaNone" data-none hidden={!r.none}>
+							Nada a este precio hoy &middot;{' '}
+							<a data-minlink href={`https://propertylist.es/es/portal/for-sale/${r.slug}`} rel="noopener" target="_blank" data-umami-event="budget-town" data-umami-event-town={r.slug}>
+								la puerta se abre en <b data-min>{fmtEur(r.minPrice)}</b> &rarr;
+							</a>
+						</span>
+					</p>
+				</div>
+			))}
+		</section>
+
+		{best && worst && (
+			<section class="kicker">
+				<p class="kickLine">
+					<span data-kb>{fmtEur(b)}</span> rinde <strong><span data-kr>{ratioStr}</span>&times; más</strong> en {best.name} que en {worst.name}.
+				</p>
+				<p class="kickSub">¿Conoces a alguien buscando casa con una cifra en la cabeza? Envíale la suya.</p>
+				<div class="shareRow">
+					<a class="shBtn wa" data-wa href="#" rel="noopener" target="_blank" data-umami-event="budget-share" data-umami-event-via="whatsapp">Compartir por WhatsApp</a>
+					<button class="shBtn cp" data-copy data-umami-event="budget-share" data-umami-event-via="copy">Copiar enlace</button>
+				</div>
+			</section>
+		)}
+
+		<section class="method">
+			<h2>De dónde salen estos números</h2>
+			<p>
+				Todos los anuncios de venta activos publicados por agencias registradas en la MLS de PropertyList, recargados a diario (último: {updatedStr}). La cifra de cada pueblo es la mediana del precio de venta por m&sup2; construido de todos sus anuncios, así que una villa de 30M &euro; no puede arrastrar el número. Los pueblos con menos de 25 anuncios se quedan fuera antes que enseñar una mediana de cara o cruz. Sin estimaciones, sin scraping, sin índices de terceros.
+			</p>
+			<p>
+				<strong>Anunciado no es vendido.</strong> Donde el registro notarial español cubre un pueblo, aquí está lo que los compradores pagaron realmente por m&sup2;, junto a lo que los vendedores piden hoy. Cestas distintas (lo anunciado ahora frente a lo que cambió de manos el último periodo), pero una brecha así conviene conocerla antes de hacer una oferta.
+			</p>
+			<div class="tblWrap">
+				<table>
+					<thead>
+						<tr><th>Pueblo</th><th>&euro;/m&sup2; anunciado</th><th>&euro;/m&sup2; notarial verificado</th><th>Ventas verificadas</th></tr>
+					</thead>
+					<tbody>
+						{oracleRows.map((t) => (
+							<tr>
+								<td>{t.name}</td>
+								<td>{nf(t.m2eur)} &euro;</td>
+								<td class="oc">{nf(t.oracle!.m2)} &euro;</td>
+								<td>{t.oracle!.n ? nf(t.oracle!.n) : '-'}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+			<p class="srcNote">Precios verificados: registro notarial español vía el Oracle de PropertyList. Solo m&sup2; construidos; parcelas excluidas.</p>
+		</section>
+
+		<section class="next">
+			<a class="nextCard" href="/es/buscador-propiedades/" data-umami-event="budget-finder">
+				<span class="nextKick">¿Ya tienes pueblo?</span>
+				<span class="nextLine">Mira cada vivienda que encaja, directa de las agencias que la publicaron &rarr;</span>
+			</a>
+		</section>
+	</div>
+
+	<script type="application/json" id="bd" set:html={payload} />
+
+	<style>
+		.bp {
+			--ink: #0d2b2e;
+			--teal: #00ae9a;
+			--mut: #5c7274;
+			max-width: 880px;
+			margin: 0 auto;
+			color: var(--ink);
+		}
+		.hero { text-align: center; padding: 26px 0 8px; }
+		.eyebrow { font-size: 13px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal); margin: 0 0 14px; }
+		h1 { font-size: clamp(30px, 5.4vw, 46px); line-height: 1.08; margin: 0 0 14px; font-weight: 800; letter-spacing: -0.5px; }
+		.und { text-decoration: underline; text-decoration-color: var(--teal); text-decoration-thickness: 4px; text-underline-offset: 5px; }
+		.sub { color: var(--mut); font-size: 16px; max-width: 560px; margin: 0 auto 26px; line-height: 1.55; }
+		.sub strong { color: var(--ink); }
+
+		.amount { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 16px; }
+		.step { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #d5e2e0; background: #fff; font-size: 24px; font-weight: 700; color: var(--ink); cursor: pointer; flex-shrink: 0; transition: border-color 0.15s, transform 0.1s; }
+		.step:hover { border-color: var(--teal); }
+		.step:active { transform: scale(0.92); }
+		.amtBox { display: inline-flex; align-items: baseline; gap: 2px; border-bottom: 4px solid var(--teal); padding: 0 6px 2px; cursor: text; min-width: 0; }
+		.cur { font-size: clamp(26px, 5vw, 40px); font-weight: 800; color: var(--teal); }
+		#amt { border: 0; outline: 0; background: transparent; font-family: inherit; font-size: clamp(42px, 8.4vw, 68px); font-weight: 800; letter-spacing: -2px; color: var(--ink); width: 5.6ch; min-width: 0; padding: 0; text-align: right; }
+		.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+		.chip { border: 1.5px solid #d5e2e0; background: #fff; border-radius: 999px; padding: 7px 15px; font-size: 14px; font-weight: 700; color: var(--mut); cursor: pointer; transition: all 0.15s; }
+		.chip:hover { border-color: var(--teal); color: var(--ink); }
+		.chip.on { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+		.board { margin: 30px 0 8px; display: flex; flex-direction: column; gap: 6px; }
+		.row { padding: 13px 16px 11px; border-radius: 14px; transition: background 0.15s, opacity 0.3s; }
+		.row:hover { background: #f2f7f6; }
+		.rowTop { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; min-width: 0; }
+		.town { font-weight: 800; font-size: 17px; }
+		.ppm { font-size: 12.5px; color: var(--mut); white-space: nowrap; }
+		.barWrap { display: flex; align-items: center; gap: 10px; margin: 7px 0 6px; min-width: 0; }
+		.bar { height: 22px; width: var(--w); min-width: 8px; border-radius: 999px; background: linear-gradient(90deg, var(--teal), #6fd0c2); transform-origin: left center; animation: grow 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+		@keyframes grow { from { transform: scaleX(0); } }
+		.row:nth-child(2) .bar { animation-delay: 0.04s; } .row:nth-child(3) .bar { animation-delay: 0.08s; }
+		.row:nth-child(4) .bar { animation-delay: 0.12s; } .row:nth-child(5) .bar { animation-delay: 0.16s; }
+		.row:nth-child(6) .bar { animation-delay: 0.2s; } .row:nth-child(7) .bar { animation-delay: 0.24s; }
+		.row:nth-child(8) .bar { animation-delay: 0.28s; } .row:nth-child(9) .bar { animation-delay: 0.32s; }
+		.row:nth-child(10) .bar { animation-delay: 0.36s; } .row:nth-child(11) .bar { animation-delay: 0.4s; }
+		.row:nth-child(12) .bar { animation-delay: 0.44s; } .row:nth-child(13) .bar { animation-delay: 0.48s; }
+		.row:nth-child(14) .bar { animation-delay: 0.52s; }
+		.sqm { font-size: 19px; font-weight: 800; white-space: nowrap; color: var(--ink); }
+		.sqm b { font-size: 24px; }
+		.meta { margin: 0; font-size: 13.5px; color: var(--mut); line-height: 1.45; }
+		.meta a { color: var(--teal); font-weight: 700; text-decoration: none; }
+		.meta a:hover { text-decoration: underline; }
+		.row.none .bar { background: #e3ebea; }
+		.row.none .sqm { color: #b3c4c2; }
+		.metaNone { color: #a8772a; }
+		.metaNone a { color: #a8772a; }
+		.metaNone b { font-weight: 800; }
+
+		.kicker { background: var(--ink); color: #fff; border-radius: 18px; padding: 30px 26px; text-align: center; margin: 26px 0; }
+		.kickLine { font-size: clamp(20px, 3.6vw, 27px); font-weight: 700; line-height: 1.3; margin: 0 0 6px; }
+		.kickLine strong { color: #5be3d0; }
+		.kickSub { color: rgba(255, 255, 255, 0.65); font-size: 14.5px; margin: 0 0 18px; }
+		.shareRow { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+		.shBtn { border-radius: 999px; padding: 12px 22px; font-size: 15px; font-weight: 800; cursor: pointer; border: 0; text-decoration: none; display: inline-block; transition: transform 0.1s; }
+		.shBtn:active { transform: scale(0.96); }
+		.wa { background: #25d366; color: #fff; }
+		.cp { background: rgba(255, 255, 255, 0.14); color: #fff; border: 1.5px solid rgba(255, 255, 255, 0.35); }
+
+		.method { padding: 10px 4px 6px; }
+		.method h2 { font-size: 21px; margin: 0 0 10px; }
+		.method p { font-size: 14.5px; color: var(--mut); line-height: 1.6; max-width: 720px; }
+		.method p strong { color: var(--ink); }
+		.tblWrap { overflow-x: auto; margin: 14px 0 6px; }
+		table { border-collapse: collapse; font-size: 14px; min-width: 480px; }
+		th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--mut); padding: 6px 18px 6px 0; border-bottom: 2px solid #e3ebea; }
+		td { padding: 7px 18px 7px 0; border-bottom: 1px solid #eef3f2; }
+		td.oc { color: var(--teal); font-weight: 800; }
+		.srcNote { font-size: 12.5px !important; color: #8aa0a2 !important; }
+
+		.next { margin: 22px 0 30px; }
+		.nextCard { display: block; border: 2px solid #d5e2e0; border-radius: 16px; padding: 20px 22px; text-decoration: none; color: var(--ink); transition: border-color 0.15s; }
+		.nextCard:hover { border-color: var(--teal); }
+		.nextKick { display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; }
+		.nextLine { font-size: 17px; font-weight: 700; }
+
+		@media (max-width: 560px) {
+			.row { padding: 11px 10px 9px; }
+			.bar { height: 18px; }
+			.sqm b { font-size: 20px; }
+			.kicker { padding: 24px 16px; }
+		}
+	</style>
+
+	<script>
+		const root = document.querySelector('.bp') as HTMLElement;
+		const D = JSON.parse(document.getElementById('bd')!.textContent || '{}');
+		const grid: number[] = D.grid || [];
+		const towns: any[] = D.towns || [];
+		const lang = root.dataset.lang === 'es' ? 'es' : 'en';
+		const loc = lang === 'es' ? 'es-ES' : 'en-GB';
+		const MIN = 100000, MAX = 10000000;
+		let b = parseInt(root.dataset.b || '500000', 10);
+
+		const nf = (v: number) => v.toLocaleString(loc);
+		const eur = (v: number) => (lang === 'es' ? `${nf(v)} €` : `€${nf(v)}`);
+		const sizeLabels: [number, string, string][] = [
+			[40, 'a studio', 'un estudio'],
+			[60, 'a one-bed apartment', 'un piso de 1 dormitorio'],
+			[80, 'a small two-bed', 'un piso pequeño de 2 dormitorios'],
+			[100, 'a two-bed apartment', 'un piso de 2 dormitorios'],
+			[130, 'a three-bed apartment', 'un piso de 3 dormitorios'],
+			[170, 'a three-bed townhouse', 'un adosado de 3 dormitorios'],
+			[220, 'a townhouse or small villa', 'un adosado o una villa pequeña'],
+			[300, 'a villa', 'una villa'],
+			[450, 'a big villa', 'una villa grande'],
+			[700, 'a very big villa', 'una villa muy grande'],
+			[Infinity, 'an estate', 'una finca señorial'],
+		];
+		const sizeLabel = (sqm: number) => {
+			for (const [lim, en, es] of sizeLabels) if (sqm < lim) return lang === 'es' ? es : en;
+			return '';
+		};
+		const countAt = (t: any, budget: number) => {
+			if (!grid.length) return { n: 0, exact: false };
+			if (budget <= grid[0]) return { n: t.counts[0], exact: budget === grid[0] };
+			for (let i = grid.length - 1; i >= 0; i--) {
+				if (grid[i] === budget) return { n: t.counts[i], exact: true };
+				if (grid[i] < budget) {
+					if (i === grid.length - 1) return { n: t.counts[i], exact: true };
+					const f = (budget - grid[i]) / (grid[i + 1] - grid[i]);
+					return { n: Math.round(t.counts[i] + f * (t.counts[i + 1] - t.counts[i])), exact: false };
+				}
+			}
+			return { n: 0, exact: false };
+		};
+
+		const amt = document.getElementById('amt') as HTMLInputElement;
+		const tween = (el: HTMLElement, to: number, suffix = '') => {
+			const from = parseInt(el.textContent!.replace(/[^\d]/g, ''), 10) || 0;
+			if (from === to) { el.textContent = nf(to) + suffix; return; }
+			const t0 = performance.now();
+			const dur = 320;
+			const step = (t: number) => {
+				const k = Math.min(1, (t - t0) / dur);
+				const e = 1 - Math.pow(1 - k, 3);
+				el.textContent = nf(Math.round(from + (to - from) * e)) + suffix;
+				if (k < 1) requestAnimationFrame(step);
+			};
+			requestAnimationFrame(step);
+		};
+
+		const render = () => {
+			const best = towns[0], worst = towns[towns.length - 1];
+			for (const t of towns) {
+				const row = root.querySelector(`[data-town="${t.slug}"]`) as HTMLElement;
+				if (!row) continue;
+				const sqm = Math.round(b / t.m2eur);
+				const none = b < t.minPrice;
+				row.classList.toggle('none', none);
+				tween(row.querySelector('[data-sqm]') as HTMLElement, sqm);
+				(row.querySelector('[data-fit]') as HTMLElement).hidden = none;
+				(row.querySelector('[data-none]') as HTMLElement).hidden = !none;
+				if (!none) {
+					(row.querySelector('[data-desc]') as HTMLElement).textContent = sizeLabel(sqm);
+					const c = countAt(t, b);
+					(row.querySelector('[data-count]') as HTMLElement).textContent = (c.exact ? '' : '~') + nf(c.n);
+					(row.querySelector('[data-link]') as HTMLAnchorElement).href =
+						`https://propertylist.es/${lang}/portal/for-sale/${t.slug}?price_max=${b}`;
+				}
+			}
+			const kb = root.querySelector('[data-kb]') as HTMLElement | null;
+			if (kb) kb.textContent = eur(b);
+			amt.value = nf(b);
+			amt.style.width = `${Math.max(4, amt.value.length) + 0.6}ch`;
+			root.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', parseInt((c as HTMLElement).dataset.chip!, 10) === b));
+			const u = new URL(location.href);
+			u.searchParams.set('b', String(b));
+			history.replaceState(null, '', u);
+			const wa = root.querySelector('[data-wa]') as HTMLAnchorElement | null;
+			if (wa && best && worst) {
+				const msg =
+					lang === 'es'
+						? `${eur(b)} son ${Math.round(b / best.m2eur)}m2 en ${best.name} pero solo ${Math.round(b / worst.m2eur)}m2 en ${worst.name}. Mira lo que compra tu presupuesto: ${u.href}`
+						: `${eur(b)} buys ${Math.round(b / best.m2eur)}m2 in ${best.name} but only ${Math.round(b / worst.m2eur)}m2 in ${worst.name}. See what your budget gets: ${u.href}`;
+				wa.href = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+			}
+		};
+
+		let evT: ReturnType<typeof setTimeout> | undefined;
+		const setB = (v: number) => {
+			b = Math.min(MAX, Math.max(MIN, Math.round(v)));
+			render();
+			clearTimeout(evT);
+			evT = setTimeout(() => (window as any).umami?.track?.('budget-set', { b }), 900);
+		};
+
+		const stepFor = (v: number) => (v < 500000 ? 25000 : v < 1000000 ? 50000 : v < 3000000 ? 100000 : 250000);
+		root.querySelectorAll('.step').forEach((btn) =>
+			btn.addEventListener('click', () => {
+				const dir = parseInt((btn as HTMLElement).dataset.step!, 10);
+				const s = stepFor(dir < 0 ? b - 1 : b);
+				setB(Math.round((b + dir * s) / s) * s);
+			}),
+		);
+		root.querySelectorAll('.chip').forEach((c) =>
+			c.addEventListener('click', () => setB(parseInt((c as HTMLElement).dataset.chip!, 10))),
+		);
+		amt.addEventListener('input', () => {
+			const v = parseInt(amt.value.replace(/[^\d]/g, ''), 10);
+			amt.style.width = `${Math.max(4, amt.value.length) + 0.6}ch`;
+			if (v >= MIN && v <= MAX) { b = v; render(); }
+		});
+		amt.addEventListener('blur', () => setB(parseInt(amt.value.replace(/[^\d]/g, ''), 10) || b));
+		amt.addEventListener('keydown', (e) => { if (e.key === 'Enter') amt.blur(); });
+		// tapping the field replaces the whole number: nobody wants to backspace
+		// through "1,250,000" on a phone before typing theirs
+		amt.addEventListener('focus', () => amt.select());
+
+		const cp = root.querySelector('[data-copy]') as HTMLElement | null;
+		cp?.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(location.href);
+				cp.textContent = lang === 'es' ? 'Copiado' : 'Copied';
+				setTimeout(() => (cp.textContent = lang === 'es' ? 'Copiar enlace' : 'Copy link'), 1600);
+			} catch {}
+		});
+
+		amt.style.width = `${Math.max(4, amt.value.length) + 0.6}ch`;
+		render();
+	</script>
+</Layout>

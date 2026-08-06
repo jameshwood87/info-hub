@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-08-04
-Version: 4.3
+Version: 4.4
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -114,6 +114,9 @@ Real estate market analysis, regulatory updates, and industry commentary for Spa
 
 #### /property-intelligence-report/ - Property Intelligence Report (AI CMA)
 Property-specific CMA for agents: notary-verified market value, comparables, pricing strategy, an agent coaching brief with objection handlers, PDF export and a trackable client share link. 5 credits per report, cached 30 days, first 3 free, free for teammates in the same agency to view. Spanish version: /es/informe-inteligencia-propiedad/
+
+#### /budget/ - What does your budget actually buy?
+Enter a budget and see how far it stretches across 14 Costa del Sol towns at once: the built square metres it buys in each, how many homes currently on the market fall at or under that price, and a direct link into that filtered search on the public portal. Figures are the median asking price per built square metre across every live for-sale listing from registered agencies, recomputed daily, with the notary-verified sold price per square metre shown alongside for the towns the Spanish registry covers. Towns with fewer than 25 listings are excluded rather than shown on an unreliable median. Spanish version: /es/presupuesto/
 
 #### /property-finder/ - Property finder (buyers and renters)
 A two-tap finder for buyers and renters: choose buy, long-term rent or holiday rent, pick a Costa del Sol town, and see how many homes are available right now from registered agencies, with a direct link into that search on the public portal at propertylist.es. Live counts refreshed daily across 16 towns. Spanish version: /es/buscador-propiedades/
