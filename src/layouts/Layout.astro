@@ -2015,9 +2015,12 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		max-height: calc(100vh - 96px);
 		overflow-y: auto;
 	}
-	/* Long labels (Property Intelligence Report) wrap inside their column instead
-	   of colliding with the next one; links elsewhere keep the default nowrap. */
-	.navDropMenu--mega a {
+	/* Long labels (Property Intelligence Report, "MLS (compartir propiedades)")
+	   wrap inside their column instead of colliding with the next one; links
+	   elsewhere keep the default nowrap. Double class deliberately: the plain
+	   .navDropMenu a nowrap rule is declared LATER in this stylesheet and would
+	   otherwise win on source order at equal specificity. */
+	.navDropMenu.navDropMenu--mega a {
 		white-space: normal;
 	}
 	.ndCols {
