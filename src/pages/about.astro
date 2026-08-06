@@ -1,3 +1,5 @@
 ---
-redirect: "/about-us/"
+// The old frontmatter `redirect:` key does nothing in SSR mode: it served an
+// empty indexable 200. This is a real 301.
+return Astro.redirect('/about-us/', 301);
 ---

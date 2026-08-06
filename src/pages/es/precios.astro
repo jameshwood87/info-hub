@@ -8,7 +8,7 @@ const plListings = statPlus(__ps.listings, 'es');
 const plAgents = statPlus(__ps.agents, 'es');
 const plAgencies = statPlus(__ps.agencies, 'es');
 
-const title = 'Precios | PropertyList Info Hub';
+const title = 'Precios: software inmobiliario y MLS gratis | PropertyList';
 const description =
 	'El MLS y el CRM son gratis para siempre para agentes inmobiliarios. Usa créditos de pago por uso opcionales para destacar anuncios y complementos, solo cuando los necesites.';
 
@@ -154,10 +154,10 @@ const softwareAppLd = {
   "@type": "Organization",
   "name": "PropertyList"
  },
- "description": "Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by 1,300+ agents across 930+ agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.",
+ "description": `Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by ${plAgents} agents across ${plAgencies} agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.`,
  "featureList": [
   "Six CRM pipelines: Leads, Buyers, Sellers, Property, Tenants, Nurture",
-  "Agent-to-agent MLS with co-broking across 930+ agencies",
+  `Agent-to-agent MLS with co-broking across ${plAgencies} agencies`,
   "Public property portal listing and direct buyer enquiries",
   "AI Property Match: plain-language search across own stock and the whole MLS",
   "Automated lead acknowledgement and a day 0, 1, 3, 7 follow-up cadence",

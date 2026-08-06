@@ -51,10 +51,10 @@ const softwareAppLd = {
   "@type": "Organization",
   "name": "PropertyList"
  },
- "description": "Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by 1,300+ agents across 930+ agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.",
+ "description": `Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by ${plAgents} agents across ${plAgencies} agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.`,
  "featureList": [
   "Six CRM pipelines: Leads, Buyers, Sellers, Property, Tenants, Nurture",
-  "Agent-to-agent MLS with co-broking across 930+ agencies",
+  `Agent-to-agent MLS with co-broking across ${plAgencies} agencies`,
   "Public property portal listing and direct buyer enquiries",
   "AI Property Match: plain-language search across own stock and the whole MLS",
   "Automated lead acknowledgement and a day 0, 1, 3, 7 follow-up cadence",
@@ -151,7 +151,7 @@ const softwareAppLd = {
 		<div class="heroInner">
 			<a class="btnSecondary topCta" href="/es/docs/">Cómo usar PropertyList</a>
 			<div class="heroCopy">
-				<div class="heroEyebrow">Gratis para siempre para agentes y promotores</div>
+				<div class="heroEyebrow">Compartir propiedades gratis para siempre, para agentes y promotores</div>
 				<h1>Publica una vez. Deja que {plAgents} agentes la vendan.</h1>
 				<p class="lead">
 					PropertyList es el MLS, CRM y portal inmobiliario gratis de España. Publica una propiedad una vez y llega a más
@@ -221,7 +221,7 @@ const softwareAppLd = {
 					<div class={`personaPanel ${persona === 'agents' ? 'isActive' : ''}`} data-persona-panel="agents">
 							<div class="personaTitle">Para agentes inmobiliarios</div>
 						<div class="personaSummary">
-								Deja de pagar una mensualidad solo para alojar tus propios anuncios. Publícalos gratis en PropertyList y {plAgents} agentes registrados pueden venderlos por ti - tú fijas la comisión y mantienes el control.<br /><br />Cruza al instante a tus compradores con miles de anuncios compartidos de toda la red. El MLS y el CRM son gratis para siempre - sin cuotas de alta, sin permanencia.<br /><br />Solo pagas cuando quieres ventaja en una operación concreta: un CMA con IA para fijar el precio, o el Agente de Reformas con Gemini para desbloquearla. Sin costes fijos, nunca.
+								Deja de pagar una mensualidad solo para alojar tus propios anuncios. Publícalos gratis en PropertyList y {plAgents} agentes registrados pueden venderlos por ti - tú fijas la comisión y mantienes el control.<br /><br />Cruza al instante a tus compradores con miles de anuncios compartidos de toda la red. El MLS y el CRM son gratis para siempre - sin cuotas de alta, sin permanencia.<br /><br />Solo pagas cuando quieres ventaja en una operación concreta, como un CMA con IA para fijar el precio. Sin costes fijos, nunca.
 						</div>
 						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">Crea tu cuenta gratis</a></div>
 						<div class="personaLinks">
@@ -245,7 +245,7 @@ const softwareAppLd = {
 					<div class={`personaPanel ${persona === 'services' ? 'isActive' : ''}`} data-persona-panel="services">
 							<div class="personaTitle">Para servicios inmobiliarios</div>
 						<div class="personaSummary">
-								Llega a agentes y compradores justo cuando te necesitan - no con un anuncio genérico de directorio, sino dentro de la propia operación. Tu servicio aparece en el flujo de trabajo cuando la transacción lo requiere.<br /><br />Nuestra IA hace la presentación: el Agente de Reformas, por ejemplo, calcula el coste de un proyecto al momento y pone tu perfil ante las personas adecuadas. Solo pagas por contactos cualificados ligados a una operación real.
+								Llega a agentes y compradores justo cuando te necesitan - no con un anuncio genérico de directorio, sino dentro de la propia operación. Tu servicio aparece en el flujo de trabajo cuando la transacción lo requiere.<br /><br />Muy pronto: nuestra IA hará la presentación, poniendo tu perfil ante las personas adecuadas justo cuando la operación necesite tu gremio. Solo pagarás por contactos cualificados ligados a una operación real.
 						</div>
 						<div class="personaCta"><a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">Crea tu cuenta gratis</a></div>
 						<div class="personaLinks">
@@ -396,495 +396,74 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 			</div>
 		</div>
 
-		<div class="grid featureGrid">
-			<div class="tile pricingTile">
+		<div style="display:flex;flex-wrap:wrap;gap:16px;">
+			<div class="tile pricingTile" style="flex:1;min-width:300px;">
 				<div class="pricingHeader">
-					<h2 class="pricingTitle">Qué obtienes gratis</h2>
+					<h2 class="pricingTitle">Gratis, sin límite</h2>
 					<div class="pricingBadge isFree">Gratis</div>
 				</div>
-				<ul class="featureList">
-					<li>
-						<a class="featureLink" href="/es/docs/propertylist-mls-manual-de-usuario/">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M4.5 10.5 12 4.5l7.5 6v9.75c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V10.5Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-									<path d="M9 22v-6.75c0-.69.56-1.25 1.25-1.25h3.5c.69 0 1.25.56 1.25 1.25V22" stroke="currentColor" stroke-width="1.7" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">MLS</span>
-								<span class="featureHint">Comparte propiedades ilimitadas</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="/es/docs/propertylist-mls-manual-de-usuario/">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7 7.5h10v13H7v-13Z" stroke="currentColor" stroke-width="1.7" />
-									<path d="M9 7.5V6.4c0-1.6 1.3-2.9 3-2.9s3 1.3 3 2.9v1.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M9.2 12h5.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M9.2 15.5h5.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">CRM</span>
-								<span class="featureHint">Contactos, leads y flujos de trabajo</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="/es/pipelines/">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<rect x="3.5" y="4.5" width="4.5" height="15" rx="1" stroke="currentColor" stroke-width="1.7" />
-									<rect x="9.75" y="4.5" width="4.5" height="10" rx="1" stroke="currentColor" stroke-width="1.7" />
-									<rect x="16" y="4.5" width="4.5" height="7" rx="1" stroke="currentColor" stroke-width="1.7" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Pipelines de CRM</span>
-								<span class="featureHint">Seis pipelines del lead al cierre - Leads, Sellers y Property son gratis</span>
-							</span>
-						</a>
-					</li>
-				<li><a class="featureLink" href="/es/app-movil/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">App móvil</span><span class="featureHint">El MLS y CRM en tu móvil - gratis en Google Play</span></span></a></li>
-				<li><a class="featureLink" href="/es/busqueda-ia/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l1.9 5.1L19 11l-5.1 1.9L12 18l-1.9-5.1L5 11l5.1-1.9L12 4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M18.5 3.5v3M17 5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">AI Property Match</span><span class="featureHint">Búsqueda en lenguaje natural para compradores y agentes - primero tu stock y después todo el MLS</span></span></a></li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M20 12c0 3.9-3.6 7-8 7-1 0-2-.1-3-.4L4.5 20l1.5-3.4C4.8 15.4 4 13.8 4 12c0-3.9 3.6-7 8-7s8 3.1 8 7Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linejoin="round"
-									/>
-									<path d="M8 12h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Mensajería y solicitud de visitas</span>
-								<span class="featureHint">Comunícate y reserva visitas</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="/es/search?q=Users">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M16.8 20.5c0-2.7-2-4.4-4.8-4.4s-4.8 1.7-4.8 4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 13.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Usuarios ilimitados</span>
-								<span class="featureHint">Añade a todo tu equipo</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M7.5 20.5h9c1.1 0 2-.9 2-2v-13c0-1.1-.9-2-2-2h-9c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-									<path d="M9 8.5h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M9 12h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M9 15.5h4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Contactos ilimitados</span>
-								<span class="featureHint">Sin límites en tu base de datos</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M10.2 13.8 7.5 16.5a3 3 0 1 1-4.2-4.2l2.7-2.7"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-									<path
-										d="M13.8 10.2 16.5 7.5a3 3 0 1 1 4.2 4.2l-2.7 2.7"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-									<path d="M9.5 14.5 14.5 9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">MicroSite</span>
-								<span class="featureHint">Mini-web con tu marca y compartición</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M12 3.75c3.2 2.47 5.5 2.47 8 2.75v8.5c0 3.9-3.1 6.6-8 8.25-4.9-1.65-8-4.35-8-8.25V6.5c2.5-.28 4.8-.28 8-2.75Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-									<path d="M8.7 12.2 11 14.5l4.8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Agencias verificadas</span>
-								<span class="featureHint">Genera confianza con compradores y agentes</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M6.5 7.5h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M6.5 12h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M6.5 16.5h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M4.5 7.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
-									<path d="M4.5 12h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
-									<path d="M4.5 16.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Historial cronológico</span>
-								<span class="featureHint">Sigue la actividad de contactos y propiedades</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M12 20c4.4 0 8-3 8-6.7 0-3.7-3.6-6.8-8-6.8S4 9.6 4 13.3c0 2 1.1 3.8 2.8 5L6 21l3.2-1.3c.9.2 1.8.3 2.8.3Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linejoin="round"
-									/>
-									<path d="M8.5 13.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
-									<path d="M12 13.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
-									<path d="M15.5 13.5h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Comunidad de WhatsApp</span>
-								<span class="featureHint">Únete a más de 3.000 miembros</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="https://www.facebook.com/PropertyList.es/" target="_blank" rel="noopener">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M4.5 9.5h15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M6.5 6.5h11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M7.5 12.5h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M8.5 15.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M6 18.5h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Distribución social</span>
-								<span class="featureHint">Páginas y grupos de Facebook (40.000+)</span>
-							</span>
-						</a>
-					</li>
+				<ul style="list-style:none;margin:0;padding:0;">
+					<li style="position:relative;padding:6px 0 6px 26px;color:rgba(16,24,40,0.78);line-height:1.5;"><span style="position:absolute;left:0;color:#0a6d61;font-weight:900;">&#10003;</span>El MLS compartido: publica una vez y toda la red puede venderla contigo</li>
+					<li style="position:relative;padding:6px 0 6px 26px;color:rgba(16,24,40,0.78);line-height:1.5;"><span style="position:absolute;left:0;color:#0a6d61;font-weight:900;">&#10003;</span>El CRM: contactos y usuarios ilimitados, y los pipelines de Leads, Vendedores y Propiedades</li>
+					<li style="position:relative;padding:6px 0 6px 26px;color:rgba(16,24,40,0.78);line-height:1.5;"><span style="position:absolute;left:0;color:#0a6d61;font-weight:900;">&#10003;</span>Tu MicroSite de marca, con alojamiento y sus consultas gratis para siempre</li>
+					<li style="position:relative;padding:6px 0 6px 26px;color:rgba(16,24,40,0.78);line-height:1.5;"><span style="position:absolute;left:0;color:#0a6d61;font-weight:900;">&#10003;</span>Instant Listing: fotos y una nota de voz se convierten en un anuncio completo</li>
+					<li style="position:relative;padding:6px 0 6px 26px;color:rgba(16,24,40,0.78);line-height:1.5;"><span style="position:absolute;left:0;color:#0a6d61;font-weight:900;">&#10003;</span>AI Property Match, gratis en beta</li>
+					<li style="position:relative;padding:6px 0 6px 26px;color:rgba(16,24,40,0.78);line-height:1.5;"><span style="position:absolute;left:0;color:#0a6d61;font-weight:900;">&#10003;</span>Tus anuncios en el portal propertylist.es, sin comisión por publicar</li>
 				</ul>
 			</div>
-			<div class="tile mutedTile pricingTile">
+			<div class="tile mutedTile pricingTile" style="flex:1;min-width:300px;">
 				<div class="pricingHeader">
-					<h2 class="pricingTitle">Extras opcionales de pago</h2>
+					<h2 class="pricingTitle">De pago, en una frase</h2>
 				</div>
-				<ul class="featureList">
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M12 3.5 14.7 9l6 .9-4.3 4.2 1 6-5.4-2.9-5.4 2.9 1-6-4.3-4.2 6-.9L12 3.5Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Anuncios MLS destacados</span>
-								<span class="featureHint">Aumenta la visibilidad donde buscan los agentes</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="/es/website-builder/">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<rect x="2.5" y="4" width="19" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
-									<path d="M8 20h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 18v2" stroke="currentColor" stroke-width="1.7" />
-									<path d="M6 9l3 2-3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-									<path d="M10.5 9h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M10.5 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Constructor de Webs de Agencia</span>
-								<span class="featureHint">Drag-and-drop, anuncios en directo, previsualiza antes de publicar</span>
-							</span>
-						</a>
-					</li>
-					<li><a class="featureLink" href="https://intelligence.propertylist.es" target="_blank" rel="noopener"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="5" y="12" width="3" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="10.5" y="8" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="16" y="4" width="3" height="14" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="featureText"><span class="featureName">Inteligencia de Mercado</span><span class="featureHint">Datos de mercado en vivo e informes por zona, verificados ante notario</span></span></a></li>
-					<li><a class="featureLink" href="/es/contenido-instantaneo/"><span class="featureIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="3.5" width="15" height="17" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="featureText"><span class="featureName">Contenido Instantáneo</span><span class="featureHint">Blogs y guías de zona automáticos - muy pronto</span></span></a></li>
-					<li>
-						<a class="featureLink" href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/reports-statistics/generating-property-reports/" target="_blank" rel="noopener">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7 4.5h7l3 3v12.75c0 .69-.56 1.25-1.25 1.25H7.25C6.56 21.75 6 21.19 6 20.5V5.75C6 5.06 6.56 4.5 7.25 4.5Z" stroke="currentColor" stroke-width="1.7" />
-									<path d="M14 4.5V8h3" stroke="currentColor" stroke-width="1.7" />
-									<path d="M8.5 13.2 10.5 11l2 2.1 3-3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Informe CMA</span>
-								<span class="featureHint">Informe por inmueble con comparables y precios verificados ante notario</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M12 3.5v3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 17.3v3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M3.5 12h3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M17.3 12h3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path
-										d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Herramientas de IA</span>
-								<span class="featureHint">Redacción, flujos y resultados más rápidos</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M12 21c4.7 0 8.5-3.8 8.5-8.5S16.7 4 12 4 3.5 7.8 3.5 12.5 7.3 21 12 21Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-									<path d="M3.8 12.5h16.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 4c2.4 2.2 4 5.2 4 8.5S14.4 18.8 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 4c-2.4 2.2-4 5.2-4 8.5S9.6 18.8 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Anuncios destacados en el Portal Público</span>
-								<span class="featureHint">Más exposición ante compradores/inquilinos</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7.5 13.5h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path
-										d="M12 3.5c4.7 0 8.5 3.8 8.5 8.5"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linecap="round"
-									/>
-									<path
-										d="M12 3.5c-4.7 0-8.5 3.8-8.5 8.5"
-										stroke="currentColor"
-										stroke-width="1.7"
-										stroke-linecap="round"
-									/>
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Pipeline de Buyers</span>
-								<span class="featureHint">1 crédito por cada lead cualificado que decidas mover</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M16.8 20.5c0-2.7-2-4.4-4.8-4.4s-4.8 1.7-4.8 4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 13.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" />
-									<path
-										d="M18.2 7.2 19.1 9l2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .4-2-1.4-1.4 2-.3.9-1.8Z"
-										stroke="currentColor"
-										stroke-width="1.2"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Agentes inmobiliarios destacados</span>
-								<span class="featureHint">Destaca en la portada de PropertyList.es ante compradores/inquilinos</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="/es/search?q=Direct%20Client%20Property%20Email">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M4.5 7.5h15v11c0 .8-.7 1.5-1.5 1.5h-12c-.8 0-1.5-.7-1.5-1.5v-11Z" stroke="currentColor" stroke-width="1.7" />
-									<path d="m5.3 8.3 6.7 5 6.7-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Email directo de propiedades a clientes</span>
-								<span class="featureHint">Envía un anuncio a compradores/inquilinos que ya buscan en esa zona</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M12 3.5c3 2.4 5.2 2.4 7.6 2.7v8.1c0 3.7-2.9 6.3-7.6 7.9-4.7-1.6-7.6-4.2-7.6-7.9V6.2c2.4-.3 4.6-.3 7.6-2.7Z"
-										stroke="currentColor"
-										stroke-width="1.7"
-									/>
-									<path d="M10 12.7 8.8 15.7l3-2.1 3 2.1-1.2-3 2.4-1.8h-3l-1-3-1 3H7.6l2.4 1.8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Publicaciones patrocinadas en redes</span>
-								<span class="featureHint">Alcance extra cuando importa</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a
-							class="featureLink"
-							href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/"
-							target="_blank"
-							rel="noopener"
-						>
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M8 4.5h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M7 7.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M9.5 20.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 7.5v13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Utilidades de IA</span>
-								<span class="featureHint">Herramientas que agilizan el día a día</span>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="featureLink" href="/es/precios/">
-							<span class="featureIcon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7 12h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M12 7v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-									<path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9 9 4 9 9Z" stroke="currentColor" stroke-width="1.7" />
-								</svg>
-							</span>
-							<span class="featureText">
-								<span class="featureName">Más próximamente</span>
-								<span class="featureHint">Ver precios y novedades</span>
-							</span>
-						</a>
-					</li>
-				</ul>
+				<p style="margin:0;color:rgba(16,24,40,0.78);line-height:1.65;">Pagas por la demanda, nunca por la oferta: 1 crédito (~1€) cuando decides pasar un lead de comprador cualificado a un pipeline de pago, con los 5 primeros gratis. Y módulos opcionales cuando los quieras: <a href="/es/alquileres/">Alquileres</a> (50 créditos / 30 días, prueba de 30 días), <a href="/es/nurture/">Automation &amp; Nurture</a> (20 créditos/mes) y el <a href="/es/constructor-de-webs/">Constructor de Webs</a> (50 créditos/mes, gratis hasta que publiques).</p>
+				<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
+					<a href="/es/funciones/" style="background:#00ae9a;color:#00100e;border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;font-size:14.5px;">Ver todas las funciones &rarr;</a>
+					<a href="/es/gratis/" style="border:1px solid rgba(16,24,40,0.18);border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;font-size:14.5px;color:rgba(16,24,40,0.85);">Todo lo gratuito</a>
+					<a href="/es/precios/" style="border:1px solid rgba(16,24,40,0.18);border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;font-size:14.5px;color:rgba(16,24,40,0.85);">Precios</a>
+				</div>
 			</div>
+		</div>
+	</section>
+
+	<section aria-label="Respuestas rápidas" style="max-width:1120px;margin:36px auto 0;padding:0 20px;">
+		<h2 style="margin:0 0 6px;letter-spacing:-0.02em;">Respuestas rápidas</h2>
+		<p style="margin:0 0 14px;color:rgba(16,24,40,0.65);font-size:14.5px;">Las preguntas que los agentes hacen antes de registrarse. La lista completa está en las <a href="/es/preguntas-frecuentes/">preguntas frecuentes</a> y en <a href="/es/funciones/">funciones</a>.</p>
+		<div style="display:grid;gap:10px;">
+			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
+				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Qué es PropertyList?</summary>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">PropertyList es el sistema sobre el que funcionan las agencias inmobiliarias en España: un solo acceso que sustituye al CRM, al MLS, a la presencia en portales, a la web de la agencia, a las herramientas de marketing con IA y a las suscripciones de datos de mercado que una agencia compraría a cuatro o cinco proveedores. Y es también la red a la que todo eso se conecta: publica una propiedad una vez y {plAgents} agentes de {plAgencies} agencias pueden venderla contigo, mientras los compradores la encuentran en propertylist.es. La IA hace el trabajo pesado: el anuncio se escribe con fotos y una nota de voz, los compradores se cruzan con todo el mercado desde un mensaje pegado, y el seguimiento sigue trabajando tu base de datos mucho después de que la mayoría lo deja - con precios de venta verificados por notaría, no estimaciones.</p>
+			</details>
+			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
+				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿PropertyList es realmente gratis?</summary>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">El núcleo es gratis y sin límite: el MLS, los anuncios ilimitados, las cuentas de equipo, tu MicroSite y los pipelines de Leads, Vendedores y Propiedades. Pasar un lead de comprador cualificado a un pipeline de pago cuesta 1 crédito (~1€), y los 5 primeros son gratis.</p>
+			</details>
+			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
+				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Cómo gana dinero PropertyList?</summary>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">Con créditos, de un único saldo prepagado - y todo cobro es opcional. Recibir un lead no cuesta nada: las consultas del portal son gratis por tiempo limitado, y los leads de otros agentes o de tu MicroSite son gratis para siempre. Si quieres trabajar un comprador cualificado en tu pipeline de pago, es 1 crédito (~1€), con los 5 primeros gratis - y si nunca lo pasas, nunca pagas. Lo mismo con destacar un anuncio, los informes de propiedad, los módulos de Alquileres y Automation &amp; Nurture, el feed XML que pone el stock de toda la red en tu propia web, y el Constructor de Webs a medida, que es gratis para crear y previsualizar y solo se cobra cuando lo publicas. Nada se activa solo. Publicar y vender siguen siendo gratis, así la red no deja de crecer.</p>
+			</details>
+			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
+				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Puedo conseguir créditos gratis?</summary>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">Sí. Recomienda una agencia: ganas <a href="/es/referidos/">20 créditos (~20€) por cada agencia que se registra con tu enlace</a>, sin límite, y la nueva agencia empieza con 10. Además, <a href="/es/verifica-tu-agencia/">verificar tu agencia</a> (gratis, unos dos minutos) suma otros 20 créditos y añade la insignia de verificado a tus anuncios.</p>
+			</details>
+			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
+				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Tengo que dejar mi portal o CRM actual?</summary>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">No. Importa tu feed XML actual gratis y usa PropertyList en paralelo con lo que ya tienes. Enviar tus anuncios a otros portales también es gratis.</p>
+			</details>
+			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
+				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Cuánto tardo en empezar?</summary>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">Minutos. Crea la cuenta gratuita (sin tarjeta), añade una propiedad con Instant Listing y estará en el MLS y en el portal. <a href="/es/lanza-tu-agencia/">Mira el recorrido de nueve minutos</a>.</p>
+			</details>
+		</div>
+	</section>
+
+	<section aria-label="El impuesto del papeleo" style="max-width:1120px;margin:36px auto 0;padding:0 20px;">
+		<div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;border:1px solid rgba(11,18,32,0.2);background:linear-gradient(135deg,rgba(11,18,32,0.05),rgba(11,18,32,0.01));border-radius:16px;padding:18px 22px;">
+			<div style="flex:none;width:44px;height:44px;border-radius:12px;background:rgba(11,18,32,0.08);display:grid;place-items:center;font-size:22px;" aria-hidden="true">&#9203;</div>
+			<div style="min-width:0;flex:1;">
+				<strong style="display:block;font-size:16px;letter-spacing:-.01em;color:rgba(16,24,40,0.92);">&iquest;Cu&aacute;ntas horas a la semana te roba el papeleo?</strong>
+				<span style="display:block;font-size:14px;color:rgba(16,24,40,0.66);margin-top:3px;">Marca lo que odias hacer, ajusta las horas, recibe la cuenta - y el remedio de cada l&iacute;nea.</span>
+			</div>
+			<a href="/es/horas/" style="flex:none;white-space:nowrap;background:#0b1220;color:#fff;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Elige tu veneno &rarr;</a>
 		</div>
 	</section>
 

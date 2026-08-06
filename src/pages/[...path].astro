@@ -2377,6 +2377,12 @@ const crumbs = (() => {
 		current += `/${seg}`;
 		acc.push({ href: `${current}/`, label: labelForCrumb(seg) });
 	}
+	// Area guides: /neighbourhood/spain/ and the per-province levels have no pages
+	// (they 404), and a broken intermediate URL invalidates the BreadcrumbList rich
+	// result. Match the ES /es/barrios/ pattern: Home > Neighbourhood > Area.
+	if (renderPath.startsWith('/neighbourhood/')) {
+		return acc.filter((c) => c.href === '/neighbourhood/');
+	}
 	return acc;
 })();
 

@@ -16,11 +16,18 @@ type FaqItem = {
 
 const faqItems: FaqItem[] = [
 	{
+		id: 'what-is-propertylist',
+		section: 'What is PropertyList and how does it work?',
+		q: 'What is PropertyList?',
+		aHtml:
+			'<p>PropertyList is the system Spanish estate agencies run on: one login that replaces the CRM, the MLS, the portal presence, the agency website, the AI marketing tools and the market-data subscriptions an agency would otherwise buy from four or five vendors. List a property once and every agent on the shared network can sell it with you, while buyers find it on <a href="https://propertylist.es/" target="_blank" rel="noopener">propertylist.es</a>.</p><p>The AI does the heavy lifting: a listing written from photos and a voice note, buyers matched against the whole market from a pasted client message, and follow-up that keeps working your database - grounded in notary-verified sale prices, not asking-price guesses.</p><p>The core is free with no listing limit; paid extras run on prepaid credits. Full comparison with the traditional portals: <a href="/estate-agents/what-is-the-best-mls-crm-property-portal-in-spain/">what is the best MLS, CRM and property portal in Spain?</a></p>',
+	},
+	{
 		id: 'is-free',
 		section: 'What is PropertyList and how does it work?',
 		q: 'Is PropertyList.es really free to use?',
 		aHtml:
-			'<p>Yes, PropertyList.es is <strong>completely free</strong> for estate agents, agencies, and developers. Our core MLS (Multiple Listing Service) and CRM (Customer Relationship Management) tools are free forever with no hidden fees, no setup costs, and no lock-in contracts.</p><p>Optional paid features - such as featured listings, AI tools, CMA reports, and enhanced visibility - are available on a pay-as-you-go basis using credits. You only pay for value-added services that directly help you close deals.</p>',
+			'<p>The core is <strong>free with no limit</strong> for estate agents, agencies and developers: the MLS, unlimited listings, team accounts and the Lead, Seller and Property pipelines, with no setup costs and no lock-in contracts.</p><p>It is not 100% free: moving a qualified buyer lead into a paid pipeline costs <strong>1 credit (~1€)</strong>, and your first 5 are free. Up to that decision the lead costs nothing, and if you never move it, you are never charged.</p><p>Other paid features - featured listings, AI tools, CMA reports and enhanced visibility - are pay-as-you-go from the same credit balance. You only pay for services that directly help you close deals.</p>',
 	},
 	{
 		id: 'portal-vs-idealista',
@@ -227,7 +234,18 @@ const quickFactsLd = {
 };
 ---
 
-<Layout lang="en" title={title} description={description} canonical={canonical} schema={[breadcrumbLd, faqLd, quickFactsLd]}>
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	schema={[breadcrumbLd, faqLd, quickFactsLd]}
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/faq/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/preguntas-frecuentes/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/faq/' },
+	]}
+>
 	<section class="hero">
 		<div class="heroInner">
 			<div class="badge">FAQ</div>

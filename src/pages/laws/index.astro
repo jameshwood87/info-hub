@@ -10,6 +10,11 @@ const items = await listKbPagesByPrefix({ prefix: '/docs/laws-procedures/', lang
 	title="Laws & Procedures • PropertyList Info Hub"
 	description="Guides covering laws, procedures, taxes and rentals in Spain."
 	canonical="https://info.propertylist.es/laws/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/laws/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/leyes/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/laws/' },
+	]}
 >
 	<h1>Laws &amp; Procedures</h1>
 	<p class="sub">Guides covering laws, procedures, taxes and rentals in Spain.</p>

@@ -1,0 +1,405 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AgentInterestCta from '../components/AgentInterestCta.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/instant-documents/`;
+const title = 'Instant Documents (coming soon) - contracts written, signed and filed inside PropertyList | PropertyList';
+const description =
+	'Coming soon: Instant Documents will write your listing agreements, reservations and rental contracts from your CRM, get them signed on any phone, and file them against the property. Bilingual, legally structured, AML file included.';
+
+const stages = [
+	{ name: 'Win the instruction', desc: 'Listing agreement (sale, long term or short term in one document), property data sheet, key receipt, media release, vendor checklist, co-agency agreement.' },
+	{ name: 'Qualify and comply', desc: 'Buyer brief, GDPR consent, viewing sheet, the full AML due-diligence file, and a non-circumvention NDA for off-market work.' },
+	{ name: 'Do the deal', desc: 'Written offer, reservation with deposit receipt, private purchase contract, completion pack for the notary, commission invoice.' },
+	{ name: 'Rent it out', desc: 'Tenancy application, LAU rental contract, inventory and condition report, key handover with meter readings, regional deposit lodgement, check-out and deposit return.' },
+	{ name: 'Short lets', desc: 'Management agreement, seasonal contract, booking terms, guest registration, house rules, damage deposit, VFT compliance declaration.' },
+];
+
+const trust = [
+	{ name: 'You approve everything', desc: 'Every value the AI fills from your CRM is shown to you before it enters the document, field by field. Nothing lands in a contract you have not confirmed with your own eyes.' },
+	{ name: 'Lawyer-written, locked where it matters', desc: 'Templates will be professionally drafted in matched language pairs, starting with Spanish and English. The legal clauses stay locked; your custom additions go in their own clearly marked section, checked for conflicts before the document generates.' },
+	{ name: 'An audit trail on every signature', desc: 'Who viewed, when they signed, from where - timestamped, hashed and attached to the final PDF. The signed copy is locked, tamper-evident and stored against the property forever.' },
+];
+
+const faqs = [
+	{ q: 'When will Instant Documents arrive?', a: 'It is in build now and will roll out to PropertyList agents first, in stages: document creation first, then signatures, then the full compliance file. Agents already on the platform will be first in the queue.' },
+	{ q: 'Are electronic signatures legally valid in Spain?', a: 'Yes. Simple electronic signatures are valid in Spain for the private documents agents prepare - listing agreements, reservations, rental contracts and the rest. Every signature will carry a full evidence pack: timestamps, signer identity, document hash and an audit certificate on the PDF. Documents that require a notary, like the final deed, are deliberately out of scope - Instant Documents prepares the notary pack and checklist instead.' },
+	{ q: 'How do bilingual documents work?', a: 'Clause by clause, side by side - the legal language of the country on the left (Spanish here in Spain), and the language of your client on the right: English, German, Dutch, Swedish and more - perfectly aligned so both parties read the same agreement together. For documents created in Spain the Spanish version prevails, and the document says so. Translations come from professionally drafted template pairs, not machine translation of legal wording.' },
+	{ q: 'Does my client need a PropertyList account to sign?', a: 'No. Signers receive a secure link and sign in the browser on any phone, tablet or computer - nothing to install, no account, no printing, no scanning. Or hand them your phone and they sign on the spot.' },
+	{ q: 'What about my legal obligations as an agent?', a: 'Built in. Estate agents in Spain have client identification duties on sales, and Instant Documents will build the due-diligence file for you: ID capture and extraction, beneficial ownership, source of funds and PEP declarations, kept for the statutory retention period. Compliance stops being homework.' },
+	{ q: 'What will it cost?', a: 'Creating, storing and downloading documents will be free within fair use. Sending for signature will run on pay-as-you-go credits, and your first 3 signature sends are free. Exact pricing is confirmed at launch. Creating your free account now costs nothing and puts you in the first wave.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 3, name: 'Instant Documents', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Instant Documents',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
+	description: 'Coming soon: AI-generated estate agency documents - listing agreements, reservations, rental contracts - written from the CRM, signed electronically on any device, and filed against the property. Bilingual, with a built-in AML due-diligence file.',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/documentos-instantaneos/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Instant Documents - Coming soon</div>
+				<h1>Signed before you leave the viewing.</h1>
+				<p class="lead">
+					The reservation that used to take an evening of Word and a week of chasing will take four questions and one link.
+					Contracts write themselves from your CRM, clients sign on any phone - or on yours, right there - and the signed PDF
+					files itself against the property. No printer, no scanner, no chasing.
+				</p>
+				<div class="winRow" aria-label="What Instant Documents gives back">
+					<div class="win"><b>Deals sealed while they're hot</b><span>Generate, send and sign in minutes, not days.</span></div>
+					<div class="win"><b>The chasing, done for you</b><span>Opens tracked, reminders sent, signed copies filed.</span></div>
+					<div class="win"><b>Compliance built in</b><span>Bilingual, legally structured, AML file included.</span></div>
+				</div>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+					<a class="btnSecondary" href="#how">See how it will work</a>
+				</div>
+				<div class="note">Coming soon. Instant Documents arrives for PropertyList agents first - creating documents will be free, signatures run on pay-as-you-go credits.</div>
+			</div>
+
+			<div class="dcWrap" aria-hidden="true">
+				<div class="dcTag">Signed on the spot</div>
+				<div class="dcCard">
+					<div class="dcHead">Documento de reserva &middot; Reservation agreement</div>
+					<div class="dcCols">
+						<div class="dcCol"><i style="width:92%"></i><i style="width:84%"></i><i style="width:88%"></i></div>
+						<div class="dcCol"><i style="width:90%"></i><i style="width:86%"></i><i style="width:80%"></i></div>
+					</div>
+					<div class="dcSigRow">
+						<svg viewBox="0 0 120 34" class="dcSig"><path d="M6 26 C 18 6, 26 30, 38 18 S 58 8, 66 20 S 88 30, 100 12" fill="none" stroke="#0a6d61" stroke-width="2.4" stroke-linecap="round"/></svg>
+						<span class="dcDone">Signed &middot; 19:04</span>
+					</div>
+					<div class="dcFoot">Viewed 19:02 &middot; signed 19:04 &middot; audit trail attached &middot; filed to PL18220</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Three moments, zero paperwork</h2>
+			<p>This is the shape of a deal with Instant Documents. Notice what never appears in any of them: a printer.</p>
+		</div>
+		<div class="grid3 steps">
+			<div class="card step">
+				<div class="stepTime">12:15</div>
+				<h3>At the viewing</h3>
+				<p>The viewing sheet is already prepared from the calendar. You hand your phone over, they sign at the front door, and it files itself before you are back in the car.</p>
+			</div>
+			<div class="card step">
+				<div class="stepTime">17:40</div>
+				<h3>The offer lands</h3>
+				<p>Four questions and the reservation agreement is ready - bilingual, prefilled from the deal, every value confirmed by you. One tap sends the signing link. The buyer signs from a restaurant table.</p>
+			</div>
+			<div class="card step">
+				<div class="stepTime">Next morning</div>
+				<h3>Already filed</h3>
+				<p>The signed PDF is locked and attached to the property, the deal is nudged forward, the deposit receipt is drafted, and the completion checklist for the notary is waiting. You did none of it.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Every document a deal needs, in both languages</h2>
+			<p>Around 15 document families cover the whole lifecycle - and one document adapts when you pick sale, long-term or short-term, so an owner listing for both signs one sheet, not three.</p>
+		</div>
+		<div class="grid3">
+			{
+				stages.map((s) => (
+					<div class="card">
+						<h3>{s.name}</h3>
+						<p>{s.desc}</p>
+					</div>
+				))
+			}
+			<div class="card accent">
+				<h3>Side by side, clause by clause</h3>
+				<div class="biBox" aria-hidden="true">
+					<div class="biRow"><span>Cl&aacute;usula 1 &middot; Objeto</span><span>Clause 1 &middot; Purpose</span></div>
+					<div class="biRow"><span>Cl&aacute;usula 2 &middot; Precio</span><span>Clause 2 &middot; Price</span></div>
+					<div class="biRow"><span>Cl&aacute;usula 3 &middot; Firma</span><span>Clause 3 &middot; Signature</span></div>
+				</div>
+				<p>The document's legal language on the left - Spanish here in Spain - and your client's language on the right: English, German, Dutch, Swedish or whichever they speak. Aligned line for line so both parties read the same agreement together, with the prevailing language stated, the way it should be.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>How a document gets made</h2>
+			<p>Not a blank form. A short conversation with an assistant that already knows the property, the owner and the deal.</p>
+		</div>
+		<div class="featRow">
+			<div class="card">
+				<h3>It asks only what it does not know</h3>
+				<p>
+					Pick what you are doing - taking an instruction, sending an offer, starting a tenancy - and the AI fills everything
+					the platform already knows: property, owner, buyer, reference, commission. You confirm every prefilled value with one
+					look, then answer only the genuinely missing questions while the document builds itself in a live preview beside you.
+				</p>
+				<p>
+					Need something the template does not say? Tell the assistant - "the storage room furniture is included" - and it
+					drafts the clause in both languages into its own clearly marked section, checked against the legal wording before
+					anything generates.
+				</p>
+			</div>
+			<div class="gCard" aria-hidden="true">
+				<div class="gLabel">Two questions left</div>
+				<div class="gMini">
+					<b>What is the reservation deposit?</b>
+					<span>Everything else is already filled from the deal.</span>
+					<em>Preview updating live &rarr;</em>
+				</div>
+			</div>
+		</div>
+		<div class="featRow rev">
+			<div class="card">
+				<h3>Signed anywhere - including right in front of you</h3>
+				<p>
+					Send a secure link and your client signs in the browser on any phone, no account, no app, no printing. Or hand your
+					phone over at the viewing and it is signed before the conversation cools. Every signer is tracked separately, slow
+					signers get reminded automatically, and the completed PDF locks itself with the full audit trail attached.
+				</p>
+				<p>
+					Multiple owners, couples, company signatories - each gets their own link, in the right order for that document, and
+					you watch it all from one screen.
+				</p>
+			</div>
+			<div class="gCard" aria-hidden="true">
+				<div class="gLabel">Signature progress</div>
+				<div class="gDiff">
+					<div><span>Buyer</span><span><b>Signed 19:04</b></span></div>
+					<div><span>Owner 1</span><span><b>Signed 21:12</b></span></div>
+					<div><span>Owner 2</span><span>Reminded today</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="featRow">
+			<div class="card">
+				<h3>The legal homework, done quietly</h3>
+				<p>
+					Spanish estate agents carry real obligations - client identification on sales, retention periods, regional deposit
+					rules. Instant Documents will build the due-diligence file as you work: ID uploaded and read automatically, expiry
+					dates checked, the declarations generated, everything kept for as long as the law requires.
+				</p>
+				<p>
+					And when a deal heads to the notary, it prepares the completion pack and checklist - so even the documents nobody
+					signs electronically arrive organised.
+				</p>
+			</div>
+			<div class="gCard" aria-hidden="true">
+				<div class="gLabel">Due-diligence file</div>
+				<div class="gDiff">
+					<div><span>ID verified</span><span><b>&#10003;</b></span></div>
+					<div><span>Source of funds</span><span><b>&#10003;</b></span></div>
+					<div><span>Beneficial owner</span><span><b>&#10003;</b></span></div>
+					<div><span>File complete</span><span><b>Ready for completion</b></span></div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Your best hours are not for typing.</h2>
+			<p>
+				Every agent knows the evening that disappears into a rental contract, and the deal that wobbled because the paperwork
+				took a week. The buyer is hottest in the hour after they say yes - Instant Documents is built to use that hour, not
+				lose it.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Built to be trusted with your contracts</h2>
+			<p>A system that writes legal documents has to earn its place. These are design decisions, not settings.</p>
+		</div>
+		<div class="grid3">
+			{
+				trust.map((t) => (
+					<div class="card accent">
+						<h3>{t.name}</h3>
+						<p>{t.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Attached to the property, forever</h2>
+				<p>
+					Every generated, uploaded and signed document lives on the property and the contact it belongs to - versioned,
+					searchable, with its full history. Three years from now, the signed instruction from today is two taps away.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Inside the platform you already use</h2>
+				<p>
+					No separate signature tool, no document folder on someone's laptop. Instant Documents lives inside PropertyList,
+					where 1,200+ agents and 900+ agencies already work - next to the listings, the CRM and the deals it writes about.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions, answered</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>The last deal you lose to paperwork.</h2>
+			<p>Instant Documents arrives for PropertyList agents first. Create your free account now - no card required - and be ready on day one, inside the free <a href="/features/">PropertyList platform</a>.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.winRow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+		.win { background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 12px; padding: 10px 12px; }
+		.win b { display: block; font-size: 13px; color: var(--pl-ink); }
+		.win span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.65); line-height: 1.45; margin-top: 2px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.dcWrap { position: relative; padding: 18px 6px 6px; }
+		.dcTag { position: absolute; top: 0; left: 18px; z-index: 2; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+		.dcCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 16px 12px; box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
+		.dcHead { font-size: 12.5px; font-weight: 800; color: #101828; border-bottom: 1px solid rgba(16, 24, 40, 0.08); padding-bottom: 8px; margin-bottom: 10px; }
+		.dcCols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; margin-bottom: 12px; }
+		.dcCols::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(16, 24, 40, 0.1); }
+		.dcCol i { display: block; height: 7px; border-radius: 4px; background: rgba(16, 24, 40, 0.12); margin-bottom: 7px; }
+		.dcSigRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(var(--pl-accent-rgb), 0.07); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 10px; padding: 6px 12px; margin-bottom: 9px; }
+		.dcSig { width: 110px; height: 32px; flex: none; }
+		.dcDone { font-size: 12px; font-weight: 900; color: var(--pl-ink); background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.35); border-radius: 999px; padding: 4px 10px; }
+		.dcFoot { font-size: 11px; color: rgba(16, 24, 40, 0.5); text-align: center; }
+
+		.biBox { background: #f7f9f9; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 10px; padding: 8px; margin-bottom: 10px; }
+		.biRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11.5px; color: rgba(16, 24, 40, 0.7); padding: 5px 6px; border-bottom: 1px solid rgba(16, 24, 40, 0.06); position: relative; }
+		.biRow:last-child { border-bottom: 0; }
+		.biRow span:last-child { border-left: 1px solid rgba(16, 24, 40, 0.1); padding-left: 10px; }
+
+		.featRow { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
+		.featRow.rev { grid-template-columns: 0.85fr 1.15fr; }
+		.featRow.rev .card { order: 2; }
+		.featRow.rev .gCard { order: 1; }
+		.featRow .card p + p { margin-top: 10px; }
+		.gCard { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+		.gLabel { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pl-ink); }
+		.gMini { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 12px; box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08); }
+		.gMini b { display: block; font-size: 14px; color: #101828; }
+		.gMini span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.6); margin: 2px 0 6px; }
+		.gMini em { display: block; font-style: normal; font-size: 12px; font-weight: 700; color: var(--pl-ink); }
+		.gDiff { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 6px 10px; font-size: 12.5px; }
+		.gDiff > div { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(16, 24, 40, 0.06); }
+		.gDiff > div:last-child { border-bottom: 0; }
+		.gDiff span:first-child { color: rgba(16, 24, 40, 0.55); }
+		.gDiff b { color: var(--pl-ink); }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepTime { display: inline-flex; align-items: center; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 4px 12px; font-weight: 900; font-size: 12px; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.grid3 { grid-template-columns: repeat(2, 1fr); }
+			.featRow, .featRow.rev { grid-template-columns: 1fr; }
+			.featRow.rev .card { order: 1; }
+			.featRow.rev .gCard { order: 2; }
+		}
+		@media (max-width: 560px) {
+			.grid3 { grid-template-columns: 1fr; }
+			.winRow { grid-template-columns: 1fr; }
+		}
+	</style>
+	<AgentInterestCta lang="en" page="/instant-documents/" />
+</Layout>

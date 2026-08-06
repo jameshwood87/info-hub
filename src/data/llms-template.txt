@@ -2,8 +2,8 @@
 
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
-Last Updated: 2026-08-03
-Version: 3.8
+Last Updated: 2026-08-04
+Version: 4.3
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -19,7 +19,7 @@ Everything paid draws on one prepaid credit balance, and every recurring cost is
 Live since February 2026: {{LISTINGS}} active listings, {{AGENTS}} agents, {{AGENCIES}} agencies (live counters on the homepage). This Info Hub (info.propertylist.es) is the documentation, marketing and market intelligence site for the portal.
 
 ### Languages
-All key pages are published in English and Spanish (Spanish paths noted per section). A German section covering the platform and selected area guides lives under /de/.
+All key pages are published in English and Spanish (Spanish paths noted per section).
 
 ### Primary Content Sections
 
@@ -37,6 +37,12 @@ Agents create a complete property listing from photos plus a voice note: the AI 
 
 #### /instant-content/ - Instant Content (AI blogs & area guides, live, add-on to the Website Builder)
 AI-written blog posts and area guides for agency websites, grounded in the agency's own live listings and verified market data - no invented prices. Writes in English and Spanish as standard (German, French, Dutch and Swedish on demand), with review-first or auto-publish control. An add-on inside the paid Website Builder: 30 credits/month for unlimited posts and guides, fully automated (auto-publish) or review-first. Spanish version: /es/contenido-instantaneo/
+
+#### /coagent/ - PropertyList CoAgent (coming soon)
+An AI assistant that turns every client call and WhatsApp chat into CRM updates, follow-ups and ranked property matches, with a briefing before every call. Call audio is never stored. Spanish version: /es/coagent/
+
+#### /instant-documents/ - Instant Documents (coming soon)
+AI-generated estate agency documents - listing agreements, reservations, rental contracts - written from the CRM, signed electronically on any device, and filed against the property. Bilingual with a built-in AML due-diligence file. Creating documents will be free; signatures run on pay-as-you-go credits. Spanish version: /es/documentos-instantaneos/
 
 #### /instant-renovation/ - Instant Renovation (coming soon)
 AI before-and-after renovation visuals for any resale listing, with an area-specific cost breakdown (materials and labour) and PDF export. Will run on pay-as-you-go credits. Spanish version: /es/renovacion-instantanea/
@@ -105,6 +111,15 @@ Curated, verified event diaries for Marbella (/whats-on/marbella/), Estepona (/w
 
 #### /blog/ - Market Intelligence Blog
 Real estate market analysis, regulatory updates, and industry commentary for Spain's property sector. Spanish version: /es/informacion-general/
+
+#### /property-intelligence-report/ - Property Intelligence Report (AI CMA)
+Property-specific CMA for agents: notary-verified market value, comparables, pricing strategy, an agent coaching brief with objection handlers, PDF export and a trackable client share link. 5 credits per report, cached 30 days, first 3 free, free for teammates in the same agency to view. Spanish version: /es/informe-inteligencia-propiedad/
+
+#### /property-finder/ - Property finder (buyers and renters)
+A two-tap finder for buyers and renters: choose buy, long-term rent or holiday rent, pick a Costa del Sol town, and see how many homes are available right now from registered agencies, with a direct link into that search on the public portal at propertylist.es. Live counts refreshed daily across 16 towns. Spanish version: /es/buscador-propiedades/
+
+#### /hours/ - Pick your poison (the admin tax audit)
+An interactive tally for estate agents: tick the admin tasks you hate (writing listings at 11pm, chasing signatures, re-typing portals, tenancies in a spreadsheet), adjust the hours, and see the weekly total plus the PropertyList fix for each pain. Every pain and fix is readable as static text. Spanish version: /es/horas/
 
 #### /website-builder/ - Website Builder
 Drag-and-drop agency website builder with MLS auto-population, AI SEO meta, lead capture, custom domain support, and the optional Instant Content add-on (AI blogs and area guides), from 50 credits/month. Credits are bought in advance at 1.00 EUR each, less in larger packs. Spanish version: /es/constructor-de-webs/

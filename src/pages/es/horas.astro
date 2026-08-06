@@ -1,0 +1,371 @@
+---
+// "Pick your poison" - the pain-first router built as a shareable tally.
+// Tick what you hate, the hours mount up, the receipt prints the damage and the
+// fix for each pain. Everything (pains AND fixes) ships in static HTML so search
+// and AI crawlers read all sixteen first-person pain phrases; JS only enhances.
+// Hours are per-week defaults the visitor can adjust - their number, not ours.
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/horas/`;
+
+// Share links carry ?h=N so the OG preview in the group chat shows THEIR number.
+const sharedH = Math.min(60, Math.max(0, parseInt(Astro.url.searchParams.get('h') || '0', 10) || 0));
+const title = sharedH
+	? `Pierdo ${sharedH} horas a la semana en papeleo. ¿Tú cuántas pierdes?`
+	: 'Elige tu veneno: ¿cuánto te cuesta el papeleo cada semana?';
+const description =
+	'Marca todo lo que odias hacer como agente inmobiliario - anuncios a las 23h, perseguir firmas, repetir portales - y mira las horas semanales que se lleva. Y el remedio de cada una.';
+const ogImage = sharedH ? `${origin}/api/og-hours.png?h=${sharedH}&lang=es` : `${origin}/api/og-hours.png?lang=es`;
+
+type Pain = {
+	id: string;
+	label: string;
+	hours: number; // typical h/week, deliberately conservative
+	fix: string;
+	fixHref: string;
+	fixLine: string;
+	soon?: boolean;
+};
+
+const pains: Pain[] = [
+	{ id: 'listings', label: 'Anuncios a las once de la noche', hours: 2, fix: 'Instant Listing', fixHref: '/es/listado-instantaneo/', fixLine: 'Fotos y una nota de voz se convierten en un anuncio terminado. Gratis.', afterMin: 15 },
+	{ id: 'portals', label: 'Repetir el mismo piso en cinco portales', hours: 2, fix: 'Feeds XML', fixHref: '/es/importar-feed-xml/', fixLine: 'Un feed entra, todos los portales salen. Gratis en ambos sentidos.', afterMin: 0 },
+	{ id: 'website', label: 'Suplicarle cambios al de la web', hours: 1, fix: 'Constructor de Webs', fixHref: '/es/constructor-de-webs/', fixLine: 'Escribe lo que quieres y la IA lo construye. Gratis hasta publicar.', afterMin: 10 },
+	{ id: 'own-stock', label: 'Una web solo con mi propio stock', hours: 1, fix: 'Feed XML de la red', fixHref: '/es/funciones/#topic-xml', fixLine: 'Todos los anuncios de la red, en tu web, sincronizados.', afterMin: 0 },
+	{ id: 'followup', label: 'Acordarme de a quién prometí llamar', hours: 3, fix: 'Nurture', fixHref: '/es/nurture/', fixLine: 'Los seguimientos se envían solos. Te avisan de quién está listo.', afterMin: 15 },
+	{ id: 'valuation', label: 'Discutir el precio con un propietario', hours: 2, fix: 'Property Intelligence Report', fixHref: '/es/informe-inteligencia-propiedad/', fixLine: 'Llévale el registro notarial. Los 3 primeros informes gratis.', afterMin: 30 },
+	{ id: 'matching', label: 'Bucear en portales buscando el piso de un comprador', hours: 2, fix: 'AI Property Match', fixHref: '/es/busqueda-ia/', fixLine: 'Pega el WhatsApp y salen los pisos. Gratis en beta.', afterMin: 10 },
+	{ id: 'callnotes', label: 'Pasar a limpio llamadas que ya dije en voz alta', hours: 2, fix: 'Copilot', fixHref: '/es/copiloto/', fixLine: 'Cuelgas y el resumen ya está hecho.', soon: true, afterMin: null },
+	{ id: 'signatures', label: 'Perseguir una firma durante una semana', hours: 1, fix: 'Instant Documents', fixHref: '/es/documentos-instantaneos/', fixLine: 'Firmado en cualquier móvil antes de salir de la visita.', soon: true, afterMin: null },
+	{ id: 'tenants', label: 'Alquileres viviendo en un Excel', hours: 2, fix: 'Módulo de Alquileres', fixHref: '/es/alquileres/', fixLine: 'Contratos, renovaciones, mantenimiento. Prueba de 30 días.', afterMin: 30 },
+	{ id: 'blog', label: 'Un blog que no toco desde marzo', hours: 1, fix: 'Instant Content', fixHref: '/es/contenido-instantaneo/', fixLine: 'Los posts SEO y las guías de zona se escriben solos.', afterMin: 10 },
+	{ id: 'brochures', label: 'Hacer folletos en Canva a medianoche', hours: 1, fix: 'Instant Brochure', fixHref: '/es/folleto-instantaneo/', fixLine: 'Un clic. PDF de imprenta y versión web viva.', soon: true, afterMin: null },
+	{ id: 'market', label: 'Adivinar qué está haciendo el mercado', hours: 1, fix: 'Datos de mercado en vivo', fixHref: '/es/barrios/', fixLine: 'Precios verificados por notaría en cada zona. Gratis.', afterMin: 5 },
+	{ id: 'invoices', label: 'Malabares con cinco suscripciones para un solo trabajo', hours: 1, fix: 'Todo lo gratuito', fixHref: '/es/gratis/', fixLine: 'MLS, CRM, web, feeds. Un acceso, el núcleo gratis.', afterMin: 10 },
+	{ id: 'exposure', label: 'Anuncios que solo ven mis propios compradores', hours: 1, fix: 'Compartir en el MLS', fixHref: '/es/lanza-tu-agencia/', fixLine: 'Publica una vez y 1.300+ agentes pueden venderla contigo.', afterMin: 0 },
+	{ id: 'desk', label: 'Volver a la oficina solo para usar el CRM', hours: 1, fix: 'App móvil', fixHref: '/es/app-movil/', fixLine: 'El MLS y el CRM en tu bolsillo. Gratis en Android.', afterMin: 0 },
+];
+
+const totalDefault = pains.reduce((a, p) => a + p.hours, 0);
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: pains.slice(0, 8).map((p) => ({
+		'@type': 'Question',
+		name: `¿Cómo dejan los agentes inmobiliarios de ${p.label.toLowerCase()}?`,
+		acceptedAnswer: { '@type': 'Answer', text: `${p.fix} en PropertyList: ${p.fixLine}` },
+	})),
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage={ogImage}
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/hours/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/hours/` },
+	]}
+	schema={faqLd}
+>
+	<div class="poison">
+		<section class="pHero">
+			<div class="pKick">El impuesto del papeleo &middot; auditoría de 60 segundos</div>
+			<h1>Elige tu veneno.</h1>
+			<p class="pLead">
+				Marca todo lo que odias hacer. Sumamos lo que te cuesta cada semana - y te enseñamos el remedio de cada una.
+				Las horas son típicas; ajústalas a tu semana.
+			</p>
+		</section>
+
+		<div class="sharedNote" data-shared-note hidden>
+			<span>Estás viendo la cuenta de otra persona (<b data-shared-h>0</b>h a la semana).</span>
+			<button type="button" data-shared-clear>Bórrala y haz la tuya</button>
+		</div>
+
+		<section class="pList" aria-label="Los venenos">
+			<ul>
+				{pains.map((p) => (
+					<li class="pain" data-pain={p.id} data-hours={p.hours} data-after={String(p.afterMin)}>
+						<button class="painBtn" type="button" aria-pressed="false">
+							<span class="painCheck" aria-hidden="true"></span>
+							<span class="painLabel">{p.label}</span>
+							<span class="painHours"><b>{p.hours}h</b>/sem</span>
+						</button>
+						<div class="painMore">
+							<label class="painSlider">
+								<span>Mi semana: <b class="painVal">{p.hours}</b>h</span>
+								<input type="range" min="0" max="10" step="1" value={p.hours} aria-label={`Horas a la semana en: ${p.label}`} />
+							</label>
+							<a class="painFix" href={p.fixHref}>
+								<span class="fixKick">El remedio{p.soon ? ' - muy pronto' : ''}</span>
+								<span class="fixName">{p.fix} &rarr;</span>
+								<span class="fixLine">{p.fixLine}</span>
+							</a>
+						</div>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<div class="tally" data-tally hidden>
+			<div class="tallyIn">
+				<span class="tallyNum"><b data-tally-h>0</b>h<i>/semana</i></span>
+				<span class="tallyLabel">perdidas en papeleo</span>
+				<a class="tallyGo" href="#receipt">Ver la cuenta &darr;</a>
+			</div>
+		</div>
+
+		<section class="receiptWrap" id="receipt">
+			<div class="receipt" data-receipt hidden>
+				<div class="rHead">
+					<span class="rBrand">PROPERTYLIST</span>
+					<span class="rSub">EL IMPUESTO DEL PAPELEO &middot; CUENTA SEMANAL</span>
+				</div>
+				<ul class="rLines" data-receipt-lines>
+					{pains.map((p) => (
+						<li data-rl={p.id} hidden>
+							<span>{p.label}</span>
+							<span class="rlNums"><b data-rl-h>{p.hours}H</b><i class="rlArrow">&rarr;</i><em data-rl-a>{p.afterMin === null ? 'PRONTO' : p.afterMin === 0 ? '0' : `${p.afterMin}M`}</em></span>
+						</li>
+					))}
+				</ul>
+				<div class="rTotal">
+					<span>HOY</span>
+					<span><b data-receipt-h>0</b>H / SEMANA</span>
+				</div>
+				<div class="rTotal rTotalPl">
+					<span>CON PROPERTYLIST</span>
+					<span><b data-receipt-pl>0</b> / SEMANA</span>
+				</div>
+				<div class="rBack">
+					<span>RECUPERAS</span>
+					<span><b data-receipt-back>0</b> / SEMANA</span>
+				</div>
+				<div class="rDays rDaysBack">= <b data-receipt-days>0</b> días de trabajo al año, tuyos otra vez</div>
+				<div class="rSoonNote" data-soon-note hidden>Las líneas PRONTO cuentan a coste completo: ese tiempo vuelve cuando salgan.</div>
+				<div class="rFoot">Cada línea de arriba tiene remedio en PropertyList. El núcleo es gratis.</div>
+				<div class="rActions">
+					<button class="rShare" type="button" data-share-wa>Comparte tu cuenta por WhatsApp</button>
+					<button class="rCopy" type="button" data-share-copy>Copiar enlace</button>
+				</div>
+				<button class="rReset" type="button" data-reset>Empezar de cero</button>
+				<a class="rCta" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener" data-umami-event="hours-cta">Recupera tus tardes - únete gratis</a>
+			</div>
+			<div class="rEmpty" data-receipt-empty>
+				<p>Marca unos venenos arriba y tu cuenta se imprime aquí.</p>
+			</div>
+		</section>
+
+		<section class="pFootnote">
+			<p>
+				Las horas típicas son estimaciones conservadoras para un agente en activo; los controles hacen que el número sea tuyo. Los remedios marcados
+				muy pronto están en construcción - <a href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">únete gratis</a>
+				y los tendrás primero. Nada en esta página pide tarjeta.
+			</p>
+		</section>
+	</div>
+
+	<script is:inline>
+		(() => {
+			const pains = Array.from(document.querySelectorAll('.pain'));
+			const tally = document.querySelector('[data-tally]');
+			const tallyH = document.querySelector('[data-tally-h]');
+			const receipt = document.querySelector('[data-receipt]');
+			const rEmpty = document.querySelector('[data-receipt-empty]');
+			const rLines = document.querySelector('[data-receipt-lines]');
+			const rH = document.querySelector('[data-receipt-h]');
+			const rDays = document.querySelector('[data-receipt-days]');
+			const state = new Map();
+
+			const track = (n, d) => { try { if (window.umami && umami.track) umami.track(n, d); } catch (e) {} };
+
+			const total = () => Array.from(state.values()).reduce((a, b) => a + b, 0);
+
+			const render = () => {
+				const t = total();
+				const on = state.size > 0;
+				tally.hidden = !on;
+				receipt.hidden = !on;
+				rEmpty.hidden = on;
+				tallyH.textContent = t;
+				rH.textContent = t;
+				let plMin = 0, anySoon = false;
+				for (const li of pains) {
+					const id = li.dataset.pain;
+					if (!state.has(id)) continue;
+					const a = li.dataset.after;
+					if (a === 'null') { plMin += state.get(id) * 60; anySoon = true; }
+					else plMin += parseInt(a, 10);
+				}
+				const backMin = Math.max(0, t * 60 - plMin);
+				const fmt = (m) => m < 60 ? m + 'M' : (Math.round((m / 60) * 2) / 2) + 'H';
+				document.querySelector('[data-receipt-pl]').textContent = fmt(plMin);
+				document.querySelector('[data-receipt-back]').textContent = fmt(backMin);
+				document.querySelector('[data-soon-note]').hidden = !anySoon;
+				rDays.textContent = Math.round((backMin / 60) * 46 / 8);
+				for (const row of rLines.querySelectorAll('[data-rl]')) {
+					const id = row.dataset.rl;
+					row.hidden = !state.has(id);
+					if (state.has(id)) row.querySelector('[data-rl-h]').textContent = state.get(id) + 'H';
+				}
+			};
+
+			const shareUrl = () => {
+				const ids = pains.filter((li) => state.has(li.dataset.pain)).map((li) => li.dataset.pain);
+				const u = new URL(location.origin + location.pathname);
+				if (ids.length) { u.searchParams.set('p', ids.join('.')); u.searchParams.set('h', String(total())); }
+				return u.toString();
+			};
+
+			for (const li of pains) {
+				const btn = li.querySelector('.painBtn');
+				const slider = li.querySelector('input[type=range]');
+				const val = li.querySelector('.painVal');
+				btn.addEventListener('click', () => {
+					const id = li.dataset.pain;
+					if (state.has(id)) {
+						state.delete(id);
+						li.classList.remove('isOn');
+						btn.setAttribute('aria-pressed', 'false');
+					} else {
+						state.set(id, parseInt(slider.value, 10));
+						li.classList.add('isOn');
+						btn.setAttribute('aria-pressed', 'true');
+						track('hours-pick', { pain: id });
+					}
+					render();
+				});
+				slider.addEventListener('input', () => {
+					val.textContent = slider.value;
+					if (state.has(li.dataset.pain)) { state.set(li.dataset.pain, parseInt(slider.value, 10)); render(); }
+				});
+			}
+
+			document.querySelector('[data-share-wa]').addEventListener('click', () => {
+				const t = total();
+				track('hours-share', { via: 'whatsapp', h: t });
+				const msg = 'Por lo visto pierdo ' + t + ' horas a la semana en papeleo. ¿Tú cuántas pierdes? ' + shareUrl();
+				window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+			});
+			document.querySelector('[data-share-copy]').addEventListener('click', (e) => {
+				track('hours-share', { via: 'copy', h: total() });
+				navigator.clipboard && navigator.clipboard.writeText(shareUrl());
+				e.target.textContent = 'Copiado';
+				setTimeout(() => { e.target.textContent = 'Copiar enlace'; }, 1600);
+			});
+
+			const clearAll = () => {
+				for (const li of pains) {
+					if (state.has(li.dataset.pain)) li.querySelector('.painBtn').click();
+				}
+				history.replaceState(null, '', location.pathname);
+			};
+			document.querySelector('[data-reset]').addEventListener('click', () => { clearAll(); track('hours-reset'); });
+
+			// restore a shared selection, but say whose it is and offer a clean start
+			const q = new URLSearchParams(location.search);
+			if (q.get('p')) {
+				const ids = q.get('p').split('.');
+				for (const li of pains) {
+					if (ids.includes(li.dataset.pain)) li.querySelector('.painBtn').click();
+				}
+				const note = document.querySelector('[data-shared-note]');
+				note.hidden = false;
+				note.querySelector('[data-shared-h]').textContent = String(total());
+				note.querySelector('[data-shared-clear]').addEventListener('click', () => {
+					clearAll();
+					note.hidden = true;
+					track('hours-shared-clear');
+					document.querySelector('.pList').scrollIntoView({ behavior: 'smooth' });
+				});
+			}
+		})();
+	</script>
+</Layout>
+
+<style>
+	.poison { max-width: 780px; margin: 0 auto; padding: 8px 4px 60px; }
+
+	.pHero { text-align: center; padding: 26px 12px 22px; }
+	.pKick { display: inline-block; font-size: 11.5px; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: #0a6d61; background: rgba(0, 174, 154, 0.1); border: 1px solid rgba(0, 174, 154, 0.25); padding: 6px 12px; border-radius: 999px; margin-bottom: 14px; }
+	.pHero h1 { font-size: clamp(38px, 7vw, 64px); letter-spacing: -0.03em; margin: 0 0 10px; }
+	.pLead { max-width: 54ch; margin: 0 auto; color: rgba(16, 24, 40, 0.68); line-height: 1.6; font-size: 16.5px; }
+
+	.pList ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+	.pain { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; background: #fff; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+	.pain.isOn { border-color: rgba(0, 174, 154, 0.55); box-shadow: 0 6px 22px rgba(0, 174, 154, 0.1); }
+	.painBtn { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: none; border: 0; padding: 16px 18px; cursor: pointer; font: inherit; }
+	.painCheck { flex: none; width: 26px; height: 26px; border-radius: 9px; border: 2px solid rgba(16, 24, 40, 0.22); display: grid; place-items: center; transition: all 0.18s; }
+	.pain.isOn .painCheck { background: #00ae9a; border-color: #00ae9a; }
+	.pain.isOn .painCheck::after { content: '✕'; color: #fff; font-weight: 900; font-size: 14px; }
+	.painLabel { flex: 1; font-weight: 700; font-size: 16.5px; letter-spacing: -0.01em; color: #101828; position: relative; }
+	.painLabel::after { content: ''; position: absolute; left: 0; top: 55%; height: 2.5px; width: 100%; background: #0a6d61; transform: scaleX(0); transform-origin: left; transition: transform 0.35s cubic-bezier(0.6, 0, 0.2, 1); }
+	.pain.isOn .painLabel { color: rgba(16, 24, 40, 0.5); }
+	.pain.isOn .painLabel::after { transform: scaleX(1); }
+	.painHours { flex: none; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
+	.painHours b { color: #0a6d61; font-size: 16px; }
+
+	.painMore { display: none; padding: 0 18px 16px 58px; }
+	.pain.isOn .painMore { display: grid; gap: 12px; animation: drop 0.25s ease; }
+	@keyframes drop { from { opacity: 0; transform: translateY(-6px); } }
+	.painSlider { display: flex; align-items: center; gap: 12px; font-size: 13.5px; color: rgba(16, 24, 40, 0.6); }
+	.painSlider b { color: #0a6d61; }
+	.painSlider input { flex: 1; accent-color: #00ae9a; }
+	.painFix { display: block; text-decoration: none; border: 1px solid rgba(0, 174, 154, 0.3); background: rgba(0, 174, 154, 0.06); border-radius: 12px; padding: 10px 14px; }
+	.painFix:hover { background: rgba(0, 174, 154, 0.12); }
+	.fixKick { display: block; font-size: 10.5px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(10, 109, 97, 0.7); }
+	.fixName { display: block; font-weight: 800; color: #0a6d61; margin: 2px 0; }
+	.fixLine { display: block; font-size: 13.5px; color: rgba(16, 24, 40, 0.65); }
+
+	.tally { position: sticky; bottom: 14px; z-index: 40; display: flex; justify-content: center; margin: 18px 0; pointer-events: none; }
+	.tallyIn { pointer-events: auto; display: flex; align-items: center; gap: 14px; background: #0b1220; color: #fff; border-radius: 999px; padding: 10px 10px 10px 20px; box-shadow: 0 14px 40px rgba(11, 18, 32, 0.35); }
+	.tallyNum { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
+	.tallyNum i { font-style: normal; font-size: 12px; font-weight: 600; opacity: 0.6; }
+	.tallyLabel { font-size: 12.5px; opacity: 0.7; }
+	.tallyGo { background: #00ae9a; color: #00100e; font-weight: 800; font-size: 13.5px; text-decoration: none; padding: 9px 16px; border-radius: 999px; }
+
+	.receiptWrap { margin: 34px auto 0; max-width: 430px; }
+	.receipt { background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); box-shadow: 0 18px 50px rgba(11, 18, 32, 0.12); padding: 26px 24px 30px; font-family: ui-monospace, 'Cascadia Mono', 'JetBrains Mono', Menlo, monospace; -webkit-mask: linear-gradient(#000 0 calc(100% - 12px), transparent 0), conic-gradient(from -45deg at 50% 100%, #000 90deg, transparent 0) 0 100% / 24px 12px repeat-x; mask: linear-gradient(#000 0 calc(100% - 12px), transparent 0), conic-gradient(from -45deg at 50% 100%, #000 90deg, transparent 0) 0 100% / 24px 12px repeat-x; }
+	.rHead { text-align: center; border-bottom: 2px dashed rgba(16, 24, 40, 0.25); padding-bottom: 12px; margin-bottom: 12px; }
+	.rBrand { display: block; font-weight: 800; letter-spacing: 0.28em; font-size: 15px; }
+	.rSub { display: block; font-size: 10.5px; letter-spacing: 0.14em; color: rgba(16, 24, 40, 0.55); margin-top: 4px; }
+	.rLines { list-style: none; margin: 0; padding: 0; }
+	.rLines li { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; padding: 4px 0; color: rgba(16, 24, 40, 0.8); text-transform: uppercase; }
+	.rLines li span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+	
+	.rTotal { display: flex; justify-content: space-between; border-top: 2px dashed rgba(16, 24, 40, 0.25); margin-top: 10px; padding-top: 12px; font-size: 16px; font-weight: 800; }
+	.rTotal b { font-size: 22px; color: #b42318; }
+	.rTotalPl { border-top: 0; margin-top: 2px; padding-top: 2px; font-size: 13px; }
+	.rTotalPl b { font-size: 16px; color: #101828; }
+	.rBack { display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: #067647; margin-top: 8px; padding-top: 10px; border-top: 2px dashed rgba(16, 24, 40, 0.25); }
+	.rBack b { font-size: 22px; }
+	.rDays.rDaysBack { color: #067647; }
+	.rSoonNote { font-size: 10.5px; color: rgba(16, 24, 40, 0.5); margin-top: 6px; text-align: right; }
+	.rlNums { flex: none; display: inline-flex; align-items: baseline; gap: 5px; }
+	.rlNums b { font-weight: 700; }
+	.rlArrow { font-style: normal; color: rgba(16, 24, 40, 0.4); }
+	.rlNums em { font-style: normal; color: #067647; font-weight: 800; }
+	.rDays { text-align: right; font-size: 12.5px; color: #b42318; margin-top: 4px; font-weight: 700; }
+	.rFoot { text-align: center; font-size: 11px; color: rgba(16, 24, 40, 0.55); border-top: 2px dashed rgba(16, 24, 40, 0.25); margin-top: 14px; padding-top: 12px; }
+	.rActions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 16px; }
+	.rShare { background: #25d366; border: 0; color: #063; font-weight: 800; font-family: inherit; font-size: 13px; padding: 12px 14px; border-radius: 10px; cursor: pointer; }
+	.rCopy { background: #fff; border: 1px solid rgba(16, 24, 40, 0.2); font-family: inherit; font-weight: 700; font-size: 13px; padding: 12px 14px; border-radius: 10px; cursor: pointer; }
+	.rCta { display: block; text-align: center; margin-top: 10px; background: #00ae9a; color: #00100e; font-weight: 800; text-decoration: none; padding: 13px 16px; border-radius: 10px; font-family: inherit; font-size: 13.5px; }
+	.rEmpty { text-align: center; color: rgba(16, 24, 40, 0.5); font-size: 14.5px; border: 2px dashed rgba(16, 24, 40, 0.15); border-radius: 16px; padding: 26px 18px; }
+
+	.sharedNote { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 12px 16px; border: 1px solid rgba(234, 88, 12, 0.35); background: rgba(251, 146, 60, 0.08); border-radius: 14px; font-size: 14px; color: rgba(16, 24, 40, 0.8); }
+	.sharedNote button { background: #0b1220; color: #fff; border: 0; font-weight: 800; font-size: 13px; padding: 9px 14px; border-radius: 999px; cursor: pointer; }
+	.rReset { background: none; border: 0; font-family: inherit; font-size: 11.5px; color: rgba(16, 24, 40, 0.45); text-decoration: underline; cursor: pointer; margin: 10px auto 0; display: block; }
+	.pFootnote { max-width: 620px; margin: 30px auto 0; text-align: center; }
+	.pFootnote p { font-size: 12.5px; color: rgba(16, 24, 40, 0.5); line-height: 1.6; }
+
+	@media (prefers-reduced-motion: reduce) {
+		.painLabel::after, .pain.isOn .painMore { transition: none; animation: none; }
+	}
+</style>

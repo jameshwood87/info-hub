@@ -12,7 +12,7 @@ const faqs = [
 	},
 	{
 		q: 'How much does it cost?',
-		a: '5 credits per report. Reports are cached for 30 days, and teammates in your agency can view a report you generated for free - so a busy office is not paying twice for the same property.',
+		a: '5 credits per report at the current limited-time price, and your first 3 are free. Reports are cached for 30 days, and teammates in your agency can view a report you generated for free - so a busy office is not paying twice for the same property. This is the agent report inside the MLS; the public Market Intelligence products at intelligence.propertylist.es are separate and priced in euros.',
 	},
 	{
 		q: 'What is the agent brief?',
@@ -78,7 +78,7 @@ const breadcrumbLd = {
 	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(appLd)} />
 	<main class="wrap">
 		<section class="hero">
-			<div class="badge"><span class="dot"></span> Live in the MLS &middot; 5 credits per report</div>
+			<div class="badge"><span class="dot"></span> Live in the MLS &middot; first 3 free, then 5 credits</div>
 			<h1>The vendor thinks it is worth 20% more.<br /><span class="accent">Bring the register.</span></h1>
 			<p class="lead">
 				The Property Intelligence Report turns any listing into an evidence-based valuation in seconds - built on live MLS
@@ -87,9 +87,15 @@ const breadcrumbLd = {
 			</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Generate a report</a>
-				<a class="btnGhost" href="https://propertylist.es/r/xWo56fq3wC4RRUAI" target="_blank" rel="noopener nofollow">See a real client report &#8599;</a>
+				<a class="btnGhost" href="https://propertylist.es/r/ajmMGDARHKdjDjtD" target="_blank" rel="noopener nofollow">See a real report &#8599;</a>
 			</div>
-			<p class="micro">Free MLS + CRM &middot; reports cached 30 days &middot; teammates view yours free &middot; <a href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">no account? join free</a></p>
+			<div class="exRow">
+				<span class="exLabel">What your client sees: one property, three editions:</span>
+				<a href="https://propertylist.es/r/EQ-66LYSlh2UHRSf" target="_blank" rel="noopener nofollow">Buyer &#8599;</a>
+				<a href="https://propertylist.es/r/dBMKBLLQfJAKV-nj" target="_blank" rel="noopener nofollow">Seller &#8599;</a>
+				<a href="https://propertylist.es/r/ajmMGDARHKdjDjtD" target="_blank" rel="noopener nofollow">Full report &#8599;</a>
+			</div>
+			<p class="micro">Free MLS + CRM &middot; first 3 reports free &middot; cached 30 days &middot; teammates view yours free &middot; <a href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">no account? join free</a></p>
 		</section>
 
 		<section class="block">
@@ -99,16 +105,17 @@ const breadcrumbLd = {
 				defaults to yours, but switch it and the whole report comes out in your client&rsquo;s language - then generate. It
 				is ready in seconds.
 			</p>
-			<figure><img src="/docs-images/cma/generate-modal.jpg" alt="The Property Intelligence Report panel showing 5 credits per report, the agency credit balance and the report language selector" loading="lazy" /><figcaption>5 credits, your balance, and the language your client reads. Reports cache for 30 days.</figcaption></figure>
+			<figure><img src="/docs-images/cma/listing-button-2026.webp" alt="A listing open in the MLS with the Property Intelligence Report button in the action row above the property" loading="lazy" /><figcaption>Open any listing in the MLS. The button sits in the action row, next to Instant Renovation and Instant Brochure.</figcaption></figure>
+			<figure><img src="/docs-images/cma/generate-panel-2026.webp" alt="The generate panel showing 5 credits per report, the agency credit balance, the report language selector and what is inside the report" loading="lazy" /><figcaption>What it costs, your balance, the language your client reads, and what is inside. Reports cache for 30 days.</figcaption></figure>
 		</section>
 
 		<section class="block">
 			<h2>What the report proves</h2>
 			<ul class="points">
-				<li><strong>Verified value, not opinion.</strong> The notarial register &euro;/m&sup2; sits next to the asking &euro;/m&sup2; - what properties actually closed at, versus what sellers hoped for.</li>
+				<li><strong>Verified value, not opinion.</strong> The notarial register &euro;/m&sup2; sits next to the asking &euro;/m&sup2; - what properties actually closed at, versus what sellers hoped for. In the example report that gap is 32.9%, drawn from 3,261 verified Marbella sales in twelve months and carrying a PropertyList Oracle attestation you can open and check.</li>
 				<li><strong>The asking-price reality.</strong> Median asking, year-on-year trend, median days on market, and the share of listings that have already conceded on price.</li>
 				<li><strong>Three pricing options, costed.</strong> Conservative for a fast sale, target for typical days on market, aggressive for a patient vendor - each with its trade-off spelled out.</li>
-				<li><strong>Comparables, location and district context.</strong> Where this property sits inside its segment.</li>
+				<li><strong>Comparables, location and district context.</strong> Scored against the sub-area and matched on size and bedrooms, each one showing its &euro;/m&sup2; and how long it has been sitting. The example analysed 27.</li>
 				<li><strong>An institutional reading.</strong> Gross and net yield, median rent, 12-month volatility, and an investor risk register covering data reliability, exit liquidity, short-term-let regulation and currency exposure.</li>
 			</ul>
 			<figure><img src="/docs-images/cma/pricing-strategy.jpg" alt="Asking-price quartile spread with a how-to-read key, three asking-price strategy tiers, and launch, 30-day and reduction-trigger guidance" loading="lazy" /><figcaption>The quartile spread, three costed pricing tiers, and what should trigger a reduction.</figcaption></figure>
@@ -141,7 +148,14 @@ const breadcrumbLd = {
 				and conditions, comparables, location, investment outlook, analyst narrative. Add a personal note, have us email it,
 				or paste the link into WhatsApp.
 			</p>
-			<figure><img src="/docs-images/cma/active-links.jpg" alt="Share panel with section checkboxes, optional client note, client email field and an active link showing whether it has been opened, with copy and revoke" loading="lazy" /><figcaption>Choose the sections, add a note, create the link. It is copied to your clipboard instantly.</figcaption></figure>
+			<figure><img src="/docs-images/cma/share-editions.webp" alt="Share panel with Buyer edition, Seller edition, Full report and Custom presets, an optional note, client email field and an active link showing it has not been opened yet" loading="lazy" /><figcaption>Pick an edition, add a note, create the link. It is copied to your clipboard instantly, and you can see it has not been opened yet.</figcaption></figure>
+			<p>
+				<strong>Three ready-made editions, or build your own.</strong> Buyer edition includes the offer plan and purchase
+				costs, and hides your vendor pricing strategy and competing-listing framing. Seller edition does the opposite.
+				Full report is everything except the agent brief. Custom lets you tick the sections yourself - 14 of them, from
+				asking-price strategy to the analyst narrative.
+			</p>
+			<figure><img src="/docs-images/cma/share-custom.webp" alt="The custom edition with fourteen section checkboxes including condition, market value, asking-price strategy, buyer offer plan, vendor position and analyst narrative" loading="lazy" /><figcaption>Custom: tick exactly what they see. The cover and disclaimer are always included, the agent brief never is.</figcaption></figure>
 			<ul class="points">
 				<li><strong>You control the story.</strong> Share the verdict and market conditions alone, or the whole analysis - the agent brief is never included.</li>
 				<li><strong>You see the open.</strong> Active links show whether your client has opened it yet, so you know whether to chase.</li>
@@ -150,12 +164,18 @@ const breadcrumbLd = {
 			</ul>
 			<figure><img src="/docs-images/cma/client-verdict.jpg" alt="The client-facing report opening with a plain-language verdict about the property position against the market, with a download PDF button" loading="lazy" /><figcaption>What your client opens: the verdict in one line, then the sections you chose.</figcaption></figure>
 			<div class="demoBox">
-				<div class="demoLabel">Live example</div>
+				<div class="demoLabel">Live examples - what your client sees, three editions</div>
 				<p>
-					This is a real shared report, exactly as a client receives it - a townhouse in Estepona, priced against the
-					notarial register for its segment.
+					A two-bedroom apartment in Nueva Andalucia, asking &euro;450,000, priced against the notarial register for its
+					segment. These are real share links, exactly as a client receives them. Open them side by side and you can see
+					what each edition hides. None of them carries the agent brief - that stays in your copy alone, which is
+					the whole point of it.
 				</p>
-				<a class="btnPrimary" href="https://propertylist.es/r/xWo56fq3wC4RRUAI" target="_blank" rel="noopener nofollow">Open the example report &#8599;</a>
+				<div class="ctaRow">
+					<a class="btnPrimary" href="https://propertylist.es/r/EQ-66LYSlh2UHRSf" target="_blank" rel="noopener nofollow">Buyer edition &#8599;</a>
+					<a class="btnGhost" href="https://propertylist.es/r/dBMKBLLQfJAKV-nj" target="_blank" rel="noopener nofollow">Seller edition &#8599;</a>
+					<a class="btnGhost" href="https://propertylist.es/r/ajmMGDARHKdjDjtD" target="_blank" rel="noopener nofollow">Full report &#8599;</a>
+				</div>
 			</div>
 		</section>
 
@@ -167,6 +187,22 @@ const breadcrumbLd = {
 				<li><strong>The reduction conversation.</strong> Days on market against the segment median, with the trigger agreed in advance.</li>
 				<li><strong>The buyer asking if it is fair.</strong> Show where the asking price sits in the band versus verified closings.</li>
 			</ul>
+		</section>
+
+		<section class="block">
+			<h2>The agent report and the public reports are different things</h2>
+			<p>
+				This page is the <strong>agent side</strong>: one property, generated inside the MLS, priced in credits, with the
+				coaching brief and the client share links. There is also a <strong>public side</strong> at
+				<a href="https://intelligence.propertylist.es/" target="_blank" rel="noopener">intelligence.propertylist.es</a>,
+				open to anyone and priced in euros - free city snapshots with no signup, one-off forensic PDFs from &euro;5 to
+				&euro;29, and live dashboard subscriptions at &euro;29 or &euro;99 a month.
+			</p>
+			<figure><img src="/docs-images/cma/public-forensics.webp" alt="The public Market Intelligence deep-dive forensics: Executive Overview 5 euros, Market Value Index 9 euros, New Dev Pipeline 19 euros and Buyer Origin and Demand 19 euros" loading="lazy" /><figcaption>The public side: one-off forensic reports, bought in euros, no agency account needed.</figcaption></figure>
+			<p class="note">
+				Both run on the same MLS transaction data. The difference is who they are for: the agent report answers "what is
+				this property worth and what do I say", the public reports answer "what is this market doing".
+			</p>
 		</section>
 
 		<section class="block">
@@ -217,6 +253,10 @@ const breadcrumbLd = {
 	figure img { max-width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(16, 24, 40, 0.12); box-shadow: 0 10px 28px rgba(15, 42, 60, 0.08); }
 	figcaption { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin-top: 7px; }
 	.note { font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.exRow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin: 14px 0 0; font-size: 13.5px; }
+	.exRow .exLabel { color: rgba(16, 24, 40, 0.55); }
+	.exRow a { display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(0, 174, 154, 0.4); background: rgba(0, 174, 154, 0.06); color: #0a6d61; font-weight: 700; padding: 6px 12px; border-radius: 999px; text-decoration: none; }
+	.exRow a:hover { background: rgba(0, 174, 154, 0.12); }
 	.demoBox { margin: 22px 0 6px; background: #fff; border: 1px solid rgba(0, 174, 154, 0.28); border-radius: 16px; padding: 22px 24px; text-align: center; }
 	.demoLabel { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #0a6d61; background: rgba(0, 174, 154, 0.12); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
 	.demoBox p { margin: 0 0 14px; font-size: 15px; color: rgba(16, 24, 40, 0.7); line-height: 1.6; }

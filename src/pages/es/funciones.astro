@@ -9,7 +9,7 @@ import { featureFaqItemsEs, featureFaqLdEs } from '../../data/es-feature-faq.mjs
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/funciones/`;
-const title = 'Funciones de PropertyList | Precios, Constructor Web, XML, CRM y Más';
+const title = 'Software inmobiliario todo en uno: CRM, MLS y portal | PropertyList';
 const description =
 	`Todo lo que incluye PropertyList y lo que cuesta: MLS y CRM gratis, ${plListings} propiedades compartidas, constructor de webs, feeds XML, Market Intelligence, API MCP y Oracle.`;
 
@@ -43,12 +43,14 @@ const ic = {
 };
 
 const featureCards = [
+	{ icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-7 4 14 3-10 2 3h4"/></svg>', title: 'Copilot', badge: 'Muy pronto', desc: 'Muy pronto: un asistente de IA que convierte cada llamada y chat de WhatsApp en actualizaciones del CRM, seguimientos y propiedades coincidentes - y te prepara antes de cada llamada. El audio nunca se guarda.', href: '/es/copiloto/', cta: 'Cómo funcionará' },
+	{ icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 15l2 2 4-4"/></svg>', title: 'Documentos Instantáneos', badge: 'Muy pronto', desc: 'Muy pronto: hojas de encargo, reservas y contratos de alquiler redactados desde tu CRM, firmados en cualquier móvil - o en el tuyo en la visita - y archivados en la propiedad. Bilingües, con expediente KYC incluido.', href: '/es/documentos-instantaneos/', cta: 'Cómo funcionará' },
 	{ icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4"/></svg>', title: 'Listado Instantáneo', badge: 'Nuevo', desc: 'Añade fotos y graba una breve nota de voz - la IA rellena todo el anuncio: m2, dormitorios, características y una descripción pulida. Revisa y publica en un minuto.', href: '/es/listado-instantaneo/', cta: 'Cómo funciona' },
 	{ icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>', title: 'Renovación Instantánea', badge: 'Muy pronto', desc: 'Muy pronto: en cualquier anuncio de segunda mano, genera visuales de antes y después con IA y un desglose de costes por zona - materiales y mano de obra - en PDF.', href: '/es/renovacion-instantanea/', cta: 'Cómo funciona' },
 	{ icon: ic.web, title: 'Constructor de Webs', desc: 'Tu propia web de agencia con tu marca, online en minutos. Cada anuncio del MLS se carga solo, un asistente de IA crea tus páginas y las consultas entran directas en tu CRM.', href: '/es/constructor-de-webs/', cta: 'Ver cómo funciona' },
 	{ icon: ic.crm, title: 'MLS y CRM Inteligente', desc: 'Gratis para siempre. Siete tableros Kanban desde el primer lead hasta el cierre, configurados y rellenados desde el primer día. Solo pagas un crédito cuando conviertes de verdad.', href: '/es/docs/propertylist-mls-manual-de-usuario/', cta: 'Explorar el CRM' },
 	{ icon: ic.share, title: `${plListings} Propiedades Compartidas`, desc: `Gratis para agentes inmobiliarios. Accede a un pool compartido de ${plListings} anuncios en toda la red - vende propiedades de otros miembros, colabora en operaciones y reparte la comisión, sin coste adicional.`, href: 'https://propertylist.es', cta: 'Ver la red' },
-	{ icon: ic.key, title: 'Módulo de Alquileres', desc: 'Gestiona el alquiler de principio a fin: inquilinos, contratos, correos de renovación automáticos, flujos de mantenimiento y un registro de auditoría a prueba de disputas de fianzas.', href: '#topic-rentals', cta: 'Saber más' },
+	{ icon: ic.key, title: 'Módulo de Alquileres', desc: 'Gestiona el alquiler de principio a fin: inquilinos, contratos, correos de renovación automáticos, flujos de mantenimiento y un registro de auditoría a prueba de disputas de fianzas.', href: '/es/alquileres/', cta: 'Saber más' },
 	{ icon: ic.chart, title: 'Market Intelligence', desc: 'Datos de mercado reales, basados en transacciones, de la Costa del Sol. Resúmenes de ciudad gratis, informes forenses en PDF y paneles en directo para inversores serios.', href: 'https://intelligence.propertylist.es', cta: 'Ver los datos' },
 	{ icon: ic.feed, title: 'Feeds XML', desc: '¿Ya tienes web? Envía cada anuncio a tu web y a portales como Idealista y Fotocasa a la vez, sincronizado en directo.', href: '#topic-xml', cta: 'Ver feeds' },
 	{ icon: ic.euro, title: 'Créditos Sencillos', desc: 'Paga solo por lo que usas. 1 crédito (~1€) y nunca caducan. Completa la verificación gratuita y recibe 20, y ganas más cada vez que recomiendas.', href: '/es/precios/', cta: 'Ver precios' },
@@ -61,7 +63,7 @@ const topics = [
 	{ key: 'xml', label: 'Feeds XML', ids: ['xml-own-website', 'xml-property-types', 'xml-new-developments', 'xml-portals', 'xml-cost'] },
 	{ key: 'market', label: 'Market Intelligence', ids: ['market-reports', 'market-reports-free', 'forensic-reports', 'live-dashboard'] },
 	{ key: 'crm', label: 'CRM y Pipelines', ids: ['crm-free', 'pipeline-boards', 'pipeline-setup', 'pipeline-pricing', 'private-listings', 'crm-email-integration'] },
-	{ key: 'rentals', label: 'Módulo de Alquileres', ids: ['rentals-module', 'rentals-includes', 'rentals-cost', 'rentals-deposit-disputes'] },
+	{ key: 'rentals', label: 'Módulo de Alquileres', ids: ['rentals-module', 'rentals-deposit-disputes'] },
 	{ key: 'credits', label: 'Créditos y Precios', ids: ['credits-work', 'credits-expire', 'earn-free-credits'] },
 	{ key: 'mcp', label: 'MCP y Desarrolladores', ids: ['api-developers', 'ai-tools', 'mcp-free'] },
 	{ key: 'oracle', label: 'Oracle', ids: ['oracle'] },

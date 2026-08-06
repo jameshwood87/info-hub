@@ -1,0 +1,408 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/documentos-instantaneos/`;
+const title = 'Documentos Instantáneos (muy pronto) - contratos redactados, firmados y archivados dentro de PropertyList | PropertyList';
+const description =
+	'Muy pronto: Documentos Instantáneos redactará tus hojas de encargo, reservas y contratos de alquiler desde tu CRM, los hará firmar en cualquier móvil y los archivará en la propiedad. Bilingües, con estructura legal y expediente KYC incluido.';
+
+const stages = [
+	{ name: 'Captar el encargo', desc: 'Hoja de encargo (venta, larga o corta temporada en un solo documento), ficha del inmueble, recibo de llaves, autorización de imágenes, checklist del vendedor, hoja de colaboración.' },
+	{ name: 'Cualificar y cumplir', desc: 'Ficha de cliente, consentimiento RGPD, hoja de visita, el expediente completo de diligencia debida (Ley 10/2010) y un acuerdo de no elusión para operaciones off-market.' },
+	{ name: 'Cerrar la operación', desc: 'Oferta por escrito, documento de reserva con recibo del depósito, contrato de arras, expediente de cierre para notaría, factura de honorarios.' },
+	{ name: 'Alquiler de larga temporada', desc: 'Solicitud de alquiler, contrato de arrendamiento (LAU), inventario y estado del inmueble, entrega de llaves con lectura de contadores, depósito de fianza regional, check-out y liquidación.' },
+	{ name: 'Corta temporada y VFT', desc: 'Contrato de gestión, arrendamiento de temporada, condiciones de reserva, registro de viajeros, normas de la vivienda, fianza por daños, declaración responsable VFT.' },
+];
+
+const trust = [
+	{ name: 'Tú apruebas todo', desc: 'Cada valor que la IA rellena desde tu CRM se te muestra antes de entrar en el documento, campo por campo. Nada llega a un contrato sin que lo hayas confirmado con tus propios ojos.' },
+	{ name: 'Redacción legal, bloqueada donde importa', desc: 'Las plantillas estarán redactadas profesionalmente en pares de idiomas, empezando por español e inglés. Las cláusulas legales quedan bloqueadas; tus añadidos van en su propia sección claramente marcada, comprobada contra conflictos antes de generar.' },
+	{ name: 'Rastro de auditoría en cada firma', desc: 'Quién lo vio, cuándo firmó, desde dónde - con sello de tiempo, hash del documento y certificado adjunto al PDF final. La copia firmada queda bloqueada, a prueba de manipulación y archivada en la propiedad para siempre.' },
+];
+
+const faqs = [
+	{ q: '¿Cuándo llegará Documentos Instantáneos?', a: 'Está en desarrollo y llegará primero a los agentes de PropertyList, por fases: primero la creación de documentos, después las firmas y después el expediente de cumplimiento completo. Los agentes que ya estén en la plataforma serán los primeros.' },
+	{ q: '¿La firma electrónica es legalmente válida en España?', a: 'Sí. La firma electrónica simple es válida en España para los documentos privados que preparan los agentes: hojas de encargo, reservas, contratos de alquiler y demás. Cada firma llevará un paquete de evidencias completo: sellos de tiempo, identidad del firmante, hash del documento y certificado de auditoría en el PDF. Los documentos que requieren notario, como la escritura, quedan fuera a propósito - Documentos Instantáneos prepara el expediente y el checklist de notaría en su lugar.' },
+	{ q: '¿Cómo funcionan los documentos bilingües?', a: 'Cláusula a cláusula, lado a lado: el idioma legal del país a la izquierda (español en España) y el idioma de tu cliente a la derecha - inglés, alemán, neerlandés, sueco y más - perfectamente alineados para que ambas partes lean el mismo acuerdo juntas. En los documentos creados en España prevalece la versión española, y el propio documento lo indica. Las traducciones vienen de pares de plantillas redactados profesionalmente, no de traducción automática de texto legal.' },
+	{ q: '¿Mi cliente necesita una cuenta de PropertyList para firmar?', a: 'No. Los firmantes reciben un enlace seguro y firman en el navegador desde cualquier móvil, tablet u ordenador - nada que instalar, sin cuenta, sin imprimir, sin escanear. O le pasas tu móvil y firma en el momento.' },
+	{ q: '¿Y mis obligaciones legales como agente?', a: 'Integradas. Los agentes inmobiliarios en España tienen deberes de identificación del cliente en las ventas, y Documentos Instantáneos construirá el expediente de diligencia debida por ti: captura y lectura del DNI o pasaporte, titularidad real, origen de fondos y declaración PEP, conservado durante el plazo legal. El cumplimiento deja de ser deberes.' },
+	{ q: '¿Cuánto costará?', a: 'Crear, guardar y descargar documentos será gratis dentro de un uso razonable. Enviar a firma funcionará con créditos de pago por uso, y tus 3 primeros envíos a firma son gratis. El precio exacto se confirma en el lanzamiento. Crear tu cuenta gratis ahora no cuesta nada y te pone en la primera ola.' },
+];
+
+const faqLd = {
+	'@context': 'https://schema.org', '@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+		{ '@type': 'ListItem', position: 3, name: 'Documentos Instantáneos', item: canonical },
+	],
+};
+const softwareLd = {
+	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
+	name: 'PropertyList Documentos Instantáneos',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
+	description: 'Muy pronto: documentos de agencia generados con IA - hojas de encargo, reservas, contratos de alquiler - redactados desde el CRM, firmados electrónicamente en cualquier dispositivo y archivados en la propiedad. Bilingües, con expediente de diligencia debida integrado.',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/instant-documents/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/instant-documents/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
+
+	<section class="hero">
+		<div class="heroInner heroGrid">
+			<div>
+				<div class="kicker">Documentos Instantáneos - Muy pronto</div>
+				<h1>Firmado antes de salir de la visita.</h1>
+				<p class="lead">
+					La reserva que antes costaba una tarde de Word y una semana de seguimiento costará cuatro preguntas y un enlace.
+					Los contratos se redactan solos desde tu CRM, los clientes firman en cualquier móvil - o en el tuyo, allí mismo -
+					y el PDF firmado se archiva solo en la propiedad. Sin impresora, sin escáner, sin ir detrás de nadie.
+				</p>
+				<div class="winRow" aria-label="Lo que Documentos Instantáneos te devuelve">
+					<div class="win"><b>Operaciones cerradas en caliente</b><span>Generar, enviar y firmar en minutos, no en días.</span></div>
+					<div class="win"><b>El seguimiento, hecho por ti</b><span>Aperturas rastreadas, recordatorios enviados, copias archivadas.</span></div>
+					<div class="win"><b>Cumplimiento integrado</b><span>Bilingüe, con estructura legal y expediente KYC incluido.</span></div>
+				</div>
+				<div class="ctaRow">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+					<a class="btnSecondary" href="#how">Cómo funcionará</a>
+				</div>
+				<div class="note">Muy pronto. Documentos Instantáneos llega primero a los agentes de PropertyList - crear documentos será gratis, las firmas funcionan con créditos de pago por uso.</div>
+			</div>
+
+			<div class="dcWrap" aria-hidden="true">
+				<div class="dcTag">Firmado en el momento</div>
+				<div class="dcCard">
+					<div class="dcHead">Documento de reserva &middot; Reservation agreement</div>
+					<div class="dcCols">
+						<div class="dcCol"><i style="width:92%"></i><i style="width:84%"></i><i style="width:88%"></i></div>
+						<div class="dcCol"><i style="width:90%"></i><i style="width:86%"></i><i style="width:80%"></i></div>
+					</div>
+					<div class="dcSigRow">
+						<svg viewBox="0 0 120 34" class="dcSig"><path d="M6 26 C 18 6, 26 30, 38 18 S 58 8, 66 20 S 88 30, 100 12" fill="none" stroke="#0a6d61" stroke-width="2.4" stroke-linecap="round"/></svg>
+						<span class="dcDone">Firmado &middot; 19:04</span>
+					</div>
+					<div class="dcFoot">Visto 19:02 &middot; firmado 19:04 &middot; auditoría adjunta &middot; archivado en PL18220</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="how">
+		<div class="sectionHead">
+			<h2>Tres momentos, cero papeleo</h2>
+			<p>Así será una operación con Documentos Instantáneos. Fíjate en lo que no aparece en ninguno de ellos: una impresora.</p>
+		</div>
+		<div class="grid3 steps">
+			<div class="card step">
+				<div class="stepTime">12:15</div>
+				<h3>En la visita</h3>
+				<p>La hoja de visita ya está preparada desde el calendario. Le pasas el móvil, firma en la puerta, y queda archivada antes de que vuelvas al coche.</p>
+			</div>
+			<div class="card step">
+				<div class="stepTime">17:40</div>
+				<h3>Llega la oferta</h3>
+				<p>Cuatro preguntas y el documento de reserva está listo - bilingüe, rellenado desde la operación, cada valor confirmado por ti. Un toque envía el enlace de firma. El comprador firma desde la mesa de un restaurante.</p>
+			</div>
+			<div class="card step">
+				<div class="stepTime">A la mañana siguiente</div>
+				<h3>Ya archivado</h3>
+				<p>El PDF firmado está bloqueado y adjunto a la propiedad, la operación avanza, el recibo del depósito está redactado y el checklist de notaría espera. Tú no hiciste nada de eso.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Todos los documentos de una operación, en dos idiomas</h2>
+			<p>Unas 15 familias de documentos cubren el ciclo completo - y un documento se adapta al elegir venta, larga o corta temporada, así que un propietario que encarga ambas firma una hoja, no tres.</p>
+		</div>
+		<div class="grid3">
+			{
+				stages.map((s) => (
+					<div class="card">
+						<h3>{s.name}</h3>
+						<p>{s.desc}</p>
+					</div>
+				))
+			}
+			<div class="card accent">
+				<h3>Lado a lado, cláusula a cláusula</h3>
+				<div class="biBox" aria-hidden="true">
+					<div class="biRow"><span>Cláusula 1 &middot; Objeto</span><span>Clause 1 &middot; Purpose</span></div>
+					<div class="biRow"><span>Cláusula 2 &middot; Precio</span><span>Clause 2 &middot; Price</span></div>
+					<div class="biRow"><span>Cláusula 3 &middot; Firma</span><span>Clause 3 &middot; Signature</span></div>
+				</div>
+				<p>El idioma legal del documento a la izquierda - español aquí en España - y el idioma de tu cliente a la derecha: inglés, alemán, neerlandés, sueco o el que hable. Alineados línea a línea para que ambas partes lean el mismo acuerdo juntas - con el idioma prevalente indicado, como debe ser.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Cómo se hace un documento</h2>
+			<p>No es un formulario en blanco. Es una conversación corta con un asistente que ya conoce la propiedad, el propietario y la operación.</p>
+		</div>
+		<div class="featRow">
+			<div class="card">
+				<h3>Solo pregunta lo que no sabe</h3>
+				<p>
+					Elige qué estás haciendo - captar un encargo, enviar una oferta, empezar un alquiler - y la IA rellena todo lo que la
+					plataforma ya sabe: propiedad, propietario, comprador, referencia, honorarios. Confirmas cada valor rellenado de un
+					vistazo y respondes solo las preguntas que de verdad faltan, mientras el documento se construye en una vista previa
+					en vivo a tu lado.
+				</p>
+				<p>
+					¿Necesitas algo que la plantilla no dice? Díselo al asistente - "los muebles del trastero están incluidos" - y
+					redacta la cláusula en ambos idiomas en su propia sección marcada, comprobada contra el texto legal antes de generar.
+				</p>
+			</div>
+			<div class="gCard" aria-hidden="true">
+				<div class="gLabel">Quedan dos preguntas</div>
+				<div class="gMini">
+					<b>¿Cuál es el depósito de reserva?</b>
+					<span>Todo lo demás ya está rellenado desde la operación.</span>
+					<em>Vista previa actualizándose &rarr;</em>
+				</div>
+			</div>
+		</div>
+		<div class="featRow rev">
+			<div class="card">
+				<h3>Firmado en cualquier parte - incluso delante de ti</h3>
+				<p>
+					Envía un enlace seguro y tu cliente firma en el navegador desde cualquier móvil, sin cuenta, sin app, sin imprimir.
+					O le pasas tu móvil en la visita y está firmado antes de que la conversación se enfríe. Cada firmante se rastrea por
+					separado, a los lentos se les recuerda automáticamente, y el PDF completado se bloquea solo con toda la auditoría
+					adjunta.
+				</p>
+				<p>
+					Varios propietarios, matrimonios, firmantes de empresa - cada uno recibe su propio enlace, en el orden correcto para
+					ese documento, y tú lo ves todo desde una pantalla.
+				</p>
+			</div>
+			<div class="gCard" aria-hidden="true">
+				<div class="gLabel">Progreso de firmas</div>
+				<div class="gDiff">
+					<div><span>Comprador</span><span><b>Firmado 19:04</b></span></div>
+					<div><span>Propietario 1</span><span><b>Firmado 21:12</b></span></div>
+					<div><span>Propietario 2</span><span>Recordado hoy</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="featRow">
+			<div class="card">
+				<h3>Los deberes legales, hechos en silencio</h3>
+				<p>
+					Los agentes inmobiliarios en España tienen obligaciones reales: identificación del cliente en las ventas, plazos de
+					conservación, normas regionales de fianzas. Documentos Instantáneos construirá el expediente de diligencia debida
+					mientras trabajas: DNI subido y leído automáticamente, caducidades comprobadas, declaraciones generadas, todo
+					conservado el tiempo que exige la ley.
+				</p>
+				<p>
+					Y cuando una operación va a notaría, prepara el expediente de cierre y el checklist - para que hasta los documentos
+					que nadie firma electrónicamente lleguen ordenados.
+				</p>
+			</div>
+			<div class="gCard" aria-hidden="true">
+				<div class="gLabel">Expediente de diligencia debida</div>
+				<div class="gDiff">
+					<div><span>DNI verificado</span><span><b>&#10003;</b></span></div>
+					<div><span>Origen de fondos</span><span><b>&#10003;</b></span></div>
+					<div><span>Titular real</span><span><b>&#10003;</b></span></div>
+					<div><span>Expediente completo</span><span><b>Listo para el cierre</b></span></div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>Tus mejores horas no son para teclear.</h2>
+			<p>
+				Todo agente conoce la tarde que desaparece en un contrato de alquiler, y la operación que tembló porque el papeleo tardó
+				una semana. El comprador está más caliente en la hora después de decir que sí - Documentos Instantáneos está hecho para
+				usar esa hora, no para perderla.
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Diseñado para ganarse tus contratos</h2>
+			<p>Un sistema que redacta documentos legales tiene que ganarse su sitio. Esto son decisiones de diseño, no ajustes.</p>
+		</div>
+		<div class="grid3">
+			{
+				trust.map((t) => (
+					<div class="card accent">
+						<h3>{t.name}</h3>
+						<p>{t.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Adjunto a la propiedad, para siempre</h2>
+				<p>
+					Cada documento generado, subido y firmado vive en la propiedad y el contacto al que pertenece - con versiones,
+					buscable y con todo su historial. Dentro de tres años, la hoja de encargo firmada de hoy está a dos toques.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Dentro de la plataforma que ya usas</h2>
+				<p>
+					Sin herramienta de firma aparte, sin carpeta de documentos en el portátil de alguien. Documentos Instantáneos vive
+					dentro de PropertyList, donde ya trabajan más de 1.200 agentes y 900 agencias - junto a los anuncios, el CRM y las
+					operaciones sobre las que escribe.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas, respondidas</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="ctaInner">
+			<h2>La última operación que pierdes por papeleo.</h2>
+			<p>Documentos Instantáneos llega primero a los agentes de PropertyList. Crea tu cuenta gratis ahora - sin tarjeta - y estarás listo desde el primer día, dentro de la <a href="/es/funciones/">plataforma PropertyList gratis</a>.</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+			</div>
+		</div>
+	</section>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+		h1, h2, h3 { letter-spacing: -0.03em; }
+		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
+			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
+		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
+		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
+		.winRow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+		.win { background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 12px; padding: 10px 12px; }
+		.win b { display: block; font-size: 13px; color: var(--pl-ink); }
+		.win span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.65); line-height: 1.45; margin-top: 2px; }
+		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
+		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
+		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
+		.btnPrimary:hover { background: #086055; }
+		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
+		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+
+		.dcWrap { position: relative; padding: 18px 6px 6px; }
+		.dcTag { position: absolute; top: 0; left: 18px; z-index: 2; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+		.dcCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 16px 12px; box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
+		.dcHead { font-size: 12.5px; font-weight: 800; color: #101828; border-bottom: 1px solid rgba(16, 24, 40, 0.08); padding-bottom: 8px; margin-bottom: 10px; }
+		.dcCols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; margin-bottom: 12px; }
+		.dcCols::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(16, 24, 40, 0.1); }
+		.dcCol i { display: block; height: 7px; border-radius: 4px; background: rgba(16, 24, 40, 0.12); margin-bottom: 7px; }
+		.dcSigRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(var(--pl-accent-rgb), 0.07); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 10px; padding: 6px 12px; margin-bottom: 9px; }
+		.dcSig { width: 110px; height: 32px; flex: none; }
+		.dcDone { font-size: 12px; font-weight: 900; color: var(--pl-ink); background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.35); border-radius: 999px; padding: 4px 10px; }
+		.dcFoot { font-size: 11px; color: rgba(16, 24, 40, 0.5); text-align: center; }
+
+		.biBox { background: #f7f9f9; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 10px; padding: 8px; margin-bottom: 10px; }
+		.biRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11.5px; color: rgba(16, 24, 40, 0.7); padding: 5px 6px; border-bottom: 1px solid rgba(16, 24, 40, 0.06); position: relative; }
+		.biRow:last-child { border-bottom: 0; }
+		.biRow span:last-child { border-left: 1px solid rgba(16, 24, 40, 0.1); padding-left: 10px; }
+
+		.featRow { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
+		.featRow.rev { grid-template-columns: 0.85fr 1.15fr; }
+		.featRow.rev .card { order: 2; }
+		.featRow.rev .gCard { order: 1; }
+		.featRow .card p + p { margin-top: 10px; }
+		.gCard { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+		.gLabel { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pl-ink); }
+		.gMini { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 12px; box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08); }
+		.gMini b { display: block; font-size: 14px; color: #101828; }
+		.gMini span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.6); margin: 2px 0 6px; }
+		.gMini em { display: block; font-style: normal; font-size: 12px; font-weight: 700; color: var(--pl-ink); }
+		.gDiff { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 6px 10px; font-size: 12.5px; }
+		.gDiff > div { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(16, 24, 40, 0.06); }
+		.gDiff > div:last-child { border-bottom: 0; }
+		.gDiff span:first-child { color: rgba(16, 24, 40, 0.55); }
+		.gDiff b { color: var(--pl-ink); }
+
+		.section { margin: 0 0 14px; }
+		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
+		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
+		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
+		.card h2 { margin: 0 0 10px; }
+		.card h3 { margin: 0 0 8px; font-size: 16px; }
+		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
+		.step { position: relative; }
+		.stepTime { display: inline-flex; align-items: center; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 4px 12px; font-weight: 900; font-size: 12px; margin-bottom: 10px; }
+		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
+		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
+		.ctaInner h2 { margin: 0; line-height: 1.15; }
+		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
+		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
+		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
+		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
+		.faq summary::-webkit-details-marker { display: none; }
+		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
+		.faq details[open] summary::after { content: '-'; }
+		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
+		@media (max-width: 900px) {
+			.heroGrid { grid-template-columns: 1fr; }
+			.grid2, .grid3 { grid-template-columns: 1fr; }
+			.grid3 { grid-template-columns: repeat(2, 1fr); }
+			.featRow, .featRow.rev { grid-template-columns: 1fr; }
+			.featRow.rev .card { order: 1; }
+			.featRow.rev .gCard { order: 2; }
+		}
+		@media (max-width: 560px) {
+			.grid3 { grid-template-columns: 1fr; }
+			.winRow { grid-template-columns: 1fr; }
+		}
+	</style>
+	<AgentInterestCta lang="es" page="/es/documentos-instantaneos/" />
+</Layout>

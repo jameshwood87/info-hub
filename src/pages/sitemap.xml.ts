@@ -1,7 +1,6 @@
 import { listKbPagesByPrefix } from '../lib/directus';
 import { canonicalAreaPath } from '../lib/areaProvince';
 import { listPrefixRedirects } from '../lib/kbRedirects';
-import dePilot from '../data/de-pilot.json';
 
 export const prerender = false;
 
@@ -175,11 +174,6 @@ export async function GET() {
     '/agents-survey/',
     '/es/encuesta-agentes/',
     '/nl/agenten-enquete/', // noindex: roadmap survey
-    '/property-finder/',
-    '/es/buscador-propiedades/', // noindex: draft
-    '/es/video-guias/',
-    '/property-intelligence-report/',
-    '/es/informe-inteligencia-propiedad/', // password-gated, see VIDEO_GATE_PATHS in middleware.ts
   ]);
 
   const derivedStaticPaths = Object.keys(import.meta.glob('./**/*.astro'))
@@ -234,20 +228,21 @@ export async function GET() {
 
   for (const p of staticPaths) push(p, null);
 
-  // German pilot pages (self-contained /de/ section)
-  push('/de/', null, [
-    { hreflang: 'de', href: `${origin}/de/` },
-    { hreflang: 'en', href: `${origin}/` },
-    { hreflang: 'es', href: `${origin}/es/` },
-    { hreflang: 'x-default', href: `${origin}/` },
-  ]);
-  for (const [dePath, e] of Object.entries(dePilot as Record<string, { hreflang?: { en?: string; es?: string } }>)) {
-    const alts: Alt[] = [{ hreflang: 'de', href: `${origin}${dePath}` }];
-    if (e?.hreflang?.en) alts.push({ hreflang: 'en', href: `${origin}${e.hreflang.en}` });
-    if (e?.hreflang?.es) alts.push({ hreflang: 'es', href: `${origin}${e.hreflang.es}` });
-    if (e?.hreflang?.en) alts.push({ hreflang: 'x-default', href: `${origin}${e.hreflang.en}` });
-    push(dePath, null, alts);
+  // Legacy Directus comparison articles outside the enumerated prefixes. They
+  // target the money query "best MLS CRM property portal in Spain", earn search
+  // landings and convert, so they are listed explicitly with their pair.
+  {
+    const en = '/estate-agents/what-is-the-best-mls-crm-property-portal-in-spain/';
+    const es = '/es/agentes-inmobiliarios/cual-es-el-mejor-portal-inmobiliario-mls-crm-en-espana/';
+    const alts: Alt[] = [
+      { hreflang: 'en', href: `${origin}${en}` },
+      { hreflang: 'es', href: `${origin}${es}` },
+      { hreflang: 'x-default', href: `${origin}${en}` },
+    ];
+    push(en, null, alts);
+    push(es, null, alts);
   }
+
 
   try {
     const realEsSet = await fetchRealEsPaths();
