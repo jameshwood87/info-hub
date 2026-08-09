@@ -75,11 +75,17 @@ export const GET: APIRoute = async ({ url }) => {
 	${svgBody}
 	</svg>`;
 
-	const png = await sharp(Buffer.from(svg)).png().toBuffer();
+	// flatten() drops the alpha channel: Meta refuses og:image PNGs that carry
+	// one ("could not be processed as an image"). The background was already
+	// opaque, so this is visually identical and just changes RGBA to RGB.
+	const png = await sharp(Buffer.from(svg)).flatten({ background: '#0d2b2e' }).png().toBuffer();
 	return new Response(new Uint8Array(png), {
 		status: 200,
 		headers: {
 			'content-type': 'image/png',
+			// declared so scrapers know the size before they decode; Astro would
+			// otherwise stream this chunked with no length at all
+			'content-length': String(png.byteLength),
 			'cache-control': 'public, max-age=3600',
 		},
 	});

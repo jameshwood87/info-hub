@@ -91,7 +91,7 @@ const title = shared
 const description = best
 	? `${fmtEur(b)} is ${best.sqm}m2 in ${best.name} but ${worst.sqm}m2 in ${worst.name}. Live median asking prices from ${totalListings.toLocaleString('en-GB')} listings in 14 towns, updated daily, with every home under your budget one tap away.`
 	: 'Live median asking prices across 14 Costa del Sol towns, updated daily.';
-const ogImage = `${origin}/api/og-budget.png?b=${b}`;
+const ogImage = `${origin}/api/og-budget.png?b=${b}&v=2`;
 
 const mIdx = grid.indexOf(500000);
 const marbella = towns.find((t) => t.slug === 'marbella');

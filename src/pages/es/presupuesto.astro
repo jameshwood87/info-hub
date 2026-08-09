@@ -83,7 +83,7 @@ const title = shared
 const description = best
 	? `${fmtEur(b)} son ${best.sqm}m2 en ${best.name} pero ${worst.sqm}m2 en ${worst.name}. Precios medianos de venta de ${nf(totalListings)} anuncios activos en 14 pueblos, actualizados a diario, con cada vivienda dentro de tu presupuesto a un toque.`
 	: 'Precios medianos de venta en 14 pueblos de la Costa del Sol, actualizados a diario.';
-const ogImage = `${origin}/api/og-budget.png?b=${b}&lang=es`;
+const ogImage = `${origin}/api/og-budget.png?b=${b}&lang=es&v=2`;
 
 const mIdx = grid.indexOf(500000);
 const marbella = towns.find((t) => t.slug === 'marbella');
