@@ -1,0 +1,426 @@
+---
+// 360 Walkthroughs - coming-soon service page (09-08-26).
+// The product is immersion, so the page demonstrates instead of describing:
+// three REAL example tours (partner-produced, Matterport player with brand=0 so
+// no partner branding) load on click behind posters. Pricing is three fixed
+// tiers by property type; each CTA opens one shared request panel that posts to
+// /api/walkthrough-lead (stored + emailed). Coming-soon honesty rules apply:
+// future tense, no invented statistics, no payment surface, price confirmed
+// before anything is booked. All interactive DOM is server-rendered; JS only
+// toggles classes and copies data-src into iframes (the scoped-CSS rule).
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/recorrido-360/`;
+
+const title = 'Recorridos 360: deja que el comprador entre antes de llamar';
+const description =
+	'Un recorrido 3D profesional de tu anuncio, filmado por un equipo en la Costa del Sol y publicado automáticamente en tu anuncio del MLS y tu microsite de PropertyList, con embed para tu propia web. Pisos 130 EUR, adosados 190 EUR, villas 250 EUR. Muy pronto.';
+
+// Real example tours. Labels match what each one actually is - a mislabelled
+// demo would undo the whole page. brand=0 strips presenter branding.
+const tours = [
+	{ id: 'apt', mp: 'H3KQgvPqPqs', tab: 'Piso', where: 'Dos dormitorios, junto a Puerto Banús' },
+	{ id: 'town', mp: 'P3YrsckPLVh', tab: 'Adosado', where: 'Tres dormitorios, Benahavís' },
+];
+const mpUrl = (m: string) => `https://my.matterport.com/show/?m=${m}&brand=0&qs=1&play=1&lang=es`;
+
+const tiers = [
+	{ key: 'apartment', name: 'Pisos', price: 130, line: 'Filmado, alojado y publicado por un precio fijo.' },
+	{ key: 'townhouse', name: 'Adosados y pareados', price: 190, line: 'Cada planta, por dentro y por fuera.' },
+	{ key: 'villa', name: 'Villas', price: 250, line: 'Jardín, terrazas y la vista desde la piscina.' },
+];
+
+const faqs = [
+	{
+		q: '¿Qué recibo exactamente?',
+		a: 'Un recorrido 3D profesional de la propiedad que el comprador abre en cualquier navegador y cualquier móvil, sin app. Se publicará automáticamente en tu anuncio del MLS y en tu microsite de PropertyList, y tendrás un embed para tu propia web, incluido.',
+	},
+	{
+		q: '¿Quién lo filma?',
+		a: 'Una empresa de filmación profesional independiente con la que PropertyList colabora en la Costa del Sol. Acuerdan una hora contigo y capturan la propiedad en una sola visita; PropertyList gestiona la reserva y se encarga de la publicación. Tú solo abres la puerta.',
+	},
+	{
+		q: '¿Cuánto cuesta?',
+		a: 'Un precio fijo por propiedad, IVA incluido: 130 EUR para pisos, 190 EUR para adosados y pareados, 250 EUR para villas. Los primeros 6 meses de alojamiento van incluidos; después, mantener el recorrido activo cuesta 30 EUR al mes. Tu precio y la fecha de filmación se confirman contigo antes de reservar nada, y en esta página no se paga nada.',
+	},
+	{
+		q: '¿Cuándo puedo pedirlo?',
+		a: 'Muy pronto. Deja tus datos con el tipo de propiedad que más publicas y te contactamos en breve.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage="/og/360-walkthrough-es.png"
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/360-walkthrough/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/360-walkthrough/` },
+	]}
+	schema={faqLd}
+>
+	<div class="wk" data-lang="es">
+		<section class="hero">
+			<div class="heroDots" aria-hidden="true">
+				<span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+			</div>
+			<p class="kicker"><span class="badge">Muy pronto</span> Recorridos 360, filmados por ti</p>
+			<h1>Deja que el comprador entre<br /><em>antes de llamar.</em></h1>
+			<p class="sub">
+				Un recorrido 3D profesional de tu anuncio. Filmado por un equipo, publicado automáticamente en tu anuncio del MLS y
+				tu microsite de PropertyList, con embed para tu propia web incluido. Precio fijo por propiedad. De momento, solo en la Costa del Sol.
+			</p>
+			<div class="heroCtas">
+				<a class="btnP" href="#demo" data-umami-event="walk-hero-demo">Entra en uno ahora</a>
+				<a class="btnG" href="#pricing" data-umami-event="walk-hero-pricing">Ver los precios</a>
+			</div>
+		</section>
+
+		<section class="demo" id="demo">
+			<h2>No te lo contamos. Entra.</h2>
+			<p class="lead">Arrastra para mirar. Toca el suelo para andar. Funciona en cualquier móvil, sin app y sin registro.</p>
+			<div class="tabs" role="tablist" aria-label="Recorridos de ejemplo">
+				{tours.map((t, i) => (
+					<button class:list={['tab', { on: i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-tab={t.id} data-umami-event="walk-tab" data-umami-event-tour={t.id}>
+						{t.tab}
+					</button>
+				))}
+			</div>
+			{tours.map((t, i) => (
+				<div class:list={['panel', { on: i === 0 }]} data-panel={t.id}>
+					<div class="stage">
+						<div class="poster" data-poster={t.id}>
+							<span class="posterWhere">{t.where}</span>
+							<button class="posterBtn" data-play={t.id} data-umami-event="walk-play" data-umami-event-tour={t.id}>
+								<span class="posterIcon" aria-hidden="true">&#9654;</span> Entra
+							</button>
+							<span class="posterNote">Carga el recorrido interactivo</span>
+						</div>
+						<iframe title={`Ejemplo de recorrido 3D: ${t.tab}`} data-src={mpUrl(t.mp)} allow="fullscreen; xr-spatial-tracking" loading="lazy"></iframe>
+					</div>
+				</div>
+			))}
+			<p class="demoFine">Recorridos reales de propiedades reales de la Costa del Sol, producidos por el equipo que reservarías. Exactamente lo que recibirían tus compradores.</p>
+		</section>
+
+		<section class="flow">
+			<h2>Se filma una vez. Se ve donde vendes.</h2>
+			<div class="steps">
+				<div class="step" data-step>
+					<span class="stepNum">1</span>
+					<h3>Lo filman</h3>
+					<p>Un equipo profesional acuerda una hora y captura toda la propiedad en una visita. Tú abres la puerta, ese es todo tu trabajo.</p>
+				</div>
+				<div class="stepLink" aria-hidden="true"><svg viewBox="0 0 60 24"><path d="M2 12 H58" stroke-dasharray="6 5" /><path d="M50 5 L58 12 L50 19" fill="none" /></svg></div>
+				<div class="step" data-step>
+					<span class="stepNum">2</span>
+					<h3>Se publica solo</h3>
+					<p>El recorrido se une a tu anuncio del MLS y a tu microsite de PropertyList automáticamente. Nada que subir, nada que sincronizar.</p>
+				</div>
+				<div class="stepLink" aria-hidden="true"><svg viewBox="0 0 60 24"><path d="M2 12 H58" stroke-dasharray="6 5" /><path d="M50 5 L58 12 L50 19" fill="none" /></svg></div>
+				<div class="step" data-step>
+					<span class="stepNum">3</span>
+					<h3>Tu web también</h3>
+					<p>Un embed para tu propia web, incluido. Donde viva el anuncio, vive el recorrido.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="why">
+			<h2>Por qué gana el anuncio con recorrido</h2>
+			<div class="whyGrid">
+				<div class="whyCard">
+					<h3>Tu comprador no está en España esta semana</h3>
+					<p>La primera visita ocurre desde un sofá en Estocolmo a las 11 de la noche. Cuando te llama, ya ha recorrido cada habitación dos veces y viene medio convencido.</p>
+				</div>
+				<div class="whyCard">
+					<h3>Filtra a los curiosos</h3>
+					<p>Quien pide visita después de recorrer la propiedad online no viene a mirar. Menos visitas que no llevan a nada, más visitas que empiezan en "dónde firmamos".</p>
+				</div>
+				<div class="whyCard">
+					<h3>Una casa abierta que nunca cierra</h3>
+					<p>Sin llaves, sin agenda, sin domingos por la tarde. La propiedad se enseña sola a cualquier hora, en cualquier zona horaria, tantas veces como quieran mirar.</p>
+				</div>
+				<div class="whyCard">
+					<h3>Uno al lado del otro, no hay color</h3>
+					<p>Cuando dos anuncios parecidos compiten por el mismo comprador, uno tiene fotos y el otro tiene una puerta abierta. Adivina cuál recibe la consulta.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="pricing" id="pricing">
+			<h2>Precio fijo. Filmado, alojado, publicado.</h2>
+			<div class="cards">
+				{tiers.map((t) => (
+					<div class="card" data-card={t.key}>
+						<h3>{t.name}</h3>
+						<p class="price">&euro;{t.price}</p>
+						<p class="per">por propiedad, pago único</p>
+						<p class="cardLine">{t.line}</p>
+						<button class="btnP cardBtn" data-choose={t.key} data-umami-event="walk-open" data-umami-event-type={t.key}>
+							Avisadme para {t.name.toLowerCase()}
+						</button>
+					</div>
+				))}
+			</div>
+			<ul class="incl">
+				<li>Visita de filmación profesional</li>
+				<li>Recorrido 3D alojado</li>
+				<li>Unido a tu anuncio del MLS automáticamente</li>
+				<li>Añadido a tu microsite automáticamente</li>
+				<li>Embed para tu propia web</li>
+			</ul>
+			<p class="terms">Precios con IVA incluido. Los primeros 6 meses de alojamiento van incluidos, después 30 &euro; al mes mantiene el recorrido activo. De momento, disponible solo en la Costa del Sol.</p>
+
+			<div class="req" data-req hidden>
+				<div data-form>
+					<h3>Confirma tu precio primero</h3>
+					<p class="reqSub">Muy pronto. Deja tus datos y te contactamos en breve. No se reserva ni se paga nada hasta que tú lo digas.</p>
+					<div class="chips" role="radiogroup" aria-label="Tipo de propiedad">
+						{tiers.map((t) => (
+							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; &euro;{t.price}</button>
+						))}
+					</div>
+					<div class="fields">
+						<input type="text" data-f="name" placeholder="Tu nombre" autocomplete="name" />
+						<input type="text" data-f="agency" placeholder="Agencia (opcional)" autocomplete="organization" />
+						<input type="tel" data-f="phone" placeholder="Teléfono" autocomplete="tel" />
+						<input type="email" data-f="email" placeholder="Email" autocomplete="email" />
+						<input type="text" data-f="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+					</div>
+					<p class="reqErr" data-err hidden>Necesitamos un teléfono o un email para poder contactarte.</p>
+					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Pedir mi recorrido &rarr;</button>
+					<p class="reqPriv">Al enviar, aceptas que PropertyList comparta estos datos con su empresa de filmación asociada para preparar tu presupuesto.</p>
+				</div>
+				<div class="done" data-done hidden>
+					<span class="doneTick" aria-hidden="true">&#10003;</span>
+					<h3>Hecho.</h3>
+					<p>Te contactamos en breve para confirmar tu precio y fijar la fecha de filmación. Sin pago y sin compromiso hasta entonces.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="faq">
+			<h2>Preguntas frecuentes</h2>
+			{faqs.map((f) => (
+				<details>
+					<summary>{f.q}</summary>
+					<p>{f.a}</p>
+				</details>
+			))}
+		</section>
+
+		<section class="close">
+			<h2>Sé el primero en entrar.</h2>
+			<p>Los recorridos llegan muy pronto a los anuncios de PropertyList. Deja tus datos y los tuyos pueden estar entre los primeros filmados.</p>
+			<a class="btnP" href="#pricing" data-open-req data-umami-event="walk-close-cta">Pedir el mío</a>
+		</section>
+	</div>
+
+	<style>
+		.wk { --ink: #101828; --teal: #00ae9a; --dark: #0b1220; --mut: rgba(16, 24, 40, 0.65); max-width: 960px; margin: 0 auto; color: var(--ink); }
+		.wk h2 { font-size: clamp(24px, 3.6vw, 32px); letter-spacing: -0.4px; margin: 0 0 10px; }
+
+		/* ---- hero ---- */
+		.hero { position: relative; background: radial-gradient(1100px 420px at 78% -10%, rgba(0, 174, 154, 0.16), transparent 60%), linear-gradient(180deg, #0b1220 0%, #101c33 100%); color: #fff; border-radius: 22px; padding: 58px 30px 54px; text-align: center; overflow: hidden; margin-top: 6px; }
+		.heroDots { position: absolute; inset: 0; pointer-events: none; }
+		.dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: rgba(91, 227, 208, 0.9); box-shadow: 0 0 0 0 rgba(91, 227, 208, 0.45); animation: pulse 2.6s infinite; }
+		.d1 { left: 12%; top: 34%; animation-delay: 0s; }
+		.d2 { left: 50%; top: 72%; animation-delay: 0.9s; }
+		.d3 { right: 14%; top: 28%; animation-delay: 1.7s; }
+		@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(91, 227, 208, 0.45); } 70% { box-shadow: 0 0 0 22px rgba(91, 227, 208, 0); } 100% { box-shadow: 0 0 0 0 rgba(91, 227, 208, 0); } }
+		.kicker { font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #5be3d0; margin: 0 0 16px; }
+		.badge { background: rgba(91, 227, 208, 0.15); border: 1px solid rgba(91, 227, 208, 0.45); border-radius: 999px; padding: 3px 10px; margin-right: 8px; }
+		.hero h1 { font-size: clamp(32px, 5.6vw, 52px); line-height: 1.08; margin: 0 0 16px; letter-spacing: -1px; }
+		.hero h1 em { font-style: normal; color: #5be3d0; }
+		.hero .sub { max-width: 620px; margin: 0 auto 26px; font-size: 16.5px; line-height: 1.6; color: rgba(255, 255, 255, 0.78); }
+		.heroCtas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+		.btnP { display: inline-block; background: var(--teal); color: #fff; border: 0; border-radius: 999px; padding: 13px 26px; font-size: 15.5px; font-weight: 800; text-decoration: none; cursor: pointer; transition: transform 0.1s, background 0.15s; }
+		.btnP:hover { background: #00998a; }
+		.btnP:active { transform: scale(0.97); }
+		.btnG { display: inline-block; background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, 0.4); border-radius: 999px; padding: 13px 26px; font-size: 15.5px; font-weight: 800; text-decoration: none; }
+		.btnG:hover { border-color: #5be3d0; color: #5be3d0; }
+
+		/* ---- demo ---- */
+		.demo { padding: 46px 0 8px; text-align: center; }
+		.lead { color: var(--mut); margin: 0 0 20px; }
+		.tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+		.tab { border: 1.5px solid #d5e2e0; background: #fff; border-radius: 999px; padding: 9px 18px; font-size: 14.5px; font-weight: 700; color: var(--mut); cursor: pointer; }
+		.tab.on { background: var(--dark); border-color: var(--dark); color: #fff; }
+		.panel { display: none; }
+		.panel.on { display: block; }
+		.stage { position: relative; border-radius: 18px; overflow: hidden; background: var(--dark); aspect-ratio: 16 / 9; box-shadow: 0 24px 60px -28px rgba(11, 18, 32, 0.5); }
+		.stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: none; }
+		.stage.loaded iframe { display: block; }
+		.stage.loaded .poster { display: none; }
+		.poster { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: radial-gradient(700px 300px at 50% 20%, rgba(0, 174, 154, 0.22), transparent 65%), linear-gradient(180deg, #0b1220, #142338); color: #fff; }
+		.posterWhere { font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255, 255, 255, 0.65); font-weight: 700; }
+		.posterBtn { display: inline-flex; align-items: center; gap: 10px; background: var(--teal); color: #fff; border: 0; border-radius: 999px; padding: 15px 30px; font-size: 17px; font-weight: 800; cursor: pointer; transition: transform 0.12s; }
+		.posterBtn:hover { transform: scale(1.04); }
+		.posterIcon { font-size: 13px; }
+		.posterNote { font-size: 12.5px; color: rgba(255, 255, 255, 0.5); }
+		.demoFine { font-size: 13px; color: rgba(16, 24, 40, 0.5); margin-top: 12px; }
+
+		/* ---- flow ---- */
+		.flow { padding: 44px 0 10px; text-align: center; }
+		.steps { display: flex; align-items: stretch; justify-content: center; gap: 6px; margin-top: 18px; }
+		.step { flex: 1; max-width: 270px; background: #fff; border: 1.5px solid #e4ecea; border-radius: 16px; padding: 20px 18px; text-align: left; opacity: 0; transform: translateY(14px); transition: opacity 0.5s, transform 0.5s; }
+		.step.seen { opacity: 1; transform: none; }
+		.step h3 { font-size: 16.5px; margin: 10px 0 6px; }
+		.step p { font-size: 14px; color: var(--mut); line-height: 1.55; margin: 0; }
+		.stepNum { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 174, 154, 0.12); color: #0a6d61; font-weight: 800; font-size: 13px; align-items: center; justify-content: center; }
+		.stepLink { align-self: center; flex: 0 0 46px; }
+		.stepLink svg { width: 46px; height: 20px; }
+		.stepLink path { stroke: #9fc4be; stroke-width: 2; }
+		.stepLink path[stroke-dasharray] { stroke-dashoffset: 60; transition: stroke-dashoffset 0.9s ease 0.25s; }
+		.steps.seen .stepLink path[stroke-dasharray] { stroke-dashoffset: 0; }
+
+		/* ---- why ---- */
+		.why { padding: 44px 0 10px; }
+		.why h2 { text-align: center; margin-bottom: 20px; }
+		.whyGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+		.whyCard { background: linear-gradient(180deg, #f4faf9, #eef6f4); border: 1px solid rgba(0, 174, 154, 0.18); border-radius: 16px; padding: 22px 22px 18px; }
+		.whyCard h3 { margin: 0 0 8px; font-size: 17px; }
+		.whyCard p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--mut); }
+
+		/* ---- pricing ---- */
+		.pricing { padding: 46px 0 10px; text-align: center; }
+		.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 22px 0 16px; }
+		.card { background: #fff; border: 2px solid #e4ecea; border-radius: 18px; padding: 26px 20px 22px; transition: border-color 0.15s, transform 0.15s; }
+		.card:hover { border-color: var(--teal); transform: translateY(-3px); }
+		.card h3 { margin: 0 0 4px; font-size: 16px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+		.price { font-size: 44px; font-weight: 800; letter-spacing: -1.5px; margin: 2px 0 0; color: var(--dark); }
+		.per { font-size: 12.5px; color: rgba(16, 24, 40, 0.5); margin: 0 0 10px; }
+		.cardLine { font-size: 13.5px; color: var(--mut); min-height: 42px; margin: 0 0 14px; }
+		.cardBtn { width: 100%; padding: 12px 10px; font-size: 14.5px; }
+		.incl { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; list-style: none; padding: 0; margin: 0 0 8px; }
+		.incl li { font-size: 13.5px; color: var(--mut); }
+		.incl li::before { content: '\2713'; color: var(--teal); font-weight: 800; margin-right: 6px; }
+		.terms { font-size: 12.5px; color: rgba(16, 24, 40, 0.55); margin: 6px auto 0; max-width: 560px; }
+
+		/* ---- request panel ---- */
+		.req { margin: 22px auto 0; max-width: 560px; background: var(--dark); color: #fff; border-radius: 18px; padding: 28px 26px; text-align: center; }
+		.req h3 { margin: 0 0 6px; font-size: 20px; }
+		.reqSub { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin: 0 0 16px; line-height: 1.55; }
+		.chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+		.chip { border: 1.5px solid rgba(255, 255, 255, 0.3); background: transparent; color: rgba(255, 255, 255, 0.8); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+		.chip[aria-checked='true'] { background: var(--teal); border-color: var(--teal); color: #fff; }
+		.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+		.fields input { border: 1.5px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.06); color: #fff; border-radius: 12px; padding: 12px 14px; font-size: 14.5px; font-family: inherit; min-width: 0; }
+		.fields input::placeholder { color: rgba(255, 255, 255, 0.45); }
+		.fields input:focus { outline: none; border-color: var(--teal); }
+		.reqErr { color: #ffb4a2; font-size: 13.5px; margin: 0 0 10px; }
+		.reqSend { width: 100%; }
+		.reqPriv { font-size: 11.5px; color: rgba(255, 255, 255, 0.45); margin: 10px 0 0; line-height: 1.5; }
+		.done { padding: 10px 0 4px; }
+		.doneTick { display: inline-flex; width: 44px; height: 44px; border-radius: 50%; background: rgba(91, 227, 208, 0.18); color: #5be3d0; font-size: 22px; align-items: center; justify-content: center; margin-bottom: 8px; }
+		.done p { color: rgba(255, 255, 255, 0.75); font-size: 14.5px; line-height: 1.6; margin: 4px 0 0; }
+
+		/* ---- faq + close ---- */
+		.faq { padding: 44px 0 8px; max-width: 720px; margin: 0 auto; }
+		.faq h2 { text-align: center; margin-bottom: 14px; }
+		.faq details { border-bottom: 1px solid #e7eeec; padding: 12px 4px; }
+		.faq summary { font-weight: 700; font-size: 15.5px; cursor: pointer; }
+		.faq p { color: var(--mut); font-size: 14.5px; line-height: 1.6; margin: 10px 0 2px; }
+		.close { text-align: center; padding: 46px 0 40px; }
+		.close p { color: var(--mut); max-width: 460px; margin: 6px auto 20px; }
+
+		@media (max-width: 760px) {
+			.whyGrid { grid-template-columns: 1fr; }
+			.cards { grid-template-columns: 1fr; }
+			.card h3, .cardLine { min-height: 0; }
+			.steps { flex-direction: column; align-items: center; }
+			.stepLink { transform: rotate(90deg); flex-basis: 30px; }
+			.fields { grid-template-columns: 1fr; }
+			.hero { padding: 44px 20px 42px; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.dot, .step, .stepLink path { animation: none; transition: none; opacity: 1; transform: none; }
+		}
+	</style>
+
+	<script>
+		const root = document.querySelector('.wk') as HTMLElement;
+		const lang = root.dataset.lang || 'en';
+		const t0 = Date.now();
+		const track = (n: string, d?: Record<string, unknown>) => { try { (window as any).umami?.track?.(n, d); } catch {} };
+
+		// tabs + lazy tour loading: iframes exist in static markup, JS only moves
+		// data-src into src on demand
+		root.querySelectorAll('.tab').forEach((tab) =>
+			tab.addEventListener('click', () => {
+				root.querySelectorAll('.tab').forEach((x) => { x.classList.toggle('on', x === tab); x.setAttribute('aria-selected', x === tab ? 'true' : 'false'); });
+				root.querySelectorAll('.panel').forEach((p) => p.classList.toggle('on', (p as HTMLElement).dataset.panel === (tab as HTMLElement).dataset.tab));
+			}),
+		);
+		root.querySelectorAll('[data-play]').forEach((btn) =>
+			btn.addEventListener('click', () => {
+				const stage = (btn as HTMLElement).closest('.stage') as HTMLElement;
+				const frame = stage.querySelector('iframe') as HTMLIFrameElement;
+				if (!frame.src) frame.src = frame.dataset.src || '';
+				stage.classList.add('loaded');
+			}),
+		);
+
+		// step-flow reveal
+		const steps = root.querySelector('.steps');
+		if (steps && 'IntersectionObserver' in window) {
+			const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { steps.classList.add('seen'); steps.querySelectorAll('[data-step]').forEach((s, i) => setTimeout(() => s.classList.add('seen'), i * 160)); io.disconnect(); } }), { threshold: 0.3 });
+			io.observe(steps);
+		} else { steps?.classList.add('seen'); steps?.querySelectorAll('[data-step]').forEach((s) => s.classList.add('seen')); }
+
+		// request panel
+		const req = root.querySelector('[data-req]') as HTMLElement;
+		const chips = Array.from(root.querySelectorAll('.chip')) as HTMLElement[];
+		let chosen = '';
+		const pick = (key: string) => { chosen = key; chips.forEach((c) => c.setAttribute('aria-checked', c.dataset.chip === key ? 'true' : 'false')); };
+		const openReq = (key?: string) => {
+			req.hidden = false;
+			if (key) pick(key);
+			req.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			setTimeout(() => (root.querySelector('[data-f="name"]') as HTMLInputElement)?.focus({ preventScroll: true }), 450);
+		};
+		root.querySelectorAll('[data-choose]').forEach((b) => b.addEventListener('click', () => openReq((b as HTMLElement).dataset.choose)));
+		root.querySelectorAll('[data-open-req]').forEach((b) => b.addEventListener('click', () => openReq(chosen || 'apartment')));
+		chips.forEach((c) => c.addEventListener('click', () => pick(c.dataset.chip || '')));
+
+		const err = root.querySelector('[data-err]') as HTMLElement;
+		(root.querySelector('[data-send]') as HTMLElement)?.addEventListener('click', async () => {
+			const f = (k: string) => (root.querySelector(`[data-f="${k}"]`) as HTMLInputElement)?.value.trim() || '';
+			if (!f('phone') && !f('email')) { err.hidden = false; return; }
+			err.hidden = true;
+			const btn = root.querySelector('[data-send]') as HTMLButtonElement;
+			btn.disabled = true;
+			try {
+				const r = await fetch('/api/walkthrough-lead', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ ptype: chosen || 'apartment', name: f('name'), agency: f('agency'), phone: f('phone'), email: f('email'), company_fax: f('company_fax'), t: Date.now() - t0, lang }),
+				});
+				if (!r.ok) throw new Error();
+				(root.querySelector('[data-form]') as HTMLElement).hidden = true;
+				(root.querySelector('[data-done]') as HTMLElement).hidden = false;
+				track('walk-lead-ok', { type: chosen });
+			} catch {
+				btn.disabled = false;
+				err.textContent = lang === 'es' ? 'Algo ha fallado, prueba otra vez.' : 'Something went wrong, please try again.';
+				err.hidden = false;
+			}
+		});
+	</script>
+</Layout>
