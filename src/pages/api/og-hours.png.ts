@@ -8,7 +8,7 @@ import sharp from 'sharp';
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 export const GET: APIRoute = async ({ url }) => {
-	const h = Math.min(60, Math.max(0, parseInt(url.searchParams.get('h') || '0', 10) || 0));
+	const h = Math.min(120, Math.max(0, parseInt(url.searchParams.get('h') || '0', 10) || 0));
 	const lang = url.searchParams.get('lang') === 'es' ? 'es' : 'en';
 
 	const big = h ? `${h}h` : lang === 'es' ? '¿Cuántas?' : 'How many?';

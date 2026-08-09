@@ -10,7 +10,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/hours/`;
 
 // Share links carry ?h=N so the OG preview in the group chat shows THEIR number.
-const sharedH = Math.min(60, Math.max(0, parseInt(Astro.url.searchParams.get('h') || '0', 10) || 0));
+const sharedH = Math.min(120, Math.max(0, parseInt(Astro.url.searchParams.get('h') || '0', 10) || 0));
 const title = sharedH
 	? `I lose ${sharedH} hours a week to admin. What do you lose?`
 	: 'Pick your poison: what does admin really cost you a week?';
@@ -28,23 +28,40 @@ type Pain = {
 	soon?: boolean;
 };
 
+type Cost = {
+	id: string;
+	label: string;
+	tag: string; // what it actually costs: DEALS or MONEY
+	sting: string;
+	fix: string;
+	fixHref: string;
+	fixLine: string;
+	soon?: boolean;
+};
+
 const pains: Pain[] = [
 	{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, fix: 'Instant Listing', fixHref: '/instant-listing/', fixLine: 'Photos plus a voice note become a finished listing. Free.', afterMin: 15 },
 	{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, fix: 'XML feeds', fixHref: '/xml-feed-import/', fixLine: 'One feed in, every portal out. Free both ways.', afterMin: 0 },
 	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, fix: 'Website Builder', fixHref: '/website-builder/', fixLine: 'Type what you want, the AI builds it. Free until you publish.', afterMin: 10 },
-	{ id: 'own-stock', label: 'A website with only my own stock on it', hours: 1, fix: 'Network XML feed', fixHref: '/features/#topic-xml', fixLine: 'Every listing on the network, on your site, in sync.', afterMin: 0 },
 	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, fix: 'Nurture', fixHref: '/nurture/', fixLine: 'Follow-ups send themselves. You get told who is ready.', afterMin: 15 },
 	{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, fix: 'Property Intelligence Report', fixHref: '/property-intelligence-report/', fixLine: 'Bring the notarial register. First 3 reports free.', afterMin: 30 },
 	{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, fix: 'AI Property Match', fixHref: '/ai-property-search/', fixLine: 'Paste the WhatsApp, get the matches. Free in beta.', afterMin: 10 },
-	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, fix: 'Copilot', fixHref: '/copilot/', fixLine: 'Hang up, the write-up is done.', soon: true, afterMin: null },
+	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, fix: 'CoAgent', fixHref: '/coagent/', fixLine: 'Hang up, the write-up is done.', soon: true, afterMin: null },
 	{ id: 'signatures', label: 'Chasing one signature for a week', hours: 1, fix: 'Instant Documents', fixHref: '/instant-documents/', fixLine: 'Signed on any phone before you leave the viewing.', soon: true, afterMin: null },
 	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, fix: 'Rentals Module', fixHref: '/rentals/', fixLine: 'Tenancies, renewals, maintenance. 30-day free trial.', afterMin: 30 },
-	{ id: 'blog', label: 'A blog I have not touched since March', hours: 1, fix: 'Instant Content', fixHref: '/instant-content/', fixLine: 'SEO posts and area guides write themselves.', afterMin: 10 },
 	{ id: 'brochures', label: 'Making brochures in Canva at midnight', hours: 1, fix: 'Instant Brochure', fixHref: '/instant-brochure/', fixLine: 'One click. Print PDF plus a live web version.', soon: true, afterMin: null },
-	{ id: 'market', label: 'Guessing what the market is actually doing', hours: 1, fix: 'Live market data', fixHref: '/neighbourhood/', fixLine: 'Notary-verified prices for every area. Free.', afterMin: 5 },
-	{ id: 'invoices', label: 'Juggling five subscriptions to do one job', hours: 1, fix: "Everything that's free", fixHref: '/free/', fixLine: 'MLS, CRM, website, feeds. One login, core free.', afterMin: 10 },
-	{ id: 'exposure', label: 'Listings only my own buyers ever see', hours: 1, fix: 'MLS sharing', fixHref: '/launch/', fixLine: 'List once, 1,300+ agents can sell it with you.', afterMin: 0 },
 	{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, fix: 'Mobile app', fixHref: '/mobile-app/', fixLine: 'The MLS and CRM in your pocket. Free on Android.', afterMin: 0 },
+];
+
+// Not hours. These cost deals or money, so they are ticked, never timed:
+// putting an invented hours figure on them was the one dishonest thing
+// on a page whose whole argument is that we counted honestly.
+const costs: Cost[] = [
+	{ id: 'exposure', label: 'Listings only my own buyers ever see', tag: 'DEALS', sting: 'One buyer pool, when there could be 1,300 agents.', fix: 'MLS sharing', fixHref: '/launch/', fixLine: 'List once, 1,300+ agents can sell it with you.' },
+	{ id: 'own-stock', label: 'A website with only my own stock on it', tag: 'DEALS', sting: 'Buyers leave to find what you do not list.', fix: 'Network XML feed', fixHref: '/features/#topic-xml', fixLine: 'Every listing on the network, on your site, in sync.' },
+	{ id: 'market', label: 'Guessing what the market is actually doing', tag: 'DEALS', sting: 'Priced on a hunch, sold at a discount.', fix: 'Live market data', fixHref: '/neighbourhood/', fixLine: 'Notary-verified prices for every area. Free.' },
+	{ id: 'blog', label: 'A blog I have not touched since March', tag: 'DEALS', sting: 'Costs you 0h a week. That is the problem.', fix: 'Instant Content', fixHref: '/instant-content/', fixLine: 'SEO posts and area guides write themselves.' },
+	{ id: 'invoices', label: 'Juggling five subscriptions to do one job', tag: 'MONEY', sting: 'Five bills where one login would do.', fix: "Everything that's free", fixHref: '/free/', fixLine: 'MLS, CRM, website, feeds. One login, core free.' },
 ];
 
 const totalDefault = pains.reduce((a, p) => a + p.hours, 0);
@@ -113,6 +130,33 @@ const faqLd = {
 			</ul>
 		</section>
 
+
+		<section class="cList" aria-label="Not hours. Still costing you.">
+			<div class="cHead">
+				<span class="cKick">Not hours. Still costing you.</span>
+				<p class="cLead">These four cost you deals and one costs you money. None of them cost you hours, so none of them touch the number above.</p>
+			</div>
+			<ul>
+				{costs.map((c) => (
+					<li class="cost" data-cost={c.id}>
+						<button class="costBtn" type="button" aria-pressed="false">
+							<span class="painCheck" aria-hidden="true"></span>
+							<span class="painLabel">{c.label}</span>
+							<span class="costTag">{c.tag}</span>
+						</button>
+						<div class="painMore">
+							<p class="costSting">{c.sting}</p>
+							<a class="painFix" href={c.fixHref}>
+								<span class="fixKick">The fix{c.soon ? ' - coming soon' : ''}</span>
+								<span class="fixName">{c.fix} &rarr;</span>
+								<span class="fixLine">{c.fixLine}</span>
+							</a>
+						</div>
+					</li>
+				))}
+			</ul>
+		</section>
+
 		<div class="tally" data-tally hidden>
 			<div class="tallyIn">
 				<span class="tallyNum"><b data-tally-h>0</b>h<i>/week</i></span>
@@ -127,28 +171,43 @@ const faqLd = {
 					<span class="rBrand">PROPERTYLIST</span>
 					<span class="rSub">THE ADMIN TAX &middot; WEEKLY BILL</span>
 				</div>
-				<ul class="rLines" data-receipt-lines>
-					{pains.map((p) => (
-						<li data-rl={p.id} hidden>
-							<span>{p.label}</span>
-							<span class="rlNums"><b data-rl-h>{p.hours}H</b><i class="rlArrow">&rarr;</i><em data-rl-a>{p.afterMin === null ? 'SOON' : p.afterMin === 0 ? '0' : `${p.afterMin}M`}</em></span>
-						</li>
-					))}
-				</ul>
-				<div class="rTotal">
-					<span>TODAY</span>
-					<span><b data-receipt-h>0</b>H / WEEK</span>
+				<div data-hours-block hidden>
+					<ul class="rLines" data-receipt-lines>
+						{pains.map((p) => (
+							<li data-rl={p.id} hidden>
+								<span>{p.label}</span>
+								<span class="rlNums"><b data-rl-h>{p.hours}H</b><i class="rlArrow">&rarr;</i><em data-rl-a>{p.afterMin === null ? 'SOON' : p.afterMin === 0 ? '0' : `${p.afterMin}M`}</em></span>
+							</li>
+						))}
+					</ul>
+					<div class="rTotal">
+						<span>TODAY</span>
+						<span><b data-receipt-h>0</b>H / WEEK</span>
+					</div>
+					<div class="rTotal rTotalPl">
+						<span>WITH PROPERTYLIST</span>
+						<span><b data-receipt-pl>0</b> / WEEK</span>
+					</div>
+					<div class="rBack">
+						<span>YOU GET BACK</span>
+						<span><b data-receipt-back>0</b> / WEEK</span>
+					</div>
+					<div class="rDays rDaysBack">= <b data-receipt-days>0</b> working days a year, yours again</div>
+					<div class="rSoonNote" data-soon-note hidden>SOON lines count at full cost - that time comes back when they ship.</div>
+					<div class="rHeavy" data-heavy-note hidden>That is more than most working weeks. We believe you. Unfortunately.</div>
 				</div>
-				<div class="rTotal rTotalPl">
-					<span>WITH PROPERTYLIST</span>
-					<span><b data-receipt-pl>0</b> / WEEK</span>
+				<div class="rDeals" data-deals-block hidden>
+					<div class="rDealsHead">NOT HOURS. STILL COSTING YOU.</div>
+					<ul class="rDealLines" data-deal-lines>
+						{costs.map((c) => (
+							<li data-dl={c.id} hidden>
+								<span>{c.label}</span>
+								<span class="dlTag">{c.tag}</span>
+							</li>
+						))}
+					</ul>
+					<div class="rDealsFoot">These were never about time.</div>
 				</div>
-				<div class="rBack">
-					<span>YOU GET BACK</span>
-					<span><b data-receipt-back>0</b> / WEEK</span>
-				</div>
-				<div class="rDays rDaysBack">= <b data-receipt-days>0</b> working days a year, yours again</div>
-				<div class="rSoonNote" data-soon-note hidden>SOON lines count at full cost - that time comes back when they ship.</div>
 				<div class="rFoot">Every line above has a fix on PropertyList. The core is free.</div>
 				<div class="rActions">
 					<button class="rShare" type="button" data-share-wa>Share your bill on WhatsApp</button>
@@ -182,6 +241,12 @@ const faqLd = {
 			const rH = document.querySelector('[data-receipt-h]');
 			const rDays = document.querySelector('[data-receipt-days]');
 			const state = new Map();
+			// ticked-but-not-timed items; never enter the hours total
+			const dealState = new Set();
+			const costEls = Array.from(document.querySelectorAll('[data-cost]'));
+			const dealLines = document.querySelector('[data-deal-lines]');
+			const hoursBlock = document.querySelector('[data-hours-block]');
+			const dealsBlock = document.querySelector('[data-deals-block]');
 
 			const track = (n, d) => { try { if (window.umami && umami.track) umami.track(n, d); } catch (e) {} };
 
@@ -189,10 +254,16 @@ const faqLd = {
 
 			const render = () => {
 				const t = total();
-				const on = state.size > 0;
-				tally.hidden = !on;
+				const anyTime = state.size > 0;
+				const anyDeal = dealState.size > 0;
+				const on = anyTime || anyDeal;
+				tally.hidden = !anyTime;
 				receipt.hidden = !on;
 				rEmpty.hidden = on;
+				hoursBlock.hidden = !anyTime;
+				dealsBlock.hidden = !anyDeal;
+				document.querySelector('[data-heavy-note]').hidden = t <= 50;
+				for (const row of dealLines.querySelectorAll('[data-dl]')) row.hidden = !dealState.has(row.dataset.dl);
 				tallyH.textContent = t;
 				rH.textContent = t;
 				let plMin = 0, anySoon = false;
@@ -217,7 +288,8 @@ const faqLd = {
 			};
 
 			const shareUrl = () => {
-				const ids = pains.filter((li) => state.has(li.dataset.pain)).map((li) => li.dataset.pain);
+				const ids = pains.filter((li) => state.has(li.dataset.pain)).map((li) => li.dataset.pain)
+					.concat(costEls.filter((li) => dealState.has(li.dataset.cost)).map((li) => li.dataset.cost));
 				const u = new URL(location.origin + location.pathname);
 				if (ids.length) { u.searchParams.set('p', ids.join('.')); u.searchParams.set('h', String(total())); }
 				return u.toString();
@@ -247,10 +319,30 @@ const faqLd = {
 				});
 			}
 
+			for (const li of costEls) {
+				const btn = li.querySelector('.costBtn');
+				btn.addEventListener('click', () => {
+					const id = li.dataset.cost;
+					if (dealState.has(id)) {
+						dealState.delete(id);
+						li.classList.remove('isOn');
+						btn.setAttribute('aria-pressed', 'false');
+					} else {
+						dealState.add(id);
+						li.classList.add('isOn');
+						btn.setAttribute('aria-pressed', 'true');
+						track('hours-pick', { pain: id, kind: 'cost' });
+					}
+					render();
+				});
+			}
+
 			document.querySelector('[data-share-wa]').addEventListener('click', () => {
 				const t = total();
 				track('hours-share', { via: 'whatsapp', h: t });
-				const msg = 'Apparently I lose ' + t + ' hours a week to admin. What do you lose? ' + shareUrl();
+				const msg = (t > 0
+					? 'Apparently I lose ' + t + ' hours a week to admin. What do you lose? '
+					: 'Admin is not even my problem. Missed deals are. What is yours? ') + shareUrl();
 				window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
 			});
 			document.querySelector('[data-share-copy]').addEventListener('click', (e) => {
@@ -264,6 +356,9 @@ const faqLd = {
 				for (const li of pains) {
 					if (state.has(li.dataset.pain)) li.querySelector('.painBtn').click();
 				}
+				for (const li of costEls) {
+					if (dealState.has(li.dataset.cost)) li.querySelector('.costBtn').click();
+				}
 				history.replaceState(null, '', location.pathname);
 			};
 			document.querySelector('[data-reset]').addEventListener('click', () => { clearAll(); track('hours-reset'); });
@@ -274,6 +369,9 @@ const faqLd = {
 				const ids = q.get('p').split('.');
 				for (const li of pains) {
 					if (ids.includes(li.dataset.pain)) li.querySelector('.painBtn').click();
+				}
+				for (const li of costEls) {
+					if (ids.includes(li.dataset.cost)) li.querySelector('.costBtn').click();
 				}
 				const note = document.querySelector('[data-shared-note]');
 				note.hidden = false;
@@ -368,4 +466,29 @@ const faqLd = {
 	@media (prefers-reduced-motion: reduce) {
 		.painLabel::after, .pain.isOn .painMore { transition: none; animation: none; }
 	}
+
+	/* Not-hours block: ticked, never timed. Visually quieter than the hours list
+	   so the headline number keeps its authority. */
+	.cList { margin-top: 26px; }
+	.cHead { padding: 0 4px 12px; }
+	.cKick { display: inline-block; font-size: 11.5px; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; color: #a8772a; background: rgba(234, 179, 8, 0.12); border: 1px solid rgba(234, 179, 8, 0.3); padding: 6px 12px; border-radius: 999px; }
+	.cLead { margin: 10px 0 0; font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.62); max-width: 60ch; }
+	.cList ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+	.cost { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; background: #fff; overflow: hidden; }
+	.cost.isOn { border-color: rgba(234, 179, 8, 0.55); }
+	.costBtn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 15px 16px; background: none; border: 0; cursor: pointer; text-align: left; font: inherit; }
+	.cost.isOn .painCheck { background: #a8772a; border-color: #a8772a; }
+	.costTag { margin-left: auto; font-size: 10.5px; font-weight: 900; letter-spacing: 0.1em; color: #a8772a; background: rgba(234, 179, 8, 0.14); padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+	.cost .painMore { display: none; padding: 0 16px 15px; }
+	.cost.isOn .painMore { display: block; }
+	.costSting { margin: 0 0 12px; font-size: 14.5px; font-weight: 600; color: #7c5a1e; }
+
+	/* Receipt: the not-hours section, deliberately without any number column. */
+	.rDeals { margin-top: 18px; padding-top: 14px; border-top: 1px dashed rgba(255, 255, 255, 0.25); }
+	.rDealsHead { font-size: 11px; font-weight: 900; letter-spacing: 0.12em; color: #f0b429; margin-bottom: 8px; }
+	.rDealLines { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+	.rDealLines li { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+	.dlTag { font-weight: 900; color: #f0b429; letter-spacing: 0.06em; flex-shrink: 0; }
+	.rDealsFoot { margin-top: 9px; font-size: 12px; opacity: 0.65; }
+	.rHeavy { margin-top: 10px; font-size: 12.5px; color: #f0b429; font-weight: 600; }
 </style>
