@@ -1364,6 +1364,43 @@ const cleanedSourceBody = (() => {
 		);
 		out = out.replace(/<div\b[^>]*class=["'][^"']*\bshortcode_title\b[^"']*["'][\s\S]*?<\/div>/i, '');
 		out = rewriteDocsLinksToSpanish(out);
+	} else {
+		// Everything that is not /es/docs/ was rendering its imported WordPress
+		// body raw: AIOSEO head blob, dead wp-content assets, unpkg script tags and
+		// a second GTM container. The English catch-all has always stripped this;
+		// the Spanish one only did it for docs. Same extraction and same strip
+		// chain as English, so the ES page ends up matching its EN twin.
+		const stripImportedHead = (html: string) => {
+			let o = html;
+			const first = (re: RegExp) => {
+				const m = o.match(re);
+				return m ? m[1] || m[0] : null;
+			};
+			if (/<html\b/i.test(o) || /<body\b/i.test(o) || /<header\b/i.test(o) || /<nav\b/i.test(o)) {
+				const article = first(/<article\b[\s\S]*?<\/article>/i);
+				if (article) o = article;
+				else {
+					const main = first(/<main\b[\s\S]*?<\/main>/i);
+					if (main) o = main;
+				}
+			}
+			const blogLike = /^\/es\/(informacion-general|blog|agentes-inmobiliarios|alimentos|estilo-de-vida|vida-nocturna|comprar)\//.test(renderPath);
+			if (blogLike) {
+				const entry = first(/<div\b[^>]*class=["'][^"']*\bentry-content\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+				if (entry) o = entry;
+				const post = first(/<div\b[^>]*class=["'][^"']*\b(post-content|postContent|wp-block-post-content)\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+				if (post) o = post;
+			}
+			return o
+				.replace(/<script\b[\s\S]*?<\/script>/gi, '')
+				.replace(/<style\b[\s\S]*?<\/style>/gi, '')
+				.replace(/<(meta|link)\b[^>]*>/gi, '')
+				.replace(/<(header|nav|footer|aside)\b[\s\S]*?<\/\1>/gi, '')
+				.replace(/<form\b[\s\S]*?<\/form>/gi, '')
+				.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '')
+				.replace(/<!--[\s\S]*?(?:All in One SEO|Yoast|Rank Math)[\s\S]*?-->/gi, '');
+		};
+		out = stripImportedHead(out);
 	}
 	return out;
 })();
