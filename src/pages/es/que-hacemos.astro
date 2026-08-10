@@ -482,12 +482,15 @@ const faqLd = {
 		.lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 		.ln { fill: none; stroke: rgba(91, 227, 208, 0.22); stroke-width: 0.3; stroke-dasharray: 90; stroke-dashoffset: calc(90 - var(--s2) * 90); transition: opacity 0.5s; }
 		.stage[data-seg='3'] .ln { opacity: 0.22; }
-		.dest { position: absolute; width: clamp(180px, 21vw, 245px); opacity: clamp(0, calc((var(--s1) - 0.55) / 0.45), 1); z-index: 4; }
+		.dest { position: absolute; width: clamp(200px, 24vw, 300px); opacity: clamp(0, calc((var(--s1) - 0.35) / 0.4), 1); z-index: 4; background: rgba(16, 28, 51, 0.55); border: 1px solid rgba(91, 227, 208, 0.16); border-radius: 14px; padding: 14px 15px 13px; transition: transform 0.5s, border-color 0.5s; }
+		.stage[data-seg='3'] .dest { transform: scale(1.05); border-color: rgba(91, 227, 208, 0.42); }
+		.js [data-stage='fan'] .dMls .dLine { opacity: 0; transition: opacity 0.4s; }
+		.js .stage.mlsOn .dMls .dLine { opacity: 1; }
 		.dMls { left: max(14px, 4vw); top: max(14px, 5vh); } .dPortal { right: max(14px, 4vw); top: max(14px, 5vh); }
 		.dWeb { left: max(14px, 4vw); bottom: max(14px, 7vh); } .dXml { right: max(14px, 4vw); bottom: max(14px, 7vh); }
-		.dHead { font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--glow); margin-bottom: 8px; }
-		.dLine { font-size: 12.5px; color: rgba(234, 242, 241, 0.6); margin-top: 8px; }
-		.dLine b { color: var(--ink); font-size: 15px; }
+		.dHead { font-size: 13.5px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--glow); margin-bottom: 10px; }
+		.dLine { font-size: 14px; color: rgba(234, 242, 241, 0.68); margin-top: 10px; }
+		.dLine b { color: var(--ink); font-size: 18px; }
 		.dotGrid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; }
 		.dot { width: 100%; aspect-ratio: 1; border-radius: 50%; background: rgba(234, 242, 241, 0.12); transition: background 0.4s, box-shadow 0.4s; transition-delay: var(--d); }
 		.stage.mlsOn .dot { background: var(--glow); box-shadow: 0 0 6px rgba(91, 227, 208, 0.7); }
@@ -640,7 +643,7 @@ const faqLd = {
 		@media (max-width: 700px) {
 			.c1 { --cx: -24vw; --cy: -29vh; } .c2 { --cx: 24vw; --cy: -29vh; } .c3 { --cx: -24vw; --cy: 23vh; } .c4 { --cx: 24vw; --cy: 23vh; }
 			.clone { display: none; }
-			.dest { width: 42vw; }
+			.dest { width: 44vw; padding: 10px 11px 9px; }
 			.dotGrid { grid-template-columns: repeat(10, 1fr); }
 			.dot:nth-child(n + 101) { display: none; }
 			.card { width: 200px; margin-left: -100px; }
@@ -691,7 +694,7 @@ const faqLd = {
 			fan: {
 				segs: [0.4, 0.82], s1: [0.1, 0.42], s2: [0.3, 0.52],
 				beats: [
-					{ at: 0.42, sel: '[data-stage=fan]', cls: 'mlsOn' },
+					{ at: 0.42, sel: ':stage', cls: 'mlsOn' },
 					{ at: 0.5, sel: '.stF1', cls: 'hit' }, { at: 0.58, sel: '.stF2', cls: 'hit' },
 					{ at: 0.66, sel: '.stF3', cls: 'hit' }, { at: 0.74, sel: '.stF4', cls: 'hit' },
 				],
@@ -733,7 +736,7 @@ const faqLd = {
 				stage.style.setProperty('--p', '0');
 				stage.dataset.seg = '1';
 				const sc = SCENES[key];
-				for (const b of sc.beats) (b.all ? stage.querySelectorAll(b.sel) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.remove(b.cls || 'on'));
+				for (const b of sc.beats) (b.sel === ':stage' ? [stage] : b.all ? Array.from(stage.querySelectorAll(b.sel)) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.remove(b.cls || 'on'));
 				if (sc.stagger) stage.querySelectorAll(sc.stagger.sel).forEach((el) => el.classList.remove('on'));
 				if (sc.counter) { const c = stage.querySelector(sc.counter.sel); if (c) c.textContent = '0'; }
 			}
@@ -756,7 +759,7 @@ const faqLd = {
 					let seg = 1;
 					for (const t of sc.segs) if (p > t) seg++;
 					stage.dataset.seg = String(seg);
-					for (const b of sc.beats) (b.all ? stage.querySelectorAll(b.sel) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.toggle(b.cls || 'on', p > b.at));
+					for (const b of sc.beats) (b.sel === ':stage' ? [stage] : b.all ? Array.from(stage.querySelectorAll(b.sel)) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.toggle(b.cls || 'on', p > b.at));
 					if (sc.stagger) {
 						const els = stage.querySelectorAll(sc.stagger.sel);
 						els.forEach((el, i) => el.classList.toggle('on', p > sc.stagger!.from + (i * (sc.stagger!.to - sc.stagger!.from)) / els.length));
