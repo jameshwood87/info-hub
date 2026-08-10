@@ -146,7 +146,8 @@ const faqLd = {
 				<span class="step">Step 2 &middot; It goes everywhere</span>
 				<p class="cap capA">This is your listing. Press save. Now watch.</p>
 				<p class="cap capB">It is now everywhere you sell. You did nothing else.</p>
-				<p class="cap capC">One save. Four places. The bill so far: <strong>&euro;0</strong>.</p>
+				<p class="cap capC">And the same save keeps going.</p>
+				<p class="cap capD">One save. Seven places live, one on the way. Still <strong>&euro;0</strong>.</p>
 
 				<svg class="lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
 					<path class="ln" d="M50,47 C41,38 33,30 20,22" />
@@ -155,29 +156,69 @@ const faqLd = {
 					<path class="ln" d="M50,53 C59,61 67,69 80,77" />
 				</svg>
 
-				<div class="dest dMls">
-					<div class="dHead">The MLS</div>
-					<div class="dotGrid" aria-hidden="true">{dots.map((i) => <span class="dot" style={`--d:${(i * 7) % 900}ms`}></span>)}</div>
-					<div class="dLine"><b data-count-agents>1,300</b>+ agents can sell it</div>
-					<span class="stamp stF1 hit">&euro;0</span>
+				<div class="dSpot dMls" data-spot="1">
+					<div class="dFlip">
+						<div class="dest dFace front">
+							<div class="dHead">The MLS</div>
+							<div class="dotGrid" aria-hidden="true">{dots.map((i) => <span class="dot" style={`--d:${(i * 7) % 900}ms`}></span>)}</div>
+							<div class="dLine"><b data-count-agents>1,300</b>+ agents can sell it</div>
+							<span class="stamp stF1 hit">&euro;0</span>
+						</div>
+						<div class="dest dFace back">
+							<div class="dHead">900+ agency microsites</div>
+							<div class="siteRow" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+							<div class="dLine">the whole network's shopfronts carry it</div>
+							<span class="stamp stB1 hit">&euro;0</span>
+						</div>
+					</div>
 				</div>
-				<div class="dest dPortal">
-					<div class="dHead">The portal</div>
-					<div class="mini browser"><div class="chrome"><span></span><span></span><span></span></div><div class="mCard"><div class="mPhoto"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div>
-					<div class="dLine">buyers see it tonight</div>
-					<span class="stamp stF2 hit">&euro;0</span>
+				<div class="dSpot dPortal" data-spot="2">
+					<div class="dFlip">
+						<div class="dest dFace front">
+							<div class="dHead">The portal</div>
+							<div class="mini browser"><div class="chrome"><span></span><span></span><span></span></div><div class="mCard"><div class="mPhoto"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div>
+							<div class="dLine">buyers see it tonight</div>
+							<span class="stamp stF2 hit">&euro;0</span>
+						</div>
+						<div class="dest dFace back">
+							<div class="dHead">AI + live data</div>
+							<div class="mini code" aria-hidden="true"><span class="q">ask: 3-bed villa, Marbella?</span><span class="ind">&rarr; Villa Alborada &middot; PL-4471</span><span class="ind">&rarr; notary-verified &euro;/m&sup2;</span></div>
+							<div class="dLine">AI assistants query it (MCP + Oracle)</div>
+							<span class="stamp stB2 hit">&euro;0</span>
+						</div>
+					</div>
 				</div>
-				<div class="dest dWeb">
-					<div class="dHead">Your microsite</div>
-					<div class="mini laptop"><div class="lapScreen"><div class="mCard"><div class="mPhoto alt"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div><div class="lapBase"></div></div>
-					<div class="dLine">every agent gets one, free</div>
-					<span class="stamp stF3 hit">&euro;0</span>
+				<div class="dSpot dWeb" data-spot="3">
+					<div class="dFlip">
+						<div class="dest dFace front">
+							<div class="dHead">Your microsite</div>
+							<div class="mini laptop"><div class="lapScreen"><div class="mCard"><div class="mPhoto alt"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div><div class="lapBase"></div></div>
+							<div class="dLine">every agent gets one, free</div>
+							<span class="stamp stF3 hit">&euro;0</span>
+						</div>
+						<div class="dest dFace back">
+							<div class="dHead">Your own website</div>
+							<div class="mini laptop"><div class="lapScreen"><div class="mCard"><div class="mPhoto"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div><div class="lapBase"></div></div>
+							<div class="dLine">your stock feeds it free &middot; the whole network, 35&euro;/month</div>
+							<span class="stamp stB3 hit">&euro;0 &middot; network 35&euro;/mo</span>
+						</div>
+					</div>
 				</div>
-				<div class="dest dXml">
-					<div class="dHead">XML feeds</div>
-					<div class="mini code" aria-hidden="true"><span>&lt;property&gt;</span><span class="ind">&lt;ref&gt;PL-4471&lt;/ref&gt;</span><span class="ind">&lt;price&gt;495000&lt;/price&gt;</span><span>&lt;/property&gt;</span></div>
-					<div class="dLine">every portal, one feed</div>
-					<span class="stamp stF4 hit">&euro;0</span>
+				<div class="dSpot dXml" data-spot="4">
+					<div class="dFlip">
+						<div class="dest dFace front">
+							<div class="dHead">XML feeds</div>
+							<div class="mini code" aria-hidden="true"><span>&lt;property&gt;</span><span class="ind">&lt;ref&gt;PL-4471&lt;/ref&gt;</span><span class="ind">&lt;price&gt;495000&lt;/price&gt;</span><span>&lt;/property&gt;</span></div>
+							<div class="dLine">Idealista, Fotocasa, Rightmove &middot; one feed</div>
+							<span class="stamp stF4 hit">&euro;0</span>
+						</div>
+						<div class="dest dFace back soonFace">
+							<div class="dHead">Instant Marketing</div>
+							<div class="adRow" aria-hidden="true"><i>G</i><i>f</i><i>IG</i></div>
+							<div class="dLine">one click will buy the ads, straight from the listing</div>
+							<span class="soonTag">SOON</span>
+						</div>
+					</div>
 				</div>
 
 				<article class="card heroF" data-cardf>
@@ -202,9 +243,12 @@ const faqLd = {
 		<div class="breather">
 			<h2>Everywhere you sell, from one save</h2>
 			<p>
-				The MLS puts your listing in front of 1,300+ agents who can sell it with you. The portal puts it in front of
-				buyers. Your free microsite updates itself, and every agency gets one. Your own website can pull the same feed too. And the XML feed carries it out to the other
-				portals you already use, so nothing gets re-typed anywhere, ever. All four directions: free.
+				One save reaches eight places. The MLS (1,300+ agents), the public portal, your free microsite, and the
+				microsites of 900+ agencies across the network. The XML feed carries it to Idealista, Fotocasa and Rightmove.
+				AI assistants can query it through the MCP, with notary-verified data behind it. Your own website takes your
+				stock free, or every network listing for 35&euro; a month. And Instant Marketing, when it ships, will buy the
+				Google, Facebook and Instagram ads in one click. Seven live today, all of them free except the full network
+				feed.
 			</p>
 		</div>
 
@@ -351,7 +395,9 @@ const faqLd = {
 						['MLS: 1,300+ agents can sell it', '€0'],
 						['Public portal visibility', '€0'],
 						['Your free microsite, kept in sync', '€0'],
-						['XML feeds, in and out', '€0'],
+						['XML feeds: Idealista, Fotocasa, Rightmove', '€0'],
+						['900+ agency microsites carry it', '€0'],
+						['AI assistants + live data (MCP)', '€0'],
 						['Market data, notary-verified', '€0'],
 						['Mobile app (Android)', '€0'],
 						['Portal enquiry', 'free for a limited time'],
@@ -359,6 +405,7 @@ const faqLd = {
 						['Buyer into paid pipeline', '1 cr · first 5 free'],
 						['Rentals Module', '50 cr / 30 days after trial'],
 						['Instant Content', '30 cr / month'],
+						['Full network feed for your own website', '35 € / month'],
 					].map(([l, v], i) => (
 						<div class="rl on" style={`--i:${i}`}><span>{l}</span><b>{v}</b></div>
 					))}
@@ -426,7 +473,7 @@ const faqLd = {
 
 		/* stage scaffold */
 		.wrap { position: relative; }
-		.w1 { height: 300vh; } .w2 { height: 420vh; } .w3 { height: 240vh; } .w4 { height: 330vh; }
+		.w1 { height: 300vh; } .w2 { height: 560vh; } .w3 { height: 240vh; } .w4 { height: 330vh; }
 		.w5 { height: 300vh; } .w6 { height: 240vh; } .w7 { height: 300vh; } .w8 { height: 210vh; } .w9 { height: 280vh; }
 		.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; --p: 1; --s1: 1; --s2: 1; }
 
@@ -499,13 +546,29 @@ const faqLd = {
 		.c1 { --cx: -30vw; --cy: -30vh; } .c2 { --cx: 30vw; --cy: -30vh; } .c3 { --cx: -30vw; --cy: 26vh; } .c4 { --cx: 30vw; --cy: 26vh; }
 		.lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 		.ln { fill: none; stroke: rgba(91, 227, 208, 0.22); stroke-width: 0.3; stroke-dasharray: 90; stroke-dashoffset: calc(90 - var(--s2) * 90); transition: opacity 0.5s; }
-		.stage[data-seg='3'] .ln { opacity: 0.22; }
-		.dest { position: absolute; width: clamp(200px, 24vw, 300px); opacity: clamp(0, calc((var(--s1) - 0.35) / 0.4), 1); z-index: 4; background: rgba(16, 28, 51, 0.55); border: 1px solid rgba(91, 227, 208, 0.16); border-radius: 14px; padding: 14px 15px 13px; transition: transform 0.5s, border-color 0.5s; }
-		.stage[data-seg='3'] .dest { transform: scale(1.05); border-color: rgba(91, 227, 208, 0.42); }
+		.stage[data-seg='4'] .ln { opacity: 0.22; }
+		.dSpot { position: absolute; width: clamp(200px, 24vw, 300px); opacity: clamp(0, calc((var(--s1) - 0.35) / 0.4), 1); z-index: 4; perspective: 1000px; }
+		.dFlip { position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.3, 1.1, 0.4, 1); }
+		.dSpot.flip .dFlip { transform: rotateY(180deg); }
+		.dest { background: rgba(16, 28, 51, 0.55); border: 1px solid rgba(91, 227, 208, 0.16); border-radius: 14px; padding: 14px 15px 13px; transition: border-color 0.5s; }
+		.dFace { backface-visibility: hidden; }
+		.dFace.front { position: relative; }
+		.dFace.back { position: absolute; inset: 0; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; }
+		.soonFace { border-style: dashed; border-color: rgba(255, 217, 160, 0.35); background: rgba(234, 242, 241, 0.05); }
+		.soonTag { position: absolute; right: -8px; top: -12px; z-index: 9; font-size: 11px; font-weight: 900; letter-spacing: 1.6px; color: rgba(255, 217, 160, 0.9); border: 2px dashed rgba(255, 217, 160, 0.5); border-radius: 8px; padding: 2px 9px; background: rgba(11, 18, 32, 0.85); transform: rotate(-9deg); }
+		.siteRow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+		.siteRow i { height: 30px; border-radius: 6px; background: linear-gradient(160deg, rgba(0, 174, 154, 0.35), rgba(22, 48, 90, 0.8)); border: 1px solid rgba(234, 242, 241, 0.14); }
+		.adRow { display: flex; gap: 8px; }
+		.adRow i { flex: 1; height: 34px; border-radius: 8px; border: 1px dashed rgba(234, 242, 241, 0.25); display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 13px; color: rgba(234, 242, 241, 0.55); }
+		.code .q { color: #ffd9a0; }
+		/* the wide website stamp hangs off the plate bottom, clear of its heading */
+		.stB3 { top: auto; bottom: -14px; font-size: 13px; }
+		
 		.js [data-stage='fan'] .dMls .dLine { opacity: 0; transition: opacity 0.4s; }
 		.js .stage.mlsOn .dMls .dLine { opacity: 1; }
 		.dMls { left: max(14px, 4vw); top: max(14px, 5vh); } .dPortal { right: max(14px, 4vw); top: max(14px, 5vh); }
 		.dWeb { left: max(14px, 4vw); bottom: max(14px, 7vh); } .dXml { right: max(14px, 4vw); bottom: max(14px, 7vh); }
+		.stage[data-seg='4'] .dSpot { transform: scale(1.04); }
 		.dHead { font-size: 13.5px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--glow); margin-bottom: 10px; }
 		.dLine { font-size: 14px; color: rgba(234, 242, 241, 0.68); margin-top: 10px; }
 		.dLine b { color: var(--ink); font-size: 18px; }
@@ -526,8 +589,8 @@ const faqLd = {
 		.code .ind { padding-left: 14px; color: rgba(234, 242, 241, 0.6); }
 		.thesis { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); text-align: center; font-size: clamp(22px, 4vw, 38px); font-weight: 800; letter-spacing: -0.5px; margin: 0; opacity: 0; transition: opacity 0.5s 0.1s; z-index: 5; text-shadow: 0 4px 30px rgba(11, 18, 32, 0.95); }
 		.thesis span { color: var(--glow); }
-		.stage[data-seg='3'] .thesis { opacity: 1; }
-		.stage[data-seg='3'] .heroF { opacity: 0.1; }
+		.stage[data-seg='4'] .thesis { opacity: 1; }
+		.stage[data-seg='4'] .heroF { opacity: 0.1; }
 
 		/* ---- scene 3 (valuation) ---- */
 		[data-stage='val'] { filter: saturate(calc(0.55 + 0.45 * var(--p))); }
@@ -665,7 +728,8 @@ const faqLd = {
 		@media (max-width: 700px) {
 			.c1 { --cx: -24vw; --cy: -29vh; } .c2 { --cx: 24vw; --cy: -29vh; } .c3 { --cx: -24vw; --cy: 23vh; } .c4 { --cx: 24vw; --cy: 23vh; }
 			.clone { display: none; }
-			.dest { width: 44vw; padding: 10px 11px 9px; }
+			.dSpot { width: 44vw; }
+			.dest { padding: 10px 11px 9px; }
 			.dotGrid { grid-template-columns: repeat(10, 1fr); }
 			.dot:nth-child(n + 101) { display: none; }
 			.card { width: 200px; margin-left: -100px; }
@@ -716,15 +780,20 @@ const faqLd = {
 		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: Stagger; counter?: { sel: string; to: number; from: number; end: number } }> = {
 			pro: { segs: [0.56], beats: [{ at: 0.2, sel: '.f1', cls: 'on' }, { at: 0.27, sel: '.f2', cls: 'on' }, { at: 0.34, sel: '.f3', cls: 'on' }, { at: 0.4, sel: '.f4', cls: 'on' }, { at: 0.46, sel: '.f5', cls: 'on' }, { at: 0.54, sel: '.f6', cls: 'on' }, { at: 0.68, sel: '.stPro', cls: 'hit' }], stagger: { sel: '.tw', from: 0.12, to: 0.5 } },
 			fan: {
-				// single-focus sequence: clones land, caption pre-names the fan-out,
-				// the wall ignites and counts ALONE, then stamps cascade ALONE (Z order)
-				segs: [0.44, 0.93], s1: [0.1, 0.42], s2: [0.3, 0.52],
+				// wave 1: clones land, caption pre-names, wall ignites and counts alone,
+				// stamps cascade. wave 2: the corners FLIP serially to their second
+				// destination, each with its own stamp beat. one onset at a time always.
+				segs: [0.3, 0.62, 0.94], s1: [0.08, 0.3], s2: [0.2, 0.38],
 				beats: [
-					{ at: 0.5, sel: ':stage', cls: 'mlsOn' },
-					{ at: 0.68, sel: '.stF1', cls: 'hit' }, { at: 0.75, sel: '.stF2', cls: 'hit' },
-					{ at: 0.82, sel: '.stF3', cls: 'hit' }, { at: 0.89, sel: '.stF4', cls: 'hit' },
+					{ at: 0.34, sel: ':stage', cls: 'mlsOn' },
+					{ at: 0.48, sel: '.stF1', cls: 'hit' }, { at: 0.52, sel: '.stF2', cls: 'hit' },
+					{ at: 0.56, sel: '.stF3', cls: 'hit' }, { at: 0.6, sel: '.stF4', cls: 'hit' },
+					{ at: 0.66, sel: '[data-spot="1"]', cls: 'flip' }, { at: 0.7, sel: '.stB1', cls: 'hit' },
+					{ at: 0.73, sel: '[data-spot="2"]', cls: 'flip' }, { at: 0.77, sel: '.stB2', cls: 'hit' },
+					{ at: 0.8, sel: '[data-spot="3"]', cls: 'flip' }, { at: 0.84, sel: '.stB3', cls: 'hit' },
+					{ at: 0.87, sel: '[data-spot="4"]', cls: 'flip' },
 				],
-				counter: { sel: '[data-count-agents]', to: 1300, from: 0.5, end: 0.66 },
+				counter: { sel: '[data-count-agents]', to: 1300, from: 0.34, end: 0.46 },
 			},
 			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
 			enq: { segs: [0.3, 0.5, 0.78], beats: [{ at: 0.12, sel: '.bubble', cls: 'on' }, { at: 0.22, sel: '.stEnq', cls: 'hit' }, { at: 0.36, sel: '.kLand', cls: 'on' }, { at: 0.58, sel: ':stage', cls: 'moved' }, { at: 0.58, sel: '.kMove', cls: 'on' }, { at: 0.68, sel: '.stPipe', cls: 'hit' }] },
