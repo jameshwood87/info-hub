@@ -230,17 +230,18 @@ const faqLd = {
 			<section class="stage" data-stage="enq" aria-label="Escena 4: la consulta se convierte en pipeline">
 				<span class="step">Paso 4 &middot; Llega un comprador</span>
 				<p class="cap capA">Miércoles, 21:12. Alguien en Róterdam lleva once minutos dentro de tu anuncio.</p>
-				<p class="cap capB">La consulta cae en el CRM gratis. Tú decides que va en serio, y la mueves al pipeline.</p>
-				<p class="cap capC">Los seguimientos se envían solos. Te avisan cuando está lista.</p>
+				<p class="cap capB">La consulta cae en el CRM. Gratis.</p>
+				<p class="cap capC">Tú decides que va en serio. Esa decisión es el crédito.</p>
+				<p class="cap capD">Los seguimientos se envían solos. Te avisan cuando está lista.</p>
 
 				<div class="bubble on"><span class="bDot"></span>Nueva consulta &middot; Villa Alborada<br /><b>"¿Sigue disponible? Volamos el 24."</b><span class="stamp stEnq hit free">gratis por tiempo limitado</span></div>
 
 				<div class="kanban">
-					<div class="kCol"><div class="kHead">Nuevo</div><div class="kGhost"></div></div>
+					<div class="kCol"><div class="kHead">Nuevo</div><div class="kCard kLand on"><b>Marije V.</b><span>nueva consulta &middot; portal</span></div></div>
 					<div class="kCol"><div class="kHead">Cualificado</div><div class="kCard kMove on"><b>Marije V.</b><span>Villa Alborada &middot; vuela el 24</span><span class="stamp stPipe hit credit">1 crédito (~1&euro;) &middot; los 5 primeros gratis</span></div></div>
 					<div class="kCol"><div class="kHead">Visita</div><div class="kGhost"></div></div>
 				</div>
-				<p class="tool">Pipelines + Nurture &middot; el núcleo del CRM es gratis; el crédito solo ocurre cuando tú decides pasar un comprador a un pipeline de pago</p>
+				<p class="tool">Pipelines + Nurture &middot; el núcleo del CRM sigue gratis</p>
 			</section>
 		</div>
 
@@ -431,7 +432,7 @@ const faqLd = {
 
 		.cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(11vh, env(safe-area-inset-bottom)); width: min(88vw, 600px); text-align: center; font-size: clamp(15px, 2.1vw, 19px); line-height: 1.5; color: rgba(234, 242, 241, 0.88); opacity: 0; transition: opacity 0.35s; margin: 0; z-index: 8; text-shadow: 0 2px 18px rgba(11, 18, 32, 0.9); }
 		.cap strong { color: var(--glow); }
-		.stage[data-seg='1'] .capA, .stage[data-seg='2'] .capB, .stage[data-seg='3'] .capC { opacity: 1; }
+		.stage[data-seg='1'] .capA, .stage[data-seg='2'] .capB, .stage[data-seg='3'] .capC, .stage[data-seg='4'] .capD { opacity: 1; }
 
 		/* ---- shared card ---- */
 		.card { position: absolute; left: 50%; top: 42%; width: clamp(200px, 25vw, 270px); margin-left: calc(clamp(200px, 25vw, 270px) / -2); transform: translateY(-50%); background: #101c33; border: 1px solid rgba(91, 227, 208, 0.25); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8); }
@@ -543,19 +544,24 @@ const faqLd = {
 		.stVal { position: relative; display: inline-block; right: auto; top: auto; }
 
 		/* ---- scene 4 (enquiry) ---- */
-		.bubble { position: absolute; left: 50%; top: 16%; transform: translateX(-50%); width: min(84vw, 400px); background: #123a2e; border: 1px solid rgba(37, 211, 102, 0.5); border-radius: 16px 16px 16px 4px; padding: 14px 18px 16px; font-size: 13.5px; color: rgba(234, 242, 241, 0.85); z-index: 5; }
+		.bubble { position: absolute; left: 50%; top: 11%; transform: translateX(-50%); width: min(84vw, 400px); background: #123a2e; border: 1px solid rgba(37, 211, 102, 0.5); border-radius: 16px 16px 16px 4px; padding: 14px 18px 16px; font-size: 13.5px; color: rgba(234, 242, 241, 0.85); z-index: 5; }
 		.bubble b { display: block; margin-top: 4px; font-size: 15px; color: #dfffe9; }
 		.bDot { position: absolute; left: -5px; top: -5px; width: 12px; height: 12px; border-radius: 50%; background: #25d366; box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); animation: pulse 2s infinite; }
 		@keyframes pulse { 70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); } }
 		.js .bubble { opacity: 0; transform: translateX(-50%) translateY(-18px); transition: opacity 0.4s, transform 0.4s; }
 		.js .bubble.on { opacity: 1; transform: translateX(-50%); }
 		.stEnq { right: 12px; top: auto; bottom: -14px; }
-		.kanban { position: absolute; left: 50%; top: 52%; transform: translateX(-50%); display: flex; gap: clamp(10px, 2vw, 22px); z-index: 4; }
+		.kanban { position: absolute; left: 50%; top: 44%; transform: translateX(-50%); display: flex; gap: clamp(10px, 2vw, 22px); z-index: 4; }
 		.kCol { width: clamp(104px, 13vw, 170px); background: rgba(16, 28, 51, 0.7); border: 1px solid rgba(234, 242, 241, 0.12); border-radius: 12px; padding: 10px; min-height: 150px; }
 		.kHead { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(234, 242, 241, 0.5); margin-bottom: 8px; }
 		.kGhost { height: 44px; border: 1.5px dashed rgba(234, 242, 241, 0.14); border-radius: 8px; }
 		.kCard { position: relative; background: #17304f; border: 1px solid rgba(91, 227, 208, 0.35); border-radius: 8px; padding: 9px 10px 11px; font-size: 12px; }
 		.kCard b { display: block; font-size: 13px; }
+		.kLand { opacity: 0.35; }
+		.js [data-stage='enq'] .kLand { opacity: 0; transform: translateY(-26px); transition: opacity 0.4s, transform 0.5s cubic-bezier(0.2, 1.5, 0.4, 1); }
+		.js [data-stage='enq'] .kLand.on { opacity: 1; transform: none; }
+		/* five classes on purpose: must outrank .kLand.on, never out-order it */
+		.js .stage.moved .kLand.on { opacity: 0.35; transform: scale(0.96); }
 		.kCard > span { color: rgba(234, 242, 241, 0.55); font-size: 11px; }
 		.js .kMove { opacity: 0; transform: translateX(calc(-100% - 24px)); transition: transform 0.55s cubic-bezier(0.3, 1.2, 0.4, 1), opacity 0.3s; }
 		.js .kMove.on { opacity: 1; transform: none; }
@@ -668,7 +674,7 @@ const faqLd = {
 			.valFrame { width: min(84vw, 340px); }
 			.valNote { max-width: 84vw; text-align: center; }
 			.valSmall { margin-bottom: 34px; }
-			.kanban { top: 46%; }
+			.kanban { top: 40%; }
 			.kCol:last-child { display: none; }
 			.kCol { width: 38vw; }
 			.shelf { grid-template-columns: 1fr 1fr; }
@@ -721,7 +727,7 @@ const faqLd = {
 				counter: { sel: '[data-count-agents]', to: 1300, from: 0.5, end: 0.66 },
 			},
 			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
-			enq: { segs: [0.36, 0.72], beats: [{ at: 0.14, sel: '.bubble', cls: 'on' }, { at: 0.3, sel: '.stEnq', cls: 'hit' }, { at: 0.46, sel: '.kMove', cls: 'on' }, { at: 0.62, sel: '.stPipe', cls: 'hit' }] },
+			enq: { segs: [0.3, 0.5, 0.78], beats: [{ at: 0.12, sel: '.bubble', cls: 'on' }, { at: 0.22, sel: '.stEnq', cls: 'hit' }, { at: 0.36, sel: '.kLand', cls: 'on' }, { at: 0.58, sel: ':stage', cls: 'moved' }, { at: 0.58, sel: '.kMove', cls: 'on' }, { at: 0.68, sel: '.stPipe', cls: 'hit' }] },
 			net: { segs: [0.55], s1: [0.05, 0.5], beats: [{ at: 0.62, sel: '.deal', cls: 'on' }, { at: 0.72, sel: '.split', cls: 'on' }, { at: 0.82, sel: '.stNet', cls: 'hit' }] },
 			rent: { segs: [0.4], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRent', cls: 'hit' }] },
 			inst: {
