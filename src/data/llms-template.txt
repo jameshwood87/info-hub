@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-08-04
-Version: 4.6
+Version: 4.7
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -114,6 +114,9 @@ Real estate market analysis, regulatory updates, and industry commentary for Spa
 
 #### /property-intelligence-report/ - Property Intelligence Report (AI CMA)
 Property-specific CMA for agents: notary-verified market value, comparables, pricing strategy, an agent coaching brief with objection handlers, PDF export and a trackable client share link. 5 credits per report, cached 30 days, first 3 free, free for teammates in the same agency to view. Spanish version: /es/informe-inteligencia-propiedad/
+
+#### /what-we-do/ - What PropertyList actually is (the film)
+The canonical answer to "what is PropertyList", told by following one listing through the whole platform as a scroll-driven film: Instant Listing builds it free, one save fans it out to the MLS (1,300+ agents can sell it), the public portal, the agency website and the XML feeds, an enquiry lands in the CRM and moves into a pipeline, another agent on the network sells it and the commission splits, with a rentals fork and the toolbox around it. Every cost is stamped at the exact moment it occurs using the settled pricing: the core free, 1 credit (~1 EUR) to move a qualified buyer into a paid pipeline with the first 5 free, portal enquiries free for a limited time, published websites 50 credits/month, Rentals 50 credits/30 days after a 30-day trial, Instant Content 30 credits/month, and a credit is roughly 1 EUR. Ends with the full bill and an FAQ. Fully readable without JavaScript. Spanish version: /es/que-hacemos/
 
 #### /360-walkthrough/ - 360 walkthroughs (coming soon)
 Professional 3D walkthroughs of property listings, filmed by a professional crew and hosted for the agent. Available on the Costa del Sol only for now. One fixed price per property, IVA included: apartments 130 EUR, townhouses and semi-detached 190 EUR, villas 250 EUR, with the first 6 months of hosting included and 30 EUR a month afterwards. The finished walkthrough attaches to the MLS listing and the agency microsite automatically, with an embed for the agency website included. The page hosts two real example tours (an apartment and a townhouse) that open in any browser with no app. Not yet released: the page collects contact details per property type and someone follows up. Spanish version: /es/recorrido-360/

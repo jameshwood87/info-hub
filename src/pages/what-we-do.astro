@@ -1,0 +1,753 @@
+---
+// "One listing. Watch what happens." - the agent film (10-08-26).
+// The answer to the most common piece of feedback PropertyList gets: agents
+// cannot tell what the platform actually is. So instead of another feature
+// list, one listing is followed through the whole machine, and every cost is
+// stamped AT THE MOMENT it occurs - EUR 0 chips for the free stations, credit
+// chips for the paid ones, SOON tags claiming nothing. The receipt at the end
+// only re-totals stamps the viewer already watched land.
+//
+// Architecture (validated against NN/g + web.dev research, 08-2026):
+// - Nine sticky-pinned scenes, each inside a tall wrapper; a single rAF scroll
+//   engine drives per-scene CSS custom properties (--p plus eased segments).
+//   1px of scroll = 1 tick, instantly reversible, no scroll hijacking, native
+//   physics everywhere. Static prose "breathers" between scenes restore
+//   control and carry the SEO/GEO copy.
+// - Transform/opacity only. No canvas, no video, no libraries. One 24KB
+//   screenshot (the real PIR) is the only raster on the page.
+// - The DEFAULT state in markup is every scene's FINISHED frame: crawlers,
+//   no-JS visitors and prefers-reduced-motion readers get a complete
+//   illustrated guide top to bottom. JS rewinds scenes to zero on init and
+//   hands control to scroll. Cascade rule from the prototype: winner classes
+//   OUTRANK their reset (.js .x.on beats .js .x), never out-order.
+// - Every stamp uses the settled free-vs-paid ledger wording exactly. Where
+//   the ledger is unsettled the stamp says less, not more.
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/what-we-do/`;
+
+const title = 'What PropertyList actually is: one listing, watched end to end';
+const description =
+	'Follow one property listing through the whole of PropertyList: the MLS where 1,300+ agents can sell it, the portal, your own website, the XML feeds, the enquiry, the pipeline, the network sale. Every cost stamped the moment it happens, most of them 0 EUR.';
+
+const dots = Array.from({ length: 130 }, (_, i) => i);
+
+const faqs = [
+	{
+		q: 'What is PropertyList?',
+		a: 'PropertyList is a property platform for Spanish agents built around a shared MLS: list a property once and 1,300+ agents can sell it with you, while the same listing appears automatically on the public portal, your own website and your XML feeds to other portals. Around the MLS sit a CRM with pipelines and automated follow-ups, a website builder, a rentals module, notary-verified market data and a set of AI tools.',
+	},
+	{
+		q: 'What does PropertyList cost?',
+		a: 'The core is free: listing, MLS sharing, the portal, the CRM core, XML feeds in and out, and market data. You pay in credits (a credit is roughly 1 EUR) only when specific things happen: moving a qualified buyer lead into a pipeline costs 1 credit with the first 5 free, a published Website Builder site is 50 credits a month, the Rentals Module is 50 credits per 30 days after a 30-day free trial, and Instant Content is 30 credits a month. Portal enquiries are free for a limited time.',
+	},
+	{
+		q: 'How does the MLS work?',
+		a: 'Your listing is visible to the other agents on the network, any of whom can bring their buyer to it. When another agent sells your listing you split the commission on the terms attached to it. Sharing is free in both directions, permanently.',
+	},
+	{
+		q: 'Do I have to move my existing setup?',
+		a: 'No. XML feeds run both ways, so your existing stock imports in one feed and your listings flow out to the portals you already use. Your own website can stay, or a Website Builder site can replace it, free to build and preview.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage="/og/what-we-do.png"
+	fullBleed
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/que-hacemos/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+	schema={faqLd}
+>
+	<div class="film" data-film>
+		<!-- progress rail -->
+		<nav class="rail" aria-label="Film progress" data-rail>
+			{['Start', 'Everywhere', 'Valuation', 'Enquiry', 'Network', 'Rentals', 'Tools', 'Credits', 'The bill'].map((label, i) => (
+				<a href={`#sc${i + 1}`} class="railDot" data-rail-dot title={label}><span>{label}</span></a>
+			))}
+		</nav>
+
+		<!-- ================= INTRO ================= -->
+		<header class="intro">
+			<p class="kicker">The whole platform, in one scroll</p>
+			<h1>One listing.<br />Watch what happens.</h1>
+			<p class="sub">
+				Agents keep asking us the same fair question: what actually <em>is</em> PropertyList? This page answers it the
+				only honest way, by following one listing through the whole machine. Every cost appears at the exact moment it
+				happens. Most of them say &euro;0.
+			</p>
+			<p class="introRow"><span class="hint">&darr; scroll slowly</span><a class="skip" href="#receipt">or skip to the bill &rarr;</a></p>
+		</header>
+
+		<!-- ================= SCENE 1: PROLOGUE ================= -->
+		<div class="wrap w1" id="sc1" data-wrap="pro">
+			<section class="stage" data-stage="pro" aria-label="Scene 1: the listing is born">
+				<p class="cap capA">Tuesday, 6:40pm. A villa in Marbella, your phone, and a 30-second voice note.</p>
+				<p class="cap capB">That is the whole job. The listing writes itself while you drive home.</p>
+
+				<div class="proPhotos" aria-hidden="true">
+					<span class="pp pp1"></span><span class="pp pp2"></span><span class="pp pp3"></span>
+				</div>
+				<div class="wave on" aria-hidden="true">
+					{Array.from({ length: 18 }, (_, i) => <i style={`--wi:${i}`}></i>)}
+				</div>
+
+				<article class="card hero1" data-card1>
+					<div class="photo"><span class="sun"></span><span class="sea"></span></div>
+					<div class="body">
+						<h2 class="cardTitle">Villa Alborada</h2>
+						<p class="where">Marbella &middot; Ref PL-4471</p>
+						<p class="price">&euro;495,000</p>
+						<p class="chips"><span>3 beds</span><span>2 baths</span><span>184 m&sup2;</span></p>
+					</div>
+					<span class="stamp stPro hit">&euro;0</span>
+				</article>
+				<p class="tool">Instant Listing &middot; photos + voice note &rarr; finished listing &middot; free</p>
+			</section>
+		</div>
+
+		<div class="breather">
+			<h2>It starts with five minutes, not an evening</h2>
+			<p>
+				Instant Listing turns photos and a voice note into a finished, structured listing: rooms, features,
+				description, the lot. You check it, you press save. Free. And the moment you save it, the interesting part
+				begins, because on PropertyList a listing does not sit where you put it.
+			</p>
+		</div>
+
+		<!-- ================= SCENE 2: FAN-OUT ================= -->
+		<div class="wrap w2" id="sc2" data-wrap="fan">
+			<section class="stage" data-stage="fan" aria-label="Scene 2: one save, four places">
+				<p class="cap capA">This is your listing. Press save. Now watch.</p>
+				<p class="cap capB">It is now everywhere you sell. You did nothing else.</p>
+				<p class="cap capC">One save. Four places. The bill so far: <strong>&euro;0</strong>.</p>
+
+				<svg class="lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+					<path class="ln" d="M50,47 C41,38 33,30 20,22" />
+					<path class="ln" d="M50,47 C59,38 67,30 80,22" />
+					<path class="ln" d="M50,53 C41,61 33,69 20,77" />
+					<path class="ln" d="M50,53 C59,61 67,69 80,77" />
+				</svg>
+
+				<div class="dest dMls">
+					<div class="dHead">The MLS</div>
+					<div class="dotGrid" aria-hidden="true">{dots.map((i) => <span class="dot" style={`--d:${(i * 7) % 900}ms`}></span>)}</div>
+					<div class="dLine"><b data-count-agents>1,300</b>+ agents can sell it</div>
+					<span class="stamp stF1 hit">&euro;0</span>
+				</div>
+				<div class="dest dPortal">
+					<div class="dHead">The portal</div>
+					<div class="mini browser"><div class="chrome"><span></span><span></span><span></span></div><div class="mCard"><div class="mPhoto"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div>
+					<div class="dLine">buyers see it tonight</div>
+					<span class="stamp stF2 hit">&euro;0</span>
+				</div>
+				<div class="dest dWeb">
+					<div class="dHead">Your website</div>
+					<div class="mini laptop"><div class="lapScreen"><div class="mCard"><div class="mPhoto alt"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div><div class="lapBase"></div></div>
+					<div class="dLine">already updated</div>
+					<span class="stamp stF3 hit">&euro;0</span>
+				</div>
+				<div class="dest dXml">
+					<div class="dHead">XML feeds</div>
+					<div class="mini code" aria-hidden="true"><span>&lt;property&gt;</span><span class="ind">&lt;ref&gt;PL-4471&lt;/ref&gt;</span><span class="ind">&lt;price&gt;495000&lt;/price&gt;</span><span>&lt;/property&gt;</span></div>
+					<div class="dLine">every portal, one feed</div>
+					<span class="stamp stF4 hit">&euro;0</span>
+				</div>
+
+				<article class="card heroF" data-cardf>
+					<div class="photo"><span class="sun"></span><span class="sea"></span></div>
+					<div class="body">
+						<h2 class="cardTitle">Villa Alborada</h2>
+						<p class="where">Marbella &middot; Ref PL-4471</p>
+						<p class="price">&euro;495,000</p>
+					</div>
+					<span class="save">Saved &check;</span>
+				</article>
+				{[1, 2, 3, 4].map((n) => (
+					<article class={`card clone c${n}`} aria-hidden="true">
+						<div class="photo"><span class="sun"></span><span class="sea"></span></div>
+						<div class="body"><h2 class="cardTitle">Villa Alborada</h2><p class="price">&euro;495,000</p></div>
+					</article>
+				))}
+				<p class="thesis">That is what PropertyList is.<br /><span>The thing in the middle.</span></p>
+			</section>
+		</div>
+
+		<div class="breather">
+			<h2>Everywhere you sell, from one save</h2>
+			<p>
+				The MLS puts your listing in front of 1,300+ agents who can sell it with you. The portal puts it in front of
+				buyers. Your own website updates itself through the network feed. And the XML feed carries it out to the other
+				portals you already use, so nothing gets re-typed anywhere, ever. All four directions: free.
+			</p>
+		</div>
+
+		<!-- ================= SCENE 3: VALUATION FLASHBACK ================= -->
+		<div class="wrap w3" id="sc3" data-wrap="val">
+			<section class="stage" data-stage="val" aria-label="Scene 3: how you won the instruction">
+				<p class="cap capA">Rewind three weeks. How did you win this instruction at all?</p>
+				<p class="cap capB">Two agents flattered the seller. You brought the notarial register.</p>
+				<div class="valScene">
+					<div class="valFrame on"><img src="/docs-images/cma/report-a.webp" alt="A real Property Intelligence Report page showing notary-verified market data for a listing" loading="lazy" width="420" height="280" /></div>
+					<div class="valNote on">
+						<p class="valBig">Asking prices are opinions.<br />The register is not.</p>
+						<p class="valSmall">A Property Intelligence Report prices the property against verified closed sales, and prints the brief that wins the kitchen-table conversation.</p>
+						<span class="stamp stVal hit credit">5 credits &middot; first 3 free</span>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ================= SCENE 4: THE ENQUIRY ================= -->
+		<div class="wrap w4" id="sc4" data-wrap="enq">
+			<section class="stage" data-stage="enq" aria-label="Scene 4: the enquiry becomes a pipeline">
+				<p class="cap capA">Wednesday, 9:12pm. Someone in Rotterdam has been on your listing for eleven minutes.</p>
+				<p class="cap capB">The enquiry lands in the CRM by itself. You move her into the pipeline.</p>
+				<p class="cap capC">Follow-ups now send themselves. You get told when she is ready.</p>
+
+				<div class="bubble on"><span class="bDot"></span>New enquiry &middot; Villa Alborada<br /><b>"Is it still available? We fly out on the 24th."</b><span class="stamp stEnq hit free">free for a limited time</span></div>
+
+				<div class="kanban">
+					<div class="kCol"><div class="kHead">New</div><div class="kGhost"></div></div>
+					<div class="kCol"><div class="kHead">Qualified</div><div class="kCard kMove on"><b>Marije V.</b><span>Villa Alborada &middot; flying 24th</span><span class="stamp stPipe hit credit">1 credit (~1&euro;) &middot; first 5 free</span></div></div>
+					<div class="kCol"><div class="kHead">Viewing</div><div class="kGhost"></div></div>
+				</div>
+				<p class="tool">Pipelines + Nurture &middot; the CRM core is free; moving a qualified buyer into a paid pipeline is the 1 credit</p>
+			</section>
+		</div>
+
+		<div class="breather">
+			<h2>The honest line about the CRM</h2>
+			<p>
+				The CRM core is free and the MLS stays free. The CRM is not 100% free: moving a qualified buyer lead into a
+				paid pipeline costs 1 credit, roughly 1&euro;, and your first 5 buyer leads are free. That is the whole trick
+				of this page: you just watched that credit get charged at the exact moment it exists.
+			</p>
+		</div>
+
+		<!-- ================= SCENE 5: THE NETWORK TWIST ================= -->
+		<div class="wrap w5" id="sc5" data-wrap="net">
+			<section class="stage" data-stage="net" aria-label="Scene 5: another agent sells it">
+				<p class="cap capA">Two weeks later the buyer arrives. Here is the twist: she is not your buyer.</p>
+				<p class="cap capB">An agent in Estepona had her all along. On an MLS, that is not competition. That is the point.</p>
+
+				<svg class="coast" viewBox="0 0 400 140" aria-hidden="true">
+					<path class="shore" d="M8,96 C60,88 90,98 130,92 C180,84 210,96 250,88 C300,78 340,86 392,72" />
+					<circle class="town tEste" cx="128" cy="92" r="5" />
+					<circle class="town tMarb" cx="252" cy="88" r="6" />
+					<path class="deal on" d="M128,92 C170,40 210,40 252,88" />
+					<text x="112" y="116" class="tLabel">Estepona</text>
+					<text x="236" y="112" class="tLabel">Marbella</text>
+				</svg>
+				<div class="split on" aria-hidden="true"><div class="sHalf sYou">your side</div><div class="sHalf sThem">their side</div></div>
+				<p class="netLine">Their buyer. Your listing. The commission splits on the terms you set.<span class="stamp stNet hit">&euro;0 forever</span></p>
+			</section>
+		</div>
+
+		<div class="breather">
+			<h2>1,300+ agents selling with you, not against you</h2>
+			<p>
+				This is the part of PropertyList that is genuinely unusual in Spain. Listings are shared across the network,
+				any agent can bring their buyer, and the commission split rides on the listing itself. You did not find this
+				buyer. Your network did, while you were at a viewing for a different property. Sharing costs nothing, in
+				either direction, permanently.
+			</p>
+		</div>
+
+		<!-- ================= SCENE 6: THE RENTALS FORK ================= -->
+		<div class="wrap w6" id="sc6" data-wrap="rent">
+			<section class="stage" data-stage="rent" aria-label="Scene 6: if it had been a rental">
+				<p class="cap capA">And if the owner had said "rent it out" instead? Same card. Other face.</p>
+				<div class="flipBox">
+					<div class="flipInner on">
+						<article class="card face front"><div class="photo"><span class="sun"></span><span class="sea"></span></div><div class="body"><h2 class="cardTitle">Villa Alborada</h2><p class="price">&euro;495,000</p></div></article>
+						<article class="card face back"><div class="photo alt2"><span class="moon"></span></div><div class="body"><h2 class="cardTitle">Villa Alborada</h2><p class="price">&euro;2,400<span class="unit">/month</span></p><p class="tline"><i></i><i></i><i></i></p><p class="tlab">tenancy &middot; renewals &middot; deposits</p></div></article>
+					</div>
+					<span class="stamp stRent hit credit">30-day free trial &middot; then 50 credits / 30 days</span>
+				</div>
+				<p class="tool">Rentals Module &middot; long-term and holiday lets in the same system</p>
+			</section>
+		</div>
+
+		<!-- ================= SCENE 7: INSTRUMENTS + SOON SHELF ================= -->
+		<div class="wrap w7" id="sc7" data-wrap="inst">
+			<section class="stage" data-stage="inst" aria-label="Scene 7: the tools around the journey">
+				<p class="cap capA">Around that journey sits a toolbox. The live shelf first.</p>
+				<p class="cap capB">And the shelf behind glass: built, coming, and claiming nothing until it ships.</p>
+				<div class="shelf live">
+					<div class="shTool on" style="--i:0"><b>Instant Content</b><span>blog + area guides that write themselves</span><span class="stamp mini2 hit credit">30 credits/mo</span></div>
+					<div class="shTool on" style="--i:1"><b>Market Intelligence</b><span>notary-verified prices, every area</span><span class="stamp mini2 hit">&euro;0</span></div>
+					<div class="shTool on" style="--i:2"><b>Mobile app</b><span>the MLS and CRM in your pocket (Android)</span><span class="stamp mini2 hit">&euro;0</span></div>
+					<div class="shTool on" style="--i:3"><b>AI Property Search</b><span>paste the WhatsApp, get the matches</span><span class="stamp mini2 hit">free in beta</span></div>
+				</div>
+				<div class="shelf frosted">
+					<div class="shTool soon" style="--i:0"><b>CoAgent</b><span>SOON</span></div>
+					<div class="shTool soon" style="--i:1"><b>Instant Documents</b><span>SOON</span></div>
+					<div class="shTool soon" style="--i:2"><b>Instant Brochure</b><span>SOON</span></div>
+					<div class="shTool soon" style="--i:3"><b>Instant Video + Images</b><span>SOON</span></div>
+					<div class="shTool soon" style="--i:4"><b>Instant Renovation</b><span>SOON</span></div>
+					<div class="shTool soon" style="--i:5"><b>360 Walkthroughs</b><span>SOON</span></div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ================= SCENE 8: CREDITS INTERLUDE ================= -->
+		<div class="wrap w8" id="sc8" data-wrap="cred">
+			<section class="stage" data-stage="cred" aria-label="Scene 8: what a credit is">
+				<p class="cap capA">Everything paid on this page was priced in one unit. So what is a credit?</p>
+				<div class="credScene">
+					<div class="coin on">1 credit &asymp; 1&euro;</div>
+					<p class="credLine">No subscriptions for the core. No contracts. Top up when you want, spend only when something specific happens.</p>
+					<div class="refRow on">
+						<div class="refCard"><b>Don't want to pay at all?</b><span>Refer an agency: 20 credits for you, 10 for them, no limit.</span></div>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ================= SCENE 9: THE RECEIPT ================= -->
+		<div class="wrap w9" id="sc9" data-wrap="rec">
+			<section class="stage" data-stage="rec" aria-label="Scene 9: the bill" id="receipt">
+				<p class="cap capA">Every stamp you watched land, on one till roll.</p>
+				<div class="till on">
+					<div class="tHead">PROPERTYLIST &middot; THE BILL</div>
+					{[
+						['List the property (Instant Listing)', '€0'],
+						['MLS: 1,300+ agents can sell it', '€0'],
+						['Public portal visibility', '€0'],
+						['Your website, kept in sync', '€0*'],
+						['XML feeds, in and out', '€0'],
+						['Market data, notary-verified', '€0'],
+						['Mobile app (Android)', '€0'],
+						['Portal enquiry', 'free for a limited time'],
+						['Valuation report (PIR)', '5 cr · first 3 free'],
+						['Buyer into paid pipeline', '1 cr · first 5 free'],
+						['Rentals Module', '50 cr / 30 days after trial'],
+						['Instant Content', '30 cr / month'],
+					].map(([l, v], i) => (
+						<div class="rl on" style={`--i:${i}`}><span>{l}</span><b>{v}</b></div>
+					))}
+					<div class="tFoot on">
+						<p class="tSum">The bill until specific things happen: <b>&euro;0</b></p>
+						<p class="tNote">* Website Builder sites are free to build and preview; a published site is 50 credits a month. A credit is roughly 1&euro;.</p>
+					</div>
+				</div>
+				<div class="ctaRow on">
+					<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener" data-umami-event="film-cta" data-umami-event-which="signup">Create your free account</a>
+					<a class="btnG" href="https://agents.propertylist.es/" target="_blank" rel="noopener" data-umami-event="film-cta" data-umami-event-which="login">Already signed up? Log in</a>
+				</div>
+			</section>
+		</div>
+
+		<!-- ================= OUTRO + FAQ ================= -->
+		<footer class="outro">
+			<h2>The same story, as questions</h2>
+			{faqs.map((f) => (
+				<details><summary>{f.q}</summary><p>{f.a}</p></details>
+			))}
+			<p class="moreLinks">
+				Prefer lists after all? <a href="/features/">Every feature</a> &middot; <a href="/free/">exactly what is free</a> &middot;
+				<a href="/hours/">what admin costs you a week</a>
+			</p>
+		</footer>
+	</div>
+
+	<style>
+		.film { --ink: #eaf2f1; --teal: #00ae9a; --glow: #5be3d0; --amber: #ffd9a0; background: #0b1220; color: var(--ink); overflow-x: clip; }
+
+		/* chapter temperature: night -> day -> evening */
+		.w1, .w2 { background: #0b1220; }
+		.w3 { background: #0d1626; }
+		.w4, .w5 { background: #0e1c2e; }
+		.w6, .w7 { background: #102030; }
+		.w8 { background: #12222f; }
+		.w9 { background: #14242e; }
+
+		.intro, .breather, .outro { max-width: 660px; margin: 0 auto; padding: 74px 22px 48px; text-align: center; position: relative; z-index: 6; }
+		.kicker { font-size: 12px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--glow); opacity: 0.8; margin: 0 0 14px; }
+		.intro h1 { font-size: clamp(36px, 6.4vw, 60px); letter-spacing: -1.5px; line-height: 1.04; margin: 0 0 16px; }
+		.sub { color: rgba(234, 242, 241, 0.68); font-size: 17px; line-height: 1.62; }
+		.sub em { font-style: normal; color: var(--glow); }
+		.introRow { display: flex; gap: 22px; justify-content: center; align-items: center; margin-top: 30px; flex-wrap: wrap; }
+		.hint { color: var(--glow); font-weight: 800; letter-spacing: 2px; animation: bob 1.7s ease-in-out infinite; }
+		@keyframes bob { 50% { transform: translateY(7px); } }
+		.skip { color: rgba(234, 242, 241, 0.55); font-size: 14px; text-decoration: none; border-bottom: 1px dotted rgba(234, 242, 241, 0.35); }
+		.skip:hover { color: var(--glow); }
+		.breather h2, .outro h2 { font-size: clamp(22px, 3.4vw, 30px); letter-spacing: -0.4px; margin: 0 0 12px; }
+		.breather p, .outro p { color: rgba(234, 242, 241, 0.66); font-size: 15.5px; line-height: 1.68; margin: 0; }
+		.breather { padding: 64px 22px 56px; }
+
+		/* rail */
+		.rail { position: fixed; left: max(10px, calc(50vw - 700px)); top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 12px; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+		.film.rolling .rail { opacity: 1; pointer-events: auto; }
+		.railDot { width: 9px; height: 9px; border-radius: 50%; background: rgba(234, 242, 241, 0.22); position: relative; transition: background 0.3s, transform 0.3s; }
+		.railDot.here { background: var(--glow); transform: scale(1.35); }
+		.railDot span { position: absolute; left: 17px; top: 50%; transform: translateY(-50%); font-size: 11px; letter-spacing: 0.6px; color: rgba(234, 242, 241, 0.6); white-space: nowrap; opacity: 0; transition: opacity 0.2s; }
+		.railDot:hover span, .railDot.here span { opacity: 1; }
+
+		/* stage scaffold */
+		.wrap { position: relative; }
+		.w1 { height: 240vh; } .w2 { height: 420vh; } .w3 { height: 240vh; } .w4 { height: 330vh; }
+		.w5 { height: 300vh; } .w6 { height: 240vh; } .w7 { height: 300vh; } .w8 { height: 210vh; } .w9 { height: 280vh; }
+		.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; --p: 1; --s1: 1; --s2: 1; }
+
+		.cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom)); width: min(88vw, 600px); text-align: center; font-size: clamp(15px, 2.1vw, 19px); line-height: 1.5; color: rgba(234, 242, 241, 0.88); opacity: 0; transition: opacity 0.35s; margin: 0; z-index: 8; text-shadow: 0 2px 18px rgba(11, 18, 32, 0.9); }
+		.cap strong { color: var(--glow); }
+		.stage[data-seg='1'] .capA, .stage[data-seg='2'] .capB, .stage[data-seg='3'] .capC { opacity: 1; }
+
+		/* ---- shared card ---- */
+		.card { position: absolute; left: 50%; top: 42%; width: clamp(200px, 25vw, 270px); margin-left: calc(clamp(200px, 25vw, 270px) / -2); transform: translateY(-50%); background: #101c33; border: 1px solid rgba(91, 227, 208, 0.25); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8); }
+		.photo { position: relative; height: 92px; background: linear-gradient(180deg, #16305a 0%, #1d4f6e 55%, #0f6b74 100%); overflow: hidden; }
+		.photo.alt2 { background: linear-gradient(180deg, #101a38, #232f55); }
+		.sun { position: absolute; right: 18%; top: 18%; width: 24px; height: 24px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 22px rgba(255, 217, 160, 0.8); }
+		.moon { position: absolute; right: 20%; top: 20%; width: 20px; height: 20px; border-radius: 50%; background: #dfe8ff; box-shadow: 0 0 18px rgba(223, 232, 255, 0.6); }
+		.sea { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; background: linear-gradient(180deg, rgba(0, 174, 154, 0.55), rgba(0, 174, 154, 0.25)); }
+		.body { padding: 12px 14px 13px; }
+		.cardTitle { font-size: 16px; margin: 0 0 2px; }
+		.where { font-size: 11.5px; color: rgba(234, 242, 241, 0.55); margin: 0 0 6px; }
+		.price { font-size: 20px; font-weight: 800; color: var(--glow); margin: 0 0 6px; }
+		.price .unit { font-size: 12px; color: rgba(234, 242, 241, 0.55); font-weight: 600; }
+		.chips { display: flex; gap: 6px; margin: 0; }
+		.chips span { font-size: 10.5px; padding: 3px 8px; border: 1px solid rgba(234, 242, 241, 0.2); border-radius: 999px; color: rgba(234, 242, 241, 0.7); }
+		.save { position: absolute; right: 10px; top: 10px; border-radius: 999px; background: var(--teal); color: #fff; font-weight: 800; font-size: 11px; padding: 6px 11px; }
+
+		/* ---- stamps (shared) ---- */
+		.stamp { position: absolute; right: -8px; top: -14px; z-index: 9; border: 2.5px solid var(--glow); color: var(--glow); font-weight: 900; font-size: 16px; padding: 2px 10px; border-radius: 8px; transform: rotate(-9deg); background: rgba(11, 18, 32, 0.88); white-space: nowrap; }
+		.stamp.credit { border-color: var(--amber); color: var(--amber); font-size: 12.5px; }
+		.stamp.free { border-color: rgba(234, 242, 241, 0.8); color: rgba(234, 242, 241, 0.9); font-size: 11.5px; }
+		.js .stamp { opacity: 0; transform: rotate(-9deg) scale(2.4); }
+		.js .stamp.hit { opacity: 1; transform: rotate(-9deg) scale(1); transition: transform 0.28s cubic-bezier(0.2, 2.2, 0.4, 1), opacity 0.12s; }
+
+		/* ---- scene 1 ---- */
+		.proPhotos { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); z-index: 2; }
+		.pp { position: absolute; width: 74px; height: 56px; border-radius: 10px; background: linear-gradient(160deg, #1d4f6e, #0f6b74); border: 1px solid rgba(234, 242, 241, 0.2); opacity: calc(1 - var(--s1)); }
+		.pp1 { transform: translate(calc(-140px + var(--s1) * 110px), calc(-90px + var(--s1) * 70px)) rotate(-10deg); }
+		.pp2 { transform: translate(calc(80px - var(--s1) * 80px), calc(-110px + var(--s1) * 85px)) rotate(7deg); background: linear-gradient(160deg, #16305a, #00ae9a); }
+		.pp3 { transform: translate(calc(-30px + var(--s1) * 25px), calc(120px - var(--s1) * 95px)) rotate(-4deg); background: linear-gradient(160deg, #0f6b74, #16305a); }
+		.wave { position: absolute; left: 50%; transform: translateX(-50%); top: 16%; display: flex; gap: 3px; align-items: center; height: 34px; }
+		.wave.on { opacity: 0; }
+		.js [data-stage='pro'] .wave.on { opacity: calc(0.9 - var(--s1) * 0.9); }
+		/* parabola height without abs()/sin(): unitless maths, then to px */
+		.wave i { width: 4px; border-radius: 3px; background: var(--glow); height: calc((26 - (var(--wi) - 9) * (var(--wi) - 9) * 0.22) * 1px); animation: wv 0.9s ease-in-out infinite alternate; animation-delay: calc(var(--wi) * -0.08s); }
+		@keyframes wv { from { transform: scaleY(0.45); } to { transform: scaleY(1); } }
+		.hero1 { z-index: 3; opacity: min(1, calc(var(--s1) * 1.6)); scale: calc(0.86 + 0.14 * var(--s1)); }
+		.hero1 .body > *, .hero1 .chips span { opacity: min(1, calc(var(--s1) * 2 - 0.3)); }
+		.stPro { right: 10px; top: auto; bottom: -12px; }
+		.tool { position: absolute; left: 50%; transform: translateX(-50%); top: calc(42% + 150px); width: min(86vw, 520px); text-align: center; font-size: 12.5px; letter-spacing: 0.4px; color: rgba(234, 242, 241, 0.5); z-index: 4; }
+
+		/* ---- scene 2 (fan-out, from the approved prototype) ---- */
+		.heroF { z-index: 3; opacity: calc(1 - var(--s1) * 0.55); scale: calc(1 - var(--s1) * 0.18); }
+		.clone { z-index: 2; pointer-events: none; opacity: calc(min(1, var(--s1) * 3) * clamp(0, calc((0.97 - var(--s1)) / 0.22), 1)); transform: translateY(-50%) translate(calc(var(--cx) * var(--s1)), calc(var(--cy) * var(--s1))) scale(calc(1 - 0.5 * var(--s1))); }
+		.c1 { --cx: -30vw; --cy: -30vh; } .c2 { --cx: 30vw; --cy: -30vh; } .c3 { --cx: -30vw; --cy: 26vh; } .c4 { --cx: 30vw; --cy: 26vh; }
+		.lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+		.ln { fill: none; stroke: rgba(91, 227, 208, 0.22); stroke-width: 0.3; stroke-dasharray: 90; stroke-dashoffset: calc(90 - var(--s2) * 90); transition: opacity 0.5s; }
+		.stage[data-seg='3'] .ln { opacity: 0.22; }
+		.dest { position: absolute; width: clamp(180px, 21vw, 245px); opacity: clamp(0, calc((var(--s1) - 0.55) / 0.45), 1); z-index: 4; }
+		.dMls { left: max(14px, 4vw); top: max(14px, 5vh); } .dPortal { right: max(14px, 4vw); top: max(14px, 5vh); }
+		.dWeb { left: max(14px, 4vw); bottom: max(14px, 7vh); } .dXml { right: max(14px, 4vw); bottom: max(14px, 7vh); }
+		.dHead { font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--glow); margin-bottom: 8px; }
+		.dLine { font-size: 12.5px; color: rgba(234, 242, 241, 0.6); margin-top: 8px; }
+		.dLine b { color: var(--ink); font-size: 15px; }
+		.dotGrid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; }
+		.dot { width: 100%; aspect-ratio: 1; border-radius: 50%; background: rgba(234, 242, 241, 0.12); transition: background 0.4s, box-shadow 0.4s; transition-delay: var(--d); }
+		.stage.mlsOn .dot { background: var(--glow); box-shadow: 0 0 6px rgba(91, 227, 208, 0.7); }
+		.mini { border: 1px solid rgba(234, 242, 241, 0.16); border-radius: 10px; background: #101c33; overflow: hidden; }
+		.chrome { display: flex; gap: 4px; padding: 6px 8px; border-bottom: 1px solid rgba(234, 242, 241, 0.1); }
+		.chrome span { width: 7px; height: 7px; border-radius: 50%; background: rgba(234, 242, 241, 0.25); }
+		.mCard { display: flex; gap: 8px; padding: 8px; align-items: center; }
+		.mPhoto { width: 46px; height: 34px; border-radius: 6px; background: linear-gradient(160deg, #1d4f6e, #0f6b74); flex: none; }
+		.mPhoto.alt { background: linear-gradient(160deg, #16305a, #00ae9a); }
+		.mMeta { flex: 1; } .mMeta i { display: block; height: 7px; border-radius: 4px; background: rgba(234, 242, 241, 0.2); margin: 5px 0; } .mMeta i.short { width: 55%; }
+		.laptop { border: 0; background: transparent; overflow: visible; }
+		.laptop .lapScreen { border: 1px solid rgba(234, 242, 241, 0.14); border-bottom: 0; border-radius: 8px 8px 0 0; background: #0d1830; }
+		.laptop .lapBase { height: 7px; background: rgba(234, 242, 241, 0.18); border-radius: 0 0 10px 10px; }
+		.code { padding: 10px 12px; font-family: ui-monospace, Consolas, monospace; font-size: 10.5px; color: rgba(91, 227, 208, 0.85); display: flex; flex-direction: column; gap: 3px; }
+		.code .ind { padding-left: 14px; color: rgba(234, 242, 241, 0.6); }
+		.thesis { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); text-align: center; font-size: clamp(22px, 4vw, 38px); font-weight: 800; letter-spacing: -0.5px; margin: 0; opacity: 0; transition: opacity 0.5s 0.1s; z-index: 5; text-shadow: 0 4px 30px rgba(11, 18, 32, 0.95); }
+		.thesis span { color: var(--glow); }
+		.stage[data-seg='3'] .thesis { opacity: 1; }
+		.stage[data-seg='3'] .heroF { opacity: 0.1; }
+
+		/* ---- scene 3 (valuation) ---- */
+		[data-stage='val'] { filter: saturate(calc(0.55 + 0.45 * var(--p))); }
+		.valScene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: clamp(18px, 4vw, 54px); padding: 0 5vw; flex-wrap: wrap; }
+		.valFrame { width: min(46vw, 430px); border-radius: 14px; overflow: hidden; border: 1px solid rgba(91, 227, 208, 0.3); box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.85); }
+		.valFrame img { display: block; width: 100%; height: auto; }
+		.js .valFrame { opacity: 0; transform: translateY(26px) rotate(-1.5deg); transition: opacity 0.5s, transform 0.5s; }
+		.js .valFrame.on { opacity: 1; transform: none; }
+		.valNote { position: relative; max-width: 340px; }
+		.js .valNote { opacity: 0; transform: translateY(18px); transition: opacity 0.5s 0.12s, transform 0.5s 0.12s; }
+		.js .valNote.on { opacity: 1; transform: none; }
+		.valBig { font-size: clamp(20px, 3vw, 28px); font-weight: 800; line-height: 1.25; margin: 0 0 10px; }
+		.valSmall { font-size: 14px; color: rgba(234, 242, 241, 0.62); line-height: 1.6; margin: 0 0 40px; }
+		.stVal { position: relative; display: inline-block; right: auto; top: auto; }
+
+		/* ---- scene 4 (enquiry) ---- */
+		.bubble { position: absolute; left: 50%; top: 16%; transform: translateX(-50%); width: min(84vw, 400px); background: #123a2e; border: 1px solid rgba(37, 211, 102, 0.5); border-radius: 16px 16px 16px 4px; padding: 14px 18px 16px; font-size: 13.5px; color: rgba(234, 242, 241, 0.85); z-index: 5; }
+		.bubble b { display: block; margin-top: 4px; font-size: 15px; color: #dfffe9; }
+		.bDot { position: absolute; left: -5px; top: -5px; width: 12px; height: 12px; border-radius: 50%; background: #25d366; box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); animation: pulse 2s infinite; }
+		@keyframes pulse { 70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); } }
+		.js .bubble { opacity: 0; transform: translateX(-50%) translateY(-18px); transition: opacity 0.4s, transform 0.4s; }
+		.js .bubble.on { opacity: 1; transform: translateX(-50%); }
+		.stEnq { right: 12px; top: auto; bottom: -14px; }
+		.kanban { position: absolute; left: 50%; top: 52%; transform: translateX(-50%); display: flex; gap: clamp(10px, 2vw, 22px); z-index: 4; }
+		.kCol { width: clamp(104px, 13vw, 170px); background: rgba(16, 28, 51, 0.7); border: 1px solid rgba(234, 242, 241, 0.12); border-radius: 12px; padding: 10px; min-height: 150px; }
+		.kHead { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(234, 242, 241, 0.5); margin-bottom: 8px; }
+		.kGhost { height: 44px; border: 1.5px dashed rgba(234, 242, 241, 0.14); border-radius: 8px; }
+		.kCard { position: relative; background: #17304f; border: 1px solid rgba(91, 227, 208, 0.35); border-radius: 8px; padding: 9px 10px 11px; font-size: 12px; }
+		.kCard b { display: block; font-size: 13px; }
+		.kCard > span { color: rgba(234, 242, 241, 0.55); font-size: 11px; }
+		.js .kMove { opacity: 0; transform: translateX(calc(-100% - 24px)); transition: transform 0.55s cubic-bezier(0.3, 1.2, 0.4, 1), opacity 0.3s; }
+		.js .kMove.on { opacity: 1; transform: none; }
+		.stPipe { right: -10px; top: auto; bottom: -16px; }
+		[data-stage='enq'] .tool { top: auto; bottom: 12vh; }
+
+		/* ---- scene 5 (network) ---- */
+		.coast { position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%); width: min(88vw, 680px); z-index: 2; }
+		.shore { fill: none; stroke: rgba(234, 242, 241, 0.35); stroke-width: 2; stroke-dasharray: 420; stroke-dashoffset: calc(420 - var(--s1) * 420); }
+		.town { fill: var(--glow); opacity: clamp(0, calc((var(--s1) - 0.6) / 0.3), 1); }
+		.tLabel { fill: rgba(234, 242, 241, 0.6); font-size: 11px; letter-spacing: 0.5px; opacity: clamp(0, calc((var(--s1) - 0.7) / 0.3), 1); }
+		.deal { fill: none; stroke: var(--glow); stroke-width: 2; stroke-dasharray: 220; stroke-dashoffset: 220; }
+		.js .deal.on { animation: draw 0.9s ease forwards; }
+		.deal.on { stroke-dashoffset: 0; }
+		@keyframes draw { to { stroke-dashoffset: 0; } }
+		.split { position: absolute; left: 50%; top: 58%; transform: translateX(-50%); width: min(78vw, 440px); display: flex; border-radius: 999px; overflow: hidden; border: 1px solid rgba(91, 227, 208, 0.4); z-index: 3; }
+		.sHalf { flex: 1; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 10px 0; }
+		.sYou { background: rgba(0, 174, 154, 0.35); }
+		.sThem { background: rgba(0, 174, 154, 0.14); }
+		.js .split { opacity: 0; transform: translateX(-50%) scaleX(0.6); transition: opacity 0.45s, transform 0.45s; }
+		.js .split.on { opacity: 1; transform: translateX(-50%) scaleX(1); }
+		.netLine { position: absolute; left: 50%; transform: translateX(-50%); top: 70%; width: min(86vw, 520px); text-align: center; font-size: clamp(15px, 2.2vw, 18px); color: rgba(234, 242, 241, 0.85); z-index: 4; }
+		.stNet { position: relative; display: inline-block; right: auto; top: auto; margin-left: 12px; }
+
+		/* ---- scene 6 (rentals flip) ---- */
+		.flipBox { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: clamp(210px, 26vw, 280px); perspective: 1100px; z-index: 3; }
+		.flipInner { position: relative; width: 100%; height: 230px; transform-style: preserve-3d; transition: transform 0.2s; transform: rotateY(calc(var(--s1) * 180deg)); }
+		.face { position: absolute; inset: 0; margin: 0; left: 0; top: 0; width: 100%; transform: none; backface-visibility: hidden; }
+		.face.back { transform: rotateY(180deg); }
+		.tline { display: flex; gap: 5px; margin: 10px 0 4px; }
+		.tline i { flex: 1; height: 8px; border-radius: 5px; background: rgba(91, 227, 208, 0.35); }
+		.tline i:nth-child(2) { background: rgba(91, 227, 208, 0.6); }
+		.tlab { font-size: 10.5px; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(234, 242, 241, 0.5); margin: 0; }
+		.stRent { right: -6px; bottom: -16px; top: auto; }
+		[data-stage='rent'] .tool { top: calc(44% + 160px); }
+
+		/* ---- scene 7 (shelves) ---- */
+		.shelf { position: absolute; left: 50%; transform: translateX(-50%); width: min(92vw, 860px); display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; z-index: 3; }
+		.shelf.live { top: 12vh; }
+		.shelf.frosted { bottom: 14vh; }
+		.shTool { position: relative; background: rgba(16, 28, 51, 0.75); border: 1px solid rgba(234, 242, 241, 0.14); border-radius: 12px; padding: 13px 14px 15px; }
+		.shTool b { display: block; font-size: 14px; margin-bottom: 3px; }
+		.shTool > span { font-size: 11.5px; color: rgba(234, 242, 241, 0.55); line-height: 1.45; display: block; }
+		.js .shelf.live .shTool { opacity: 0; transform: translateY(16px); transition: opacity 0.4s, transform 0.4s; transition-delay: calc(var(--i) * 90ms); }
+		.js .shelf.live .shTool.on { opacity: 1; transform: none; }
+		.stamp.mini2 { position: absolute; right: 8px; top: -10px; font-size: 10.5px; padding: 1px 7px; border-width: 2px; }
+		.shelf.frosted .shTool { backdrop-filter: blur(3px); background: rgba(234, 242, 241, 0.05); border-style: dashed; border-color: rgba(234, 242, 241, 0.22); }
+		.shTool.soon b { color: rgba(234, 242, 241, 0.65); }
+		.shTool.soon span { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255, 217, 160, 0.75); }
+		.js .shelf.frosted { opacity: 0; transition: opacity 0.5s; }
+		.js .shelf.frosted.on { opacity: 1; }
+		.frosted.on { opacity: 1; }
+
+		/* ---- scene 8 (credits) ---- */
+		.credScene { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 0 6vw; text-align: center; }
+		.coin { width: clamp(150px, 20vw, 200px); aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--amber); color: var(--amber); display: grid; place-items: center; font-size: clamp(17px, 2.4vw, 22px); font-weight: 900; background: radial-gradient(circle at 34% 30%, rgba(255, 217, 160, 0.2), transparent 60%); }
+		.js .coin { opacity: 0; transform: scale(0.6) rotate(-14deg); transition: opacity 0.4s, transform 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+		.js .coin.on { opacity: 1; transform: none; }
+		.credLine { max-width: 440px; color: rgba(234, 242, 241, 0.7); font-size: 15px; line-height: 1.6; margin: 0; }
+		.refCard { border: 1px solid rgba(91, 227, 208, 0.35); background: rgba(0, 174, 154, 0.1); border-radius: 14px; padding: 14px 20px; font-size: 14px; }
+		.refCard b { display: block; margin-bottom: 3px; }
+		.refCard span { color: rgba(234, 242, 241, 0.65); font-size: 13px; }
+		.js .refRow { opacity: 0; transform: translateY(14px); transition: opacity 0.45s, transform 0.45s; }
+		.js .refRow.on { opacity: 1; transform: none; }
+
+		/* ---- scene 9 (receipt) ---- */
+		.till { position: absolute; left: 50%; top: 47%; transform: translate(-50%, -50%); width: min(90vw, 460px); background: #f4f1e8; color: #101828; border-radius: 6px 6px 14px 14px; padding: 18px 22px 16px; font-size: 13.5px; box-shadow: 0 34px 80px -30px rgba(0, 0, 0, 0.9); z-index: 3; max-height: 74svh; overflow: auto; }
+		.till::before { content: ''; position: absolute; left: 0; right: 0; top: -8px; height: 9px; background: linear-gradient(-45deg, transparent 6px, #f4f1e8 0) 0 0 / 14px 100%; }
+		.tHead { text-align: center; font-weight: 900; letter-spacing: 2px; font-size: 12.5px; border-bottom: 2px dashed rgba(16, 24, 40, 0.25); padding-bottom: 9px; margin-bottom: 6px; }
+		.rl { display: flex; justify-content: space-between; gap: 14px; padding: 5px 0; border-bottom: 1px dotted rgba(16, 24, 40, 0.14); }
+		.rl span { color: rgba(16, 24, 40, 0.78); }
+		.rl b { white-space: nowrap; color: #0a6d61; }
+		.js .rl { opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+		.js .rl.on { opacity: 1; transform: none; }
+		.tFoot { padding-top: 9px; }
+		.js .tFoot { opacity: 0; transition: opacity 0.4s 0.1s; }
+		.js .tFoot.on { opacity: 1; }
+		.tSum { font-size: 15.5px; font-weight: 800; margin: 0 0 6px; }
+		.tSum b { color: #0a6d61; font-size: 19px; }
+		.tNote { font-size: 11px; color: rgba(16, 24, 40, 0.55); line-height: 1.5; margin: 0; }
+		.js .till { opacity: 0; transform: translate(-50%, -47%); transition: opacity 0.5s, transform 0.5s; }
+		.js .till.on { opacity: 1; transform: translate(-50%, -50%); }
+		.ctaRow { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(16px, 5vh); display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; z-index: 4; width: min(92vw, 600px); }
+		.js .ctaRow { opacity: 0; transition: opacity 0.5s 0.2s; }
+		.js .ctaRow.on { opacity: 1; }
+		.btnP { background: var(--teal); color: #fff; border-radius: 999px; padding: 13px 26px; font-size: 15px; font-weight: 800; text-decoration: none; }
+		.btnP:hover { background: #00998a; }
+		.btnG { background: transparent; color: var(--ink); border: 1.5px solid rgba(234, 242, 241, 0.4); border-radius: 999px; padding: 13px 26px; font-size: 15px; font-weight: 800; text-decoration: none; }
+		.btnG:hover { border-color: var(--glow); color: var(--glow); }
+		[data-stage='rec'] .capA { bottom: auto; top: max(16px, 4vh); }
+
+		/* ---- outro ---- */
+		.outro { padding-bottom: 90px; }
+		.outro details { text-align: left; border-bottom: 1px solid rgba(234, 242, 241, 0.12); padding: 13px 4px; }
+		.outro summary { font-weight: 700; font-size: 15.5px; cursor: pointer; }
+		.outro details p { margin: 10px 0 2px; font-size: 14.5px; }
+		.moreLinks { margin-top: 26px !important; font-size: 14px !important; }
+		.moreLinks a { color: var(--glow); text-decoration: none; }
+		.moreLinks a:hover { text-decoration: underline; }
+
+		/* ---- mobile ---- */
+		@media (max-width: 700px) {
+			.c1 { --cx: -24vw; --cy: -29vh; } .c2 { --cx: 24vw; --cy: -29vh; } .c3 { --cx: -24vw; --cy: 23vh; } .c4 { --cx: 24vw; --cy: 23vh; }
+			.clone { display: none; }
+			.dest { width: 42vw; }
+			.dotGrid { grid-template-columns: repeat(10, 1fr); }
+			.dot:nth-child(n + 101) { display: none; }
+			.card { width: 200px; margin-left: -100px; }
+			.rail { display: none; }
+			.valScene { gap: 14px; padding-top: 6vh; align-content: center; }
+			.valFrame { width: min(84vw, 340px); }
+			.valNote { max-width: 84vw; text-align: center; }
+			.valSmall { margin-bottom: 34px; }
+			.kanban { top: 46%; }
+			.kCol:last-child { display: none; }
+			.kCol { width: 38vw; }
+			.shelf { grid-template-columns: 1fr 1fr; }
+			.shelf.live { top: 8vh; }
+			.shelf.frosted { bottom: 10vh; }
+			.stamp { font-size: 13px; }
+			.stamp.credit { font-size: 10.5px; }
+			.till { font-size: 12px; padding: 14px 14px 12px; top: 44%; max-height: 66svh; }
+			.flipInner { height: 215px; }
+			.coast { width: 94vw; top: 26%; }
+			.bubble { top: 10%; }
+		}
+
+		/* ---- reduced motion: the film becomes an illustrated article ---- */
+		@media (prefers-reduced-motion: reduce) {
+			.wrap { height: auto !important; }
+			.stage { position: static; height: auto; min-height: 92vh; padding: 46px 0 70px; }
+			.cap { position: static; transform: none; opacity: 1 !important; margin: 12px auto; }
+			.hint, .bDot, .wave i { animation: none; }
+			.card, .dest, .kanban, .coast, .split, .netLine, .flipBox, .shelf, .credScene, .till, .ctaRow, .bubble, .valScene, .tool, .thesis, .proPhotos { position: static; transform: none; margin: 14px auto; opacity: 1; }
+			.thesis { opacity: 1; }
+			.clone, .lines { display: none; }
+			.credScene { display: flex; }
+		}
+	</style>
+
+	<script>
+		const film = document.querySelector('[data-film]') as HTMLElement;
+		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const clamp = (v: number) => Math.max(0, Math.min(1, v));
+		const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+		// Every scene declares its beats. cls beats toggle a class on a target
+		// (or each element of a stagger) once --p passes the threshold; seg sets
+		// data-seg for captions; counters tween textContent.
+		type Beat = { at: number; sel: string; cls?: string; all?: boolean };
+		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: { sel: string; from: number; to: number }; counter?: { sel: string; to: number; from: number; end: number } }> = {
+			pro: { segs: [0.42], s1: [0.18, 0.62], beats: [{ at: 0.66, sel: '.stPro', cls: 'hit' }] },
+			fan: {
+				segs: [0.4, 0.82], s1: [0.1, 0.42], s2: [0.3, 0.52],
+				beats: [
+					{ at: 0.42, sel: '[data-stage=fan]', cls: 'mlsOn' },
+					{ at: 0.5, sel: '.stF1', cls: 'hit' }, { at: 0.58, sel: '.stF2', cls: 'hit' },
+					{ at: 0.66, sel: '.stF3', cls: 'hit' }, { at: 0.74, sel: '.stF4', cls: 'hit' },
+				],
+				counter: { sel: '[data-count-agents]', to: 1300, from: 0.42, end: 0.72 },
+			},
+			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
+			enq: { segs: [0.36, 0.72], beats: [{ at: 0.14, sel: '.bubble', cls: 'on' }, { at: 0.3, sel: '.stEnq', cls: 'hit' }, { at: 0.46, sel: '.kMove', cls: 'on' }, { at: 0.62, sel: '.stPipe', cls: 'hit' }] },
+			net: { segs: [0.55], s1: [0.05, 0.5], beats: [{ at: 0.55, sel: '.deal', cls: 'on' }, { at: 0.68, sel: '.split', cls: 'on' }, { at: 0.8, sel: '.stNet', cls: 'hit' }] },
+			rent: { segs: [0.4], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRent', cls: 'hit' }] },
+			inst: {
+				segs: [0.52],
+				beats: [
+					{ at: 0.14, sel: '.shelf.live .shTool', cls: 'on', all: true },
+					{ at: 0.3, sel: '.stamp.mini2', cls: 'hit', all: true },
+					{ at: 0.56, sel: '.shelf.frosted', cls: 'on' },
+				],
+			},
+			cred: { segs: [0.5], beats: [{ at: 0.2, sel: '.coin', cls: 'on' }, { at: 0.55, sel: '.refRow', cls: 'on' }] },
+			rec: {
+				segs: [0.3],
+				beats: [{ at: 0.03, sel: '.till', cls: 'on' }, { at: 0.78, sel: '.tFoot', cls: 'on' }, { at: 0.84, sel: '.ctaRow', cls: 'on' }],
+				stagger: { sel: '.rl', from: 0.14, to: 0.74 },
+			},
+		};
+
+		const wraps = Array.from(document.querySelectorAll('[data-wrap]')) as HTMLElement[];
+		const railDots = Array.from(document.querySelectorAll('[data-rail-dot]'));
+		const seen = new Set<string>();
+		const track = (n: string, d?: Record<string, unknown>) => { try { (window as any).umami?.track?.(n, d); } catch {} };
+
+		if (!reduced) {
+			film.classList.add('js');
+			// rewind every scene to its zero state
+			for (const w of wraps) {
+				const key = w.dataset.wrap!;
+				const stage = w.querySelector('[data-stage]') as HTMLElement;
+				stage.style.setProperty('--s1', '0');
+				stage.style.setProperty('--s2', '0');
+				stage.style.setProperty('--p', '0');
+				stage.dataset.seg = '1';
+				const sc = SCENES[key];
+				for (const b of sc.beats) (b.all ? stage.querySelectorAll(b.sel) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.remove(b.cls || 'on'));
+				if (sc.stagger) stage.querySelectorAll(sc.stagger.sel).forEach((el) => el.classList.remove('on'));
+				if (sc.counter) { const c = stage.querySelector(sc.counter.sel); if (c) c.textContent = '0'; }
+			}
+
+			let ticking = false;
+			const frame = () => {
+				ticking = false;
+				const vh = innerHeight;
+				let anyActive = false;
+				wraps.forEach((w, wi) => {
+					const r = w.getBoundingClientRect();
+					if (r.bottom < -vh || r.top > vh * 2) return;
+					const key = w.dataset.wrap!;
+					const sc = SCENES[key];
+					const stage = w.querySelector('[data-stage]') as HTMLElement;
+					const p = clamp(-r.top / Math.max(1, w.offsetHeight - vh));
+					stage.style.setProperty('--p', String(p));
+					if (sc.s1) stage.style.setProperty('--s1', String(ease(clamp((p - sc.s1[0]) / (sc.s1[1] - sc.s1[0])))));
+					if (sc.s2) stage.style.setProperty('--s2', String(clamp((p - sc.s2[0]) / (sc.s2[1] - sc.s2[0]))));
+					let seg = 1;
+					for (const t of sc.segs) if (p > t) seg++;
+					stage.dataset.seg = String(seg);
+					for (const b of sc.beats) (b.all ? stage.querySelectorAll(b.sel) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.toggle(b.cls || 'on', p > b.at));
+					if (sc.stagger) {
+						const els = stage.querySelectorAll(sc.stagger.sel);
+						els.forEach((el, i) => el.classList.toggle('on', p > sc.stagger!.from + (i * (sc.stagger!.to - sc.stagger!.from)) / els.length));
+					}
+					if (sc.counter) {
+						const c = stage.querySelector(sc.counter.sel) as HTMLElement;
+						if (c) c.textContent = Math.round(sc.counter.to * clamp((p - sc.counter.from) / (sc.counter.end - sc.counter.from))).toLocaleString('en-GB');
+					}
+					const active = r.top < vh * 0.5 && r.bottom > vh * 0.5;
+					if (active) { railDots.forEach((d, i) => d.classList.toggle('here', i === wi)); anyActive = true; }
+					if (active && !seen.has(key)) { seen.add(key); track('film-scene', { scene: key }); }
+				});
+				film.classList.toggle('rolling', anyActive);
+			};
+			addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+			addEventListener('resize', frame);
+			frame();
+		}
+	</script>
+</Layout>
