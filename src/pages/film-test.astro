@@ -1,0 +1,291 @@
+---
+// PROTOTYPE - the "fan-out" thesis scene for the agent film ("One listing.
+// Watch what happens."). Not linked from anywhere, noindex, EN only: it exists
+// so James can scroll one scene and approve the art direction before the full
+// build. If approved, this grows into the complete film; if not, it dies here.
+//
+// Mechanics chosen deliberately:
+// - position:sticky pinned stage inside a tall wrapper; scroll progress drives
+//   a single CSS custom property --p (plus eased segment vars) set by a tiny
+//   rAF-throttled listener. Works in every browser today, 1px of scroll = one
+//   tick, instantly reversible (the NN/g rule). Native CSS scroll timelines can
+//   replace the JS in production behind @supports; the authoring stays the same.
+// - All motion is transform/opacity only. No canvas, no video, no libraries.
+// - Default state in the markup is the FINISHED scene: crawlers and no-JS
+//   visitors see the completed fan-out with all text; JS rewinds it to 0 on
+//   init and hands control to scroll. Reduced-motion never rewinds.
+import Layout from '../layouts/Layout.astro';
+
+const dots = Array.from({ length: 130 }, (_, i) => i); // 1 dot = 10 agents
+---
+
+<Layout
+	lang="en"
+	title="Prototype: the fan-out scene"
+	description="Internal prototype of the agent film thesis scene."
+	canonical="https://info.propertylist.es/film-test/"
+	robots="noindex, nofollow"
+>
+	<div class="ft">
+		<section class="intro">
+			<p class="kicker">Prototype &middot; scene 2 of 9 &middot; not linked anywhere</p>
+			<h1>One listing. Watch what happens.</h1>
+			<p class="sub">
+				Scroll slowly. This is the thesis scene: the second after you press save. If this thirty seconds feels right,
+				the rest of the film is assembly.
+			</p>
+			<p class="hint">&darr; scroll</p>
+		</section>
+
+		<div class="fWrap" data-wrap>
+			<div class="stage" data-stage>
+				<!-- captions: one visible at a time, all in HTML for crawlers -->
+				<p class="cap cap1">This is your listing. Five minutes, photos and a voice note.</p>
+				<p class="cap cap2">Press save. Now watch.</p>
+				<p class="cap cap3">It is now everywhere you sell. You did nothing else.</p>
+				<p class="cap cap4">One save. Four places. The bill so far: <strong>&euro;0</strong>.</p>
+
+				<!-- connection lines -->
+				<svg class="lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+					<path class="ln" d="M50,50 C40,38 32,30 18,20" />
+					<path class="ln" d="M50,50 C60,38 68,30 82,20" />
+					<path class="ln" d="M50,50 C40,62 32,70 18,80" />
+					<path class="ln" d="M50,50 C60,62 68,70 82,80" />
+				</svg>
+
+				<!-- the four destinations -->
+				<div class="dest dMls" data-dest>
+					<div class="dHead">The MLS</div>
+					<div class="dotGrid" aria-hidden="true">
+						{dots.map((i) => <span class="dot" style={`--d:${(i * 7) % 900}ms`}></span>)}
+					</div>
+					<div class="dLine"><b data-count>1,300</b>+ agents can sell it</div>
+					<div class="stamp st1">&euro;0</div>
+				</div>
+
+				<div class="dest dPortal" data-dest>
+					<div class="dHead">The portal</div>
+					<div class="mini browser">
+						<div class="chrome"><span></span><span></span><span></span></div>
+						<div class="mCard"><div class="mPhoto"></div><div class="mMeta"><i></i><i class="short"></i></div></div>
+					</div>
+					<div class="dLine">buyers see it tonight</div>
+					<div class="stamp st2">&euro;0</div>
+				</div>
+
+				<div class="dest dWeb" data-dest>
+					<div class="dHead">Your website</div>
+					<div class="mini laptop">
+						<div class="lapScreen"><div class="mCard"><div class="mPhoto alt"></div><div class="mMeta"><i></i><i class="short"></i></div></div></div>
+						<div class="lapBase"></div>
+					</div>
+					<div class="dLine">already updated</div>
+					<div class="stamp st3">&euro;0</div>
+				</div>
+
+				<div class="dest dXml" data-dest>
+					<div class="dHead">XML feeds</div>
+					<div class="mini code" aria-hidden="true">
+						<span>&lt;property&gt;</span>
+						<span class="ind">&lt;ref&gt;PL-4471&lt;/ref&gt;</span>
+						<span class="ind">&lt;price&gt;495000&lt;/price&gt;</span>
+						<span>&lt;/property&gt;</span>
+					</div>
+					<div class="dLine">every portal, one feed</div>
+					<div class="stamp st4">&euro;0</div>
+				</div>
+
+				<!-- the actor: one listing card, plus four travelling clones -->
+				<article class="card hero" data-hero>
+					<div class="photo"><span class="sun"></span><span class="sea"></span></div>
+					<div class="body">
+						<h2>Villa Alborada</h2>
+						<p class="where">Marbella &middot; Ref PL-4471</p>
+						<p class="price">&euro;495,000</p>
+						<p class="chips"><span>3 beds</span><span>2 baths</span><span>184 m&sup2;</span></p>
+					</div>
+					<button class="save" tabindex="-1">Saved &check;</button>
+				</article>
+
+				{[1, 2, 3, 4].map((n) => (
+					<article class={`card clone c${n}`} aria-hidden="true">
+						<div class="photo"><span class="sun"></span><span class="sea"></span></div>
+						<div class="body">
+							<h2>Villa Alborada</h2>
+							<p class="where">Marbella &middot; Ref PL-4471</p>
+							<p class="price">&euro;495,000</p>
+						</div>
+					</article>
+				))}
+
+				<p class="thesis">That is what PropertyList is.<br /><span>The thing in the middle.</span></p>
+			</div>
+		</div>
+
+		<section class="outro">
+			<h2>Scene approved?</h2>
+			<p>
+				The full film adds the valuation flashback, the enquiry landing in the CRM, the network sale, the rentals
+				fork, the coming-soon shelf behind glass, and the receipt that totals every stamp you just watched land.
+			</p>
+		</section>
+	</div>
+
+	<style>
+		.ft { --ink: #eaf2f1; --teal: #00ae9a; --glow: #5be3d0; max-width: none; margin: -28px calc(50% - 50vw) 0; background: #0b1220; color: var(--ink); }
+		.intro, .outro { max-width: 640px; margin: 0 auto; padding: 72px 22px 40px; text-align: center; }
+		.kicker { font-size: 12px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--glow); opacity: 0.75; margin: 0 0 14px; }
+		.intro h1 { font-size: clamp(32px, 6vw, 52px); letter-spacing: -1px; margin: 0 0 14px; }
+		.sub { color: rgba(234, 242, 241, 0.65); font-size: 16.5px; line-height: 1.6; }
+		.hint { margin-top: 34px; color: var(--glow); font-weight: 800; letter-spacing: 2px; animation: bob 1.6s ease-in-out infinite; }
+		@keyframes bob { 50% { transform: translateY(7px); } }
+		.outro { padding: 60px 22px 90px; }
+		.outro p { color: rgba(234, 242, 241, 0.65); line-height: 1.65; }
+
+		.fWrap { height: 430vh; }
+		.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+
+		/* segment vars: s1 split travel, s2 line draw. Default = FINISHED scene
+		   so crawlers/no-JS/reduced-motion read the completed frame. */
+		.stage { --s1: 1; --s2: 1; }
+
+		/* ---- captions ---- */
+		.cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(20px, env(safe-area-inset-bottom)); width: min(88vw, 560px); text-align: center; font-size: clamp(15px, 2.2vw, 19px); color: rgba(234, 242, 241, 0.85); opacity: 0; transition: opacity 0.35s; margin: 0; }
+		.cap strong { color: var(--glow); }
+		.stage[data-seg='1'] .cap1, .stage[data-seg='2'] .cap2, .stage[data-seg='3'] .cap3, .stage[data-seg='4'] .cap4 { opacity: 1; }
+
+		/* ---- the card ---- */
+		.card { position: absolute; left: 50%; top: 44%; width: clamp(200px, 26vw, 280px); margin-left: calc(clamp(200px, 26vw, 280px) / -2); transform: translateY(-50%); background: #101c33; border: 1px solid rgba(91, 227, 208, 0.25); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8); }
+		.photo { position: relative; height: 96px; background: linear-gradient(180deg, #16305a 0%, #1d4f6e 55%, #0f6b74 100%); overflow: hidden; }
+		.sun { position: absolute; right: 18%; top: 18%; width: 26px; height: 26px; border-radius: 50%; background: #ffd9a0; box-shadow: 0 0 24px rgba(255, 217, 160, 0.8); }
+		.sea { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; background: linear-gradient(180deg, rgba(0, 174, 154, 0.55), rgba(0, 174, 154, 0.25)); }
+		.body { padding: 12px 14px 14px; }
+		.body h2 { font-size: 16px; margin: 0 0 2px; }
+		.where { font-size: 11.5px; color: rgba(234, 242, 241, 0.55); margin: 0 0 6px; }
+		.price { font-size: 20px; font-weight: 800; color: var(--glow); margin: 0 0 8px; }
+		.chips { display: flex; gap: 6px; margin: 0; }
+		.chips span { font-size: 10.5px; padding: 3px 8px; border: 1px solid rgba(234, 242, 241, 0.2); border-radius: 999px; color: rgba(234, 242, 241, 0.7); }
+		.save { position: absolute; right: 10px; top: 10px; border: 0; border-radius: 999px; background: var(--teal); color: #fff; font-weight: 800; font-size: 11px; padding: 6px 11px; pointer-events: none; }
+		.hero { z-index: 3; opacity: calc(1 - var(--s1) * 0.55); scale: calc(1 - var(--s1) * 0.18); }
+
+		/* ---- clones fly to the corners, then are ABSORBED by the plates ----
+		   fade-out at the end of travel: the listing "arrives", the plate's own
+		   mini-card takes over, and the plates (and their stamps) stay uncovered */
+		.clone { z-index: 2; pointer-events: none; opacity: calc(min(1, var(--s1) * 3) * clamp(0, calc((0.97 - var(--s1)) / 0.22), 1)); transform: translateY(-50%) translate(calc(var(--cx) * var(--s1)), calc(var(--cy) * var(--s1))) scale(calc(1 - 0.5 * var(--s1))); }
+		.clone .body { padding-bottom: 10px; }
+		.c1 { --cx: -30vw; --cy: -31vh; }
+		.c2 { --cx: 30vw; --cy: -31vh; }
+		.c3 { --cx: -30vw; --cy: 27vh; }
+		.c4 { --cx: 30vw; --cy: 27vh; }
+
+		/* ---- connection lines ---- */
+		.lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+		.ln { fill: none; stroke: rgba(91, 227, 208, 0.22); stroke-width: 0.3; stroke-dasharray: 90; stroke-dashoffset: calc(90 - var(--s2) * 90); transition: opacity 0.5s; }
+		.stage[data-seg='4'] .ln { opacity: 0.25; }
+
+		/* ---- destinations ---- */
+		.dest { position: absolute; width: clamp(180px, 22vw, 250px); opacity: clamp(0, calc((var(--s1) - 0.55) / 0.45), 1); z-index: 2; }
+		.dMls { left: max(14px, 4vw); top: max(14px, 5vh); }
+		.dPortal { right: max(14px, 4vw); top: max(14px, 5vh); }
+		.dWeb { left: max(14px, 4vw); bottom: max(14px, 6vh); }
+		.dXml { right: max(14px, 4vw); bottom: max(14px, 6vh); }
+		.dHead { font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--glow); margin-bottom: 8px; }
+		.dLine { font-size: 12.5px; color: rgba(234, 242, 241, 0.6); margin-top: 8px; }
+		.dLine b { color: var(--ink); font-size: 15px; }
+
+		.dotGrid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; width: 100%; }
+		.dot { width: 100%; aspect-ratio: 1; border-radius: 50%; background: rgba(234, 242, 241, 0.12); transition: background 0.4s, box-shadow 0.4s; transition-delay: var(--d); }
+		.stage.mlsOn .dot { background: var(--glow); box-shadow: 0 0 6px rgba(91, 227, 208, 0.7); }
+
+		.mini { border: 1px solid rgba(234, 242, 241, 0.16); border-radius: 10px; background: #101c33; overflow: hidden; }
+		.chrome { display: flex; gap: 4px; padding: 6px 8px; border-bottom: 1px solid rgba(234, 242, 241, 0.1); }
+		.chrome span { width: 7px; height: 7px; border-radius: 50%; background: rgba(234, 242, 241, 0.25); }
+		.mCard { display: flex; gap: 8px; padding: 8px; align-items: center; }
+		.mPhoto { width: 46px; height: 34px; border-radius: 6px; background: linear-gradient(160deg, #1d4f6e, #0f6b74); flex: none; }
+		.mPhoto.alt { background: linear-gradient(160deg, #16305a, #00ae9a); }
+		.mMeta { flex: 1; }
+		.mMeta i { display: block; height: 7px; border-radius: 4px; background: rgba(234, 242, 241, 0.2); margin: 5px 0; }
+		.mMeta i.short { width: 55%; }
+		.laptop .lapScreen { border: 1px solid rgba(234, 242, 241, 0.14); border-bottom: 0; border-radius: 8px 8px 0 0; background: #0d1830; }
+		.laptop .lapBase { height: 7px; background: rgba(234, 242, 241, 0.18); border-radius: 0 0 10px 10px; }
+		.laptop { border: 0; background: transparent; overflow: visible; }
+		.code { padding: 10px 12px; font-family: ui-monospace, Consolas, monospace; font-size: 10.5px; color: rgba(91, 227, 208, 0.85); display: flex; flex-direction: column; gap: 3px; }
+		.code .ind { padding-left: 14px; color: rgba(234, 242, 241, 0.6); }
+
+		/* ---- stamps ---- */
+		.stamp { position: absolute; right: -8px; top: -14px; z-index: 5; border: 2.5px solid var(--glow); color: var(--glow); font-weight: 900; font-size: 17px; padding: 2px 10px; border-radius: 8px; transform: rotate(-9deg) scale(1); opacity: 1; background: rgba(11, 18, 32, 0.85); }
+		.js .stamp { opacity: 0; transform: rotate(-9deg) scale(2.4); }
+		/* three classes on purpose: .js .stamp and .stamp.hit tie at (0,2,0) and
+		   the compiled bundle resolved the tie the wrong way - same cascade trap
+		   as the nav mega-menu. The winner must outrank, not out-order. */
+		.js .stamp.hit { opacity: 1; transform: rotate(-9deg) scale(1); transition: transform 0.28s cubic-bezier(0.2, 2.2, 0.4, 1), opacity 0.12s; }
+
+		/* ---- thesis line ---- */
+		.thesis { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); text-align: center; font-size: clamp(22px, 4vw, 38px); font-weight: 800; letter-spacing: -0.5px; margin: 0; opacity: 0; transition: opacity 0.5s 0.1s; z-index: 4; text-shadow: 0 4px 30px rgba(11, 18, 32, 0.9); }
+		.thesis span { color: var(--glow); }
+		.stage[data-seg='4'] .thesis { opacity: 1; }
+		.stage[data-seg='4'] .hero { opacity: 0.12; }
+
+		@media (max-width: 700px) {
+			.c1 { --cx: -24vw; --cy: -30vh; } .c2 { --cx: 24vw; --cy: -30vh; }
+			.c3 { --cx: -24vw; --cy: 24vh; } .c4 { --cx: 24vw; --cy: 24vh; }
+			.dest { width: 42vw; }
+			.clone { display: none; } /* phones: destinations light up, clones skipped for clarity */
+			.dotGrid { grid-template-columns: repeat(10, 1fr); }
+			.dot:nth-child(n + 101) { display: none; }
+			.card.hero { width: 200px; margin-left: -100px; }
+			.stamp { font-size: 14px; }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.fWrap { height: auto; }
+			.stage { position: static; height: auto; min-height: 100vh; padding: 40px 0 90px; }
+			.cap { position: static; transform: none; opacity: 1 !important; margin: 10px auto; }
+			.hint { animation: none; }
+		}
+	</style>
+
+	<script>
+		const wrap = document.querySelector('[data-wrap]') as HTMLElement;
+		const stage = document.querySelector('[data-stage]') as HTMLElement;
+		const count = document.querySelector('[data-count]') as HTMLElement;
+		const stamps = ['.st1', '.st2', '.st3', '.st4'].map((s) => document.querySelector(s) as HTMLElement);
+		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		if (!reduced) {
+			// take control: rewind the finished frame to zero, then let scroll drive
+			document.querySelector('.ft')!.classList.add('js');
+			const clamp = (v: number) => Math.max(0, Math.min(1, v));
+			const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+			let ticking = false;
+
+			const frame = () => {
+				ticking = false;
+				const r = wrap.getBoundingClientRect();
+				const total = wrap.offsetHeight - innerHeight;
+				const p = clamp(-r.top / Math.max(1, total));
+
+				const s1 = ease(clamp((p - 0.1) / 0.32));
+				const s2 = clamp((p - 0.3) / 0.22);
+				stage.style.setProperty('--s1', String(s1));
+				stage.style.setProperty('--s2', String(s2));
+
+				// discrete beats
+				stage.classList.toggle('mlsOn', p > 0.42);
+				stamps.forEach((el, i) => el.classList.toggle('hit', p > 0.52 + i * 0.09));
+				const seg = p < 0.1 ? 1 : p < 0.42 ? 2 : p < 0.82 ? 3 : 4;
+				stage.dataset.seg = String(seg);
+
+				// agent counter rides the dot field
+				const c = clamp((p - 0.42) / 0.3);
+				count.textContent = Math.round(1300 * c).toLocaleString('en-GB');
+			};
+			addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+			addEventListener('resize', frame);
+			frame();
+		} else {
+			stage.dataset.seg = '4';
+			stage.classList.add('mlsOn');
+		}
+	</script>
+</Layout>
