@@ -118,6 +118,7 @@ const faqLd = {
 					<article class="card hero1" data-card1>
 						<div class="photo"><span class="sun"></span><span class="sea"></span></div>
 						<div class="body">
+							<div class="skel" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 							<h2 class="cardTitle f f1 on">Villa Alborada</h2>
 							<p class="where f f2 on">Marbella &middot; Ref PL-4471</p>
 							<p class="price f f6 on">&euro;495,000</p>
@@ -471,10 +472,25 @@ const faqLd = {
 		.f { transition: opacity 0.35s, transform 0.35s; }
 		.js [data-stage='pro'] .f { opacity: 0; transform: translateY(5px); }
 		.js [data-stage='pro'] .f.on { opacity: 1; transform: none; }
-		.hero1 { z-index: 3; }
+		.hero1 { z-index: 3; overflow: visible; }
+		/* the card must not clip the EUR 0 stamp hanging off its edge; the photo
+		   rounds its own top corners since the card no longer clips for it */
+		.hero1 .photo { border-radius: 15px 15px 0 0; }
+		.hero1 .body { position: relative; }
+		.skel { position: absolute; inset: 14px 14px auto; display: flex; flex-direction: column; gap: 10px; opacity: 0; pointer-events: none; }
+		.skel i { height: 11px; border-radius: 6px; background: rgba(234, 242, 241, 0.09); }
+		.skel i:nth-child(1) { width: 62%; }
+		.skel i:nth-child(2) { width: 44%; }
+		.skel i:nth-child(3) { width: 34%; height: 15px; }
+		.skel i:nth-child(4) { width: 82%; }
+		/* dissolves as the dictated fields replace it, off the existing --p */
+		.js [data-stage='pro'] .skel { opacity: clamp(0, calc((0.56 - var(--p)) / 0.4), 1); }
 		.stPro { right: 10px; top: auto; bottom: -12px; }
 		.tool { position: absolute; left: 50%; transform: translateX(-50%); top: calc(42% + 150px); width: min(86vw, 520px); text-align: center; font-size: 12.5px; letter-spacing: 0.4px; color: rgba(234, 242, 241, 0.5); z-index: 4; }
-		[data-stage='pro'] .tool { top: auto; bottom: 10vh; }
+		[data-stage='pro'] .tool { top: auto; bottom: calc(max(11vh, env(safe-area-inset-bottom)) + 62px); opacity: 0; transition: opacity 0.4s; }
+		/* the tool line repeats the opening caption's message, so it waits for
+		   seg 2 (redundancy principle: never the same words twice at once) */
+		[data-stage='pro'][data-seg='2'] .tool { opacity: 1; }
 
 		/* ---- scene 2 (fan-out, from the approved prototype) ---- */
 		.heroF { z-index: 3; opacity: calc(1 - var(--s1) * 0.55); scale: calc(1 - var(--s1) * 0.18); }
@@ -544,7 +560,7 @@ const faqLd = {
 		.js .kMove { opacity: 0; transform: translateX(calc(-100% - 24px)); transition: transform 0.55s cubic-bezier(0.3, 1.2, 0.4, 1), opacity 0.3s; }
 		.js .kMove.on { opacity: 1; transform: none; }
 		.stPipe { right: -10px; top: auto; bottom: -16px; }
-		[data-stage='enq'] .tool { top: auto; bottom: 12vh; }
+		[data-stage='enq'] .tool { top: auto; bottom: calc(max(11vh, env(safe-area-inset-bottom)) + 62px); }
 
 		/* ---- scene 5 (network) ---- */
 		.coast { position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%); width: min(88vw, 680px); z-index: 2; }
@@ -664,6 +680,7 @@ const faqLd = {
 			.flipInner { height: 215px; }
 			.coast { width: 94vw; top: 26%; }
 			.bubble { top: 10%; }
+			[data-stage='pro'] .tool, [data-stage='enq'] .tool { bottom: calc(max(11vh, env(safe-area-inset-bottom)) + 96px); }
 		}
 
 		/* ---- reduced motion: the film becomes an illustrated article ---- */
