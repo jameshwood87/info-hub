@@ -97,34 +97,43 @@ const faqLd = {
 		<div class="wrap w1" id="sc1" data-wrap="pro">
 			<section class="stage" data-stage="pro" aria-label="Escena 1: nace el anuncio">
 				<span class="step">Paso 1 &middot; Publicas</span>
-				<p class="cap capA">Martes, 18:40. Una villa en Marbella, tu móvil y una nota de voz de 30 segundos.</p>
-				<p class="cap capB">Ese es todo el trabajo. El anuncio se escribe solo mientras conduces a casa.</p>
+				<p class="cap capA">Martes, 18:40. Sin portátil y sin formularios. Describes la villa en voz alta, o le lees la hoja de encargo a tu móvil.</p>
+				<p class="cap capB">Mira las palabras convertirse en campos. El anuncio se escribe solo mientras conduces a casa.</p>
 
-				<div class="proPhotos" aria-hidden="true">
-					<span class="pp pp1"></span><span class="pp pp2"></span><span class="pp pp3"></span>
-				</div>
-				<div class="wave on" aria-hidden="true">
-					{Array.from({ length: 18 }, (_, i) => <i style={`--wi:${i}`}></i>)}
-				</div>
-
-				<article class="card hero1" data-card1>
-					<div class="photo"><span class="sun"></span><span class="sea"></span></div>
-					<div class="body">
-						<h2 class="cardTitle">Villa Alborada</h2>
-						<p class="where">Marbella &middot; Ref PL-4471</p>
-						<p class="price">&euro;495,000</p>
-						<p class="chips"><span>3 beds</span><span>2 baths</span><span>184 m&sup2;</span></p>
+				<div class="proRow">
+					<div class="vn">
+						<div class="vnHead"><span class="vnPlay">&#9654;</span> Nota de voz &middot; 0:31</div>
+						<div class="wave" aria-hidden="true">
+							{Array.from({ length: 14 }, (_, i) => <i style={`--wi:${i}`}></i>)}
+						</div>
+						<p class="vnT">
+							<span class="tw on">"Villa en Marbella,</span>
+							<span class="tw on">junto al casco antiguo.</span>
+							<span class="tw on">Tres dormitorios,</span>
+							<span class="tw on">dos ba&ntilde;os,</span>
+							<span class="tw on">184 metros cuadrados.</span>
+							<span class="tw on">Precio cuatro noventa y cinco."</span>
+						</p>
 					</div>
-					<span class="stamp stPro hit">&euro;0</span>
-				</article>
-				<p class="tool">Instant Listing &middot; fotos + nota de voz &rarr; anuncio terminado &middot; gratis</p>
+					<article class="card hero1" data-card1>
+						<div class="photo"><span class="sun"></span><span class="sea"></span></div>
+						<div class="body">
+							<h2 class="cardTitle f f1 on">Villa Alborada</h2>
+							<p class="where f f2 on">Marbella &middot; Ref PL-4471</p>
+							<p class="price f f6 on">&euro;495,000</p>
+							<p class="chips"><span class="f f3 on">3 dorm</span><span class="f f4 on">2 ba&ntilde;os</span><span class="f f5 on">184 m&sup2;</span></p>
+						</div>
+						<span class="stamp stPro hit">&euro;0</span>
+					</article>
+				</div>
+				<p class="tool">Instant Listing &middot; dilo, o lee la hoja de encargo en voz alta, a&ntilde;ade fotos &rarr; anuncio terminado &middot; gratis</p>
 			</section>
 		</div>
 
 		<div class="breather">
 			<h2>Empieza con cinco minutos, no con una tarde</h2>
 			<p>
-				Instant Listing convierte fotos y una nota de voz en un anuncio terminado y estructurado: habitaciones,
+				Instant Listing convierte fotos y una nota de voz, o tú leyendo la hoja de encargo en voz alta, en un anuncio terminado y estructurado: habitaciones,
 				características, descripción, todo. Lo revisas y pulsas guardar. Gratis. Y en el momento en que guardas empieza
 				la parte interesante, porque en PropertyList un anuncio no se queda donde lo dejas.
 			</p>
@@ -414,7 +423,7 @@ const faqLd = {
 
 		/* stage scaffold */
 		.wrap { position: relative; }
-		.w1 { height: 240vh; } .w2 { height: 420vh; } .w3 { height: 240vh; } .w4 { height: 330vh; }
+		.w1 { height: 300vh; } .w2 { height: 420vh; } .w3 { height: 240vh; } .w4 { height: 330vh; }
 		.w5 { height: 300vh; } .w6 { height: 240vh; } .w7 { height: 300vh; } .w8 { height: 210vh; } .w9 { height: 280vh; }
 		.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; --p: 1; --s1: 1; --s2: 1; }
 
@@ -445,22 +454,26 @@ const faqLd = {
 		.js .stamp { opacity: 0; transform: rotate(-9deg) scale(2.4); }
 		.js .stamp.hit { opacity: 1; transform: rotate(-9deg) scale(1); transition: transform 0.28s cubic-bezier(0.2, 2.2, 0.4, 1), opacity 0.12s; }
 
-		/* ---- scene 1 ---- */
-		.proPhotos { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); z-index: 2; }
-		.pp { position: absolute; width: 74px; height: 56px; border-radius: 10px; background: linear-gradient(160deg, #1d4f6e, #0f6b74); border: 1px solid rgba(234, 242, 241, 0.2); opacity: calc(1 - var(--s1)); }
-		.pp1 { transform: translate(calc(-140px + var(--s1) * 110px), calc(-90px + var(--s1) * 70px)) rotate(-10deg); }
-		.pp2 { transform: translate(calc(80px - var(--s1) * 80px), calc(-110px + var(--s1) * 85px)) rotate(7deg); background: linear-gradient(160deg, #16305a, #00ae9a); }
-		.pp3 { transform: translate(calc(-30px + var(--s1) * 25px), calc(120px - var(--s1) * 95px)) rotate(-4deg); background: linear-gradient(160deg, #0f6b74, #16305a); }
-		.wave { position: absolute; left: 50%; transform: translateX(-50%); top: 16%; display: flex; gap: 3px; align-items: center; height: 34px; }
-		.wave.on { opacity: 0; }
-		.js [data-stage='pro'] .wave.on { opacity: calc(0.9 - var(--s1) * 0.9); }
+		/* ---- scene 1: dictation becomes a listing ---- */
+		.proRow { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: clamp(20px, 5vw, 64px); padding: 0 5vw; flex-wrap: wrap; z-index: 3; }
+		.proRow .card { position: relative; left: auto; top: auto; margin-left: 0; transform: none; }
+		.vn { width: min(84vw, 330px); background: #123a2e; border: 1px solid rgba(37, 211, 102, 0.45); border-radius: 16px 16px 4px 16px; padding: 14px 16px 16px; }
+		.vnHead { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: rgba(223, 255, 233, 0.8); display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+		.vnPlay { width: 24px; height: 24px; border-radius: 50%; background: #25d366; color: #06281a; display: inline-grid; place-items: center; font-size: 10px; }
+		.wave { display: flex; gap: 3px; align-items: center; height: 26px; margin-bottom: 10px; }
 		/* parabola height without abs()/sin(): unitless maths, then to px */
-		.wave i { width: 4px; border-radius: 3px; background: var(--glow); height: calc((26 - (var(--wi) - 9) * (var(--wi) - 9) * 0.22) * 1px); animation: wv 0.9s ease-in-out infinite alternate; animation-delay: calc(var(--wi) * -0.08s); }
+		.wave i { width: 4px; border-radius: 3px; background: rgba(37, 211, 102, 0.8); height: calc((22 - (var(--wi) - 7) * (var(--wi) - 7) * 0.28) * 1px); animation: wv 0.9s ease-in-out infinite alternate; animation-delay: calc(var(--wi) * -0.08s); }
 		@keyframes wv { from { transform: scaleY(0.45); } to { transform: scaleY(1); } }
-		.hero1 { z-index: 3; opacity: min(1, calc(var(--s1) * 1.6)); scale: calc(0.86 + 0.14 * var(--s1)); }
-		.hero1 .body > *, .hero1 .chips span { opacity: min(1, calc(var(--s1) * 2 - 0.3)); }
+		.vnT { margin: 0; font-size: 14.5px; line-height: 1.7; color: #dfffe9; }
+		.js [data-stage='pro'] .tw { opacity: 0.16; transition: opacity 0.3s; }
+		.js [data-stage='pro'] .tw.on { opacity: 1; }
+		.f { transition: opacity 0.35s, transform 0.35s; }
+		.js [data-stage='pro'] .f { opacity: 0; transform: translateY(5px); }
+		.js [data-stage='pro'] .f.on { opacity: 1; transform: none; }
+		.hero1 { z-index: 3; }
 		.stPro { right: 10px; top: auto; bottom: -12px; }
 		.tool { position: absolute; left: 50%; transform: translateX(-50%); top: calc(42% + 150px); width: min(86vw, 520px); text-align: center; font-size: 12.5px; letter-spacing: 0.4px; color: rgba(234, 242, 241, 0.5); z-index: 4; }
+		[data-stage='pro'] .tool { top: auto; bottom: 10vh; }
 
 		/* ---- scene 2 (fan-out, from the approved prototype) ---- */
 		.heroF { z-index: 3; opacity: calc(1 - var(--s1) * 0.55); scale: calc(1 - var(--s1) * 0.18); }
@@ -656,7 +669,7 @@ const faqLd = {
 			.stage { position: static; height: auto; min-height: 92vh; padding: 46px 0 70px; }
 			.cap { position: static; transform: none; opacity: 1 !important; margin: 12px auto; }
 			.hint, .bDot, .wave i { animation: none; }
-			.card, .dest, .kanban, .coast, .split, .netLine, .flipBox, .shelf, .credScene, .till, .ctaRow, .bubble, .valScene, .tool, .thesis, .proPhotos { position: static; transform: none; margin: 14px auto; opacity: 1; }
+			.card, .dest, .kanban, .coast, .split, .netLine, .flipBox, .shelf, .credScene, .till, .ctaRow, .bubble, .valScene, .tool, .thesis, .proRow, .vn { position: static; transform: none; margin: 14px auto; opacity: 1; }
 			.thesis { opacity: 1; }
 			.clone, .lines { display: none; }
 			.credScene { display: flex; }
@@ -674,7 +687,7 @@ const faqLd = {
 		// data-seg for captions; counters tween textContent.
 		type Beat = { at: number; sel: string; cls?: string; all?: boolean };
 		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: { sel: string; from: number; to: number }; counter?: { sel: string; to: number; from: number; end: number } }> = {
-			pro: { segs: [0.42], s1: [0.18, 0.62], beats: [{ at: 0.66, sel: '.stPro', cls: 'hit' }] },
+			pro: { segs: [0.56], beats: [{ at: 0.2, sel: '.f1', cls: 'on' }, { at: 0.27, sel: '.f2', cls: 'on' }, { at: 0.34, sel: '.f3', cls: 'on' }, { at: 0.4, sel: '.f4', cls: 'on' }, { at: 0.46, sel: '.f5', cls: 'on' }, { at: 0.54, sel: '.f6', cls: 'on' }, { at: 0.68, sel: '.stPro', cls: 'hit' }], stagger: { sel: '.tw', from: 0.12, to: 0.5 } },
 			fan: {
 				segs: [0.4, 0.82], s1: [0.1, 0.42], s2: [0.3, 0.52],
 				beats: [
