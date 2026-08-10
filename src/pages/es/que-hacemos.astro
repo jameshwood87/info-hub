@@ -428,7 +428,7 @@ const faqLd = {
 		.w5 { height: 300vh; } .w6 { height: 240vh; } .w7 { height: 300vh; } .w8 { height: 210vh; } .w9 { height: 280vh; }
 		.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; --p: 1; --s1: 1; --s2: 1; }
 
-		.cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom)); width: min(88vw, 600px); text-align: center; font-size: clamp(15px, 2.1vw, 19px); line-height: 1.5; color: rgba(234, 242, 241, 0.88); opacity: 0; transition: opacity 0.35s; margin: 0; z-index: 8; text-shadow: 0 2px 18px rgba(11, 18, 32, 0.9); }
+		.cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(11vh, env(safe-area-inset-bottom)); width: min(88vw, 600px); text-align: center; font-size: clamp(15px, 2.1vw, 19px); line-height: 1.5; color: rgba(234, 242, 241, 0.88); opacity: 0; transition: opacity 0.35s; margin: 0; z-index: 8; text-shadow: 0 2px 18px rgba(11, 18, 32, 0.9); }
 		.cap strong { color: var(--glow); }
 		.stage[data-seg='1'] .capA, .stage[data-seg='2'] .capB, .stage[data-seg='3'] .capC { opacity: 1; }
 
@@ -689,30 +689,33 @@ const faqLd = {
 		// (or each element of a stagger) once --p passes the threshold; seg sets
 		// data-seg for captions; counters tween textContent.
 		type Beat = { at: number; sel: string; cls?: string; all?: boolean };
-		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: { sel: string; from: number; to: number }; counter?: { sel: string; to: number; from: number; end: number } }> = {
+		type Stagger = { sel: string; from: number; to: number; cls?: string };
+		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: Stagger; counter?: { sel: string; to: number; from: number; end: number } }> = {
 			pro: { segs: [0.56], beats: [{ at: 0.2, sel: '.f1', cls: 'on' }, { at: 0.27, sel: '.f2', cls: 'on' }, { at: 0.34, sel: '.f3', cls: 'on' }, { at: 0.4, sel: '.f4', cls: 'on' }, { at: 0.46, sel: '.f5', cls: 'on' }, { at: 0.54, sel: '.f6', cls: 'on' }, { at: 0.68, sel: '.stPro', cls: 'hit' }], stagger: { sel: '.tw', from: 0.12, to: 0.5 } },
 			fan: {
-				segs: [0.4, 0.82], s1: [0.1, 0.42], s2: [0.3, 0.52],
+				// single-focus sequence: clones land, caption pre-names the fan-out,
+				// the wall ignites and counts ALONE, then stamps cascade ALONE (Z order)
+				segs: [0.44, 0.93], s1: [0.1, 0.42], s2: [0.3, 0.52],
 				beats: [
-					{ at: 0.42, sel: ':stage', cls: 'mlsOn' },
-					{ at: 0.5, sel: '.stF1', cls: 'hit' }, { at: 0.58, sel: '.stF2', cls: 'hit' },
-					{ at: 0.66, sel: '.stF3', cls: 'hit' }, { at: 0.74, sel: '.stF4', cls: 'hit' },
+					{ at: 0.5, sel: ':stage', cls: 'mlsOn' },
+					{ at: 0.68, sel: '.stF1', cls: 'hit' }, { at: 0.75, sel: '.stF2', cls: 'hit' },
+					{ at: 0.82, sel: '.stF3', cls: 'hit' }, { at: 0.89, sel: '.stF4', cls: 'hit' },
 				],
-				counter: { sel: '[data-count-agents]', to: 1300, from: 0.42, end: 0.72 },
+				counter: { sel: '[data-count-agents]', to: 1300, from: 0.5, end: 0.66 },
 			},
 			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
 			enq: { segs: [0.36, 0.72], beats: [{ at: 0.14, sel: '.bubble', cls: 'on' }, { at: 0.3, sel: '.stEnq', cls: 'hit' }, { at: 0.46, sel: '.kMove', cls: 'on' }, { at: 0.62, sel: '.stPipe', cls: 'hit' }] },
-			net: { segs: [0.55], s1: [0.05, 0.5], beats: [{ at: 0.55, sel: '.deal', cls: 'on' }, { at: 0.68, sel: '.split', cls: 'on' }, { at: 0.8, sel: '.stNet', cls: 'hit' }] },
+			net: { segs: [0.55], s1: [0.05, 0.5], beats: [{ at: 0.62, sel: '.deal', cls: 'on' }, { at: 0.72, sel: '.split', cls: 'on' }, { at: 0.82, sel: '.stNet', cls: 'hit' }] },
 			rent: { segs: [0.4], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRent', cls: 'hit' }] },
 			inst: {
 				segs: [0.52],
 				beats: [
 					{ at: 0.14, sel: '.shelf.live .shTool', cls: 'on', all: true },
-					{ at: 0.3, sel: '.stamp.mini2', cls: 'hit', all: true },
 					{ at: 0.56, sel: '.shelf.frosted', cls: 'on' },
 				],
+				stagger: { sel: '.stamp.mini2', from: 0.28, to: 0.46, cls: 'hit' },
 			},
-			cred: { segs: [0.5], beats: [{ at: 0.2, sel: '.coin', cls: 'on' }, { at: 0.55, sel: '.refRow', cls: 'on' }] },
+			cred: { segs: [0.5], beats: [{ at: 0.2, sel: '.coin', cls: 'on' }, { at: 0.58, sel: '.refRow', cls: 'on' }] },
 			rec: {
 				segs: [0.3],
 				beats: [{ at: 0.03, sel: '.till', cls: 'on' }, { at: 0.78, sel: '.tFoot', cls: 'on' }, { at: 0.84, sel: '.ctaRow', cls: 'on' }],
@@ -737,7 +740,7 @@ const faqLd = {
 				stage.dataset.seg = '1';
 				const sc = SCENES[key];
 				for (const b of sc.beats) (b.sel === ':stage' ? [stage] : b.all ? Array.from(stage.querySelectorAll(b.sel)) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.remove(b.cls || 'on'));
-				if (sc.stagger) stage.querySelectorAll(sc.stagger.sel).forEach((el) => el.classList.remove('on'));
+				if (sc.stagger) stage.querySelectorAll(sc.stagger.sel).forEach((el) => el.classList.remove(sc.stagger!.cls || 'on'));
 				if (sc.counter) { const c = stage.querySelector(sc.counter.sel); if (c) c.textContent = '0'; }
 			}
 
@@ -762,7 +765,7 @@ const faqLd = {
 					for (const b of sc.beats) (b.sel === ':stage' ? [stage] : b.all ? Array.from(stage.querySelectorAll(b.sel)) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.toggle(b.cls || 'on', p > b.at));
 					if (sc.stagger) {
 						const els = stage.querySelectorAll(sc.stagger.sel);
-						els.forEach((el, i) => el.classList.toggle('on', p > sc.stagger!.from + (i * (sc.stagger!.to - sc.stagger!.from)) / els.length));
+						els.forEach((el, i) => el.classList.toggle(sc.stagger!.cls || 'on', p > sc.stagger!.from + (i * (sc.stagger!.to - sc.stagger!.from)) / els.length));
 					}
 					if (sc.counter) {
 						const c = stage.querySelector(sc.counter.sel) as HTMLElement;
