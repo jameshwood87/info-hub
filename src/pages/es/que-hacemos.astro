@@ -341,16 +341,18 @@ const faqLd = {
 		<!-- ================= SCENE 6: THE RENTALS FORK ================= -->
 		<div class="wrap w6" id="sc6" data-wrap="rent">
 			<section class="stage" data-stage="rent" aria-label="Escena 6: si hubiera sido un alquiler">
-				<span class="step">Paso 6 &middot; Si es alquiler</span>
-				<p class="cap capA">¿Y si el propietario hubiera dicho "alquílala"? La misma ficha. La otra cara.</p>
+				<span class="step">Paso 6 &middot; Si lo alquilas: publicar gratis, módulo opcional</span>
+				<p class="cap capA">¿Y si el propietario hubiera dicho "alquílala"? Publicarla también es gratis.</p>
+				<p class="cap capB">Solo se paga gestionar el alquiler, y solo si tú quieres.</p>
 				<div class="flipBox">
 					<div class="flipInner on">
 						<article class="card face front"><div class="photo"><span class="sun"></span><span class="sea"></span></div><div class="body"><h2 class="cardTitle">Villa de 3 Dormitorios</h2><p class="price">945.000 &euro;</p></div></article>
 						<article class="card face back"><div class="photo alt2"><span class="moon"></span></div><div class="body"><h2 class="cardTitle">Villa de 3 Dormitorios</h2><p class="price">2.400 &euro;<span class="unit">/mes</span></p><p class="tline"><i></i><i></i><i></i></p><p class="tlab">contrato &middot; renovaciones &middot; fianzas</p></div></article>
 					</div>
-					<span class="stamp stRent hit credit">30 días de prueba gratis &middot; después 50 créditos / 30 días</span>
+					<span class="stamp stRentFree hit">publicar 0 &euro;</span>
+					<span class="stamp stRent hit credit">Módulo de alquileres &middot; 50 cr / 30 días tras la prueba</span>
 				</div>
-				<p class="tool">Módulo de alquileres &middot; larga temporada y vacacional en el mismo sistema</p>
+				<p class="tool">Publicar un alquiler cuesta 0 &euro; &middot; el módulo añade contratos, renovaciones y fianzas</p>
 			</section>
 		</div>
 
@@ -698,6 +700,7 @@ const faqLd = {
 		.tline i:nth-child(2) { background: rgba(91, 227, 208, 0.6); }
 		.tlab { font-size: 10.5px; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(234, 242, 241, 0.5); margin: 0; }
 		.stRent { right: -6px; bottom: -16px; top: auto; }
+		.stRentFree { left: -10px; right: auto; top: -14px; }
 		[data-stage='rent'] .tool { top: calc(44% + 160px); }
 
 		/* ---- scene 7 (shelves) ---- */
@@ -857,7 +860,7 @@ const faqLd = {
 			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
 			enq: { segs: [0.3, 0.5, 0.78], beats: [{ at: 0.12, sel: '.bubble', cls: 'on' }, { at: 0.22, sel: '.stEnq', cls: 'hit' }, { at: 0.36, sel: '.kLand', cls: 'on' }, { at: 0.58, sel: ':stage', cls: 'moved' }, { at: 0.58, sel: '.kMove', cls: 'on' }, { at: 0.68, sel: '.stPipe', cls: 'hit' }] },
 			net: { segs: [0.42, 0.74], s1: [0.04, 0.32], beats: [{ at: 0.26, sel: '.bChip', cls: 'on' }, { at: 0.34, sel: '.lChip', cls: 'on' }, { at: 0.5, sel: '.deal', cls: 'on' }, { at: 0.6, sel: '.pulse', cls: 'on' }, { at: 0.66, sel: '.split', cls: 'on' }, { at: 0.8, sel: '.n5w', cls: 'on' }, { at: 0.88, sel: '.stN5', cls: 'hit' }] },
-			rent: { segs: [0.4], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRent', cls: 'hit' }] },
+			rent: { segs: [0.66], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRentFree', cls: 'hit' }, { at: 0.82, sel: '.stRent', cls: 'hit' }] },
 			inst: {
 				segs: [0.52],
 				beats: [
