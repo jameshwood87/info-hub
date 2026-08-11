@@ -362,7 +362,7 @@ const faqLd = {
 				<p class="cap capB">Y la estantería tras el cristal: en camino, y sin prometer nada hasta que llegue.</p>
 				<div class="shelf live">
 					<div class="shTool on" style="--i:0"><b>Instant Content</b><span>blog + guías de zona que se escriben solas</span><span class="stamp mini2 hit credit">30 créditos/mes</span></div>
-					<div class="shTool on" style="--i:1"><b>Inteligencia de mercado</b><span>datos de mercado verificados por notario, en cada zona</span><span class="stamp mini2 hit">&euro;0 &middot; informe 5 créditos</span></div>
+					<div class="shTool on" style="--i:1"><b>Inteligencia de mercado</b><span>datos por zona gratis &middot; informe completo por propiedad: comparables, mercado y zona</span><span class="stamp mini2 hit credit">5 cr &middot; por tiempo limitado</span></div>
 					<div class="shTool on" style="--i:2"><b>App móvil</b><span>el MLS y el CRM en tu bolsillo (Android)</span><span class="stamp mini2 hit">&euro;0</span></div>
 					<div class="shTool on" style="--i:3"><b>Búsqueda con IA</b><span>pega el WhatsApp, recibe las coincidencias</span><span class="stamp mini2 hit">gratis en beta</span></div>
 				</div>
@@ -708,6 +708,7 @@ const faqLd = {
 		.js .shelf.live .shTool { opacity: 0; transform: translateY(16px); transition: opacity 0.4s, transform 0.4s; transition-delay: calc(var(--i) * 90ms); }
 		.js .shelf.live .shTool.on { opacity: 1; transform: none; }
 		.stamp.mini2 { position: absolute; right: 8px; top: -10px; font-size: 10.5px; padding: 1px 7px; border-width: 2px; }
+		.stamp.mini2.credit { font-size: 10px; }
 		.shelf.frosted .shTool { backdrop-filter: blur(3px); background: rgba(234, 242, 241, 0.05); border-style: dashed; border-color: rgba(234, 242, 241, 0.22); }
 		.shTool.soon b { color: rgba(234, 242, 241, 0.65); }
 		.shTool.soon span { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255, 217, 160, 0.75); }
@@ -783,6 +784,7 @@ const faqLd = {
 			.shelf.frosted { bottom: 22vh; }
 			.stamp { font-size: 13px; }
 			.stamp.credit { font-size: 10.5px; }
+			.stamp.mini2.credit { font-size: 9px; }
 			.stamp.wide2 { white-space: normal; text-align: center; max-width: 40vw; font-size: 9px; line-height: 1.3; bottom: -22px; }
 			.till { font-size: 12px; padding: 14px 14px 12px; top: 44%; max-height: 66svh; }
 			.flipInner { height: 215px; }
