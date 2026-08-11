@@ -865,6 +865,19 @@ const faqLd = {
 			.cardTitle { font-size: 14px; }
 			.price { font-size: 16px; }
 			.chips span { font-size: 9px; padding: 2px 6px; }
+			/* scene 2 packs four plates plus the card into the same band, and the ES
+			   plates run taller, so its card shrinks further than scene 1 needs */
+			[data-stage='fan'] .card { width: 146px; }
+			[data-stage='fan'] .photo { height: 44px; }
+			[data-stage='fan'] .cardTitle { font-size: 12px; }
+			[data-stage='fan'] .price { font-size: 14px; }
+			[data-stage='fan'] .sub { font-size: 9.5px; }
+			/* on a 667px phone the four plates leave ~100px in the middle, so the
+			   anchor card drops to its identity lines only */
+			[data-stage='fan'] .photo, [data-stage='fan'] .chips, [data-stage='fan'] .where { display: none; }
+			[data-stage='fan'] .dMls, [data-stage='fan'] .dPortal { top: 64px; }
+			[data-stage='fan'] .dWeb, [data-stage='fan'] .dXml { bottom: 168px; }
+			[data-stage='fan'] .body { padding: 8px 9px 9px; }
 			.body { padding: 9px 10px 10px; }
 			/* the card stamp hangs ~20px BELOW the card, so the tool line sits just
 			   above the caption rather than just under the card */
