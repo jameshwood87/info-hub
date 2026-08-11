@@ -657,6 +657,12 @@ const faqLd = {
 		.pulse { fill: none; stroke: var(--glow); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
 		.js .pulse.on { animation: pulse5 0.8s ease-out 1 both; }
 		@keyframes pulse5 { 0% { opacity: 0.9; transform: scale(0.4); } 100% { opacity: 0; transform: scale(3); } }
+		@media (max-height: 700px) {
+			div.coastWrap { top: 22%; width: min(80vw, 560px); }
+			div.splitWrap { top: 46%; }
+			p.n5w { top: 59%; font-size: clamp(30px, 7vh, 44px); }
+			p.n5w .nSub { font-size: 14px; }
+		}
 		.shore { fill: none; stroke: rgba(234, 242, 241, 0.35); stroke-width: 2; stroke-dasharray: 420; stroke-dashoffset: calc(420 - var(--s1) * 420); }
 		.town { fill: var(--glow); opacity: clamp(0, calc((var(--s1) - 0.6) / 0.3), 1); }
 		.tLabel { fill: rgba(234, 242, 241, 0.6); font-size: 11px; letter-spacing: 0.5px; opacity: clamp(0, calc((var(--s1) - 0.7) / 0.3), 1); }
