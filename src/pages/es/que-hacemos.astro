@@ -754,7 +754,10 @@ const faqLd = {
 		.tSum { font-size: 15.5px; font-weight: 800; margin: 0 0 6px; }
 		.tSum b { color: #0a6d61; font-size: 19px; }
 		.tNote { font-size: 11px; color: rgba(16, 24, 40, 0.55); line-height: 1.5; margin: 0; }
-		.js .till { opacity: 0; transform: translate(-50%, -47%); transition: opacity 0.5s, transform 0.5s; }
+		.js .till { opacity: 0; transform: translate(-50%, -47%); transition: opacity 0.5s, transform 0.5s;
+			/* the scroll engine drives scrollTop, so the receipt must not eat the wheel */
+			overflow: hidden; scrollbar-width: none; }
+		.js .till::-webkit-scrollbar { display: none; }
 		.js .till.on { opacity: 1; transform: translate(-50%, -50%); }
 		.ctaRow { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(12px, 2.5vh); display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; z-index: 4; width: min(92vw, 600px); }
 		.js .ctaRow { opacity: 0; transition: opacity 0.5s 0.2s; }
@@ -845,7 +848,7 @@ const faqLd = {
 		// data-seg for captions; counters tween textContent.
 		type Beat = { at: number; sel: string; cls?: string; all?: boolean };
 		type Stagger = { sel: string; from: number; to: number; cls?: string };
-		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: Stagger; counter?: { sel: string; to: number; from: number; end: number } }> = {
+		const SCENES: Record<string, { segs: number[]; s1?: [number, number]; s2?: [number, number]; beats: Beat[]; stagger?: Stagger; counter?: { sel: string; to: number; from: number; end: number }; roll?: { sel: string; from: number; to: number } }> = {
 			pro: { segs: [0.56], beats: [{ at: 0.2, sel: '.f1', cls: 'on' }, { at: 0.27, sel: '.f2', cls: 'on' }, { at: 0.34, sel: '.f3', cls: 'on' }, { at: 0.4, sel: '.f4', cls: 'on' }, { at: 0.46, sel: '.f5', cls: 'on' }, { at: 0.54, sel: '.f6', cls: 'on' }, { at: 0.68, sel: '.stPro', cls: 'hit' }], stagger: { sel: '.tw', from: 0.12, to: 0.5 } },
 			fan: {
 				// wave 1: clones land, caption pre-names, wall ignites and counts alone,
@@ -880,6 +883,7 @@ const faqLd = {
 				segs: [0.3],
 				beats: [{ at: 0.03, sel: '.till', cls: 'on' }, { at: 0.78, sel: '.tFoot', cls: 'on' }, { at: 0.84, sel: '.ctaRow', cls: 'on' }],
 				stagger: { sel: '.rl', from: 0.14, to: 0.74 },
+				roll: { sel: '.till', from: 0.2, to: 0.8 },
 			},
 		};
 
@@ -902,6 +906,7 @@ const faqLd = {
 				for (const b of sc.beats) (b.sel === ':stage' ? [stage] : b.all ? Array.from(stage.querySelectorAll(b.sel)) : [stage.querySelector(b.sel)]).forEach((el: any) => el && el.classList.remove(b.cls || 'on'));
 				if (sc.stagger) stage.querySelectorAll(sc.stagger.sel).forEach((el) => el.classList.remove(sc.stagger!.cls || 'on'));
 				if (sc.counter) { const c = stage.querySelector(sc.counter.sel); if (c) c.textContent = '0'; }
+				if (sc.roll) { const el = stage.querySelector(sc.roll.sel); if (el) el.scrollTop = 0; }
 			}
 
 			let ticking = false;
@@ -930,6 +935,13 @@ const faqLd = {
 					if (sc.counter) {
 						const c = stage.querySelector(sc.counter.sel) as HTMLElement;
 						if (c) c.textContent = Math.round(sc.counter.to * clamp((p - sc.counter.from) / (sc.counter.end - sc.counter.from))).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+					}
+					if (sc.roll) {
+						const el = stage.querySelector(sc.roll.sel) as HTMLElement;
+						if (el) {
+							const max = el.scrollHeight - el.clientHeight;
+							if (max > 0) el.scrollTop = max * clamp((p - sc.roll.from) / (sc.roll.to - sc.roll.from));
+						}
 					}
 					const active = r.top < vh * 0.5 && r.bottom > vh * 0.5;
 					if (active) { railDots.forEach((d, i) => d.classList.toggle('here', i === wi)); anyActive = true; }
