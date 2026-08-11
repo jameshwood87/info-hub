@@ -428,6 +428,7 @@ const faqLd = {
 				<div class="ctaRow on">
 					<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener" data-umami-event="film-cta" data-umami-event-which="signup">Create your free account</a>
 					<a class="btnG" href="https://agents.propertylist.es/" target="_blank" rel="noopener" data-umami-event="film-cta" data-umami-event-which="login">Already signed up? Log in</a>
+					<p class="ctaSub"><a href="/features/" data-umami-event="film-cta" data-umami-event-which="features">Prefer it feature by feature? Explore the features</a></p>
 				</div>
 			</section>
 		</div>
@@ -748,6 +749,9 @@ const faqLd = {
 		.ctaRow { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(16px, 5vh); display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; z-index: 4; width: min(92vw, 600px); }
 		.js .ctaRow { opacity: 0; transition: opacity 0.5s 0.2s; }
 		.js .ctaRow.on { opacity: 1; }
+		.ctaSub { flex-basis: 100%; text-align: center; margin: 2px 0 0; font-size: 13px; }
+		.ctaSub a { color: rgba(234, 242, 241, 0.6); text-decoration: underline; text-underline-offset: 3px; }
+		.ctaSub a:hover { color: var(--glow); }
 		.btnP { background: var(--teal); color: #fff; border-radius: 999px; padding: 13px 26px; font-size: 15px; font-weight: 800; text-decoration: none; }
 		.btnP:hover { background: #00998a; }
 		.btnG { background: transparent; color: var(--ink); border: 1.5px solid rgba(234, 242, 241, 0.4); border-radius: 999px; padding: 13px 26px; font-size: 15px; font-weight: 800; text-decoration: none; }
