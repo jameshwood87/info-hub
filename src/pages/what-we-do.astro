@@ -40,7 +40,7 @@ const faqs = [
 	},
 	{
 		q: 'What does PropertyList cost?',
-		a: 'The core is free: listing, MLS sharing, the portal, the CRM core, XML feeds in and out, and market data. You pay in credits (a credit is roughly 1 EUR) only when specific things happen: moving a qualified buyer lead into a pipeline costs 1 credit with the first 5 free, a published Website Builder site is 50 credits a month, the Rentals Module is 50 credits per 30 days after a 30-day free trial, and Instant Content is 30 credits a month. Portal enquiries are free for a limited time.',
+		a: 'The core is free: listing, MLS sharing, the portal, the CRM core, XML feeds in and out, and market data. You pay in credits (a credit is roughly 1 EUR) only when specific things happen: moving a qualified buyer lead into the Buyer pipeline costs 1 credit with the first 5 free, Automation and Nurture is 20 credits a month, a published Website Builder site is 50 credits a month, the Rentals Module is 50 credits per 30 days after a 30-day free trial, and Instant Content is 30 credits a month. Portal enquiries are free for a limited time.',
 	},
 	{
 		q: 'How does the MLS work?',
@@ -276,7 +276,7 @@ const faqLd = {
 				<p class="cap capA">Wednesday, 9:12pm. Someone in Rotterdam has been on your listing for eleven minutes.</p>
 				<p class="cap capB">The enquiry lands in the CRM. Free.</p>
 				<p class="cap capC">You decide she is serious. That decision is the credit.</p>
-				<p class="cap capD">Nurture tracks every follow-up, and tells you the moment to move.</p>
+				<p class="cap capD">Want the chasing automated? Nurture is 20 credits a month.</p>
 
 				<div class="bubble on"><span class="bDot"></span>New enquiry &middot; 3 Bed Villa<br /><b>"Is it still available? We fly out on the 24th."</b><span class="stamp stEnq hit free">free for a limited time</span></div>
 
@@ -285,14 +285,14 @@ const faqLd = {
 					<div class="kCol"><div class="kHead">Qualified</div><div class="kCard kMove on"><b>Marije V.</b><span>3 Bed Villa &middot; flying 24th</span><span class="stamp stPipe hit credit">1 credit (~1&euro;) &middot; first 5 free</span></div></div>
 					<div class="kCol"><div class="kHead">Viewing</div><div class="kGhost"></div></div>
 				</div>
-				<p class="tool">Pipelines + Nurture &middot; the CRM core stays free</p>
+				<p class="tool">Lead, Seller and Property pipelines free &middot; Buyer is the credit step</p>
 			</section>
 		</div>
 
 		<div class="breather">
 			<h2>The honest line about the CRM</h2>
 			<p>
-				The CRM core is free and the MLS stays free. The CRM is not 100% free, and here is the honest line in full:
+				The CRM core is free and the MLS stays free: the Lead, Seller and Property pipelines cost nothing, with no limit. The CRM is not 100% free, and here is the honest line in full:
 				enquiries land in your CRM at no cost, and nothing is charged until you decide a lead is worth pursuing and
 				move it into a paid pipeline yourself. That decision costs 1 credit, roughly 1&euro;, and your first 5 buyer
 				leads are free. You just watched it happen: the credit exists only at the moment you decide the lead is worth one.
@@ -416,6 +416,7 @@ const faqLd = {
 						['Another agent closes it with their buyer', '€0 · no cut, ever'],
 						['Valuation report (PIR)', '5 cr · first 3 free'],
 						['Buyer into paid pipeline', '1 cr · first 5 free'],
+						['Automation & Nurture (optional)', '20 cr / month'],
 						['Rentals Module', '50 cr / 30 days after trial'],
 						['Instant Content', '30 cr / month'],
 						['Full network feed for your own website', '35 € / month'],
