@@ -303,19 +303,28 @@ const faqLd = {
 		<div class="wrap w5" id="sc5" data-wrap="net">
 			<section class="stage" data-stage="net" aria-label="Escena 5: otro agente lo vende">
 				<span class="step">Paso 5 &middot; La red la vende</span>
-				<p class="cap capA">Dos semanas después llega la compradora. Y aquí está el giro: no es tu compradora.</p>
-				<p class="cap capB">Una agente de Estepona la tenía desde el principio. En un MLS eso no es competencia. Es la gracia.</p>
+				<p class="cap capA">Dos semanas después llega una compradora. No es tu compradora.</p>
+				<p class="cap capB">La trae una agente de Estepona. El reparto va según tus condiciones.</p>
+				<p class="cap capC">¿Y qué se lleva PropertyList de esta operación?</p>
 
-				<svg class="coast" viewBox="0 0 400 140" aria-hidden="true">
-					<path class="shore" d="M8,96 C60,88 90,98 130,92 C180,84 210,96 250,88 C300,78 340,86 392,72" />
-					<circle class="town tEste" cx="128" cy="92" r="5" />
-					<circle class="town tMarb" cx="252" cy="88" r="6" />
-					<path class="deal on" d="M128,92 C170,40 210,40 252,88" />
-					<text x="112" y="116" class="tLabel">Estepona</text>
-					<text x="236" y="112" class="tLabel">Marbella</text>
-				</svg>
-				<div class="split on" aria-hidden="true"><div class="sHalf sYou">tu parte</div><div class="sHalf sThem">su parte</div></div>
-				<p class="netLine">Su compradora. Tu anuncio. La comisión se reparte según las condiciones que tú fijaste.<span class="stamp stNet hit">0 &euro; para siempre</span></p>
+				<div class="coastWrap" aria-hidden="true">
+					<svg class="coast" viewBox="0 0 400 140">
+						<path class="shore" d="M8,96 C60,88 90,98 130,92 C180,84 210,96 250,88 C300,78 340,86 392,72" />
+						<circle class="town tEste" cx="128" cy="92" r="5" />
+						<circle class="town tMarb" cx="252" cy="88" r="6" />
+						<circle class="pulse on" cx="252" cy="88" r="9" />
+						<path class="deal on" d="M128,92 C170,40 210,40 252,88" />
+						<text x="112" y="116" class="tLabel">Estepona</text>
+						<text x="236" y="112" class="tLabel">Marbella</text>
+					</svg>
+					<div class="mapChip bChip on"><b>Agente de Estepona</b><span>su compradora busca en Marbella</span></div>
+					<div class="mapChip lChip on"><b>Villa de 3 Dormitorios</b><span>PL-4471 &middot; 945.000 &euro;</span></div>
+				</div>
+				<div class="splitWrap" aria-hidden="true">
+					<div class="split on"><div class="sHalf sYou">tu parte</div><div class="sHalf sThem">su parte</div></div>
+					<p class="splitSub">repartida según las condiciones que tú fijas en el anuncio</p>
+				</div>
+				<p class="n5w on">Nada.<span class="stamp stN5 hit">0 &euro; &middot; sin comisión, nunca</span><br /><span class="nSub">Las operaciones entre agentes son gratis. Para siempre.</span></p>
 			</section>
 		</div>
 
@@ -402,6 +411,7 @@ const faqLd = {
 						['Datos de mercado verificados por notario', '0 €'],
 						['App móvil (Android)', '0 €'],
 						['Consulta del portal', 'gratis por tiempo limitado'],
+						['Otro agente la cierra con su comprador', '0 € · sin comisión, nunca'],
 						['Informe de valoración (PIR)', '5 cr · los 3 primeros gratis'],
 						['Comprador a pipeline de pago', '1 cr · los 5 primeros gratis'],
 						['Módulo de alquileres', '50 cr / 30 días tras la prueba'],
@@ -475,7 +485,7 @@ const faqLd = {
 		/* stage scaffold */
 		.wrap { position: relative; }
 		.w1 { height: 300vh; } .w2 { height: 560vh; } .w3 { height: 240vh; } .w4 { height: 330vh; }
-		.w5 { height: 300vh; } .w6 { height: 240vh; } .w7 { height: 300vh; } .w8 { height: 210vh; } .w9 { height: 280vh; }
+		.w5 { height: 380vh; } .w6 { height: 240vh; } .w7 { height: 300vh; } .w8 { height: 210vh; } .w9 { height: 280vh; }
 		.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; --p: 1; --s1: 1; --s2: 1; }
 
 		.cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(11vh, env(safe-area-inset-bottom)); width: min(88vw, 600px); text-align: center; font-size: clamp(15px, 2.1vw, 19px); line-height: 1.5; color: rgba(234, 242, 241, 0.88); opacity: 0; transition: opacity 0.35s; margin: 0; z-index: 8; text-shadow: 0 2px 18px rgba(11, 18, 32, 0.9); }
@@ -634,7 +644,19 @@ const faqLd = {
 		[data-stage='enq'] .tool { top: auto; bottom: calc(max(11vh, env(safe-area-inset-bottom)) + 62px); }
 
 		/* ---- scene 5 (network) ---- */
-		.coast { position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%); width: min(88vw, 680px); z-index: 2; }
+		.coastWrap { position: absolute; left: 50%; top: 27%; transform: translate(-50%, -50%); width: min(88vw, 680px); z-index: 2; }
+		.coast { display: block; width: 100%; }
+		.mapChip { position: absolute; bottom: 56%; transform: translateX(-50%); background: rgba(16, 28, 51, 0.85); border: 1px solid rgba(91, 227, 208, 0.35); border-radius: 10px; padding: 7px 11px; text-align: left; z-index: 3; width: max-content; max-width: 170px; }
+		.mapChip::after { content: ''; position: absolute; top: 100%; left: 50%; width: 1px; height: 38px; background: rgba(91, 227, 208, 0.4); }
+		.mapChip b { display: block; font-size: 12.5px; }
+		.mapChip span { display: block; font-size: 10.5px; color: rgba(234, 242, 241, 0.6); line-height: 1.35; }
+		.bChip { left: 32%; }
+		.lChip { left: 63%; border-color: rgba(91, 227, 208, 0.6); }
+		.js .mapChip { opacity: 0; transform: translateX(-50%) translateY(12px); transition: opacity 0.4s, transform 0.4s; }
+		.js .mapChip.on { opacity: 1; transform: translateX(-50%); }
+		.pulse { fill: none; stroke: var(--glow); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+		.js .pulse.on { animation: pulse5 0.8s ease-out 1 both; }
+		@keyframes pulse5 { 0% { opacity: 0.9; transform: scale(0.4); } 100% { opacity: 0; transform: scale(3); } }
 		.shore { fill: none; stroke: rgba(234, 242, 241, 0.35); stroke-width: 2; stroke-dasharray: 420; stroke-dashoffset: calc(420 - var(--s1) * 420); }
 		.town { fill: var(--glow); opacity: clamp(0, calc((var(--s1) - 0.6) / 0.3), 1); }
 		.tLabel { fill: rgba(234, 242, 241, 0.6); font-size: 11px; letter-spacing: 0.5px; opacity: clamp(0, calc((var(--s1) - 0.7) / 0.3), 1); }
@@ -642,14 +664,21 @@ const faqLd = {
 		.js .deal.on { animation: draw 0.9s ease forwards; }
 		.deal.on { stroke-dashoffset: 0; }
 		@keyframes draw { to { stroke-dashoffset: 0; } }
-		.split { position: absolute; left: 50%; top: 58%; transform: translateX(-50%); width: min(78vw, 440px); display: flex; border-radius: 999px; overflow: hidden; border: 1px solid rgba(91, 227, 208, 0.4); z-index: 3; }
+		.splitWrap { position: absolute; left: 50%; top: 52%; transform: translateX(-50%); width: min(78vw, 440px); z-index: 3; text-align: center; }
+		.split { display: flex; border-radius: 999px; overflow: hidden; border: 1px solid rgba(91, 227, 208, 0.4); }
+		.splitSub { margin: 9px 0 0; font-size: 12.5px; color: rgba(234, 242, 241, 0.6); }
 		.sHalf { flex: 1; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 10px 0; }
 		.sYou { background: rgba(0, 174, 154, 0.35); }
 		.sThem { background: rgba(0, 174, 154, 0.14); }
-		.js .split { opacity: 0; transform: translateX(-50%) scaleX(0.6); transition: opacity 0.45s, transform 0.45s; }
-		.js .split.on { opacity: 1; transform: translateX(-50%) scaleX(1); }
-		.netLine { position: absolute; left: 50%; transform: translateX(-50%); top: 70%; width: min(86vw, 520px); text-align: center; font-size: clamp(15px, 2.2vw, 18px); color: rgba(234, 242, 241, 0.85); z-index: 4; }
-		.stNet { position: relative; display: inline-block; right: auto; top: auto; margin-left: 12px; }
+		.js .split { opacity: 0; transform: scaleX(0.6); transition: opacity 0.45s, transform 0.45s; }
+		.js .split.on { opacity: 1; transform: scaleX(1); }
+		.js .splitSub { opacity: 0; transition: opacity 0.4s 0.3s; }
+		.js .split.on + .splitSub { opacity: 1; }
+		.n5w { position: absolute; left: 50%; top: 65%; transform: translateX(-50%); margin: 0; text-align: center; font-size: clamp(34px, 8.5vw, 58px); font-weight: 800; letter-spacing: -1px; line-height: 1.05; z-index: 5; width: max-content; max-width: 92vw; text-shadow: 0 4px 30px rgba(11, 18, 32, 0.95); }
+		.n5w .nSub { display: inline-block; margin-top: 10px; font-size: clamp(15px, 2.3vw, 19px); font-weight: 700; letter-spacing: 0; line-height: 1.35; color: var(--glow); }
+		.n5w .stN5 { top: -0.5em; right: -3%; }
+		.js .n5w { opacity: 0; transform: translateX(-50%) translateY(14px); transition: opacity 0.5s, transform 0.5s; }
+		.js .n5w.on { opacity: 1; transform: translateX(-50%); }
 
 		/* ---- scene 6 (rentals flip) ---- */
 		.flipBox { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: clamp(210px, 26vw, 280px); perspective: 1100px; z-index: 3; }
@@ -751,7 +780,17 @@ const faqLd = {
 			.stamp.wide2 { white-space: normal; text-align: center; max-width: 40vw; font-size: 9px; line-height: 1.3; bottom: -22px; }
 			.till { font-size: 12px; padding: 14px 14px 12px; top: 44%; max-height: 66svh; }
 			.flipInner { height: 215px; }
-			.coast { width: 94vw; top: 26%; }
+			.coastWrap { width: 94vw; top: 24%; }
+			.mapChip { max-width: 120px; padding: 6px 8px; }
+			.mapChip b { font-size: 11px; }
+			.mapChip span { font-size: 9.5px; }
+			.mapChip.bChip { transform: translateX(-58%); }
+			.mapChip.lChip { transform: translateX(-42%); }
+			.js .mapChip.bChip { transform: translateX(-58%) translateY(12px); }
+			.js .mapChip.bChip.on { transform: translateX(-58%); }
+			.js .mapChip.lChip { transform: translateX(-42%) translateY(12px); }
+			.js .mapChip.lChip.on { transform: translateX(-42%); }
+			.n5w { top: 62%; }
 			.bubble { top: 10%; }
 			[data-stage='pro'] .tool, [data-stage='enq'] .tool { bottom: calc(max(11vh, env(safe-area-inset-bottom)) + 96px); }
 		}
@@ -762,8 +801,12 @@ const faqLd = {
 			.stage { position: static; height: auto; min-height: 92vh; padding: 46px 0 70px; }
 			.cap { position: static; transform: none; opacity: 1 !important; margin: 12px auto; }
 			.hint, .bDot, .wave i { animation: none; }
-			.card, .dest, .kanban, .coast, .split, .netLine, .flipBox, .shelf, .credScene, .till, .ctaRow, .bubble, .valScene, .tool, .thesis, .proRow, .vn { position: static; transform: none; margin: 14px auto; opacity: 1; }
+			.card, .dest, .kanban, .coastWrap, .splitWrap, .n5w, .flipBox, .shelf, .credScene, .till, .ctaRow, .bubble, .valScene, .tool, .thesis, .proRow, .vn { position: static; transform: none; margin: 14px auto; opacity: 1; }
 			.thesis { opacity: 1; }
+			.mapChip { position: static; display: inline-block; transform: none; margin: 8px 6px; }
+			.mapChip::after { display: none; }
+			.n5w .stN5 { position: static; display: inline-block; margin-left: 10px; }
+			.js .stage .pulse.on { animation: none; }
 			.clone, .lines { display: none; }
 			.credScene { display: flex; }
 		}
@@ -800,7 +843,7 @@ const faqLd = {
 			},
 			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
 			enq: { segs: [0.3, 0.5, 0.78], beats: [{ at: 0.12, sel: '.bubble', cls: 'on' }, { at: 0.22, sel: '.stEnq', cls: 'hit' }, { at: 0.36, sel: '.kLand', cls: 'on' }, { at: 0.58, sel: ':stage', cls: 'moved' }, { at: 0.58, sel: '.kMove', cls: 'on' }, { at: 0.68, sel: '.stPipe', cls: 'hit' }] },
-			net: { segs: [0.55], s1: [0.05, 0.5], beats: [{ at: 0.62, sel: '.deal', cls: 'on' }, { at: 0.72, sel: '.split', cls: 'on' }, { at: 0.82, sel: '.stNet', cls: 'hit' }] },
+			net: { segs: [0.42, 0.74], s1: [0.04, 0.32], beats: [{ at: 0.26, sel: '.bChip', cls: 'on' }, { at: 0.34, sel: '.lChip', cls: 'on' }, { at: 0.5, sel: '.deal', cls: 'on' }, { at: 0.6, sel: '.pulse', cls: 'on' }, { at: 0.66, sel: '.split', cls: 'on' }, { at: 0.8, sel: '.n5w', cls: 'on' }, { at: 0.88, sel: '.stN5', cls: 'hit' }] },
 			rent: { segs: [0.4], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRent', cls: 'hit' }] },
 			inst: {
 				segs: [0.52],
