@@ -781,11 +781,35 @@ const faqLd = {
 
 		/* ---- mobile ---- */
 		@media (max-width: 700px) {
-			.c1 { --cx: -24vw; --cy: -29vh; } .c2 { --cx: 24vw; --cy: -29vh; } .c3 { --cx: -24vw; --cy: 23vh; } .c4 { --cx: 24vw; --cy: 23vh; }
+			/* top row clears the step chip, bottom row clears the caption slot */
+			.c1 { --cx: -24vw; --cy: -25vh; } .c2 { --cx: 24vw; --cy: -25vh; } .c3 { --cx: -24vw; --cy: 19vh; } .c4 { --cx: 24vw; --cy: 19vh; }
+			.dHead { font-size: 12px; letter-spacing: 1.4px; padding-right: 42px; margin-bottom: 8px; }
+			/* a WRAPPED flex box defaults to align-content: stretch, which spread these
+			   two lines across the whole stage and pushed the content into the caption
+			   slot. centre the lines and reserve the chip / tool + caption bands. */
+			.proRow { align-content: center; inset: 56px 0 196px; gap: 16px; }
+			.vn { max-width: 88vw; }
+			.valScene { inset: 52px 0 168px; padding-top: 0; }
+			.valFrame { width: min(74vw, 300px); }
+			.valBig { font-size: 19px; }
+			.valSmall { font-size: 13px; line-height: 1.5; margin-bottom: 22px; }
 			.clone { display: none; }
 			.dSpot { width: 44vw; }
+			/* the plates own the band between the step chip and the caption slot:
+			   corner stamps hang 16px above / 22px below their plate, so the plate
+			   edges must sit clear of both by that much again */
+			.dMls, .dPortal { top: 72px; }
+			.dWeb, .dXml { bottom: 178px; }
+			.dest { padding: 8px 9px 7px; }
+			.dHead { font-size: 11px; margin-bottom: 5px; }
+			.soonTag { font-size: 9px; padding: 1px 6px; }
 			.dest { padding: 10px 11px 9px; }
-			.dotGrid { grid-template-columns: repeat(10, 1fr); }
+			.dotGrid { grid-template-columns: repeat(10, 1fr); gap: 3px; }
+			.dot:nth-child(n + 61) { display: none; }
+			.siteRow i { height: 20px; }
+			.adRow i { height: 26px; font-size: 11px; }
+			.dSub, .dNote, .dest p { font-size: 11px; line-height: 1.35; }
+			.bMini, .cMini { font-size: 9.5px; }
 			.dot:nth-child(n + 101) { display: none; }
 			.card { width: 200px; margin-left: -100px; }
 			.rail { display: none; }
@@ -868,7 +892,7 @@ const faqLd = {
 			},
 			val: { segs: [0.5], beats: [{ at: 0.22, sel: '.valFrame', cls: 'on' }, { at: 0.38, sel: '.valNote', cls: 'on' }, { at: 0.62, sel: '.stVal', cls: 'hit' }] },
 			enq: { segs: [0.3, 0.5, 0.78], beats: [{ at: 0.12, sel: '.bubble', cls: 'on' }, { at: 0.22, sel: '.stEnq', cls: 'hit' }, { at: 0.36, sel: '.kLand', cls: 'on' }, { at: 0.58, sel: ':stage', cls: 'moved' }, { at: 0.58, sel: '.kMove', cls: 'on' }, { at: 0.68, sel: '.stPipe', cls: 'hit' }] },
-			net: { segs: [0.42, 0.74], s1: [0.04, 0.32], beats: [{ at: 0.26, sel: '.bChip', cls: 'on' }, { at: 0.34, sel: '.lChip', cls: 'on' }, { at: 0.5, sel: '.deal', cls: 'on' }, { at: 0.6, sel: '.pulse', cls: 'on' }, { at: 0.66, sel: '.split', cls: 'on' }, { at: 0.8, sel: '.n5w', cls: 'on' }, { at: 0.88, sel: '.stN5', cls: 'hit' }] },
+			net: { segs: [0.42, 0.70], s1: [0.04, 0.32], beats: [{ at: 0.26, sel: '.bChip', cls: 'on' }, { at: 0.34, sel: '.lChip', cls: 'on' }, { at: 0.5, sel: '.deal', cls: 'on' }, { at: 0.6, sel: '.pulse', cls: 'on' }, { at: 0.66, sel: '.split', cls: 'on' }, { at: 0.86, sel: '.n5w', cls: 'on' }, { at: 0.93, sel: '.stN5', cls: 'hit' }] },
 			rent: { segs: [0.66], s1: [0.2, 0.62], beats: [{ at: 0.72, sel: '.stRentFree', cls: 'hit' }, { at: 0.82, sel: '.stRent', cls: 'hit' }] },
 			inst: {
 				segs: [0.52],
