@@ -694,12 +694,18 @@ const faqLd = {
 		.flipBox { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: clamp(210px, 26vw, 280px); perspective: 1100px; z-index: 3; }
 		.flipInner { position: relative; width: 100%; height: 230px; transform-style: preserve-3d; transition: transform 0.2s; transform: rotateY(calc(var(--s1) * 180deg)); }
 		.face { position: absolute; inset: 0; margin: 0; left: 0; top: 0; width: 100%; transform: none; backface-visibility: hidden; }
+		/* must OUTRANK the mobile .card rule (width 200 / margin-left -100), which otherwise
+		   shifts the flipped face 110px off centre and clips it off a phone screen */
+		.flipInner .face { width: 100%; margin: 0; }
 		.face.back { transform: rotateY(180deg); }
 		.tline { display: flex; gap: 5px; margin: 10px 0 4px; }
 		.tline i { flex: 1; height: 8px; border-radius: 5px; background: rgba(91, 227, 208, 0.35); }
 		.tline i:nth-child(2) { background: rgba(91, 227, 208, 0.6); }
 		.tlab { font-size: 10.5px; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(234, 242, 241, 0.5); margin: 0; }
-		.stRent { right: -6px; bottom: -16px; top: auto; }
+		.stRent { right: -6px; bottom: -34px; top: auto; }
+		/* .stamp.credit (2 classes) outranks .stRent (1), so the size rule needs 3 */
+		.stamp.stRent.credit { font-size: 11.5px; }
+		[data-stage="rent"] .tool { top: calc(42% + 210px); }
 		.stRentFree { left: -10px; right: auto; top: -14px; }
 		[data-stage='rent'] .tool { top: calc(44% + 160px); }
 
