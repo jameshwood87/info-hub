@@ -712,7 +712,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								<input type="text" name="website" class="footerNewsHp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 								<button type="submit">{lang === 'es' ? 'Suscribirme' : 'Sign up'}</button>
 							</div>
-							<p class="footerNewsConsent">{lang === 'es' ? 'Guardamos tu correo solo para enviarte este email. Puedes darte de baja cuando quieras. ' : 'We store your email only to send you this email. You can unsubscribe at any time. '}<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/' : '/docs/propertylist-mls-user-manual/legal/privacy-policy/'}>{lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}</a></p>
+							<p class="footerNewsConsent">{lang === 'es' ? 'Guardamos tu correo solo para enviarte este email. Puedes darte de baja cuando quieras. ' : 'We store your address only to send you this email. You can unsubscribe at any time. '}<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/' : '/docs/propertylist-mls-user-manual/legal/privacy-policy/'}>{lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}</a></p>
 							<p class="footerNewsStatus" role="status" aria-live="polite"></p>
 						</form>
 					</div>
@@ -2972,8 +2972,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		flex-wrap: wrap;
 	}
 	.footerNewsCopy {
-		flex: 1 1 300px;
-		max-width: 430px;
+		flex: 1 1 320px;
+		max-width: 520px;
 	}
 	.footerNewsTitle {
 		font-weight: 900;
@@ -3078,8 +3078,11 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 			flex-direction: column;
 			padding: 18px;
 		}
+		/* column direction reads flex-basis as a height, which left a tall
+		   empty gap between the copy and the input - pin both to content */
+		.footerNewsCopy,
 		.footerNewsForm {
-			flex: 1 1 auto;
+			flex: 0 0 auto;
 			max-width: none;
 			width: 100%;
 		}
