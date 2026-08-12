@@ -44,24 +44,54 @@ async function main() {
   if (!hubToken) throw new Error('SOCIAL_HUB_TOKEN missing in ' + ENV_PATH);
 
   const tok = await accessToken();
-  const body = {
-    dateRanges: [{ startDate: '35daysAgo', endDate: 'today' }],
+  const RANGE = [{ startDate: '35daysAgo', endDate: 'today' }];
+  const campaignFilter = { filter: { fieldName: 'sessionCampaignName', stringFilter: { value: 'social-studio' } } };
+
+  async function runReport(body) {
+    const r = await fetch(`https://analyticsdata.googleapis.com/v1beta/${PORTAL_PROPERTY}:runReport`, {
+      method: 'POST', headers: { Authorization: `Bearer ${tok}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    const jr = await r.json();
+    if (jr.error) throw new Error('ga4 report failed: ' + JSON.stringify(jr.error).slice(0, 300));
+    return jr;
+  }
+
+  // Clicks = sessions per utm_content.
+  const jSessions = await runReport({
+    dateRanges: RANGE,
     dimensions: [{ name: 'sessionManualAdContent' }],
-    metrics: [{ name: 'sessions' }, { name: 'keyEvents' }],
-    dimensionFilter: { filter: { fieldName: 'sessionCampaignName', stringFilter: { value: 'social-studio' } } },
+    metrics: [{ name: 'sessions' }],
+    dimensionFilter: campaignFilter,
     limit: 200,
-  };
-  const res = await fetch(`https://analyticsdata.googleapis.com/v1beta/${PORTAL_PROPERTY}:runReport`, {
-    method: 'POST', headers: { Authorization: `Bearer ${tok}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   });
-  const j = await res.json();
-  if (j.error) throw new Error('ga4 report failed: ' + JSON.stringify(j.error).slice(0, 300));
-  const items = (j.rows || [])
-    .map(r => ({
-      utm_content: r.dimensionValues?.[0]?.value || '',
-      clicks: Number(r.metricValues?.[0]?.value || 0),
-      leads: Number(r.metricValues?.[1]?.value || 0),
-    }))
+
+  // Leads = real lead events only.
+  // Do NOT use the keyEvents metric here: the three key events configured on this
+  // property are GA4 setup stubs that have never once fired, so keyEvents is always 0.
+  // form_submit is deliberately excluded too - it is enhanced-measurement noise that
+  // counts logins and intermediate signup-step forms as if they were leads.
+  // This returns 0 until the portal fires generate_lead on enquiry/signup. That zero
+  // is honest; a form_submit-based number would not be.
+  const jLeads = await runReport({
+    dateRanges: RANGE,
+    dimensions: [{ name: 'sessionManualAdContent' }],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: { andGroup: { expressions: [
+      campaignFilter,
+      { filter: { fieldName: 'eventName', inListFilter: { values: ['generate_lead', 'enquiry'] } } },
+    ] } },
+    limit: 200,
+  });
+
+  const leadMap = new Map((jLeads.rows || []).map(r => [
+    r.dimensionValues?.[0]?.value || '', Number(r.metricValues?.[0]?.value || 0),
+  ]));
+
+  const items = (jSessions.rows || [])
+    .map(r => {
+      const utm = r.dimensionValues?.[0]?.value || '';
+      return { utm_content: utm, clicks: Number(r.metricValues?.[0]?.value || 0), leads: leadMap.get(utm) ?? 0 };
+    })
     .filter(it => it.utm_content && it.utm_content !== '(not set)');
   console.log(new Date().toISOString(), 'ga4 utm_content rows:', items.length, JSON.stringify(items));
   if (!items.length) { console.log('nothing to sync yet'); return; }
