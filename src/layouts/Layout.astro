@@ -701,6 +701,21 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							</a>
 						</div>
 					</div>
+					<div class="footerNews">
+						<div class="footerNewsCopy">
+							<div class="footerNewsTitle">{lang === 'es' ? 'El mercado de la Costa del Sol, en tu correo' : 'The Costa del Sol market, in your inbox'}</div>
+							<p class="footerNewsSub">{lang === 'es' ? 'Precios, oferta y lo que cambia - un email breve con datos, sin spam.' : "Prices, supply and what's changing - a short data email, no spam."}</p>
+						</div>
+						<form class="footerNewsForm" data-newsletter novalidate>
+							<div class="footerNewsRow">
+								<input type="email" name="email" required inputmode="email" autocomplete="email" maxlength="160" aria-label={lang === 'es' ? 'Tu correo electrónico' : 'Your email address'} placeholder={lang === 'es' ? 'tu@agencia.com' : 'you@agency.com'} />
+								<input type="text" name="website" class="footerNewsHp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+								<button type="submit">{lang === 'es' ? 'Suscribirme' : 'Sign up'}</button>
+							</div>
+							<p class="footerNewsConsent">{lang === 'es' ? 'Guardamos tu correo solo para enviarte este email. Puedes darte de baja cuando quieras. ' : 'We store your email only to send you this email. You can unsubscribe at any time. '}<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/' : '/docs/propertylist-mls-user-manual/legal/privacy-policy/'}>{lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}</a></p>
+							<p class="footerNewsStatus" role="status" aria-live="polite"></p>
+						</form>
+					</div>
 					<div class="footerBottom2">
 						<span class="footerCopy">&copy; {new Date().getFullYear()} PropertyList.es &middot; {lang === 'de' ? 'Alle Rechte vorbehalten' : lang === 'es' ? 'Todos los derechos reservados' : 'All rights reserved'}</span>
 						<span class="footerFine2">{lang === 'de' ? 'Die Informationen auf dieser Website sind allgemeine Hinweise, keine professionelle Beratung.' : lang === 'es' ? 'La información de este sitio es orientación general, no asesoramiento profesional.' : 'Information on this site is general guidance, not professional advice.'}</span>
@@ -708,6 +723,62 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				</div>
 			</footer>
 
+		<script is:inline data-newsletter-form>
+			(function () {
+				var form = document.querySelector('form[data-newsletter]');
+				if (!form) return;
+				var box = form.closest('.footerNews');
+				var status = form.querySelector('.footerNewsStatus');
+				var emailEl = form.querySelector('input[name="email"]');
+				var hpEl = form.querySelector('input[name="website"]');
+				var btn = form.querySelector('button[type="submit"]');
+				var es = (document.documentElement.lang || '').toLowerCase().indexOf('es') === 0;
+				var RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				function say(cls, msg) {
+					status.className = 'footerNewsStatus' + (cls ? ' ' + cls : '');
+					status.textContent = msg;
+				}
+				form.addEventListener('submit', function (e) {
+					e.preventDefault();
+					var email = ((emailEl && emailEl.value) || '').trim();
+					if (!RE.test(email) || email.length > 160) {
+						say('err', es ? 'Escribe un correo electrónico válido.' : 'Please enter a valid email address.');
+						if (emailEl) emailEl.focus();
+						return;
+					}
+					if (btn) btn.disabled = true;
+					say('', es ? 'Enviando...' : 'Sending...');
+					fetch('/api/newsletter', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ email: email, website: hpEl ? hpEl.value : '', lang: es ? 'es' : 'en', source: location.pathname })
+					})
+						.then(function (r) {
+							return r
+								.json()
+								.catch(function () {
+									return {};
+								})
+								.then(function (j) {
+									return { ok: r.ok, body: j };
+								});
+						})
+						.then(function (res) {
+							if (res.ok && res.body && res.body.ok) {
+								if (box) box.classList.add('done');
+								say('ok', es ? 'Hecho. Te escribiremos cuando salga el próximo email.' : "You're in. We'll email you when the next one goes out.");
+							} else {
+								if (btn) btn.disabled = false;
+								say('err', es ? 'No hemos podido guardarlo. Revisa el correo e inténtalo de nuevo.' : 'We could not save that. Check the address and try again.');
+							}
+						})
+						.catch(function () {
+							if (btn) btn.disabled = false;
+							say('err', es ? 'Algo ha fallado. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
+						});
+				});
+			})();
+		</script>
 		<script is:inline data-cta-tracker>
 			document.addEventListener('click', function (e) {
 				try {
@@ -2886,6 +2957,132 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 	.footerColCta {
 		color: #0a6d61 !important;
 		font-weight: 800 !important;
+	}
+	/* footer newsletter signup (capture-only: no email provider connected yet) */
+	.footerNews {
+		margin-top: 32px;
+		padding: 20px 22px;
+		border: 1px solid rgba(11, 18, 32, 0.1);
+		border-radius: 14px;
+		background: rgba(0, 174, 154, 0.04);
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 18px 28px;
+		flex-wrap: wrap;
+	}
+	.footerNewsCopy {
+		flex: 1 1 300px;
+		max-width: 430px;
+	}
+	.footerNewsTitle {
+		font-weight: 900;
+		font-size: 17px;
+		letter-spacing: -0.01em;
+		color: #0b1b22;
+	}
+	.footerNewsSub {
+		margin: 5px 0 0;
+		font-size: 14px;
+		line-height: 1.5;
+		color: rgba(11, 18, 32, 0.62);
+	}
+	.footerNewsForm {
+		flex: 1 1 340px;
+		max-width: 460px;
+	}
+	.footerNewsRow {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.footerNewsRow input[type='email'] {
+		flex: 1 1 200px;
+		min-width: 0;
+		padding: 11px 16px;
+		border: 1px solid rgba(11, 18, 32, 0.16);
+		border-radius: 999px;
+		background: #fff;
+		font: inherit;
+		font-size: 14px;
+		color: #0b1b22;
+	}
+	.footerNewsRow input[type='email']::placeholder {
+		color: rgba(11, 18, 32, 0.38);
+	}
+	.footerNewsRow input[type='email']:focus-visible {
+		outline: none;
+		border-color: #00ae9a;
+		box-shadow: 0 0 0 3px rgba(0, 174, 154, 0.18);
+	}
+	.footerNewsRow button {
+		flex: none;
+		border: 0;
+		cursor: pointer;
+		background: #00ae9a;
+		color: #fff;
+		font: inherit;
+		font-weight: 800;
+		font-size: 14px;
+		padding: 11px 24px;
+		border-radius: 999px;
+		transition: background 0.15s, transform 0.1s;
+	}
+	.footerNewsRow button:hover {
+		background: #008a7a;
+		transform: translateY(-1px);
+	}
+	.footerNewsRow button[disabled] {
+		opacity: 0.55;
+		cursor: default;
+		transform: none;
+	}
+	/* honeypot: off-screen, never focusable, invisible to real users */
+	.footerNewsHp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+	.footerNewsConsent {
+		margin: 9px 0 0;
+		font-size: 12px;
+		line-height: 1.5;
+		color: rgba(11, 18, 32, 0.5);
+	}
+	.footerNewsConsent a {
+		color: #0a6d61;
+		font-weight: 700;
+		text-decoration: underline;
+	}
+	.footerNewsStatus {
+		margin: 8px 0 0;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(11, 18, 32, 0.6);
+	}
+	.footerNewsStatus.ok {
+		color: #0a6d61;
+	}
+	.footerNewsStatus.err {
+		color: #b4232a;
+	}
+	.footerNews.done .footerNewsRow,
+	.footerNews.done .footerNewsConsent {
+		display: none;
+	}
+	@media (max-width: 720px) {
+		.footerNews {
+			flex-direction: column;
+			padding: 18px;
+		}
+		.footerNewsForm {
+			flex: 1 1 auto;
+			max-width: none;
+			width: 100%;
+		}
 	}
 	.footerBottom2 {
 		margin-top: 34px;
