@@ -1,0 +1,203 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Owner-facing landing page. Every legal statement here is checked against the
+// BOE and the Ministry of Housing stressed-zone register, and dated, because
+// the previous version of this content described a decree that had been
+// repealed for three months. Nothing is asserted that is not linked.
+const CHECKED = '11 August 2026';
+
+const faqs = [
+	{
+		q: 'Is there a limit on how much I can raise the rent in 2026?',
+		a: 'Not a national cap, no. The 2% ceiling introduced in March 2026 was repealed on 30 April 2026 when Congress refused to ratify it. What limits your increase now is your own contract and the index that applies to it: the IRAV for contracts signed from 26 May 2023, and whatever the contract says (usually CPI) for earlier ones.',
+	},
+	{
+		q: 'Is my property in a stressed area?',
+		a: 'Not if it is in Andalucia. Stressed market areas only exist where the regional government declares them, and no Andalusian municipality appears in the Ministry of Housing register. The Junta de Andalucia has declined to activate the mechanism and has challenged the state housing law before the Constitutional Court.',
+	},
+	{
+		q: 'How long am I tied in for if I let long term?',
+		a: 'The Urban Leasing Act sets a minimum of five years when the landlord is a private individual and seven when the landlord is a company, extended year by year at the tenant’s option, with a tacit extension of up to three further years if neither side gives notice in time. The repeal in April did not change any of this.',
+	},
+	{
+		q: 'Should I let it or sell it?',
+		a: 'That depends on what the property would actually achieve on each side, and most owners only know the asking prices they see advertised. The free guide below starts from registered sale prices in the notarial register instead, so you can compare a realistic sale figure against the rent you would collect.',
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title="Renting out a property in Andalucia: what actually applies in 2026 | PropertyList"
+	description="The 2% rent cap was repealed on 30 April 2026. What governs your rent increase now, why Andalucia has no stressed zones, and what has not changed. Checked against the BOE."
+	canonical="https://info.propertylist.es/landlord/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/landlord/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/propietarios/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/landlord/' },
+	]}
+	schema={{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map((f) => ({
+			'@type': 'Question',
+			name: f.q,
+			acceptedAnswer: { '@type': 'Answer', text: f.a },
+		})),
+	}}
+>
+	<section class="lHero">
+		<p class="lKick">For property owners on the Costa del Sol</p>
+		<h1 class="lH1">The rules changed twice this year. Here is where they actually stand.</h1>
+		<p class="lLead">
+			In March 2026 Spain capped rent increases at 2%. Six weeks later the cap was gone. A lot of what you will read
+			online still describes the version that no longer applies, so this page states the current position and links
+			every claim to its source.
+		</p>
+		<p class="lStamp">Checked against the BOE on {CHECKED}</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">The cap that no longer exists</h2>
+		<p>
+			Real Decreto-ley 8/2026 capped annual rent updates at 2% and gave tenants the right to ask for an
+			extraordinary two-year extension. It was in force from 22 March 2026. The Congress of Deputies
+			<strong>rejected it on 28 April 2026</strong> and it was repealed with effect from 30 April. The BOE entry
+			(<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-6545" rel="nofollow">BOE-A-2026-6545</a>) is now
+			headed <em>Disposicion derogada</em>.
+		</p>
+		<p>
+			If you applied the 2% ceiling to an update inside that six-week window, that was correct and stays correct.
+			The repeal is not retroactive. From 29 April 2026 onwards, ordinary rules apply again.
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">What governs your increase now</h2>
+		<div class="lTwo">
+			<div class="lCard">
+				<h3 class="lH3">Signed from 26 May 2023</h3>
+				<p>
+					The update uses the <strong>IRAV</strong>, the reference index published monthly by the National
+					Statistics Institute. You cannot swap it for the CPI, even by agreement, and you cannot exceed it. Use
+					the figure for the month your anniversary falls in.
+				</p>
+			</div>
+			<div class="lCard">
+				<h3 class="lH3">Signed before 26 May 2023</h3>
+				<p>
+					Your contract governs. Most refer to the CPI. If the contract sets out no update mechanism at all,
+					there is no automatic right to raise the rent during the term.
+				</p>
+			</div>
+		</div>
+		<p class="lFine">
+			Either way the increase is not automatic: you have to notify in writing, showing the index applied, the
+			percentage and the resulting rent, and it takes effect the following month, never retroactively.
+			<a href="/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/">The full explanation, with worked detail</a>.
+		</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">Andalucia has no stressed zones</h2>
+		<p>
+			Almost every headline about rent control in Spain is really about <strong>stressed market areas</strong>, where
+			a region can impose real limits on the rent in new contracts. That regime only operates where the regional
+			government declares it, and <strong>no Andalusian municipality is in the Ministry of Housing register</strong>.
+		</p>
+		<p>
+			The Junta de Andalucia has declined to activate the mechanism and has challenged the state housing law before
+			the Constitutional Court. Its own housing law, Ley 5/2025, published in the BOJA on 24 December 2025 and
+			applying since 24 January 2026, works through subsidies rather than caps.
+		</p>
+		<p class="lPull">
+			If your property is in Malaga province, the rent-control coverage filling the national press does not describe
+			your situation.
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">What did not change</h2>
+		<ul class="lList">
+			<li>Minimum term of five years when the landlord is an individual, seven when the landlord is a company.</li>
+			<li>Year-by-year extension at the tenant's option, plus tacit extension of up to three further years.</li>
+			<li>Deposit for habitual-residence lettings remains one month's rent, plus any additional guarantee agreed.</li>
+			<li>Seasonal and tourist lettings sit under a different regime entirely, with their own regional rules.</li>
+		</ul>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">Let it, or sell it?</h2>
+		<p>
+			With the cap gone, the arithmetic is back to being an ordinary decision: what the property would fetch as a
+			sale against what it would collect as a rent. Most owners only ever see asking prices, which are what other
+			sellers hope for rather than what buyers paid.
+		</p>
+		<p>
+			Our free guide starts from <strong>registered sale prices in the Spanish notarial register</strong> instead. Two
+			questions, no account, and no agent contacts you unless you tick the box.
+		</p>
+		<p class="lCtaRow">
+			<a class="lBtn" href="/what-is-my-property-worth/">See what your property is actually worth</a>
+			<a class="lBtnG" href="/blog/spain-housing-rules-2026-what-applies-in-andalucia/">Which 2026 rules apply in Andalucia</a>
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">If you would rather someone handled it</h2>
+		<p>
+			PropertyList is the shared network the local agents work in: one listing is visible to more than 1,300 agents
+			across the Costa del Sol, so a property is not limited to the buyers or tenants of one office. Owners do not
+			list here directly, agents do. If you want an agent involved, say so on the guide above and a registered local
+			agent gets in touch.
+		</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">Common questions</h2>
+		<div class="lFaq">
+			{faqs.map((f) => (
+				<details class="lFaqItem">
+					<summary class="lFaqQ">{f.q}</summary>
+					<p class="lFaqA">{f.a}</p>
+				</details>
+			))}
+		</div>
+		<p class="lNote">
+			This is general information for property owners, checked against the BOE and the Ministry of Housing register
+			on {CHECKED}. It is not legal advice, and rental rules in Spain change often. Check your own contract and take
+			professional advice before acting.
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.lHero { max-width: 860px; margin: 0 auto; padding: 54px 20px 26px; text-align: center; }
+	.lKick { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #0a6d61; }
+	.lH1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 44px); line-height: 1.15; letter-spacing: -0.5px; }
+	.lLead { margin: 0 auto; max-width: 680px; font-size: 17px; line-height: 1.65; color: rgba(16, 24, 40, 0.75); }
+	.lStamp { margin: 16px 0 0; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
+	.lBand { max-width: 860px; margin: 0 auto; padding: 30px 20px; }
+	.lAlt { background: rgba(0, 174, 154, 0.05); max-width: none; }
+	.lAlt > * { max-width: 860px; margin-left: auto; margin-right: auto; }
+	.lH2 { font-size: clamp(21px, 3vw, 28px); margin: 0 0 14px; letter-spacing: -0.3px; }
+	.lH3 { font-size: 17px; margin: 0 0 8px; color: #0a6d61; }
+	.lBand p { line-height: 1.7; color: rgba(16, 24, 40, 0.78); margin: 0 0 14px; }
+	.lTwo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 6px 0 14px; }
+	.lCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 14px; padding: 18px 20px; }
+	.lCard p { margin: 0; font-size: 15px; }
+	.lFine { font-size: 15px; color: rgba(16, 24, 40, 0.62) !important; }
+	.lPull { border-left: 4px solid #00ae9a; padding-left: 16px; font-size: 18px; font-weight: 600; color: rgba(16, 24, 40, 0.85) !important; }
+	.lList { margin: 0; padding-left: 20px; line-height: 1.8; color: rgba(16, 24, 40, 0.78); }
+	.lCtaRow { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px !important; }
+	.lBtn { background: #00ae9a; color: #fff; border-radius: 999px; padding: 13px 24px; font-weight: 800; text-decoration: none; }
+	.lBtn:hover { background: #0a6d61; }
+	.lBtnG { border: 1.5px solid rgba(16, 24, 40, 0.25); border-radius: 999px; padding: 13px 24px; font-weight: 700; text-decoration: none; color: rgba(16, 24, 40, 0.8); }
+	.lBtnG:hover { border-color: #00ae9a; color: #0a6d61; }
+	.lFaqItem { border-bottom: 1px solid rgba(16, 24, 40, 0.12); padding: 12px 2px; }
+	.lFaqQ { font-weight: 700; cursor: pointer; font-size: 16px; }
+	.lFaqA { margin: 10px 0 2px !important; font-size: 15px; }
+	.lNote { margin-top: 24px !important; font-size: 13.5px; color: rgba(16, 24, 40, 0.55) !important; border-top: 1px solid rgba(16, 24, 40, 0.1); padding-top: 14px; }
+	@media (max-width: 700px) { .lTwo { grid-template-columns: 1fr; } }
+</style>

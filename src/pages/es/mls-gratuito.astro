@@ -1,0 +1,200 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Gemelo español de /free-mls/. Todos los precios salen del ledger de
+// gratis-vs-pago, literalmente. No se nombra a ningún competidor ni se hace
+// ninguna comparación sobre sus condiciones: no podemos verificarlas y no hace
+// falta, la economía de la red sostiene el argumento sola.
+
+const free = [
+	['Publicar tus propiedades', 'Sin límite, con fotos, documentos y tu propia referencia'],
+	['El MLS compartido', 'Más de 1.300 agentes pueden venderlo contigo'],
+	['El portal público', 'Tu anuncio aparece en propertylist.es'],
+	['Tu MicroSite', 'Una web de marca para tu agencia, sincronizada sola'],
+	['Feeds XML de entrada y salida', 'Importa tu cartera y publícala en Idealista, Fotocasa, Rightmove'],
+	['El núcleo del CRM', 'Contactos, calendario, documentos y los pipelines de Lead, Seller y Property'],
+	['Datos de mercado por pueblo y zona', 'Precios verificados por notario, no precios de oferta'],
+	['La app móvil', 'El MLS y el CRM en tu teléfono'],
+];
+
+const paid = [
+	['Un comprador cualificado que pasas al pipeline de Buyer', '1 crédito (~1€), los 5 primeros gratis'],
+	['Informe de Inteligencia de Propiedad', '5 créditos, por tiempo limitado'],
+	['Automation & Nurture', '20 créditos al mes'],
+	['Instant Content', '30 créditos al mes'],
+	['Módulo de Alquileres', '50 créditos por 30 días, tras una prueba gratis de 30 días'],
+	['Creador de webs, una vez publicada', '50 créditos al mes'],
+	['Toda la cartera de la red en tu propia web', '35 € al mes'],
+];
+
+const faqs = [
+	{
+		q: '¿Qué es un MLS y en qué se diferencia de un portal?',
+		a: 'Un portal enseña tu anuncio a compradores. Un MLS lo comparte con otros agentes, de modo que cualquiera de ellos puede traer a su comprador y la comisión se reparte según las condiciones que tú fijas en el propio anuncio. Uno es publicidad. El otro es una red de colegas que pueden cerrar tu cartera contigo.',
+	},
+	{
+		q: '¿Qué se lleva PropertyList de una operación entre agentes?',
+		a: 'Nada. Sin comisión, sin fee de referencia, en ningún sentido, para siempre. El reparto es entre las dos agencias según lo pactado en el anuncio. Esa es la parte del modelo que tiene que seguir siendo gratis, porque es lo que hace que merezca la pena entrar en la red.',
+	},
+	{
+		q: 'Entonces, ¿dónde está la trampa?',
+		a: 'No hay trampa, pero el CRM no es 100% gratis y preferimos decirlo claro. Recibir una consulta no cuesta nada y llegar a Cualificado tampoco. Pasar un comprador cualificado al pipeline de Buyer cuesta 1 crédito, aproximadamente 1€, y los 5 primeros son gratis. Todo lo demás de pago es un módulo que activas tú a propósito.',
+	},
+	{
+		q: '¿Es gratis para siempre o gratis por ahora?',
+		a: 'Publicar, compartir en el MLS, el portal, tu MicroSite, los feeds XML y el núcleo del CRM son gratis sin límite de tiempo y sin tarjeta. Las consultas del portal son gratis por tiempo limitado, y lo decimos en lugar de esconderlo. Cuando eso cambie, se anunciará, no se colará.',
+	},
+	{
+		q: '¿Cuánto vale un crédito?',
+		a: 'Un crédito es aproximadamente 1€. Es 1,00€ en el pack de 20 créditos y menos en packs mayores, por eso escribimos "1 crédito (~1€)" en lugar de fingir que es exactamente un euro.',
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title="Un MLS gratis para agentes inmobiliarios en España: qué significa de verdad | PropertyList"
+	description="Qué es un MLS, qué cuesta PropertyList y qué no cobra nunca. La lista de precios entera en una página, incluidas las partes que no son gratis."
+	canonical="https://info.propertylist.es/es/mls-gratuito/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/free-mls/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/mls-gratuito/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/free-mls/' },
+	]}
+	schema={{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map((f) => ({
+			'@type': 'Question',
+			name: f.q,
+			acceptedAnswer: { '@type': 'Answer', text: f.a },
+		})),
+	}}
+>
+	<section class="mHero">
+		<p class="mKick">Para agentes inmobiliarios en España</p>
+		<h1 class="mH1">Un MLS gratis, y la lista honesta de lo que no lo es</h1>
+		<p class="mLead">
+			Entrar no cuesta nada y publicar tampoco, de forma permanente. Algunas cosas sí cuestan créditos, y están todas
+			en esta página en lugar de tres clics más adentro.
+		</p>
+	</section>
+
+	<section class="mBand">
+		<h2 class="mH2">Primero, qué es realmente un MLS</h2>
+		<p>
+			Un portal anuncia tu propiedad a compradores. Un <strong>MLS la comparte con otros agentes</strong>. Cuando
+			publicas en PropertyList, más de 1.300 agentes de la Costa del Sol pueden venderla contigo, y la comisión se
+			reparte según las condiciones que tú fijas en el anuncio.
+		</p>
+		<p>
+			Esa única diferencia es la razón por la que el núcleo tiene que ser gratis. Una red que cobra a los agentes por
+			compartir cartera entre ellos deja de ser una red. <strong>PropertyList no se lleva nada de una operación entre
+			agentes, en ningún sentido, nunca.</strong>
+		</p>
+		<p class="mCtaRow">
+			<a class="mBtn" href="/es/que-hacemos/">Mira un anuncio recorrerlo entero</a>
+		</p>
+	</section>
+
+	<section class="mBand mAlt">
+		<h2 class="mH2">Gratis, sin límite de tiempo y sin tarjeta</h2>
+		<table class="mTable">
+			<tbody>
+				{free.map(([a, b]) => (
+					<tr>
+						<th scope="row">{a}</th>
+						<td>{b}</td>
+						<td class="mCost mFree">0 €</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+		<p class="mFine">
+			Las consultas del portal también son gratis ahora mismo: esa es <strong>gratis por tiempo limitado</strong> y no
+			permanente, y preferimos escribirlo así.
+		</p>
+	</section>
+
+	<section class="mBand">
+		<h2 class="mH2">Qué cuesta créditos</h2>
+		<p>
+			Todo lo de pago ocurre porque tú lo eliges, en el momento en que lo eliges. Nada se activa solo y no hay cuota
+			mensual sobre el núcleo.
+		</p>
+		<table class="mTable">
+			<tbody>
+				{paid.map(([a, b]) => (
+					<tr>
+						<th scope="row">{a}</th>
+						<td class="mCost mPaid">{b}</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+		<p class="mFine">
+			Un crédito es aproximadamente 1€. Cada función de pago tiene una forma gratis de probarla antes: 5 leads de
+			comprador, 3 informes de propiedad, 30 días de Alquileres, y una web del creador que es gratis de construir y
+			previsualizar hasta que la publicas.
+		</p>
+	</section>
+
+	<section class="mBand mAlt">
+		<h2 class="mH2">La parte que casi todos preguntan dos veces</h2>
+		<p>
+			El CRM no es 100% gratis, y decir lo contrario sería la mentira más fácil de esta página. Recibir una consulta
+			es gratis. Trabajarla hasta Cualificado es gratis. <strong>Decidir que un comprador cualificado merece un sitio
+			en tu pipeline de pago cuesta 1 crédito (~1€), y los 5 primeros son gratis.</strong> Si nunca lo pasas, nunca
+			pagas.
+		</p>
+		<p>
+			Los pipelines de Lead, Seller y Property son gratis y sin límite. Es el de Buyer el que lleva el crédito, porque
+			es el punto donde la plataforma está haciendo el trabajo que te hace ganar dinero.
+		</p>
+	</section>
+
+	<section class="mBand">
+		<h2 class="mH2">Preguntas frecuentes</h2>
+		<div class="mFaq">
+			{faqs.map((f) => (
+				<details class="mFaqItem">
+					<summary class="mFaqQ">{f.q}</summary>
+					<p class="mFaqA">{f.a}</p>
+				</details>
+			))}
+		</div>
+		<p class="mCtaRow">
+			<a class="mBtn" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener" data-umami-event="signup-click">Crea tu cuenta gratis</a>
+			<a class="mBtnG" href="/es/precios/">Ver la página de precios completa</a>
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.mHero { max-width: 820px; margin: 0 auto; padding: 54px 20px 24px; text-align: center; }
+	.mKick { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #0a6d61; }
+	.mH1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 42px); line-height: 1.15; letter-spacing: -0.5px; }
+	.mLead { margin: 0 auto; max-width: 640px; font-size: 17px; line-height: 1.65; color: rgba(16, 24, 40, 0.75); }
+	.mBand { max-width: 820px; margin: 0 auto; padding: 30px 20px; }
+	.mAlt { background: rgba(0, 174, 154, 0.05); max-width: none; }
+	.mAlt > * { max-width: 820px; margin-left: auto; margin-right: auto; }
+	.mH2 { font-size: clamp(21px, 3vw, 28px); margin: 0 0 14px; letter-spacing: -0.3px; }
+	.mBand p { line-height: 1.7; color: rgba(16, 24, 40, 0.78); margin: 0 0 14px; }
+	.mTable { width: 100%; border-collapse: collapse; margin: 4px 0 14px; }
+	.mTable tr { border-bottom: 1px solid rgba(16, 24, 40, 0.1); }
+	.mTable th { text-align: left; font-weight: 700; padding: 11px 10px 11px 0; font-size: 15px; color: rgba(16, 24, 40, 0.85); }
+	.mTable td { padding: 11px 0; font-size: 14.5px; color: rgba(16, 24, 40, 0.65); }
+	.mCost { text-align: right; font-weight: 800; white-space: nowrap; }
+	.mFree { color: #0a6d61; }
+	.mPaid { color: #b45309; }
+	.mFine { font-size: 14.5px; color: rgba(16, 24, 40, 0.6) !important; }
+	.mCtaRow { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px !important; }
+	.mBtn { background: #00ae9a; color: #fff; border-radius: 999px; padding: 13px 24px; font-weight: 800; text-decoration: none; }
+	.mBtn:hover { background: #0a6d61; }
+	.mBtnG { border: 1.5px solid rgba(16, 24, 40, 0.25); border-radius: 999px; padding: 13px 24px; font-weight: 700; text-decoration: none; color: rgba(16, 24, 40, 0.8); }
+	.mBtnG:hover { border-color: #00ae9a; color: #0a6d61; }
+	.mFaqItem { border-bottom: 1px solid rgba(16, 24, 40, 0.12); padding: 12px 2px; }
+	.mFaqQ { font-weight: 700; cursor: pointer; font-size: 16px; }
+	.mFaqA { margin: 10px 0 2px !important; font-size: 15px; }
+	@media (max-width: 700px) { .mTable th, .mTable td { display: block; padding: 4px 0; } .mTable tr { padding: 10px 0; display: block; } .mCost { text-align: left; } }
+</style>

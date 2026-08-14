@@ -1,0 +1,204 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Gemelo español de /landlord/. Cada afirmación legal está comprobada contra
+// el BOE y el registro de zonas tensionadas del Ministerio de Vivienda, y
+// fechada: la versión anterior de este contenido describía un decreto que
+// llevaba tres meses derogado.
+const CHECKED = '11 de agosto de 2026';
+
+const faqs = [
+	{
+		q: '¿Hay un límite a cuánto puedo subir la renta en 2026?',
+		a: 'Un tope nacional no. El límite del 2% que se introdujo en marzo de 2026 quedó derogado el 30 de abril de 2026, cuando el Congreso no lo convalidó. Lo que limita tu subida ahora es tu propio contrato y el índice que le corresponde: el IRAV para contratos firmados desde el 26 de mayo de 2023, y lo que diga el contrato (normalmente el IPC) para los anteriores.',
+	},
+	{
+		q: '¿Mi propiedad está en zona tensionada?',
+		a: 'En Andalucía no. Las zonas de mercado residencial tensionado solo existen donde las declara el gobierno autonómico, y ningún municipio andaluz figura en el registro del Ministerio de Vivienda. La Junta de Andalucía ha optado por no activar el mecanismo y ha recurrido la ley estatal de vivienda ante el Tribunal Constitucional.',
+	},
+	{
+		q: '¿Cuánto tiempo quedo vinculado si alquilo a largo plazo?',
+		a: 'La Ley de Arrendamientos Urbanos fija un mínimo de cinco años si el arrendador es persona física y siete si es persona jurídica, prorrogable año a año a voluntad del inquilino, con prórroga tácita de hasta tres años más si ninguna parte avisa a tiempo. La derogación de abril no cambió nada de esto.',
+	},
+	{
+		q: '¿Alquilar o vender?',
+		a: 'Depende de lo que la propiedad conseguiría por cada vía, y la mayoría de propietarios solo conoce los precios que ve anunciados. La guía gratuita de abajo parte de los precios de venta registrados en el registro notarial, para que puedas comparar una cifra realista de venta con la renta que ingresarías.',
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title="Alquilar una propiedad en Andalucía: qué se aplica de verdad en 2026 | PropertyList"
+	description="El tope del 2% quedó derogado el 30 de abril de 2026. Qué rige ahora tu subida de renta, por qué Andalucía no tiene zonas tensionadas y qué no ha cambiado. Comprobado en el BOE."
+	canonical="https://info.propertylist.es/es/propietarios/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/landlord/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/propietarios/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/landlord/' },
+	]}
+	schema={{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map((f) => ({
+			'@type': 'Question',
+			name: f.q,
+			acceptedAnswer: { '@type': 'Answer', text: f.a },
+		})),
+	}}
+>
+	<section class="lHero">
+		<p class="lKick">Para propietarios en la Costa del Sol</p>
+		<h1 class="lH1">Las normas cambiaron dos veces este año. Esto es lo que se aplica hoy.</h1>
+		<p class="lLead">
+			En marzo de 2026 España limitó las subidas de renta al 2%. Seis semanas después el tope ya no existía. Mucho de
+			lo que se lee en internet sigue describiendo la versión que ya no se aplica, así que esta página fija la
+			posición actual y enlaza cada afirmación a su fuente.
+		</p>
+		<p class="lStamp">Comprobado en el BOE el {CHECKED}</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">El tope que ya no existe</h2>
+		<p>
+			El Real Decreto-ley 8/2026 limitaba la actualización anual al 2% y daba al inquilino derecho a pedir una
+			prórroga extraordinaria de dos años. Estuvo en vigor desde el 22 de marzo de 2026. El Congreso de los Diputados
+			<strong>lo rechazó el 28 de abril de 2026</strong> y quedó derogado con efectos del 30 de abril. La ficha del BOE
+			(<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-6545" rel="nofollow">BOE-A-2026-6545</a>) figura ya
+			como <em>Disposición derogada</em>.
+		</p>
+		<p>
+			Si aplicaste el tope del 2% a una actualización dentro de esas seis semanas, fue correcto y lo sigue siendo. La
+			derogación no es retroactiva. Desde el 29 de abril de 2026 vuelven a regir las reglas ordinarias.
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">Qué rige tu subida ahora</h2>
+		<div class="lTwo">
+			<div class="lCard">
+				<h3 class="lH3">Firmado desde el 26 de mayo de 2023</h3>
+				<p>
+					La actualización usa el <strong>IRAV</strong>, el índice de referencia que publica mensualmente el
+					Instituto Nacional de Estadística. No se puede sustituir por el IPC, ni de mutuo acuerdo, ni superarlo.
+					Usa el dato del mes en que cae tu aniversario.
+				</p>
+			</div>
+			<div class="lCard">
+				<h3 class="lH3">Firmado antes del 26 de mayo de 2023</h3>
+				<p>
+					Manda tu contrato. La mayoría remiten al IPC. Si el contrato no prevé ningún mecanismo de
+					actualización, no hay derecho automático a subir la renta durante el plazo.
+				</p>
+			</div>
+		</div>
+		<p class="lFine">
+			En ambos casos la subida no es automática: hay que notificar por escrito, indicando el índice aplicado, el
+			porcentaje y la renta resultante, y surte efecto el mes siguiente, nunca con efectos retroactivos.
+			<a href="/es/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/">La explicación completa, con el detalle</a>.
+		</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">Andalucía no tiene zonas tensionadas</h2>
+		<p>
+			Casi todos los titulares sobre control de alquileres en España hablan en realidad de las <strong>zonas de
+			mercado residencial tensionado</strong>, donde una comunidad puede imponer límites reales a la renta en los
+			contratos nuevos. Ese régimen solo funciona donde el gobierno autonómico lo declara, y <strong>ningún municipio
+			andaluz está en el registro del Ministerio de Vivienda</strong>.
+		</p>
+		<p>
+			La Junta de Andalucía ha optado por no activar el mecanismo y ha recurrido la ley estatal de vivienda ante el
+			Tribunal Constitucional. Su propia ley, la Ley 5/2025, publicada en el BOJA el 24 de diciembre de 2025 y
+			aplicable desde el 24 de enero de 2026, va por la vía de las ayudas en lugar de los topes.
+		</p>
+		<p class="lPull">
+			Si tu propiedad está en la provincia de Málaga, la cobertura sobre control de alquileres que llena la prensa
+			nacional no describe tu situación.
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">Qué no ha cambiado</h2>
+		<ul class="lList">
+			<li>Duración mínima de cinco años si el arrendador es persona física y siete si es persona jurídica.</li>
+			<li>Prórroga año a año a voluntad del inquilino, más prórroga tácita de hasta tres años adicionales.</li>
+			<li>La fianza en vivienda habitual sigue siendo una mensualidad, más las garantías adicionales que se pacten.</li>
+			<li>El alquiler de temporada y el turístico van por un régimen distinto, con sus propias normas autonómicas.</li>
+		</ul>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">¿Alquilar o vender?</h2>
+		<p>
+			Sin el tope, la cuenta vuelve a ser una decisión normal: lo que la propiedad conseguiría en venta frente a lo
+			que ingresaría en alquiler. La mayoría de propietarios solo ve precios de oferta, que son lo que otros
+			vendedores esperan, no lo que los compradores pagaron.
+		</p>
+		<p>
+			Nuestra guía gratuita parte de los <strong>precios de venta registrados en el registro notarial</strong>. Dos
+			preguntas, sin crear cuenta, y ningún agente te contacta salvo que marques la casilla.
+		</p>
+		<p class="lCtaRow">
+			<a class="lBtn" href="/es/cuanto-vale-mi-propiedad/">Mira cuánto vale de verdad tu propiedad</a>
+			<a class="lBtnG" href="/es/blog/spain-housing-rules-2026-what-applies-in-andalucia/">Qué normas de 2026 aplican en Andalucía</a>
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">Si prefieres que se encargue alguien</h2>
+		<p>
+			PropertyList es la red compartida en la que trabajan los agentes locales: un anuncio es visible para más de
+			1.300 agentes de la Costa del Sol, así que una propiedad no queda limitada a los compradores o inquilinos de
+			una sola oficina. Los propietarios no publican aquí directamente, lo hacen los agentes. Si quieres un agente,
+			indícalo en la guía de arriba y un agente local registrado te contacta.
+		</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">Preguntas frecuentes</h2>
+		<div class="lFaq">
+			{faqs.map((f) => (
+				<details class="lFaqItem">
+					<summary class="lFaqQ">{f.q}</summary>
+					<p class="lFaqA">{f.a}</p>
+				</details>
+			))}
+		</div>
+		<p class="lNote">
+			Esto es información general para propietarios, comprobada en el BOE y en el registro del Ministerio de Vivienda
+			el {CHECKED}. No es asesoramiento jurídico y las normas de alquiler en España cambian a menudo. Revisa tu
+			contrato y consulta con un profesional antes de actuar.
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.lHero { max-width: 860px; margin: 0 auto; padding: 54px 20px 26px; text-align: center; }
+	.lKick { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #0a6d61; }
+	.lH1 { margin: 0 0 14px; font-size: clamp(28px, 5vw, 44px); line-height: 1.15; letter-spacing: -0.5px; }
+	.lLead { margin: 0 auto; max-width: 680px; font-size: 17px; line-height: 1.65; color: rgba(16, 24, 40, 0.75); }
+	.lStamp { margin: 16px 0 0; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
+	.lBand { max-width: 860px; margin: 0 auto; padding: 30px 20px; }
+	.lAlt { background: rgba(0, 174, 154, 0.05); max-width: none; }
+	.lAlt > * { max-width: 860px; margin-left: auto; margin-right: auto; }
+	.lH2 { font-size: clamp(21px, 3vw, 28px); margin: 0 0 14px; letter-spacing: -0.3px; }
+	.lH3 { font-size: 17px; margin: 0 0 8px; color: #0a6d61; }
+	.lBand p { line-height: 1.7; color: rgba(16, 24, 40, 0.78); margin: 0 0 14px; }
+	.lTwo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 6px 0 14px; }
+	.lCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 14px; padding: 18px 20px; }
+	.lCard p { margin: 0; font-size: 15px; }
+	.lFine { font-size: 15px; color: rgba(16, 24, 40, 0.62) !important; }
+	.lPull { border-left: 4px solid #00ae9a; padding-left: 16px; font-size: 18px; font-weight: 600; color: rgba(16, 24, 40, 0.85) !important; }
+	.lList { margin: 0; padding-left: 20px; line-height: 1.8; color: rgba(16, 24, 40, 0.78); }
+	.lCtaRow { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px !important; }
+	.lBtn { background: #00ae9a; color: #fff; border-radius: 999px; padding: 13px 24px; font-weight: 800; text-decoration: none; }
+	.lBtn:hover { background: #0a6d61; }
+	.lBtnG { border: 1.5px solid rgba(16, 24, 40, 0.25); border-radius: 999px; padding: 13px 24px; font-weight: 700; text-decoration: none; color: rgba(16, 24, 40, 0.8); }
+	.lBtnG:hover { border-color: #00ae9a; color: #0a6d61; }
+	.lFaqItem { border-bottom: 1px solid rgba(16, 24, 40, 0.12); padding: 12px 2px; }
+	.lFaqQ { font-weight: 700; cursor: pointer; font-size: 16px; }
+	.lFaqA { margin: 10px 0 2px !important; font-size: 15px; }
+	.lNote { margin-top: 24px !important; font-size: 13.5px; color: rgba(16, 24, 40, 0.55) !important; border-top: 1px solid rgba(16, 24, 40, 0.1); padding-top: 14px; }
+	@media (max-width: 700px) { .lTwo { grid-template-columns: 1fr; } }
+</style>

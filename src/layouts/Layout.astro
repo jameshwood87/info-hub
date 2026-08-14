@@ -124,6 +124,8 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/what-we-offer/', es: '/es/lo-que-ofrecemos/' },
 	{ en: '/what-is-my-property-worth/', es: '/es/cuanto-vale-mi-propiedad/' },
 	{ en: '/xml-feed-import/', es: '/es/importar-feed-xml/' },
+	{ en: '/landlord/', es: '/es/propietarios/' },
+	{ en: '/free-mls/', es: '/es/mls-gratuito/' },
 	{ en: '/blog/', es: '/es/blog/' },
 	{ en: '/general-information/', es: '/es/informacion-general/' },
 	{ en: '/community/', es: '/es/comunidad/' },
@@ -646,6 +648,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a href={lang === 'es' ? '/es/funciones/' : '/features/'}>{lang === 'de' ? 'Funktionen' : lang === 'es' ? 'Funciones' : 'Features'}</a>
 							<a href={lang === 'es' ? '/es/gratis/' : '/free/'}>{lang === 'de' ? 'Kostenlos - alles inklusive' : lang === 'es' ? 'Todo gratis' : 'What’s free'}</a>
 							<a href={lang === 'es' ? '/es/recorrido-360/' : '/360-walkthrough/'}>{lang === 'es' ? 'Recorridos 360' : '360 Walkthroughs'}</a>
+							<a href={lang === 'es' ? '/es/mls-gratuito/' : '/free-mls/'}>{lang === 'es' ? 'MLS gratis' : 'Free MLS'}</a>
+							<a href={lang === 'es' ? '/es/propietarios/' : '/landlord/'}>{lang === 'es' ? 'Para propietarios' : 'For landlords'}</a>
 							<a href={lang === 'es' ? '/es/importar-feed-xml/' : '/xml-feed-import/'}>{lang === 'es' ? 'Feeds XML' : 'XML feeds'}</a>
 							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
 							<a href="https://propertylist.es/">{lang === 'de' ? 'Immobilien suchen' : lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
