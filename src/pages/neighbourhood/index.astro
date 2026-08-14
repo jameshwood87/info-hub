@@ -469,6 +469,18 @@ const provinces = (() => {
 	) : (
 		<div class="empty">No neighbourhood guides yet.</div>
 	)}
+
+	<a class="xlink" href="/budget/" data-umami-event="nbhd-budget">
+		<span class="xlinkKick">Not sure which town yet?</span>
+		<span class="xlinkLine">See what your budget actually buys in each one &rarr;</span>
+	</a>
+
+<style>
+	.xlink { display: block; max-width: 760px; margin: 26px auto 40px; padding: 16px 20px; border: 1px solid rgba(0, 174, 154, 0.35); border-radius: 14px; text-decoration: none; background: rgba(0, 174, 154, 0.06); }
+	.xlink:hover { border-color: rgba(0, 174, 154, 0.7); }
+	.xlinkKick { display: block; font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase; color: rgba(16, 24, 40, 0.55); font-weight: 700; }
+	.xlinkLine { display: block; margin-top: 4px; font-size: 17px; font-weight: 700; color: #0a6d61; }
+</style>
 </Layout>
 
 <script is:inline>
