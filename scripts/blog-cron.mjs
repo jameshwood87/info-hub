@@ -98,23 +98,71 @@ const before = await (async () => {
   return ((await r.json()).data || []).map((x) => String(x.path || ''));
 })();
 
+// Generate as DRAFT. Nothing goes live from this script any more: every post
+// is linted, then emailed to James with one-click approve / reject links.
+// (11-08-26, after the blog audit found unfilled placeholders and a repealed
+// decree presented as current law on live pages.)
 const genPath = new URL('./generate-blog-post.mjs', import.meta.url).pathname;
-execFileSync('node', [genPath, topic, '--publish'], { stdio: 'inherit' });
+execFileSync('node', [genPath, topic], { stdio: 'inherit' });
 commit();
 
-// ping IndexNow for the fresh URLs (best effort)
+const { lintBlogPost } = await import('./lib/blog-lint.mjs');
+const { createHmac } = await import('node:crypto');
+
+const hdr = { Authorization: `Bearer ${TOKEN}` };
+const listDrafts = async (prefix) => {
+  const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=${encodeURIComponent(prefix)}&filter[status][_eq]=draft&fields=id,path,title,body,language,date_created&sort=-date_created&limit=4`, { headers: hdr });
+  return ((await r.json()).data || []);
+};
+const fresh = (await listDrafts('/blog/')).filter((p) => !before.includes(p.path));
+if (!fresh.length) { console.log('blog-cron: no new draft found after generation - nothing to review.'); process.exit(0); }
+const en = fresh[0];
+const esList = await listDrafts('/es/blog/');
+const es = esList.find((p) => p.path === `/es${en.path}`) || null;
+
+const lint = lintBlogPost({ title: en.title, body: en.body, bodyEs: es ? es.body : '' });
+console.log('lint:', JSON.stringify({ ok: lint.ok, regulatory: lint.regulatory, errors: lint.errors.length, warnings: lint.warnings.length }));
+
+// ---- approval email ----
+const envText = fs.readFileSync('/opt/info-hub/.env', 'utf8');
+const cfg = (k) => (envText.match(new RegExp('^' + k + '=(.*)$', 'm'))?.[1] || '').trim().replace(/^["']|["']$/g, '');
+const KEY = cfg('MANDRILL_API_KEY'), TO = cfg('NOTIFY_TO'), FROM = cfg('NOTIFY_FROM') || 'noreply@propertylist.es', SECRET = cfg('BLOG_APPROVE_SECRET');
+const SITE = 'https://info.propertylist.es';
+const exp = Math.floor(Date.now() / 1000) + 7 * 86400;
+const sign = (action) => createHmac('sha256', SECRET).update(`${en.id}|${es ? es.id : ''}|${exp}|${action}`).digest('hex');
+const link = (action) => `${SITE}/api/blog/approve?id=${encodeURIComponent(en.id)}&es=${encodeURIComponent(es ? es.id : '')}&exp=${exp}&action=${action}&sig=${sign(action)}`;
+
+const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const plain = String(en.body || '').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const li = (arr, color) => arr.map((x) => `<li style="color:${color};margin:4px 0">${esc(x)}</li>`).join('');
+const badge = lint.regulatory ? '<span style="background:#fef3c7;color:#92400e;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:800">REGULATORY, check the law is current</span>' : '<span style="background:#ecfdf5;color:#065f46;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:800">market / guide</span>';
+const btn = (href, label, bg) => `<a href="${href}" style="display:inline-block;background:${bg};color:#fff;text-decoration:none;font-weight:800;padding:12px 22px;border-radius:999px;margin:6px 8px 6px 0">${label}</a>`;
+
+const html = `<div style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;color:#101828">
+<p style="font-size:13px;color:#667085;margin:0 0 6px">Info hub blog draft for review ${badge}</p>
+<h2 style="margin:0 0 6px;font-size:22px;line-height:1.3">${esc(en.title)}</h2>
+<p style="margin:0 0 14px;color:#667085;font-size:14px">${esc(en.path)} ${es ? ' + Spanish twin' : ' (no Spanish twin found)'} · ${plain.split(' ').length} words</p>
+${lint.errors.length ? `<div style="border:2px solid #b42318;background:#fef3f2;border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#b42318">BLOCKED, cannot be approved until fixed:</b><ul style="margin:6px 0 0;padding-left:18px">${li(lint.errors, '#b42318')}</ul></div>` : ''}
+${lint.warnings.length ? `<div style="border:1px solid #f59e0b;background:#fffbeb;border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#92400e">Read these before approving:</b><ul style="margin:6px 0 0;padding-left:18px">${li(lint.warnings, '#78350f')}</ul></div>` : '<p style="color:#065f46;font-size:14px">Lint: no warnings.</p>'}
+<div style="border:1px solid #e4e7ec;border-radius:10px;padding:14px 16px;margin:0 0 16px;font-size:14px;line-height:1.6;color:#344054;max-height:none">${esc(plain.slice(0, 1800))}${plain.length > 1800 ? ' [...]' : ''}</div>
+<p style="margin:0 0 6px;font-size:13px;color:#667085">Read the full draft (admin login): <a href="${SITE}/admin/blog">${SITE}/admin/blog</a></p>
+<p style="margin:14px 0">${lint.ok ? btn(link('approve'), 'Approve and publish', '#00ae9a') : ''}${btn(link('reject'), 'Reject (archive)', '#b42318')}</p>
+<p style="font-size:12px;color:#98a2b3">Links expire in 7 days and are single-purpose. Nothing is published unless you click approve. Reply to this email with corrections and it stays a draft.</p></div>`;
+
+const text = `Blog draft for review${lint.regulatory ? ' [REGULATORY]' : ''}: ${en.title}\n${SITE}${en.path}\n\n` +
+  (lint.errors.length ? 'BLOCKED:\n' + lint.errors.map((e) => ' - ' + e).join('\n') + '\n\n' : '') +
+  (lint.warnings.length ? 'Warnings:\n' + lint.warnings.map((w) => ' - ' + w).join('\n') + '\n\n' : '') +
+  (lint.ok ? `Approve: ${link('approve')}\n` : '') + `Reject: ${link('reject')}\n`;
+
+if (!KEY || !TO || !SECRET) {
+  console.log('blog-cron: approval email NOT sent (missing MANDRILL_API_KEY / NOTIFY_TO / BLOG_APPROVE_SECRET). Draft left in Directus:', en.path);
+  process.exit(0);
+}
 try {
-  const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=/blog/&fields=path&limit=-1`, { headers: { Authorization: `Bearer ${TOKEN}` } });
-  const after = ((await r.json()).data || []).map((x) => String(x.path || ''));
-  const fresh = after.filter((p) => !before.includes(p));
-  const urls = fresh.flatMap((p) => [`https://info.propertylist.es${p}`, `https://info.propertylist.es/es${p}`]);
-  if (urls.length) {
-    const key = fs.readFileSync('/opt/info-hub/var/admin/indexnow-key.txt', 'utf8').trim();
-    const res = await fetch('https://www.bing.com/indexnow', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify({ host: 'info.propertylist.es', key, keyLocation: `https://info.propertylist.es/${key}.txt`, urlList: urls }),
-    });
-    console.log('IndexNow ping:', res.status, 'for', urls.length, 'urls');
-  }
-} catch (e) { console.log('IndexNow ping skipped:', e.message); }
+  const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO, type: 'to' }],
+      subject: `${lint.ok ? (lint.regulatory ? '[REVIEW, regulatory]' : '[REVIEW]') : '[BLOCKED]'} blog draft: ${en.title}`.slice(0, 180), html, text } }),
+  });
+  console.log('approval email:', res.status, (await res.text()).slice(0, 100));
+} catch (e) { console.log('approval email failed:', e.message, '- draft left in Directus:', en.path); }
