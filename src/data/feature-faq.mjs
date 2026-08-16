@@ -64,13 +64,13 @@ export const featureFaqItems = [
     id: 'xml-portals',
     q: 'Can I use the XML feed to push listings to other portals like Idealista?',
     aHtml:
-      'Yes, and pushing to third-party portals is free - Idealista, Fotocasa, or any platform that accepts XML. The feed subscription only applies when you use it to power your own website.',
+      'Yes, and pushing to third-party portals is free - Idealista, Fotocasa, or any platform that accepts XML. The feed subscription only applies when you use it to power your own website with the network listings; your own listings are free there too.',
   },
   {
     id: 'xml-cost',
     q: 'How much does the XML feed cost?',
     aHtml:
-      'Pushing your listings to other portals - Idealista, Fotocasa, or any platform that accepts XML - is free. The paid feed is for powering your own website: 35 credits a month (about €35) for the resale and rentals feed, and 25 credits/month for the new developments feed. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
+      'Pushing your listings to other portals - Idealista, Fotocasa, or any platform that accepts XML - is free. The paid feed is for powering your own website with the whole network's listings (your own stock is free): 35 credits a month (about €35) for the resale and rentals feed, and 25 credits/month for the new developments feed. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────

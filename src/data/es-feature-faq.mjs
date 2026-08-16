@@ -75,13 +75,13 @@ export const featureFaqItemsEs = [
     id: 'xml-portals',
     q: '¿Puedo usar el feed XML para enviar anuncios a otros portales como Idealista?',
     aHtml:
-      'Sí. Ambos feeds envían a tu propia web y a portales de terceros simultáneamente - Idealista, Fotocasa, o cualquier plataforma que acepte XML.',
+      'Sí, y enviar a portales de terceros es gratis - Idealista, Fotocasa o cualquier plataforma que acepte XML. La suscripción del feed solo aplica cuando lo usas para alimentar tu propia web con los anuncios de la red; tus propios anuncios también son gratis ahí.',
   },
   {
     id: 'xml-cost',
     q: '¿Cuánto cuesta el feed XML?',
     aHtml:
-      'Enviar tus anuncios a otros portales - Idealista, Fotocasa o cualquier plataforma que acepte XML - es gratis. El feed de pago es para alimentar tu propia web: 35 créditos/mes (unos 35 €) el feed de reventa y alquileres, y 25 créditos/mes el de obra nueva. <a href="https://info.propertylist.es/es/precios">Precios completos</a>.',
+      'Enviar tus anuncios a otros portales - Idealista, Fotocasa o cualquier plataforma que acepte XML - es gratis. El feed de pago es para alimentar tu propia web con los anuncios de toda la red (tu propia cartera es gratis): 35 créditos/mes (unos 35 €) el feed de reventa y alquileres, y 25 créditos/mes el de obra nueva. <a href="https://info.propertylist.es/es/precios">Precios completos</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────
