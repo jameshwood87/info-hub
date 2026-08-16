@@ -46,7 +46,7 @@ export const featureFaqItems = [
     id: 'xml-own-website',
     q: 'I already have a website - can I still get my PropertyList properties on it?',
     aHtml:
-      'Yes. The PropertyList XML feeds let you push your listings to any website. Both feeds can also send to third-party portals simultaneously.',
+      'Yes, two ways: a live XML feed your site reads on a schedule, or the Website API, a REST key your site calls directly for live results. Your own listings are free to export either way. Powering your site with the whole network is 35 credits a month, XML or API, same price. Both can push to third-party portals at the same time. <a href="https://propertylist.es/api-docs" rel="noopener">API docs</a>.',
   },
   {
     id: 'xml-property-types',
@@ -167,7 +167,7 @@ export const featureFaqItems = [
     id: 'credits-work',
     q: 'How do PropertyList credits work?',
     aHtml:
-      '1 credit (~1€). Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. <a href="https://info.propertylist.es/pricing">See credit pricing</a>.',
+      '1 credit (~1€). Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. For anything monthly, you can switch on auto top-up: a saved card refills your balance by the cost of your active subscriptions the day before renewal, so nothing pauses. It is a way to pay, not an extra charge. <a href="https://info.propertylist.es/pricing">See credit pricing</a>.',
   },
   {
     id: 'credits-expire',
@@ -186,19 +186,19 @@ export const featureFaqItems = [
     id: 'api-developers',
     q: 'Does PropertyList have an API for developers?',
     aHtml:
-      'Yes. PropertyList MCP (mcp.propertylist.es) is the first Model Context Protocol server for Spanish, Portuguese, and Italian real estate. Six tools: search_properties, find_properties_by_description, autocomplete_location, get_property, area_market_summary, and list_agencies.',
+      'Two, for different jobs. The Website API pulls your own PropertyList stock into your website (a REST key you create, rotate and revoke in your account, 35 credits a month for the whole network, free for your own listings). The MCP at mcp.propertylist.es is a Model Context Protocol server that lets AI agents search the market: search_properties, find_properties_by_description, autocomplete_location, get_property, area_market_summary and list_agencies. <a href="https://propertylist.es/api-docs" rel="noopener">Website API docs</a>, <a href="https://mcp.propertylist.es/" rel="noopener">MCP</a>.',
   },
   {
     id: 'ai-tools',
     q: 'Can I connect PropertyList to AI tools like Claude, Cursor, or Perplexity?',
     aHtml:
-      'Yes. The MCP connects PropertyList live MLS data to any MCP-compatible AI client - Claude, Cursor, Zed, Perplexity, and more. Install via Claude Desktop config, npx adapter, or direct JSON-RPC endpoint.',
+      'Yes. The MCP connects live PropertyList data to any MCP-compatible client - Claude, Cursor, Zed, Perplexity and any Model Context Protocol tool - so an AI agent can search your market on your behalf. Install via Claude Desktop config, npx adapter or the direct JSON-RPC endpoint. Structured search works with no key; the natural-language AI matcher needs an agent key, which is approval only.',
   },
   {
     id: 'mcp-free',
     q: 'Is the MCP free to use?',
     aHtml:
-      'Free public tier: 60 requests/minute, no signup required. An API key is needed for natural-language search - free for agencies, developers, and AI product teams.',
+      'Three tiers. Public: free, no signup, no key, structured search, location autocomplete, full listing detail and area market summaries at 60 requests a minute. Agent: a free key, approval only (each request is reviewed by hand), which switches on the natural-language AI matcher with 200 AI searches a month included, then 1 credit per 10 searches from your agency wallet and nothing else charged, at 600 requests a minute. Enterprise: custom, billed by contract, for banks, valuers, portals and AI product teams. <a href="https://mcp.propertylist.es/" rel="noopener">mcp.propertylist.es</a>.',
   },
 
   // ─── Oracle ────────────────────────────────────────────────────────────

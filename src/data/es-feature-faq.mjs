@@ -46,7 +46,7 @@ export const featureFaqItemsEs = [
     id: 'xml-own-website',
     q: 'Ya tengo una web - ¿puedo incluir mis propiedades de PropertyList?',
     aHtml:
-      'Sí, y enviar a portales de terceros es gratis - Idealista, Fotocasa o cualquier plataforma que acepte XML. La suscripción del feed solo aplica cuando lo usas para alimentar tu propia web.',
+      'Sí, de dos formas: un feed XML en directo que tu web lee cada cierto tiempo, o la API para webs, una clave REST que tu web consulta directamente con resultados en vivo. Exportar tus propios anuncios es gratis en ambos casos. Alimentar tu web con toda la red son 35 créditos al mes, XML o API, mismo precio. Ambos pueden publicar a portales de terceros a la vez. <a href="https://propertylist.es/api-docs" rel="noopener">Documentación de la API</a>.',
   },
   {
     id: 'private-listings',
@@ -167,7 +167,7 @@ export const featureFaqItemsEs = [
     id: 'credits-work',
     q: '¿Cómo funcionan los créditos de PropertyList?',
     aHtml:
-      '1 crédito (~1€). Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
+      '1 crédito (~1€). Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. Para cualquier cuota mensual puedes activar la recarga automática: una tarjeta guardada repone tu saldo por el coste de tus suscripciones activas el día antes de la renovación, así nada se pausa. Es una forma de pagar, no un cargo extra. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
   },
   {
     id: 'credits-expire',
@@ -186,19 +186,19 @@ export const featureFaqItemsEs = [
     id: 'api-developers',
     q: '¿PropertyList tiene una API para desarrolladores?',
     aHtml:
-      'Sí. PropertyList MCP (mcp.propertylist.es) es el primer servidor de Model Context Protocol para real estate español, portugués e italiano. Seis herramientas: search_properties, find_properties_by_description, autocomplete_location, get_property, area_market_summary y list_agencies.',
+      'Dos, para cosas distintas. La API para webs lleva tu propia cartera de PropertyList a tu web (una clave REST que creas, rotas y revocas en tu cuenta, 35 créditos al mes por toda la red, gratis para tus propios anuncios). El MCP en mcp.propertylist.es es un servidor de Model Context Protocol que permite a agentes de IA buscar en el mercado: search_properties, find_properties_by_description, autocomplete_location, get_property, area_market_summary y list_agencies. <a href="https://propertylist.es/api-docs" rel="noopener">Docs de la API para webs</a>, <a href="https://mcp.propertylist.es/" rel="noopener">MCP</a>.',
   },
   {
     id: 'ai-tools',
     q: '¿Puedo conectar PropertyList a herramientas de IA como Claude, Cursor o Perplexity?',
     aHtml:
-      'Sí. El MCP conecta los datos MLS en directo de PropertyList a cualquier cliente compatible con MCP - Claude, Cursor, Zed, Perplexity y más. Instalación vía Claude Desktop config, adaptadores npx, o endpoint JSON-RPC directo.',
+      'Sí. El MCP conecta los datos en directo de PropertyList a cualquier cliente compatible con MCP - Claude, Cursor, Zed, Perplexity y cualquier herramienta de Model Context Protocol - para que un agente de IA busque en tu mercado por ti. Instalación vía Claude Desktop config, adaptador npx o el endpoint JSON-RPC directo. La búsqueda estructurada funciona sin clave; el matcher de IA en lenguaje natural necesita una clave de agente, solo con aprobación.',
   },
   {
     id: 'mcp-free',
     q: '¿El MCP es gratis?',
     aHtml:
-      'Nivel público gratuito: 60 solicitudes/minuto, sin registro. Se necesita una API key para búsqueda en lenguaje natural - gratuita para agencias, desarrolladores y equipos de productos de IA.',
+      'Tres niveles. Público: gratis, sin registro ni clave, búsqueda estructurada, autocompletado de ubicaciones, detalle completo de anuncios y resúmenes de mercado por zona a 60 solicitudes por minuto. Agente: una clave gratis, solo con aprobación (revisamos cada solicitud a mano), que activa el matcher de IA en lenguaje natural con 200 búsquedas de IA al mes incluidas, después 1 crédito por cada 10 búsquedas de la cartera de tu agencia y nada más, a 600 solicitudes por minuto. Enterprise: a medida, por contrato, para bancos, tasadores, portales y equipos de producto de IA. <a href="https://mcp.propertylist.es/" rel="noopener">mcp.propertylist.es</a>.',
   },
 
   // ─── Oracle ────────────────────────────────────────────────────────────
