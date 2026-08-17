@@ -32,6 +32,10 @@ const buildUrlEntry = (loc: string, lastmod: string | null, alternates?: Alt[]) 
   return `<url><loc>${safeLoc}</loc>${safeLastMod ? `<lastmod>${safeLastMod}</lastmod>` : ''}${links}</url>`;
 };
 
+// Directus stores generator-written blog paths WITHOUT a trailing slash and
+// WordPress-era ones WITH; every comparison must normalise or ES twins vanish.
+const withSlash = (p: string) => (p && !p.endsWith('/') ? `${p}/` : p);
+
 const normaliseEsDocsPath = (p: string) => {
   const path = String(p || '');
   if (!path.startsWith('/es/docs/')) return path;
@@ -149,7 +153,7 @@ const fetchRealEsPaths = async (): Promise<Set<string>> => {
     if (!res || !res.ok) break;
     const data = (((await res.json()) as any)?.data as Array<{ path?: string; body?: string }>) || [];
     for (const d of data) {
-      if (!isStub(String(d.body || ''))) set.add(normaliseEsDocsPath(String(d.path || '')));
+      if (!isStub(String(d.body || ''))) set.add(withSlash(normaliseEsDocsPath(String(d.path || ''))));
     }
     if (data.length < 200) break;
     page++;
@@ -169,6 +173,11 @@ export async function GET() {
   // If you add a noindex or gated page, add it here too.
   const SITEMAP_EXCLUDE = new Set([
     '/about/', // redirect stub -> /about-us/
+    '/copilot/', // redirect stub -> /coagent/
+    '/es/copiloto/', // redirect stub -> /es/coagent/
+    '/film-test/', // redirect stub -> /what-we-do/
+    '/360walkthrough/', // redirect stub -> /360-walkthrough/
+    '/es/video-guias/', // password gated (401)
     '/activate/',
     '/es/activar/', // noindex: dormant-agent activation
     '/agents-survey/',
@@ -253,10 +262,12 @@ export async function GET() {
         const lastmod = asLastMod(it.date_updated || it.date_created);
         const p0 = String(it.path || '');
         const p1 = lang === 'en' ? applyPrefixRedirect(p0) : normaliseEsDocsPath(p0);
-        const p = lang === 'en' ? canonicalNeighbourhoodPath(p1) : p1;
+        // ES paths must carry the trailing slash the site canonicalises to, or the
+        // slashless Directus form is listed as a second URL that 301s.
+        const p = lang === 'en' ? canonicalNeighbourhoodPath(p1) : withSlash(p1);
         if (lang === 'en') {
           const es = applyPrefixRedirect(applyStaticRedirectAliases(normaliseEsDocsPath(toSpanishPath(p))));
-          if (realEsSet.has(es)) {
+          if (realEsSet.has(withSlash(es))) {
             const alts: Alt[] = [
               { hreflang: 'en', href: `${origin}${p}` },
               { hreflang: 'es', href: `${origin}${es}` },
@@ -267,7 +278,7 @@ export async function GET() {
           } else {
             push(p, lastmod);
           }
-        } else if (realEsSet.has(p)) {
+        } else if (realEsSet.has(withSlash(p))) {
           push(p, lastmod);
         }
       }
@@ -279,6 +290,10 @@ export async function GET() {
     await addPrefix('/neighbourhood/', 'en');
     await addPrefix('/andalucia/', 'en');
     await addPrefix('/es/docs/', 'es');
+    // Spanish blog + general-information have TRANSLATED slugs that toSpanishPath()
+    // cannot derive from the EN twin, so they must be walked directly (dedupe is in push).
+    await addPrefix('/es/blog/', 'es');
+    await addPrefix('/es/informacion-general/', 'es');
   } catch {}
 
   const body = urls
