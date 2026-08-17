@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-08-11
-Version: 5.1
+Version: 5.2
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -30,10 +30,13 @@ Questions and answers covering every PropertyList product feature: website build
 General questions about the PropertyList MLS and CRM platform - how it works, pricing, getting started, and platform usage. Spanish version: /es/preguntas-frecuentes/
 
 #### /docs/ - MLS & Platform Documentation
-Complete user manual for the PropertyList MLS and CRM platform, in English and Spanish. Covers agent onboarding, property listings, lead management, credits and featuring, website builder, XML feeds, AI automation, and API integration. Spanish manual root: /es/docs/propertylist-mls-manual-de-usuario/
+Complete user manual for the PropertyList MLS and CRM platform, in English and Spanish. Covers agent onboarding, property listings, lead management, credits and featuring, reference numbers on shared listings (each agency has a short code; your website, brochures and feeds show your number, the portal shows the listing agent's, the CRM shows both, search finds either), website builder, XML feeds, AI automation, and API integration. Spanish manual root: /es/docs/propertylist-mls-manual-de-usuario/
 
 #### /instant-listing/ - Instant Listing (AI listing creation, live)
 Agents create a complete property listing from photos plus a voice note: the AI fills property type, bedrooms, bathrooms, built/plot/terrace m2, features, orientation, location and a sales-ready description. The AI only fills what it can see or hear; the agent reviews everything before publishing. Free with a PropertyList account. Works in the browser and the Android app (Google Play); iOS in final review. Spanish version: /es/listado-instantaneo/
+
+#### /video-guides/ - Video guides for agents (English; Spanish at /es/video-guias/)
+Short screen-recorded tutorials, under a minute each, narrated: dashboard tour, MLS search, sharing a property, saving a shortlist, featuring a listing (10/20/30 credits for 3/7/15 days, top of the MLS, portal and every agent microsite), reference numbers on shared listings, and the MCP data server. Each has a transcript on the page.
 
 #### /instant-content/ - Instant Content (AI blogs & area guides, live, add-on to the Website Builder)
 AI-written blog posts and area guides for agency websites, grounded in the agency's own live listings and verified market data - no invented prices. Writes in English and Spanish as standard (German, French, Dutch and Swedish on demand), with review-first or auto-publish control. An add-on inside the paid Website Builder: 30 credits/month for unlimited posts and guides, fully automated (auto-publish) or review-first. Spanish version: /es/contenido-instantaneo/
