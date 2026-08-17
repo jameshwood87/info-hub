@@ -177,7 +177,6 @@ export async function GET() {
     '/es/copiloto/', // redirect stub -> /es/coagent/
     '/film-test/', // redirect stub -> /what-we-do/
     '/360walkthrough/', // redirect stub -> /360-walkthrough/
-    '/es/video-guias/', // password gated (401)
     '/activate/',
     '/es/activar/', // noindex: dormant-agent activation
     '/agents-survey/',

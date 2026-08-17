@@ -44,11 +44,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	} catch {}
 
 	// --- Temporary password gate for pages still being finished ---
-	const VIDEO_GATE_PATHS = [
+	const VIDEO_GATE_PATHS: string[] = [
 		// /video-guides made public 2026-07-20 (EN); the Property Intelligence
-		// Report pages made public 2026-08-09 (they were the linked fix from
-		// /hours/, so ticking that poison hit a password wall). ES guides stay gated.
-		'/es/video-guias',
+		// Report pages made public 2026-08-09; /es/video-guias made public
+		// 2026-08-17 (James: they should be ungated live). Nothing is gated
+		// right now - add a path here to gate an unfinished page again.
 	];
 	{
 		const gp = new URL(context.request.url).pathname.replace(/\/+$/, '') || '/';
