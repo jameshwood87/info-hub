@@ -169,7 +169,7 @@ const breadcrumbLd = {
 			</div>
 		</section>
 
-		<section class="featured">
+		<section class="featured" id={`guide-${featured.slug}`}>
 			<div class="player">
 				<video controls preload="metadata" playsinline poster={`/videos/pl-tutorial-${featured.slug}.jpg`}>
 					<source src={`/videos/pl-tutorial-${featured.slug}.mp4`} type="video/mp4" />
@@ -186,7 +186,7 @@ const breadcrumbLd = {
 
 		<section class="grid">
 			{rest.map((g) => (
-				<article class="card">
+				<article class="card" id={`guide-${g.slug}`}>
 					<div class="player">
 						<video controls preload="metadata" playsinline poster={`/videos/pl-tutorial-${g.slug}.jpg`}>
 							<source src={`/videos/pl-tutorial-${g.slug}.mp4`} type="video/mp4" />
