@@ -1919,6 +1919,10 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		flex-shrink: 0;
 	}
 
+	/* imported article bodies sometimes print a bare URL as the link text, and a
+	   URL has no wrap opportunity of its own. */
+	.e-con-inner a, .docMain a, article a { overflow-wrap: anywhere; }
+
 	/* narrow phones: the consent bar and the docs search must not push the page
 	   sideways. Spanish labels are longer than the English ones, so this only
 	   ever showed on /es/. */
