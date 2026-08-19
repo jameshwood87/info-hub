@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Live network map. Data is rebuilt nightly by scripts/build-map-data.mjs into
+// public/map/map-data.json; boundaries are OSM admin_level=8 relations, simplified.
+const title = 'Costa del Sol property map - live network coverage | PropertyList';
+const description =
+	'A live map of the Costa del Sol property market: how many homes are listed in each municipality, the median asking price, the price per m2, and the notary-verified price buyers actually paid. Built from the PropertyList MLS and the Spanish notarial register, rebuilt every night.';
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+
+let data: any = null;
+try {
+	const raw = await import('../../public/map/map-data.json');
+	data = raw.default ?? raw;
+} catch (e) {
+	data = null;
+}
+const munis = data?.municipalities ?? {};
+const rows = Object.entries(munis)
+	.map(([name, m]: any) => ({
+		name,
+		ine: m.ine,
+		sale: m.ops?.sale?.n ?? 0,
+		rent: m.ops?.rent?.n ?? 0,
+		holiday: m.ops?.holiday?.n ?? 0,
+		median: m.ops?.sale?.median ?? null,
+		psm: m.ops?.sale?.psm ?? null,
+		verified: m.verified?.psm ?? null,
+		vn: m.verified?.n ?? null,
+		agencies: m.agencies?.top ?? [],
+	}))
+	.sort((a, b) => b.sale - a.sale);
+
+const totalSale = rows.reduce((s, r) => s + r.sale, 0);
+const totalRent = rows.reduce((s, r) => s + r.rent, 0);
+const totalHol = rows.reduce((s, r) => s + r.holiday, 0);
+const generated = data?.generated ? new Date(data.generated) : null;
+const fmtDate = generated
+	? `${String(generated.getUTCDate()).padStart(2, '0')}-${String(generated.getUTCMonth() + 1).padStart(2, '0')}-${String(generated.getUTCFullYear()).slice(2)}`
+	: null;
+const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('en-GB'));
+---
+
+<Layout title={title} description={description}>
+	<section class="hero">
+		<div class="wrap">
+			<p class="eyebrow">Live network map</p>
+			<h1>Where the Costa del Sol market actually is</h1>
+			<p class="lede">
+				Every municipality we cover, drawn to its real administrative boundary. Listing counts, median asking prices and
+				the price per m<sup>2</sup> come from the PropertyList MLS. The verified figure underneath comes from the Spanish
+				notarial register - what buyers actually paid, not what sellers are asking.
+			</p>
+			<div class="counters">
+				<div><strong>{totalSale.toLocaleString('en-GB')}</strong><span>homes for sale</span></div>
+				<div><strong>{totalRent.toLocaleString('en-GB')}</strong><span>long-term rentals</span></div>
+				<div><strong>{totalHol.toLocaleString('en-GB')}</strong><span>holiday rentals</span></div>
+				<div><strong>8</strong><span>municipalities</span></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="mapsec">
+		<div class="wrap">
+			<div class="controls" role="group" aria-label="Map layer">
+				<button class="chip on" data-layer="sale">Homes for sale</button>
+				<button class="chip" data-layer="psm">Asking &euro;/m&sup2;</button>
+				<button class="chip" data-layer="verified">Verified &euro;/m&sup2;</button>
+				<button class="chip" data-layer="gap">Coverage gaps</button>
+			</div>
+
+			<div class="maplayout">
+				<div id="map" role="application" aria-label="Map of Costa del Sol municipalities">
+					<noscript>
+						<p class="nojs">The interactive map needs JavaScript. The full table of every municipality is below.</p>
+					</noscript>
+				</div>
+				<aside id="panel" aria-live="polite">
+					<p class="panelhint">Select a municipality on the map to see its numbers.</p>
+				</aside>
+			</div>
+
+			<p class="legend"><span id="legendlabel">Darker means more homes listed.</span>
+				{fmtDate && <span class="stamp">Rebuilt {fmtDate}</span>}
+			</p>
+		</div>
+	</section>
+
+	<section class="tablesec">
+		<div class="wrap">
+			<h2>Every municipality, in numbers</h2>
+			<p class="sub">
+				Asking prices are what sellers are currently advertising. The verified price per m<sup>2</sup> is the notarial
+				register figure for that municipality over the trailing twelve months - all property types, so treat it as the
+				floor a market sits on rather than a valuation of any one home.
+			</p>
+			<div class="tablewrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Municipality</th>
+							<th class="n">For sale</th>
+							<th class="n">Median asking</th>
+							<th class="n">Asking &euro;/m&sup2;</th>
+							<th class="n">Verified &euro;/m&sup2;</th>
+							<th class="n">Long-term</th>
+							<th class="n">Holiday</th>
+						</tr>
+					</thead>
+					<tbody>
+						{rows.map((r) => (
+							<tr>
+								<th scope="row">{r.name}</th>
+								<td class="n">{r.sale.toLocaleString('en-GB')}</td>
+								<td class="n">{eur(r.median)}</td>
+								<td class="n">{eur(r.psm)}</td>
+								<td class="n v">{eur(r.verified)}{r.vn && <em> n={r.vn.toLocaleString('en-GB')}</em>}</td>
+								<td class="n">{r.rent.toLocaleString('en-GB')}</td>
+								<td class="n">{r.holiday.toLocaleString('en-GB')}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<section class="ctasec">
+		<div class="wrap">
+			<h2>Your listings, on this map</h2>
+			<p>
+				Every home shown here belongs to an agency on the PropertyList network. Listing is free: your properties reach
+				the other agents who can sell them, and you can sell from everything they list. No card, no contract.
+			</p>
+			<a class="btn" href={SIGNUP} data-umami-event="map-signup">Create your free agency account</a>
+			<p class="fine">Free forever for the core platform. See <a href="/free/">what is free</a>.</p>
+		</div>
+	</section>
+
+	<script is:inline define:vars={{ rows }}>
+		window.__PLMAP__ = rows;
+	</script>
+	<link rel="stylesheet" href="/map/maplibre-gl.css" />
+	<script is:inline src="/map/maplibre-gl.js"></script>
+	<script is:inline src="/map/map.js"></script>
+</Layout>
+
+<style>
+	.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+	.hero { background: linear-gradient(160deg, #06302c 0%, #0b1b22 70%); color: #fff; padding: 62px 0 40px; }
+	.eyebrow { text-transform: uppercase; letter-spacing: 1.4px; font-size: 12px; font-weight: 800; color: #5be3d0; margin: 0 0 10px; }
+	.hero h1 { font-size: clamp(30px, 4.6vw, 50px); line-height: 1.06; letter-spacing: -1.2px; margin: 0 0 14px; }
+	.lede { max-width: 780px; font-size: 17.5px; line-height: 1.62; color: rgba(255,255,255,0.82); margin: 0 0 26px; }
+	.counters { display: flex; flex-wrap: wrap; gap: 34px; }
+	.counters strong { display: block; font-size: 30px; font-weight: 800; letter-spacing: -0.8px; color: #5be3d0; }
+	.counters span { font-size: 13px; color: rgba(255,255,255,0.62); }
+
+	.mapsec { padding: 30px 0 10px; background: #f6fafb; }
+	.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+	.chip { border: 1.5px solid #d5e2e0; background: #fff; color: #5b6b73; border-radius: 999px; padding: 9px 17px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .14s, color .14s, border-color .14s; }
+	.chip:hover { border-color: #00ae9a; color: #0b1b22; }
+	.chip.on { background: #00ae9a; border-color: #00ae9a; color: #fff; }
+
+	.maplayout { display: grid; grid-template-columns: 1fr 330px; gap: 16px; }
+	#map { height: 560px; border-radius: 14px; overflow: hidden; background: #dfeaec; border: 1px solid #e7eef1; }
+	.nojs { padding: 20px; color: #5b6b73; }
+	#panel { background: #fff; border: 1px solid #e7eef1; border-radius: 14px; padding: 18px; overflow-y: auto; max-height: 560px; }
+	.panelhint { color: #5b6b73; font-size: 14.5px; margin: 0; }
+	.legend { display: flex; justify-content: space-between; align-items: center; gap: 14px; font-size: 13px; color: #5b6b73; margin: 12px 0 0; }
+	.stamp { color: #8aa0a6; }
+
+	.tablesec { padding: 46px 0; background: #fff; }
+	.tablesec h2, .ctasec h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.7px; margin: 0 0 10px; color: #0b1b22; }
+	.sub { color: #5b6b73; max-width: 780px; line-height: 1.6; margin: 0 0 20px; font-size: 15.5px; }
+	.tablewrap { overflow-x: auto; }
+	table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 720px; }
+	th, td { padding: 11px 12px; border-bottom: 1px solid #eef3f4; text-align: left; }
+	thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: #5b6b73; border-bottom: 2px solid #e7eef1; }
+	td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+	tbody th { font-weight: 700; color: #0b1b22; }
+	td.v { color: #00867a; font-weight: 700; }
+	td.v em { display: block; font-style: normal; font-size: 11.5px; color: #8aa0a6; font-weight: 400; }
+
+	.ctasec { padding: 52px 0 66px; background: #f6fafb; }
+	.ctasec p { color: #45585f; max-width: 720px; line-height: 1.62; margin: 0 0 18px; }
+	.btn { display: inline-block; background: #00ae9a; color: #fff; border-radius: 999px; padding: 14px 30px; font-weight: 800; text-decoration: none; }
+	.btn:hover { background: #00998a; }
+	.fine { font-size: 13.5px; color: #5b6b73; margin-top: 14px; }
+	.fine a { color: #00867a; }
+
+	@media (max-width: 900px) {
+		.maplayout { grid-template-columns: 1fr; }
+		#map { height: 420px; }
+		#panel { max-height: none; }
+		.counters { gap: 22px; }
+	}
+</style>

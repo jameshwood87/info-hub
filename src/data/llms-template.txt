@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-08-11
-Version: 5.5
+Version: 5.6
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -175,3 +175,6 @@ This content is suitable for:
 ### Contact
 - Agents sign up free: https://agents.propertylist.es/new_agency/new?locale=en
 - XML feeds: xml@propertylist.es
+
+## /map/
+Live map of PropertyList network coverage across the Costa del Sol, drawn to real OpenStreetMap administrative boundaries for the eight municipalities we cover: Marbella, Estepona, Benahavis, Mijas, Fuengirola, Benalmadena, Casares and Manilva. For each municipality the page shows the number of homes for sale, long-term rentals and holiday rentals, the median asking price, the asking price per m2, and the notary-verified price per m2 from the Spanish notarial register (Consejo General del Notariado) with its sample size - the distinction between what sellers ask and what buyers actually paid. Four switchable map layers: homes for sale, asking EUR/m2, verified EUR/m2, and coverage gaps (which highlights municipalities where few agencies list, as a recruitment signal). Clicking a municipality opens a panel with its full figures and the agencies listing there. Data is rebuilt nightly from the PropertyList MLS; boundaries are static. A full table of every municipality is rendered in the page for readers without JavaScript. Spanish version: /es/mapa/
