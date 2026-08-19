@@ -157,3 +157,10 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+    # attach notarial verified EUR/m2 to the town dots (Spain only, sample >= 30)
+    try:
+        import subprocess
+        subprocess.run(["/usr/bin/python3","/opt/info-hub/scripts/add-verified.py"],timeout=1800)
+    except Exception as e:
+        print("verified pass skipped:",e)

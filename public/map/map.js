@@ -276,6 +276,15 @@
 		h += lbl('Median asking', p.median ? '€' + Number(p.median).toLocaleString('en-GB') : '-');
 		h += lbl('Asking €/m²', p.psm ? '€' + Number(p.psm).toLocaleString('en-GB') : '-');
 		h += '</div>';
+		if (p.v) {
+			h += '<div style="margin-top:15px;padding:12px;border-radius:10px;background:#f0faf8;border:1px solid #d6ede8">';
+			h += '<span style="display:block;font-size:11.5px;color:#00867a;text-transform:uppercase;letter-spacing:.6px;font-weight:800">' + T.verified + '</span>';
+			h += '<strong style="font-size:20px;color:#00867a">€' + Number(p.v).toLocaleString('en-GB') + '/m²</strong>';
+			h += '<span style="display:block;font-size:12px;color:#5b6b73;margin-top:3px">' + T.paid + ' · ' + Number(p.vn).toLocaleString('en-GB') + ' ' + T.sales + '</span></div>';
+		} else if (p.vwhy) {
+			var why = p.vwhy === 'pt' ? T.whyPt : (p.vwhy === 'thin' ? T.whyThin : T.whyNone);
+			h += '<p style="margin-top:13px;font-size:12.5px;color:#8aa0a6;line-height:1.5">' + why + '</p>';
+		}
 		if (Number(p.n) < 10) {
 			h += '<div style="margin-top:15px;padding:13px;border-radius:10px;background:#f0faf8;border:1px solid #d6ede8">';
 			h += '<strong style="display:block;font-size:14px;color:#0b1b22;margin-bottom:3px">Do you list in ' + p.city + '?</strong>';
