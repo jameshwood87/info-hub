@@ -39,3 +39,10 @@ import os
 for d in ["/opt/info-hub/public/map","/opt/info-hub/dist/client/map"]:
     if os.path.isdir(d): json.dump(out,open(d+"/map-data.json","w"),separators=(",",":"))
 print("\nwrote map-data.json")
+
+# refresh cities.json from the Website API (all listings, geocode cache is static)
+try:
+    import subprocess
+    subprocess.run(["/usr/bin/python3","/opt/info-hub/scripts/build-cities.py"],timeout=1800)
+except Exception as e:
+    print("cities refresh skipped:",e)

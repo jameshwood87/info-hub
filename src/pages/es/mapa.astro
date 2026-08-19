@@ -1,23 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-// Espejo ES de /map/. Los datos se regeneran cada noche en public/map/map-data.json;
-// los limites son relaciones admin_level=8 de OSM, simplificadas.
-const title = 'Mapa inmobiliario de la Costa del Sol - cobertura en directo | PropertyList';
-const description =
-	'Un mapa en directo del mercado de la Costa del Sol: cuantas viviendas hay en venta en cada municipio, el precio medio de salida, el precio por m2 y el precio verificado ante notario que realmente pagaron los compradores. Con datos de la MLS de PropertyList y del registro notarial espanol, actualizado cada noche.';
-
+// Live network map. map-data.json (8 deep-coverage municipalities) is rebuilt nightly by
+// scripts/build-map-data.py. cities.json holds every listing's town, geocoded once.
+// Boundaries are OSM admin_level=8 relations, stitched and simplified.
 const origin = 'https://info.propertylist.es';
 const canonical = origin + '/es/mapa/';
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 
+const title = 'Mapa de la red inmobiliaria - todas las propiedades, en 3D | PropertyList';
+const description =
+	'Un mapa 3D en directo de todas las viviendas de la red de PropertyList en Espana y Portugal. Gira el globo, baja hasta la Costa del Sol y consulta el numero de anuncios, los precios medios, el precio por m2 y el precio verificado ante notario que pagaron de verdad los compradores.';
+
 let data: any = null;
+let cities: any = null;
 try {
 	const raw = await import('../../../public/map/map-data.json');
 	data = raw.default ?? raw;
-} catch (e) {
-	data = null;
-}
+} catch (e) {}
+try {
+	const raw = await import('../../../public/map/cities.json');
+	cities = raw.default ?? raw;
+} catch (e) {}
+
 const munis = data?.municipalities ?? {};
 const rows = Object.entries(munis)
 	.map(([name, m]: any) => ({
@@ -34,9 +39,16 @@ const rows = Object.entries(munis)
 	}))
 	.sort((a, b) => b.sale - a.sale);
 
-const totalSale = rows.reduce((s, r) => s + r.sale, 0);
-const totalRent = rows.reduce((s, r) => s + r.rent, 0);
-const totalHol = rows.reduce((s, r) => s + r.holiday, 0);
+const feats = cities?.features ?? [];
+const totalListings = feats.reduce((s: number, f: any) => s + (f.properties?.n ?? 0), 0);
+const townCount = feats.length;
+const regionMap: Record<string, number> = {};
+feats.forEach((f: any) => {
+	const r = f.properties?.region ?? '?';
+	regionMap[r] = (regionMap[r] ?? 0) + (f.properties?.n ?? 0);
+});
+const regions = Object.entries(regionMap).sort((a, b) => b[1] - a[1]);
+
 const generated = data?.generated ? new Date(data.generated) : null;
 const fmtDate = generated
 	? `${String(generated.getUTCDate()).padStart(2, '0')}-${String(generated.getUTCMonth() + 1).padStart(2, '0')}-${String(generated.getUTCFullYear()).slice(2)}`
@@ -57,17 +69,16 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	<section class="hero">
 		<div class="wrap">
 			<p class="eyebrow">Mapa de la red en directo</p>
-			<h1>Dónde está de verdad el mercado de la Costa del Sol</h1>
+			<h1>Dónde está de verdad la red</h1>
 			<p class="lede">
-				Cada municipio que cubrimos, dibujado con su límite administrativo real. El número de anuncios, el precio medio
-				de salida y el precio por m<sup>2</sup> salen de la MLS de PropertyList. La cifra verificada que aparece debajo
-				viene del registro notarial español: lo que los compradores pagaron de verdad, no lo que piden los vendedores.
+				Todas las viviendas de la red de PropertyList, situadas donde están. Gira el globo, baja hasta la Costa del Sol y
+				los municipios donde más cubrimos se levantan del mapa: cuanto más alto, más viviendas anunciadas. Los precios de
+				salida salen de la MLS. La cifra verificada de debajo viene del registro notarial español: lo que pagaron de verdad los compradores.
 			</p>
 			<div class="counters">
-				<div><strong>{totalSale.toLocaleString('es-ES')}</strong><span>viviendas en venta</span></div>
-				<div><strong>{totalRent.toLocaleString('es-ES')}</strong><span>alquiler de larga temporada</span></div>
-				<div><strong>{totalHol.toLocaleString('es-ES')}</strong><span>alquiler vacacional</span></div>
-				<div><strong>8</strong><span>municipios</span></div>
+				<div><strong>{totalListings.toLocaleString('es-ES')}</strong><span>viviendas en la red</span></div>
+				<div><strong>{townCount}</strong><span>localidades</span></div>
+				<div><strong>{regions.length}</strong><span>regiones de España y Portugal</span></div>
 			</div>
 		</div>
 	</section>
@@ -75,24 +86,30 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	<section class="mapsec">
 		<div class="wrap">
 			<div class="controls" role="group" aria-label="Capa del mapa">
-				<button class="chip on" data-layer="sale">Viviendas en venta</button>
-				<button class="chip" data-layer="psm">&euro;/m&sup2; de salida</button>
-				<button class="chip" data-layer="verified">&euro;/m&sup2; verificado</button>
-				<button class="chip" data-layer="gap">Zonas con poca cobertura</button>
+				<button class="chip on" data-layer="sale" type="button">Viviendas en venta</button>
+				<button class="chip" data-layer="psm" type="button">&euro;/m&sup2; de salida</button>
+				<button class="chip" data-layer="verified" type="button">&euro;/m&sup2; verificado</button>
+				<button class="chip" data-layer="gap" type="button">Zonas con poca cobertura</button>
+			</div>
+			<div class="controls secondary" role="group" aria-label="Vista del mapa">
+				<button class="ghost" id="spainbtn" type="button">Toda la red</button>
+				<button class="ghost" id="homebtn" type="button">Costa del Sol</button>
+				<button class="ghost" id="flattoggle" type="button">Vista plana</button>
 			</div>
 
 			<div class="maplayout">
-				<div id="map" role="application" aria-label="Mapa de los municipios de la Costa del Sol">
+				<button id="skipintro" type="button">Saltar intro</button>
+				<div id="map" role="application" aria-label="Mapa 3D de la red de PropertyList">
 					<noscript>
-						<p class="nojs">El mapa interactivo necesita JavaScript. Tienes la tabla completa de cada municipio más abajo.</p>
+						<p class="nojs">El mapa interactivo necesita JavaScript. Tienes todos los municipios y regiones en las tablas de abajo.</p>
 					</noscript>
 				</div>
 				<aside id="panel" aria-live="polite">
-					<p class="panelhint">Selecciona un municipio en el mapa para ver sus cifras.</p>
+					<p class="panelhint">Selecciona un municipio o una localidad en el mapa para ver sus cifras.</p>
 				</aside>
 			</div>
 
-			<p class="legend"><span id="legendlabel">Cuanto más oscuro, más viviendas anunciadas.</span>
+			<p class="legend"><span id="legendlabel">La altura y el color indican cuántas viviendas hay anunciadas.</span>
 				{fmtDate && <span class="stamp">Actualizado {fmtDate}</span>}
 			</p>
 		</div>
@@ -100,11 +117,11 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 
 	<section class="tablesec">
 		<div class="wrap">
-			<h2>Todos los municipios, en cifras</h2>
+			<h2>Máxima cobertura: la Costa del Sol</h2>
 			<p class="sub">
-				Los precios de salida son lo que los vendedores piden ahora mismo. El precio por m<sup>2</sup> verificado es la
-				cifra del registro notarial de ese municipio en los últimos doce meses, de todos los tipos de vivienda, así que
-				tómalo como el suelo sobre el que se apoya un mercado y no como la valoración de una vivienda concreta.
+				Estos ocho municipios concentran la mayor parte de la red. Los precios de salida son lo que piden los vendedores hoy.
+				El precio por m<sup>2</sup> verificado es la cifra del registro notarial de ese municipio en los últimos doce meses,
+				de todos los tipos de vivienda: tómalo como el suelo sobre el que se apoya un mercado, no como la valoración de una vivienda concreta.
 			</p>
 			<div class="tablewrap">
 				<table>
@@ -113,7 +130,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 							<th>Municipio</th>
 							<th class="n">En venta</th>
 							<th class="n">Precio medio</th>
-							<th class="n">&euro;/m&sup2; salida</th>
+							<th class="n">&euro;/m&sup2; de salida</th>
 							<th class="n">&euro;/m&sup2; verificado</th>
 							<th class="n">Larga temporada</th>
 							<th class="n">Vacacional</th>
@@ -134,6 +151,26 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 					</tbody>
 				</table>
 			</div>
+
+			<h2 class="mt">Todo lo demás a lo que llega la red</h2>
+			<p class="sub">
+				Todas las regiones con al menos un anuncio. Algunas son un puñado de viviendas y no un mercado que cubramos: aparecen
+				porque son reales, no porque sean profundas.
+			</p>
+			<div class="tablewrap">
+				<table>
+					<thead><tr><th>Región</th><th class="n">Viviendas</th><th class="n">Porcentaje</th></tr></thead>
+					<tbody>
+						{regions.map(([r, n]) => (
+							<tr>
+								<th scope="row">{r}</th>
+								<td class="n">{n.toLocaleString('es-ES')}</td>
+								<td class="n">{totalListings ? ((n / totalListings) * 100).toFixed(1) + '%' : '-'}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</section>
 
@@ -141,9 +178,8 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 		<div class="wrap">
 			<h2>Tus propiedades, en este mapa</h2>
 			<p>
-				Cada vivienda que ves aquí pertenece a una agencia de la red de PropertyList. Publicar es gratis: tus propiedades
-				llegan a los demás agentes que pueden venderlas, y tú puedes vender de todo lo que ellos publican. Sin tarjeta y
-				sin permanencia.
+				Cada vivienda que ves aquí pertenece a una agencia de la red de PropertyList. Publicar es gratis: tus propiedades llegan
+				a los demás agentes que pueden venderlas, y tú puedes vender de todo lo que ellos publican. Sin tarjeta y sin permanencia.
 			</p>
 			<a class="btn" href={SIGNUP} data-umami-event="map-signup-es">Crea tu cuenta de agencia gratis</a>
 			<p class="fine">El núcleo de la plataforma es gratis para siempre. Mira <a href="/es/gratis/">qué es gratis</a>.</p>
@@ -163,30 +199,36 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.hero { background: linear-gradient(160deg, #06302c 0%, #0b1b22 70%); color: #fff; padding: 62px 0 40px; }
 	.eyebrow { text-transform: uppercase; letter-spacing: 1.4px; font-size: 12px; font-weight: 800; color: #5be3d0; margin: 0 0 10px; }
 	.hero h1 { font-size: clamp(30px, 4.6vw, 50px); line-height: 1.06; letter-spacing: -1.2px; margin: 0 0 14px; }
-	.lede { max-width: 780px; font-size: 17.5px; line-height: 1.62; color: rgba(255,255,255,0.82); margin: 0 0 26px; }
+	.lede { max-width: 800px; font-size: 17.5px; line-height: 1.62; color: rgba(255,255,255,0.82); margin: 0 0 26px; }
 	.counters { display: flex; flex-wrap: wrap; gap: 34px; }
 	.counters strong { display: block; font-size: 30px; font-weight: 800; letter-spacing: -0.8px; color: #5be3d0; }
 	.counters span { font-size: 13px; color: rgba(255,255,255,0.62); }
 
 	.mapsec { padding: 30px 0 10px; background: #f6fafb; }
-	.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+	.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+	.controls.secondary { margin-bottom: 14px; }
 	.chip { border: 1.5px solid #d5e2e0; background: #fff; color: #5b6b73; border-radius: 999px; padding: 9px 17px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .14s, color .14s, border-color .14s; }
 	.chip:hover { border-color: #00ae9a; color: #0b1b22; }
 	.chip.on { background: #00ae9a; border-color: #00ae9a; color: #fff; }
+	.ghost { border: 1.5px solid #d5e2e0; background: #fff; color: #5b6b73; border-radius: 999px; padding: 7px 15px; font-size: 13px; font-weight: 700; cursor: pointer; }
+	.ghost:hover { border-color: #00ae9a; color: #0b1b22; }
 
-	.maplayout { display: grid; grid-template-columns: 1fr 330px; gap: 16px; }
-	#map { height: 560px; border-radius: 14px; overflow: hidden; background: #dfeaec; border: 1px solid #e7eef1; }
-	.nojs { padding: 20px; color: #5b6b73; }
-	#panel { background: #fff; border: 1px solid #e7eef1; border-radius: 14px; padding: 18px; overflow-y: auto; max-height: 560px; }
+	.maplayout { display: grid; grid-template-columns: 1fr 330px; gap: 16px; position: relative; }
+	#map { height: 600px; border-radius: 14px; overflow: hidden; background: #0b1b22; border: 1px solid #e7eef1; }
+	#skipintro { display: none; position: absolute; z-index: 5; top: 14px; left: 14px; align-items: center; background: rgba(11,27,34,.84); color: #fff; border: 0; border-radius: 999px; padding: 8px 17px; font-size: 13px; font-weight: 700; cursor: pointer; }
+	#skipintro:hover { background: rgba(11,27,34,.95); }
+	.nojs { padding: 20px; color: #cfe0e2; }
+	#panel { background: #fff; border: 1px solid #e7eef1; border-radius: 14px; padding: 18px; overflow-y: auto; max-height: 600px; }
 	.panelhint { color: #5b6b73; font-size: 14.5px; margin: 0; }
 	.legend { display: flex; justify-content: space-between; align-items: center; gap: 14px; font-size: 13px; color: #5b6b73; margin: 12px 0 0; }
 	.stamp { color: #8aa0a6; }
 
 	.tablesec { padding: 46px 0; background: #fff; }
 	.tablesec h2, .ctasec h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.7px; margin: 0 0 10px; color: #0b1b22; }
-	.sub { color: #5b6b73; max-width: 780px; line-height: 1.6; margin: 0 0 20px; font-size: 15.5px; }
+	.mt { margin-top: 46px; }
+	.sub { color: #5b6b73; max-width: 800px; line-height: 1.6; margin: 0 0 20px; font-size: 15.5px; }
 	.tablewrap { overflow-x: auto; }
-	table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 720px; }
+	table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
 	th, td { padding: 11px 12px; border-bottom: 1px solid #eef3f4; text-align: left; }
 	thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: #5b6b73; border-bottom: 2px solid #e7eef1; }
 	td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
@@ -203,7 +245,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 
 	@media (max-width: 900px) {
 		.maplayout { grid-template-columns: 1fr; }
-		#map { height: 420px; }
+		#map { height: 440px; }
 		#panel { max-height: none; }
 		.counters { gap: 22px; }
 	}
