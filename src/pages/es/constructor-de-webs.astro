@@ -250,7 +250,7 @@ a:hover{text-decoration:underline}
 .wb-schema-head{text-align:center;margin-bottom:40px}
 .wb-schema-head h3{font-family:'Playfair Display',serif;font-size:28px;font-weight:500;color:#fff;margin:6px 0 8px}
 .wb-schema-head p{font-size:15px;color:#b8c9cb}
-.wb-schema-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.wb-schema-grid{display:grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap:24px}
 .wb-schema-card{background:#1a3f43;border-radius:16px;padding:28px 24px;text-align:center;transition:transform .2s}
 .wb-schema-card:hover{transform:translateY(-3px)}
 .wb-schema-icon{width:48px;height:48px;background:#00ae9a;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff}
@@ -288,7 +288,7 @@ a:hover{text-decoration:underline}
 .wb-t-indent2{margin-left:48px}
 .wb-t-spacer{height:8px}
 .wb-trust{background:#0d2b2e;padding:80px 0 56px;color:#fff}
-.wb-trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;text-align:center}
+.wb-trust-grid{display:grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap:30px;text-align:center}
 .wb-trust-num{font-family:'Playfair Display',serif;font-size:38px;line-height:1;color:#00ae9a;margin-bottom:6px}
 .wb-trust-label{font-size:12px;color:#b8c9cb;letter-spacing:1px;text-transform:uppercase}
 .wb-section{padding:100px 0}
@@ -299,7 +299,7 @@ a:hover{text-decoration:underline}
 .wb-section-h2.on-dark{color:#fff}
 .wb-lead{font-size:18px;line-height:1.6;color:#4a5b5d}
 .wb-bento{background:#faf6ee}
-.wb-bento-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.wb-bento-grid{display:grid;grid-template-columns: repeat(3, minmax(0, 1fr));gap:24px}
 .wb-bento-card{background:#fff;border-radius:18px;padding:32px 28px;border:1px solid #e5ecec;transition:transform .2s,box-shadow .2s}
 .wb-bento-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(13,43,46,.08)}
 .wb-bento-num{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:#e5f5f3;color:#00ae9a;border-radius:12px;font-family:'Playfair Display',serif;font-weight:700;font-size:20px;margin-bottom:20px}
@@ -449,9 +449,9 @@ details>p{margin-top:14px;color:#4a5b5d;line-height:1.7;font-size:15px}
 /* Media queries last: several .wb-* rules are declared after them in
    source order and would otherwise win at every width (this is why the AI
    section stayed side-by-side on phones). */
-@media(max-width:900px){.wb-section{padding:70px 0}.wb-nav-link{display:none}.wb-hero{padding:50px 0 0}.wb-hero-grid{grid-template-columns:1fr;gap:40px}.wb-hero-visual img{transform:translateY(30px)}.wb-trust{padding:90px 0 50px}.wb-trust-grid{grid-template-columns:repeat(2,1fr);gap:30px}.wb-bento-grid{grid-template-columns:1fr}.wb-feature-row{grid-template-columns:1fr;gap:36px;margin-bottom:70px}.wb-mcp-grid{grid-template-columns:1fr;gap:36px}.wb-xml-inner{grid-template-columns:1fr;gap:40px}.wb-pricing-card{padding:36px 28px}.wb-price-grid-3{grid-template-columns:1fr;gap:24px}.wb-referral{padding:36px 28px;margin-top:50px}.wb-referral-grid{grid-template-columns:1fr;gap:30px}.wb-ai-grid{grid-template-columns:1fr;gap:44px}}
+@media(max-width:900px){.wb-section{padding:70px 0}.wb-nav-link{display:none}.wb-hero{padding:50px 0 0}.wb-hero-grid{grid-template-columns: minmax(0, 1fr);gap:40px}.wb-hero-visual img{transform:translateY(30px)}.wb-trust{padding:90px 0 50px}.wb-trust-grid{grid-template-columns: repeat(2, minmax(0, 1fr));gap:30px}.wb-bento-grid{grid-template-columns:1fr}.wb-feature-row{grid-template-columns: minmax(0, 1fr);gap:36px;margin-bottom:70px}.wb-mcp-grid{grid-template-columns: minmax(0, 1fr);gap:36px}.wb-xml-inner{grid-template-columns: minmax(0, 1fr);gap:40px}.wb-pricing-card{padding:36px 28px}.wb-price-grid-3{grid-template-columns: minmax(0, 1fr);gap:24px}.wb-referral{padding:36px 28px;margin-top:50px}.wb-referral-grid{grid-template-columns: minmax(0, 1fr);gap:30px}.wb-ai-grid{grid-template-columns: minmax(0, 1fr);gap:44px}}
 @media(max-width:560px){.wb-mcp-tools{grid-template-columns:1fr}}
-@media(max-width:380px){.wrap{padding:0 16px}.wb-trust-grid{grid-template-columns:1fr;gap:20px}}
+@media(max-width:380px){.wrap{padding:0 16px}.wb-trust-grid{grid-template-columns: minmax(0, 1fr);gap:20px}}
 @media(max-width:520px){.wb-trust-grid{grid-template-columns:1fr 1fr;gap:24px}.wb-nav-actions{gap:10px}.wb-hero-ctas{flex-direction:column;align-items:stretch}.wb-hero-ctas .btn{text-align:center}}
 @media(max-width:560px){.wb-referral-num-card{padding:16px 10px}.wb-referral-who{font-size:10.5px;letter-spacing:.2px}}
 

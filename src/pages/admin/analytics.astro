@@ -384,7 +384,7 @@ import Layout from '../../layouts/Layout.astro';
 	.shell .ga4row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(16,24,40,0.05); }
 	.shell .ga4meta { font-size: 13px; line-height: 1.7; }
 	.shell .muted { color: rgba(16,24,40,0.5); font-weight: 400; }
-	@media (max-width: 700px) { 	.shell .ga4grid { grid-template-columns: 1fr; } }
+	@media (max-width: 700px) { 	.shell .ga4grid { grid-template-columns: minmax(0, 1fr); } }
 	.shell .jump { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
 	.shell .jump a { font-size: 13px; font-weight: 700; text-decoration: none; color: rgba(11, 18, 32, 0.75); background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 999px; padding: 6px 13px; }
 	.shell .jump a:hover { border-color: rgba(0, 174, 154, 0.45); color: #0a6d61; }
@@ -418,7 +418,7 @@ import Layout from '../../layouts/Layout.astro';
 	.shell .tableWrap { max-height: 640px; overflow: auto; }
 	.shell thead th { position: sticky; top: 0; background: #f4f6f8; z-index: 1; }
 	.shell .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-	@media (max-width: 900px) { 	.shell .cols { grid-template-columns: 1fr; } }
+	@media (max-width: 900px) { 	.shell .cols { grid-template-columns: minmax(0, 1fr); } }
 </style>
 <script>
 	(async () => {

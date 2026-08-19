@@ -2433,7 +2433,7 @@ import Layout from '../../layouts/Layout.astro';
 
 	@media (max-width: 1100px) {
 		.split {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 		.tree {
 			max-height: 42vh;
@@ -2448,7 +2448,7 @@ import Layout from '../../layouts/Layout.astro';
 			justify-content: flex-start;
 		}
 		.formGrid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

@@ -691,10 +691,10 @@ const stats: Array<{ value: string; label: string }> = [
 
 		@media (max-width: 980px) {
 			.twoCol {
-				grid-template-columns: 1fr;
+				grid-template-columns: minmax(0, 1fr);
 			}
 			.grid {
-				grid-template-columns: 1fr;
+				grid-template-columns: minmax(0, 1fr);
 			}
 			h1 {
 				font-size: 36px;
@@ -703,7 +703,7 @@ const stats: Array<{ value: string; label: string }> = [
 				min-width: unset;
 			}
 			.form {
-				grid-template-columns: 1fr;
+				grid-template-columns: minmax(0, 1fr);
 			}
 			.btnPrimary,
 			.btnSecondary {

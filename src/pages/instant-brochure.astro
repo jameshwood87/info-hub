@@ -327,9 +327,13 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 		.faq details[open] summary::after { content: '-'; }
 		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
 		@media (max-width: 900px) {
-			.heroGrid { grid-template-columns: 1fr; }
-			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
-			.grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+			.heroGrid { grid-template-columns: minmax(0, 1fr); }
+			.grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
+			.grid3, .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		}
+
+		@media (max-width: 430px) {
+			.grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
 		}
 	</style>
 	<AgentInterestCta lang="en" page="/instant-brochure/" />

@@ -485,7 +485,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 				<strong style="display:block;font-size:16px;letter-spacing:-.01em;color:rgba(16,24,40,0.92);">Don't want to pay? Earn your credits.</strong>
 				<span style="display:block;font-size:14px;color:rgba(16,24,40,0.66);margin-top:3px;">Refer an agency and you both get credits - 20 for you, 10 for them, with no limit. Spend them on any of the upgrades above.</span>
 			</div>
-			<a href="/referrals/" style="flex:none;white-space:nowrap;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">See how referrals work &rarr;</a>
+			<a href="/referrals/" style="flex:0 1 auto;max-width:100%;text-align:center;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">See how referrals work &rarr;</a>
 		</div>
 	</section>
 
@@ -506,7 +506,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 				<strong style="display:block;font-size:16px;letter-spacing:-.01em;color:rgba(16,24,40,0.92);">Are you an agent? Help shape what we build next.</strong>
 				<span style="display:block;font-size:14px;color:rgba(16,24,40,0.66);margin-top:3px;">A 2-minute survey - tell us what you want from a property portal, and we'll add 20 credits (~20&euro;) to your account.</span>
 			</div>
-			<a href="/agents-survey/" style="flex:none;white-space:nowrap;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Take the 2-min survey &rarr;</a>
+			<a href="/agents-survey/" style="flex:0 1 auto;max-width:100%;text-align:center;background:#00ae9a;color:#00100e;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;font-size:15px;">Take the 2-min survey &rarr;</a>
 		</div>
 	</section>
 
@@ -602,7 +602,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 	.heroInner {
 		position: relative;
 		display: grid;
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 0;
 		align-items: start;
 		min-width: 0;
@@ -975,7 +975,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 
 	@media (max-width: 700px) {
 		.wbHeroInner {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 		.wbHeroImage {
 			display: none;
@@ -1118,7 +1118,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 
 	@media (max-width: 700px) {
 		.aiHeroInner {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 		.aiHeadline {
 			font-size: 22px;
@@ -1478,25 +1478,25 @@ When you want to move faster, stand out, or build your own agency website - tap 
 
 	@media (max-width: 980px) {
 		.heroInner {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 
 	@media (max-width: 820px) {
 		.grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.featureGrid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.cards {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.personaLinks {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		h1 {

@@ -323,7 +323,7 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 
 	@media (max-width: 620px) {
 		.grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

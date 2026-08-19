@@ -965,7 +965,7 @@ const breadcrumbLd = {
 		.townStrip { position: relative; inset: auto; display: block; width: 100%; }
 		.stop {
 			flex: none; width: 100%; height: auto; display: grid;
-			grid-template-columns: 1fr; gap: 22px; padding: 54px 20px;
+			grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 54px 20px;
 			border-bottom: 1px solid rgba(255,255,255,.09);
 		}
 		.postcard { max-width: 100%; rotate: -.8deg; }
@@ -973,7 +973,7 @@ const breadcrumbLd = {
 		.stats { grid-template-columns: 1fr 1fr; }
 	}
 	@media (max-width: 420px) {
-		.stats { grid-template-columns: 1fr; }
+		.stats { grid-template-columns: minmax(0, 1fr); }
 	}
 	/* ============ atmosphere & life ============ */
 	.grain {
@@ -1199,7 +1199,7 @@ const breadcrumbLd = {
 			}
 			.stop {
 				display: grid;
-				grid-template-columns: 1fr;
+				grid-template-columns: minmax(0, 1fr);
 				grid-template-rows: auto auto;
 				align-content: center;
 				justify-items: center;

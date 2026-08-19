@@ -103,7 +103,7 @@ const error = Astro.url.searchParams.get('error') === '1';
 		.form label { display: block; font-weight: 700; font-size: 14px; margin: 12px 0 0; }
 		.form input[type=text], .form input[type=email], .form select, .form textarea { width: 100%; margin-top: 5px; padding: 10px 12px; border: 1px solid rgba(16,24,40,0.2); border-radius: 10px; font: inherit; font-weight: 400; }
 		.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-		@media (max-width: 620px) { .row { grid-template-columns: 1fr; } }
+		@media (max-width: 620px) { .row { grid-template-columns: minmax(0, 1fr); } }
 		.req { color: #dc2626; }
 		.check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 13.5px; margin-top: 16px; color: rgba(16,24,40,0.8); }
 		.check input { margin-top: 3px; }

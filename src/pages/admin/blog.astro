@@ -2131,13 +2131,13 @@ import Layout from '../../layouts/Layout.astro';
 			grid-template-columns: 1fr 1fr;
 		}
 		.split {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 		.bulk {
 			justify-content: flex-start;
 		}
 		.formGrid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

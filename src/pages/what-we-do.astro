@@ -574,7 +574,7 @@ const faqLd = {
 		.dFace.back { position: absolute; inset: 0; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; }
 		.soonFace { border-style: dashed; border-color: rgba(255, 217, 160, 0.35); background: rgba(234, 242, 241, 0.05); }
 		.soonTag { position: absolute; right: -8px; top: -12px; z-index: 9; font-size: 11px; font-weight: 900; letter-spacing: 1.6px; color: rgba(255, 217, 160, 0.9); border: 2px dashed rgba(255, 217, 160, 0.5); border-radius: 8px; padding: 2px 9px; background: rgba(11, 18, 32, 0.85); transform: rotate(-9deg); }
-		.siteRow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+		.siteRow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
 		.siteRow i { height: 30px; border-radius: 6px; background: linear-gradient(160deg, rgba(0, 174, 154, 0.35), rgba(22, 48, 90, 0.8)); border: 1px solid rgba(234, 242, 241, 0.14); }
 		.adRow { display: flex; gap: 8px; }
 		.adRow i { flex: 1; height: 34px; border-radius: 8px; border: 1px dashed rgba(234, 242, 241, 0.25); display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 13px; color: rgba(234, 242, 241, 0.55); }
@@ -591,7 +591,7 @@ const faqLd = {
 		.dHead { font-size: 13.5px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--glow); margin-bottom: 10px; }
 		.dLine { font-size: 14px; color: rgba(234, 242, 241, 0.68); margin-top: 10px; }
 		.dLine b { color: var(--ink); font-size: 18px; }
-		.dotGrid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; }
+		.dotGrid { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; }
 		.dot { width: 100%; aspect-ratio: 1; border-radius: 50%; background: rgba(234, 242, 241, 0.12); transition: background 0.4s, box-shadow 0.4s; transition-delay: var(--d); }
 		.stage.mlsOn .dot { background: var(--glow); box-shadow: 0 0 6px rgba(91, 227, 208, 0.7); }
 		.mini { border: 1px solid rgba(234, 242, 241, 0.16); border-radius: 10px; background: #101c33; overflow: hidden; }
@@ -811,7 +811,7 @@ const faqLd = {
 			.dHead { font-size: 11px; margin-bottom: 5px; }
 			.soonTag { font-size: 9px; padding: 1px 6px; }
 			.dest { padding: 10px 11px 9px; }
-			.dotGrid { grid-template-columns: repeat(10, 1fr); gap: 3px; }
+			.dotGrid { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; }
 			.dot:nth-child(n + 61) { display: none; }
 			.siteRow i { height: 20px; }
 			.adRow i { height: 26px; font-size: 11px; }

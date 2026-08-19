@@ -164,7 +164,7 @@ const breadcrumbLd = {
 		.fmeta h2 { font-family: 'Lora', Georgia, serif; font-size: 34px; font-weight: 700; color: #0b1b22; margin: 8px 0 16px; }
 		.blurb { font-size: 18px; line-height: 1.5; color: #47555b; }
 		.tx { font-size: 15px; line-height: 1.55; color: #78868c; margin-top: 14px; font-style: italic; }
-		.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 40px; }
+		.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 40px; }
 		.card .num { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #0f8f8a; margin: 16px 0 6px; }
 		.card h3 { font-family: 'Lora', Georgia, serif; font-size: 24px; font-weight: 700; color: #0b1b22; margin-bottom: 10px; }
 		.card .blurb { font-size: 16px; }
@@ -177,8 +177,8 @@ const breadcrumbLd = {
 		.btn.ghost { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.28); }
 		@media (max-width: 860px) {
 			.hero h1 { font-size: 40px; }
-			.featured { grid-template-columns: 1fr; gap: 24px; }
-			.grid { grid-template-columns: 1fr; }
+			.featured { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+			.grid { grid-template-columns: minmax(0, 1fr); }
 		}
 	</style>
 </Layout>

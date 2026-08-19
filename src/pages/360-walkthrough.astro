@@ -300,7 +300,7 @@ const faqLd = {
 
 		/* ---- pricing ---- */
 		.pricing { padding: 46px 0 10px; text-align: center; }
-		.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 22px 0 16px; }
+		.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 22px 0 16px; }
 		.card { background: #fff; border: 2px solid #e4ecea; border-radius: 18px; padding: 26px 20px 22px; transition: border-color 0.15s, transform 0.15s; }
 		.card:hover { border-color: var(--teal); transform: translateY(-3px); }
 		.card h3 { margin: 0 0 4px; font-size: 16px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
@@ -341,12 +341,12 @@ const faqLd = {
 		.close p { color: var(--mut); max-width: 460px; margin: 6px auto 20px; }
 
 		@media (max-width: 760px) {
-			.whyGrid { grid-template-columns: 1fr; }
-			.cards { grid-template-columns: 1fr; }
+			.whyGrid { grid-template-columns: minmax(0, 1fr); }
+			.cards { grid-template-columns: minmax(0, 1fr); }
 			.card h3, .cardLine { min-height: 0; }
 			.steps { flex-direction: column; align-items: center; }
 			.stepLink { transform: rotate(90deg); flex-basis: 30px; }
-			.fields { grid-template-columns: 1fr; }
+			.fields { grid-template-columns: minmax(0, 1fr); }
 			.hero { padding: 44px 20px 42px; }
 		}
 		@media (prefers-reduced-motion: reduce) {

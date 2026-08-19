@@ -794,11 +794,11 @@ const softwareAppLd = {
 
 	@media (max-width: 980px) {
 		.grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.twoCol {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 
@@ -904,7 +904,7 @@ const softwareAppLd = {
 
 	.wbAddonGrid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 10px;
 		margin-bottom: 14px;
 	}
@@ -1004,19 +1004,19 @@ const softwareAppLd = {
 
 	@media (max-width: 900px) {
 		.wbPricing {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 		.wbAddonGrid {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 		.faqGrid {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
 	@media (max-width: 580px) {
 		.wbAddonGrid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 		.wbBasePrice {
 			font-size: 28px;
@@ -1031,7 +1031,7 @@ const softwareAppLd = {
 			font-size: 12px;
 		}
 		.faqGrid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 

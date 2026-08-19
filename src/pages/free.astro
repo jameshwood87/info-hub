@@ -216,7 +216,7 @@ const breadcrumbLd = {
 	.block h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.02em; margin: 0 0 8px; text-align: center; font-weight: 900; }
 	.sub { text-align: center; max-width: 620px; margin: 0 auto 24px; color: rgba(16, 24, 40, 0.7); font-size: 15.5px; line-height: 1.6; }
 
-	.freeGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 22px; }
+	.freeGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 22px; }
 	.freeCard { position: relative; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 16px 18px 16px 46px; }
 	.freeCard .tick { position: absolute; left: 16px; top: 17px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 174, 154, 0.14); color: #0a6d61; display: grid; place-items: center; font-size: 11px; font-weight: 900; }
 	.freeCard b { display: block; font-size: 15px; margin-bottom: 3px; color: #0b1220; }
@@ -243,7 +243,7 @@ const breadcrumbLd = {
 	.betterLine { text-align: center; max-width: 620px; margin: 22px auto 0; font-size: 15px; line-height: 1.6; color: rgba(16, 24, 40, 0.78); font-weight: 500; }
 	.fine { text-align: center; font-size: 12px; color: rgba(16, 24, 40, 0.45); margin: 12px auto 0; max-width: 620px; line-height: 1.5; }
 
-	.proof { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 54px 0 0; text-align: center; }
+	.proof { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 54px 0 0; text-align: center; }
 	.proof div { background: #0b1220; color: #fff; border-radius: 14px; padding: 22px 10px; }
 	.proof b { display: block; font-size: 26px; font-weight: 900; color: #7ee8d8; }
 	.proof span { font-size: 12px; color: rgba(255, 255, 255, 0.7); }
@@ -273,8 +273,8 @@ const breadcrumbLd = {
 	.growMore a { color: #0a6d61; font-weight: 700; }
 
 	@media (max-width: 720px) {
-		.freeGrid { grid-template-columns: 1fr; }
-		.proof { grid-template-columns: repeat(2, 1fr); }
+		.freeGrid { grid-template-columns: minmax(0, 1fr); }
+		.proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 		.cmpHead { display: none; }
 		.cmpRow { grid-template-columns: 1fr auto; grid-template-areas: 'tool free' 'usual free'; row-gap: 0; padding: 6px 0; }
 		.cTool { grid-area: tool; padding: 8px 14px 0; }

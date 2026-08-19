@@ -274,7 +274,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 		.ilBtn { border: 1px solid rgba(0, 174, 154, 0.45); color: var(--pl-ink); border-radius: 10px; padding: 7px 10px; font-size: 12px; font-weight: 800; background: #fff; }
 		.ilBtnGo { background: rgba(0, 174, 154, 0.35); border-color: transparent; color: #075e53; }
 		.ilMicro { margin-top: 10px; font-size: 11.5px; color: rgba(16, 24, 40, 0.55); }
-		.ilPhotos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+		.ilPhotos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 10px; }
 		.ilPhotos span { height: 44px; border-radius: 8px; }
 		.ilPhotos span:nth-child(1) { background: linear-gradient(135deg, #9fe1cb, #1d9e75); }
 		.ilPhotos span:nth-child(2) { background: linear-gradient(135deg, #b5d4f4, #378add); }
@@ -323,9 +323,13 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 		.faq details[open] summary::after { content: '-'; }
 		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
 		@media (max-width: 900px) {
-			.heroGrid { grid-template-columns: 1fr; }
-			.grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
-			.grid4 { grid-template-columns: repeat(2, 1fr); }
+			.heroGrid { grid-template-columns: minmax(0, 1fr); }
+			.grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
+			.grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		}
+
+		@media (max-width: 430px) {
+			.grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
 		}
 	</style>
 	<AgentInterestCta lang="es" page="/es/listado-instantaneo/" />

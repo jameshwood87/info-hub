@@ -480,7 +480,7 @@ const listDescendantPages = (node: ManualNode): PageLink[] => {
 		padding: 12px 14px;
 		text-decoration: none;
 		display: grid;
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 10px;
 		align-content: start;
 	}
@@ -607,7 +607,7 @@ const listDescendantPages = (node: ManualNode): PageLink[] => {
 
 	.listRow {
 		display: grid;
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 2px;
 		padding: 8px 10px;
 		border-radius: 12px;
@@ -657,13 +657,13 @@ const listDescendantPages = (node: ManualNode): PageLink[] => {
 		}
 
 		.grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 
 	@media (max-width: 620px) {
 		.rows {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

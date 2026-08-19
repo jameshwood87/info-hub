@@ -938,7 +938,7 @@ const townLabel = (k: string) =>
 	.bucketHead h2 { margin: 0; font-size: 19px; letter-spacing: -0.02em; }
 	.bucketHead p { margin: 0; font-size: 13px; color: rgba(16,24,40,0.55); }
 	@media (max-width: 980px) { .featRow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-	@media (max-width: 520px) { .featRow { grid-template-columns: 1fr; } }
+	@media (max-width: 520px) { .featRow { grid-template-columns: minmax(0, 1fr); } }
 	.tabRow { display: flex; gap: 8px; margin: 0 0 14px; }
 	.tabBtn { flex: none; border: 1px solid rgba(16,24,40,0.14); background: rgba(255,255,255,0.9); border-radius: 14px; padding: 11px 18px; font-weight: 900; font-size: 14.5px; color: rgba(16,24,40,0.7); cursor: pointer; }
 	.tabBtn.isActive { background: #0b1220; border-color: #0b1220; color: #fff; }
@@ -1007,7 +1007,7 @@ const townLabel = (k: string) =>
 	.feedForm { display: grid; grid-template-columns: 1fr 1.4fr 1fr auto; gap: 8px; position: relative; }
 	.feedForm input { border: 1px solid rgba(16, 24, 40, 0.16); border-radius: 10px; padding: 10px 11px; font-size: 14px; }
 	.descLab { display: flex; flex-direction: column; gap: 5px; font-weight: 800; font-size: 12.5px; color: rgba(16, 24, 40, 0.7); margin-top: 10px; }
-	@media (max-width: 860px) { .feedForm { grid-template-columns: 1fr; } }
+	@media (max-width: 860px) { .feedForm { grid-template-columns: minmax(0, 1fr); } }
 	.formMsg.ok { color: #0a6d61; }
 	.formMsg.err { color: #b42318; }
 	.evFoot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 2px; }
@@ -1029,7 +1029,7 @@ const townLabel = (k: string) =>
 	.planNote { margin: 10px 0 0; font-size: 12px; color: rgba(16,24,40,0.55); }
 	@media (min-width: 640px) { .planOverlay { align-items: center; } }
 	@media (max-width: 980px) { .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .formGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-	@media (max-width: 640px) { .grid3, .formGrid { grid-template-columns: 1fr; } }
+	@media (max-width: 640px) { .grid3, .formGrid { grid-template-columns: minmax(0, 1fr); } }
 </style>
 
 <style is:global>

@@ -59,6 +59,8 @@ const items = await listKbPagesByPrefix({ prefix: '/general-information/', lang:
 		text-decoration: none;
 	}
 
+	.card h2, .card p { overflow-wrap: anywhere; }
+
 	.card:hover {
 		text-decoration: none;
 		border-color: rgba(0, 174, 154, 0.35);
@@ -85,7 +87,7 @@ const items = await listKbPagesByPrefix({ prefix: '/general-information/', lang:
 
 	@media (max-width: 820px) {
 		.grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

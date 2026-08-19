@@ -137,6 +137,7 @@ const error = Astro.url.searchParams.get('error') === '1';
 	.board h2, .suggest h2 { font-size: 22px; letter-spacing: -0.01em; margin: 26px 0 4px; }
 	.ideas { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
 	.idea { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 14px 16px; }
+	@media (max-width: 430px) { .idea { flex-wrap: wrap; } .ideaTitle { overflow-wrap: anywhere; } }
 	.voteBtn { flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; padding: 8px 6px; background: #f7f6f2; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 10px; cursor: pointer; font: inherit; transition: border-color 0.15s, background 0.15s; }
 	.voteBtn:hover { border-color: #00ae9a; }
 	.voteBtn.voted { background: rgba(0, 174, 154, 0.12); border-color: #00ae9a; color: #0a6d61; cursor: default; }
