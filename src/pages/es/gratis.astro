@@ -15,14 +15,14 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 // Ranges are typical Spanish market rates (2026), kept conservative and defensible.
 const stack = [
 	{ tool: 'Presencia en portal inmobiliario', usual: 'desde 250 €/mes', note: 'a menudo 700+ €/mes con promociones' },
-	{ tool: 'CRM inmobiliario', usual: 'desde 30 €/mes', note: '29-150 €/mes es lo habitual', freeNote: 'núcleo gratis; leads de compradores 1cr' },
+	{ tool: 'CRM inmobiliario', usual: 'desde 30 €/mes', note: '29-150 €/mes es lo habitual', freeNote: 'núcleo gratis; leads de compradores 5cr' },
 	{ tool: 'Web de agencia + hosting', usual: 'desde 30 €/mes', note: 'o 500-2.000 € por crearla', freeNote: 'MicroSite con tu marca' },
 	{ tool: 'Envío a otros portales (XML)', usual: 'desde 20 €/mes', note: 'suele ser un extra' },
 ];
 
 const free = [
 	{ t: 'El MLS compartido', d: `Publica una vez y más de ${plAgents} agentes pueden venderlo contigo, y tú puedes vender los más de ${plListings} anuncios de la red - no solo los tuyos. Los leads y referidos entre agentes son gratis, para siempre.` },
-	{ t: 'Un CRM gratis', d: 'Contactos ilimitados, calendario y almacenamiento de documentos, más los pipelines de Leads, Vendedores y Propiedades - todo gratis y sin coste por operación. Los leads de compradores cuestan 5 créditos (~5€) cada uno, solo se cobra cuando decides pasar un lead cualificado a un pipeline de pago, y los 5 primeros son gratis. Llegar a Qualified no cuesta nada. Los pipelines de Inquilinos y Nurture van dentro de los módulos de pago, Rentals Module y Automation & Nurture.' },
+	{ t: 'Un CRM gratis', d: 'Contactos ilimitados, calendario y almacenamiento de documentos, más los pipelines de Leads, Vendedores y Propiedades - todo gratis y sin coste por operación. Los leads de compradores cuestan 5 créditos (~5€) cada uno, solo se cobra cuando decides pasar un lead cualificado al pipeline de Buyer, y los 5 primeros son gratis. Llegar a Qualified no cuesta nada. Los pipelines de Inquilinos y Nurture van dentro de los módulos de pago, Rentals Module y Automation & Nurture.' },
 	{ t: 'Tus anuncios en el portal', d: `En vivo en propertylist.es ante los compradores, junto a más de ${plListings} viviendas. Sin cuotas de publicación, nunca.` },
 	{ t: 'Un MicroSite con tu marca', d: 'Tu propia web en tuagencia.estate-agency.co, generada sola con tus anuncios y con hosting gratis. Las consultas que llegan por ella son tuyas, gratis para siempre. (¿Web a medida con tu dominio? Eso es el Creador de Webs.)' },
 	{ t: 'Instant Listing', d: 'Añade tus imágenes y describe la propiedad en voz alta - el anuncio completo se redacta solo, listo para revisar y publicar.' },
@@ -105,7 +105,7 @@ const breadcrumbLd = {
 		<section class="honest">
 			<div class="honestInner">
 				<span class="honestTag">&iquest;Suena demasiado bien?</span>
-				<p>Esta es la versi&oacute;n honesta. El n&uacute;cleo - MLS, el CRM con tus pipelines de Leads, Vendedores y Propiedades, anuncios en el portal y un MicroSite con tu marca - es gratis para siempre, sin tarjeta. El intercambio: tus anuncios se comparten con el resto de agentes de la red, que es como vend&eacute;is todos m&aacute;s. Ganamos dinero cuando eliges algo de pago: 1 cr&eacute;dito cuando te pasamos un lead de comprador, destacar un anuncio, un informe de valoraci&oacute;n o un m&oacute;dulo mensual como Automation &amp; Nurture por 20 cr&eacute;ditos al mes (unos 20 &euro;). Pagas por la demanda, nunca por la oferta. Esa es toda la trampa.</p>
+				<p>Esta es la versi&oacute;n honesta. El n&uacute;cleo - MLS, el CRM con tus pipelines de Leads, Vendedores y Propiedades, anuncios en el portal y un MicroSite con tu marca - es gratis para siempre, sin tarjeta. El intercambio: tus anuncios se comparten con el resto de agentes de la red, que es como vend&eacute;is todos m&aacute;s. Ganamos dinero cuando eliges algo de pago: 5 cr&eacute;ditos cuando decides pasar un lead de comprador cualificado al pipeline de Buyer, destacar un anuncio, un informe de valoraci&oacute;n o un m&oacute;dulo mensual como Automation &amp; Nurture por 20 cr&eacute;ditos al mes (unos 20 &euro;). Pagas por la demanda, nunca por la oferta. Esa es toda la trampa.</p>
 			</div>
 		</section>
 

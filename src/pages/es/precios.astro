@@ -42,7 +42,7 @@ const sections: Array<{
 			{ feature: 'Contactos ilimitados', price: 'Gratis' },
 			{ feature: 'Eventos de calendario', price: 'Gratis' },
 			{ feature: 'Pipeline de Leads', price: 'Gratis' },
-			{ feature: 'Pipeline de Buyers (tú eliges quién entra)', price: '5 créditos por lead que metas' },
+			{ feature: 'Pipeline de Buyers (tú eliges quién entra)', price: '5 créditos por cada lead que metas en él' },
 			{ feature: 'Pipeline de Sellers', price: 'Gratis' },
 			{ feature: 'Pipeline de Property', price: 'Gratis' },
 			{ feature: 'Pipeline de Tenants (Rentals Module)', price: '50 créditos / 30 días, prueba gratis de 30 días' },
@@ -84,7 +84,7 @@ const sections: Array<{
 const pricingFaqItems = [
 	{
 		q: '¿PropertyList es realmente gratis para agentes inmobiliarios?',
-		a: 'El núcleo es gratis y sin límite: el MLS, los anuncios ilimitados, las cuentas de equipo, la gestión de contactos y los pipelines de Leads, Vendedores y Propiedades. El CRM no es 100% gratis: pasar un lead de comprador cualificado a un pipeline de pago cuesta 5 créditos (~5€). Los 5 primeros son gratis, después es 5 créditos cada uno. Lo demás que se paga es opcional: destacar anuncios (10 créditos (~10€) por 3 días), el Módulo de Alquileres (50 créditos / 30 días, con prueba gratis de 30 días), Automation y Nurture (20 créditos al mes) o el Constructor de Webs (50 créditos al mes).',
+		a: 'El núcleo es gratis y sin límite: el MLS, los anuncios ilimitados, las cuentas de equipo, la gestión de contactos y los pipelines de Leads, Vendedores y Propiedades. El CRM no es 100% gratis: pasar un lead de comprador cualificado al pipeline de Buyer cuesta 5 créditos (~5€). Los 5 primeros son gratis, después es 5 créditos cada uno. Lo demás que se paga es opcional: destacar anuncios (10 créditos (~10€) por 3 días), el Módulo de Alquileres (50 créditos / 30 días, con prueba gratis de 30 días), Automation y Nurture (20 créditos al mes) o el Constructor de Webs (50 créditos al mes).',
 	},
 	{
 		q: '¿Cómo funcionan los créditos?',
@@ -191,7 +191,7 @@ const softwareAppLd = {
    "name": "Buyer lead",
    "price": "1",
    "priceCurrency": "EUR",
-   "description": "Costs 5 credits, charged only when the agent chooses to move a qualified contact into one of the paid pipeline boards, and the first 5 are free. Everything up to that point is free and declining costs nothing. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+   "description": "Costs 5 credits, charged only when the agent chooses to move a qualified contact into the Buyer pipeline, and the first 5 are free. Everything up to that point is free and declining costs nothing. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
   },
   {
    "@type": "Offer",
@@ -296,7 +296,7 @@ const softwareAppLd = {
 				</figure>
 				<figure class="panelMock">
 					<img src="/img/crm-dashboard.jpg" alt="El panel del CRM de PropertyList: pipelines de leads, compradores, vendedores y transacciones, AI Property Match, agenda y saldo de créditos" loading="lazy" width="1600" height="792" />
-					<figcaption>...y el CRM en el que trabajan los agentes: pipelines, AI Property Match, agenda y leads. El núcleo es gratis; mover un lead cualificado a un pipeline de pago cuesta 5 créditos.</figcaption>
+					<figcaption>...y el CRM en el que trabajan los agentes: pipelines, AI Property Match, agenda y leads. El núcleo es gratis; mover un lead cualificado al pipeline de Buyer cuesta 5 créditos.</figcaption>
 				</figure>
 			</div>
 			<div class="panel">

@@ -42,7 +42,7 @@ const sections: Array<{
 			{ feature: 'Unlimited Contacts', price: 'Free' },
 			{ feature: 'Calendar Events', price: 'Free' },
 			{ feature: 'Lead Pipeline', price: 'Free' },
-			{ feature: 'Buyer pipeline (you choose who goes in)', price: '5 credits per lead you move in' },
+			{ feature: 'Buyer pipeline (you choose who goes in)', price: '5 credits per lead you move into it' },
 			{ feature: 'Seller pipeline', price: 'Free' },
 			{ feature: 'Property pipeline', price: 'Free' },
 			{ feature: 'Tenants pipeline (Rentals Module)', price: '50 credits / 30 days, free 30-day trial' },
@@ -84,7 +84,7 @@ const sections: Array<{
 const pricingFaqItems = [
 	{
 		q: 'Is PropertyList really free for estate agents?',
-		a: 'The core is free with no limit: the MLS, unlimited listings, team accounts, contact management and the Lead, Seller and Property pipelines. The CRM is not 100% free, because moving a qualified buyer lead into a paid pipeline costs 5 credits (~5€). Your first 5 are free, then it is 5 credits each. Everything else paid is optional: featured listings (10 credits (~10€) for 3 days), the Rentals Module (50 credits per 30 days, free 30-day trial), Automation & Nurture (20 credits a month) or the Website Builder (50 credits a month).',
+		a: 'The core is free with no limit: the MLS, unlimited listings, team accounts, contact management and the Lead, Seller and Property pipelines. The CRM is not 100% free, because moving a qualified buyer lead into the Buyer pipeline costs 5 credits (~5€). Your first 5 are free, then it is 5 credits each. Everything else paid is optional: featured listings (10 credits (~10€) for 3 days), the Rentals Module (50 credits per 30 days, free 30-day trial), Automation & Nurture (20 credits a month) or the Website Builder (50 credits a month).',
 	},
 	{
 		q: 'How do credits work?',
@@ -155,7 +155,7 @@ const softwareAppLd = {
   "@type": "Organization",
   "name": "PropertyList"
  },
- "description": `Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by ${plAgents} agents across ${plAgencies} agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 5 credits and only when the agent chooses to take it. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.`,
+ "description": `Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by ${plAgents} agents across ${plAgencies} agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 5 credits, and only when the agent chooses to move it into the Buyer pipeline. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.`,
  "featureList": [
   "Six CRM pipelines: Leads, Buyers, Sellers, Property, Tenants, Nurture",
   `Agent-to-agent MLS with co-broking across ${plAgencies} agencies`,
@@ -191,7 +191,7 @@ const softwareAppLd = {
    "name": "Buyer lead",
    "price": "1",
    "priceCurrency": "EUR",
-   "description": "Costs 5 credits, charged only when the agent chooses to move a qualified contact into one of the paid pipeline boards, and the first 5 are free. Everything up to that point is free and declining costs nothing. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+   "description": "Costs 5 credits, charged only when the agent chooses to move a qualified contact into the Buyer pipeline, and the first 5 are free. Everything up to that point is free and declining costs nothing. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
   },
   {
    "@type": "Offer",
