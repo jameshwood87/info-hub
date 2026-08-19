@@ -7,6 +7,8 @@ const title = 'Mapa inmobiliario de la Costa del Sol - cobertura en directo | Pr
 const description =
 	'Un mapa en directo del mercado de la Costa del Sol: cuantas viviendas hay en venta en cada municipio, el precio medio de salida, el precio por m2 y el precio verificado ante notario que realmente pagaron los compradores. Con datos de la MLS de PropertyList y del registro notarial espanol, actualizado cada noche.';
 
+const origin = 'https://info.propertylist.es';
+const canonical = origin + '/es/mapa/';
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 
 let data: any = null;
@@ -42,7 +44,16 @@ const fmtDate = generated
 const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('es-ES'));
 ---
 
-<Layout title={title} description={description}>
+<Layout
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: origin + '/map/' },
+		{ hreflang: 'es', href: origin + '/es/mapa/' },
+		{ hreflang: 'x-default', href: origin + '/map/' },
+	]}
+>
 	<section class="hero">
 		<div class="wrap">
 			<p class="eyebrow">Mapa de la red en directo</p>

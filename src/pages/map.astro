@@ -7,6 +7,8 @@ const title = 'Costa del Sol property map - live network coverage | PropertyList
 const description =
 	'A live map of the Costa del Sol property market: how many homes are listed in each municipality, the median asking price, the price per m2, and the notary-verified price buyers actually paid. Built from the PropertyList MLS and the Spanish notarial register, rebuilt every night.';
 
+const origin = 'https://info.propertylist.es';
+const canonical = origin + '/map/';
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 
 let data: any = null;
@@ -42,7 +44,16 @@ const fmtDate = generated
 const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('en-GB'));
 ---
 
-<Layout title={title} description={description}>
+<Layout
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: origin + '/map/' },
+		{ hreflang: 'es', href: origin + '/es/mapa/' },
+		{ hreflang: 'x-default', href: origin + '/map/' },
+	]}
+>
 	<section class="hero">
 		<div class="wrap">
 			<p class="eyebrow">Live network map</p>
