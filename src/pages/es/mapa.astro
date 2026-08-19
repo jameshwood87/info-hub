@@ -7,6 +7,11 @@ import Layout from '../../layouts/Layout.astro';
 const origin = 'https://info.propertylist.es';
 const canonical = origin + '/es/mapa/';
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+const MAPTEXT = {
+	thin: 'Publícalas gratis, para siempre. Tus propiedades llegan a todos los agentes de la red.',
+	cta: 'Publicar gratis',
+	thinTitle: 'Hay sitio para otra agencia',
+};
 
 const title = 'Mapa de la red inmobiliaria - todas las propiedades, en 3D | PropertyList';
 const description =
@@ -71,12 +76,13 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 			<p class="eyebrow">Mapa de la red en directo</p>
 			<h1>Dónde está de verdad la red</h1>
 			<p class="lede">
-				Todas las viviendas de la red de PropertyList, situadas donde están. Gira el globo, baja hasta la Costa del Sol y
+				Todas las viviendas de la red de PropertyList, situadas donde están. Cada propiedad se cuenta una sola vez,
+				por muchas agencias que la estén comercializando. Gira el globo, baja hasta la Costa del Sol y
 				los municipios donde más cubrimos se levantan del mapa: cuanto más alto, más viviendas anunciadas. Los precios de
 				salida salen de la MLS. La cifra verificada de debajo viene del registro notarial español: lo que pagaron de verdad los compradores.
 			</p>
 			<div class="counters">
-				<div><strong>{totalListings.toLocaleString('es-ES')}</strong><span>viviendas en la red</span></div>
+				<div><strong>{totalListings.toLocaleString('es-ES')}</strong><span>viviendas &uacute;nicas en la red</span></div>
 				<div><strong>{townCount}</strong><span>localidades</span></div>
 				<div><strong>{regions.length}</strong><span>regiones de España y Portugal</span></div>
 			</div>
@@ -109,9 +115,10 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 				</aside>
 			</div>
 
-			<p class="legend"><span id="legendlabel">La altura y el color indican cuántas viviendas hay anunciadas.</span>
+			<p class="legend"><span id="legendlabel">El color indica cuántas viviendas hay anunciadas.</span>
 				{fmtDate && <span class="stamp">Actualizado {fmtDate}</span>}
 			</p>
+			<p class="credits">Imagen de sat&eacute;lite Esri, Maxar, Earthstar Geographics &middot; l&iacute;mites y top&oacute;nimos &copy; OpenStreetMap &middot; elevaci&oacute;n AWS Terrain Tiles &middot; datos de mercado PropertyList &middot; precios verificados Consejo General del Notariado.</p>
 		</div>
 	</section>
 
@@ -154,8 +161,8 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 
 			<h2 class="mt">Todo lo demás a lo que llega la red</h2>
 			<p class="sub">
-				Todas las regiones con al menos un anuncio. Algunas son un puñado de viviendas y no un mercado que cubramos: aparecen
-				porque son reales, no porque sean profundas.
+				Todas las regiones donde la red ya tiene alguna vivienda. En algunas hay muy pocas: si publicas ahí, serías de
+				los primeros.
 			</p>
 			<div class="tablewrap">
 				<table>
@@ -186,8 +193,10 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 		</div>
 	</section>
 
-	<script is:inline define:vars={{ rows }}>
+	<script is:inline define:vars={{ rows, SIGNUP, MAPTEXT }}>
 		window.__PLMAP__ = rows;
+		window.__PLSIGNUP__ = SIGNUP;
+		window.__PLTEXT__ = MAPTEXT;
 	</script>
 	<link rel="stylesheet" href="/map/maplibre-gl.css" />
 	<script is:inline src="/map/maplibre-gl.js"></script>
@@ -223,6 +232,8 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.legend { display: flex; justify-content: space-between; align-items: center; gap: 14px; font-size: 13px; color: #5b6b73; margin: 12px 0 0; }
 	.stamp { color: #8aa0a6; }
 
+	.credits { font-size: 11.5px; color: #8aa0a6; line-height: 1.5; margin: 8px 0 0; max-width: 900px; }
+	.maplibregl-ctrl-attrib.maplibregl-compact:not(.maplibregl-compact-show) .maplibregl-ctrl-attrib-inner { display: none; }
 	.tablesec { padding: 46px 0; background: #fff; }
 	.tablesec h2, .ctasec h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.7px; margin: 0 0 10px; color: #0b1b22; }
 	.mt { margin-top: 46px; }
