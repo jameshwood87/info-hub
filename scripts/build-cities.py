@@ -163,7 +163,10 @@ def post_passes():
     therefore never ran on cron.
     """
     import subprocess
-    for label, script in (("verified prices", "add-verified.py"),
+    # ORDER MATTERS: add-inside.py must run first - the other two skip features tagged
+    # 'inside', and without the tag they waste calls on towns that are never drawn.
+    for label, script in (("inside-polygon tagging", "add-inside.py"),
+                          ("verified prices", "add-verified.py"),
                           ("population", "add-population.py")):
         try:
             r = subprocess.run(["/usr/bin/python3", "/opt/info-hub/scripts/" + script],

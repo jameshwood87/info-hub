@@ -255,7 +255,7 @@
 			map.addSource('cities', { type: 'geojson', data: cj });
 			map.addLayer({
 				id: 'city-dots', type: 'circle', source: 'cities',
-				filter: ['!', ['get', 'inside']],
+				filter: ['!=', ['get', 'inside'], true],
 				paint: {
 					'circle-radius': ['interpolate', ['linear'], ['zoom'],
 						3, ['interpolate', ['linear'], ['get', 'n'], 1, 4, 100, 9, 1200, 15],
@@ -268,13 +268,13 @@
 			});
 			map.addLayer({
 				id: 'city-labels', type: 'symbol', source: 'cities', minzoom: 6.5,
-				filter: ['all', ['!', ['get', 'inside']], ['>=', ['get', 'n'], 8]],
+				filter: ['all', ['!=', ['get', 'inside'], true], ['>=', ['get', 'n'], 8]],
 				layout: { 'text-field': ['get', 'city'], 'text-size': 11.5, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-font': ['Noto Sans Regular'] },
 				paint: { 'text-color': '#eafff9', 'text-halo-color': '#04171a', 'text-halo-width': 1.5 }
 			});
 			map.addLayer({
 				id: 'city-hit', type: 'circle', source: 'cities',
-				filter: ['!', ['get', 'inside']],
+				filter: ['!=', ['get', 'inside'], true],
 				paint: {
 					'circle-radius': ['interpolate', ['linear'], ['zoom'],
 						3, ['interpolate', ['linear'], ['get', 'n'], 1, 9, 100, 14, 1200, 20],
