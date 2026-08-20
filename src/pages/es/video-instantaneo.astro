@@ -49,8 +49,8 @@ const faqs = [
 	{ q: '¿Cómo funciona el avatar?', a: 'Subes un breve vídeo tuyo una sola vez, con tu consentimiento, y es solo tuyo - nadie más puede usarlo. Tu avatar IA puede entonces presentar guías de zona, presentaciones de agencia o el vídeo que quieras. Los vídeos con avatar llevan una pequeña nota de presentador IA, que los compradores respetan mucho más de lo que les molesta.' },
 	{ q: '¿Puedo hacer una versión sin marca?', a: 'Sí. Cada vídeo puede generarse con o sin marca, sin coste extra. La versión con marca es para tus propios canales; la versión sin marca está pensada para compartir por el MLS, para que los agentes colaboradores presenten tu propiedad a sus clientes - compradores o inquilinos - sin tus datos de contacto.' },
 	{ q: '¿Cuánto cuesta?', a: LIVE
-		? 'Los vídeos son de pago por uso con tus créditos de PropertyList: 10 créditos un tamaño, 20 créditos los tres tamaños del mismo vídeo. El avatar presentador son +10 créditos y cada idioma extra +5 créditos. 1 crédito (~1€), sin suscripción.'
-		: 'El precio previsto es de pago por uso con tus créditos de PropertyList: 10 créditos un tamaño, 20 créditos los tres tamaños del mismo vídeo, +10 créditos el avatar presentador y +5 créditos por idioma extra. 1 crédito (~1€), sin suscripción. El precio final se confirma en el lanzamiento.' },
+		? 'Los vídeos son de pago por uso con tus créditos de PropertyList: 10 créditos un tamaño, 20 créditos los tres tamaños del mismo vídeo. El avatar presentador son +10 créditos y cada idioma extra +5 créditos. 1 crédito, sin suscripción.'
+		: 'El precio previsto es de pago por uso con tus créditos de PropertyList: 10 créditos un tamaño, 20 créditos los tres tamaños del mismo vídeo, +10 créditos el avatar presentador y +5 créditos por idioma extra. 1 crédito, sin suscripción. El precio final se confirma en el lanzamiento.' },
 	{ q: '¿Cuándo puedo usarlo?', a: LIVE
 		? 'Ya está disponible - abre la sección Marketing de tu cuenta PropertyList y crea tu primer vídeo. Las agencias nuevas empiezan gratis en propertylist.es.'
 		: 'Muy pronto. Vídeo Instantáneo está en la fase final de desarrollo. Apúntate a la lista de espera y te enviaremos un solo email el día que se lance - y si aún no estás en PropertyList, tu cuenta gratuita se crea en minutos, así estarás listo desde el primer día.' },
@@ -200,7 +200,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<section class="section" id="pricing">
 		<div class="sectionHead">
 			<h2>Precio sencillo, de pago por uso</h2>
-			<p>Siempre en Full HD - sin niveles de calidad, sin suscripción. 1 crédito (~1€), del mismo saldo de créditos que tu agencia ya usa.{LIVE ? '' : ' Precio previsto, se confirma en el lanzamiento.'}</p>
+			<p>Siempre en Full HD - sin niveles de calidad, sin suscripción. 1 crédito, del mismo saldo de créditos que tu agencia ya usa.{LIVE ? '' : ' Precio previsto, se confirma en el lanzamiento.'}</p>
 		</div>
 		<div class="grid4">
 			{prices.map((p) => (

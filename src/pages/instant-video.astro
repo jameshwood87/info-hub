@@ -49,8 +49,8 @@ const faqs = [
 	{ q: 'How does the avatar work?', a: 'You upload a short video of yourself once, with your consent, and it stays yours alone - no one else can use it. Your AI avatar can then present area guides, agency intros or any video you like. Avatar videos carry a small AI-presenter note, which buyers respect far more than they mind.' },
 	{ q: 'Can I make an unbranded version?', a: 'Yes. Every video can be rendered branded or unbranded at no extra cost. Branded is for your own channels; the unbranded version is made for MLS sharing, so partner agents can put your property in front of their clients - buyers or tenants - without your contact details on it.' },
 	{ q: 'What does it cost?', a: LIVE
-		? 'Videos are pay-as-you-go with your PropertyList credits: 10 credits for one size, 20 credits for all three sizes of the same video. The avatar presenter is +10 credits and extra languages +5 credits each. 1 credit (~1€), no subscription needed.'
-		: 'Planned pricing is pay-as-you-go with your PropertyList credits: 10 credits for one size, 20 credits for all three sizes of the same video, +10 credits for the avatar presenter and +5 credits per extra language. 1 credit (~1€), no subscription. Final pricing is confirmed at launch.' },
+		? 'Videos are pay-as-you-go with your PropertyList credits: 10 credits for one size, 20 credits for all three sizes of the same video. The avatar presenter is +10 credits and extra languages +5 credits each. 1 credit, no subscription needed.'
+		: 'Planned pricing is pay-as-you-go with your PropertyList credits: 10 credits for one size, 20 credits for all three sizes of the same video, +10 credits for the avatar presenter and +5 credits per extra language. 1 credit, no subscription. Final pricing is confirmed at launch.' },
 	{ q: 'When can I use it?', a: LIVE
 		? 'It is live now - open the Marketing section in your PropertyList account and create your first video. New agencies get started free at propertylist.es.'
 		: 'Very soon. Instant Video is in final development. Join the waitlist below and we will send one email the day it goes live - and if you are not on PropertyList yet, your free account takes minutes to set up, so you are ready on day one.' },
@@ -200,7 +200,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 	<section class="section" id="pricing">
 		<div class="sectionHead">
 			<h2>Simple pay-as-you-go pricing</h2>
-			<p>Full HD always - no quality tiers, no subscription. 1 credit (~1€), from the same credit balance your agency already uses.{LIVE ? '' : ' Planned pricing, confirmed at launch.'}</p>
+			<p>Full HD always - no quality tiers, no subscription. 1 credit, from the same credit balance your agency already uses.{LIVE ? '' : ' Planned pricing, confirmed at launch.'}</p>
 		</div>
 		<div class="grid4">
 			{prices.map((p) => (

@@ -20,7 +20,7 @@ export const featureFaqItems = [
     id: 'custom-domain',
     q: 'Can I use my own domain with the PropertyList website builder?',
     aHtml:
-      'Yes. Connect your own domain (your-agency.com) to your PropertyList website. The custom domain add-on costs 20 credits/month (about €20) on top of the base plan.',
+      'Yes. Connect your own domain (your-agency.com) to your PropertyList website. The custom domain add-on costs 20 credits/month on top of the base plan.',
   },
   {
     id: 'seo-features',
@@ -70,7 +70,7 @@ export const featureFaqItems = [
     id: 'xml-cost',
     q: 'How much does the XML feed cost?',
     aHtml:
-      'Pushing your listings to other portals - Idealista, Fotocasa, or any platform that accepts XML - is free. The paid feed is for powering your own website with the listings of the whole network (your own stock is free): 35 credits a month (about €35) for the resale and rentals feed, and 25 credits/month for the new developments feed. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
+      'Pushing your listings to other portals - Idealista, Fotocasa, or any platform that accepts XML - is free. The paid feed is for powering your own website with the listings of the whole network (your own stock is free): 35 credits a month for the resale and rentals feed, and 25 credits/month for the new developments feed. <a href="https://info.propertylist.es/pricing">Full pricing</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────
@@ -122,7 +122,7 @@ export const featureFaqItems = [
     id: 'pipeline-pricing',
     q: 'How does the pipeline pricing work - what do I actually pay for?',
     aHtml:
-      'You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with the Automation and Nurture subscription at 20 credits/month (about €20), which also covers all automated emails, Hot-lead detection and the Daily Action Queue.',
+      'You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with the Automation and Nurture subscription at 20 credits/month, which also covers all automated emails, Hot-lead detection and the Daily Action Queue.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────
@@ -167,7 +167,7 @@ export const featureFaqItems = [
     id: 'credits-work',
     q: 'How do PropertyList credits work?',
     aHtml:
-      '1 credit (~1€). Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. For anything monthly, you can switch on auto top-up: a saved card refills your balance by the cost of your active subscriptions the day before renewal, so nothing pauses. It is a way to pay, not an extra charge. <a href="https://info.propertylist.es/pricing">See credit pricing</a>.',
+      '1 credit. Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. For anything monthly, you can switch on auto top-up: a saved card refills your balance by the cost of your active subscriptions the day before renewal, so nothing pauses. It is a way to pay, not an extra charge. <a href="https://info.propertylist.es/pricing">See credit pricing</a>.',
   },
   {
     id: 'credits-expire',

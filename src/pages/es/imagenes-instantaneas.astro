@@ -48,8 +48,8 @@ const faqs = [
 	{ q: '¿Sustituye mis fotos originales?', a: 'Nunca. Las fotos mejoradas se guardan junto a tus originales como versiones adicionales entre las que elegir, y puedes revertir en un clic. Tus fotos originales permanecen siempre en el anuncio.' },
 	{ q: 'Mis fotos importadas son pequeñas y borrosas - ¿puede arreglarlas?', a: 'Sí. El ampliador eleva las fotos pequeñas y comprimidas (habituales en anuncios importados por feed) a calidad de portal. Cuesta un crédito por foto, como cualquier otra mejora.' },
 	{ q: '¿Cuánto cuesta?', a: LIVE
-		? 'Pago por uso con tus créditos de PropertyList: 1 crédito por foto mejorada, 10 créditos por un anuncio completo, 5 créditos por habitación amueblada, y tarjetas sociales desde 2 créditos. 1 crédito (~1€), sin suscripción.'
-		: 'El precio previsto es de pago por uso con tus créditos de PropertyList: 1 crédito por foto mejorada, 10 créditos por un anuncio completo, 5 créditos por habitación amueblada, y tarjetas sociales desde 2 créditos. 1 crédito (~1€), sin suscripción. El precio final se confirma en el lanzamiento.' },
+		? 'Pago por uso con tus créditos de PropertyList: 1 crédito por foto mejorada, 10 créditos por un anuncio completo, 5 créditos por habitación amueblada, y tarjetas sociales desde 2 créditos. 1 crédito, sin suscripción.'
+		: 'El precio previsto es de pago por uso con tus créditos de PropertyList: 1 crédito por foto mejorada, 10 créditos por un anuncio completo, 5 créditos por habitación amueblada, y tarjetas sociales desde 2 créditos. 1 crédito, sin suscripción. El precio final se confirma en el lanzamiento.' },
 	{ q: '¿Cuándo puedo usarlo?', a: LIVE
 		? 'Ya está disponible - abre la sección Marketing de tu cuenta PropertyList. Las agencias nuevas empiezan gratis en propertylist.es.'
 		: 'Muy pronto - se lanza junto a Vídeo Instantáneo en la nueva sección Marketing. Apúntate a la lista de espera y te enviaremos un solo email el día que esté disponible. ¿Aún no estás en PropertyList? Tu cuenta gratuita se crea en minutos.' },
@@ -191,7 +191,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<section class="section" id="pricing">
 		<div class="sectionHead">
 			<h2>Un precio para usarlo cada semana</h2>
-			<p>1 crédito (~1€), del mismo saldo de créditos que tu agencia ya usa. Sin suscripción.{LIVE ? '' : ' Precio previsto, se confirma en el lanzamiento.'}</p>
+			<p>1 crédito, del mismo saldo de créditos que tu agencia ya usa. Sin suscripción.{LIVE ? '' : ' Precio previsto, se confirma en el lanzamiento.'}</p>
 		</div>
 		<div class="grid4">
 			{prices.map((p) => (

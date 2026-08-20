@@ -20,7 +20,7 @@ export const featureFaqItemsEs = [
     id: 'custom-domain',
     q: '¿Puedo usar mi propio dominio con el creador de webs de PropertyList?',
     aHtml:
-      'Sí. Conecta tu propio dominio (tu-agencia.com) a tu web PropertyList. El extra de dominio personalizado cuesta 20 créditos/mes (unos 20 €) adicionales.',
+      'Sí. Conecta tu propio dominio (tu-agencia.com) a tu web PropertyList. El extra de dominio personalizado cuesta 20 créditos/mes adicionales.',
   },
   {
     id: 'seo-features',
@@ -81,7 +81,7 @@ export const featureFaqItemsEs = [
     id: 'xml-cost',
     q: '¿Cuánto cuesta el feed XML?',
     aHtml:
-      'Enviar tus anuncios a otros portales - Idealista, Fotocasa o cualquier plataforma que acepte XML - es gratis. El feed de pago es para alimentar tu propia web con los anuncios de toda la red (tu propia cartera es gratis): 35 créditos/mes (unos 35 €) el feed de reventa y alquileres, y 25 créditos/mes el de obra nueva. <a href="https://info.propertylist.es/es/precios">Precios completos</a>.',
+      'Enviar tus anuncios a otros portales - Idealista, Fotocasa o cualquier plataforma que acepte XML - es gratis. El feed de pago es para alimentar tu propia web con los anuncios de toda la red (tu propia cartera es gratis): 35 créditos/mes el feed de reventa y alquileres, y 25 créditos/mes el de obra nueva. <a href="https://info.propertylist.es/es/precios">Precios completos</a>.',
   },
 
   // ─── Market Intelligence ──────────────────────────────────────────────
@@ -133,7 +133,7 @@ export const featureFaqItemsEs = [
     id: 'pipeline-pricing',
     q: '¿Cómo funciona el precio de los pipelines - qué pago exactamente?',
     aHtml:
-      'Pagas por la demanda, no por el inventario. Los pipelines de Lead, Seller y Property son gratis. El pipeline de Buyer cuesta 1 crédito por cada lead cualificado que decidas meter en él, y los créditos se descuentan de tu saldo de créditos. El pipeline de Tenants va incluido en el Módulo de Alquileres: 50 créditos por período de 30 días, con prueba gratis de 30 días. El pipeline de Nurture va incluido en la suscripción de Automatización y Nurture, 20 créditos/mes (unos 20 €), que cubre además todos los correos automáticos, la detección de leads calientes (Hot-lead) y la Daily Action Queue.',
+      'Pagas por la demanda, no por el inventario. Los pipelines de Lead, Seller y Property son gratis. El pipeline de Buyer cuesta 1 crédito por cada lead cualificado que decidas meter en él, y los créditos se descuentan de tu saldo de créditos. El pipeline de Tenants va incluido en el Módulo de Alquileres: 50 créditos por período de 30 días, con prueba gratis de 30 días. El pipeline de Nurture va incluido en la suscripción de Automatización y Nurture, 20 créditos/mes, que cubre además todos los correos automáticos, la detección de leads calientes (Hot-lead) y la Daily Action Queue.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────
@@ -167,7 +167,7 @@ export const featureFaqItemsEs = [
     id: 'credits-work',
     q: '¿Cómo funcionan los créditos de PropertyList?',
     aHtml:
-      '1 crédito (~1€). Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. Para cualquier cuota mensual puedes activar la recarga automática: una tarjeta guardada repone tu saldo por el coste de tus suscripciones activas el día antes de la renovación, así nada se pausa. Es una forma de pagar, no un cargo extra. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
+      '1 crédito. Compra en volumen con descuento. Los créditos nunca caducan. Se usan para desbloquear funciones de pago en toda la plataforma. Para cualquier cuota mensual puedes activar la recarga automática: una tarjeta guardada repone tu saldo por el coste de tus suscripciones activas el día antes de la renovación, así nada se pausa. Es una forma de pagar, no un cargo extra. <a href="https://info.propertylist.es/es/precios/">Ver precios de créditos</a>.',
   },
   {
     id: 'credits-expire',
