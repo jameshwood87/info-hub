@@ -2,8 +2,8 @@
 
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
-Last Updated: 2026-08-11
-Version: 5.7
+Last Updated: 2026-08-20
+Version: 5.8
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -95,7 +95,7 @@ Full pricing breakdown: free MLS and CRM forever, everything paid draws from one
 Agents share a unique referral link (found at agents.propertylist.es/referrals); when a referred agency signs up and is approved, the referrer receives 20 credits and the new agency 10 credits, automatically and with no cap. The page explains what credits buy: listing featuring, CMA property reports, and the Website Builder. Spanish version: /es/referidos/
 
 #### /rentals/ - Rentals Module
-Long-term and holiday rental management for agencies: Tenants pipeline, Tenancies, Maintenance and renewal email reminders. 50 credits per 30 days, free 30-day trial, no charge until you renew. Spanish version: /es/alquileres/
+Long-term lettings management for agencies: Tenants pipeline, Tenancies, Maintenance and renewal email reminders. 50 credits per 30 days, free 30-day trial. Holiday and short-let management - bookings, nightly rates, channel sync and guest registration with the police - is on the roadmap and is NOT in the module today. Spanish version: /es/alquileres/
 
 #### /pipelines/ - Sales Pipelines
 Visual deal pipelines and task management in the free CRM. Spanish version: /es/pipelines/
