@@ -5,15 +5,45 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/rentals/`;
 const title = 'Rentals Management Module for Estate Agents | PropertyList';
 const description =
-	'The Rentals Module runs long-term lettings end to end - tenants pipeline, tenancies ledger, renewals, maintenance and deposit tracking, built for Spanish rental law. Free 30-day trial. Holiday and short-let management is on the roadmap, not in the module today.';
+	'The Rentals Module runs long-term lettings end to end - tenants pipeline, tenancies that update themselves, renewals, annual rent review, maintenance the tenant starts and deposit tracking, built for Spanish rental law. Bring your existing book in by CSV. Free 30-day trial. Holiday and short-let management is on the roadmap, not in the module today.';
 
 const features = [
-	{ name: 'Tenants pipeline', desc: 'A dedicated board for applicants, from first enquiry through to a signed lease.' },
-	{ name: 'Tenancies ledger', desc: 'Every live, expiring and ended lease in one view, each with its deposit status.' },
-	{ name: 'Automatic renewals', desc: 'Renewal reminders before a lease expires, in your client’s language.' },
-	{ name: 'Maintenance workflow', desc: 'Log issues, assign suppliers, and track every job through to completion.' },
-	{ name: 'Landlord portfolio view', desc: 'Rent roll and renewals due, per landlord, at a glance.' },
-	{ name: 'Deposit audit log', desc: 'Every status and deposit change timestamped against the agent responsible.' },
+	{
+		name: 'Tenants pipeline',
+		desc: 'Thirteen stages from first enquiry to active tenancy, on its own board, beside the sales pipeline you already run.',
+	},
+	{
+		name: 'Tenancies that keep themselves current',
+		desc: 'One record per lease. Draft, then Active when the start date passes, then Expiring when the renewal window opens. You do not move it.',
+	},
+	{
+		name: 'Your existing book, imported',
+		desc: 'CSV import for a whole rental book, a manual option for one-offs, and new deals create their own tenancy.',
+	},
+	{
+		name: 'Renewal alerts',
+		desc: 'The tenancy moves to Renewal Pending and tells you before the lease ends, on a window you set at 60, 90 or 120 days.',
+	},
+	{
+		name: 'Annual rent review',
+		desc: 'It knows the anniversary and the current rent, works out the permitted new rent against the official index, and drafts the notice.',
+	},
+	{
+		name: 'Deposit tracking and audit log',
+		desc: 'Unpaid, Held, then Returned or partly withheld, every change timestamped against the agent responsible, with the lodging window watched where your region still requires it.',
+	},
+	{
+		name: 'Repairs the tenant starts',
+		desc: 'Tenants raise their own tickets by magic link with photos, no login, already attached to their tenancy. You triage rather than transcribe.',
+	},
+	{
+		name: 'Landlord approval thresholds',
+		desc: 'Small jobs go ahead. Anything above the threshold goes to the landlord with photos and quote, and they approve or decline in one click.',
+	},
+	{
+		name: 'Rentals dashboard',
+		desc: 'Live tenancies, expiring in 60 days, monthly rent roll, your monthly income, deposits and actions needed, plus your average days to resolve.',
+	},
 ];
 
 const faqLd = {
@@ -22,18 +52,50 @@ const faqLd = {
 	mainEntity: [
 		{
 			'@type': 'Question',
-			name: 'What does the Rentals module include?',
+			name: 'Can I bring the tenancies I already manage into it?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'A dedicated Tenants pipeline, a Tenancies ledger (live, expiring and ended leases with deposit status), automatic lease renewal reminders, a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes. It covers long-term lettings. Holiday and short-let management is on the roadmap.',
+				text: 'Yes. Import CSV sits at the top of the Tenancies screen and brings an existing rental book over in one go. There is a manual option for one-off agreements, and any new rental deal creates its tenancy automatically when it reaches Contract Signed, pre-filled from the deal.',
 			},
 		},
 		{
 			'@type': 'Question',
-			name: 'How much does the Rentals module cost?',
+			name: 'What does the Rentals module include?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Free 30-day trial, no credit card required. After the trial it is 50 credits per 30-day period, with no charge until you renew.',
+				text: 'A Tenants pipeline of thirteen stages, tenancies that move through Draft, Active, Expiring and then Renewed, Periodic or Ended on their own, renewal alerts on a window you set, the annual rent review against the official index, deposit tracking with an audit log, maintenance tickets the tenant raises by magic link with landlord approval thresholds and a supplier directory, and a dashboard of live tenancies, expiring contracts, rent roll, your monthly income, deposits and actions needed. It covers long-term lettings.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'How much does the Rentals module cost, and what happens after the trial?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'The first 30 days are free and no card is needed. Nothing is charged when the trial ends. If you want to keep it you subscribe, and from then it is 50 credits per 30-day period taken from your prepaid credit balance. You can switch on auto top-up so a saved card refills the balance instead of the module pausing, and you can stop the subscription whenever you want.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'What happens to my tenancies if I stop paying for the module?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Nothing is deleted. The module is hidden until you subscribe again, and your tenancies, deposits and repair history are exactly where you left them when it comes back.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'Does it change anything on the sales side of my agency?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'No. Same login, same contacts, same listings, same sales pipeline. The module adds a Rentals section with Tenancies and Maintenance, and the Tenants pipeline board.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'Do tenants and landlords need accounts?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'No. Tenants report repairs through a magic link sent at move-in and repeated in their emails, with photos and no login. Landlords approve or decline a job above their threshold from an email, in one click.',
 			},
 		},
 		{
@@ -42,6 +104,14 @@ const faqLd = {
 			acceptedAnswer: {
 				'@type': 'Answer',
 				text: 'It gives you the evidence, not the compliance. The audit log timestamps every status and deposit change with the agent responsible, which is what a deposit dispute under LAU art. 36 turns on. It does not lodge deposits with a regional body, issue a rental registration number or file anything with the police on your behalf: those stay your obligation.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: 'Does it handle holiday lets?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Not today. Bookings, nightly rates, channel sync and guest registration with the police are on the roadmap. If your book is holiday rather than long-term, this is not yet the tool for you. Seasonal contracts sit in between: talk to us before you move a temporada book across.',
 			},
 		},
 	],
@@ -64,18 +134,78 @@ const faqLd = {
 	<section class="hero">
 		<div class="heroInner">
 			<div class="kicker">Rentals Module</div>
-			<h1>The long-term lettings workflow, end to end.</h1>
+			<h1>Your rental book, out of the spreadsheet.</h1>
 			<p class="lead">
-				The Rentals Module runs your long-term lettings end to end - from the first enquiry through to lease completion, renewal and deposit
-				return. Built for Spanish rental law, with a free 30-day trial and no auto-charge.
+				The Rentals Module runs long-term lettings inside the CRM you already use for sales: a tenants pipeline, one record per tenancy that
+				chases its own renewals and deposit deadlines, and repairs the tenant starts and the landlord approves. Import the book you already
+				manage by CSV. Free for 30 days, no card, and nothing is charged when the trial ends.
 			</p>
 			<div class="ctaRow" aria-label="Get started">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
 					Start the free trial
 				</a>
-				<a class="btnSecondary" href="/pricing/">See full pricing</a>
+				<a class="btnSecondary" href="#pricing">What it costs</a>
 			</div>
-			<div class="note">30-day free trial. No credit card required.</div>
+			<div class="note">Already with PropertyList? Open the Rentals tab in your account. No credit card required.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Start with the tenancies you already manage</h2>
+			<p>Three ways in, and none of them is typing it all again.</p>
+		</div>
+		<div class="grid3" aria-label="Ways to bring tenancies in">
+			<div class="card">
+				<h3>Import CSV</h3>
+				<p>A button at the top of the Tenancies screen, not a buried setting. Bring a whole rental book over in one go.</p>
+			</div>
+			<div class="card">
+				<h3>From the deal</h3>
+				<p>A rental deal that reaches Contract Signed writes its own tenancy: property, tenant, landlord, dates, rent and deposit. You fill the gaps.</p>
+			</div>
+			<div class="card">
+				<h3>By hand</h3>
+				<p>New Tenancy, for the agreements that live nowhere else yet.</p>
+			</div>
+		</div>
+		<p class="aside">
+			Nothing changes on the sales side. Same login, same contacts, same listings. The module adds a Rentals section with Tenancies and
+			Maintenance, and the Tenants board.
+		</p>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>From enquiry to signed lease</h2>
+			<p>The Tenants pipeline, exactly as it ships. Thirteen stages, and two of them do work for you.</p>
+		</div>
+		<div class="dflow" aria-label="The thirteen stages of the Tenants pipeline">
+			<span class="dstep"><span class="n">1</span>Rental Lead</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">2</span>Qualified, criteria defined</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">3</span>Matching properties</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">4</span>Viewings booked</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">5</span>Viewings in progress</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">6</span>Negotiating</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">7</span>Reservation paid</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">8</span>Contract review</span><span class="darrow">&rarr;</span>
+			<span class="dstep on"><span class="n">9</span>Contract signed</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">10</span>Deposit paid</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">11</span>Awaiting move-in</span><span class="darrow">&rarr;</span>
+			<span class="dstep on"><span class="n">12</span>Active tenancy</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">13</span>Renewal pending</span>
+		</div>
+		<div class="dbeat">
+			<span class="tick">9</span>
+			<span>
+				<b>At Contract signed</b> the tenancy writes itself from the deal, and your listing is set to reserved. If the property belongs to
+				another agency, they get an email asking them to update it, because PropertyList does not change another agency's listing. A lettings
+				tool with no other agencies in it cannot do this at any price.
+			</span>
+		</div>
+		<div class="dbeat">
+			<span class="tick">12</span>
+			<span><b>At Active tenancy</b> you are asked for the dates, the tenant and landlord details and marketing consent, and both go into Nurture.</span>
 		</div>
 	</section>
 
@@ -83,9 +213,8 @@ const faqLd = {
 		<div class="sectionHead">
 			<h2>What is inside</h2>
 			<p>
-				One module covers the long-term lettings lifecycle, so you are not stitching the rental side of your business together from spreadsheets
-				and reminders. Holiday and short-let management - bookings, nightly rates, channel sync and guest registration - is on the roadmap, not
-				in the module today.
+				Nine things the module does, most of them without being asked. It covers long-term lettings. Holiday and short-let management -
+				bookings, nightly rates, channel sync and guest registration - is on the roadmap, not in the module today.
 			</p>
 		</div>
 		<div class="grid3" aria-label="Rentals module features">
@@ -98,6 +227,85 @@ const faqLd = {
 				))
 			}
 		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What the tenancy does while you get on with selling</h2>
+			<p>One record per lease, and its status follows the dates rather than waiting for someone to remember.</p>
+		</div>
+		<div class="dhub">
+			<div class="dcore">
+				<h3>The tenancy</h3>
+				<p>Created from the deal, imported from your spreadsheet by CSV, or added by hand for the contracts you already manage.</p>
+			</div>
+			<div class="dspoke"><h4>Renewals</h4><p>Moves to Renewal Pending before the lease ends and tells you, on a window you set at 60, 90 or 120 days.</p></div>
+			<div class="dspoke"><h4>Annual rent review</h4><p>Knows the anniversary and the current rent, works out the permitted new rent against the official index, and drafts the notice to the tenant.</p></div>
+			<div class="dspoke"><h4>Deposit compliance</h4><p>Unpaid, Held, then Returned or partly withheld, every change timestamped. Where your region still requires lodging, it records that and chases it.</p></div>
+			<div class="dspoke"><h4>Notice deadlines</h4><p>You are warned before the deadline passes, not after.</p></div>
+			<div class="dspoke"><h4>Repair history</h4><p>Every maintenance ticket hangs off the tenancy, so a property's whole history sits in one place.</p></div>
+		</div>
+		<div class="dstates">
+			<span class="s">Draft</span><span class="darrow">&rarr;</span>
+			<span class="s">Active</span><span class="darrow">&rarr;</span>
+			<span class="s">Expiring</span><span class="darrow">&rarr;</span>
+			<span class="s end">Renewed</span><span>or</span><span class="s end">Periodic</span><span>or</span><span class="s end">Ended</span>
+			<span class="dstatesNote">A renewal chains to a new linked tenancy, so the history stays intact.</span>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>A repair, from the tenant's phone to closed</h2>
+			<p>The part that eats a letting agent's week. Three parties, one thread.</p>
+		</div>
+		<div class="dlanes">
+			<div class="dlane">
+				<header>Tenant</header>
+				<ol>
+					<li>Opens the <b>magic link</b> sent at move-in and repeated in their emails. No login, no app.</li>
+					<li>Describes the problem and <b>adds photos</b>. A plumber quoting from two photos often saves a visit.</li>
+					<li>Confirms the repair at the end, which is what closes the ticket.</li>
+				</ol>
+			</div>
+			<div class="dlane">
+				<header>You</header>
+				<ol>
+					<li>The ticket arrives <b>already linked</b> to the tenancy, tenant and property. You triage it.</li>
+					<li>Send it to a supplier from the <b>directory</b>, with description, photos and address filled in. Response times and cost history build up per supplier.</li>
+					<li>Record <b>who pays</b>: landlord, tenant, agency or split.</li>
+				</ol>
+				<p class="dfork">
+					Urgent jobs, a leak or no water or anything electrical, go straight to the Daily Action Queue with an SLA timer. Anything sitting a
+					week without an update surfaces like a stalled deal. The annual boiler revision and gas certificate raise their own ticket on the
+					anniversary.
+				</p>
+			</div>
+			<div class="dlane">
+				<header>Landlord</header>
+				<ol>
+					<li>Nothing at all, if the cost is under the <b>approval threshold</b> you hold for them.</li>
+					<li>Above it, an email with the issue, the photos and the quote.</li>
+					<li><b>Approve or Decline</b> in one click, and the decision is on the record if it is ever disputed.</li>
+				</ol>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Six numbers, one screen</h2>
+			<p>The rentals dashboard, so you can answer a landlord without opening a spreadsheet.</p>
+		</div>
+		<div class="dtiles">
+			<div class="dtile">Live tenancies</div>
+			<div class="dtile">Expiring in 60 days</div>
+			<div class="dtile">Monthly rent roll</div>
+			<div class="dtile">Your monthly income</div>
+			<div class="dtile">Deposits</div>
+			<div class="dtile">Actions needed</div>
+		</div>
+		<p class="aside">Plus your average days to resolve a repair, and views for live, expiring, ended and all.</p>
 	</section>
 
 	<section class="section">
@@ -114,20 +322,48 @@ const faqLd = {
 					and the tenant two. And since 24 January 2026 an Andalusian landlord no longer lodges the fianza with AVRA (Ley 5/2025, DA 6&ordf;) -
 					it stays with the landlord. Lodging still applies in Catalonia, Madrid and Valencia, and deposits lodged before that date are still
 					returned through the old process.
+					<a href="/docs/laws-procedures/renting-a-property/long-term/tenancy-agreements/">The rules in full</a>.
 				</p>
 			</div>
-			<div class="card">
-				<h2>Simple, honest pricing</h2>
+			<div class="card" id="pricing">
+				<h2>What it costs</h2>
 				<p>
-					Start with a free 30-day trial - no credit card required. After the trial, the module is 50 credits per 30-day period, and there is no
-					auto-charge. You renew it when you want it, not before.
+					The first 30 days are free and no card is needed. Nothing is charged when the trial ends. If you want to keep it you subscribe, and
+					from then it is 50 credits per 30-day period taken from your prepaid credit balance. Switch on auto top-up and a saved card refills the
+					balance rather than the module pausing. Stop the subscription whenever you want.
 				</p>
+				<p>If you stop, nothing is deleted. The module is hidden until you subscribe again, and your tenancies, deposits and repair history are
+					exactly where you left them when it comes back.</p>
 				<div class="pillRow">
-					<span class="pill">30-day free trial</span>
-					<span class="pill">No card required</span>
+					<span class="pill">30 days free</span>
+					<span class="pill">No card to start</span>
 					<span class="pill">50 credits / 30 days</span>
-					<span class="pill">No auto-charge</span>
+					<span class="pill">Stop any time</span>
 				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What it does not do</h2>
+			<p>Worth knowing before you start the trial rather than during it.</p>
+		</div>
+		<div class="grid2">
+			<div class="card">
+				<h3>Not in the module</h3>
+				<ul class="plain">
+					<li><b>It does not lodge your deposits.</b> Where your region still requires lodging, the tenancy records it and warns you before the window closes. Filing it stays yours.</li>
+					<li><b>It does not file with the police or issue registration numbers.</b> See <a href="/docs/laws-procedures/renting-a-property/short-term-holiday/guest-registration-police/">guest registration with the police</a> for what those duties are.</li>
+					<li><b>Seasonal contracts.</b> The module is built around long-term lettings, and the annual rent review in particular assumes a long-term rent. Talk to us before you move a temporada book across.</li>
+				</ul>
+			</div>
+			<div class="card">
+				<h3>On the roadmap</h3>
+				<ul class="plain">
+					<li><b>Holiday and short lets.</b> Bookings, nightly rates, channel sync and guest registration will come later. If your book is holiday rather than long-term, this is not yet the tool for you.</li>
+					<li><b>Landlord statements.</b> A periodic report per landlord covering repairs done, what they cost, the invoices, deposit status and rent roll. Every ticket already records who pays, so the data will be there when it ships.</li>
+				</ul>
 			</div>
 		</div>
 	</section>
@@ -152,14 +388,14 @@ const faqLd = {
 		<div class="ctaInner">
 			<h2>Run lettings the same place you run sales</h2>
 			<p>
-				The Rentals Module sits inside the same free CRM that powers your sales pipeline - one login, one contact database, one workflow for the
-				whole agency.
+				One login, one contact database, one workflow for the whole agency. Already with PropertyList? The Rentals tab is in your account, with
+				Tenancies and Maintenance inside it.
 			</p>
 			<div class="ctaRow" aria-label="Join PropertyList">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
 					Agents: Get Started FREE
 				</a>
-				<a class="btnSecondary" href="/features/">See all features</a>
+				<a class="btnSecondary" href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/rentals-module/">Read the manual chapter</a>
 			</div>
 		</div>
 	</section>
@@ -399,5 +635,267 @@ const faqLd = {
 		.grid2 {
 			grid-template-columns: minmax(0, 1fr);
 		}
+	}
+
+	.aside {
+		margin: 14px 0 0;
+		font-size: 14.5px;
+		color: #475467;
+	}
+
+	ul.plain {
+		margin: 0;
+		padding-left: 18px;
+	}
+
+	ul.plain li {
+		margin: 0 0 10px;
+		color: #475467;
+		line-height: 1.55;
+	}
+
+	ul.plain li:last-child {
+		margin-bottom: 0;
+	}
+
+	ul.plain b {
+		color: #101828;
+	}
+
+	.dflow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 6px;
+		padding: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 18px;
+		background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.05), rgba(255, 255, 255, 0));
+	}
+
+	.dstep {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 9px 13px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 999px;
+		background: #fff;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.2;
+	}
+
+	.dstep .n {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		color: #067a6c;
+		font-size: 11.5px;
+		font-weight: 800;
+		flex: none;
+	}
+
+	.dstep.on {
+		border-color: rgba(var(--pl-accent-rgb), 0.55);
+		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
+	}
+
+	.dstep.on .n {
+		background: var(--pl-accent);
+		color: #fff;
+	}
+
+	.darrow {
+		align-self: center;
+		color: rgba(16, 24, 40, 0.28);
+		font-size: 13px;
+	}
+
+	@media (max-width: 560px) {
+		.dflow .darrow {
+			display: none;
+		}
+	}
+
+	.dbeat {
+		display: flex;
+		gap: 10px;
+		align-items: flex-start;
+		margin: 12px 0 0;
+		padding: 12px 14px;
+		border-radius: 14px;
+		background: rgba(var(--pl-accent-rgb), 0.07);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.2);
+		font-size: 14.5px;
+		line-height: 1.55;
+		color: #12433d;
+	}
+
+	.dbeat b {
+		color: #0b5f55;
+	}
+
+	.dbeat .tick {
+		flex: none;
+		color: var(--pl-accent);
+		font-weight: 900;
+	}
+
+	.dhub {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+		gap: 12px;
+	}
+
+	@media (min-width: 900px) {
+		.dhub {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.dcore {
+		grid-column: 1 / -1;
+		padding: 16px 18px;
+		border-radius: 18px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.07);
+	}
+
+	.dcore h3 {
+		margin: 0 0 4px;
+		font-size: 17px;
+	}
+
+	.dcore p {
+		margin: 0;
+		color: #475467;
+		font-size: 14.5px;
+		line-height: 1.55;
+	}
+
+	.dspoke {
+		padding: 14px 16px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 16px;
+		background: #fff;
+	}
+
+	.dspoke h4 {
+		margin: 0 0 5px;
+		font-size: 15px;
+		letter-spacing: -0.01em;
+	}
+
+	.dspoke p {
+		margin: 0;
+		color: #475467;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	.dstates {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+		margin-top: 12px;
+		padding: 12px 14px;
+		border: 1px dashed rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		font-size: 13.5px;
+		color: #475467;
+	}
+
+	.dstates .s {
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: rgba(16, 24, 40, 0.05);
+		font-weight: 600;
+		color: #101828;
+	}
+
+	.dstates .s.end {
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		color: #0b5f55;
+	}
+
+	.dstatesNote {
+		flex-basis: 100%;
+		margin-top: 4px;
+	}
+
+	.dlanes {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 12px;
+		align-items: start;
+	}
+
+	.dlane {
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 16px;
+		overflow: hidden;
+		background: #fff;
+	}
+
+	.dlane header {
+		padding: 10px 14px;
+		font-size: 12px;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #0b5f55;
+		background: rgba(var(--pl-accent-rgb), 0.09);
+		border-bottom: 1px solid rgba(16, 24, 40, 0.1);
+	}
+
+	.dlane ol {
+		margin: 0;
+		padding: 12px 14px 14px 30px;
+	}
+
+	.dlane li {
+		margin: 0 0 8px;
+		font-size: 14px;
+		line-height: 1.5;
+		color: #475467;
+	}
+
+	.dlane li:last-child {
+		margin-bottom: 0;
+	}
+
+	.dlane li b {
+		color: #101828;
+	}
+
+	.dfork {
+		margin: 0 14px 14px;
+		padding: 11px 13px;
+		border-radius: 12px;
+		background: rgba(16, 24, 40, 0.035);
+		font-size: 13.5px;
+		line-height: 1.5;
+		color: #475467;
+	}
+
+	.dtiles {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		gap: 10px;
+	}
+
+	.dtile {
+		padding: 16px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		background: #fff;
+		font-weight: 700;
+		font-size: 14.5px;
+		letter-spacing: -0.01em;
 	}
 </style>
