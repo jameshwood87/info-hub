@@ -406,6 +406,16 @@ const faqs = [
 			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 		}
 
+		@media (min-width: 900px) {
+			.grid2 {
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			.grid3 {
+				grid-template-columns: repeat(3, 1fr);
+			}
+		}
+
 		.card {
 			border: 1px solid rgba(16, 24, 40, 0.1);
 			border-radius: 18px;
