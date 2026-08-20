@@ -134,6 +134,7 @@ const mapPairs: Array<{ en: string; es: string }> = [
 	{ en: '/features/', es: '/es/funciones/' },
 	{ en: '/website-builder/', es: '/es/constructor-de-webs/' },
 	{ en: '/rentals/', es: '/es/alquileres/' },
+	{ en: '/holiday-rentals/', es: '/es/alquiler-vacacional/' },
 	{ en: '/developers/', es: '/es/promotores/' },
 	{ en: '/faq/', es: '/es/preguntas-frecuentes/' },
 	{ en: '/verify-your-agency/', es: '/es/verifica-tu-agencia/' },
@@ -428,6 +429,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 												<a role="menuitem" href={lang === 'es' ? '/es/pipelines/' : '/pipelines/'}>Pipelines</a>
 												<a role="menuitem" href={lang === 'es' ? '/es/nurture/' : '/nurture/'}>Nurture</a>
 												<a role="menuitem" href={lang === 'es' ? '/es/alquileres/' : '/rentals/'}>{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
+												<a role="menuitem" href={lang === 'es' ? '/es/alquiler-vacacional/' : '/holiday-rentals/'}>{lang === 'es' ? 'Alquiler vacacional' : 'Holiday lets'}</a>
 												<a role="menuitem" href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'de' ? 'Website-Baukasten' : lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 												<a role="menuitem" href={lang === 'es' ? '/es/informe-inteligencia-propiedad/' : '/property-intelligence-report/'}>{lang === 'de' ? 'Immobilien-Analysebericht' : lang === 'es' ? 'Informe de Inteligencia' : 'Property Intelligence Report'}</a>
 											</div>
@@ -541,6 +543,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a href={lang === 'es' ? '/es/pipelines/' : '/pipelines/'}>Pipelines</a>
 							<a href={lang === 'es' ? '/es/nurture/' : '/nurture/'}>Nurture</a>
 							<a href={lang === 'es' ? '/es/alquileres/' : '/rentals/'}>{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
+							<a href={lang === 'es' ? '/es/alquiler-vacacional/' : '/holiday-rentals/'}>{lang === 'es' ? 'Alquiler vacacional' : 'Holiday lets'}</a>
 							<a href="https://agents.propertylist.es/">{lang === 'es' ? 'MLS (compartir propiedades)' : 'MLS (Property Sharing)'}</a>
 							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile App'}</a>
 							<a href={lang === 'es' ? '/es/busqueda-ia/' : '/ai-property-search/'}>{lang === 'de' ? 'KI-Immobiliensuche' : lang === 'es' ? 'Búsqueda con IA' : 'AI Property Search'}</a>
@@ -662,6 +665,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a href={lang === 'es' ? '/es/pipelines/' : '/pipelines/'}>Pipelines</a>
 							<a href={lang === 'es' ? '/es/nurture/' : '/nurture/'}>Nurture</a>
 							<a href={lang === 'es' ? '/es/alquileres/' : '/rentals/'}>{lang === 'de' ? 'Mietobjekte' : lang === 'es' ? 'Alquileres' : 'Rentals'}</a>
+							<a href={lang === 'es' ? '/es/alquiler-vacacional/' : '/holiday-rentals/'}>{lang === 'es' ? 'Alquiler vacacional' : 'Holiday lets'}</a>
 							<a href={lang === 'es' ? '/es/constructor-de-webs/' : '/website-builder/'}>{lang === 'de' ? 'Website-Baukasten' : lang === 'es' ? 'Creador de webs' : 'Website Builder'}</a>
 							<a href={lang === 'es' ? '/es/informe-inteligencia-propiedad/' : '/property-intelligence-report/'}>{lang === 'de' ? 'Immobilien-Analysebericht' : lang === 'es' ? 'Informe de Inteligencia' : 'Property Intelligence Report'}</a>
 							<a href={lang === 'es' ? '/es/lanza-tu-agencia/' : '/launch/'}>{lang === 'de' ? 'In Minuten starten' : lang === 'es' ? 'Lanza tu agencia' : 'Launch your agency'}</a>
