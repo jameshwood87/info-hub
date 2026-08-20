@@ -15,14 +15,14 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 // Ranges are typical Spanish market rates (2026), kept conservative and defensible.
 const stack = [
 	{ tool: 'Property portal presence', usual: 'from €250/mo', note: 'often €700+/mo with promotions' },
-	{ tool: 'Real estate CRM', usual: 'from €30/mo', note: '€29-150/mo is typical', freeNote: 'core free; buyer leads 5cr each' },
+	{ tool: 'Real estate CRM', usual: 'from €30/mo', note: '€29-150/mo is typical', freeNote: 'core free; buyer leads 1cr each' },
 	{ tool: 'Agency website + hosting', usual: 'from €30/mo', note: 'or €500-2,000 to build', freeNote: 'branded MicroSite' },
 	{ tool: 'Feed to other portals (XML)', usual: 'from €20/mo', note: 'often an add-on' },
 ];
 
 const free = [
 	{ t: 'The shared MLS', d: `List once and ${plAgents} agents can sell it with you, and you can sell from all ${plListings} listings on the network - not just your own. Leads and referrals between agents are free, forever.` },
-	{ t: 'A free CRM', d: 'Unlimited contacts, calendar and document storage, plus the Lead, Seller and Property pipelines - all free, with nothing to pay per deal. Buyer leads are 5 credits (~5€) each, charged only when you choose to move a qualified lead into the Buyer pipeline, and your first 5 are free. Reaching Qualified costs nothing. The Tenants and Nurture pipelines sit inside the paid modules, Rentals and Automation & Nurture.' },
+	{ t: 'A free CRM', d: 'Unlimited contacts, calendar and document storage, plus the Lead, Seller and Property pipelines - all free, with nothing to pay per deal. Buyer leads is 1 credit (~1€) each, charged only when you choose to move a qualified lead into the Buyer pipeline, and your first 5 are free. Reaching Qualified costs nothing. The Tenants and Nurture pipelines sit inside the paid modules, Rentals and Automation & Nurture.' },
 	{ t: 'Your listings on the portal', d: `Live on propertylist.es in front of buyers, next to ${plListings} homes. No listing fees, ever.` },
 	{ t: 'A branded MicroSite', d: 'Your own site at youragency.estate-agency.co, auto-built from your listings, with free hosting. Enquiries from it come straight to you, free forever. (Fully custom site and domain? That is the Website Builder.)' },
 	{ t: 'Instant Listing', d: 'Add your images then describe the property out loud - and the full listing writes itself, ready to review and publish.' },
@@ -37,11 +37,11 @@ const free = [
 const faqs = [
 	{
 		q: 'Is it really free, or is it a trial?',
-		a: 'Free forever, not a trial. The MLS, the CRM core, your portal presence, your MicroSite and the tools above cost nothing and always will. There is no card required to start and no monthly fee on the core. What is paid is separate and optional: 5 credits for each qualified lead you choose to move into the Buyer pipeline, and the two monthly modules, Automation & Nurture and the Rentals Module.',
+		a: 'Free forever, not a trial. The MLS, the CRM core, your portal presence, your MicroSite and the tools above cost nothing and always will. There is no card required to start and no monthly fee on the core. What is paid is separate and optional: 1 credit for each qualified lead you choose to move into the Buyer pipeline, and the two monthly modules, Automation & Nurture and the Rentals Module.',
 	},
 	{
 		q: 'Then how does PropertyList make money?',
-		a: 'Two ways. Credits, for demand and one-offs: 5 credits for each qualified lead you decide to move into your Buyer pipeline, taken from your credit balance, plus featuring a listing to the top, notary-verified valuation reports, a full custom website builder, or keeping a sale off the shared network. And monthly subscriptions for the modules that run in the background: Automation & Nurture at 20 credits a month (about €20), and the Rentals Module at 50 credits per 30 days, with a free 30-day trial. Your listings and your sellers stay free, so you pay for demand and never for supply. The core stays free because a bigger, shared network is worth more to everyone on it.',
+		a: 'Two ways. Credits, for demand and one-offs: 1 credit for each qualified lead you decide to move into your Buyer pipeline, taken from your credit balance, plus featuring a listing to the top, notary-verified valuation reports, a full custom website builder, or keeping a sale off the shared network. And monthly subscriptions for the modules that run in the background: Automation & Nurture at 20 credits a month (about €20), and the Rentals Module at 50 credits per 30 days, with a free 30-day trial. Your listings and your sellers stay free, so you pay for demand and never for supply. The core stays free because a bigger, shared network is worth more to everyone on it.',
 	},
 	{
 		q: 'What is the catch?',
@@ -105,7 +105,7 @@ const breadcrumbLd = {
 		<section class="honest">
 			<div class="honestInner">
 				<span class="honestTag">Sounds too good to be true?</span>
-				<p>Here is the honest version. The core - MLS, the CRM with your lead, seller and property pipelines, portal listings and a branded MicroSite - is free forever, no card. The trade: your listings are shared with the other agents on the network, which is how you all sell more. We make money when you choose something paid: 5 credits for a qualified lead you choose to move into the Buyer pipeline, featuring a listing, a valuation report, or a monthly module like Automation &amp; Nurture at 20 credits a month (about &euro;20). You pay for demand, never for supply. That is the whole catch.</p>
+				<p>Here is the honest version. The core - MLS, the CRM with your lead, seller and property pipelines, portal listings and a branded MicroSite - is free forever, no card. The trade: your listings are shared with the other agents on the network, which is how you all sell more. We make money when you choose something paid: 1 credit for a qualified lead you choose to move into the Buyer pipeline, featuring a listing, a valuation report, or a monthly module like Automation &amp; Nurture at 20 credits a month (about &euro;20). You pay for demand, never for supply. That is the whole catch.</p>
 			</div>
 		</section>
 
@@ -177,7 +177,7 @@ const breadcrumbLd = {
 			<p class="growLead">The core stays free. These are the optional extras, priced openly: credits when we hand you demand or you want a one-off, a monthly subscription for the modules that run in the background.</p>
 			<p class="growCredits"><a href="/verify-your-agency/">Verify your agency</a> (free, and whenever you like) for <strong>20 free credits</strong> to try any of these, and every paid feature has a <strong>free test</strong> - so you can try before you spend a cent.</p>
 			<div class="growGrid">
-				<a href="/pricing/"><b>Buyer leads</b><span>5 credits, charged only when you choose to move a qualified lead into the Buyer pipeline, from your credit balance</span><em>5 credits each</em></a>
+				<a href="/pricing/"><b>Buyer leads</b><span>1 credit, charged only when you choose to move a qualified lead into the Buyer pipeline, from your credit balance</span><em>1 credit each</em></a>
 				<a href="/pricing/"><b>Automation &amp; Nurture</b><span>Nurture pipeline, automated emails, Hot-lead detection and the Daily Action Queue</span><em>20 credits/mo</em></a>
 				<a href="/pricing/"><b>Rentals Module</b><span>Tenants pipeline, Tenancies, Maintenance and renewal reminders. Free 30-day trial</span><em>50 credits / 30 days</em></a>
 				<a href="/property-intelligence-report/"><b>Property Intelligence Report</b><span>Notary-verified valuations with an agent brief</span><em>5 credits</em></a>

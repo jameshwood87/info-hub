@@ -91,6 +91,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	title={title}
 	description={description}
 	canonical={canonical}
+	fullBleed
 	ogImage="/og/map-es.png"
 	hreflangs={[
 		{ hreflang: 'en', href: origin + '/map/' },
@@ -103,10 +104,11 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 			<p class="eyebrow">Mapa de la red en directo</p>
 			<h1>Dónde está de verdad la red</h1>
 			<p class="lede">
-				Todas las viviendas de la red de PropertyList, situadas donde están. Cada propiedad se cuenta una sola vez,
-				por muchas agencias que la estén comercializando. Gira el globo, baja hasta la Costa del Sol y
-				los municipios donde más cubrimos se levantan del mapa: cuanto más alto, más viviendas anunciadas. Los precios de
-				salida salen de la MLS. La cifra verificada de debajo viene del registro notarial español: lo que pagaron de verdad los compradores.
+				Todas las viviendas de la red de PropertyList, contadas una sola vez por muchas agencias que las estén
+				comercializando, y situadas en la localidad a la que pertenecen. Gira el globo, baja hasta la Costa del Sol y
+				fíjate en el color: cuanto más intenso, más viviendas anunciadas tiene ese municipio. Los precios de salida
+				salen de la MLS. La cifra verificada de debajo viene del registro notarial español: lo que pagaron de verdad
+				los compradores.
 			</p>
 			<div class="counters">
 				<div><strong>{totalListings.toLocaleString('es-ES')}</strong><span>viviendas &uacute;nicas en la red</span></div>
@@ -193,7 +195,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 				Todas las regiones donde la red ya tiene alguna vivienda. En algunas hay muy pocas: si publicas ahí, serías de
 				los primeros.
 			</p>
-			<div class="tablewrap">
+			<div class="tablewrap narrow">
 				<table>
 					<thead><tr><th>Región</th><th class="n">Viviendas</th><th class="n">Porcentaje</th></tr></thead>
 					<tbody>
@@ -269,6 +271,10 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.sub { color: #5b6b73; max-width: 800px; line-height: 1.6; margin: 0 0 20px; font-size: 15.5px; }
 	.tablewrap { overflow-x: auto; }
 	table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
+	/* three columns do not need the wide table's minimum, and on a phone that
+	   minimum was spreading them across a scrollable 640px. */
+	.tablewrap.narrow table { min-width: 0; }
+	.tablewrap.narrow th.n, .tablewrap.narrow td.n { width: 1%; white-space: nowrap; }
 	th, td { padding: 11px 12px; border-bottom: 1px solid #eef3f4; text-align: left; }
 	thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: #5b6b73; border-bottom: 2px solid #e7eef1; }
 	td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
@@ -282,6 +288,16 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.btn:hover { background: #00998a; }
 	.fine { font-size: 13.5px; color: #5b6b73; margin-top: 14px; }
 	.fine a { color: #00867a; }
+
+	@media (max-width: 640px) {
+		.tablewrap.narrow th, .tablewrap.narrow td { padding: 10px 8px; font-size: 14px; }
+		.tablewrap.narrow thead th { font-size: 11px; letter-spacing: 0.4px; }
+	}
+
+	@media (max-width: 380px) {
+		.tablewrap.narrow th, .tablewrap.narrow td { padding: 9px 5px; font-size: 13px; }
+		.tablewrap.narrow thead th { font-size: 10px; letter-spacing: 0.2px; }
+	}
 
 	@media (max-width: 900px) {
 		.maplayout { grid-template-columns: 1fr; }

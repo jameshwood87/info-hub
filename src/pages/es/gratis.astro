@@ -15,14 +15,14 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 // Ranges are typical Spanish market rates (2026), kept conservative and defensible.
 const stack = [
 	{ tool: 'Presencia en portal inmobiliario', usual: 'desde 250 €/mes', note: 'a menudo 700+ €/mes con promociones' },
-	{ tool: 'CRM inmobiliario', usual: 'desde 30 €/mes', note: '29-150 €/mes es lo habitual', freeNote: 'núcleo gratis; leads de compradores 5cr' },
+	{ tool: 'CRM inmobiliario', usual: 'desde 30 €/mes', note: '29-150 €/mes es lo habitual', freeNote: 'núcleo gratis; leads de compradores 1cr' },
 	{ tool: 'Web de agencia + hosting', usual: 'desde 30 €/mes', note: 'o 500-2.000 € por crearla', freeNote: 'MicroSite con tu marca' },
 	{ tool: 'Envío a otros portales (XML)', usual: 'desde 20 €/mes', note: 'suele ser un extra' },
 ];
 
 const free = [
 	{ t: 'El MLS compartido', d: `Publica una vez y más de ${plAgents} agentes pueden venderlo contigo, y tú puedes vender los más de ${plListings} anuncios de la red - no solo los tuyos. Los leads y referidos entre agentes son gratis, para siempre.` },
-	{ t: 'Un CRM gratis', d: 'Contactos ilimitados, calendario y almacenamiento de documentos, más los pipelines de Leads, Vendedores y Propiedades - todo gratis y sin coste por operación. Los leads de compradores cuestan 5 créditos (~5€) cada uno, solo se cobra cuando decides pasar un lead cualificado al pipeline de Buyer, y los 5 primeros son gratis. Llegar a Qualified no cuesta nada. Los pipelines de Inquilinos y Nurture van dentro de los módulos de pago, Rentals Module y Automation & Nurture.' },
+	{ t: 'Un CRM gratis', d: 'Contactos ilimitados, calendario y almacenamiento de documentos, más los pipelines de Leads, Vendedores y Propiedades - todo gratis y sin coste por operación. Los leads de compradores cuestan 1 crédito (~1€) cada uno, solo se cobra cuando decides pasar un lead cualificado al pipeline de Buyer, y los 5 primeros son gratis. Llegar a Qualified no cuesta nada. Los pipelines de Inquilinos y Nurture van dentro de los módulos de pago, Rentals Module y Automation & Nurture.' },
 	{ t: 'Tus anuncios en el portal', d: `En vivo en propertylist.es ante los compradores, junto a más de ${plListings} viviendas. Sin cuotas de publicación, nunca.` },
 	{ t: 'Un MicroSite con tu marca', d: 'Tu propia web en tuagencia.estate-agency.co, generada sola con tus anuncios y con hosting gratis. Las consultas que llegan por ella son tuyas, gratis para siempre. (¿Web a medida con tu dominio? Eso es el Creador de Webs.)' },
 	{ t: 'Instant Listing', d: 'Añade tus imágenes y describe la propiedad en voz alta - el anuncio completo se redacta solo, listo para revisar y publicar.' },
@@ -37,11 +37,11 @@ const free = [
 const faqs = [
 	{
 		q: '¿Es de verdad gratis o es una prueba?',
-		a: 'Gratis para siempre, no una prueba. El MLS, el núcleo del CRM, tu presencia en el portal, tu MicroSite y las herramientas de arriba no cuestan nada y nunca lo harán. No hace falta tarjeta para empezar ni hay cuota mensual en lo esencial. Lo de pago va aparte y es opcional: 5 créditos por cada lead cualificado que decides meter en el pipeline de Buyer y los dos módulos mensuales, Automation & Nurture y el Rentals Module.',
+		a: 'Gratis para siempre, no una prueba. El MLS, el núcleo del CRM, tu presencia en el portal, tu MicroSite y las herramientas de arriba no cuestan nada y nunca lo harán. No hace falta tarjeta para empezar ni hay cuota mensual en lo esencial. Lo de pago va aparte y es opcional: 1 crédito por cada lead cualificado que decides meter en el pipeline de Buyer y los dos módulos mensuales, Automation & Nurture y el Rentals Module.',
 	},
 	{
 		q: '¿Entonces cómo gana dinero PropertyList?',
-		a: 'De dos formas. Con créditos, para la demanda y los extras puntuales: 5 créditos por cada lead cualificado que decidas meter en tu pipeline de Buyers, descontado de tu saldo de créditos, además de destacar un anuncio arriba, informes de valoración verificados ante notario, un creador de webs a medida o mantener una venta fuera de la red compartida. Y con suscripciones mensuales para los módulos que trabajan de fondo: Automation & Nurture por 20 créditos/mes (unos 20 €) y el Rentals Module por 50 créditos por período de 30 días, con prueba gratis de 30 días. Tus anuncios y tus vendedores siguen gratis: pagas por la demanda, nunca por la oferta. Lo esencial sigue gratis porque una red más grande y compartida vale más para todos los que están en ella.',
+		a: 'De dos formas. Con créditos, para la demanda y los extras puntuales: 1 crédito por cada lead cualificado que decidas meter en tu pipeline de Buyers, descontado de tu saldo de créditos, además de destacar un anuncio arriba, informes de valoración verificados ante notario, un creador de webs a medida o mantener una venta fuera de la red compartida. Y con suscripciones mensuales para los módulos que trabajan de fondo: Automation & Nurture por 20 créditos/mes (unos 20 €) y el Rentals Module por 50 créditos por período de 30 días, con prueba gratis de 30 días. Tus anuncios y tus vendedores siguen gratis: pagas por la demanda, nunca por la oferta. Lo esencial sigue gratis porque una red más grande y compartida vale más para todos los que están en ella.',
 	},
 	{
 		q: '¿Cuál es la trampa?',
@@ -105,7 +105,7 @@ const breadcrumbLd = {
 		<section class="honest">
 			<div class="honestInner">
 				<span class="honestTag">&iquest;Suena demasiado bien?</span>
-				<p>Esta es la versi&oacute;n honesta. El n&uacute;cleo - MLS, el CRM con tus pipelines de Leads, Vendedores y Propiedades, anuncios en el portal y un MicroSite con tu marca - es gratis para siempre, sin tarjeta. El intercambio: tus anuncios se comparten con el resto de agentes de la red, que es como vend&eacute;is todos m&aacute;s. Ganamos dinero cuando eliges algo de pago: 5 cr&eacute;ditos cuando decides pasar un lead de comprador cualificado al pipeline de Buyer, destacar un anuncio, un informe de valoraci&oacute;n o un m&oacute;dulo mensual como Automation &amp; Nurture por 20 cr&eacute;ditos al mes (unos 20 &euro;). Pagas por la demanda, nunca por la oferta. Esa es toda la trampa.</p>
+				<p>Esta es la versi&oacute;n honesta. El n&uacute;cleo - MLS, el CRM con tus pipelines de Leads, Vendedores y Propiedades, anuncios en el portal y un MicroSite con tu marca - es gratis para siempre, sin tarjeta. El intercambio: tus anuncios se comparten con el resto de agentes de la red, que es como vend&eacute;is todos m&aacute;s. Ganamos dinero cuando eliges algo de pago: 1 cr&eacute;dito cuando decides pasar un lead de comprador cualificado al pipeline de Buyer, destacar un anuncio, un informe de valoraci&oacute;n o un m&oacute;dulo mensual como Automation &amp; Nurture por 20 cr&eacute;ditos al mes (unos 20 &euro;). Pagas por la demanda, nunca por la oferta. Esa es toda la trampa.</p>
 			</div>
 		</section>
 
@@ -177,7 +177,7 @@ const breadcrumbLd = {
 			<p class="growLead">Lo esencial sigue gratis. Estos son los extras opcionales, con su precio a la vista: créditos cuando te pasamos demanda o quieres algo puntual, y una suscripción mensual para los módulos que trabajan de fondo.</p>
 			<p class="growCredits"><a href="/es/verifica-tu-agencia/">Verifica tu agencia</a> (gratis, y cuando quieras) y consigue <strong>20 cr&eacute;ditos gratis</strong> para probar cualquiera de estos; adem&aacute;s, cada funci&oacute;n de pago tiene una <strong>prueba gratis</strong>, as&iacute; que pruebas antes de gastar un c&eacute;ntimo.</p>
 			<div class="growGrid">
-				<a href="/es/precios/"><b>Leads de compradores</b><span>5 créditos por cada lead cualificado que decidas meter, desde tu saldo de créditos</span><em>5 créditos cada uno</em></a>
+				<a href="/es/precios/"><b>Leads de compradores</b><span>1 crédito por cada lead cualificado que decidas meter, desde tu saldo de créditos</span><em>1 crédito cada uno</em></a>
 				<a href="/es/precios/"><b>Automation &amp; Nurture</b><span>Pipeline de Nurture, emails automáticos, detección de leads calientes y Daily Action Queue</span><em>20 cr&eacute;ditos/mes</em></a>
 				<a href="/es/precios/"><b>Rentals Module</b><span>Pipeline de Inquilinos, Tenancies, Mantenimiento y recordatorios de renovaci&oacute;n. Prueba gratis de 30 d&iacute;as</span><em>50 cr&eacute;ditos / 30 d&iacute;as</em></a>
 				<a href="/es/informe-inteligencia-propiedad/"><b>Property Intelligence Report</b><span>Valoraciones verificadas ante notario con brief para el agente</span><em>5 créditos</em></a>

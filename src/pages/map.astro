@@ -91,6 +91,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	title={title}
 	description={description}
 	canonical={canonical}
+	fullBleed
 	ogImage="/og/map.png"
 	hreflangs={[
 		{ hreflang: 'en', href: origin + '/map/' },
@@ -103,10 +104,10 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 			<p class="eyebrow">Live network map</p>
 			<h1>Where the network actually is</h1>
 			<p class="lede">
-				Every home on the PropertyList network, plotted where it sits. Each property is counted once, however many
-				agencies are marketing it. Spin the globe, drop into the Costa del Sol, and
-				the municipalities we cover deepest rise out of the map - taller means more homes listed. Asking prices come from
-				the MLS. The verified figure underneath comes from the Spanish notarial register: what buyers actually paid.
+				Every home on the PropertyList network, counted once however many agencies are marketing it, and placed in the
+				town it sits in. Spin the globe, drop into the Costa del Sol, and the deeper a municipality&rsquo;s colour, the
+				more homes it has listed. Asking prices come from the MLS. The verified figure underneath comes from the Spanish
+				notarial register: what buyers actually paid.
 			</p>
 			<div class="counters">
 				<div><strong>{totalListings.toLocaleString('en-GB')}</strong><span>unique homes on the network</span></div>
@@ -193,7 +194,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 				Every region where the network has at least one home. Some have only a handful - if you list there, you would be
 				among the first.
 			</p>
-			<div class="tablewrap">
+			<div class="tablewrap narrow">
 				<table>
 					<thead><tr><th>Region</th><th class="n">Homes listed</th><th class="n">Share</th></tr></thead>
 					<tbody>
@@ -269,6 +270,10 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.sub { color: #5b6b73; max-width: 800px; line-height: 1.6; margin: 0 0 20px; font-size: 15.5px; }
 	.tablewrap { overflow-x: auto; }
 	table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
+	/* three columns do not need the wide table's minimum, and on a phone that
+	   minimum was spreading them across a scrollable 640px. */
+	.tablewrap.narrow table { min-width: 0; }
+	.tablewrap.narrow th.n, .tablewrap.narrow td.n { width: 1%; white-space: nowrap; }
 	th, td { padding: 11px 12px; border-bottom: 1px solid #eef3f4; text-align: left; }
 	thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: #5b6b73; border-bottom: 2px solid #e7eef1; }
 	td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
@@ -282,6 +287,16 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.btn:hover { background: #00998a; }
 	.fine { font-size: 13.5px; color: #5b6b73; margin-top: 14px; }
 	.fine a { color: #00867a; }
+
+	@media (max-width: 640px) {
+		.tablewrap.narrow th, .tablewrap.narrow td { padding: 10px 8px; font-size: 14px; }
+		.tablewrap.narrow thead th { font-size: 11px; letter-spacing: 0.4px; }
+	}
+
+	@media (max-width: 380px) {
+		.tablewrap.narrow th, .tablewrap.narrow td { padding: 9px 5px; font-size: 13px; }
+		.tablewrap.narrow thead th { font-size: 10px; letter-spacing: 0.2px; }
+	}
 
 	@media (max-width: 900px) {
 		.maplayout { grid-template-columns: 1fr; }
