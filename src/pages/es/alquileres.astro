@@ -5,15 +5,45 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/alquileres/`;
 const title = 'Módulo de Gestión de Alquileres para Inmobiliarias | PropertyList';
 const description =
-	'El Módulo de Alquileres gestiona el alquiler de larga duración de principio a fin - pipeline de inquilinos, libro de contratos, renovaciones, mantenimiento y seguimiento de fianzas, creado para la ley de alquiler española. Prueba gratis de 30 días. La gestión de alquiler vacacional está en la hoja de ruta, no en el módulo actual.';
+	'El Módulo de Alquileres gestiona el alquiler de larga duración de principio a fin - pipeline de inquilinos, contratos que se actualizan solos, renovaciones, actualización anual de la renta, incidencias que abre el inquilino y seguimiento de fianzas, creado para la ley de alquiler española. Importa por CSV la cartera que ya llevas. Prueba gratis de 30 días. La gestión de alquiler vacacional está en la hoja de ruta, no en el módulo actual.';
 
 const features = [
-	{ name: 'Pipeline de inquilinos', desc: 'Un tablero dedicado para candidatos, desde la primera consulta hasta el contrato firmado.' },
-	{ name: 'Libro de contratos', desc: 'Cada contrato vivo, en expiración y finalizado en una sola vista, cada uno con su estado de fianza.' },
-	{ name: 'Renovaciones automáticas', desc: 'Avisos de renovación antes de que venza el contrato, en el idioma de tu cliente.' },
-	{ name: 'Flujo de mantenimiento', desc: 'Registra incidencias, asigna proveedores y sigue cada trabajo hasta su finalización.' },
-	{ name: 'Vista de cartera del propietario', desc: 'Renta y renovaciones pendientes, por propietario, de un vistazo.' },
-	{ name: 'Registro de auditoría de fianzas', desc: 'Cada cambio de estado y de fianza con fecha y hora, asociado al agente responsable.' },
+	{
+		name: 'Pipeline de Tenants (inquilinos)',
+		desc: 'Trece etapas desde la primera consulta hasta el contrato activo, en su propio tablero, junto al pipeline de ventas que ya llevas.',
+	},
+	{
+		name: 'Contratos que se mantienen al día',
+		desc: 'Un registro por contrato. Borrador, luego Activo cuando llega la fecha de inicio, y Próximo a vencer cuando se abre la ventana de renovación. No lo mueves tú.',
+	},
+	{
+		name: 'Tu cartera actual, importada',
+		desc: 'Importación CSV para toda una cartera de alquileres, alta manual para casos sueltos, y las operaciones nuevas crean su propio contrato.',
+	},
+	{
+		name: 'Avisos de renovación',
+		desc: 'El contrato pasa a Renovación pendiente y te avisa antes de que venza, con una ventana que configuras en 60, 90 o 120 días.',
+	},
+	{
+		name: 'Actualización anual de la renta',
+		desc: 'Sabe el aniversario y la renta actual, calcula la renta que corresponde según el índice oficial y redacta el borrador del aviso.',
+	},
+	{
+		name: 'Seguimiento de fianzas y registro de auditoría',
+		desc: 'Pendiente, Depositada, y después Devuelta o retenida en parte, con fecha y hora en cada cambio junto al agente responsable, y vigilando el plazo de depósito donde tu comunidad lo siga exigiendo.',
+	},
+	{
+		name: 'Incidencias que abre el inquilino',
+		desc: 'El inquilino abre su incidencia con un enlace mágico y fotos, sin registrarse, y llega ya vinculada a su contrato. Tú clasificas, no transcribes.',
+	},
+	{
+		name: 'Umbrales de aprobación del propietario',
+		desc: 'Las reparaciones pequeñas salen solas. Por encima del umbral, el propietario recibe fotos y presupuesto y aprueba o rechaza en un clic.',
+	},
+	{
+		name: 'Panel de alquileres',
+		desc: 'Contratos activos, los que vencen en 60 días, rent roll mensual, tus ingresos del mes, fianzas y acciones pendientes, además de tu media de días hasta resolver.',
+	},
 ];
 
 const faqLd = {
@@ -22,18 +52,50 @@ const faqLd = {
 	mainEntity: [
 		{
 			'@type': 'Question',
-			name: '¿Qué incluye el módulo de Alquileres?',
+			name: '¿Puedo meter los contratos que ya llevo?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Un pipeline de inquilinos dedicado, un libro de contratos (contratos vivos, en expiración y finalizados con estado de fianza), avisos automáticos de renovación, un flujo de mantenimiento con seguimiento de proveedores, una vista de cartera del propietario con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas. Cubre el alquiler de larga duración. La gestión de alquiler vacacional está en la hoja de ruta.',
+				text: 'Sí. Importar CSV está arriba del todo en la pantalla de contratos y sube de una vez toda una cartera de alquileres. Hay alta manual para casos sueltos, y cualquier operación de alquiler nueva crea su contrato automáticamente al llegar a Contrato firmado, con los datos de la operación ya rellenados.',
 			},
 		},
 		{
 			'@type': 'Question',
-			name: '¿Cuánto cuesta el módulo de Alquileres?',
+			name: '¿Qué incluye el módulo de Alquileres?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Prueba gratis de 30 días, sin tarjeta de crédito. Después de la prueba son 50 créditos por período de 30 días, sin cargo hasta que renueves.',
+				text: 'Un pipeline de inquilinos de trece etapas, contratos que pasan solos por Borrador, Activo, Próximo a vencer y después Renovado, Prorrogado o Finalizado, avisos de renovación con la ventana que configures, la actualización anual de la renta según el índice oficial, seguimiento de fianzas con registro de auditoría, incidencias que abre el inquilino con enlace mágico, umbrales de aprobación del propietario y directorio de proveedores, y un panel con contratos activos, los que vencen, rent roll, tus ingresos del mes, fianzas y acciones pendientes. Cubre el alquiler de larga duración y los contratos de temporada (art. 3 de la LAU).',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: '¿Cuánto cuesta el módulo y qué pasa cuando acaba la prueba?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Los primeros 30 días son gratis y no hace falta tarjeta. Cuando acaba la prueba no se cobra nada. Si quieres seguir, te suscribes, y a partir de ahí son 50 créditos por período de 30 días que salen de tu saldo de créditos. Puedes activar la recarga automática para que una tarjeta guardada reponga el saldo en vez de que el módulo se pause, y puedes dar de baja la suscripción cuando quieras.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: '¿Qué pasa con mis contratos si dejo de pagar el módulo?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'No se borra nada. El módulo se oculta hasta que vuelvas a suscribirte, y tus contratos, fianzas e historial de reparaciones están exactamente donde los dejaste cuando vuelve.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: '¿Cambia algo en la parte de ventas de mi agencia?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'No. El mismo acceso, los mismos contactos, las mismas propiedades y el mismo pipeline de ventas. El módulo añade una sección de Alquileres con Tenancies y Maintenance, y el tablero de Tenants.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: '¿Los inquilinos y los propietarios necesitan cuenta?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'No. El inquilino abre incidencias con un enlace mágico que se le envía en la entrada y se repite en sus correos, con fotos y sin registrarse. El propietario aprueba o rechaza desde un correo, en un clic, cuando el trabajo supera su umbral.',
 			},
 		},
 		{
@@ -41,7 +103,15 @@ const faqLd = {
 			name: '¿El módulo de Alquileres me mantiene al día con la ley de alquiler española?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Te da la evidencia, no el cumplimiento. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, que es de lo que depende una disputa de fianza según el art. 36 de la LAU. No deposita fianzas ante ningún organismo autonómico, no emite el número de registro de arrendamiento ni comunica nada a la policía por ti: eso sigue siendo obligación tuya.',
+				text: 'Te da la prueba documental, no el cumplimiento normativo. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, que es de lo que depende una disputa de fianza según el art. 36 de la LAU. No deposita fianzas ante ningún organismo autonómico, no emite el número de registro de arrendamiento ni comunica nada a la policía por ti: eso sigue siendo obligación tuya.',
+			},
+		},
+		{
+			'@type': 'Question',
+			name: '¿Sirve para el alquiler vacacional?',
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: 'Hoy no. Las reservas, las tarifas por noche, la sincronización de canales y el registro de viajeros ante la policía están en la hoja de ruta. Si tu cartera es vacacional y no de larga duración, todavía no es tu herramienta. Los contratos de temporada quedan en medio: escríbenos antes de mover una cartera de temporada.',
 			},
 		},
 	],
@@ -64,18 +134,78 @@ const faqLd = {
 	<section class="hero">
 		<div class="heroInner">
 			<div class="kicker">Módulo de Alquileres</div>
-			<h1>Todo el flujo del alquiler de larga duración, de principio a fin.</h1>
+			<h1>Tu cartera de alquileres, fuera de la hoja de cálculo.</h1>
 			<p class="lead">
-				El Módulo de Alquileres gestiona tus arrendamientos de larga duración de principio a fin - desde la primera consulta hasta la firma del
-				contrato, la renovación y la devolución de la fianza. Creado para la ley de alquiler española, con una prueba gratis de 30 días y sin cargo hasta que renueves.
+				El Módulo de Alquileres gestiona el alquiler de larga duración dentro del CRM que ya usas para vender: un pipeline de inquilinos, un
+				registro por contrato que persigue solo sus renovaciones y sus plazos de fianza, y unas incidencias que abre el inquilino y aprueba el
+				propietario. Importa por CSV la cartera que ya llevas. 30 días gratis, sin tarjeta, y sin cobro al acabar la prueba.
 			</p>
 			<div class="ctaRow" aria-label="Empezar">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
 					Empezar la prueba gratis
 				</a>
-				<a class="btnSecondary" href="/es/precios/">Ver precios completos</a>
+				<a class="btnSecondary" href="#pricing">Cuánto cuesta</a>
 			</div>
-			<div class="note">Prueba gratis de 30 días. Sin tarjeta de crédito.</div>
+			<div class="note">¿Ya estás en PropertyList? Abre la pestaña de Alquileres en tu cuenta. Sin tarjeta de crédito.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Empieza por los contratos que ya llevas</h2>
+			<p>Tres formas de entrar, y ninguna es volver a teclearlo todo.</p>
+		</div>
+		<div class="grid3" aria-label="Formas de meter tus contratos">
+			<div class="card">
+				<h3>Importar CSV</h3>
+				<p>Un botón arriba del todo en la pantalla de contratos, no un ajuste escondido. Sube de una vez toda una cartera de alquileres.</p>
+			</div>
+			<div class="card">
+				<h3>Desde la operación</h3>
+				<p>Una operación de alquiler que llega a Contrato firmado crea su propio contrato: propiedad, inquilino, propietario, fechas, renta y fianza. Tú rellenas los huecos.</p>
+			</div>
+			<div class="card">
+				<h3>A mano</h3>
+				<p>Nuevo contrato, para los acuerdos que todavía no están en ningún sitio.</p>
+			</div>
+		</div>
+		<p class="aside">
+			En la parte de ventas no cambia nada. El mismo acceso, los mismos contactos, las mismas propiedades. El módulo añade una sección de
+			Alquileres con Tenancies y Maintenance, y el tablero de Tenants.
+		</p>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>De la consulta al contrato firmado</h2>
+			<p>El pipeline de Tenants, tal y como sale. Trece etapas, y dos de ellas trabajan por ti.</p>
+		</div>
+		<div class="dflow" aria-label="Las trece etapas del pipeline de Tenants">
+			<span class="dstep"><span class="n">1</span>Lead de alquiler</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">2</span>Cualificado, criterios definidos</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">3</span>Propiedades que encajan</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">4</span>Visitas agendadas</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">5</span>Visitas en curso</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">6</span>Negociando</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">7</span>Reserva pagada</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">8</span>Revisión del contrato</span><span class="darrow">&rarr;</span>
+			<span class="dstep on"><span class="n">9</span>Contrato firmado</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">10</span>Fianza pagada</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">11</span>Pendiente de entrada</span><span class="darrow">&rarr;</span>
+			<span class="dstep on"><span class="n">12</span>Contrato activo</span><span class="darrow">&rarr;</span>
+			<span class="dstep"><span class="n">13</span>Renovación pendiente</span>
+		</div>
+		<div class="dbeat">
+			<span class="tick">9</span>
+			<span>
+				<b>En Contrato firmado</b> el contrato se crea solo a partir de la operación, y tu propiedad pasa a reservada. Si la propiedad es de
+				otra agencia, le llega un correo pidiéndole que la actualice, porque PropertyList no cambia la propiedad de otra agencia. Una herramienta
+				de alquileres sin más agencias dentro no puede hacer esto por ningún precio.
+			</span>
+		</div>
+		<div class="dbeat">
+			<span class="tick">12</span>
+			<span><b>En Contrato activo</b> se te piden las fechas, los datos del inquilino y del propietario y el consentimiento de marketing, y los dos entran en Nurture.</span>
 		</div>
 	</section>
 
@@ -83,9 +213,9 @@ const faqLd = {
 		<div class="sectionHead">
 			<h2>Qué incluye</h2>
 			<p>
-				Un solo módulo cubre el ciclo de vida del alquiler de larga duración, así no tienes que unir la parte de arrendamientos de tu negocio a
-				base de hojas de cálculo y recordatorios. La gestión de alquiler vacacional y de corta duración - reservas, tarifas por noche,
-				sincronización de canales y registro de viajeros - está en la hoja de ruta, no en el módulo actual.
+				Nueve cosas que hace el módulo, casi todas sin que se lo pidas. Cubre el alquiler de larga duración. La gestión de alquiler vacacional y
+				de corta duración - reservas, tarifas por noche, sincronización de canales y registro de viajeros - está en la hoja de ruta, no en el
+				módulo actual.
 			</p>
 		</div>
 		<div class="grid3" aria-label="Funciones del módulo de alquileres">
@@ -101,12 +231,91 @@ const faqLd = {
 	</section>
 
 	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que hace el contrato mientras tú vendes</h2>
+			<p>Un registro por contrato, y su estado sigue las fechas en vez de esperar a que alguien se acuerde.</p>
+		</div>
+		<div class="dhub">
+			<div class="dcore">
+				<h3>El contrato</h3>
+				<p>Creado desde la operación, importado por CSV desde tu hoja de cálculo, o dado de alta a mano para los contratos que ya llevas.</p>
+			</div>
+			<div class="dspoke"><h4>Renovaciones</h4><p>Pasa a Renovación pendiente antes de que acabe el contrato y te avisa, con la ventana que configures en 60, 90 o 120 días.</p></div>
+			<div class="dspoke"><h4>Actualización anual de la renta</h4><p>Sabe el aniversario y la renta actual, calcula la que corresponde según el índice oficial y redacta el borrador del aviso al inquilino.</p></div>
+			<div class="dspoke"><h4>Fianzas</h4><p>Pendiente, Depositada, y después Devuelta o retenida en parte, con fecha y hora en cada cambio. Donde tu comunidad siga exigiendo el depósito, lo registra y lo persigue.</p></div>
+			<div class="dspoke"><h4>Plazos de preaviso</h4><p>Te avisa antes de que pase el plazo, no después.</p></div>
+			<div class="dspoke"><h4>Historial de reparaciones</h4><p>Cada incidencia cuelga del contrato, así que todo el historial de una propiedad está en un sitio.</p></div>
+		</div>
+		<div class="dstates">
+			<span class="s">Borrador</span><span class="darrow">&rarr;</span>
+			<span class="s">Activo</span><span class="darrow">&rarr;</span>
+			<span class="s">Próximo a vencer</span><span class="darrow">&rarr;</span>
+			<span class="s end">Renovado</span><span>o</span><span class="s end">Prorrogado</span><span>o</span><span class="s end">Finalizado</span>
+			<span class="dstatesNote">Una renovación encadena un contrato nuevo vinculado, así que el historial no se pierde.</span>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Una reparación, del móvil del inquilino a cerrada</h2>
+			<p>La parte que se come la semana de un agente de alquileres. Tres partes, un solo hilo.</p>
+		</div>
+		<div class="dlanes">
+			<div class="dlane">
+				<header>Inquilino</header>
+				<ol>
+					<li>Abre el <b>enlace mágico</b> que recibió en la entrada y que se repite en sus correos. Sin registro y sin app.</li>
+					<li>Describe el problema y <b>añade fotos</b>. Un fontanero que presupuesta con dos fotos se ahorra muchas veces la visita.</li>
+					<li>Confirma la reparación al final, que es lo que cierra la incidencia.</li>
+				</ol>
+			</div>
+			<div class="dlane">
+				<header>Tú</header>
+				<ol>
+					<li>La incidencia llega <b>ya vinculada</b> al contrato, al inquilino y a la propiedad. Tú la clasificas.</li>
+					<li>La mandas a un proveedor del <b>directorio</b>, con descripción, fotos y dirección ya puestas. Se van acumulando tiempos de respuesta y costes por proveedor.</li>
+					<li>Registras <b>quién paga</b>: propietario, inquilino, agencia o a partes.</li>
+				</ol>
+				<p class="dfork">
+					Las urgencias, una fuga o quedarse sin agua o cualquier cosa eléctrica, van directas a la Daily Action Queue con un temporizador de
+					SLA. Lo que lleva una semana parado sale a la superficie como una operación atascada. La revisión anual de la caldera y el certificado
+					de gas abren su propia incidencia en el aniversario.
+				</p>
+			</div>
+			<div class="dlane">
+				<header>Propietario</header>
+				<ol>
+					<li>Nada, si el coste está por debajo del <b>umbral de aprobación</b> que tienes guardado para él.</li>
+					<li>Por encima, un correo con el problema, las fotos y el presupuesto.</li>
+					<li><b>Aprueba o rechaza</b> en un clic, y la decisión queda registrada por si algún día se discute.</li>
+				</ol>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Seis números, una pantalla</h2>
+			<p>El panel de alquileres, para contestar a un propietario sin abrir una hoja de cálculo.</p>
+		</div>
+		<div class="dtiles">
+			<div class="dtile">Contratos activos</div>
+			<div class="dtile">Vencen en 60 días</div>
+			<div class="dtile">Rent roll mensual</div>
+			<div class="dtile">Tus ingresos del mes</div>
+			<div class="dtile">Fianzas</div>
+			<div class="dtile">Acciones pendientes</div>
+		</div>
+		<p class="aside">Además de tu media de días hasta resolver una incidencia, y vistas de activos, próximos a vencer, finalizados y todos.</p>
+	</section>
+
+	<section class="section">
 		<div class="grid2">
 			<div class="card accent">
 				<h2>Creado para la ley de alquiler española</h2>
 				<p>
-					El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, dándote evidencia
-					defendible para disputas de fianzas según el art. 36 de la LAU y la normativa de fianzas de tu comunidad.
+					El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, dándote prueba
+					documental para una disputa de fianza según el art. 36 de la LAU y la normativa de fianzas de tu comunidad.
 				</p>
 				<p>Se acabó reconstruir quién cambió qué, y cuándo, una vez que la disputa ya ha empezado.</p>
 				<p class="lawNote">
@@ -114,20 +323,48 @@ const faqLd = {
 					arrendador y dos al inquilino. Y desde el 24 de enero de 2026 el arrendador andaluz ya no deposita la fianza en AVRA (Ley 5/2025, DA
 					6&ordf;): la conserva él. En Cataluña, Madrid y Valencia el depósito sigue siendo obligatorio, y las fianzas depositadas antes de esa
 					fecha se devuelven por el procedimiento anterior.
+					<a href="/es/docs/leyes-procedimientos/renting-a-property/long-term/tenancy-agreements/">Las reglas completas</a>.
 				</p>
 			</div>
-			<div class="card">
-				<h2>Precios sencillos y honestos</h2>
+			<div class="card" id="pricing">
+				<h2>Cuánto cuesta</h2>
 				<p>
-					Empieza con una prueba gratis de 30 días - sin tarjeta de crédito. Después de la prueba, el módulo cuesta 50 créditos por período de 30 días,
-					y no hay cargo automático. Lo renuevas cuando quieras, no antes.
+					Los primeros 30 días son gratis y no hace falta tarjeta. Cuando acaba la prueba no se cobra nada. Si quieres seguir, te suscribes, y a
+					partir de ahí son 50 créditos por período de 30 días que salen de tu saldo de créditos. Activa la recarga automática y una tarjeta
+					guardada repone el saldo en vez de que el módulo se pause. Das de baja la suscripción cuando quieras.
 				</p>
+				<p>Si lo dejas, no se borra nada. El módulo se oculta hasta que vuelvas a suscribirte, y tus contratos, fianzas e historial de
+					reparaciones están exactamente donde los dejaste cuando vuelve.</p>
 				<div class="pillRow">
-					<span class="pill">Prueba gratis de 30 días</span>
-					<span class="pill">Sin tarjeta</span>
+					<span class="pill">30 días gratis</span>
+					<span class="pill">Sin tarjeta para empezar</span>
 					<span class="pill">50 créditos / 30 días</span>
-					<span class="pill">Sin cargo automático</span>
+					<span class="pill">Baja cuando quieras</span>
 				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que no hace</h2>
+			<p>Mejor saberlo antes de empezar la prueba que durante.</p>
+		</div>
+		<div class="grid2">
+			<div class="card">
+				<h3>No está en el módulo</h3>
+				<ul class="plain">
+					<li><b>No deposita tus fianzas.</b> Donde tu comunidad siga exigiendo el depósito, el contrato lo registra y te avisa antes de que se cierre el plazo. Presentarlo sigue siendo cosa tuya.</li>
+					<li><b>No comunica nada a la policía ni emite números de registro.</b> Mira <a href="/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/guest-registration-police/">el registro de viajeros ante la policía</a> para saber qué obligaciones son.</li>
+					<li><b>Contratos de temporada.</b> El módulo está pensado para el alquiler de larga duración, y la actualización anual de la renta en particular da por hecho una renta de larga duración. Escríbenos antes de mover una cartera de temporada.</li>
+				</ul>
+			</div>
+			<div class="card">
+				<h3>En la hoja de ruta</h3>
+				<ul class="plain">
+					<li><b>Alquiler vacacional y de corta duración.</b> Las reservas, las tarifas por noche, la sincronización de canales y el registro de viajeros llegarán más adelante. Si tu cartera es vacacional y no de larga duración, todavía no es tu herramienta.</li>
+					<li><b>Informe al propietario.</b> Un informe periódico por propietario con las reparaciones hechas, su coste, las facturas, el estado de la fianza y el rent roll. Cada incidencia ya registra quién paga, así que los datos estarán ahí cuando salga.</li>
+				</ul>
 			</div>
 		</div>
 	</section>
@@ -152,14 +389,14 @@ const faqLd = {
 		<div class="ctaInner">
 			<h2>Gestiona alquileres en el mismo sitio que las ventas</h2>
 			<p>
-				El Módulo de Alquileres vive dentro del mismo CRM gratis que impulsa tu pipeline de ventas - un solo acceso, una sola base de datos de
-				contactos, un solo flujo de trabajo para toda la agencia.
+				Un solo acceso, una sola base de contactos, un solo flujo para toda la agencia. ¿Ya estás en PropertyList? La pestaña de Alquileres está
+				en tu cuenta, con Tenancies y Maintenance dentro.
 			</p>
 			<div class="ctaRow" aria-label="Únete a PropertyList">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
 					Agentes: Empieza GRATIS
 				</a>
-				<a class="btnSecondary" href="/es/funciones/">Ver todas las funciones</a>
+				<a class="btnSecondary" href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/rentals-module/">Leer el manual</a>
 			</div>
 		</div>
 	</section>
@@ -399,5 +636,267 @@ const faqLd = {
 		.grid2 {
 			grid-template-columns: minmax(0, 1fr);
 		}
+	}
+
+	.aside {
+		margin: 14px 0 0;
+		font-size: 14.5px;
+		color: #475467;
+	}
+
+	ul.plain {
+		margin: 0;
+		padding-left: 18px;
+	}
+
+	ul.plain li {
+		margin: 0 0 10px;
+		color: #475467;
+		line-height: 1.55;
+	}
+
+	ul.plain li:last-child {
+		margin-bottom: 0;
+	}
+
+	ul.plain b {
+		color: #101828;
+	}
+
+	.dflow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 6px;
+		padding: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 18px;
+		background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.05), rgba(255, 255, 255, 0));
+	}
+
+	.dstep {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 9px 13px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 999px;
+		background: #fff;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.2;
+	}
+
+	.dstep .n {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		color: #067a6c;
+		font-size: 11.5px;
+		font-weight: 800;
+		flex: none;
+	}
+
+	.dstep.on {
+		border-color: rgba(var(--pl-accent-rgb), 0.55);
+		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
+	}
+
+	.dstep.on .n {
+		background: var(--pl-accent);
+		color: #fff;
+	}
+
+	.darrow {
+		align-self: center;
+		color: rgba(16, 24, 40, 0.28);
+		font-size: 13px;
+	}
+
+	@media (max-width: 560px) {
+		.dflow .darrow {
+			display: none;
+		}
+	}
+
+	.dbeat {
+		display: flex;
+		gap: 10px;
+		align-items: flex-start;
+		margin: 12px 0 0;
+		padding: 12px 14px;
+		border-radius: 14px;
+		background: rgba(var(--pl-accent-rgb), 0.07);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.2);
+		font-size: 14.5px;
+		line-height: 1.55;
+		color: #12433d;
+	}
+
+	.dbeat b {
+		color: #0b5f55;
+	}
+
+	.dbeat .tick {
+		flex: none;
+		color: var(--pl-accent);
+		font-weight: 900;
+	}
+
+	.dhub {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+		gap: 12px;
+	}
+
+	@media (min-width: 900px) {
+		.dhub {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.dcore {
+		grid-column: 1 / -1;
+		padding: 16px 18px;
+		border-radius: 18px;
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.35);
+		background: rgba(var(--pl-accent-rgb), 0.07);
+	}
+
+	.dcore h3 {
+		margin: 0 0 4px;
+		font-size: 17px;
+	}
+
+	.dcore p {
+		margin: 0;
+		color: #475467;
+		font-size: 14.5px;
+		line-height: 1.55;
+	}
+
+	.dspoke {
+		padding: 14px 16px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 16px;
+		background: #fff;
+	}
+
+	.dspoke h4 {
+		margin: 0 0 5px;
+		font-size: 15px;
+		letter-spacing: -0.01em;
+	}
+
+	.dspoke p {
+		margin: 0;
+		color: #475467;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	.dstates {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+		margin-top: 12px;
+		padding: 12px 14px;
+		border: 1px dashed rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		font-size: 13.5px;
+		color: #475467;
+	}
+
+	.dstates .s {
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: rgba(16, 24, 40, 0.05);
+		font-weight: 600;
+		color: #101828;
+	}
+
+	.dstates .s.end {
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		color: #0b5f55;
+	}
+
+	.dstatesNote {
+		flex-basis: 100%;
+		margin-top: 4px;
+	}
+
+	.dlanes {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 12px;
+		align-items: start;
+	}
+
+	.dlane {
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 16px;
+		overflow: hidden;
+		background: #fff;
+	}
+
+	.dlane header {
+		padding: 10px 14px;
+		font-size: 12px;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #0b5f55;
+		background: rgba(var(--pl-accent-rgb), 0.09);
+		border-bottom: 1px solid rgba(16, 24, 40, 0.1);
+	}
+
+	.dlane ol {
+		margin: 0;
+		padding: 12px 14px 14px 30px;
+	}
+
+	.dlane li {
+		margin: 0 0 8px;
+		font-size: 14px;
+		line-height: 1.5;
+		color: #475467;
+	}
+
+	.dlane li:last-child {
+		margin-bottom: 0;
+	}
+
+	.dlane li b {
+		color: #101828;
+	}
+
+	.dfork {
+		margin: 0 14px 14px;
+		padding: 11px 13px;
+		border-radius: 12px;
+		background: rgba(16, 24, 40, 0.035);
+		font-size: 13.5px;
+		line-height: 1.5;
+		color: #475467;
+	}
+
+	.dtiles {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		gap: 10px;
+	}
+
+	.dtile {
+		padding: 16px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 14px;
+		background: #fff;
+		font-weight: 700;
+		font-size: 14.5px;
+		letter-spacing: -0.01em;
 	}
 </style>
