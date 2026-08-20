@@ -10,7 +10,7 @@ const description =
 const features = [
 	{ name: 'Tenants pipeline', desc: 'A dedicated board for applicants, from first enquiry through to a signed lease.' },
 	{ name: 'Tenancies ledger', desc: 'Every live, expiring and ended lease in one view, each with its deposit status.' },
-	{ name: 'Automatic renewals', desc: 'Lease renewal emails sent 30 days before expiry, in your client’s language.' },
+	{ name: 'Automatic renewals', desc: 'Renewal reminders before a lease expires, in your client’s language.' },
 	{ name: 'Maintenance workflow', desc: 'Log issues, assign suppliers, and track every job through to completion.' },
 	{ name: 'Landlord portfolio view', desc: 'Rent roll and renewals due, per landlord, at a glance.' },
 	{ name: 'Deposit audit log', desc: 'Every status and deposit change timestamped against the agent responsible.' },
@@ -25,7 +25,7 @@ const faqLd = {
 			name: 'What does the Rentals module include?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'A dedicated Tenants pipeline, a Tenancies ledger (live, expiring and ended leases with deposit status), automatic lease renewal emails 30 days before expiry, a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
+				text: 'A dedicated Tenants pipeline, a Tenancies ledger (live, expiring and ended leases with deposit status), automatic lease renewal reminders, a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes. It covers long-term lettings. Holiday and short-let management is on the roadmap.',
 			},
 		},
 		{
@@ -38,10 +38,10 @@ const faqLd = {
 		},
 		{
 			'@type': 'Question',
-			name: 'Does the Rentals module comply with Spanish rental law?',
+			name: 'Does the Rentals module keep me compliant with Spanish rental law?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Yes. The audit log timestamps every status and deposit change with the agent responsible, providing defensible evidence for Spanish deposit disputes under the LAU and RDL 8/2024 framework.',
+				text: 'It gives you the evidence, not the compliance. The audit log timestamps every status and deposit change with the agent responsible, which is what a deposit dispute under LAU art. 36 turns on. It does not lodge deposits with a regional body, issue a rental registration number or file anything with the police on your behalf: those stay your obligation.',
 			},
 		},
 	],
@@ -66,8 +66,8 @@ const faqLd = {
 			<div class="kicker">Rentals Module</div>
 			<h1>The full rental workflow, end to end.</h1>
 			<p class="lead">
-				The Rentals Module unlocks everything an agency needs to run lettings - from the first enquiry through to lease completion, renewal and
-				deposit return. Built for Spanish rental law, with a free 30-day trial and no auto-charge.
+				The Rentals Module runs your long-term lettings end to end - from the first enquiry through to lease completion, renewal and deposit
+				return. Built for Spanish rental law, with a free 30-day trial and no auto-charge.
 			</p>
 			<div class="ctaRow" aria-label="Get started">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
@@ -83,8 +83,9 @@ const faqLd = {
 		<div class="sectionHead">
 			<h2>What is inside</h2>
 			<p>
-				One module covers the entire lettings lifecycle, so you are not stitching the rental side of your business together from spreadsheets and
-				reminders.
+				One module covers the long-term lettings lifecycle, so you are not stitching the rental side of your business together from spreadsheets
+				and reminders. Holiday and short-let management - bookings, nightly rates, channel sync and guest registration - is on the roadmap, not
+				in the module today.
 			</p>
 		</div>
 		<div class="grid3" aria-label="Rentals module features">
@@ -105,9 +106,15 @@ const faqLd = {
 				<h2>Built for Spanish rental law</h2>
 				<p>
 					The audit log timestamps every status and deposit change against the agent responsible, giving you defensible evidence for deposit
-					disputes under the LAU and RDL 8/2024 framework.
+					disputes under LAU art. 36 and the deposit rules of your region.
 				</p>
 				<p>No more reconstructing who changed what, and when, after a dispute has already started.</p>
+				<p class="lawNote">
+					Two deadlines the module records but does not decide for you. To stop a contract renewing, LAU art. 10 gives the landlord four months
+					and the tenant two. And since 24 January 2026 an Andalusian landlord no longer lodges the fianza with AVRA (Ley 5/2025, DA 6&ordf;) -
+					it stays with the landlord. Lodging still applies in Catalonia, Madrid and Valencia, and deposits lodged before that date are still
+					returned through the old process.
+				</p>
 			</div>
 			<div class="card">
 				<h2>Simple, honest pricing</h2>
@@ -122,6 +129,22 @@ const faqLd = {
 					<span class="pill">No auto-charge</span>
 				</div>
 			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Questions</h2>
+		</div>
+		<div class="faq">
+			{
+				faqLd.mainEntity.map((qa) => (
+					<details>
+						<summary>{qa.name}</summary>
+						<p>{qa.acceptedAnswer.text}</p>
+					</details>
+				))
+			}
 		</div>
 	</section>
 
@@ -152,6 +175,37 @@ const faqLd = {
 	h2,
 	h3 {
 		letter-spacing: -0.03em;
+	}
+
+	.lawNote {
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(16, 24, 40, 0.1);
+		font-size: 14.5px;
+		color: #475467;
+	}
+
+	.faq {
+		display: grid;
+		gap: 10px;
+	}
+
+	.faq details {
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 14px 16px;
+		background: #fff;
+	}
+
+	.faq summary {
+		cursor: pointer;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+	}
+
+	.faq details p {
+		margin: 10px 0 0;
+		color: #475467;
 	}
 
 	.hero {

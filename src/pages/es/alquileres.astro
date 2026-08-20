@@ -10,7 +10,7 @@ const description =
 const features = [
 	{ name: 'Pipeline de inquilinos', desc: 'Un tablero dedicado para candidatos, desde la primera consulta hasta el contrato firmado.' },
 	{ name: 'Libro de contratos', desc: 'Cada contrato vivo, en expiración y finalizado en una sola vista, cada uno con su estado de fianza.' },
-	{ name: 'Renovaciones automáticas', desc: 'Correos de renovación de contrato enviados 30 días antes del vencimiento, en el idioma de tu cliente.' },
+	{ name: 'Renovaciones automáticas', desc: 'Avisos de renovación antes de que venza el contrato, en el idioma de tu cliente.' },
 	{ name: 'Flujo de mantenimiento', desc: 'Registra incidencias, asigna proveedores y sigue cada trabajo hasta su finalización.' },
 	{ name: 'Vista de cartera del propietario', desc: 'Renta y renovaciones pendientes, por propietario, de un vistazo.' },
 	{ name: 'Registro de auditoría de fianzas', desc: 'Cada cambio de estado y de fianza con fecha y hora, asociado al agente responsable.' },
@@ -25,7 +25,7 @@ const faqLd = {
 			name: '¿Qué incluye el módulo de Alquileres?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Un pipeline de inquilinos dedicado, un libro de contratos (contratos vivos, en expiración y finalizados con estado de fianza), correos automáticos de renovación 30 días antes del vencimiento, un flujo de mantenimiento con seguimiento de proveedores, una vista de cartera del propietario con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas.',
+				text: 'Un pipeline de inquilinos dedicado, un libro de contratos (contratos vivos, en expiración y finalizados con estado de fianza), avisos automáticos de renovación, un flujo de mantenimiento con seguimiento de proveedores, una vista de cartera del propietario con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas. Cubre el alquiler de larga duración. La gestión de alquiler vacacional está en la hoja de ruta.',
 			},
 		},
 		{
@@ -38,10 +38,10 @@ const faqLd = {
 		},
 		{
 			'@type': 'Question',
-			name: '¿El módulo de Alquileres cumple con la ley de alquiler española?',
+			name: '¿El módulo de Alquileres me mantiene al día con la ley de alquiler española?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Sí. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, proporcionando evidencia defendible para disputas de fianzas españolas bajo el marco LAU y RDL 8/2024.',
+				text: 'Te da la evidencia, no el cumplimiento. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, que es de lo que depende una disputa de fianza según el art. 36 de la LAU. No deposita fianzas ante ningún organismo autonómico, no emite el número de registro de arrendamiento ni comunica nada a la policía por ti: eso sigue siendo obligación tuya.',
 			},
 		},
 	],
@@ -66,8 +66,8 @@ const faqLd = {
 			<div class="kicker">Módulo de Alquileres</div>
 			<h1>Todo el flujo de alquiler, de principio a fin.</h1>
 			<p class="lead">
-				El Módulo de Alquileres desbloquea todo lo que una agencia necesita para gestionar arrendamientos - desde la primera consulta hasta la firma
-				del contrato, la renovación y la devolución de la fianza. Creado para la ley de alquiler española, con una prueba gratis de 30 días y sin cargo hasta que renueves.
+				El Módulo de Alquileres gestiona tus arrendamientos de larga duración de principio a fin - desde la primera consulta hasta la firma del
+				contrato, la renovación y la devolución de la fianza. Creado para la ley de alquiler española, con una prueba gratis de 30 días y sin cargo hasta que renueves.
 			</p>
 			<div class="ctaRow" aria-label="Empezar">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
@@ -83,8 +83,9 @@ const faqLd = {
 		<div class="sectionHead">
 			<h2>Qué incluye</h2>
 			<p>
-				Un solo módulo cubre todo el ciclo de vida del alquiler, así no tienes que unir la parte de arrendamientos de tu negocio a base de hojas de
-				cálculo y recordatorios.
+				Un solo módulo cubre el ciclo de vida del alquiler de larga duración, así no tienes que unir la parte de arrendamientos de tu negocio a
+				base de hojas de cálculo y recordatorios. La gestión de alquiler vacacional y de corta duración - reservas, tarifas por noche,
+				sincronización de canales y registro de viajeros - está en la hoja de ruta, no en el módulo actual.
 			</p>
 		</div>
 		<div class="grid3" aria-label="Funciones del módulo de alquileres">
@@ -105,9 +106,15 @@ const faqLd = {
 				<h2>Creado para la ley de alquiler española</h2>
 				<p>
 					El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, dándote evidencia
-					defendible para disputas de fianzas bajo el marco LAU y RDL 8/2024.
+					defendible para disputas de fianzas según el art. 36 de la LAU y la normativa de fianzas de tu comunidad.
 				</p>
 				<p>Se acabó reconstruir quién cambió qué, y cuándo, una vez que la disputa ya ha empezado.</p>
+				<p class="lawNote">
+					Dos plazos que el módulo registra pero no decide por ti. Para que un contrato no se prorrogue, el art. 10 de la LAU da cuatro meses al
+					arrendador y dos al inquilino. Y desde el 24 de enero de 2026 el arrendador andaluz ya no deposita la fianza en AVRA (Ley 5/2025, DA
+					6&ordf;): la conserva él. En Cataluña, Madrid y Valencia el depósito sigue siendo obligatorio, y las fianzas depositadas antes de esa
+					fecha se devuelven por el procedimiento anterior.
+				</p>
 			</div>
 			<div class="card">
 				<h2>Precios sencillos y honestos</h2>
@@ -122,6 +129,22 @@ const faqLd = {
 					<span class="pill">Sin cargo automático</span>
 				</div>
 			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Preguntas</h2>
+		</div>
+		<div class="faq">
+			{
+				faqLd.mainEntity.map((qa) => (
+					<details>
+						<summary>{qa.name}</summary>
+						<p>{qa.acceptedAnswer.text}</p>
+					</details>
+				))
+			}
 		</div>
 	</section>
 
@@ -152,6 +175,37 @@ const faqLd = {
 	h2,
 	h3 {
 		letter-spacing: -0.03em;
+	}
+
+	.lawNote {
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(16, 24, 40, 0.1);
+		font-size: 14.5px;
+		color: #475467;
+	}
+
+	.faq {
+		display: grid;
+		gap: 10px;
+	}
+
+	.faq details {
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		border-radius: 14px;
+		padding: 14px 16px;
+		background: #fff;
+	}
+
+	.faq summary {
+		cursor: pointer;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+	}
+
+	.faq details p {
+		margin: 10px 0 0;
+		color: #475467;
 	}
 
 	.hero {

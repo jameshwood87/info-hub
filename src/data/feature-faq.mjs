@@ -147,7 +147,7 @@ export const featureFaqItems = [
     id: 'rentals-includes',
     q: 'What does the Rentals module include?',
     aHtml:
-      'A dedicated Tenants pipeline, a Tenancies ledger (live/expiring/ended leases with deposit status), automatic lease renewal emails (30 days before expiry, multi-language), a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
+      'A dedicated Tenants pipeline, a Tenancies ledger (live/expiring/ended leases with deposit status), automatic lease renewal reminders (multi-language), a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
   },
   {
     id: 'rentals-cost',
@@ -157,9 +157,9 @@ export const featureFaqItems = [
   },
   {
     id: 'rentals-deposit-disputes',
-    q: 'Does the Rentals module handle deposit disputes and comply with Spanish rental law?',
+    q: 'Does the Rentals module handle deposit disputes and keep me compliant with Spanish rental law?',
     aHtml:
-      'Yes. The audit log timestamps every status and deposit change with the agent responsible - providing defensible evidence for Spanish deposit disputes under the LAU / RDL 8/2024 framework.',
+      'It gives you the evidence, not the compliance. The audit log timestamps every status and deposit change with the agent responsible - which is what a deposit dispute under LAU art. 36 turns on. It does not lodge deposits with a regional body or file any registration for you.',
   },
 
   // ─── Credits & Pricing ─────────────────────────────────────────────────

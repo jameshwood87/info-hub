@@ -147,7 +147,7 @@ export const featureFaqItemsEs = [
     id: 'rentals-includes',
     q: '¿Qué incluye el módulo de Alquileres?',
     aHtml:
-      'Un tablero de Tenants dedicado, un libro de arrendamientos (contratos vivos/en expiración/finalizados con estado de la fianza), correos automáticos de renovación de contrato (30 días antes del vencimiento, multilingüe), flujo de trabajo de mantenimiento con seguimiento de proveedores, vista de cartera de propietarios con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas.',
+      'Un tablero de Tenants dedicado, un libro de arrendamientos (contratos vivos/en expiración/finalizados con estado de la fianza), avisos automáticos de renovación de contrato (multilingüe), flujo de trabajo de mantenimiento con seguimiento de proveedores, vista de cartera de propietarios con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas.',
   },
   {
     id: 'rentals-cost',
@@ -157,9 +157,9 @@ export const featureFaqItemsEs = [
   },
   {
     id: 'rentals-deposit-disputes',
-    q: '¿El módulo de Alquileres gestiona disputas de fianzas y cumple con la ley de alquiler española?',
+    q: '¿El módulo de Alquileres gestiona disputas de fianzas y me mantiene al día con la ley de alquiler española?',
     aHtml:
-      'Sí. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable - proporcionando evidencia defendible para disputas de fianzas españolas bajo el marco LAU / RDL 8/2024.',
+      'Te da la evidencia, no el cumplimiento. El registro de auditoría marca con fecha y hora cada cambio de estado y de fianza junto al agente responsable, que es de lo que depende una disputa de fianza según el art. 36 de la LAU. No deposita fianzas ante ningún organismo autonómico ni presenta registros por ti.',
   },
 
   // ─── Credits & Pricing ─────────────────────────────────────────────────
