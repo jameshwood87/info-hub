@@ -150,6 +150,17 @@ const faqLd = {
 		</div>
 	</section>
 
+	<nav class="modePick" aria-label="Qué tipo de alquiler llevas">
+		<a class="modeCard here" href="/es/alquileres/" aria-current="page">
+			<span class="modeName">Alquiler de larga duración</span>
+			<span class="modeState">Ya funciona. Prueba gratis de 30 días.</span>
+		</a>
+		<a class="modeCard" href="/es/alquiler-vacacional/">
+			<span class="modeName">Alquiler vacacional y de corta duración</span>
+			<span class="modeState">Próximamente. Las normas que ya se aplican, y la lista de espera.</span>
+		</a>
+	</nav>
+
 	<section class="section">
 		<div class="sectionHead">
 			<h2>Empieza por los contratos que ya llevas</h2>
@@ -213,9 +224,7 @@ const faqLd = {
 		<div class="sectionHead">
 			<h2>Qué incluye</h2>
 			<p>
-				Nueve cosas que hace el módulo, casi todas sin que se lo pidas. Cubre el alquiler de larga duración. La gestión de alquiler vacacional y
-				de corta duración - reservas, tarifas por noche, sincronización de canales y registro de viajeros - está en la hoja de ruta, no en el
-				módulo actual.
+				Nueve cosas que hace el módulo, casi todas sin que se lo pidas. Todo esto es alquiler de larga duración.
 			</p>
 		</div>
 		<div class="grid3" aria-label="Funciones del módulo de alquileres">
@@ -899,4 +908,63 @@ const faqLd = {
 		font-size: 14.5px;
 		letter-spacing: -0.01em;
 	}
+
+	.modePick {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 10px;
+		margin: 0 0 22px;
+	}
+
+	.modeCard {
+		display: block;
+		padding: 14px 16px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		border-radius: 16px;
+		background: #fff;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.modeCard:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	.modeCard.here {
+		border-color: rgba(var(--pl-accent-rgb), 0.55);
+		background: rgba(var(--pl-accent-rgb), 0.08);
+		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
+		cursor: default;
+	}
+
+	.modeName {
+		display: block;
+		font-weight: 800;
+		font-size: 15.5px;
+		letter-spacing: -0.01em;
+		color: #101828;
+	}
+
+	.modeCard.here .modeName::after {
+		content: 'Estás aquí';
+		margin-left: 8px;
+		padding: 3px 8px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.16);
+		color: #0b5f55;
+		font-size: 10.5px;
+		font-weight: 900;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		vertical-align: middle;
+	}
+
+	.modeState {
+		display: block;
+		margin-top: 4px;
+		font-size: 13.5px;
+		line-height: 1.45;
+		color: #475467;
+	}
+
 </style>

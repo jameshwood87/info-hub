@@ -150,6 +150,17 @@ const faqLd = {
 		</div>
 	</section>
 
+	<nav class="modePick" aria-label="Which kind of letting">
+		<a class="modeCard here" href="/rentals/" aria-current="page">
+			<span class="modeName">Long-term lettings</span>
+			<span class="modeState">Live today. Free 30-day trial.</span>
+		</a>
+		<a class="modeCard" href="/holiday-rentals/">
+			<span class="modeName">Holiday and short lets</span>
+			<span class="modeState">Coming soon. The rules that already apply, and the waitlist.</span>
+		</a>
+	</nav>
+
 	<section class="section">
 		<div class="sectionHead">
 			<h2>Start with the tenancies you already manage</h2>
@@ -213,8 +224,7 @@ const faqLd = {
 		<div class="sectionHead">
 			<h2>What is inside</h2>
 			<p>
-				Nine things the module does, most of them without being asked. It covers long-term lettings. Holiday and short-let management -
-				bookings, nightly rates, channel sync and guest registration - is on the roadmap, not in the module today.
+				Nine things the module does, most of them without being asked. All of it is long-term lettings.
 			</p>
 		</div>
 		<div class="grid3" aria-label="Rentals module features">
@@ -898,4 +908,63 @@ const faqLd = {
 		font-size: 14.5px;
 		letter-spacing: -0.01em;
 	}
+
+	.modePick {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 10px;
+		margin: 0 0 22px;
+	}
+
+	.modeCard {
+		display: block;
+		padding: 14px 16px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		border-radius: 16px;
+		background: #fff;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.modeCard:hover {
+		border-color: rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	.modeCard.here {
+		border-color: rgba(var(--pl-accent-rgb), 0.55);
+		background: rgba(var(--pl-accent-rgb), 0.08);
+		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
+		cursor: default;
+	}
+
+	.modeName {
+		display: block;
+		font-weight: 800;
+		font-size: 15.5px;
+		letter-spacing: -0.01em;
+		color: #101828;
+	}
+
+	.modeCard.here .modeName::after {
+		content: 'You are here';
+		margin-left: 8px;
+		padding: 3px 8px;
+		border-radius: 999px;
+		background: rgba(var(--pl-accent-rgb), 0.16);
+		color: #0b5f55;
+		font-size: 10.5px;
+		font-weight: 900;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		vertical-align: middle;
+	}
+
+	.modeState {
+		display: block;
+		margin-top: 4px;
+		font-size: 13.5px;
+		line-height: 1.45;
+		color: #475467;
+	}
+
 </style>
