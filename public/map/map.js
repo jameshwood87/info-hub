@@ -74,15 +74,21 @@
 
 	// ---- intro flight, cancellable ----
 	var introRunning = false, introDone = false, introAborted = false;
+	var userPicked = false;      // the visitor has chosen a place, so do not overwrite it
 	function cancelIntro() {
-		introAborted = true;   // also stops the landing, which fires after introRunning clears
-		if (!introRunning) return;
-		introRunning = false; introDone = true;
+		if (!introRunning) return;   // a gesture that cancelled nothing must not poison the landing
+		introRunning = false; introDone = true; introAborted = true;
 		map.stop();
 		var b = skipBtn(); if (b) b.style.display = 'none';
 	}
-	['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+	// cooperativeGestures means a plain wheel or a one-finger drag is NOT a map gesture -
+	// MapLibre refuses it and shows the "use two fingers" hint - so scrolling the page past
+	// the map must not cancel anything. Listen for gestures the map actually acted on.
+	['mousedown', 'keydown'].forEach(function (ev) {
 		el.addEventListener(ev, cancelIntro, { passive: true });
+	});
+	['dragstart', 'zoomstart', 'rotatestart', 'pitchstart'].forEach(function (ev) {
+		map.on(ev, function (e) { if (e && e.originalEvent) cancelIntro(); });
 	});
 	function skipBtn() { return document.getElementById('skipintro'); }
 	document.addEventListener('click', function (ev) {
@@ -90,8 +96,7 @@
 		if (t && t.id === 'skipintro') {
 			cancelIntro();
 			map.fitBounds(COAST, { padding: 30, duration: 900, pitch: 46, bearing: -18 });
-			introAborted = false;                                // the skip is not a rejection of the data
-			setTimeout(function () { landIntro(false); introAborted = true; }, 950);
+			setTimeout(function () { landIntro(false); }, 950);   // skipping is not a rejection of the data
 		}
 	});
 
@@ -137,6 +142,9 @@
 		introRunning = true;
 		window.__PLINTRO__ = 'running';
 		var sb = skipBtn(); if (sb) sb.style.display = 'inline-flex';
+		// Scheduled unconditionally: whatever happens to the camera, the panel ends up
+		// showing real numbers rather than "select a municipality".
+		setTimeout(function () { landIntro(!introAborted); }, 7350);
 		map.flyTo({ center: [-3.7, 40.2], zoom: 4.6, pitch: 0, duration: 2600, essential: true });
 		setTimeout(function () {
 			if (!introRunning) return;
@@ -148,7 +156,6 @@
 			introRunning = false; introDone = true;
 			window.__PLINTRO__ = 'done';
 			var sb2 = skipBtn(); if (sb2) sb2.style.display = 'none';
-			setTimeout(function () { landIntro(true); }, 1250);  // as the camera settles
 		}, 6100);
 	}
 
@@ -223,10 +230,29 @@
 				}
 			});
 			map.addLayer({
-				id: 'muni-label', type: 'symbol', source: 'munis', minzoom: 7.4,
-				layout: { 'text-field': ['get', 'name'], 'text-size': 13, 'text-font': ['Noto Sans Bold'] },
+				id: 'muni-label', type: 'symbol', source: 'munis', minzoom: 6.6,
+				layout: {
+					'text-field': ['get', 'name'],
+					// a phone settles at zoom 7.3 where all 8 anchors sit inside ~175x28px,
+					// so the type has to come down or nothing is placed at all
+					'text-size': ['interpolate', ['linear'], ['zoom'], 6.6, 10, 8.5, 12.5, 10, 14],
+					'text-font': ['Noto Sans Bold'],
+					// when there is not room for all 8, keep the ones that matter most
+					'symbol-sort-key': ['match', ['get', 'name'],
+						'Marbella', 0, 'Estepona', 1, 'Benahavís', 2, 'Mijas', 3,
+						'Fuengirola', 4, 'Benalmádena', 5, 'Casares', 6, 'Manilva', 7, 8],
+					// let a crowded label step aside rather than be dropped
+					'text-variable-anchor': ['center', 'top', 'bottom', 'left', 'right'],
+					'text-radial-offset': 0.7,
+					'text-justify': 'auto',
+					'text-padding': 1
+				},
 				paint: { 'text-color': '#ffffff', 'text-halo-color': '#04171a', 'text-halo-width': 1.8 }
 			});
+			// Collision priority follows layer order, and the basemap's label-city sits first,
+			// so without this the municipality names lose every contest and the polygons end
+			// up nameless - most visibly on mobile, which settles at zoom 7.3 not 8.63.
+			if (map.getLayer('label-city')) map.moveLayer('muni-label', 'label-city');
 			gj.features.forEach(function (f) {
 				var r = byName[f.properties.mls]; if (!r) return;
 				if (f.properties.mls === LANDING.name) LANDING.id = f.id;
@@ -246,7 +272,7 @@
 				if (hov !== null) map.setFeatureState({ source: 'munis', id: hov }, { hover: false });
 				hov = null;
 			});
-			map.on('click', 'muni-3d', function (e) { clearSel(); showMuni(e.features[0].properties.mls); });
+			map.on('click', 'muni-3d', function (e) { userPicked = true; clearSel(); showMuni(e.features[0].properties.mls); });
 			armIntro();
 		}).catch(function () { armIntro(); });
 
@@ -283,7 +309,17 @@
 					'circle-opacity': 0
 				}
 			});
-			map.on('click', 'city-hit', function (e) { clearSel(); showCity(e.features[0].properties); });
+			// Features arrive topmost-first, and cities.json is written largest-n first, so the
+			// TOP feature is the smallest town - clicking the big Sotogrande dot used to open
+			// "Guadiaro, 1 home listed". Pick the most significant town under the cursor instead.
+			map.on('click', 'city-hit', function (e) {
+				userPicked = true;
+				clearSel();
+				var best = e.features.slice().sort(function (a, b) {
+					return (Number(b.properties.n) || 0) - (Number(a.properties.n) || 0);
+				})[0];
+				showCity(best.properties);
+			});
 			map.on('mouseenter', 'city-hit', function () { map.getCanvas().style.cursor = 'pointer'; });
 			map.on('mouseleave', 'city-hit', function () { map.getCanvas().style.cursor = ''; });
 		}).catch(function () {});
@@ -317,10 +353,10 @@
 		});
 	}
 	function landIntro(withPulse) {
-		if (introAborted) return;
+		if (userPicked) return;          // they already clicked something of their own
 		showMuni(LANDING.name);
 		if (LANDING.id !== null) map.setFeatureState({ source: 'munis', id: LANDING.id }, { sel: true });
-		if (withPulse) pulseOthers();
+		if (withPulse && !introAborted) pulseOthers();
 	}
 
 	// ---- panel ----
@@ -427,9 +463,10 @@
 		flat.textContent = is3d ? '3D view' : 'Flat view';
 	});
 	var home = document.getElementById('homebtn');
-	if (home) home.addEventListener('click', function () { cancelIntro(); map.fitBounds(COAST, { padding: 30, pitch: 46, bearing: -18, duration: 1400 }); });
+	if (home) home.addEventListener('click', function () { userPicked = true; cancelIntro(); map.fitBounds(COAST, { padding: 30, pitch: 46, bearing: -18, duration: 1400 }); });
 	var spain = document.getElementById('spainbtn');
 	if (spain) spain.addEventListener('click', function () {
+		userPicked = true;
 		cancelIntro();
 		map.fitBounds(NETWORK, { padding: { top: 40, bottom: 40, left: 40, right: 40 }, pitch: 0, bearing: 0, duration: 1700 });
 	});
