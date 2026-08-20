@@ -17,6 +17,24 @@ const MAPTEXT = {
 	whyPt: 'Aquí no hay precio verificado: el registro notarial que usamos cubre España, no Portugal.',
 	whyThin: 'Hay muy pocas ventas registradas aquí para publicar un precio verificado.',
 	whyNone: 'Todavía no hay cifra notarial para este sitio: el registro publica por municipio y esta es una zona dentro de uno.',
+	loc: 'es-ES',
+	layerSale: 'El color indica cuántas viviendas hay anunciadas.',
+	layerPsm: 'El color indica el precio de salida por m\u00b2.',
+	layerVerified: 'El color indica el precio verificado ante notario por m\u00b2.',
+	layerGap: 'Viviendas anunciadas por cada 10.000 habitantes. El rojo señala los sitios con muy poca presencia para su tamaño. El gris indica que todavía hay muy pocas viviendas para poder medirlo.',
+	cov: 'anunciadas por cada 10.000 habitantes',
+	popLbl: 'Población',
+	gapThin: 'Muy poca presencia para un sitio de este tamaño.',
+	forSale: 'viviendas en venta',
+	listed1: 'vivienda anunciada',
+	listedN: 'viviendas anunciadas',
+	medianAsking: 'Precio medio',
+	askingPsm: '\u20ac/m\u00b2 de salida',
+	longTerm: 'Larga temporada',
+	holidayLbl: 'Vacacional',
+	agenciesHere: 'Agencias que publican aquí',
+	askPre: '¿Publicas en ',
+	askPost: '?',
 };
 
 const title = 'Mapa de la red inmobiliaria - todas las propiedades, en 3D | PropertyList';
@@ -46,6 +64,8 @@ const rows = Object.entries(munis)
 		psm: m.ops?.sale?.psm ?? null,
 		verified: m.verified?.psm ?? null,
 		vn: m.verified?.n ?? null,
+		pop: m.pop ?? null,
+		p10: m.p10 ?? null,
 		agencies: m.agencies?.top ?? [],
 	}))
 	.sort((a, b) => b.sale - a.sale);
@@ -142,6 +162,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 						<tr>
 							<th>Municipio</th>
 							<th class="n">En venta</th>
+							<th class="n">Por 10.000 hab.</th>
 							<th class="n">Precio medio</th>
 							<th class="n">&euro;/m&sup2; de salida</th>
 							<th class="n">&euro;/m&sup2; verificado</th>
@@ -154,6 +175,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 							<tr>
 								<th scope="row">{r.name}</th>
 								<td class="n">{r.sale.toLocaleString('es-ES')}</td>
+								<td class="n">{r.p10 == null ? '-' : r.p10.toLocaleString('es-ES')}</td>
 								<td class="n">{eur(r.median)}</td>
 								<td class="n">{eur(r.psm)}</td>
 								<td class="n v">{eur(r.verified)}{r.vn && <em> n={r.vn.toLocaleString('es-ES')}</em>}</td>
@@ -242,7 +264,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 	.maplibregl-ctrl-attrib.maplibregl-compact:not(.maplibregl-compact-show) .maplibregl-ctrl-attrib-inner { display: none; }
 	.tablesec { padding: 46px 0; background: #fff; }
 	.tablesec h2, .ctasec h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.7px; margin: 0 0 10px; color: #0b1b22; }
-	.mt { margin-top: 46px; }
+	.mt, .tablesec h2.mt, .ctasec h2.mt { margin-top: 64px; }
 	.sub { color: #5b6b73; max-width: 800px; line-height: 1.6; margin: 0 0 20px; font-size: 15.5px; }
 	.tablewrap { overflow-x: auto; }
 	table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }

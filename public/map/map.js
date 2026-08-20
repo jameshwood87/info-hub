@@ -11,14 +11,41 @@
 	var T = window.__PLTEXT__ || {
 		thin: 'List them free, forever. Your properties reach every agent on the network.',
 		cta: 'List for free',
-		thinTitle: 'Room for another agency'
+		thinTitle: 'Room for another agency',
+		layerSale: 'Colour shows how many homes are listed.',
+		layerPsm: 'Colour shows the asking price per m\u00b2.',
+		layerVerified: 'Colour shows the notary-verified price per m\u00b2.',
+		layerGap: 'Homes listed per 10,000 residents. Red means a place is barely covered for its size. Grey means too few listings there to measure yet.',
+		forSale: 'homes for sale',
+		listed1: 'home listed',
+		listedN: 'homes listed',
+		medianAsking: 'Median asking',
+		askingPsm: 'Asking \u20ac/m\u00b2',
+		longTerm: 'Long-term',
+		holidayLbl: 'Holiday',
+		agenciesHere: 'Agencies listing here',
+		askPre: 'Do you list in ',
+		askPost: '?',
+		cov: 'listed per 10,000 residents',
+		popLbl: 'Population',
+		gapThin: 'Barely covered for a place this size.'
 	};
+	var LOC = T.loc || 'en-GB';
 	var el = document.getElementById('map');
 	var panel = document.getElementById('panel');
 	if (!el || typeof maplibregl === 'undefined') return;
 
-	var COAST = [[-5.3581, 36.3103], [-4.5076, 36.6424]];
+	var COAST = [[-5.3581, 36.3103], [-4.3560, 36.7580]];
 	var NETWORK = [[-9.1, 35.7], [3.9, 42.7]];
+
+	// Coverage measured per head, not per listing. Fixed bands rather than a data-driven
+	// ramp: the range runs 1.3 to 460 per 10k, so a linear ramp would flatten everything
+	// into one colour, and fixed bands stay comparable as the data changes night to night.
+	var GAPMIN = 10;                                   // below this there is nothing to measure
+	var GAPSTOPS = [5, 15, 40, 80];                    // homes listed per 10,000 residents
+	var GAPCOLS = ['#e2452b', '#f2743f', '#f0b429', '#3fcbb0', '#0d5f57'];
+	var GAPGREY = '#5b7078';
+	var LANDING = { name: 'Marbella', id: null };
 	var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	var map = new maplibregl.Map({
@@ -46,8 +73,9 @@
 	});
 
 	// ---- intro flight, cancellable ----
-	var introRunning = false, introDone = false;
+	var introRunning = false, introDone = false, introAborted = false;
 	function cancelIntro() {
+		introAborted = true;   // also stops the landing, which fires after introRunning clears
 		if (!introRunning) return;
 		introRunning = false; introDone = true;
 		map.stop();
@@ -62,6 +90,8 @@
 		if (t && t.id === 'skipintro') {
 			cancelIntro();
 			map.fitBounds(COAST, { padding: 30, duration: 900, pitch: 46, bearing: -18 });
+			introAborted = false;                                // the skip is not a rejection of the data
+			setTimeout(function () { landIntro(false); introAborted = true; }, 950);
 		}
 	});
 
@@ -98,7 +128,12 @@
 	}
 
 	function runIntro() {
-		if (reduce) { map.fitBounds(COAST, { padding: 30, duration: 0, pitch: 45 }); introDone = true; window.__PLINTRO__ = 'reduced-motion'; return; }
+		if (reduce) {
+			map.fitBounds(COAST, { padding: 30, duration: 0, pitch: 45 });
+			introDone = true; window.__PLINTRO__ = 'reduced-motion';
+			setTimeout(function () { landIntro(false); }, 60);   // no motion, but still show real numbers
+			return;
+		}
 		introRunning = true;
 		window.__PLINTRO__ = 'running';
 		var sb = skipBtn(); if (sb) sb.style.display = 'inline-flex';
@@ -113,15 +148,16 @@
 			introRunning = false; introDone = true;
 			window.__PLINTRO__ = 'done';
 			var sb2 = skipBtn(); if (sb2) sb2.style.display = 'none';
+			setTimeout(function () { landIntro(true); }, 1250);  // as the camera settles
 		}, 6100);
 	}
 
 	// ---- layers ----
 	var LAYERS = {
-		sale:     { key: 'sale',     label: 'Colour shows how many homes are listed.' },
-		psm:      { key: 'psm',      label: 'Colour shows the asking price per m².' },
-		verified: { key: 'verified', label: 'Colour shows the notary-verified price per m².' },
-		gap:      { key: 'sale',     label: 'Red means we are thin on the ground - room for another agency.' }
+		sale:     { key: 'sale',     label: T.layerSale },
+		psm:      { key: 'psm',      label: T.layerPsm },
+		verified: { key: 'verified', label: T.layerVerified },
+		gap:      { key: 'p10',      label: T.layerGap }
 	};
 	var current = 'sale';
 
@@ -130,15 +166,31 @@
 		v.sort(function (a, b) { return a - b; });
 		return v.length ? { lo: v[0], hi: v[v.length - 1] } : { lo: 0, hi: 1 };
 	}
-	function ramp(key, invert) {
+	function ramp(key) {
 		var s = stats(key);
-		var cols = invert
-			? ['#ff5a3c', '#ff8a63', '#ffc4ab', '#8fe6d6', '#2fe3cb']
-			: ['#0d5f57', '#12907f', '#17b39c', '#42d6bd', '#7deede'];
+		var cols = ['#0d5f57', '#12907f', '#17b39c', '#42d6bd', '#7deede'];
 		var e = ['interpolate', ['linear'], ['coalesce', ['feature-state', key], s.lo]];
 		for (var i = 0; i < cols.length; i++) e.push(s.lo + ((s.hi - s.lo) * i) / (cols.length - 1), cols[i]);
 		return e;
 	}
+
+	// -1 is the "not scored" sentinel: either no population figure for the place, or
+	// fewer than GAPMIN listings. Both are shown grey rather than red - absence of data
+	// is not the same as absence of coverage.
+	function gapStep(input) {
+		var e = ['step', input, GAPCOLS[0]];
+		for (var i = 0; i < GAPSTOPS.length; i++) e.push(GAPSTOPS[i], GAPCOLS[i + 1]);
+		return e;
+	}
+	function gapPaint() {
+		return ['case', ['<', ['coalesce', ['feature-state', 'p10'], -1], 0], GAPGREY,
+			gapStep(['coalesce', ['feature-state', 'p10'], 0])];
+	}
+	var DOTCOLOR = ['case', ['>=', ['get', 'n'], 100], '#7deede', ['>=', ['get', 'n'], 20], '#2fe3cb', '#0affd8'];
+	var DOTGAP = ['case',
+		['<', ['get', 'n'], GAPMIN], GAPGREY,
+		['<', ['coalesce', ['get', 'p10'], -1], 0], GAPGREY,
+		gapStep(['coalesce', ['get', 'p10'], 0])];
 
 	map.on('load', function () {
 		// terrain + sky for the Google-Earth feel
@@ -159,12 +211,16 @@
 				id: 'muni-3d', type: 'fill', source: 'munis',
 				paint: {
 					'fill-color': ramp('sale', false),
-					'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.78, 0.58]
+					'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.78, ['boolean', ['feature-state', 'sel'], false], 0.86, 0.58]
 				}
 			});
 			map.addLayer({
 				id: 'muni-line', type: 'line', source: 'munis',
-				paint: { 'line-color': '#0affd8', 'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2.6, 0.9], 'line-opacity': 0.6 }
+				paint: {
+					'line-color': ['case', ['boolean', ['feature-state', 'sel'], false], '#ffffff', '#0affd8'],
+					'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2.6, ['boolean', ['feature-state', 'sel'], false], 3.4, 0.9],
+					'line-opacity': ['case', ['boolean', ['feature-state', 'sel'], false], 0.95, 0.6]
+				}
 			});
 			map.addLayer({
 				id: 'muni-label', type: 'symbol', source: 'munis', minzoom: 7.4,
@@ -173,7 +229,11 @@
 			});
 			gj.features.forEach(function (f) {
 				var r = byName[f.properties.mls]; if (!r) return;
-				map.setFeatureState({ source: 'munis', id: f.id }, { sale: r.sale, psm: r.psm || 0, verified: r.verified || 0 });
+				if (f.properties.mls === LANDING.name) LANDING.id = f.id;
+				map.setFeatureState({ source: 'munis', id: f.id }, {
+					sale: r.sale, psm: r.psm || 0, verified: r.verified || 0,
+					p10: (typeof r.p10 === 'number' && r.sale >= GAPMIN) ? r.p10 : -1
+				});
 			});
 			var hov = null;
 			map.on('mousemove', 'muni-3d', function (e) {
@@ -186,7 +246,7 @@
 				if (hov !== null) map.setFeatureState({ source: 'munis', id: hov }, { hover: false });
 				hov = null;
 			});
-			map.on('click', 'muni-3d', function (e) { showMuni(e.features[0].properties.mls); });
+			map.on('click', 'muni-3d', function (e) { clearSel(); showMuni(e.features[0].properties.mls); });
 			armIntro();
 		}).catch(function () { armIntro(); });
 
@@ -200,7 +260,7 @@
 					'circle-radius': ['interpolate', ['linear'], ['zoom'],
 						3, ['interpolate', ['linear'], ['get', 'n'], 1, 4, 100, 9, 1200, 15],
 						9, ['interpolate', ['linear'], ['get', 'n'], 1, 6.5, 100, 15, 1200, 32]],
-					'circle-color': ['case', ['>=', ['get', 'n'], 100], '#7deede', ['>=', ['get', 'n'], 20], '#2fe3cb', '#0affd8'],
+					'circle-color': DOTCOLOR,
 					'circle-opacity': 0.85,
 					'circle-stroke-width': 1.1,
 					'circle-stroke-color': '#eafff9'
@@ -223,36 +283,84 @@
 					'circle-opacity': 0
 				}
 			});
-			map.on('click', 'city-hit', function (e) { showCity(e.features[0].properties); });
+			map.on('click', 'city-hit', function (e) { clearSel(); showCity(e.features[0].properties); });
 			map.on('mouseenter', 'city-hit', function () { map.getCanvas().style.cursor = 'pointer'; });
 			map.on('mouseleave', 'city-hit', function () { map.getCanvas().style.cursor = ''; });
 		}).catch(function () {});
 	});
 
+	// ---- end of the intro: land on one municipality with real numbers showing ----
+	function clearSel() {
+		if (LANDING.id === null || !map.getSource('munis')) return;
+		map.setFeatureState({ source: 'munis', id: LANDING.id }, { sel: false });
+		if (map.getLayer('muni-pulse')) map.setPaintProperty('muni-pulse', 'line-opacity', 0);
+	}
+	function pulseOthers() {
+		if (!map.getSource('munis')) return;
+		if (!map.getLayer('muni-pulse')) {
+			map.addLayer({
+				id: 'muni-pulse', type: 'line', source: 'munis',
+				filter: ['!=', ['get', 'mls'], LANDING.name],
+				paint: { 'line-color': '#0affd8', 'line-width': 3, 'line-opacity': 0, 'line-blur': 1.4 }
+			});
+		}
+		// Two decaying pulses, so the other municipalities read as "these are clickable too"
+		// rather than as a blinking alert. Timed set-points with a transition rather than a
+		// requestAnimationFrame loop: rAF is throttled to a standstill in headless Chrome,
+		// which made this impossible to verify, and the renderer interpolates it better.
+		map.setPaintProperty('muni-pulse', 'line-opacity-transition', { duration: 620, delay: 0 });
+		[[0, 0.8], [700, 0], [1400, 0.55], [2100, 0]].forEach(function (step) {
+			setTimeout(function () {
+				if (!map.getLayer('muni-pulse')) return;
+				map.setPaintProperty('muni-pulse', 'line-opacity', introAborted ? 0 : step[1]);
+			}, step[0]);
+		});
+	}
+	function landIntro(withPulse) {
+		if (introAborted) return;
+		showMuni(LANDING.name);
+		if (LANDING.id !== null) map.setFeatureState({ source: 'munis', id: LANDING.id }, { sel: true });
+		if (withPulse) pulseOthers();
+	}
+
 	// ---- panel ----
+	function covBlock(pop, p10) {
+		if (typeof p10 !== 'number' || !pop) return '';
+		var thin = p10 < GAPSTOPS[1];
+		return '<div style="margin-top:13px;padding:11px 12px;border-radius:10px;background:'
+			+ (thin ? '#fff5f2' : '#f4f8f9') + ';border:1px solid ' + (thin ? '#f6d9d0' : '#e6eef0') + '">'
+			+ '<strong style="font-size:18px;color:#0b1b22">' + p10 + '</strong> '
+			+ '<span style="font-size:13px;color:#5b6b73">' + T.cov + '</span>'
+			+ '<span style="display:block;font-size:12px;color:#8aa0a6;margin-top:2px">' + T.popLbl + ' '
+			+ Number(pop).toLocaleString(LOC) + (thin ? ' \u00b7 ' + T.gapThin : '') + '</span></div>';
+	}
 	function lbl(t, v) {
 		return '<div><span style="display:block;font-size:11.5px;color:#8aa0a6;text-transform:uppercase;letter-spacing:.6px">' + t + '</span><strong>' + v + '</strong></div>';
 	}
 	function showMuni(name) {
 		var r = byName[name]; if (!r || !panel) return;
 		var maxSale = Math.max.apply(null, rows.map(function (x) { return x.sale; }));
-		var thin = r.sale / maxSale < 0.12;
+		// per head where we can, raw share only as a fallback
+		var thin = (typeof r.p10 === 'number' && r.sale >= GAPMIN)
+			? r.p10 < GAPSTOPS[1]
+			: r.sale / maxSale < 0.12;
 		var h = '<h3 style="margin:0 0 2px;font-size:20px;letter-spacing:-0.5px;color:#0b1b22">' + name + '</h3>';
 		h += '<p style="margin:0 0 14px;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:#8aa0a6">INE ' + (r.ine || '') + '</p>';
 		h += '<div style="font-size:14.5px;color:#45585f;line-height:1.5">';
-		h += '<strong style="font-size:26px;color:#0b1b22;letter-spacing:-0.7px">' + r.sale.toLocaleString('en-GB') + '</strong> homes for sale';
+		h += '<strong style="font-size:26px;color:#0b1b22;letter-spacing:-0.7px">' + r.sale.toLocaleString(LOC) + '</strong> ' + T.forSale;
 		h += '<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px">';
-		h += lbl('Median asking', r.median ? '€' + r.median.toLocaleString('en-GB') : '-');
-		h += lbl('Asking €/m²', r.psm ? '€' + r.psm.toLocaleString('en-GB') : '-');
-		h += lbl('Long-term', r.rent.toLocaleString('en-GB'));
-		h += lbl('Holiday', r.holiday.toLocaleString('en-GB'));
+		h += lbl(T.medianAsking, r.median ? '€' + r.median.toLocaleString(LOC) : '-');
+		h += lbl(T.askingPsm, r.psm ? '€' + r.psm.toLocaleString(LOC) : '-');
+		h += lbl(T.longTerm, r.rent.toLocaleString(LOC));
+		h += lbl(T.holidayLbl, r.holiday.toLocaleString(LOC));
 		h += '</div>';
 		if (r.verified) {
 			h += '<div style="margin-top:15px;padding:12px;border-radius:10px;background:#f0faf8;border:1px solid #d6ede8">';
-			h += '<span style="display:block;font-size:11.5px;color:#00867a;text-transform:uppercase;letter-spacing:.6px;font-weight:800">Notary-verified</span>';
-			h += '<strong style="font-size:20px;color:#00867a">€' + r.verified.toLocaleString('en-GB') + '/m²</strong>';
-			h += '<span style="display:block;font-size:12px;color:#5b6b73;margin-top:3px">what buyers actually paid · ' + (r.vn ? r.vn.toLocaleString('en-GB') + ' sales' : '') + '</span></div>';
+			h += '<span style="display:block;font-size:11.5px;color:#00867a;text-transform:uppercase;letter-spacing:.6px;font-weight:800">' + T.verified + '</span>';
+			h += '<strong style="font-size:20px;color:#00867a">€' + r.verified.toLocaleString(LOC) + '/m²</strong>';
+			h += '<span style="display:block;font-size:12px;color:#5b6b73;margin-top:3px">' + T.paid + (r.vn ? ' · ' + r.vn.toLocaleString(LOC) + ' ' + T.sales : '') + '</span></div>';
 		}
+		h += covBlock(r.pop, r.sale >= GAPMIN ? r.p10 : null);
 		if (thin) {
 			h += '<div style="margin-top:14px;padding:12px;border-radius:10px;background:#fff5f2;border:1px solid #f6d9d0">';
 			h += '<strong style="color:#c0392b;font-size:14px">' + T.thinTitle + '</strong>';
@@ -260,7 +368,7 @@
 			h += '<a href="' + SIGNUP + '" data-umami-event="map-panel-signup" style="display:inline-block;background:#00ae9a;color:#fff;border-radius:999px;padding:9px 18px;font-size:13.5px;font-weight:800;text-decoration:none">' + T.cta + '</a></div>';
 		}
 		if (r.agencies && r.agencies.length) {
-			h += '<div style="margin-top:15px"><span style="display:block;font-size:11.5px;color:#8aa0a6;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Agencies listing here</span>';
+			h += '<div style="margin-top:15px"><span style="display:block;font-size:11.5px;color:#8aa0a6;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">' + T.agenciesHere + '</span>';
 			r.agencies.slice(0, 5).forEach(function (a) { h += '<div style="font-size:13.5px;color:#45585f;padding:3px 0;border-bottom:1px solid #f2f6f7">' + a.name + '</div>'; });
 			h += '</div>';
 		}
@@ -271,23 +379,24 @@
 		var h = '<h3 style="margin:0 0 2px;font-size:20px;letter-spacing:-0.5px;color:#0b1b22">' + p.city + '</h3>';
 		h += '<p style="margin:0 0 14px;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:#8aa0a6">' + (p.region || '') + '</p>';
 		h += '<div style="font-size:14.5px;color:#45585f;line-height:1.5">';
-		h += '<strong style="font-size:26px;color:#0b1b22;letter-spacing:-0.7px">' + Number(p.n).toLocaleString('en-GB') + '</strong> ' + (Number(p.n) === 1 ? 'home listed' : 'homes listed');
+		h += '<strong style="font-size:26px;color:#0b1b22;letter-spacing:-0.7px">' + Number(p.n).toLocaleString(LOC) + '</strong> ' + (Number(p.n) === 1 ? T.listed1 : T.listedN);
 		h += '<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px">';
-		h += lbl('Median asking', p.median ? '€' + Number(p.median).toLocaleString('en-GB') : '-');
-		h += lbl('Asking €/m²', p.psm ? '€' + Number(p.psm).toLocaleString('en-GB') : '-');
+		h += lbl(T.medianAsking, p.median ? '€' + Number(p.median).toLocaleString(LOC) : '-');
+		h += lbl(T.askingPsm, p.psm ? '€' + Number(p.psm).toLocaleString(LOC) : '-');
 		h += '</div>';
 		if (p.v) {
 			h += '<div style="margin-top:15px;padding:12px;border-radius:10px;background:#f0faf8;border:1px solid #d6ede8">';
 			h += '<span style="display:block;font-size:11.5px;color:#00867a;text-transform:uppercase;letter-spacing:.6px;font-weight:800">' + T.verified + '</span>';
-			h += '<strong style="font-size:20px;color:#00867a">€' + Number(p.v).toLocaleString('en-GB') + '/m²</strong>';
-			h += '<span style="display:block;font-size:12px;color:#5b6b73;margin-top:3px">' + T.paid + ' · ' + Number(p.vn).toLocaleString('en-GB') + ' ' + T.sales + '</span></div>';
+			h += '<strong style="font-size:20px;color:#00867a">€' + Number(p.v).toLocaleString(LOC) + '/m²</strong>';
+			h += '<span style="display:block;font-size:12px;color:#5b6b73;margin-top:3px">' + T.paid + ' · ' + Number(p.vn).toLocaleString(LOC) + ' ' + T.sales + '</span></div>';
 		} else if (p.vwhy) {
 			var why = p.vwhy === 'pt' ? T.whyPt : (p.vwhy === 'thin' ? T.whyThin : T.whyNone);
 			h += '<p style="margin-top:13px;font-size:12.5px;color:#8aa0a6;line-height:1.5">' + why + '</p>';
 		}
-		if (Number(p.n) < 10) {
+		h += covBlock(p.pop, Number(p.n) >= GAPMIN ? p.p10 : null);
+		if (Number(p.n) < GAPMIN || (typeof p.p10 === 'number' && p.p10 < GAPSTOPS[1])) {
 			h += '<div style="margin-top:15px;padding:13px;border-radius:10px;background:#f0faf8;border:1px solid #d6ede8">';
-			h += '<strong style="display:block;font-size:14px;color:#0b1b22;margin-bottom:3px">Do you list in ' + p.city + '?</strong>';
+			h += '<strong style="display:block;font-size:14px;color:#0b1b22;margin-bottom:3px">' + T.askPre + p.city + T.askPost + '</strong>';
 			h += '<span style="display:block;font-size:13px;color:#5b6b73;margin-bottom:9px">' + T.thin + '</span>';
 			h += '<a href="' + SIGNUP + '" data-umami-event="map-panel-signup" style="display:inline-block;background:#00ae9a;color:#fff;border-radius:999px;padding:9px 18px;font-size:13.5px;font-weight:800;text-decoration:none">' + T.cta + '</a></div>';
 		}
@@ -302,7 +411,10 @@
 			current = b.getAttribute('data-layer');
 			var cfg = LAYERS[current];
 			if (map.getLayer('muni-3d')) {
-				map.setPaintProperty('muni-3d', 'fill-color', ramp(cfg.key, current === 'gap'));
+				map.setPaintProperty('muni-3d', 'fill-color', current === 'gap' ? gapPaint() : ramp(cfg.key));
+			}
+			if (map.getLayer('city-dots')) {
+				map.setPaintProperty('city-dots', 'circle-color', current === 'gap' ? DOTGAP : DOTCOLOR);
 			}
 			var lab = document.getElementById('legendlabel');
 			if (lab) lab.textContent = cfg.label;

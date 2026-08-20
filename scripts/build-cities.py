@@ -155,12 +155,26 @@ def main():
     return 0
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+def post_passes():
+    """Re-attach the fields that main() cannot compute itself.
 
-    # attach notarial verified EUR/m2 to the town dots (Spain only, sample >= 30)
-    try:
-        import subprocess
-        subprocess.run(["/usr/bin/python3","/opt/info-hub/scripts/add-verified.py"],timeout=1800)
-    except Exception as e:
-        print("verified pass skipped:",e)
+    main() rewrites cities.json from the Website API, so anything added afterwards has to
+    be re-applied on every build. These calls previously sat below sys.exit(main()) and
+    therefore never ran on cron.
+    """
+    import subprocess
+    for label, script in (("verified prices", "add-verified.py"),
+                          ("population", "add-population.py")):
+        try:
+            r = subprocess.run(["/usr/bin/python3", "/opt/info-hub/scripts/" + script],
+                               timeout=2400)
+            if r.returncode != 0:
+                print("%s pass exited %d" % (label, r.returncode))
+        except Exception as e:
+            print("%s pass skipped: %s" % (label, e))
+
+
+if __name__ == "__main__":
+    rc = main()
+    post_passes()
+    sys.exit(rc)
