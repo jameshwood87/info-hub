@@ -71,7 +71,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	await notifySubmission({
 		kind: 'buyer lead',
 		fields: [['Name', rec.name], ['Email', rec.email], ['Phone', rec.phone], ['Looking for', rec.op], ['Area', rec.area_name || rec.area], ['Budget', rec.budget]],
-		link: '/admin/analytics',
+		link: '/admin/leads',
 	});
 	return json({ ok: true });
 };

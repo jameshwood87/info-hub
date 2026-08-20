@@ -124,6 +124,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 				['Page', source],
 				['Language', lang],
 			],
+			link: '/admin/leads',
 		});
 	}
 	return json({ ok: true });

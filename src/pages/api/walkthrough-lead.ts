@@ -75,6 +75,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 			['Email', email],
 			['Language', rec.lang],
 		],
+		link: '/admin/leads',
 	});
 
 	return json({ ok: true });

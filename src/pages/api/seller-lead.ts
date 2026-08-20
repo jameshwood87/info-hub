@@ -97,6 +97,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 			['Wants agent contact', rec.agentOptIn ? 'YES' : 'no'],
 			['Language', rec.lang],
 		],
+		link: '/admin/leads',
 	});
 
 	// 3) send the seller the breakdown we promised on the page. Best-effort: the lead is

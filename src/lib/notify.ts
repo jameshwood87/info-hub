@@ -42,13 +42,18 @@ export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
 			)
 			.join('');
 
-		const reviewUrl = opts.link ? `${SITE}${opts.link}` : SITE;
+		// No admin queue for this kind of submission means no button. It used to fall back
+		// to SITE, so "Review it" quietly dropped the reader on the public homepage.
+		const reviewUrl = opts.link ? `${SITE}${opts.link}` : '';
+		const button = reviewUrl
+			? `<p style="margin:0"><a href="${esc(reviewUrl)}" style="background:#00ae9a;color:#fff;padding:10px 18px;` +
+				`border-radius:8px;text-decoration:none;font-size:14px">Review it</a></p>`
+			: '';
 		const html =
 			`<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px">` +
 			`<p style="font-size:16px;margin:0 0 14px"><strong>New ${esc(opts.kind)}</strong> on info.propertylist.es</p>` +
 			`<table style="border-collapse:collapse;font-size:14px;margin-bottom:18px">${rows}</table>` +
-			`<p style="margin:0"><a href="${esc(reviewUrl)}" style="background:#00ae9a;color:#fff;padding:10px 18px;` +
-			`border-radius:8px;text-decoration:none;font-size:14px">Review it</a></p>` +
+			button +
 			`</div>`;
 
 		const text =
@@ -57,7 +62,7 @@ export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
 				.filter(([, v]) => v !== undefined && v !== null && String(v).trim() !== '')
 				.map(([k, v]) => `${k}: ${v}`)
 				.join('\n') +
-			`\n\nReview: ${reviewUrl}\n`;
+			(reviewUrl ? `\n\nReview: ${reviewUrl}\n` : '\n');
 
 		const ctl = new AbortController();
 		const timer = setTimeout(() => ctl.abort(), 8000);

@@ -89,6 +89,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	await notifySubmission({
 		kind: 'app waitlist signup',
 		fields: [['Email', email], ['Source', source], ['Language', lang]],
+		link: '/admin/leads',
 	});
 	return json({ ok: true });
 };

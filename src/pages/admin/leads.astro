@@ -1,0 +1,158 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Every direct enquiry the public forms collect, in one place.
+//
+// These stores had no admin view at all, so the "Review it" button in the notification
+// email had nowhere to point and fell back to the public homepage. Rendered server-side
+// from the JSON queues; /admin/* is behind the auth middleware, so no separate API is
+// needed and the emails and phone numbers here never reach an unauthenticated request.
+//
+// Columns are derived from the records themselves, so a form that starts capturing a new
+// field shows it here without this page needing a change.
+
+const VAR = '/opt/info-hub/var/admin';
+
+type Store = { key: string; title: string; note: string; file: string };
+
+const STORES: Store[] = [
+	{ key: 'app-waitlist', title: 'App waitlist', note: 'Early access for the mobile app, from /mobile-app/ and the holiday-lets page.', file: 'app-waitlist.json' },
+	{ key: 'seller-leads', title: 'Seller enquiries', note: 'Owners asking what their property is worth.', file: 'seller-leads.json' },
+	{ key: 'buyer-leads', title: 'Buyer leads', note: 'From the property finder.', file: 'buyer-leads.json' },
+	{ key: 'walkthrough-leads', title: '360 walkthrough requests', note: 'Agencies asking for a virtual tour.', file: 'walkthrough-leads.json' },
+	{ key: 'newsletter', title: 'Newsletter signups', note: '', file: 'newsletter.json' },
+	{ key: 'agents-survey', title: 'Agents survey', note: 'Roadmap survey responses. Credit grants are still manual.', file: 'agents-survey.json' },
+];
+
+const readStore = (file: string): any[] => {
+	try {
+		const raw = fs.readFileSync(path.join(VAR, file), 'utf8');
+		const d = JSON.parse(raw);
+		if (Array.isArray(d)) return d;
+		return d?.entries ?? d?.items ?? [];
+	} catch {
+		return [];
+	}
+};
+
+// 'at' and 'id' are rendered separately; everything else becomes a column
+const HIDE = new Set(['id', 'at', 'ip', 'ua']);
+const LABELS: Record<string, string> = {
+	ptype: 'Property type',
+	op: 'Looking for',
+	lang: 'Lang',
+	listings_band: 'Listings',
+	top_value: 'Most valued',
+	mls_value: 'MLS value',
+	switch_blocker: 'Blocker',
+	wants_followup: 'Follow up',
+	area_name: 'Area',
+};
+const label = (k: string) => LABELS[k] ?? k.charAt(0).toUpperCase() + k.slice(1).replace(/_/g, ' ');
+
+const sections = STORES.map((s) => {
+	const rows = readStore(s.file)
+		.slice()
+		.sort((a, b) => String(b?.at ?? '').localeCompare(String(a?.at ?? '')));
+	const cols: string[] = [];
+	rows.forEach((r) => Object.keys(r ?? {}).forEach((k) => { if (!HIDE.has(k) && !cols.includes(k)) cols.push(k); }));
+	return { ...s, rows, cols };
+});
+
+const total = sections.reduce((n, s) => n + s.rows.length, 0);
+const when = (v: unknown) => String(v ?? '').slice(0, 16).replace('T', ' ');
+const cell = (v: unknown) => {
+	const s = String(v ?? '').trim();
+	if (!s) return '-';
+	return s.length > 160 ? s.slice(0, 160) + '...' : s;
+};
+---
+
+<Layout
+	lang="en"
+	title="Admin • Leads"
+	description="Direct enquiries from the public forms"
+	canonical="https://info.propertylist.es/admin/leads"
+>
+	<meta name="robots" content="noindex,nofollow" slot="head" />
+	<div class="shell">
+		<header class="topbar">
+			<div class="title"><a class="back" href="/admin/">&larr; Dashboard</a><h1>Leads</h1></div>
+			<div class="hint">
+				Everything the public forms collect. Private, never published. {total} record{total === 1 ? '' : 's'} in total.
+			</div>
+		</header>
+
+		<nav class="jump">
+			{sections.map((s) => (
+				<a href={`#${s.key}`} class={s.rows.length ? 'has' : ''}>
+					{s.title} <b>{s.rows.length}</b>
+				</a>
+			))}
+		</nav>
+
+		{sections.map((s) => (
+			<section id={s.key} class="block">
+				<h2>{s.title} <span class="count">{s.rows.length}</span></h2>
+				{s.note && <p class="note">{s.note}</p>}
+				{s.rows.length === 0 ? (
+					<p class="empty">Nothing yet.</p>
+				) : (
+					<div class="tablewrap">
+						<table>
+							<thead>
+								<tr>
+									<th class="w">When</th>
+									{s.cols.map((c) => <th>{label(c)}</th>)}
+								</tr>
+							</thead>
+							<tbody>
+								{s.rows.map((r) => (
+									<tr>
+										<td class="w mono">{when(r?.at)}</td>
+										{s.cols.map((c) => (
+											<td>
+												{c === 'email' && r?.[c] ? <a href={`mailto:${r[c]}`}>{cell(r[c])}</a> : cell(r?.[c])}
+											</td>
+										))}
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				)}
+			</section>
+		))}
+	</div>
+</Layout>
+
+<style>
+	.shell { max-width: 1180px; margin: 0 auto; padding: 26px 20px 70px; }
+	.topbar { border-bottom: 1px solid #e7eef1; padding-bottom: 14px; margin-bottom: 18px; }
+	.title { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+	.back { color: #00867a; text-decoration: none; font-size: 14px; font-weight: 700; }
+	.topbar h1 { font-size: 26px; letter-spacing: -0.6px; margin: 0; color: #0b1b22; }
+	.hint { color: #5b6b73; font-size: 14px; margin-top: 6px; }
+
+	.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+	.jump a { border: 1.5px solid #e2eaec; border-radius: 999px; padding: 7px 15px; font-size: 13.5px; color: #8aa0a6; text-decoration: none; }
+	.jump a.has { border-color: #b9e5dd; color: #0b1b22; }
+	.jump a b { color: #00867a; }
+
+	.block { margin-bottom: 34px; }
+	.block h2 { font-size: 18px; letter-spacing: -0.3px; color: #0b1b22; margin: 0 0 4px; }
+	.count { display: inline-block; background: #eef7f6; color: #00867a; border-radius: 999px; font-size: 12.5px; padding: 2px 10px; margin-left: 6px; vertical-align: middle; }
+	.note { color: #5b6b73; font-size: 13.5px; margin: 0 0 12px; }
+	.empty { color: #8aa0a6; font-size: 14px; margin: 6px 0 0; }
+
+	.tablewrap { overflow-x: auto; border: 1px solid #e7eef1; border-radius: 12px; }
+	table { width: 100%; border-collapse: collapse; font-size: 14px; }
+	th, td { padding: 9px 12px; border-bottom: 1px solid #f0f5f6; text-align: left; vertical-align: top; }
+	thead th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.6px; color: #5b6b73; background: #fafcfc; white-space: nowrap; }
+	tbody tr:last-child td { border-bottom: 0; }
+	td a { color: #00867a; }
+	.w { white-space: nowrap; }
+	.mono { font-variant-numeric: tabular-nums; color: #5b6b73; }
+</style>
