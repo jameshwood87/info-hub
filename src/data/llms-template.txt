@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-08-20
-Version: 5.8
+Version: 5.9
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -96,6 +96,9 @@ Agents share a unique referral link (found at agents.propertylist.es/referrals);
 
 #### /rentals/ - Rentals Module
 Long-term lettings management for agencies: Tenants pipeline, Tenancies, Maintenance and renewal email reminders. 50 credits per 30 days, free 30-day trial. Holiday and short-let management - bookings, nightly rates, channel sync and guest registration with the police - is on the roadmap and is NOT in the module today. Spanish version: /es/alquileres/
+
+#### /holiday-rentals/ - Holiday lets (coming soon)
+What Spanish law already requires of a holiday let - guest registration with the police within 24 hours (RD 933/2021, SES.HOSPEDAJES), the rental registration number mandatory since 1 July 2025 (RD 1312/2024), Andalusian tourist registration (VFT) and the three-fifths community approval required since 3 April 2025 - plus what PropertyList is building for holiday lets: bookings and a guest record, one calendar across both modes, nightly rates, guest messaging and turnover, deposits and owner statements, and automatic guest registration with a compliance dashboard. NONE of that is built today; the page carries a waitlist. Long-term lettings are live at /rentals/. Spanish version: /es/alquiler-vacacional/
 
 #### /pipelines/ - Sales Pipelines
 Visual deal pipelines and task management in the free CRM. Spanish version: /es/pipelines/

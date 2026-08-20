@@ -1,0 +1,565 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/holiday-rentals/`;
+const title = 'Holiday lets on PropertyList: what the law asks now, what we are building | PropertyList';
+const description =
+	'Holiday and short-let management is being built into the Rentals Module: bookings, nightly rates, channel sync and automatic guest registration with the police. Not in the module today. Here is what the law already requires of a Costa del Sol holiday let, and how to be told when the tooling lands.';
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+
+const duties = [
+	{
+		name: 'Guest registration, within 24 hours',
+		desc: 'Every holiday stay. Around 17 to 21 fields per traveller over 14, sent to SES.HOSPEDAJES within 24 hours, register kept 3 years. Fines for a grave breach run 601 to 30,000 euros.',
+		href: '/docs/laws-procedures/renting-a-property/short-term-holiday/guest-registration-police/',
+		linkText: 'How guest registration works',
+	},
+	{
+		name: 'A rental registration number, in every advert',
+		desc: 'Mandatory since 1 July 2025 under RD 1312/2024. Without one you cannot be advertised on a platform, and since 20 May 2026 platforms have to verify the number and pull listings that do not have it.',
+		href: '/general-information/spains-new-national-register-for-short-term-rentals/',
+		linkText: 'The national register explained',
+	},
+	{
+		name: 'Tourist registration in Andalucia',
+		desc: 'The Junta registry entry, commonly the VFT, on top of the national number. It is what makes the unit lettable to tourists at all.',
+		href: '/docs/laws-procedures/renting-a-property/short-term-holiday/',
+		linkText: 'Short-term and holiday requirements',
+	},
+	{
+		name: 'Your community of owners',
+		desc: 'Since 3 April 2025 a new tourist let needs express approval by a three-fifths majority of the community (Ley Organica 1/2025). It does not apply retroactively to lets already lawfully established.',
+		href: '/general-information/spains-new-national-register-for-short-term-rentals/',
+		linkText: 'What changed and when',
+	},
+];
+
+const building = [
+	{ name: 'Bookings and a guest record', desc: 'The primitive the platform does not have yet. Everything else hangs off it: documents, deposits, statements, guest messaging and the police submission.' },
+	{ name: 'One calendar across both modes', desc: 'A property let long-term in winter and by the week in summer, on a single availability view, with iCal in and out.' },
+	{ name: 'Nightly rates and quoting', desc: 'Season pricing, minimum stays, and a quote a guest can accept.' },
+	{ name: 'Guest messaging and turnover', desc: 'Pre-arrival, check-in and checkout sequences, and the cleaning job that follows every departure.' },
+	{ name: 'Deposits and owner statements', desc: 'Holiday deposits alongside long-term fianzas, and a monthly statement per owner with the channel fee and the management commission itemised rather than netted away.' },
+	{ name: 'Automatic guest registration', desc: 'A pre-arrival link, the guest photographs their ID and signs, the signed parte is archived for the three years the law asks, and the submission goes to SES on its own with retries, receipts and an alert if it fails. A dashboard shows every stay as sent, pending or failed, per property.' },
+];
+
+const faqs = [
+	{
+		q: 'When will it be ready?',
+		a: 'There is no date, and we would rather say that than invent one. The build is scoped and under review, and it starts with the booking record everything else depends on. The waitlist is how we decide the order, so joining it genuinely counts.',
+	},
+	{
+		q: 'What can I actually use today?',
+		a: 'The Rentals Module runs long-term lettings end to end and you can start a free 30-day trial of it now. On the holiday side you can use the guides here, which are free and public: what guest registration involves, what the registration number is and where it has to appear, and what Andalucia asks on top.',
+	},
+	{
+		q: 'Will holiday and long-term be two separate products?',
+		a: 'No. One Rentals Module, with the mode set per property, because letting a Costa del Sol property long-term through the winter and by the week in summer is the normal pattern here, not an edge case.',
+	},
+	{
+		q: 'Does PropertyList send anything to the police today?',
+		a: 'No. Nothing is submitted on your behalf today, and a long-term tenancy will never trigger it in any case: a tenant living in the property as their home is not a traveller, and the duty does not apply to them. The automatic submission being built is for holiday bookings only.',
+	},
+	{
+		q: 'What will it cost?',
+		a: 'Not decided. The Rentals Module is 50 credits per 30-day period today for long-term lettings, and we are not going to quote a holiday price before the thing exists.',
+	},
+	{
+		q: 'I let on a temporada contract. Which side am I on?',
+		a: 'It depends on the purpose of the let rather than its length. A stay for tourism or leisure is a holiday let for these duties. A genuine temporary-housing contract, for work, study or treatment, is arguably outside them, and many operators file anyway to be safe. Talk to us before you move a temporada book across.',
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/alquiler-vacacional/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Rentals Module &middot; Holiday wing</div>
+			<h1>Holiday lets: the rules are here now, the tooling is coming.</h1>
+			<p class="lead">
+				Bookings, nightly rates, channel sync and automatic guest registration with the police are being built into the Rentals Module. None
+				of it is in the module today, and we are not going to pretend otherwise. What is here today is everything a Costa del Sol holiday
+				let has to get right, written out properly and free to read.
+			</p>
+			<div class="ctaRow" aria-label="Get started">
+				<a class="btnPrimary" href="#waitlist">Tell us to build it</a>
+				<a class="btnSecondary" href="/docs/laws-procedures/renting-a-property/short-term-holiday/guest-registration-police/">
+					Start with guest registration
+				</a>
+			</div>
+			<div class="note">Long-term lettings are live today. <a href="/rentals/">See the Rentals Module</a>.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What the law already asks of you</h2>
+			<p>
+				Four duties, all in force, none of them waiting for our software. Every one of these guides is free and public, and none of them
+				needs a PropertyList account.
+			</p>
+		</div>
+		<div class="grid2" aria-label="Duties on a Spanish holiday let">
+			{
+				duties.map((d) => (
+					<div class="card">
+						<h3>{d.name}</h3>
+						<p>{d.desc}</p>
+						<p class="cardLink">
+							<a href={d.href}>{d.linkText}</a>
+						</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>What we are building <span class="soonTag">Coming soon</span></h2>
+			<p>
+				The blueprint is written and under review. It is listed here in the order it depends on itself, not in the order it would sound
+				best. Nothing below exists yet.
+			</p>
+		</div>
+		<div class="grid3" aria-label="Planned holiday-let capabilities">
+			{
+				building.map((b) => (
+					<div class="card soon">
+						<h3>{b.name}</h3>
+						<p>{b.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>One module, mode per property</h2>
+				<p>
+					A Costa del Sol property is often let long-term through the winter and by the week in summer. That is the normal pattern here, so
+					holiday and long-term will not be two products with two prices and two databases. It is one Rentals Module with the mode set per
+					property.
+				</p>
+				<p>
+					Long-term is the half that works today: a tenants pipeline, tenancies that chase their own renewals and deposit deadlines, repairs
+					the tenant starts and the landlord approves. <a href="/rentals/">See what is in it</a>.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Why we are telling you what we have not built</h2>
+				<p>
+					Because you can check. The guest-registration duty has been mandatory since December 2024 and the registration number since July
+					2025, so a holiday agency reading a page that implies we handle both would find out inside a week.
+				</p>
+				<p>
+					The useful thing we can do today is make the rules legible, and the useful thing you can do is tell us this matters, so it gets
+					built before the parts that only sound impressive.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta waitlistBand" id="waitlist">
+		<div class="ctaInner">
+			<h2>Tell us to build it</h2>
+			<p>
+				Leave your email and we will send one message when the holiday side is ready to try, and nothing else. It also counts as a vote: the
+				waitlist is what decides how soon this moves up the queue.
+			</p>
+			<form class="waitlistForm" data-source="holiday-rentals">
+				<input type="email" name="email" required placeholder="you@agency.com" aria-label="Your email address" autocomplete="email" />
+				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+				<button type="submit">Put me on the list</button>
+				<p class="wlStatus" role="status" aria-live="polite"></p>
+			</form>
+			<div class="ctaRow" style="margin-top: 12px;">
+				<a class="btnSecondary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Questions</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p set:html={f.a} />
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<script is:inline>
+		document.querySelectorAll('.waitlistForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.wlStatus');
+				const emailEl = form.querySelector('input[name="email"]');
+				const hpEl = form.querySelector('input[name="website"]');
+				const email = emailEl ? emailEl.value : '';
+				const website = hpEl ? hpEl.value : '';
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'wlStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/app-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({
+							email: email,
+							website: website,
+							lang: es ? 'es' : 'en',
+							source: form.getAttribute('data-source') || 'holiday-rentals',
+						}),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'wlStatus ok';
+						status.textContent = es
+							? 'Anotado. Te escribimos cuando la parte vacacional se pueda probar.'
+							: 'Noted. We will email you when the holiday side is ready to try.';
+					} else {
+						status.className = 'wlStatus err';
+						status.textContent = es ? 'Revisa tu correo e intentalo de nuevo.' : 'Please check your email and try again.';
+					}
+				} catch (err) {
+					status.className = 'wlStatus err';
+					status.textContent = es ? 'Algo salio mal. Intentalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+
+		h1,
+		h2,
+		h3 {
+			letter-spacing: -0.03em;
+		}
+
+		.hero {
+			border-radius: 22px;
+			padding: 16px;
+			margin: 0 0 16px;
+			border: 1px solid rgba(16, 24, 40, 0.08);
+			background:
+				radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+				radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+		}
+
+		.heroInner {
+			background: rgba(255, 255, 255, 0.78);
+			border: 1px solid rgba(16, 24, 40, 0.06);
+			border-radius: 18px;
+			padding: 22px;
+		}
+
+		.kicker {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 6px 12px;
+			border-radius: 999px;
+			background: rgba(var(--pl-accent-rgb), 0.12);
+			border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+			color: var(--pl-ink);
+			font-weight: 900;
+			font-size: 12px;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+		}
+
+		h1 {
+			margin: 14px 0 12px;
+			line-height: 1.06;
+			font-size: clamp(28px, 4.4vw, 42px);
+		}
+
+		.lead {
+			margin: 0 0 16px;
+			color: rgba(16, 24, 40, 0.75);
+			max-width: 62ch;
+			line-height: 1.62;
+		}
+
+		.note {
+			color: rgba(16, 24, 40, 0.6);
+			font-weight: 700;
+			font-size: 12.5px;
+			margin-top: 12px;
+		}
+
+		.note a {
+			color: var(--pl-ink);
+		}
+
+		.ctaRow {
+			display: flex;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.btnPrimary,
+		.btnSecondary {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 14px 22px;
+			border-radius: 14px;
+			text-decoration: none;
+			font-weight: 900;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.btnPrimary {
+			background: var(--pl-ink);
+			color: #fff;
+			border: 1px solid var(--pl-ink);
+		}
+
+		.btnPrimary:hover {
+			background: #086055;
+		}
+
+		.btnSecondary {
+			background: #fff;
+			color: rgba(16, 24, 40, 0.86);
+			border: 1px solid rgba(16, 24, 40, 0.16);
+		}
+
+		.btnSecondary:hover {
+			border-color: rgba(16, 24, 40, 0.3);
+		}
+
+		.section {
+			margin: 34px 0;
+		}
+
+		.sectionHead {
+			margin: 0 0 16px;
+		}
+
+		.sectionHead h2 {
+			margin: 0 0 6px;
+			font-size: clamp(22px, 3vw, 28px);
+		}
+
+		.sectionHead p {
+			margin: 0;
+			color: rgba(16, 24, 40, 0.7);
+			max-width: 70ch;
+			line-height: 1.6;
+		}
+
+		.soonTag {
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: 8px;
+			padding: 5px 11px;
+			border-radius: 999px;
+			background: rgba(var(--pl-accent-rgb), 0.12);
+			border: 1px solid rgba(var(--pl-accent-rgb), 0.28);
+			color: var(--pl-ink);
+			font-size: 12px;
+			font-weight: 900;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+		}
+
+		.grid2,
+		.grid3 {
+			display: grid;
+			gap: 14px;
+		}
+
+		.grid2 {
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		}
+
+		.grid3 {
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		}
+
+		.card {
+			border: 1px solid rgba(16, 24, 40, 0.1);
+			border-radius: 18px;
+			padding: 18px 20px;
+			background: #fff;
+		}
+
+		.card h2 {
+			margin: 0 0 8px;
+			font-size: 20px;
+		}
+
+		.card h3 {
+			margin: 0 0 6px;
+			font-size: 16.5px;
+		}
+
+		.card p {
+			margin: 0 0 10px;
+			color: rgba(16, 24, 40, 0.72);
+			line-height: 1.6;
+			font-size: 15px;
+		}
+
+		.card p:last-child {
+			margin-bottom: 0;
+		}
+
+		.card a {
+			color: var(--pl-ink);
+			font-weight: 700;
+		}
+
+		.card.accent {
+			border-color: rgba(var(--pl-accent-rgb), 0.35);
+			background: rgba(var(--pl-accent-rgb), 0.06);
+		}
+
+		.card.soon {
+			background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.05), rgba(255, 255, 255, 0));
+			border-style: dashed;
+		}
+
+		.cardLink {
+			margin-top: 12px !important;
+			font-size: 14.5px;
+		}
+
+		.cta {
+			border-radius: 22px;
+			padding: 26px 22px;
+			border: 1px solid rgba(var(--pl-accent-rgb), 0.28);
+			background: rgba(var(--pl-accent-rgb), 0.07);
+			margin: 34px 0;
+		}
+
+		.ctaInner h2 {
+			margin: 0 0 8px;
+			font-size: clamp(22px, 3vw, 28px);
+		}
+
+		.ctaInner p {
+			margin: 0 0 14px;
+			color: rgba(16, 24, 40, 0.72);
+			max-width: 66ch;
+			line-height: 1.6;
+		}
+
+		.waitlistForm {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			align-items: center;
+			max-width: 560px;
+		}
+
+		.waitlistForm input[type='email'] {
+			flex: 1;
+			min-width: 220px;
+			padding: 13px 14px;
+			border-radius: 14px;
+			border: 1px solid rgba(16, 24, 40, 0.2);
+			font-size: 15px;
+			background: #fff;
+		}
+
+		.waitlistForm input[type='email']:focus {
+			outline: none;
+			border-color: var(--pl-accent);
+			box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.18);
+		}
+
+		.waitlistForm button {
+			padding: 13px 20px;
+			border-radius: 14px;
+			border: 1px solid var(--pl-ink);
+			background: var(--pl-ink);
+			color: #fff;
+			font-weight: 900;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.waitlistForm .hp {
+			position: absolute;
+			left: -9999px;
+			width: 1px;
+			height: 1px;
+			opacity: 0;
+		}
+
+		.wlStatus {
+			flex-basis: 100%;
+			margin: 4px 0 0;
+			font-size: 13px;
+			font-weight: 700;
+			color: rgba(16, 24, 40, 0.6);
+		}
+
+		.wlStatus.ok {
+			color: #0a6d61;
+		}
+
+		.wlStatus.err {
+			color: #b42318;
+		}
+
+		.waitlistForm.done input,
+		.waitlistForm.done button {
+			display: none;
+		}
+
+		.faq {
+			display: grid;
+			gap: 10px;
+		}
+
+		.faq details {
+			border: 1px solid rgba(16, 24, 40, 0.08);
+			border-radius: 14px;
+			padding: 14px 16px;
+			background: #fff;
+		}
+
+		.faq summary {
+			cursor: pointer;
+			font-weight: 700;
+			letter-spacing: -0.01em;
+		}
+
+		.faq details p {
+			margin: 10px 0 0;
+			color: rgba(16, 24, 40, 0.72);
+			line-height: 1.6;
+		}
+	</style>
+</Layout>

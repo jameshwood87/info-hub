@@ -1,0 +1,565 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/alquiler-vacacional/`;
+const title = 'Alquiler vacacional en PropertyList: qué exige la ley hoy y qué estamos construyendo | PropertyList';
+const description =
+	'La gestión de alquiler vacacional y de corta duración se está construyendo dentro del Módulo de Alquileres: reservas, tarifas por noche, sincronización de canales y registro de viajeros automático ante la policía. Hoy no está en el módulo. Esto es lo que la ley ya exige a una vivienda turística en la Costa del Sol, y cómo enterarte cuando llegue la herramienta.';
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+
+const duties = [
+	{
+		name: 'Registro de viajeros, en 24 horas',
+		desc: 'En toda estancia vacacional. Entre 17 y 21 datos por viajero de 14 años o más, comunicados a SES.HOSPEDAJES en 24 horas, y el parte conservado 3 años. Las infracciones graves van de 601 a 30.000 euros.',
+		href: '/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/guest-registration-police/',
+		linkText: 'Cómo funciona el registro de viajeros',
+	},
+	{
+		name: 'Número de registro de arrendamiento, en cada anuncio',
+		desc: 'Obligatorio desde el 1 de julio de 2025 (RD 1312/2024). Sin él no puedes anunciarte en una plataforma, y desde el 20 de mayo de 2026 las plataformas están obligadas a verificarlo y retirar los anuncios que no lo tengan.',
+		href: '/es/informacion-general/nuevo-registro-nacional-espanol-de-alquileres-de-corta-duracion/',
+		linkText: 'El registro nacional, explicado',
+	},
+	{
+		name: 'Inscripción turística en Andalucía',
+		desc: 'La inscripción en el registro de la Junta, habitualmente el VFT, además del número estatal. Es lo que permite alquilar la vivienda a turistas.',
+		href: '/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/',
+		linkText: 'Requisitos del alquiler vacacional',
+	},
+	{
+		name: 'Tu comunidad de propietarios',
+		desc: 'Desde el 3 de abril de 2025 una nueva vivienda turística necesita el acuerdo favorable de tres quintas partes de la comunidad (Ley Orgánica 1/2025). No se aplica con carácter retroactivo a las que ya estaban legalmente establecidas.',
+		href: '/es/informacion-general/nuevo-registro-nacional-espanol-de-alquileres-de-corta-duracion/',
+		linkText: 'Qué cambió y desde cuándo',
+	},
+];
+
+const building = [
+	{ name: 'Reservas y ficha de huésped', desc: 'La pieza que la plataforma todavía no tiene. De ella cuelga todo lo demás: documentos, fianzas, informes al propietario, mensajería con el huésped y la comunicación a la policía.' },
+	{ name: 'Un calendario para los dos modos', desc: 'Una vivienda alquilada de larga duración en invierno y por semanas en verano, en una sola vista de disponibilidad, con iCal de entrada y de salida.' },
+	{ name: 'Tarifas por noche y presupuestos', desc: 'Precios por temporada, estancias mínimas y un presupuesto que el huésped pueda aceptar.' },
+	{ name: 'Mensajería y cambios de huésped', desc: 'Secuencias de antes de llegar, de entrada y de salida, y la limpieza que va detrás de cada salida.' },
+	{ name: 'Fianzas e informes al propietario', desc: 'Las fianzas vacacionales junto a las de larga duración, y un informe mensual por propietario con la comisión del canal y la de gestión desglosadas, no descontadas por lo bajo.' },
+	{ name: 'Registro de viajeros automático', desc: 'Un enlace antes de llegar, el huésped fotografía su documento y firma, el parte firmado se guarda los tres años que exige la ley, y el envío a SES sale solo con reintentos, acuses y un aviso si falla. Un panel muestra cada estancia como enviada, pendiente o fallida, propiedad por propiedad.' },
+];
+
+const faqs = [
+	{
+		q: '¿Cuándo estará listo?',
+		a: 'No hay fecha, y preferimos decirlo a inventarla. El desarrollo está definido y en revisión, y empieza por la ficha de reserva de la que depende todo lo demás. La lista de espera es lo que decide el orden, así que apuntarse cuenta de verdad.',
+	},
+	{
+		q: '¿Qué puedo usar hoy?',
+		a: 'El Módulo de Alquileres gestiona el alquiler de larga duración de principio a fin y puedes empezar ahora una prueba gratis de 30 días. En la parte vacacional puedes usar las guías de aquí, que son gratuitas y públicas: en qué consiste el registro de viajeros, qué es el número de registro y dónde tiene que aparecer, y qué pide Andalucía por encima.',
+	},
+	{
+		q: '¿Serán dos productos separados, vacacional y larga duración?',
+		a: 'No. Un solo Módulo de Alquileres, con el modo definido por propiedad, porque alquilar una vivienda de la Costa del Sol de larga duración en invierno y por semanas en verano es lo normal aquí, no un caso raro.',
+	},
+	{
+		q: '¿PropertyList comunica algo a la policía hoy?',
+		a: 'No. Hoy no se envía nada en tu nombre, y un arrendamiento de larga duración no lo activará nunca en ningún caso: un inquilino que vive en la propiedad como su vivienda no es un viajero y la obligación no le alcanza. El envío automático que se está construyendo es solo para reservas vacacionales.',
+	},
+	{
+		q: '¿Cuánto costará?',
+		a: 'Sin decidir. Hoy el Módulo de Alquileres son 50 créditos por período de 30 días para el alquiler de larga duración, y no vamos a poner precio a la parte vacacional antes de que exista.',
+	},
+	{
+		q: 'Alquilo con contrato de temporada. ¿En qué lado estoy?',
+		a: 'Depende de la finalidad del alquiler, no de su duración. Una estancia por turismo u ocio es alquiler vacacional a estos efectos. Un contrato de vivienda temporal auténtico, por trabajo, estudios o tratamiento, cabe defender que queda fuera, y muchos operadores lo comunican igualmente por prudencia. Escríbenos antes de mover una cartera de temporada.',
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/holiday-rentals/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/holiday-rentals/` },
+	]}
+>
+	<section class="hero">
+		<div class="heroInner">
+			<div class="kicker">Módulo de Alquileres &middot; Parte vacacional</div>
+			<h1>Alquiler vacacional: las normas ya están aquí, la herramienta llega después.</h1>
+			<p class="lead">
+				Las reservas, las tarifas por noche, la sincronización de canales y el registro de viajeros automático ante la policía se están
+				construyendo dentro del Módulo de Alquileres. Hoy no hay nada de eso en el módulo, y no vamos a fingir lo contrario. Lo que sí hay
+				hoy es todo lo que una vivienda turística de la Costa del Sol tiene que cumplir, bien explicado y gratis.
+			</p>
+			<div class="ctaRow" aria-label="Empezar">
+				<a class="btnPrimary" href="#waitlist">Dinos que lo construyamos</a>
+				<a class="btnSecondary" href="/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/guest-registration-police/">
+					Empieza por el registro de viajeros
+				</a>
+			</div>
+			<div class="note">El alquiler de larga duración ya funciona. <a href="/es/alquileres/">Ver el Módulo de Alquileres</a>.</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que la ley ya te exige</h2>
+			<p>
+				Cuatro obligaciones, todas en vigor, y ninguna espera a nuestro software. Todas estas guías son gratuitas y públicas, y no hacen
+				falta cuenta en PropertyList.
+			</p>
+		</div>
+		<div class="grid2" aria-label="Obligaciones de una vivienda turística">
+			{
+				duties.map((d) => (
+					<div class="card">
+						<h3>{d.name}</h3>
+						<p>{d.desc}</p>
+						<p class="cardLink">
+							<a href={d.href}>{d.linkText}</a>
+						</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead">
+			<h2>Lo que estamos construyendo <span class="soonTag">Próximamente</span></h2>
+			<p>
+				El diseño está escrito y en revisión. Va en el orden en el que unas piezas dependen de otras, no en el orden que mejor sonaría. Nada
+				de lo de abajo existe todavía.
+			</p>
+		</div>
+		<div class="grid3" aria-label="Funciones vacacionales previstas">
+			{
+				building.map((b) => (
+					<div class="card soon">
+						<h3>{b.name}</h3>
+						<p>{b.desc}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="grid2">
+			<div class="card accent">
+				<h2>Un módulo, modo por propiedad</h2>
+				<p>
+					Una vivienda de la Costa del Sol se alquila muchas veces de larga duración en invierno y por semanas en verano. Aquí eso es lo
+					normal, así que vacacional y larga duración no serán dos productos con dos precios y dos bases de datos. Es un solo Módulo de
+					Alquileres con el modo definido por propiedad.
+				</p>
+				<p>
+					La larga duración es la mitad que ya funciona: pipeline de inquilinos, contratos que persiguen solos sus renovaciones y sus plazos
+					de fianza, incidencias que abre el inquilino y aprueba el propietario. <a href="/es/alquileres/">Ver qué incluye</a>.
+				</p>
+			</div>
+			<div class="card">
+				<h2>Por qué te contamos lo que no hemos construido</h2>
+				<p>
+					Porque puedes comprobarlo. El registro de viajeros es obligatorio desde diciembre de 2024 y el número de registro desde julio de
+					2025, así que una agencia vacacional que leyera una página dando a entender que lo cubrimos todo se daría cuenta en una semana.
+				</p>
+				<p>
+					Lo útil que podemos hacer hoy es dejar las normas claras, y lo útil que puedes hacer tú es decirnos que esto te importa, para que
+					se construya antes que las partes que solo suenan bien.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta waitlistBand" id="waitlist">
+		<div class="ctaInner">
+			<h2>Dinos que lo construyamos</h2>
+			<p>
+				Deja tu correo y te escribimos una sola vez, cuando la parte vacacional se pueda probar. Nada más. Y cuenta como voto: la lista de
+				espera es lo que decide cuánto sube en la cola.
+			</p>
+			<form class="waitlistForm" data-source="holiday-rentals-es">
+				<input type="email" name="email" required placeholder="tu@agencia.com" aria-label="Tu correo electrónico" autocomplete="email" />
+				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+				<button type="submit">Apúntame a la lista</button>
+				<p class="wlStatus" role="status" aria-live="polite"></p>
+			</form>
+			<div class="ctaRow" style="margin-top: 12px;">
+				<a class="btnSecondary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="sectionHead"><h2>Preguntas</h2></div>
+		<div class="faq">
+			{
+				faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p set:html={f.a} />
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<script is:inline>
+		document.querySelectorAll('.waitlistForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.wlStatus');
+				const emailEl = form.querySelector('input[name="email"]');
+				const hpEl = form.querySelector('input[name="website"]');
+				const email = emailEl ? emailEl.value : '';
+				const website = hpEl ? hpEl.value : '';
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'wlStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/app-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({
+							email: email,
+							website: website,
+							lang: es ? 'es' : 'en',
+							source: form.getAttribute('data-source') || 'holiday-rentals-es',
+						}),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'wlStatus ok';
+						status.textContent = es
+							? 'Anotado. Te escribimos cuando la parte vacacional se pueda probar.'
+							: 'Noted. We will email you when the holiday side is ready to try.';
+					} else {
+						status.className = 'wlStatus err';
+						status.textContent = es ? 'Revisa tu correo e inténtalo de nuevo.' : 'Please check your email and try again.';
+					}
+				} catch (err) {
+					status.className = 'wlStatus err';
+					status.textContent = es ? 'Algo salió mal. Inténtalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<style>
+		:global(:root) {
+			--pl-accent: #00ae9a;
+			--pl-accent-rgb: 0, 174, 154;
+			--pl-ink: #0a6d61;
+		}
+
+		h1,
+		h2,
+		h3 {
+			letter-spacing: -0.03em;
+		}
+
+		.hero {
+			border-radius: 22px;
+			padding: 16px;
+			margin: 0 0 16px;
+			border: 1px solid rgba(16, 24, 40, 0.08);
+			background:
+				radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
+				radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
+		}
+
+		.heroInner {
+			background: rgba(255, 255, 255, 0.78);
+			border: 1px solid rgba(16, 24, 40, 0.06);
+			border-radius: 18px;
+			padding: 22px;
+		}
+
+		.kicker {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 6px 12px;
+			border-radius: 999px;
+			background: rgba(var(--pl-accent-rgb), 0.12);
+			border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
+			color: var(--pl-ink);
+			font-weight: 900;
+			font-size: 12px;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+		}
+
+		h1 {
+			margin: 14px 0 12px;
+			line-height: 1.06;
+			font-size: clamp(28px, 4.4vw, 42px);
+		}
+
+		.lead {
+			margin: 0 0 16px;
+			color: rgba(16, 24, 40, 0.75);
+			max-width: 62ch;
+			line-height: 1.62;
+		}
+
+		.note {
+			color: rgba(16, 24, 40, 0.6);
+			font-weight: 700;
+			font-size: 12.5px;
+			margin-top: 12px;
+		}
+
+		.note a {
+			color: var(--pl-ink);
+		}
+
+		.ctaRow {
+			display: flex;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.btnPrimary,
+		.btnSecondary {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 14px 22px;
+			border-radius: 14px;
+			text-decoration: none;
+			font-weight: 900;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.btnPrimary {
+			background: var(--pl-ink);
+			color: #fff;
+			border: 1px solid var(--pl-ink);
+		}
+
+		.btnPrimary:hover {
+			background: #086055;
+		}
+
+		.btnSecondary {
+			background: #fff;
+			color: rgba(16, 24, 40, 0.86);
+			border: 1px solid rgba(16, 24, 40, 0.16);
+		}
+
+		.btnSecondary:hover {
+			border-color: rgba(16, 24, 40, 0.3);
+		}
+
+		.section {
+			margin: 34px 0;
+		}
+
+		.sectionHead {
+			margin: 0 0 16px;
+		}
+
+		.sectionHead h2 {
+			margin: 0 0 6px;
+			font-size: clamp(22px, 3vw, 28px);
+		}
+
+		.sectionHead p {
+			margin: 0;
+			color: rgba(16, 24, 40, 0.7);
+			max-width: 70ch;
+			line-height: 1.6;
+		}
+
+		.soonTag {
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: 8px;
+			padding: 5px 11px;
+			border-radius: 999px;
+			background: rgba(var(--pl-accent-rgb), 0.12);
+			border: 1px solid rgba(var(--pl-accent-rgb), 0.28);
+			color: var(--pl-ink);
+			font-size: 12px;
+			font-weight: 900;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+		}
+
+		.grid2,
+		.grid3 {
+			display: grid;
+			gap: 14px;
+		}
+
+		.grid2 {
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		}
+
+		.grid3 {
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		}
+
+		.card {
+			border: 1px solid rgba(16, 24, 40, 0.1);
+			border-radius: 18px;
+			padding: 18px 20px;
+			background: #fff;
+		}
+
+		.card h2 {
+			margin: 0 0 8px;
+			font-size: 20px;
+		}
+
+		.card h3 {
+			margin: 0 0 6px;
+			font-size: 16.5px;
+		}
+
+		.card p {
+			margin: 0 0 10px;
+			color: rgba(16, 24, 40, 0.72);
+			line-height: 1.6;
+			font-size: 15px;
+		}
+
+		.card p:last-child {
+			margin-bottom: 0;
+		}
+
+		.card a {
+			color: var(--pl-ink);
+			font-weight: 700;
+		}
+
+		.card.accent {
+			border-color: rgba(var(--pl-accent-rgb), 0.35);
+			background: rgba(var(--pl-accent-rgb), 0.06);
+		}
+
+		.card.soon {
+			background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.05), rgba(255, 255, 255, 0));
+			border-style: dashed;
+		}
+
+		.cardLink {
+			margin-top: 12px !important;
+			font-size: 14.5px;
+		}
+
+		.cta {
+			border-radius: 22px;
+			padding: 26px 22px;
+			border: 1px solid rgba(var(--pl-accent-rgb), 0.28);
+			background: rgba(var(--pl-accent-rgb), 0.07);
+			margin: 34px 0;
+		}
+
+		.ctaInner h2 {
+			margin: 0 0 8px;
+			font-size: clamp(22px, 3vw, 28px);
+		}
+
+		.ctaInner p {
+			margin: 0 0 14px;
+			color: rgba(16, 24, 40, 0.72);
+			max-width: 66ch;
+			line-height: 1.6;
+		}
+
+		.waitlistForm {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			align-items: center;
+			max-width: 560px;
+		}
+
+		.waitlistForm input[type='email'] {
+			flex: 1;
+			min-width: 220px;
+			padding: 13px 14px;
+			border-radius: 14px;
+			border: 1px solid rgba(16, 24, 40, 0.2);
+			font-size: 15px;
+			background: #fff;
+		}
+
+		.waitlistForm input[type='email']:focus {
+			outline: none;
+			border-color: var(--pl-accent);
+			box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.18);
+		}
+
+		.waitlistForm button {
+			padding: 13px 20px;
+			border-radius: 14px;
+			border: 1px solid var(--pl-ink);
+			background: var(--pl-ink);
+			color: #fff;
+			font-weight: 900;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.waitlistForm .hp {
+			position: absolute;
+			left: -9999px;
+			width: 1px;
+			height: 1px;
+			opacity: 0;
+		}
+
+		.wlStatus {
+			flex-basis: 100%;
+			margin: 4px 0 0;
+			font-size: 13px;
+			font-weight: 700;
+			color: rgba(16, 24, 40, 0.6);
+		}
+
+		.wlStatus.ok {
+			color: #0a6d61;
+		}
+
+		.wlStatus.err {
+			color: #b42318;
+		}
+
+		.waitlistForm.done input,
+		.waitlistForm.done button {
+			display: none;
+		}
+
+		.faq {
+			display: grid;
+			gap: 10px;
+		}
+
+		.faq details {
+			border: 1px solid rgba(16, 24, 40, 0.08);
+			border-radius: 14px;
+			padding: 14px 16px;
+			background: #fff;
+		}
+
+		.faq summary {
+			cursor: pointer;
+			font-weight: 700;
+			letter-spacing: -0.01em;
+		}
+
+		.faq details p {
+			margin: 10px 0 0;
+			color: rgba(16, 24, 40, 0.72);
+			line-height: 1.6;
+		}
+	</style>
+</Layout>
