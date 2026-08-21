@@ -50,11 +50,13 @@ const pipelines = [
 	},
 	{
 		name: 'Tenants',
+		href: '/es/alquileres/',
 		tag: 'Módulo de Alquileres',
 		desc: 'El camino hasta el contrato firmado, y después una tenancy que se renueva sola, revisa su renta y mantiene la fianza en regla.',
 	},
 	{
 		name: 'Nurture',
+		href: '/es/nurture/',
 		tag: 'Automatización',
 		desc: 'Todos los que ya cerraste, en contacto, y devueltos a ti en cuanto muestran interés por volver a moverse.',
 	},
@@ -190,7 +192,7 @@ const faqLd = {
 				pipelines.map((b) => (
 					<div class="card">
 						<div class="boardHead">
-							<h3>{b.name}</h3>
+							<h3>{b.href ? <a href={b.href}>{b.name}</a> : b.name}</h3>
 							<span class={b.tag === 'Gratis' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag}</span>
 						</div>
 						<p>{b.desc}</p>
@@ -741,5 +743,15 @@ const faqLd = {
 			display: inline;
 			font-weight: 700;
 		}
+	}
+
+	.boardHead h3 a {
+		color: inherit;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	.boardHead h3 a:hover {
+		border-bottom-color: var(--pl-accent);
 	}
 </style>

@@ -50,11 +50,13 @@ const pipelines = [
 	},
 	{
 		name: 'Tenants',
+		href: '/rentals/',
 		tag: 'Rentals Module',
 		desc: 'The road to a signed contract, then a tenancy that renews itself, reviews its own rent and keeps the deposit compliant.',
 	},
 	{
 		name: 'Nurture',
+		href: '/nurture/',
 		tag: 'Automation',
 		desc: 'Everyone you have already closed, kept in touch with, and handed back to you the moment they show interest in moving again.',
 	},
@@ -190,7 +192,7 @@ const faqLd = {
 				pipelines.map((b) => (
 					<div class="card">
 						<div class="boardHead">
-							<h3>{b.name}</h3>
+							<h3>{b.href ? <a href={b.href}>{b.name}</a> : b.name}</h3>
 							<span class={b.tag === 'Free' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag}</span>
 						</div>
 						<p>{b.desc}</p>
@@ -740,5 +742,15 @@ const faqLd = {
 			display: inline;
 			font-weight: 700;
 		}
+	}
+
+	.boardHead h3 a {
+		color: inherit;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(var(--pl-accent-rgb), 0.45);
+	}
+
+	.boardHead h3 a:hover {
+		border-bottom-color: var(--pl-accent);
 	}
 </style>
