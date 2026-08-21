@@ -171,6 +171,19 @@ const faqLd = {
 			<h2>Six pipelines, one workflow</h2>
 			<p>Each one covers a stage of the job, and contacts move between them as the deal moves. No spreadsheets, nothing typed twice.</p>
 		</div>
+		<figure class="panelMock">
+			<img
+				src="/img/pipelines-board.png"
+				alt="The PropertyList Lead Pipeline board: tabs for Leads, Buyers, Sellers, Tenants, Properties and Nurture with their free or paid labels, and lead cards sitting in the New Lead, Attempted Contact and Contacted stages"
+				loading="lazy"
+				width="1618"
+				height="700"
+			/>
+			<figcaption>
+				The Lead Pipeline as it actually looks. The tabs along the top are the six boards, each labelled with what it costs, and the timer on
+				each card is how long that lead has been waiting.
+			</figcaption>
+		</figure>
 		<div class="grid3" aria-label="CRM pipelines">
 			{
 				pipelines.map((b) => (
@@ -692,5 +705,24 @@ const faqLd = {
 		.priceList strong {
 			white-space: normal;
 		}
+	}
+
+	.panelMock {
+		margin: 20px 0 0;
+	}
+
+	.panelMock img {
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		border: 1px solid rgba(16, 24, 40, 0.12);
+		box-shadow: 0 8px 22px rgba(4, 33, 28, 0.08);
+	}
+
+	.panelMock figcaption {
+		margin-top: 10px;
+		font-size: 13px;
+		line-height: 1.55;
+		color: rgba(16, 24, 40, 0.55);
 	}
 </style>
