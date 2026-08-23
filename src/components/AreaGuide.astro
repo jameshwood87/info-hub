@@ -31,8 +31,10 @@ const country: Country | null = region ? countryOfRegion(region.key) : null;
 const hasSale = !!sale && sale.totalListings > 0;
 // Only claim an area is unclaimed when the MCP actually answered and said so.
 // A transport failure must degrade to the neutral invite, never to a false claim.
-const dataTrusted = markets.ok;
-const showFounding = !hasSale && dataTrusted;
+// The claim needs a matched location that reported zero - a definitive "no
+// listings here" from the MCP itself. Failure or an unmatched name gets the
+// neutral invite instead.
+const showFounding = markets.ok && !!sale && sale.totalListings === 0;
 
 const eurCompact = (n: number | null | undefined) => {
 	const v = Number(n);

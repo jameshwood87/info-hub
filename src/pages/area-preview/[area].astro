@@ -24,8 +24,8 @@ const region: Region | null = regionFromProvince(provinceGuess);
 const country: Country | null = region ? countryOfRegion(region.key) : null;
 
 const hasSale = !!sale && sale.totalListings > 0;
-// Never claim an area is unclaimed on the strength of a failed fetch.
-const showFounding = !hasSale && markets.ok;
+// The claim needs a matched location that reported zero listings.
+const showFounding = markets.ok && !!sale && sale.totalListings === 0;
 
 // ---- formatting ----
 const eurCompact = (n: number | null | undefined) => {

@@ -75,56 +75,73 @@ const num = (v: any): number | null => {
 	return Number.isFinite(n) ? n : null;
 };
 
-// Transport health. A failed fetch and a genuinely empty area both used to come
-// back as null, and the area guides read that as "nobody has claimed this town".
-// attempts/successes let callers tell the two apart before making a claim.
-let mcpAttempts = 0;
-let mcpSuccesses = 0;
-export const mcpReachable = (): boolean => mcpAttempts === 0 || mcpSuccesses > 0;
+// A failed fetch and a genuinely empty area must never look alike: the area
+// guides make a public claim ("no agency has claimed X") on the empty case.
+// callMcp returns undefined for transport/HTTP/rate-limit failure and an
+// object for a definitive answer, and retries once because the public MCP
+// rate limit makes 429s bursty. A global reachability counter was tried first
+// and failed: one page's success made every other page trust its own 429s.
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-const callMcp = async (name: string, args: Record<string, any>): Promise<any | null> => {
+const callMcp = async (name: string, args: Record<string, any>): Promise<any | undefined> => {
 	const key = `${name}:${JSON.stringify(args)}`;
 	const hit = cache.get(key);
-	if (hit && Date.now() - hit.at < TTL_MS) {
-		mcpSuccesses += 1;
-		return hit.value;
-	}
-	mcpAttempts += 1;
-	try {
-		const res = await fetch(MCP_URL, {
-			method: 'POST',
-			headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'user-agent': 'Mozilla/5.0 (compatible; info-hub)', ...(MCP_KEY ? { authorization: `Bearer ${MCP_KEY}` } : {}) },
-			body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name, arguments: args } }),
-		});
-		if (!res.ok) return null;
-		const data = await res.json().catch(() => null);
-		if ((data as any)?.error) return null;
-		const sc = (data as any)?.result?.structuredContent ?? null;
-		if (sc) {
-			mcpSuccesses += 1;
-			cache.set(key, { at: Date.now(), value: sc });
+	if (hit && Date.now() - hit.at < TTL_MS) return hit.value;
+	for (let attempt = 0; attempt < 2; attempt += 1) {
+		try {
+			const res = await fetch(MCP_URL, {
+				method: 'POST',
+				headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'user-agent': 'Mozilla/5.0 (compatible; info-hub)', ...(MCP_KEY ? { authorization: `Bearer ${MCP_KEY}` } : {}) },
+				body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name, arguments: args } }),
+			});
+			if (res.ok) {
+				const data = await res.json().catch(() => null);
+				if (data && !(data as any).error) {
+					const sc = (data as any)?.result?.structuredContent ?? null;
+					if (sc) {
+						cache.set(key, { at: Date.now(), value: sc });
+						return sc;
+					}
+				}
+			}
+		} catch {
+			/* fall through to retry */
 		}
-		return sc;
-	} catch {
-		return null;
+		if (attempt === 0) await sleep(900);
 	}
+	return undefined;
 };
 
 // Unmatched place names now come back from the MCP as { total_listings: 0,
 // error: 'location_not_found', location_match: { matched: false } } (Lucy, 2026-07-29),
 // so we read that field directly instead of the old sentinel calibration.
 
+export type AreaFetch = { status: 'ok'; data: AreaMarketSummary } | { status: 'unmatched' } | { status: 'failed' };
+
+export const areaMarketSummaryChecked = async (
+	location: string,
+	searchType: SearchType = 'for-sale',
+): Promise<AreaFetch> => {
+	// Parentheticals break MCP matching: "Pedregalejo (Málaga)" never matches
+	// while "Pedregalejo" does. Strip them before querying.
+	const loc = String(location || '').replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+	if (!loc) return { status: 'unmatched' };
+	const sc = await callMcp('area_market_summary', { location: loc, search_type: searchType });
+	if (typeof sc === 'undefined') return { status: 'failed' };
+	if (!sc || typeof sc.total_listings === 'undefined') return { status: 'failed' };
+	if (sc.error === 'location_not_found' || (sc.location_match && sc.location_match.matched === false)) return { status: 'unmatched' };
+	return { status: 'ok', data: buildSummary(sc, loc, searchType) };
+};
+
 export const areaMarketSummary = async (
 	location: string,
 	searchType: SearchType = 'for-sale',
 ): Promise<AreaMarketSummary | null> => {
-	const loc = String(location || '').trim();
-	if (!loc) return null;
-	const sc = await callMcp('area_market_summary', { location: loc, search_type: searchType });
-	if (!sc || typeof sc.total_listings === 'undefined') return null;
+	const r = await areaMarketSummaryChecked(location, searchType);
+	return r.status === 'ok' ? r.data : null;
+};
 
-	// unmatched location -> report no data rather than invent a market.
-	if (sc.error === 'location_not_found' || (sc.location_match && sc.location_match.matched === false)) return null;
+const buildSummary = (sc: any, loc: string, searchType: SearchType): AreaMarketSummary => {
 	const o = sc.oracle && typeof sc.oracle === 'object' ? sc.oracle : {};
 	return {
 		location: String(sc.location || loc),
@@ -216,14 +233,17 @@ export const autocompleteLocation = async (query: string): Promise<LocationMatch
 export const marketsForArea = async (
 	location: string,
 ): Promise<{ sale: AreaMarketSummary | null; rent: AreaMarketSummary | null; holiday: AreaMarketSummary | null; ok: boolean }> => {
-	const [sale, rent, holiday] = await Promise.all([
-		areaMarketSummary(location, 'for-sale'),
-		areaMarketSummary(location, 'for-rent'),
-		areaMarketSummary(location, 'holiday-rentals'),
+	const [saleR, rentR, holidayR] = await Promise.all([
+		areaMarketSummaryChecked(location, 'for-sale'),
+		areaMarketSummaryChecked(location, 'for-rent'),
+		areaMarketSummaryChecked(location, 'holiday-rentals'),
 	]);
-	// ok = we actually heard back. Callers must not claim an area is unclaimed
-	// on the strength of a failed fetch.
-	return { sale, rent, holiday, ok: mcpReachable() };
+	const pick = (r: AreaFetch) => (r.status === 'ok' ? r.data : null);
+	// ok = the SALE answer is definitive for this page's own render: the MCP
+	// matched the location and told us the count. A 429, a transport failure or
+	// an unmatched name must all fail this, because the founding block turns it
+	// into a public claim that nobody has listed here.
+	return { sale: pick(saleR), rent: pick(rentR), holiday: pick(holidayR), ok: saleR.status === 'ok' };
 };
 
 // ---- portal price enrichment ----
