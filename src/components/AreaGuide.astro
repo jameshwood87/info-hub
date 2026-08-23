@@ -29,6 +29,10 @@ const provinceGuess = (listings.find((l) => l.province)?.province || '').trim();
 const region: Region | null = regionFromProvince(provinceGuess);
 const country: Country | null = region ? countryOfRegion(region.key) : null;
 const hasSale = !!sale && sale.totalListings > 0;
+// Only claim an area is unclaimed when the MCP actually answered and said so.
+// A transport failure must degrade to the neutral invite, never to a false claim.
+const dataTrusted = markets.ok;
+const showFounding = !hasSale && dataTrusted;
 
 const eurCompact = (n: number | null | undefined) => {
 	const v = Number(n);
@@ -198,7 +202,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
 		</div>
 	</div>
-) : (
+) : showFounding ? (
 	<section class="agFounding">
 		<div class="agFInner">
 			<div class="agFBadge">{t('Founding member opportunity', 'Oportunidad de miembro fundador')}</div>
@@ -213,6 +217,14 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			<p class="agFFine">{t('Free MLS + CRM forever. Verified agencies also get 20 free credits (verify any time, free).', 'MLS + CRM gratis para siempre. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).')}</p>
 		</div>
 	</section>
+) : (
+	<div class="agFoundingInline">
+		<div>
+			<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
+			<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits (verification is free, any time).`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).`)}</div>
+		</div>
+		<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
+	</div>
 )}
 
 <style>

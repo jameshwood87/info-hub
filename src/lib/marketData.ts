@@ -75,10 +75,21 @@ const num = (v: any): number | null => {
 	return Number.isFinite(n) ? n : null;
 };
 
+// Transport health. A failed fetch and a genuinely empty area both used to come
+// back as null, and the area guides read that as "nobody has claimed this town".
+// attempts/successes let callers tell the two apart before making a claim.
+let mcpAttempts = 0;
+let mcpSuccesses = 0;
+export const mcpReachable = (): boolean => mcpAttempts === 0 || mcpSuccesses > 0;
+
 const callMcp = async (name: string, args: Record<string, any>): Promise<any | null> => {
 	const key = `${name}:${JSON.stringify(args)}`;
 	const hit = cache.get(key);
-	if (hit && Date.now() - hit.at < TTL_MS) return hit.value;
+	if (hit && Date.now() - hit.at < TTL_MS) {
+		mcpSuccesses += 1;
+		return hit.value;
+	}
+	mcpAttempts += 1;
 	try {
 		const res = await fetch(MCP_URL, {
 			method: 'POST',
@@ -87,8 +98,12 @@ const callMcp = async (name: string, args: Record<string, any>): Promise<any | n
 		});
 		if (!res.ok) return null;
 		const data = await res.json().catch(() => null);
+		if ((data as any)?.error) return null;
 		const sc = (data as any)?.result?.structuredContent ?? null;
-		if (sc) cache.set(key, { at: Date.now(), value: sc });
+		if (sc) {
+			mcpSuccesses += 1;
+			cache.set(key, { at: Date.now(), value: sc });
+		}
 		return sc;
 	} catch {
 		return null;
@@ -200,13 +215,15 @@ export const autocompleteLocation = async (query: string): Promise<LocationMatch
 
 export const marketsForArea = async (
 	location: string,
-): Promise<{ sale: AreaMarketSummary | null; rent: AreaMarketSummary | null; holiday: AreaMarketSummary | null }> => {
+): Promise<{ sale: AreaMarketSummary | null; rent: AreaMarketSummary | null; holiday: AreaMarketSummary | null; ok: boolean }> => {
 	const [sale, rent, holiday] = await Promise.all([
 		areaMarketSummary(location, 'for-sale'),
 		areaMarketSummary(location, 'for-rent'),
 		areaMarketSummary(location, 'holiday-rentals'),
 	]);
-	return { sale, rent, holiday };
+	// ok = we actually heard back. Callers must not claim an area is unclaimed
+	// on the strength of a failed fetch.
+	return { sale, rent, holiday, ok: mcpReachable() };
 };
 
 // ---- portal price enrichment ----
