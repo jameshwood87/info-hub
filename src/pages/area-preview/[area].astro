@@ -24,6 +24,8 @@ const region: Region | null = regionFromProvince(provinceGuess);
 const country: Country | null = region ? countryOfRegion(region.key) : null;
 
 const hasSale = !!sale && sale.totalListings > 0;
+// Never claim an area is unclaimed on the strength of a failed fetch.
+const showFounding = !hasSale && markets.ok;
 
 // ---- formatting ----
 const eurCompact = (n: number | null | undefined) => {
@@ -195,7 +197,7 @@ const description = hasSale
 				</div>
 			</section>
 		</>
-	) : (
+	) : showFounding ? (
 		<section class="founding">
 			<div class="fInner">
 				<div class="fBadge">Founding member opportunity</div>
@@ -213,7 +215,7 @@ const description = hasSale
 				<p class="fFine">Free MLS + CRM forever. Verified agencies also get 20 free credits (verify any time, free).</p>
 			</div>
 		</section>
-	)}
+	) : null}
 </Layout>
 
 <style>

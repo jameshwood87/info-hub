@@ -365,6 +365,123 @@ function parseIcs(text, feedName, town) {
   }
   return events.slice(0, 20);
 }
+async function sourceCulturaMalaga() {
+  // The real Malaga culture agenda (cultura.malaga.eu, direct fetch - visita.malaga.eu
+  // 403s our IP on every path and /es/agenda/ is a 404 even through the reader).
+  // Events are NOT in the visible list: they live in calendar-day popover attributes
+  // as "DD/MM-DD/MM Actividad: TITLE". The year is not in that string, it comes from
+  // calYear, and calMonth is 0-INDEXED (7 = August).
+  const decode = (t) => String(t || '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ').replace(/&[a-z]+;/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+  const today = todayIso;
+  const now = new Date(`${today}T00:00:00`);
+  const rx = /href='([^']*detalle-de-agenda[^']*id=(\d+)[^']*)'>\s*(\d{2})\/(\d{2})-(\d{2})\/(\d{2})\s*(?:Actividad|Inscripci[^:]*)\s*:\s*([\s\S]*?)<\/a>/g;
+  const out = [];
+  const seen = new Set();
+  for (let i = 0; i < 4; i += 1) {
+    const mIdx = now.getMonth() + i;
+    const year = now.getFullYear() + Math.floor(mIdx / 12);
+    const cal = mIdx % 12;
+    const url = `https://cultura.malaga.eu/es/agenda/index.html?calYear=${year}&calMonth=${cal}`;
+    let html;
+    try {
+      html = await fetchText(url, { timeoutMs: 30000 });
+    } catch (err) { log(`cultura.malaga.eu fetch failed (${year}-${cal + 1}): ${err.message}`); continue; }
+    let m;
+    rx.lastIndex = 0;
+    while ((m = rx.exec(html))) {
+      const [, href, id, d1, m1, d2, m2, rawTitle] = m;
+      // a range that wraps into January belongs to the next year
+      const y1 = year + (cal === 11 && m1 === '01' ? 1 : 0);
+      const y2 = year + (cal === 11 && m2 === '01' ? 1 : 0);
+      const start = `${y1}-${m1}-${d1}`;
+      const end = `${y2}-${m2}-${d2}`;
+      if (end < today) continue;
+      const key = `${id}|${start}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const title = decode(rawTitle);
+      if (!title) continue;
+      out.push({
+        title,
+        start,
+        end: end !== start ? end : null,
+        town: 'Malaga',
+        venue: null,
+        category: /infantil|familia|ni.os|peque/i.test(title) ? 'family' : 'culture',
+        url: `https://cultura.malaga.eu${href.replace(/&amp;/g, '&')}`,
+        source: 'cultura.malaga.eu',
+      });
+    }
+  }
+  return out;
+}
+
+async function sourceFever() {
+  // Fever city pages. Plans are encoded in Astro island props as [flag, value] pairs.
+  // plan.location has a venue name only and NO city, so the page's own city scoping is
+  // the geography signal and a far-city blocklist catches the leaks. Estepona is not
+  // fetched: its page is effectively empty and duplicates Marbella.
+  const FAR = ['madrid', 'barcelona', 'valencia', 'sevilla', 'bilbao', 'zaragoza', 'alicante',
+    'murcia', 'palma', 'tenerife', 'las palmas', 'vigo', 'santander', 'valladolid', 'pamplona'];
+  const unwrap = (v) => {
+    if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') return unwrap(v[1]);
+    if (Array.isArray(v)) return v.map(unwrap);
+    if (v && typeof v === 'object') { const o = {}; for (const k of Object.keys(v)) o[k] = unwrap(v[k]); return o; }
+    return v;
+  };
+  const unesc = (t) => String(t || '')
+    .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  const today = todayIso;
+  const out = [];
+  const seen = new Set();
+  for (const [city, town] of [['marbella', 'Marbella'], ['malaga', 'Malaga']]) {
+    let html;
+    try {
+      html = await fetchText(`https://feverup.com/es/${city}`, { timeoutMs: 60000 });
+    } catch (err) { log(`fever ${city} fetch failed: ${err.message}`); continue; }
+    const props = html.match(/props="[^"]*"/g) || [];
+    let kept = 0;
+    for (const raw of props) {
+      let obj;
+      try { obj = unwrap(JSON.parse(unesc(raw.slice(7, -1)))); } catch { continue; }
+      const stack = [obj];
+      while (stack.length) {
+        const cur = stack.pop();
+        if (cur && typeof cur === 'object' && !Array.isArray(cur)) {
+          const p = cur.plan;
+          if (p && typeof p === 'object' && p.startDate && !p.isTimeless) {
+            const title = String(p.name || p.title || '').trim();
+            const start = String(p.startDate).slice(0, 10);
+            const end = String(p.endDate || p.startDate).slice(0, 10);
+            const venue = p.location && p.location.name ? String(p.location.name) : null;
+            const key = `${slugify(title)}|${start}`;
+            const span = (new Date(end) - new Date(start)) / 86400000;
+            const blob = `${title} ${venue || ''}`.toLowerCase();
+            if (title && !seen.has(key) && end >= today && span <= 21 && !FAR.some((f) => blob.includes(f))) {
+              seen.add(key);
+              kept += 1;
+              out.push({
+                title, start, end: end !== start ? end : null,
+                town, venue, category: null,
+                url: `https://feverup.com/es/${city}`,
+                source: 'fever',
+              });
+            }
+          }
+          for (const k of Object.keys(cur)) stack.push(cur[k]);
+        } else if (Array.isArray(cur)) { for (const v of cur) stack.push(v); }
+      }
+    }
+    log(`fever ${city}: ${kept} kept`);
+  }
+  return out;
+}
+
 async function sourceCommunityFeeds() {
   const feeds = readJson(FEEDS_PATH, []).filter((x) => x && x.status === 'approved' && x.url);
   const all = [];
@@ -452,7 +569,7 @@ async function main() {
 
   // ---- gather ALL sources once; each town curates from the same pool ----
   const gathered = [];
-  for (const [name, fn] of [['visitcostadelsol', sourceProvinceDiary], ['marbella.es', sourceMarbellaTownHall], ['estepona.es', sourceEsteponaTownHall], ['malaga.eu', sourceMalagaTownHall], ['starlite', sourceStarlite], ['marbella-arena', sourceMarbellaArena], ['community-feeds', sourceCommunityFeeds]]) {
+  for (const [name, fn] of [['visitcostadelsol', sourceProvinceDiary], ['marbella.es', sourceMarbellaTownHall], ['estepona.es', sourceEsteponaTownHall], ['malaga.eu', sourceMalagaTownHall], ['starlite', sourceStarlite], ['marbella-arena', sourceMarbellaArena], ['cultura.malaga.eu', sourceCulturaMalaga], ['fever', sourceFever], ['community-feeds', sourceCommunityFeeds]]) {
     try {
       const evs = await fn();
       log(`${name}: ${evs.length} events extracted`);
