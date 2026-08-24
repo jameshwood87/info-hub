@@ -57,7 +57,7 @@ export const featureFaqItemsEs = [
   {
     id: 'crm-email-integration',
     q: '¿Puedo conectar mi propio correo (Gmail u Outlook) al CRM?',
-    aHtml: 'Sí. En el CRM entra en Ajustes, luego Bandeja conectada, y conecta Gmail/Google Workspace u Outlook/Microsoft 365 con un inicio de sesión OAuth seguro en su propia página, así ninguna contraseña llega a PropertyList. Las respuestas del cliente aparecen en el contacto correspondiente, y el correo que escribes en el CRM sale por tu propia cuenta, así que el cliente ve tu dirección y no la de una plataforma. Cuesta 10 Créditos por buzón conectado y mes, y desconectarlo detiene el cobro. <a href="https://info.propertylist.es/es/bandeja-conectada/">Mira cómo funciona</a> o <a href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/connect-your-email/">lee la guía</a>.',
+    aHtml: 'Muy pronto. Entrarás en Ajustes, luego Bandeja conectada, en el CRM y conectarás Gmail/Google Workspace u Outlook/Microsoft 365 con un inicio de sesión OAuth seguro en su propia página, así ninguna contraseña llega a PropertyList. Las respuestas del cliente aparecen en el contacto correspondiente, y el correo que escribes en el CRM sale por tu propia cuenta, así que el cliente ve tu dirección y no la de una plataforma. Cuesta 10 Créditos por buzón conectado y mes, y desconectarlo detiene el cobro. <a href="https://info.propertylist.es/es/bandeja-conectada/">Mira cómo funciona</a> o <a href="https://info.propertylist.es/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/connect-your-email/">lee la guía</a>.',
   },
   {
     id: 'xml-property-types',

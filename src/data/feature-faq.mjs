@@ -135,7 +135,7 @@ export const featureFaqItems = [
   {
     id: 'crm-email-integration',
     q: 'Can I connect my own email (Gmail or Outlook) to the CRM?',
-    aHtml: 'Yes. In the CRM open Settings, then Connected inbox, and connect Gmail/Google Workspace or Outlook/Microsoft 365 with a secure OAuth sign-in on their own page, so no password reaches PropertyList. Client replies then appear on the matching contact, and mail you write in the CRM goes out through your own account, so the client sees your address rather than a platform address. It costs 10 Credits per connected mailbox per month, and disconnecting stops the charge. <a href="https://info.propertylist.es/connected-inbox/">See how it works</a> or <a href="https://info.propertylist.es/docs/propertylist-mls-user-manual/contacts-crm/connect-your-email/">read the setup guide</a>.',
+    aHtml: 'Coming soon. You will open Settings, then Connected inbox, in the CRM and connect Gmail/Google Workspace or Outlook/Microsoft 365 with a secure OAuth sign-in on their own page, so no password reaches PropertyList. Client replies then appear on the matching contact, and mail you write in the CRM goes out through your own account, so the client sees your address rather than a platform address. It costs 10 Credits per connected mailbox per month, and disconnecting stops the charge. <a href="https://info.propertylist.es/connected-inbox/">See how it works</a> or <a href="https://info.propertylist.es/docs/propertylist-mls-user-manual/contacts-crm/connect-your-email/">read the setup guide</a>.',
   },
   {
     id: 'rentals-module',
