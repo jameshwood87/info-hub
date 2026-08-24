@@ -150,22 +150,6 @@ const faqLd = {
 		</div>
 	</section>
 
-	<figure class="film">
-		<video
-			class="filmVid"
-			autoplay
-			muted
-			loop
-			playsinline
-			preload="auto"
-			poster="/hero/rentals-hero-poster.jpg"
-			aria-hidden="true"
-			tabindex="-1"
-		>
-			<source src="/hero/rentals-hero.mp4" type="video/mp4" />
-		</video>
-		<figcaption class="filmCap">A long-term rental listed on the PropertyList MLS, in Marbella. The camera move is added.</figcaption>
-	</figure>
 
 	<nav class="modePick" aria-label="Which kind of letting">
 		<a class="modeCard here" href="/rentals/" aria-current="page">
@@ -469,46 +453,6 @@ const faqLd = {
 	.faq details p {
 		margin: 10px 0 0;
 		color: #475467;
-	}
-
-	.film {
-		margin: 0 0 20px;
-		padding: 0;
-	}
-
-	.filmVid {
-		display: block;
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		object-fit: cover;
-		border-radius: 22px;
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		background: #0b1620;
-	}
-
-	.filmCap {
-		margin: 8px 2px 0;
-		font-size: 12.5px;
-		line-height: 1.5;
-		color: rgba(16, 24, 40, 0.5);
-	}
-
-	/* Reduced motion gets the still, not a paused video element. */
-	@media (prefers-reduced-motion: reduce) {
-		.filmVid {
-			display: none;
-		}
-
-		.film {
-			aspect-ratio: 16 / 9;
-			border-radius: 22px;
-			border: 1px solid rgba(16, 24, 40, 0.08);
-			background: url('/hero/rentals-hero-poster.jpg') center / cover no-repeat;
-		}
-
-		.filmCap {
-			margin-top: 8px;
-		}
 	}
 
 	.hero {
