@@ -378,6 +378,27 @@ const faqLd = {
 			}),
 		);
 
+		// deep link: ?tour=villa (or #tour-villa) opens that tab with the tour
+		// already running, so an email or an ad can point at one property instead
+		// of dropping the reader on a poster. Falls through harmlessly if the id
+		// is unknown, and everyone without the parameter still gets lazy loading.
+		const openTour = (raw: string) => {
+			const id = String(raw || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 24);
+			if (!id) return false;
+			const tab = root.querySelector('.tab[data-tab="' + id + '"]') as HTMLElement | null;
+			const play = root.querySelector('[data-play="' + id + '"]') as HTMLElement | null;
+			if (!tab || !play) return false;
+			tab.click();
+			play.click();
+			const stage = play.closest('.stage') as HTMLElement | null;
+			setTimeout(() => stage?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+			return true;
+		};
+		const wanted =
+			new URLSearchParams(location.search).get('tour') ||
+			(location.hash.startsWith('#tour-') ? location.hash.slice(6) : '');
+		if (wanted && openTour(wanted)) track('walk-deeplink', { tour: wanted });
+
 		// step-flow reveal
 		const steps = root.querySelector('.steps');
 		if (steps && 'IntersectionObserver' in window) {
