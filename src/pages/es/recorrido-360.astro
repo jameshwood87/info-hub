@@ -15,7 +15,7 @@ const canonical = `${origin}/es/recorrido-360/`;
 
 const title = 'Recorridos 360: deja que el comprador entre antes de llamar';
 const description =
-	'Un recorrido 3D profesional de tu anuncio, filmado por un equipo en la Costa del Sol y publicado automáticamente en tu anuncio del MLS y tu microsite de PropertyList, con embed para tu propia web. Pisos 129 EUR, adosados 189 EUR, villas 249 EUR. Muy pronto.';
+	'Un recorrido 3D profesional de tu anuncio, filmado por un equipo en la Costa del Sol y publicado automáticamente en tu anuncio del MLS y tu microsite de PropertyList, con embed para tu propia web. Pisos 129 EUR, adosados 189 EUR, villas 249 EUR. Costa del Sol.';
 
 // Real example tours. Labels match what each one actually is - a mislabelled
 // demo would undo the whole page. brand=0 strips presenter branding.
@@ -47,7 +47,7 @@ const faqs = [
 	},
 	{
 		q: '¿Cuándo puedo pedirlo?',
-		a: 'Muy pronto. Deja tus datos con el tipo de propiedad que más publicas y te contactamos en breve.',
+		a: 'Ya. Deja tus datos con el tipo de propiedad y te contactamos para confirmar tu precio y una fecha de rodaje. Solo Costa del Sol, por ahora.',
 	},
 ];
 
@@ -80,7 +80,7 @@ const faqLd = {
 			<div class="heroDots" aria-hidden="true">
 				<span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
 			</div>
-			<p class="kicker"><span class="badge">Muy pronto</span> Recorridos 360, filmados por ti</p>
+			<p class="kicker"><span class="badge">Ya se reserva</span> Recorridos 360, filmados por ti</p>
 			<h1>Deja que el comprador entre<br /><em>antes de llamar.</em></h1>
 			<p class="sub">
 				Un recorrido 3D profesional de tu anuncio. Filmado por un equipo, publicado automáticamente en tu anuncio del MLS y
@@ -191,7 +191,7 @@ const faqLd = {
 			<div class="req" data-req hidden>
 				<div data-form>
 					<h3>Confirma tu precio primero</h3>
-					<p class="reqSub">Muy pronto. Deja tus datos y te contactamos en breve. No se reserva ni se paga nada hasta que tú lo digas.</p>
+					<p class="reqSub">Deja tus datos y te contactamos en breve. No se reserva ni se paga nada hasta que tú lo digas.</p>
 					<div class="chips" role="radiogroup" aria-label="Tipo de propiedad">
 						{tiers.map((t) => (
 							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; &euro;{t.price}</button>

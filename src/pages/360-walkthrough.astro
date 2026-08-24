@@ -15,7 +15,7 @@ const canonical = `${origin}/360-walkthrough/`;
 
 const title = '360 walkthroughs: let buyers walk through before they call';
 const description =
-	'A professional 3D walkthrough of your listing, filmed for you on the Costa del Sol and attached to your MLS listing and PropertyList microsite automatically, with an embed for your own website. Apartments 129 EUR, townhouses 189 EUR, villas 249 EUR. Coming soon.';
+	'A professional 3D walkthrough of your listing, filmed for you on the Costa del Sol and attached to your MLS listing and PropertyList microsite automatically, with an embed for your own website. Apartments 129 EUR, townhouses 189 EUR, villas 249 EUR. Costa del Sol.';
 
 // Real example tours. Labels match what each one actually is - a mislabelled
 // demo would undo the whole page. brand=0 strips presenter branding.
@@ -47,7 +47,7 @@ const faqs = [
 	},
 	{
 		q: 'When can I order one?',
-		a: 'Soon. Leave your details with the property type you list most and someone will be in touch shortly.',
+		a: 'Now. Leave your details with the property type and someone will be in touch to confirm your price and a filming date. Costa del Sol only, for now.',
 	},
 ];
 
@@ -80,7 +80,7 @@ const faqLd = {
 			<div class="heroDots" aria-hidden="true">
 				<span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
 			</div>
-			<p class="kicker"><span class="badge">Coming soon</span> 360 walkthroughs, filmed for you</p>
+			<p class="kicker"><span class="badge">Now booking</span> 360 walkthroughs, filmed for you</p>
 			<h1>Let buyers walk through<br /><em>before they ever call.</em></h1>
 			<p class="sub">
 				A professional 3D walkthrough of your listing. Filmed for you, attached to your MLS listing and your
@@ -191,7 +191,7 @@ const faqLd = {
 			<div class="req" data-req hidden>
 				<div data-form>
 					<h3>Get your price confirmed first</h3>
-					<p class="reqSub">Coming soon. Leave your details and someone will be in touch shortly. Nothing is booked or paid until you say so.</p>
+					<p class="reqSub">Leave your details and someone will be in touch shortly. Nothing is booked or paid until you say so.</p>
 					<div class="chips" role="radiogroup" aria-label="Property type">
 						{tiers.map((t) => (
 							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; &euro;{t.price}</button>
