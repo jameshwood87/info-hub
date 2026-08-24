@@ -15,7 +15,7 @@ const canonical = `${origin}/es/recorrido-360/`;
 
 const title = 'Recorridos 360: deja que el comprador entre antes de llamar';
 const description =
-	'Un recorrido 3D profesional de tu anuncio, filmado por un equipo en la Costa del Sol y publicado automáticamente en tu anuncio del MLS y tu microsite de PropertyList, con un enlace para tu propia web. Pisos 129 EUR, adosados 189 EUR, villas 249 EUR. Costa del Sol.';
+	'Un recorrido 3D de tu anuncio, filmado y facturado por una empresa de filmación independiente de la Costa del Sol. PropertyList une el recorrido terminado a tu anuncio del MLS y a tu microsite y te da un enlace para tu propia web. Sus precios: pisos 129 EUR, adosados 189 EUR, villas 249 EUR.';
 
 // Real example tours. Labels match what each one actually is - a mislabelled
 // demo would undo the whole page. brand=0 strips presenter branding.
@@ -27,7 +27,7 @@ const tours = [
 const mpUrl = (m: string) => `https://my.matterport.com/show/?m=${m}&brand=0&qs=1&play=1&lang=es`;
 
 const tiers = [
-	{ key: 'apartment', name: 'Pisos', price: 129, line: 'Filmado, alojado y publicado por un precio fijo.' },
+	{ key: 'apartment', name: 'Pisos', price: 129, line: 'Nuestro colaborador lo filma y lo aloja. Nosotros lo publicamos.' },
 	{ key: 'townhouse', name: 'Adosados y pareados', price: 189, line: 'Cada planta, por dentro y por fuera.' },
 	{ key: 'villa', name: 'Villas', price: 249, line: 'Jardín, terrazas y la vista desde la piscina.' },
 ];
@@ -35,19 +35,19 @@ const tiers = [
 const faqs = [
 	{
 		q: '¿Qué recibo exactamente?',
-		a: 'Un recorrido 3D profesional de la propiedad que el comprador abre en cualquier navegador y cualquier móvil, sin app. Se publicará automáticamente en tu anuncio del MLS y en tu microsite de PropertyList, y tendrás un enlace para añadir a tu propia web, incluido.',
+		a: 'Un recorrido 3D profesional de la propiedad que el comprador abre en cualquier navegador y cualquier móvil, sin app. Se publicará automáticamente en tu anuncio del MLS y en tu microsite de PropertyList, y tendrás un enlace para añadir a tu propia web, incluido. Nuestro colaborador de filmación filma y aloja el recorrido. PropertyList lo une a tu anuncio y a tu microsite.',
 	},
 	{
 		q: '¿Quién lo filma?',
-		a: 'Una empresa de filmación profesional independiente con la que PropertyList colabora en la Costa del Sol. Acuerdan una hora contigo y capturan la propiedad en una sola visita; PropertyList gestiona la reserva y se encarga de la publicación. Tú solo abres la puerta.',
+		a: 'Una empresa de filmación independiente de la Costa del Sol, no PropertyList. Ellos te presupuestan, acuerdan una hora contigo, filman la propiedad en una sola visita y te facturan directamente, y se identifican con su denominación y su NIF al enviarte el presupuesto. PropertyList traslada tu solicitud y une el recorrido terminado a tu anuncio y a tu microsite. PropertyList no es parte de tu contrato con ellos, y ellos le pagan una remuneración por la presentación, con cargo al precio que pagas y no añadida a él.',
 	},
 	{
 		q: '¿Cuánto cuesta?',
-		a: 'Un precio fijo por propiedad, IVA incluido: 129 EUR para pisos, 189 EUR para adosados y pareados, 249 EUR para villas. Los primeros 6 meses de alojamiento van incluidos; después, mantener el recorrido activo cuesta 30 EUR al año. Tu precio y la fecha de filmación se confirman contigo antes de reservar nada, y en esta página no se paga nada.',
+		a: 'Nuestro colaborador de filmación fija el precio y te factura. Sus precios, IVA incluido: 129 EUR para pisos, 189 EUR para adosados y pareados, 249 EUR para villas, con los primeros 6 meses de alojamiento incluidos y 30 EUR al año después. Pueden cambiarlos, así que el precio que cuenta es el que ellos te presupuesten. PropertyList no fija el precio ni cobra por él.',
 	},
 	{
 		q: '¿Cuándo puedo pedirlo?',
-		a: 'Ya. Deja tus datos con el tipo de propiedad y te contactamos para confirmar tu precio y una fecha de rodaje. Solo Costa del Sol, por ahora.',
+		a: 'Ya. Deja tus datos con el tipo de propiedad y nuestro colaborador de filmación te contactará con un presupuesto y una fecha de rodaje. Solo Costa del Sol, por ahora.',
 	},
 ];
 
@@ -80,11 +80,12 @@ const faqLd = {
 			<div class="heroDots" aria-hidden="true">
 				<span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
 			</div>
-			<p class="kicker"><span class="badge">Ya se reserva</span> Recorridos 360, filmados por ti</p>
+			<p class="kicker"><span class="badge">Ya se reserva</span> Recorridos 360, filmados por nuestro colaborador</p>
 			<h1>Deja que el comprador entre<br /><em>antes de llamar.</em></h1>
 			<p class="sub">
-				Un recorrido 3D profesional de tu anuncio. Filmado por un equipo, publicado automáticamente en tu anuncio del MLS y
-				tu microsite de PropertyList, con un enlace para tu propia web incluido. Precio fijo por propiedad. De momento, solo en la Costa del Sol.
+				Un recorrido 3D de tu anuncio, filmado por una empresa independiente con la que trabajamos. Ellos te presupuestan,
+				lo filman y te facturan directamente. PropertyList une el recorrido terminado a tu anuncio del MLS y a tu microsite,
+				y te da un enlace para tu propia web. De momento, solo en la Costa del Sol.
 			</p>
 			<div class="heroCtas">
 				<a class="btnP" href="#demo" data-umami-event="walk-hero-demo">Entra en uno ahora</a>
@@ -116,7 +117,7 @@ const faqLd = {
 					</div>
 				</div>
 			))}
-			<p class="demoFine">Recorridos reales de propiedades reales de la Costa del Sol, producidos por el equipo que reservarías. Exactamente lo que recibirían tus compradores.</p>
+			<p class="demoFine">Propiedades reales de la Costa del Sol, filmadas y alojadas por nuestro colaborador de filmación y mostradas aquí con su permiso. Exactamente lo que recibirían tus compradores.</p>
 		</section>
 
 		<section class="flow">
@@ -125,12 +126,12 @@ const faqLd = {
 				<div class="step" data-step>
 					<span class="stepNum">1</span>
 					<h3>Lo filman</h3>
-					<p>Un equipo profesional acuerda una hora y captura toda la propiedad en una visita. Tú abres la puerta, ese es todo tu trabajo.</p>
+					<p>Nuestro colaborador de filmación te presupuesta, acuerda una hora y captura toda la propiedad en una visita. Te factura directamente. Tú abres la puerta, ese es todo tu trabajo.</p>
 				</div>
 				<div class="stepLink" aria-hidden="true"><svg viewBox="0 0 60 24"><path d="M2 12 H58" stroke-dasharray="6 5" /><path d="M50 5 L58 12 L50 19" fill="none" /></svg></div>
 				<div class="step" data-step>
 					<span class="stepNum">2</span>
-					<h3>Se publica solo</h3>
+					<h3>Lo publicamos nosotros</h3>
 					<p>El recorrido se une a tu anuncio del MLS y a tu microsite de PropertyList automáticamente. Nada que subir, nada que sincronizar.</p>
 				</div>
 				<div class="stepLink" aria-hidden="true"><svg viewBox="0 0 60 24"><path d="M2 12 H58" stroke-dasharray="6 5" /><path d="M50 5 L58 12 L50 19" fill="none" /></svg></div>
@@ -165,7 +166,7 @@ const faqLd = {
 		</section>
 
 		<section class="pricing" id="pricing">
-			<h2>Precio fijo. Filmado, alojado, publicado.</h2>
+			<h2>Los precios de nuestro colaborador. Ellos filman, alojan y facturan.</h2>
 			<div class="cards">
 				{tiers.map((t) => (
 					<div class="card" data-card={t.key}>
@@ -179,22 +180,27 @@ const faqLd = {
 					</div>
 				))}
 			</div>
+			<p class="inclHead">Lo que hace nuestro colaborador</p>
 			<ul class="incl">
-				<li>Visita de filmación profesional</li>
-				<li>Recorrido 3D alojado</li>
-				<li>Unido a tu anuncio del MLS automáticamente</li>
-				<li>Añadido a tu microsite automáticamente</li>
-				<li>Enlace para tu propia web</li>
+				<li>Filma la propiedad en una visita</li>
+				<li>Aloja el recorrido 3D</li>
+				<li>Te presupuesta y te factura directamente</li>
 			</ul>
-			<p class="terms">Precios con IVA incluido. Los primeros 6 meses de alojamiento van incluidos, después 30 &euro; al año mantiene el recorrido activo. De momento, disponible solo en la Costa del Sol.</p>
+			<p class="inclHead">Lo que hace PropertyList</p>
+			<ul class="incl">
+				<li>Lo une a tu anuncio del MLS</li>
+				<li>Lo añade a tu microsite</li>
+				<li>Te da un enlace para tu propia web</li>
+			</ul>
+			<p class="terms">Estos son los precios de nuestro colaborador de filmación, IVA incluido, y pueden cambiarlos. Sus primeros 6 meses de alojamiento van incluidos, después 30 &euro; al año mantiene el recorrido activo. Contratas con ellos y ellos te facturan directamente. A PropertyList le pagan una remuneración por la presentación, con cargo al precio que pagas y no añadida a él, y no es parte de tu contrato con ellos. La cláusula 3.10 de los <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/">términos y condiciones</a> lo detalla. De momento, solo en la Costa del Sol.</p>
 
 			<div class="req" data-req hidden>
 				<div data-form>
-					<h3>Confirma tu precio primero</h3>
-					<p class="reqSub">Deja tus datos y te contactamos en breve. No se reserva ni se paga nada hasta que tú lo digas.</p>
+					<h3>Pide presupuesto a nuestro colaborador</h3>
+					<p class="reqSub">Deja tus datos y se los pasamos a nuestro colaborador de filmación, que te contactará con un presupuesto. Tu contrato y tu factura son con ellos, no con PropertyList. No se reserva ni se paga nada hasta que lo acuerdes con ellos.</p>
 					<div class="chips" role="radiogroup" aria-label="Tipo de propiedad">
 						{tiers.map((t) => (
-							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; &euro;{t.price}</button>
+							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; desde &euro;{t.price}</button>
 						))}
 					</div>
 					<div class="fields">
@@ -205,13 +211,13 @@ const faqLd = {
 						<input type="text" data-f="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
 					</div>
 					<p class="reqErr" data-err hidden>Necesitamos un teléfono o un email para poder contactarte.</p>
-					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Pedir mi recorrido &rarr;</button>
-					<p class="reqPriv">Al enviar, aceptas que PropertyList comparta estos datos con su empresa de filmación asociada para preparar tu presupuesto.</p>
+					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Enviar mis datos al colaborador &rarr;</button>
+					<p class="reqPriv">Al enviar, aceptas que PropertyList pase tu nombre, agencia, teléfono y email a la empresa de filmación independiente que cubre tu zona, para que pueda presupuestarte. Son responsables del tratamiento por separado y se identificarán al contactarte. El servicio lo presta y lo factura esa empresa conforme a la cláusula 3.10 de los <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/">términos</a>; consulta la <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/">política de privacidad</a> para saber qué compartimos y cuánto lo conservamos.</p>
 				</div>
 				<div class="done" data-done hidden>
 					<span class="doneTick" aria-hidden="true">&#10003;</span>
-					<h3>Hecho.</h3>
-					<p>Te contactamos en breve para confirmar tu precio y fijar la fecha de filmación. Sin pago y sin compromiso hasta entonces.</p>
+					<h3>Enviado.</h3>
+					<p>Hemos pasado tus datos a nuestro colaborador de filmación. Te contactarán con un presupuesto y una fecha de rodaje, y te facturarán directamente si sigues adelante. Sin pago y sin compromiso hasta que lo acuerdes con ellos.</p>
 				</div>
 			</div>
 		</section>
@@ -309,6 +315,7 @@ const faqLd = {
 		.per { font-size: 12.5px; color: rgba(16, 24, 40, 0.5); margin: 0 0 10px; }
 		.cardLine { font-size: 13.5px; color: var(--mut); min-height: 42px; margin: 0 0 14px; }
 		.cardBtn { width: 100%; padding: 12px 10px; font-size: 14.5px; }
+		.inclHead { margin: 18px 0 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(16, 24, 40, 0.55); }
 		.incl { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; list-style: none; padding: 0; margin: 0 0 8px; }
 		.incl li { font-size: 13.5px; color: var(--mut); }
 		.incl li::before { content: '\2713'; color: var(--teal); font-weight: 800; margin-right: 6px; }

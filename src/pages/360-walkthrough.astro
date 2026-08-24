@@ -15,7 +15,7 @@ const canonical = `${origin}/360-walkthrough/`;
 
 const title = '360 walkthroughs: let buyers walk through before they call';
 const description =
-	'A professional 3D walkthrough of your listing, filmed for you on the Costa del Sol and attached to your MLS listing and PropertyList microsite automatically, with a link for your own website. Apartments 129 EUR, townhouses 189 EUR, villas 249 EUR. Costa del Sol.';
+	'A 3D walkthrough of your listing, filmed and invoiced by an independent filming company on the Costa del Sol. PropertyList attaches the finished walkthrough to your MLS listing and microsite and gives you a link for your own website. Their prices: apartments 129 EUR, townhouses 189 EUR, villas 249 EUR.';
 
 // Real example tours. Labels match what each one actually is - a mislabelled
 // demo would undo the whole page. brand=0 strips presenter branding.
@@ -27,7 +27,7 @@ const tours = [
 const mpUrl = (m: string) => `https://my.matterport.com/show/?m=${m}&brand=0&qs=1&play=1&lang=en`;
 
 const tiers = [
-	{ key: 'apartment', name: 'Apartments', price: 129, line: 'Filmed, hosted and published for one fixed price.' },
+	{ key: 'apartment', name: 'Apartments', price: 129, line: 'Our filming partner films and hosts it. We publish it.' },
 	{ key: 'townhouse', name: 'Townhouses & semi-detached', price: 189, line: 'Every floor, inside and out.' },
 	{ key: 'villa', name: 'Villas', price: 249, line: 'Grounds, terraces and the view from the pool.' },
 ];
@@ -35,19 +35,19 @@ const tiers = [
 const faqs = [
 	{
 		q: 'What exactly will I get?',
-		a: 'A professional 3D walkthrough of the property that buyers open in any browser, on any phone, with no app. It will attach to your MLS listing and your PropertyList microsite automatically, and you will get a link to add to your own website, included.',
+		a: 'A professional 3D walkthrough of the property that buyers open in any browser, on any phone, with no app. It will attach to your MLS listing and your PropertyList microsite automatically, and you will get a link to add to your own website, included. Our filming partner films and hosts the walkthrough. PropertyList attaches it to your listing and your microsite.',
 	},
 	{
 		q: 'Who films it?',
-		a: 'An independent professional filming company that PropertyList partners with on the Costa del Sol. They book a time with you and capture the property in one visit; PropertyList arranges the booking and handles the publishing. You do nothing but open the door.',
+		a: 'An independent filming company on the Costa del Sol, not PropertyList. They quote you, agree a time with you, film the property in one visit and invoice you directly, and they identify themselves by name and tax number when they send the quote. PropertyList passes on your request and attaches the finished walkthrough to your listing and microsite. PropertyList is not a party to your contract with them, and is paid a fee by them for the introduction, out of the price you pay rather than on top of it.',
 	},
 	{
 		q: 'What does it cost?',
-		a: 'One fixed price per property, IVA included: 129 EUR for apartments, 189 EUR for townhouses and semi-detached homes, 249 EUR for villas. The first 6 months of hosting are included; after that, keeping the walkthrough live costs 30 EUR a year. Your price and filming date will be confirmed with you before anything is booked, and nothing is paid on this page.',
+		a: 'Our filming partner sets the price and invoices you. Their prices, IVA included: 129 EUR for apartments, 189 EUR for townhouses and semi-detached homes, 249 EUR for villas, with the first 6 months of hosting included and 30 EUR a year after that. They can change these, so the price that counts is the one they quote you. PropertyList does not set the price and does not take payment for it.',
 	},
 	{
 		q: 'When can I order one?',
-		a: 'Now. Leave your details with the property type and someone will be in touch to confirm your price and a filming date. Costa del Sol only, for now.',
+		a: 'Now. Leave your details with the property type and our filming partner will be in touch with a quote and a filming date. Costa del Sol only, for now.',
 	},
 ];
 
@@ -80,11 +80,12 @@ const faqLd = {
 			<div class="heroDots" aria-hidden="true">
 				<span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
 			</div>
-			<p class="kicker"><span class="badge">Now booking</span> 360 walkthroughs, filmed for you</p>
+			<p class="kicker"><span class="badge">Now booking</span> 360 walkthroughs, filmed by our partner</p>
 			<h1>Let buyers walk through<br /><em>before they ever call.</em></h1>
 			<p class="sub">
-				A professional 3D walkthrough of your listing. Filmed for you, attached to your MLS listing and your
-				PropertyList microsite automatically, with a link for your own website included. One fixed price per property. Costa del Sol only, for now.
+				A 3D walkthrough of your listing, filmed by an independent company we work with. They quote you, film it and
+				invoice you directly. PropertyList attaches the finished walkthrough to your MLS listing and microsite, and gives
+				you a link for your own website. Costa del Sol only, for now.
 			</p>
 			<div class="heroCtas">
 				<a class="btnP" href="#demo" data-umami-event="walk-hero-demo">Step inside one now</a>
@@ -116,7 +117,7 @@ const faqLd = {
 					</div>
 				</div>
 			))}
-			<p class="demoFine">Real walkthroughs of real Costa del Sol properties, produced by the filming crew you would be booking. Exactly what your buyers would get.</p>
+			<p class="demoFine">Real Costa del Sol properties, filmed and hosted by our filming partner and shown here with their permission. Exactly what your buyers would get.</p>
 		</section>
 
 		<section class="flow">
@@ -125,12 +126,12 @@ const faqLd = {
 				<div class="step" data-step>
 					<span class="stepNum">1</span>
 					<h3>They film it</h3>
-					<p>A professional crew books a time and captures the whole property in one visit. You open the door, that is the job.</p>
+					<p>Our filming partner quotes you, agrees a time and captures the whole property in one visit. They invoice you directly. You open the door, that is the job.</p>
 				</div>
 				<div class="stepLink" aria-hidden="true"><svg viewBox="0 0 60 24"><path d="M2 12 H58" stroke-dasharray="6 5" /><path d="M50 5 L58 12 L50 19" fill="none" /></svg></div>
 				<div class="step" data-step>
 					<span class="stepNum">2</span>
-					<h3>It publishes itself</h3>
+					<h3>We publish it</h3>
 					<p>The walkthrough attaches to your MLS listing and your PropertyList microsite automatically. Nothing to upload, nothing to sync.</p>
 				</div>
 				<div class="stepLink" aria-hidden="true"><svg viewBox="0 0 60 24"><path d="M2 12 H58" stroke-dasharray="6 5" /><path d="M50 5 L58 12 L50 19" fill="none" /></svg></div>
@@ -165,7 +166,7 @@ const faqLd = {
 		</section>
 
 		<section class="pricing" id="pricing">
-			<h2>One fixed price. Filmed, hosted, published.</h2>
+			<h2>Our partner&rsquo;s prices. They film, host and invoice.</h2>
 			<div class="cards">
 				{tiers.map((t) => (
 					<div class="card" data-card={t.key}>
@@ -179,22 +180,27 @@ const faqLd = {
 					</div>
 				))}
 			</div>
+			<p class="inclHead">What our filming partner does</p>
 			<ul class="incl">
-				<li>Professional filming visit</li>
-				<li>Hosted 3D walkthrough</li>
-				<li>Auto-attached to your MLS listing</li>
-				<li>Auto-added to your microsite</li>
-				<li>Link for your own website</li>
+				<li>Films the property on a visit</li>
+				<li>Hosts the 3D walkthrough</li>
+				<li>Quotes and invoices you directly</li>
 			</ul>
-			<p class="terms">Prices include IVA. The first 6 months of hosting are included, then &euro;30 a year keeps the walkthrough live. Available on the Costa del Sol for now.</p>
+			<p class="inclHead">What PropertyList does</p>
+			<ul class="incl">
+				<li>Attaches it to your MLS listing</li>
+				<li>Adds it to your microsite</li>
+				<li>Gives you a link for your own website</li>
+			</ul>
+			<p class="terms">These are our filming partner&rsquo;s prices, IVA included, and they can change them. Their first 6 months of hosting are included, then &euro;30 a year keeps the walkthrough live. You contract with them and they invoice you directly. PropertyList is paid a fee by them for the introduction, out of the price you pay rather than on top of it, and is not a party to your contract with them. Clause 3.10 of the <a href="/docs/propertylist-mls-user-manual/legal/terms-conditions/">terms and conditions</a> sets this out. Costa del Sol for now.</p>
 
 			<div class="req" data-req hidden>
 				<div data-form>
-					<h3>Get your price confirmed first</h3>
-					<p class="reqSub">Leave your details and someone will be in touch shortly. Nothing is booked or paid until you say so.</p>
+					<h3>Ask our filming partner for a quote</h3>
+					<p class="reqSub">Leave your details and we will pass them to our filming partner, who will be in touch with a quote. Your contract and your invoice are with them, not with PropertyList. Nothing is booked or paid until you agree it with them.</p>
 					<div class="chips" role="radiogroup" aria-label="Property type">
 						{tiers.map((t) => (
-							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; &euro;{t.price}</button>
+							<button class="chip" role="radio" aria-checked="false" data-chip={t.key}>{t.name} &middot; from &euro;{t.price}</button>
 						))}
 					</div>
 					<div class="fields">
@@ -205,13 +211,13 @@ const faqLd = {
 						<input type="text" data-f="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
 					</div>
 					<p class="reqErr" data-err hidden>We need a phone number or an email to be in touch.</p>
-					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Request my walkthrough &rarr;</button>
-					<p class="reqPriv">By sending, you agree that PropertyList shares these details with its filming partner to arrange your quote.</p>
+					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Send my details to our filming partner &rarr;</button>
+					<p class="reqPriv">By sending, you agree that PropertyList passes your name, agency, phone and email to the independent filming company that covers your area, so they can quote you. They are a separate data controller and will identify themselves when they get in touch. The service is supplied and invoiced by them under clause 3.10 of the <a href="/docs/propertylist-mls-user-manual/legal/terms-conditions/">terms</a>; see the <a href="/docs/propertylist-mls-user-manual/legal/privacy-policy/">privacy policy</a> for what we share and how long we keep it.</p>
 				</div>
 				<div class="done" data-done hidden>
 					<span class="doneTick" aria-hidden="true">&#10003;</span>
-					<h3>Done.</h3>
-					<p>Someone will be in touch shortly to confirm your price and set a filming date. No payment, no commitment until then.</p>
+					<h3>Sent.</h3>
+					<p>We have passed your details to our filming partner. They will be in touch with a quote and a filming date, and they will invoice you directly if you go ahead. No payment and no commitment until you agree it with them.</p>
 				</div>
 			</div>
 		</section>
@@ -309,6 +315,7 @@ const faqLd = {
 		.per { font-size: 12.5px; color: rgba(16, 24, 40, 0.5); margin: 0 0 10px; }
 		.cardLine { font-size: 13.5px; color: var(--mut); min-height: 42px; margin: 0 0 14px; }
 		.cardBtn { width: 100%; padding: 12px 10px; font-size: 14.5px; }
+		.inclHead { margin: 18px 0 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(16, 24, 40, 0.55); }
 		.incl { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; list-style: none; padding: 0; margin: 0 0 8px; }
 		.incl li { font-size: 13.5px; color: var(--mut); }
 		.incl li::before { content: '\2713'; color: var(--teal); font-weight: 800; margin-right: 6px; }
