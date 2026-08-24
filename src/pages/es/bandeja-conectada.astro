@@ -1,0 +1,623 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/bandeja-conectada/`;
+const title = 'Bandeja conectada: tu correo y tu CRM, un solo registro | PropertyList';
+const description =
+	'Conecta el buzón que ya usas. Las respuestas del cliente caen solas en el contacto correcto, y todo lo que envías sale desde tu propia dirección. 10 créditos por buzón al mes.';
+
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+
+// Espejo exacto de /connected-inbox/. Toda afirmación sale del propio panel de
+// ajustes del CRM o del capítulo del manual. Nada describe qué se almacena ni qué
+// correo se lee, porque todavía no está confirmado: ver el bloque PENDING.
+
+const cost = [
+	['Un buzón conectado', '10 créditos por buzón, al mes'],
+	['Un segundo buzón en la misma cuenta', '10 créditos, por buzón, al mes'],
+	['Desconectarlo', 'Gratis, y detiene el cobro'],
+];
+
+const notDoing = [
+	{
+		h: 'No es un cliente de correo',
+		p: 'Sigues usando Gmail o Outlook como siempre. El CRM no intenta sustituir a tu bandeja de entrada, y nada cambia en la forma en que lees tu correo.',
+	},
+	{
+		h: 'No envía nada por su cuenta',
+		p: 'Conectar un buzón no pone en marcha ninguna campaña. El correo automatizado es otro producto, Automation y Nurture, con su propia suscripción y sus propios controles.',
+	},
+	{
+		h: 'No se comparte con tu equipo por defecto',
+		p: 'Un buzón lo conecta una persona, para una cuenta. Conectar el tuyo no pone tu correo delante de tus compañeros.',
+	},
+	{
+		h: 'No es un archivador de correo antiguo',
+		p: 'Esto va de la conversación que estás teniendo ahora, en el contacto al que pertenece. Tu buzón sigue siendo el archivo, y conviene tratarlo así.',
+	},
+];
+
+const faqs = [
+	{
+		q: '¿Cuánto cuesta?',
+		a: 'Diez créditos por buzón conectado y mes, del mismo saldo de créditos que ya usas para destacar un anuncio o sacar un informe. Si conectas dos buzones, son diez créditos cada uno. Si lo desconectas, el cobro se detiene.',
+	},
+	{
+		q: '¿PropertyList se queda con mi contraseña?',
+		a: 'No. Inicias sesión en la propia página de Google, o en la de Microsoft, y ellos devuelven un permiso que puedes retirar cuando quieras. Tu contraseña se escribe en su sitio y nunca llega hasta nosotros. Eso es exactamente lo que hacen los botones de Google y de Outlook, y por eso están ahí en lugar de una casilla pidiéndote la contraseña.',
+	},
+	{
+		q: '¿Cómo lo desconecto?',
+		a: 'En el CRM, entra en Ajustes y luego en Bandeja conectada, y desconecta el buzón. También puedes revocar el permiso desde el lado del proveedor cuando quieras, en myaccount.google.com/permissions para Google o en account.live.com/consent/Manage para Microsoft. En cualquiera de los dos casos la sincronización se detiene.',
+	},
+	{
+		q: '¿Qué direcciones puedo conectar?',
+		a: 'Gmail y Google Workspace con el botón de Google, Outlook y Microsoft 365 con el botón de Outlook. Si tu agencia tiene el correo en otro sitio, para eso está el botón de Otro.',
+	},
+	{
+		q: '¿Mis clientes ven PropertyList?',
+		a: 'No. El correo que envías sale desde tu propia dirección, así que el cliente te ve a ti y a tu agencia, te responde a ti, y archiva la conversación con tu nombre. Ese es el sentido de conectar tu buzón real en lugar de enviar desde una dirección de plataforma.',
+	},
+	{
+		q: '¿Tiene que autorizarlo el administrador de mi agencia?',
+		a: 'En Google Workspace y en Microsoft 365 un administrador puede restringir qué aplicaciones puede conectar el personal. Si tu primer intento se bloquea, es por eso. El capítulo del manual tiene la ruta exacta que necesita tu administrador, para los dos proveedores.',
+	},
+];
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/connected-inbox/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/connected-inbox/` },
+	]}
+>
+	<div class="wrap">
+		<section class="intro">
+			<p class="kicker">Bandeja conectada</p>
+			<h1>El correo <em>ya es</em> el registro.<br />Deja de copiarlo a mano.</h1>
+			<p class="sub">
+				Conecta el buzón que ya usas. Las respuestas del cliente caen solas en el contacto correcto, y todo lo
+				que envías sale desde tu propia dirección. Diez créditos por buzón al mes, y lo desconectas con los
+				mismos dos clics con los que lo encendiste.
+			</p>
+			<p class="subtle">
+				En el CRM: <strong>Ajustes</strong>, luego <strong>Bandeja conectada</strong>, luego
+				<strong>Conectar un buzón</strong>.
+			</p>
+		</section>
+
+		<section class="band">
+			<h2>Conectarlo, una vez</h2>
+			<p class="lead">
+				Cuatro pasos, y el único que exige pensar algo es el tercero, donde decides si lo autorizas.
+			</p>
+			<div class="dflow">
+				<span class="dstep"><span class="n">1</span> Ajustes, Bandeja conectada</span>
+				<span class="darrow">&rarr;</span>
+				<span class="dstep"><span class="n">2</span> Google, Outlook u Otro</span>
+				<span class="darrow">&rarr;</span>
+				<span class="dstep on"><span class="n">3</span> Inicias sesión en su página</span>
+				<span class="darrow">&rarr;</span>
+				<span class="dstep"><span class="n">4</span> Conectado</span>
+			</div>
+			<div class="dbeat">
+				<span class="tick">&#10003;</span>
+				<span>
+					El paso 3 ocurre en <b>la web de Google o la de Microsoft</b>, no en la nuestra. Escribes tu
+					contraseña donde la escribes siempre, y ellos devuelven un permiso que puedes retirar cuando quieras.
+					Nada de lo que escribes en esa pantalla llega a PropertyList.
+				</span>
+			</div>
+		</section>
+
+		<section class="band">
+			<h2>Qué pasa después</h2>
+			<p class="lead">
+				Dos direcciones, un contacto. Esto es toda la función.
+			</p>
+
+			<div class="lanes">
+				<div class="lane">
+					<div class="laneHead"><span class="dir in">Entra</span> Un cliente te escribe</div>
+					<ol class="beats">
+						<li><span class="bn">1</span> Su mensaje llega a tu buzón, igual que hoy.</li>
+						<li><span class="bn">2</span> PropertyList cruza la dirección con tus contactos.</li>
+						<li><span class="bn">3</span> La conversación aparece en ese contacto, dentro del CRM.</li>
+						<li><span class="bn">4</span> La ves junto a su consulta, sus visitas y su fase del pipeline.</li>
+					</ol>
+				</div>
+				<div class="lane">
+					<div class="laneHead"><span class="dir out">Sale</span> Le escribes a un cliente</div>
+					<ol class="beats">
+						<li><span class="bn">1</span> Escribes la respuesta en el contacto, dentro del CRM.</li>
+						<li><span class="bn">2</span> Sale por tu propio buzón conectado.</li>
+						<li><span class="bn">3</span> El cliente ve tu dirección, tu nombre, tu agencia.</li>
+						<li><span class="bn">4</span> Te responde a ti, y vuelve al mismo contacto.</li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="dbeat">
+				<span class="tick">&#10003;</span>
+				<span>
+					Lo que de verdad se paga es la segunda mitad de cada columna. Enviar un correo ya sabe hacerlo todo
+					el mundo. Lo que dejas de hacer es <b>acordarte de apuntarlo después</b>.
+				</span>
+			</div>
+		</section>
+
+		<section class="band">
+			<h2>Por qué sale desde tu dirección</h2>
+			<div class="two">
+				<div class="col">
+					<h3>El cliente debería verte a ti</h3>
+					<p>
+						El correo enviado desde una dirección de plataforma se trata como una plataforma. Llega más
+						abajo, se archiva en otro sitio, y no se parece a la persona que el cliente conoció en la visita.
+						Tu dirección es la que ya reconoce y a la que va a responder.
+					</p>
+				</div>
+				<div class="col">
+					<h3>Y tu carpeta de enviados también</h3>
+					<p>
+						Como sale por tu buzón, la conversación se queda donde la buscarías de todos modos. Si mañana
+						dejas PropertyList, tu historial de correo sigue siendo tuyo, en la cuenta que siempre ha sido
+						tuya.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="band tight">
+			<h2>Lo que cuesta</h2>
+			<table class="costs">
+				<tbody>
+					{cost.map(([a, b]) => (
+						<tr>
+							<td>{a}</td>
+							<td class="num">{b}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+			<p class="subtle">
+				Los créditos salen de un único saldo compartido con todo lo demás que pagas. No hay suscripción aparte
+				ni permanencia. Consulta <a href="/es/precios/">la lista de precios completa</a>.
+			</p>
+		</section>
+
+		<section class="band">
+			<h2>Tu buzón, tu permiso</h2>
+			<div class="two">
+				<div class="col">
+					<h3>Tú lo concedes</h3>
+					<p>
+						La conexión se hace con OAuth, el mismo mecanismo que te deja entrar en otros servicios con
+						Google. Lo apruebas en la pantalla del propio proveedor, y ves qué se te pide antes de aceptar
+						nada.
+					</p>
+				</div>
+				<div class="col">
+					<h3>Tú lo retiras</h3>
+					<p>
+						Desconecta desde Ajustes en el CRM, o revócalo desde el lado del proveedor en
+						<a href="https://myaccount.google.com/permissions" rel="nofollow noopener" target="_blank">myaccount.google.com/permissions</a>
+						o
+						<a href="https://account.live.com/consent/Manage" rel="nofollow noopener" target="_blank">account.live.com/consent/Manage</a>.
+						No tienes que pedírnoslo, y no tienes que cerrar tu cuenta.
+					</p>
+				</div>
+			</div>
+			<p class="subtle">
+				Cómo trata PropertyList los datos que hay detrás está en la
+				<a href="/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/">política de privacidad</a>,
+				junto a los
+				<a href="/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/">términos y condiciones</a>.
+			</p>
+			{/*
+			  PENDING - no escribir un bloque de "qué guardamos" hasta que Lucy confirme:
+			    1. qué scope de Gmail pide la app (solo gmail.send, o un scope de lectura)
+			    2. si se guarda el cuerpo del mensaje, o solo remitente / asunto / fecha
+			    3. si se ingiere correo de direcciones desconocidas, o solo de contactos ya existentes
+			  Espeja el mismo bloque en /connected-inbox/. Los dos idiomas cambian a la vez.
+			*/}
+		</section>
+
+		<section class="band">
+			<h2>Lo que no hace</h2>
+			<div class="grid">
+				{notDoing.map((b) => (
+					<div class="card">
+						<h3>{b.h}</h3>
+						<p>{b.p}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class="band tight">
+			<h2>Preguntas</h2>
+			<div class="faq">
+				{faqs.map((qa) => (
+					<details>
+						<summary>{qa.q}</summary>
+						<p>{qa.a}</p>
+					</details>
+				))}
+			</div>
+		</section>
+
+		<section class="band close">
+			<h2>Ya está en tus ajustes</h2>
+			<p class="lead">
+				La bandeja conectada vive en el CRM que ya usan {plAgents} agentes, junto a los contactos a los que
+				pertenece el correo. El <a href="/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/connect-your-email/">capítulo
+				del manual</a> tiene el paso a paso, incluido qué enviarle al administrador de tu Google Workspace o tu
+				Microsoft 365 si tu agencia restringe qué aplicaciones puede conectar el personal.
+			</p>
+			<p class="lead">
+				Funciona mejor junto a los tableros que ya llevas: <a href="/es/pipelines/">los pipelines</a> donde está
+				el contacto, y <a href="/es/nurture/">Automation y Nurture</a> para los clientes con los que no vas a
+				hablar esta semana.
+			</p>
+		</section>
+	</div>
+</Layout>
+
+<style>
+	.wrap {
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 0 20px 72px;
+	}
+
+	.intro {
+		padding: 44px 0 8px;
+	}
+
+	.kicker {
+		font-size: 13px;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--pl-accent);
+		margin: 0 0 10px;
+	}
+
+	h1 {
+		font-size: clamp(30px, 5vw, 46px);
+		line-height: 1.12;
+		letter-spacing: -0.02em;
+		margin: 0 0 16px;
+	}
+
+	h1 em {
+		font-style: normal;
+		color: var(--pl-accent);
+	}
+
+	.sub {
+		font-size: 17.5px;
+		line-height: 1.6;
+		color: rgba(16, 24, 40, 0.78);
+		max-width: 62ch;
+		margin: 0 0 12px;
+	}
+
+	.subtle {
+		font-size: 14px;
+		line-height: 1.6;
+		color: rgba(16, 24, 40, 0.6);
+		max-width: 66ch;
+	}
+
+	.band {
+		padding: 34px 0 6px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		margin-top: 30px;
+	}
+
+	.band.tight {
+		padding-bottom: 0;
+	}
+
+	h2 {
+		font-size: clamp(22px, 3.4vw, 29px);
+		line-height: 1.2;
+		letter-spacing: -0.015em;
+		margin: 0 0 10px;
+	}
+
+	h3 {
+		font-size: 16px;
+		margin: 0 0 6px;
+	}
+
+	.lead {
+		font-size: 16px;
+		line-height: 1.62;
+		color: rgba(16, 24, 40, 0.76);
+		max-width: 66ch;
+		margin: 0 0 18px;
+	}
+
+	.dflow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 6px;
+		padding: 18px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 18px;
+		background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.05), rgba(255, 255, 255, 0));
+	}
+
+	.dstep {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 9px 13px;
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 999px;
+		background: #fff;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.2;
+	}
+
+	.dstep .n {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: rgba(var(--pl-accent-rgb), 0.12);
+		color: #067a6c;
+		font-size: 11.5px;
+		font-weight: 800;
+		flex: none;
+	}
+
+	.dstep.on {
+		border-color: rgba(var(--pl-accent-rgb), 0.55);
+		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
+	}
+
+	.dstep.on .n {
+		background: var(--pl-accent);
+		color: #fff;
+	}
+
+	.darrow {
+		align-self: center;
+		color: rgba(16, 24, 40, 0.28);
+		font-size: 13px;
+	}
+
+	@media (max-width: 560px) {
+		.dflow .darrow {
+			display: none;
+		}
+	}
+
+	.dbeat {
+		display: flex;
+		gap: 10px;
+		align-items: flex-start;
+		margin: 14px 0 0;
+		padding: 12px 14px;
+		border-radius: 14px;
+		background: rgba(var(--pl-accent-rgb), 0.07);
+		border: 1px solid rgba(var(--pl-accent-rgb), 0.2);
+		font-size: 14.5px;
+		line-height: 1.55;
+		color: #12433d;
+	}
+
+	.dbeat b {
+		color: #0b5f55;
+	}
+
+	.dbeat .tick {
+		flex: none;
+		color: var(--pl-accent);
+		font-weight: 900;
+	}
+
+	.lanes {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
+	@media (min-width: 780px) {
+		.lanes {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.lane {
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 18px;
+		padding: 16px 18px 6px;
+		background: #fff;
+	}
+
+	.laneHead {
+		display: flex;
+		align-items: center;
+		gap: 9px;
+		font-weight: 800;
+		font-size: 15px;
+		margin-bottom: 8px;
+	}
+
+	.dir {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 34px;
+		padding: 3px 8px;
+		border-radius: 999px;
+		font-size: 11px;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.dir.in {
+		color: #0a6d61;
+		background: rgba(0, 174, 154, 0.14);
+		border: 1px solid rgba(0, 174, 154, 0.25);
+	}
+
+	.dir.out {
+		color: #8a5a00;
+		background: rgba(245, 158, 11, 0.15);
+		border: 1px solid rgba(245, 158, 11, 0.32);
+	}
+
+	.beats {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.beats li {
+		display: flex;
+		gap: 10px;
+		align-items: flex-start;
+		padding: 9px 0;
+		border-top: 1px solid rgba(16, 24, 40, 0.07);
+		font-size: 14.5px;
+		line-height: 1.55;
+		color: rgba(16, 24, 40, 0.8);
+	}
+
+	.bn {
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		margin-top: 1px;
+		border-radius: 50%;
+		background: rgba(16, 24, 40, 0.06);
+		font-size: 11.5px;
+		font-weight: 800;
+		color: rgba(16, 24, 40, 0.6);
+	}
+
+	.two {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+
+	@media (min-width: 780px) {
+		.two {
+			grid-template-columns: 1fr 1fr;
+			gap: 26px;
+		}
+	}
+
+	.col p {
+		font-size: 15px;
+		line-height: 1.6;
+		color: rgba(16, 24, 40, 0.76);
+		margin: 0;
+	}
+
+	.costs {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 0 0 12px;
+	}
+
+	.costs td {
+		padding: 12px 2px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		font-size: 15px;
+		color: rgba(16, 24, 40, 0.82);
+	}
+
+	.costs td.num {
+		text-align: right;
+		font-weight: 700;
+		white-space: nowrap;
+		color: #0a6d61;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 14px;
+	}
+
+	.card {
+		border: 1px solid rgba(16, 24, 40, 0.1);
+		border-radius: 16px;
+		padding: 16px 18px;
+		background: #fff;
+	}
+
+	.card p {
+		font-size: 14.5px;
+		line-height: 1.58;
+		color: rgba(16, 24, 40, 0.74);
+		margin: 0;
+	}
+
+	.faq details {
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+		padding: 4px 0;
+	}
+
+	.faq summary {
+		cursor: pointer;
+		padding: 13px 0;
+		font-weight: 700;
+		font-size: 15.5px;
+		list-style: none;
+	}
+
+	.faq summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.faq summary::after {
+		content: '+';
+		float: right;
+		color: var(--pl-accent);
+		font-weight: 800;
+	}
+
+	.faq details[open] summary::after {
+		content: '\2212';
+	}
+
+	.faq p {
+		margin: 0 0 14px;
+		font-size: 15px;
+		line-height: 1.62;
+		color: rgba(16, 24, 40, 0.76);
+		max-width: 72ch;
+	}
+
+	.close .lead {
+		max-width: 70ch;
+	}
+
+	a {
+		color: #0a6d61;
+	}
+</style>
