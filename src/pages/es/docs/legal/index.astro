@@ -56,6 +56,11 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 	title="Docs Legal • PropertyList Info Hub"
 	description="Políticas, plantillas y documentos de referencia legal."
 	canonical="https://info.propertylist.es/es/docs/legal/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/docs/legal/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/docs/legal/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/docs/legal/' },
+	]}
 >
 	<h1>Docs Legal</h1>
 	<p class="sub">Políticas, plantillas y documentos de referencia legal.</p>
