@@ -108,6 +108,26 @@ const faqLd = {
 		</div>
 	</section>
 
+	<figure class="film">
+		<video
+			class="filmVid"
+			autoplay
+			muted
+			loop
+			playsinline
+			preload="auto"
+			poster="/hero/nurture-anim-poster.jpg"
+			aria-label="An illustration of a past client kept in touch with for four years, then handed to the agent as a call when they show intent"
+		>
+			<source src="/hero/nurture-anim.mp4" type="video/mp4" />
+		</video>
+		<figcaption class="filmCap">
+			An illustration of a Nurture contact, not a recording of the CRM. The behaviour is the module&rsquo;s own:
+			one email a week at most, sent under your name, and the moment someone shows intent the sequence stops,
+			they are tagged Hot, and a call goes to the top of your Daily Action Queue with the reason attached.
+		</figcaption>
+	</figure>
+
 	<section class="section">
 		<div class="sectionHead">
 			<h2>The deals you have already earned</h2>
@@ -263,6 +283,42 @@ const faqLd = {
 	h2,
 	h3 {
 		letter-spacing: -0.03em;
+	}
+
+	.film {
+		margin: 0 0 20px;
+		padding: 0;
+	}
+
+	.filmVid {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 7;
+		object-fit: cover;
+		border-radius: 22px;
+		border: 1px solid rgba(16, 24, 40, 0.08);
+		background: #f4f7f8;
+	}
+
+	.filmCap {
+		margin: 9px 4px 0;
+		font-size: 12.5px;
+		line-height: 1.55;
+		color: rgba(16, 24, 40, 0.5);
+		max-width: 92ch;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.filmVid {
+			display: none;
+		}
+
+		.film {
+			aspect-ratio: 16 / 7;
+			border-radius: 22px;
+			border: 1px solid rgba(16, 24, 40, 0.08);
+			background: url('/hero/nurture-anim-poster.jpg') center / cover no-repeat;
+		}
 	}
 
 	.hero {
