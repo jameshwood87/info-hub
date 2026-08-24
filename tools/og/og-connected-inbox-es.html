@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
+<style>
+	* { margin: 0; padding: 0; box-sizing: border-box; }
+	html, body { width: 1200px; height: 630px; }
+
+	/* Matches the /360-walkthrough/ and /what-we-do/ OG family: near-black navy,
+	   two soft teal discs, teal wordmark, headline split white over teal, and a
+	   line-art motif on the right. */
+	.card {
+		width: 1200px; height: 630px; position: relative; overflow: hidden;
+		background: #0b1620;
+		font-family: 'Roboto', Arial, sans-serif;
+		color: #fff;
+	}
+
+	.disc { position: absolute; border-radius: 50%; }
+	.disc.tr { width: 700px; height: 700px; right: -170px; top: -190px; background: #10262c; }
+	.disc.bl { width: 430px; height: 430px; left: -175px; bottom: -195px; background: #0f2429; }
+
+	.inner { position: relative; z-index: 2; padding: 78px 0 0 92px; }
+
+	.wordmark {
+		font-size: 27px; font-weight: 900; letter-spacing: 0.235em;
+		text-transform: uppercase; color: #12c9a8;
+	}
+
+	.eyebrow {
+		margin-top: 26px;
+		font-size: 21px; font-weight: 900; letter-spacing: 0.145em;
+		text-transform: uppercase; color: rgba(255, 255, 255, 0.42);
+	}
+
+	h1 {
+		margin-top: 46px;
+		font-size: 66px; font-weight: 900; line-height: 1.07;
+		letter-spacing: -0.021em; max-width: 830px;
+	}
+
+	h1 .two { color: #5ce7cf; display: block; }
+
+	.sub {
+		margin-top: 34px;
+		font-size: 25px; font-weight: 700; line-height: 1.35;
+		color: rgba(255, 255, 255, 0.68); max-width: 1010px; white-space: nowrap;
+	}
+
+	.cta {
+		margin-top: 42px;
+		font-size: 27px; font-weight: 700; color: #12c9a8;
+	}
+
+	.motif { position: absolute; right: 92px; top: 128px; z-index: 3; }
+</style>
+</head>
+<body>
+	<div class="card">
+		<div class="disc tr"></div>
+		<div class="disc bl"></div>
+
+		<!-- The motif is the feature in one glance: the mailbox at the top, the
+		     contact below it, and a closed loop between them. Teal descending is
+		     the reply arriving, pale ascending is the answer going back out from
+		     the agent's own address. The two arcs are kept well apart so they read
+		     as a circuit rather than a tangle. -->
+		<svg class="motif" width="200" height="225" viewBox="0 0 272 306" fill="none">
+			<defs>
+				<marker id="tipIn" markerWidth="9" markerHeight="9" refX="4.6" refY="4.4" orient="auto">
+					<path d="M0 0 L9 4.4 L0 8.8 Z" fill="#2fd4b6" />
+				</marker>
+				<marker id="tipOut" markerWidth="9" markerHeight="9" refX="4.6" refY="4.4" orient="auto">
+					<path d="M0 0 L9 4.4 L0 8.8 Z" fill="rgba(255,255,255,0.38)" />
+				</marker>
+			</defs>
+
+			<!-- the mailbox -->
+			<rect x="46" y="4" width="150" height="98" rx="14"
+				stroke="#2fd4b6" stroke-width="3" fill="#0d1f26" />
+			<path d="M46 24 L121 70 L196 24" stroke="#2fd4b6" stroke-width="3" fill="none" />
+
+			<!-- in: down the left -->
+			<path d="M64 108 C 26 148, 22 184, 44 208" stroke="#2fd4b6" stroke-width="2.6"
+				stroke-dasharray="9 9" fill="none" marker-end="url(#tipIn)" />
+			<!-- out: up the right -->
+			<path d="M228 208 C 250 184, 246 148, 208 108" stroke="rgba(255,255,255,0.3)"
+				stroke-width="2.6" stroke-dasharray="9 9" fill="none" marker-end="url(#tipOut)" />
+
+			<!-- the contact it lands on -->
+			<rect x="40" y="214" width="192" height="80" rx="16"
+				fill="#12303a" stroke="rgba(47,212,182,0.55)" stroke-width="2.6" />
+			<circle cx="76" cy="254" r="17" fill="#2fd4b6" opacity="0.9" />
+			<rect x="106" y="240" width="96" height="10" rx="5" fill="rgba(255,255,255,0.62)" />
+			<rect x="106" y="260" width="62" height="10" rx="5" fill="rgba(255,255,255,0.3)" />
+		</svg>
+
+		<div class="inner">
+			<div class="wordmark">PropertyList</div>
+			<div class="eyebrow">Bandeja conectada</div>
+			<h1>El correo ya es el registro.<span class="two">Deja de copiarlo a mano.</span></h1>
+			<div class="sub">Gmail u Outlook &middot; la respuesta cae en el contacto &middot; 10 créditos al mes</div>
+			<div class="cta">Mira cómo funciona &rarr;</div>
+		</div>
+	</div>
+</body>
+</html>
