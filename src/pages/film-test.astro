@@ -1,5 +1,5 @@
 ---
 // The approved fan-out prototype grew into the full film at /what-we-do/.
 // Anyone holding the prototype link lands on the real thing.
-return Astro.redirect('/what-we-do/', 301);
+return Astro.redirect('/what-we-do/' + Astro.url.search, 301);
 ---

@@ -1359,8 +1359,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 						const el = menu.querySelector(`.navSearchItem[data-i="${activeIndex}"]`);
 						const opt = currentOptions[activeIndex];
 						if (el instanceof HTMLAnchorElement && opt?.href) {
-							if (opt.targetBlank) window.open(opt.href, '_blank', 'noopener');
-							else window.location.href = opt.href;
+							const dest = window.__plRefUrl?.(opt.href) ?? opt.href;
+							if (opt.targetBlank) window.open(dest, '_blank', 'noopener');
+							else window.location.href = dest;
 						}
 					}
 				});
@@ -1372,7 +1373,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 					const opt = Number.isFinite(i) ? currentOptions[i] : null;
 					if (opt?.targetBlank) {
 						e.preventDefault();
-						window.open(opt.href, '_blank', 'noopener');
+						window.open(window.__plRefUrl?.(opt.href) ?? opt.href, '_blank', 'noopener');
 					}
 					close();
 				});
@@ -1769,82 +1770,114 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				} catch {}
 			})();
 		</script>
-		<script is:inline>
-			(() => {
-				// Referral-code forwarding.
-				//
-				// An agent's referral link is the signup URL plus ?ref=<CODE>. Agents
-				// share a content page instead ("read this, then join"), and that used
-				// to drop the code: every signup CTA here is hardcoded as
-				// .../new_agency/new?locale=xx, so a visitor arriving on
-				// /free-mls/?ref=ABC and clicking Join signed up unattributed and the
-				// referrer earned nothing.
-				//
-				// This carries the code the visitor already has in their own URL onto
-				// the signup CTAs, and onto internal links so it survives them reading
-				// another page first. Nothing is written to cookies, localStorage or
-				// sessionStorage, so LSSI art. 22.2 consent does not come into it.
-				const match = /(?:^|[?&])ref=([A-Za-z0-9_-]{4,32})(?=&|$)/.exec(window.location.search);
-				if (!match) return;
-				const ref = match[1];
+		{!isAdminPath ? (
+			<script is:inline>
+				(() => {
+					// Referral-code forwarding.
+					//
+					// An agent's referral link is the signup URL plus ?ref=<CODE>. Agents
+					// share a content page instead ("read this, then join"), and that used
+					// to drop the code: every signup CTA here is hardcoded as
+					// .../new_agency/new?locale=xx, so a visitor arriving on
+					// /free-mls/?ref=ABC and clicking Join signed up unattributed and the
+					// referrer earned nothing.
+					//
+					// This carries the code the visitor already has in their own URL onto
+					// the signup CTAs, and onto internal links so it survives them reading
+					// another page first. Nothing is written to cookies, localStorage or
+					// sessionStorage, so LSSI art. 22.2 consent does not come into it.
+					//
+					// Guarded by isAdminPath: /admin/* hosts the kb_pages editor, and a
+					// tagged href inside an editor body would be saved into published
+					// content, baking one agent's code into the site permanently.
+					const match = /(?:^|[?&])ref=([A-Za-z0-9_-]{4,32})(?=&|$)/.exec(window.location.search);
+					if (!match) return;
+					const ref = match[1];
 
-				const SIGNUP_HOST = 'agents.propertylist.es';
-				const SIGNUP_PATH = '/new_agency/new';
+					const SIGNUP_HOST = 'agents.propertylist.es';
+					const SIGNUP_PATH = '/new_agency/new';
 
-				const nextHref = (a) => {
-					const raw = a.getAttribute('href');
-					if (!raw || raw.charAt(0) === '#') return null;
-					if (/^(mailto:|tel:|javascript:)/i.test(raw)) return null;
-					if (a.hasAttribute('download')) return null;
+					// Returns the href with the code appended, or the original untouched.
+					const tagUrl = (href) => {
+						let url;
+						try {
+							url = new URL(String(href ?? ''), window.location.origin);
+						} catch {
+							return href;
+						}
+						if (url.protocol !== 'http:' && url.protocol !== 'https:') return href;
+						// An explicit ref already on the link wins. Never overwrite one.
+						if (url.searchParams.has('ref')) return href;
+						const isSignup = url.host === SIGNUP_HOST && url.pathname.startsWith(SIGNUP_PATH);
+						if (!isSignup && url.host !== window.location.host) return href;
+						// Only ever adds a query param. Host and path are untouched, so the
+						// analytics guards matching the 'new_agency' substring, and the
+						// data-umami-event attributes, keep working.
+						url.searchParams.set('ref', ref);
+						return url.toString();
+					};
 
-					let url;
-					try {
-						url = new URL(a.href, window.location.origin);
-					} catch {
-						return null;
+					// The search combobox navigates with window.location.href and
+					// window.open on its raw option data rather than by following its own
+					// anchor, so it cannot be reached by tagging the DOM. It asks instead.
+					window.__plRefUrl = tagUrl;
+
+					const tag = (a) => {
+						const raw = a.getAttribute('href');
+						if (!raw || raw.charAt(0) === '#') return;
+						if (/^(mailto:|tel:|javascript:)/i.test(raw)) return;
+						if (a.hasAttribute('download')) return;
+						const next = tagUrl(a.href);
+						if (next && next !== a.href) a.href = next;
+					};
+
+					const sweep = () => document.querySelectorAll('a[href]').forEach(tag);
+
+					if (document.readyState === 'loading') {
+						document.addEventListener('DOMContentLoaded', sweep);
+					} else {
+						sweep();
 					}
-					if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
-					// An explicit ref already on the link wins. Never overwrite one.
-					if (url.searchParams.has('ref')) return null;
 
-					const isSignup = url.host === SIGNUP_HOST && url.pathname.startsWith(SIGNUP_PATH);
-					const isInternal = url.host === window.location.host;
-					if (!isSignup && !isInternal) return null;
-
-					// Only ever adds a query param. Host and path are untouched, so the
-					// analytics guards that match on the 'new_agency' substring, and the
-					// data-umami-event attributes, keep working.
-					url.searchParams.set('ref', ref);
-					return url.toString();
-				};
-
-				const tag = (a) => {
-					const href = nextHref(a);
-					if (href) a.href = href;
-				};
-
-				const sweep = () => document.querySelectorAll('a[href]').forEach(tag);
-
-				if (document.readyState === 'loading') {
-					document.addEventListener('DOMContentLoaded', sweep);
-				} else {
-					sweep();
-				}
-
-				// Safety net for anchors written after load. /map/ builds its town
-				// panel with innerHTML on click, so its two signup links are in
-				// neither the server HTML nor the DOM at load. Capture phase, so the
-				// href is corrected before the navigation starts.
-				document.addEventListener(
-					'click',
-					(e) => {
+					// Anchors written after load: /map/ builds its town panel with
+					// innerHTML only once a town is clicked, so its two signup links are
+					// in neither the server HTML nor the DOM at load. Capture phase, so
+					// the href is corrected before navigation. auxclick covers
+					// middle-click, contextmenu covers "copy link address".
+					const late = (e) => {
 						const a = e.target?.closest?.('a[href]');
 						if (a) tag(a);
-					},
-					true
-				);
-			})();
-		</script>
+					};
+					['click', 'auxclick', 'contextmenu'].forEach((type) => {
+						document.addEventListener(type, late, true);
+					});
+
+					// A native GET form rebuilds the query string from its own fields, so
+					// submitting the docs search, the docs nav filter or the 404 search
+					// dropped the code mid-visit. A hidden field carries it across.
+					document.addEventListener(
+						'submit',
+						(e) => {
+							const form = e.target;
+							if (!(form instanceof HTMLFormElement)) return;
+							if (form.method.toLowerCase() !== 'get') return;
+							try {
+								if (new URL(form.action, window.location.origin).host !== window.location.host) return;
+							} catch {
+								return;
+							}
+							if (form.querySelector('input[name="ref"]')) return;
+							const field = document.createElement('input');
+							field.type = 'hidden';
+							field.name = 'ref';
+							field.value = ref;
+							form.appendChild(field);
+						},
+						true
+					);
+				})();
+			</script>
+		) : null}
 	</body>
 </html>
 
