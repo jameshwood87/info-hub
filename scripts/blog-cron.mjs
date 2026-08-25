@@ -103,7 +103,31 @@ const before = await (async () => {
 // (11-08-26, after the blog audit found unfilled placeholders and a repealed
 // decree presented as current law on live pages.)
 const genPath = new URL('./generate-blog-post.mjs', import.meta.url).pathname;
-execFileSync('node', [genPath, topic], { stdio: 'inherit' });
+try {
+  execFileSync('node', [genPath, topic], { stdio: 'inherit' });
+} catch (genErr) {
+  // A silent crash here cost two runs (22-08 and 25-08) before anyone
+  // noticed. The pipeline's promise is that nothing needs watching, so a
+  // failure must announce itself the same way an approval does: by email.
+  try {
+    const envText = fs.readFileSync('/opt/info-hub/.env', 'utf8');
+    const cfg = (k) => (envText.match(new RegExp('^' + k + '=(.*)$', 'm'))?.[1] || '').trim().replace(/^[\"']|[\"']$/g, '');
+    await fetch('https://mandrillapp.com/api/1.0/messages/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: cfg('MANDRILL_API_KEY'), message: {
+        from_email: cfg('NOTIFY_FROM') || 'noreply@propertylist.es',
+        from_name: 'PropertyList Blog Cron',
+        to: [{ email: cfg('NOTIFY_TO') }],
+        subject: 'Blog cron FAILED - no draft was completed',
+        text: 'The blog generator crashed and no approval email will follow.\n\nTopic: ' + topic + '\n\nError: ' + String(genErr && genErr.message || genErr).slice(0, 800) + '\n\nLog: /opt/info-hub/var/log/blog-cron.log on the info-hub droplet.',
+      } }),
+    });
+  } catch (mailErr) {
+    console.error('failure alert email also failed:', mailErr && mailErr.message);
+  }
+  throw genErr;
+}
 commit();
 
 const { lintBlogPost } = await import('./lib/blog-lint.mjs');

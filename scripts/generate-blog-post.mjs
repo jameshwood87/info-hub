@@ -103,7 +103,9 @@ async function marketData() {
 }
 
 const slugify = (s) => String(s).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').slice(0, 80);
-const noDashes = (s) => String(s || '').replace(/\s*[—–]\s*/g, ' - ').replace(/[ \t]{2,}/g, ' ');
+// Also strips NUL and other C0 control characters: Postgres refuses 0x00 in
+// text, and one NUL in a translation killed the whole 25-08-26 run.
+const noDashes = (s) => String(s || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/\s*[—–]\s*/g, ' - ').replace(/[ \t]{2,}/g, ' ');
 const decodeEntities = (s) => {
   let out = String(s || '');
   for (let i = 0; i < 3; i++) {

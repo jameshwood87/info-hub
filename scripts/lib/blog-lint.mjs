@@ -14,7 +14,9 @@ const HARD_PATTERNS = [
   [/\b[XYZ] (month|months|percent|per cent|year|years|days?|weeks?|euros?|€)\b/i, 'unfilled template placeholder (X month / Y percent)'],
   [/\bexceeds [XYZ]\b/i, 'unfilled template placeholder'],
   [/\[(TODO|TBD|INSERT|CITATION NEEDED|PLACEHOLDER)[^\]]*\]/i, 'editorial placeholder left in text'],
-  [/\bTODO\b|\bTBD\b|\bLOREM IPSUM\b/i, 'TODO/TBD/lorem left in text'],
+  // case-sensitive on purpose: 'todo' is an ordinary Spanish word, and the
+  // insensitive version blocked any Spanish body containing it (26-08-26)
+  [/\bTODO\b|\bTBD\b|\bLOREM IPSUM\b/, 'TODO/TBD/lorem left in text'],
   [/\{\{[^}]+\}\}/, 'unrendered template variable {{...}}'],
   [/�/, 'invalid UTF-8 replacement character'],
   [/[—–]/, 'em/en dash (house rule: plain hyphens only)'],

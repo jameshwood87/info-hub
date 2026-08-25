@@ -669,6 +669,7 @@ import Layout from '../../layouts/Layout.astro';
 							`;
 						}
 						return `
+							${status !== 'published' ? `<button class="btnGhostSmall" type="button" data-action="publish" data-id="${id}" style="border-color:#00ae9a;color:#0a6d61;font-weight:800;">Publish</button>` : ''}
 							<button class="btnGhostSmall" type="button" data-edit="${id}">Edit</button>
 							<button class="btnGhostSmall" type="button" data-action="archive" data-id="${id}">Archive</button>
 							<button class="btnDangerSmall" type="button" data-action="trash" data-id="${id}">Trash</button>
