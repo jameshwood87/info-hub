@@ -1769,6 +1769,82 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				} catch {}
 			})();
 		</script>
+		<script is:inline>
+			(() => {
+				// Referral-code forwarding.
+				//
+				// An agent's referral link is the signup URL plus ?ref=<CODE>. Agents
+				// share a content page instead ("read this, then join"), and that used
+				// to drop the code: every signup CTA here is hardcoded as
+				// .../new_agency/new?locale=xx, so a visitor arriving on
+				// /free-mls/?ref=ABC and clicking Join signed up unattributed and the
+				// referrer earned nothing.
+				//
+				// This carries the code the visitor already has in their own URL onto
+				// the signup CTAs, and onto internal links so it survives them reading
+				// another page first. Nothing is written to cookies, localStorage or
+				// sessionStorage, so LSSI art. 22.2 consent does not come into it.
+				const match = /(?:^|[?&])ref=([A-Za-z0-9_-]{4,32})(?=&|$)/.exec(window.location.search);
+				if (!match) return;
+				const ref = match[1];
+
+				const SIGNUP_HOST = 'agents.propertylist.es';
+				const SIGNUP_PATH = '/new_agency/new';
+
+				const nextHref = (a) => {
+					const raw = a.getAttribute('href');
+					if (!raw || raw.charAt(0) === '#') return null;
+					if (/^(mailto:|tel:|javascript:)/i.test(raw)) return null;
+					if (a.hasAttribute('download')) return null;
+
+					let url;
+					try {
+						url = new URL(a.href, window.location.origin);
+					} catch {
+						return null;
+					}
+					if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+					// An explicit ref already on the link wins. Never overwrite one.
+					if (url.searchParams.has('ref')) return null;
+
+					const isSignup = url.host === SIGNUP_HOST && url.pathname.startsWith(SIGNUP_PATH);
+					const isInternal = url.host === window.location.host;
+					if (!isSignup && !isInternal) return null;
+
+					// Only ever adds a query param. Host and path are untouched, so the
+					// analytics guards that match on the 'new_agency' substring, and the
+					// data-umami-event attributes, keep working.
+					url.searchParams.set('ref', ref);
+					return url.toString();
+				};
+
+				const tag = (a) => {
+					const href = nextHref(a);
+					if (href) a.href = href;
+				};
+
+				const sweep = () => document.querySelectorAll('a[href]').forEach(tag);
+
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', sweep);
+				} else {
+					sweep();
+				}
+
+				// Safety net for anchors written after load. /map/ builds its town
+				// panel with innerHTML on click, so its two signup links are in
+				// neither the server HTML nor the DOM at load. Capture phase, so the
+				// href is corrected before the navigation starts.
+				document.addEventListener(
+					'click',
+					(e) => {
+						const a = e.target?.closest?.('a[href]');
+						if (a) tag(a);
+					},
+					true
+				);
+			})();
+		</script>
 	</body>
 </html>
 
