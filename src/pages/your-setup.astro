@@ -863,6 +863,9 @@ const faqs = [
 
 	.board { display: grid; grid-template-columns: 1fr; gap: 16px; }
 	@media (min-width: 880px) { .board { grid-template-columns: 1fr 300px; } }
+	/* grid children default to min-width auto, so one nowrap span inside a row
+	   can force the whole column past the viewport on a phone */
+	.board > * { min-width: 0; }
 
 	.panel { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 20px; padding: 20px 22px; background: #fff; }
 	.panelHead h2 { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.015em; }
@@ -871,7 +874,7 @@ const faqs = [
 	.toolSet { display: none; }
 	.toolSet.on { display: block; }
 	.tool { padding: 11px 0; border-top: 1px solid rgba(16, 24, 40, 0.08); }
-	.toolTop { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
+	.toolTop { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px; align-items: baseline; }
 	.toolName { font-size: 15px; font-weight: 700; }
 	.toolName a { color: #0a6d61; }
 	.toolPrice { font-size: 14px; font-weight: 800; color: #0a6d61; white-space: nowrap; }
@@ -899,7 +902,8 @@ const faqs = [
 	.weekHead { font-size: 12px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); margin: 0 0 4px; }
 	.weekList { list-style: none; margin: 0; padding: 0; }
 	.weekList li { border-top: 1px solid rgba(16, 24, 40, 0.06); }
-	.wJump { appearance: none; border: 0; background: none; font: inherit; width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; cursor: pointer; text-align: left; }
+	.wJump { appearance: none; border: 0; background: none; font: inherit; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 12px; padding: 8px 0; cursor: pointer; text-align: left; }
+	.wRight { margin-left: auto; }
 	.wLabel { font-size: 14px; line-height: 1.45; color: rgba(16, 24, 40, 0.78); }
 	.wRight { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 	.wH { font-size: 13px; font-weight: 800; color: rgba(16, 24, 40, 0.55); }
