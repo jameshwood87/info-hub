@@ -1,6 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getPortalStats, statPlus } from '../lib/portalStats';
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
 
 // A configurator, not a fifth telling of the value story. /free/ already does
 // money, /hours/ does time, /what-we-do/ follows a listing and /launch/ does
@@ -28,13 +28,13 @@ import { getPortalStats, statPlus } from '../lib/portalStats';
 //      tenancies row; own website already, no nagging-a-developer row.
 
 const origin = 'https://info.propertylist.es';
-const canonical = `${origin}/your-setup/`;
-const title = 'Your setup: what to switch on, and what it costs | PropertyList';
+const canonical = `${origin}/es/tu-configuracion/`;
+const title = 'Tu configuración: qué activar y qué cuesta | PropertyList';
 const description =
-	'Start with how you work now and add one thing at a time. Every stage shows the tools, the credits a month, and the hours a week it gives back. The core is free and most of it stays free.';
+	'Empieza por cómo trabajas hoy y añade las cosas de una en una. Cada paso muestra las herramientas, los créditos al mes y las horas a la semana que devuelve. El núcleo es gratis y casi todo lo sigue siendo.';
 
 const __ps = await getPortalStats();
-const plAgents = statPlus(__ps.agents, 'en');
+const plAgents = statPlus(__ps.agents, 'es');
 
 // hours: weekly hours the task costs. after: minutes still left once the tool is
 // on. Both come straight from /hours/, where they are described as deliberately
@@ -50,17 +50,17 @@ type Task = {
 };
 
 const allTasks: Task[] = [
-	{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, after: 15, fix: 'stage:free' },
-	{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, after: 0, fix: 'stage:free' },
-	{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10, fix: 'stage:free' },
-	{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0, fix: 'stage:free' },
-	{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30, fix: 'stage:demand' },
-	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15, fix: 'stage:auto' },
-	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
-	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
-	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 0, fix: 'soon:CoAgent' },
-	{ id: 'signatures', label: 'Chasing one signature for a week', hours: 1, after: 0, fix: 'soon:Instant Documents' },
-	{ id: 'brochures', label: 'Making brochures in Canva at midnight', hours: 1, after: 0, fix: 'soon:Instant Brochure' },
+	{ id: 'listings', label: 'Anuncios a las once de la noche', hours: 2, after: 15, fix: 'stage:free' },
+	{ id: 'portals', label: 'Repetir el mismo piso en cinco portales', hours: 2, after: 0, fix: 'stage:free' },
+	{ id: 'matching', label: 'Bucear en portales buscando el piso de un comprador', hours: 2, after: 10, fix: 'stage:free' },
+	{ id: 'desk', label: 'Volver a la oficina solo para usar el CRM', hours: 1, after: 0, fix: 'stage:free' },
+	{ id: 'valuation', label: 'Discutir el precio con un propietario', hours: 2, after: 30, fix: 'stage:demand' },
+	{ id: 'followup', label: 'Acordarme de a quién prometí llamar', hours: 3, after: 15, fix: 'stage:auto' },
+	{ id: 'website', label: 'Suplicarle cambios al de la web', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
+	{ id: 'tenants', label: 'Alquileres viviendo en un Excel', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
+	{ id: 'callnotes', label: 'Pasar a limpio llamadas que ya dije en voz alta', hours: 2, after: 0, fix: 'soon:CoAgent' },
+	{ id: 'signatures', label: 'Perseguir una firma durante una semana', hours: 1, after: 0, fix: 'soon:Documentos Instantáneos' },
+	{ id: 'brochures', label: 'Hacer folletos en Canva a medianoche', hours: 1, after: 0, fix: 'soon:Folleto Instantáneo' },
 ];
 
 type Tool = {
@@ -80,45 +80,45 @@ type Stage = { key: string; tick: string; head: string; sub: string; tools: Tool
 const stages: Stage[] = [
 	{
 		key: 'now',
-		tick: 'Now',
-		head: 'How you work now',
-		sub: 'Nothing switched on. Every job below is one you do by hand, in the evening, from memory.',
+		tick: 'Hoy',
+		head: 'Cómo trabajas hoy',
+		sub: 'Nada activado. Cada tarea de abajo la haces a mano, por la noche, de memoria.',
 		tools: [],
 	},
 	{
 		key: 'free',
-		tick: 'Free core',
-		head: 'The free core',
-		sub: 'This is what every agency gets for nothing, with no card and no trial clock. Most agencies never need to go further than this.',
+		tick: 'Núcleo gratis',
+		head: 'El núcleo gratis',
+		sub: 'Esto es lo que toda agencia recibe por nada, sin tarjeta y sin reloj de prueba. La mayoría de las agencias nunca necesita ir más allá.',
 		tools: [
-			{ name: 'Shared MLS and CRM', href: '/pipelines/', price: 'Free', monthly: 0 },
-			{ name: 'Unlimited listings and staff', price: 'Free', monthly: 0 },
-			{ name: 'Instant Listing', href: '/instant-listing/', price: 'Free', monthly: 0 },
-			{ name: 'XML feeds, in and out', href: '/xml-feed-import/', price: 'Free', monthly: 0 },
-			{ name: 'Branded microsite', price: 'Free', monthly: 0 },
-			{ name: 'Mobile app', href: '/mobile-app/', price: 'Free', monthly: 0 },
-			{ name: 'AI Property Search', href: '/ai-property-search/', price: 'Free in beta', monthly: 0 },
+			{ name: 'MLS y CRM compartidos', href: '/es/pipelines/', price: 'Gratis', monthly: 0 },
+			{ name: 'Anuncios y personal ilimitados', price: 'Gratis', monthly: 0 },
+			{ name: 'Listado Instantáneo', href: '/es/listado-instantaneo/', price: 'Gratis', monthly: 0 },
+			{ name: 'Feeds XML, de entrada y de salida', href: '/es/importar-feed-xml/', price: 'Gratis', monthly: 0 },
+			{ name: 'Microsite de marca', price: 'Gratis', monthly: 0 },
+			{ name: 'App móvil', href: '/es/app-movil/', price: 'Gratis', monthly: 0 },
+			{ name: 'Búsqueda de propiedades con IA', href: '/es/busqueda-ia/', price: 'Gratis en beta', monthly: 0 },
 		],
 	},
 	{
 		key: 'demand',
-		tick: 'Pay per use',
-		head: 'Pay only when it works',
-		sub: 'Nothing monthly here. You spend a credit at the moment something is worth having, and not before.',
+		tick: 'Pago por uso',
+		head: 'Paga solo cuando funciona',
+		sub: 'Aquí no hay nada mensual. Gastas un crédito en el momento en que algo merece la pena, y no antes.',
 		tools: [
-			{ name: 'Buyer leads', href: '/pricing/', price: '1 credit each', monthly: 0, perUse: '1 credit per lead you move into the Buyer pipeline, first 5 free' },
-			{ name: 'Property Intelligence Report', href: '/property-intelligence-report/', price: '5 credits', monthly: 0, perUse: '5 credits per report' },
-			{ name: 'Feature a listing', price: '10 credits / 3 days', monthly: 0, perUse: '10 credits to feature a listing for 3 days' },
+			{ name: 'Leads de compradores', href: '/es/precios/', price: '1 crédito cada uno', monthly: 0, perUse: '1 crédito por lead que decides pasar al pipeline de Compradores, los 5 primeros gratis' },
+			{ name: 'Informe de Inteligencia de Propiedad', href: '/es/informe-inteligencia-propiedad/', price: '5 créditos', monthly: 0, perUse: '5 créditos por informe' },
+			{ name: 'Destacar un anuncio', price: '10 créditos / 3 días', monthly: 0, perUse: '10 créditos por destacar un anuncio 3 días' },
 		],
 	},
 	{
 		key: 'auto',
-		tick: 'Runs itself',
-		head: 'The parts that run themselves',
-		sub: 'The first genuinely monthly thing. It works while you are at a viewing, and tells you who to ring when it finds something.',
+		tick: 'Se hace solo',
+		head: 'Las partes que funcionan solas',
+		sub: 'Lo primero genuinamente mensual. Trabaja mientras estás en una visita y te dice a quién llamar cuando encuentra algo.',
 		tools: [
-			{ name: 'Automation and Nurture', href: '/nurture/', price: '20 credits a month', monthly: 20 },
-			{ name: 'Connected inbox', href: '/connected-inbox/', price: '10 credits per mailbox a month', monthly: 0, soon: true, note: 'Not built yet, so it costs nothing today.' },
+			{ name: 'Automatización y Nurture', href: '/es/nurture/', price: '20 créditos al mes', monthly: 20 },
+			{ name: 'Bandeja de correo conectada', href: '/es/bandeja-conectada/', price: '10 créditos por buzón al mes', monthly: 0, soon: true, note: 'Aún no está construida, así que hoy no cuesta nada.' },
 		],
 	},
 ];
@@ -140,49 +140,49 @@ type Addon = {
 const addons: Addon[] = [
 	{
 		key: 'wb',
-		name: 'Website Builder',
-		href: '/website-builder/',
-		price: '50 credits a month',
+		name: 'Constructor de Webs',
+		href: '/es/constructor-de-webs/',
+		price: '50 créditos al mes',
 		monthly: 50,
 		taskId: 'website',
-		note: 'A real site that loads your MLS stock on its own. Build and preview free, pay only once you publish.',
+		note: 'Una web de verdad que carga tu cartera del MLS por sí sola. Constrúyela y previsualízala gratis, pagas solo cuando la publicas.',
 		show: 'nosite',
 	},
 	{
 		key: 'ic',
-		name: 'Instant Content',
-		href: '/instant-content/',
-		price: '30 credits a month',
+		name: 'Contenido Instantáneo',
+		href: '/es/contenido-instantaneo/',
+		price: '30 créditos al mes',
 		monthly: 30,
-		note: 'Add-on to the Website Builder: AI blog and area guides for your site.',
+		note: 'Complemento del Constructor de Webs: blog con IA y guías de zona para tu web.',
 		show: 'nosite',
 		needs: 'wb',
 	},
 	{
 		key: 'feed',
-		name: 'Network feed to your own site',
-		href: '/xml-feed-import/',
-		price: '35 credits a month',
+		name: 'Feed de la red a tu propia web',
+		href: '/es/importar-feed-xml/',
+		price: '35 créditos al mes',
 		monthly: 35,
-		note: 'Every shared listing on the network, on the site you already have. Your own listings are free either way.',
+		note: 'Todos los anuncios compartidos de la red, en la web que ya tienes. Tus propios anuncios son gratis en cualquier caso.',
 		show: 'hassite',
 	},
 	{
 		key: 'devfeed',
-		name: 'New developments feed',
-		price: '25 credits a month',
+		name: 'Feed de obra nueva',
+		price: '25 créditos al mes',
 		monthly: 25,
-		note: 'Separate feed, off-plan and new build.',
+		note: 'Feed aparte, sobre plano y obra nueva.',
 		show: 'hassite',
 	},
 	{
 		key: 'rent',
-		name: 'Rentals Module',
-		href: '/rentals/',
-		price: '50 credits per 30 days',
+		name: 'Módulo de Alquileres',
+		href: '/es/alquileres/',
+		price: '50 créditos por 30 días',
 		monthly: 50,
 		taskId: 'tenants',
-		note: 'Chases its own renewal dates, which is the part nobody remembers until it is late. Free for 30 days, no card.',
+		note: 'Persigue solo sus propias fechas de renovación, que es la parte que nadie recuerda hasta que es tarde. Gratis 30 días, sin tarjeta.',
 		show: 'lettings',
 	},
 ];
@@ -190,94 +190,94 @@ const addons: Addon[] = [
 // Not built. In a strip below the board, never on the slider: a stage that
 // changes nothing must not be where the story ends.
 const soonTools = [
-	{ name: 'CoAgent', href: '/coagent/' },
-	{ name: 'Instant Documents', href: '/instant-documents/' },
-	{ name: 'Instant Brochure', href: '/instant-brochure/' },
-	{ name: 'Instant Video and Images', href: '/instant-video/' },
+	{ name: 'CoAgent', href: '/es/coagent/' },
+	{ name: 'Documentos Instantáneos', href: '/es/documentos-instantaneos/' },
+	{ name: 'Folleto Instantáneo', href: '/es/folleto-instantaneo/' },
+	{ name: 'Vídeo e Imágenes Instantáneos', href: '/es/video-instantaneo/' },
 ];
 
 const faqs = [
 	{
-		q: 'Where do the hours come from?',
-		a: 'From the same list as the admin tally on the hours page, which is deliberately conservative. A tool almost never removes a job completely, so the figure here is the hours the task costs minus the minutes it still costs afterwards. Writing listings drops from two hours to fifteen minutes, for example, and this page counts the difference rather than the whole two hours.',
+		q: '¿De dónde salen las horas?',
+		a: 'De la misma lista que el recuento de papeleo de la página de horas, que es deliberadamente conservador. Una herramienta casi nunca elimina una tarea del todo, así que la cifra de aquí son las horas que cuesta la tarea menos los minutos que sigue costando después. Redactar anuncios baja de dos horas a quince minutos, por ejemplo, y esta página cuenta la diferencia, no las dos horas enteras.',
 	},
 	{
-		q: 'Why are the per-use credits kept out of the monthly total?',
-		a: 'Because rolling them in would be a made-up number. A buyer lead costs a credit at the moment you decide that lead is worth having, and if you take none in a month you spend none. Adding a guess about how many you might take would make the monthly figure look precise when it is not.',
+		q: '¿Por qué los créditos de pago por uso quedan fuera del total mensual?',
+		a: 'Porque meterlos sería inventarse un número. Un lead de comprador cuesta un crédito en el momento en que decides que ese lead merece la pena, y si en un mes no tomas ninguno no gastas nada. Añadir una suposición de cuántos podrías tomar haría que la cifra mensual pareciera precisa cuando no lo es.',
 	},
 	{
-		q: 'Do I have to go left to right?',
-		a: 'No. Most agencies stop at the free core and that is a perfectly good place to stop. The slider is the order that tends to make sense, and the add-ons are exactly that: add-ons, each with its own switch, none of them on unless you flick them. Everything past the free core can be switched off again the month you stop wanting it.',
+		q: '¿Tengo que ir de izquierda a derecha?',
+		a: 'No. La mayoría de las agencias se queda en el núcleo gratis y es un sitio perfectamente bueno donde quedarse. El deslizador es el orden que suele tener sentido, y los complementos son exactamente eso: complementos, cada uno con su interruptor, y ninguno encendido si no lo enciendes tú. Todo lo que va después del núcleo gratis se puede apagar el mes que dejes de quererlo.',
 	},
 	{
-		q: 'What about the ones marked coming soon?',
-		a: 'They are not built. They cost nothing, they save nothing, and they are on the page because agents ask what is next. When one ships it gets a price and starts counting, and not before.',
+		q: '¿Y los marcados como próximamente?',
+		a: 'No están construidos. No cuestan nada, no ahorran nada, y están en la página porque los agentes preguntan qué viene. Cuando uno se lance tendrá precio y empezará a contar, y no antes.',
 	},
 ];
 ---
 
 <Layout
-	lang="en"
+	lang="es"
 	title={title}
 	description={description}
 	canonical={canonical}
 	robots="noindex,follow"
 	hreflangs={[
-		{ hreflang: 'en', href: canonical },
-		{ hreflang: 'es', href: `${origin}/es/tu-configuracion/` },
-		{ hreflang: 'x-default', href: canonical },
+		{ hreflang: 'en', href: `${origin}/your-setup/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/your-setup/` },
 	]}
 >
 	<div class="wrap" data-setup>
 		<section class="intro">
-			<p class="kicker">Your setup</p>
-			<h1>Start where you are.<br /><em>Add one thing at a time.</em></h1>
+			<p class="kicker">Tu configuración</p>
+			<h1>Empieza donde estás.<br /><em>Añade las cosas de una en una.</em></h1>
 			<p class="sub">
-				Nobody switches everything on at once, and most agencies never need to. Slide right, flick on only the
-				add-ons you would actually use, and watch what it costs and what it hands back. The core is free, and a
-				lot of agencies stop there.
+				Nadie lo activa todo de golpe, y la mayoría de las agencias nunca lo necesita. Desliza a la derecha, enciende
+				solo los complementos que de verdad usarías, y mira qué cuesta y qué devuelve. El núcleo es gratis, y muchas
+				agencias se quedan ahí.
 			</p>
 		</section>
 
 		<section class="qs">
 			<div class="q">
-				<span class="qLab">Do you do lettings?</span>
-				<div class="seg" role="group" aria-label="Do you do lettings?">
+				<span class="qLab">¿Llevas alquileres?</span>
+				<div class="seg" role="group" aria-label="¿Llevas alquileres?">
 					<button type="button" class="segBtn on" data-lettings="no">No</button>
-					<button type="button" class="segBtn" data-lettings="yes">Yes</button>
+					<button type="button" class="segBtn" data-lettings="yes">Sí</button>
 				</div>
 			</div>
 			<div class="q">
-				<span class="qLab">Have you got your own website?</span>
-				<div class="seg" role="group" aria-label="Have you got your own website?">
-					<button type="button" class="segBtn on" data-site="no">Not yet</button>
-					<button type="button" class="segBtn" data-site="yes">Yes</button>
+				<span class="qLab">¿Tienes web propia?</span>
+				<div class="seg" role="group" aria-label="¿Tienes web propia?">
+					<button type="button" class="segBtn on" data-site="no">Aún no</button>
+					<button type="button" class="segBtn" data-site="yes">Sí</button>
 				</div>
 			</div>
 		</section>
 
 		<section class="rig">
 			<div class="sliderRow">
-				<span class="srLab" id="sliderLab">Build it up</span>
+				<span class="srLab" id="sliderLab">Móntalo por pasos</span>
 				<div class="sliderLine">
-					<button type="button" class="step" data-step="-1" aria-label="Previous step">&#8249;</button>
+					<button type="button" class="step" data-step="-1" aria-label="Paso anterior">&#8249;</button>
 					<input id="stage" class="slider" type="range" min="0" max={stages.length - 1} step="1" value="0" aria-labelledby="sliderLab" aria-describedby="stageName" />
-					<button type="button" class="step" data-step="1" aria-label="Next step">&#8250;</button>
+					<button type="button" class="step" data-step="1" aria-label="Paso siguiente">&#8250;</button>
 				</div>
 				<div class="ticks">
 					{stages.map((s, i) => (
 						<button type="button" class="tick" data-goto={String(i)}>{s.tick}</button>
 					))}
 				</div>
-				<p class="stepline" data-stepline aria-hidden="true">Step 1 of {stages.length} &middot; How you work now</p>
+				<p class="stepline" data-stepline aria-hidden="true">Paso 1 de {stages.length} &middot; Cómo trabajas hoy</p>
 				<p class="delta" data-delta aria-live="polite"></p>
 			</div>
 
 			<div class="board">
 				<div class="panel">
 					<div class="panelHead">
-						<h2 id="stageName">How you work now</h2>
-						<p class="panelSub" data-sub>Nothing switched on. Every job below is one you do by hand, in the evening, from memory.</p>
+						<h2 id="stageName">Cómo trabajas hoy</h2>
+						<p class="panelSub" data-sub>Nada activado. Cada tarea de abajo la haces a mano, por la noche, de memoria.</p>
 					</div>
 
 					<div class="toolWrap" data-tools>
@@ -300,8 +300,8 @@ const faqs = [
 					</div>
 
 					<div class="addonWrap" data-addonwrap hidden>
-						<h3 class="addonHead">Add-ons, only if you want them</h3>
-						<p class="addonSub">Each one has its own switch. Nothing here is bundled, and nothing is on unless you turn it on.</p>
+						<h3 class="addonHead">Complementos, solo si los quieres</h3>
+						<p class="addonSub">Cada uno tiene su propio interruptor. Aquí no hay paquetes y nada se enciende si no lo enciendes tú.</p>
 						{addons.map((a) => (
 							<div class="addon" data-addon={a.key} data-show={a.show} data-needs={a.needs || ''}>
 								<div class="toolTop">
@@ -310,18 +310,18 @@ const faqs = [
 									</span>
 									<span class="addonRight">
 										<span class="toolPrice">{a.price}</span>
-										<button type="button" class="sw" role="switch" aria-checked="false" data-sw={a.key} aria-label={`Switch ${a.name} on or off`}>
+										<button type="button" class="sw" role="switch" aria-checked="false" data-sw={a.key} aria-label={`Encender o apagar ${a.name}`}>
 											<span class="swKnob"></span>
 										</button>
 									</span>
 								</div>
-								<p class="toolNote">{a.note} <span class="offAgain">Off again any month.</span></p>
+								<p class="toolNote">{a.note} <span class="offAgain">Se apaga el mes que quieras.</span></p>
 							</div>
 						))}
 					</div>
 
 					<div class="week">
-						<h3 class="weekHead">Your week, by hand</h3>
+						<h3 class="weekHead">Tu semana, a mano</h3>
 						<ul class="weekList" data-week>
 							{allTasks.map((t) => (
 								<li data-task={t.id}>
@@ -335,33 +335,33 @@ const faqs = [
 								</li>
 							))}
 						</ul>
-						<p class="weekTotal">About <strong data-weektotal>17</strong> hours of admin a week, from the <a href="/hours/">admin tally</a>. Deliberately conservative.</p>
+						<p class="weekTotal">Unas <strong data-weektotal>17</strong> horas de papeleo a la semana, del <a href="/es/horas/">recuento de horas</a>. Deliberadamente conservador.</p>
 					</div>
 				</div>
 
 				<aside class="meter">
 					<div class="mBlock">
-						<div class="mLab">Credits a month</div>
+						<div class="mLab">Créditos al mes</div>
 						<div class="mNum" data-credits>0</div>
 						<div class="mEuro" data-euro hidden></div>
-						<div class="mNote" data-perUse>Nothing monthly. Nothing at all, in fact.</div>
+						<div class="mNote" data-perUse>Nada mensual. Nada de nada, de hecho.</div>
 					</div>
 					<div class="mBlock">
-						<div class="mLab">Hours a week handed back</div>
+						<div class="mLab">Horas a la semana devueltas</div>
 						<div class="mNum alt" data-hours>0</div>
-						<div class="mNote">Out of about <strong data-weektotal2>17</strong> hours of admin a week.</div>
+						<div class="mNote">De unas <strong data-weektotal2>17</strong> horas de papeleo a la semana.</div>
 					</div>
 					<div class="mBlock last mCta" data-ctablock>
-						<p class="mCtaLine" data-ctaline>Slide right to see what the free core switches on.</p>
-						<a class="btnP mBtn" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener" data-cta hidden>
-							Create your free agency account
+						<p class="mCtaLine" data-ctaline>Desliza a la derecha para ver qué activa el núcleo gratis.</p>
+						<a class="btnP mBtn" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener" data-cta hidden>
+							Crea la cuenta gratis de tu agencia
 						</a>
 					</div>
 				</aside>
 			</div>
 
 			<div class="soonStrip">
-				<span class="soonStripLab">On the way, none of it built, none of it counted:</span>
+				<span class="soonStripLab">En camino, nada construido, nada contado:</span>
 				{soonTools.map((t, i) => (
 					<span class="soonItem">
 						<a href={t.href}>{t.name}</a>{i < soonTools.length - 1 ? ',' : ''}
@@ -371,30 +371,30 @@ const faqs = [
 		</section>
 
 		<section class="band">
-			<h2>Keep this setup</h2>
+			<h2>Guarda esta configuración</h2>
 			<p class="lead" data-keeplead>
-				Slide and switch until it looks like your agency, then take it with you. The link reproduces exactly
-				what you built.
+				Desliza y enciende hasta que se parezca a tu agencia, y llévatela. El enlace reproduce exactamente lo
+				que has montado.
 			</p>
 			<div class="receipt" data-receipt>
-				<p class="rTitle">YOUR SETUP</p>
+				<p class="rTitle">TU CONFIGURACIÓN</p>
 				<div class="rLines" data-rlines>
-					<p class="rEmpty">Nothing switched on yet. Slide right to build one.</p>
+					<p class="rEmpty">Nada activado todavía. Desliza a la derecha para montar una.</p>
 				</div>
 			</div>
 			<div class="ctaRow">
-				<button type="button" class="btnS" data-share-wa hidden>Share on WhatsApp</button>
-				<button type="button" class="btnS" data-share-copy hidden>Copy link</button>
-				<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener" data-cta2>
-					Create your free agency account
+				<button type="button" class="btnS" data-share-wa hidden>Compartir por WhatsApp</button>
+				<button type="button" class="btnS" data-share-copy hidden>Copiar enlace</button>
+				<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener" data-cta2>
+					Crea la cuenta gratis de tu agencia
 				</a>
-				<a class="btnS" href="/pricing/">See every price</a>
+				<a class="btnS" href="/es/precios/">Ver todos los precios</a>
 			</div>
-			<p class="agentsLine">{plAgents} agents are already on the free core. You can decide about the rest once you have seen whether the free part is any good.</p>
+			<p class="agentsLine">{plAgents} agentes ya están en el núcleo gratis. Lo demás lo decides cuando hayas visto si la parte gratis vale la pena.</p>
 		</section>
 
 		<section class="band">
-			<h2>Questions</h2>
+			<h2>Preguntas</h2>
 			<div class="faq">
 				{faqs.map((qa) => (
 					<details>
@@ -405,10 +405,10 @@ const faqs = [
 			</div>
 		</section>
 
-		<button type="button" class="bar" data-bar aria-label="Your running total. Tap to see the full figures.">
-			<span class="barC"><strong data-bar-c>0</strong> cr/mo</span>
+		<button type="button" class="bar" data-bar aria-label="Tu total en marcha. Toca para ver las cifras completas.">
+			<span class="barC"><strong data-bar-c>0</strong> cr/mes</span>
 			<span class="barE" data-bar-e hidden></span>
-			<span class="barH"><strong data-bar-h>0</strong> h/wk back</span>
+			<span class="barH"><strong data-bar-h>0</strong> h/sem devueltas</span>
 		</button>
 	</div>
 
@@ -538,7 +538,7 @@ const faqs = [
 				root.querySelector('#stageName').textContent = current.head;
 				root.querySelector('[data-sub]').textContent = current.sub;
 				root.querySelector('[data-stepline]').textContent =
-					'Step ' + (state.stage + 1) + ' of ' + stages.length + ' · ' + current.head;
+					'Paso ' + (state.stage + 1) + ' de ' + stages.length + ' · ' + current.head;
 
 				const activeKeys = new Set(stages.slice(0, state.stage + 1).map((s) => s.key));
 				root.querySelectorAll('.toolSet').forEach((el) => {
@@ -579,7 +579,7 @@ const faqs = [
 					const fixEl = li.querySelector('[data-wfix]');
 					if (kind === 'soon') {
 						li.classList.add('soonTask');
-						fixEl.textContent = key + ' · not built yet';
+						fixEl.textContent = key + ' · aún no construido';
 						return;
 					}
 					const fixed =
@@ -589,8 +589,8 @@ const faqs = [
 					fixEl.textContent = fixed
 						? t.after > 0 ? t.hours + 'h → ' + t.after + ' min' : t.hours + 'h → 0'
 						: kind === 'stage'
-							? 'fixed at ' + stages.find((s) => s.key === key).tick.toLowerCase()
-							: 'fixed by ' + (addons.find((a) => a.key === key) || {}).name;
+							? 'se arregla en ' + stages.find((s) => s.key === key).tick.toLowerCase()
+							: 'se arregla con ' + (addons.find((a) => a.key === key) || {}).name;
 				});
 				root.querySelectorAll('[data-weektotal], [data-weektotal2]').forEach((el) => {
 					el.textContent = String(weekTotal);
@@ -603,12 +603,12 @@ const faqs = [
 				tween(root.querySelector('[data-hours]'), t.hours, anim);
 				const euro = root.querySelector('[data-euro]');
 				euro.hidden = t.monthly === 0;
-				euro.textContent = '1 credit is about 1€, so about ' + t.monthly + '€ a month.';
+				euro.textContent = '1 crédito es aproximadamente 1€, así que unos ' + t.monthly + '€ al mes.';
 				root.querySelector('[data-perUse]').textContent = t.perUse.length
-					? 'Plus, only when you use them: ' + t.perUse.join('; ') + '.'
+					? 'Además, solo cuando los usas: ' + t.perUse.join('; ') + '.'
 					: t.monthly === 0
-						? 'Nothing monthly. Nothing at all, in fact.'
-						: 'No pay-per-use at this step.';
+						? 'Nada mensual. Nada de nada, de hecho.'
+						: 'Sin pago por uso en este paso.';
 
 				// sticky bar
 				root.querySelector('[data-bar-c]').textContent = String(t.monthly);
@@ -629,14 +629,14 @@ const faqs = [
 					const dc = t.monthly - prev.monthly;
 					const dh = t.hours - prev.hours;
 					const bits = [];
-					if (dc !== 0) bits.push((dc > 0 ? '+' : '−') + Math.abs(dc) + ' credits a month');
-					if (Math.abs(dh) >= 0.05) bits.push((dh > 0 ? '+' : '−') + fmtH(Math.abs(dh)) + ' h a week back');
+					if (dc !== 0) bits.push((dc > 0 ? '+' : '−') + Math.abs(dc) + ' créditos al mes');
+					if (Math.abs(dh) >= 0.05) bits.push((dh > 0 ? '+' : '−') + fmtH(Math.abs(dh)) + ' h a la semana');
 					if (reason.type === 'stage') {
 						deltaEl.textContent = reason.dir > 0
-							? current.head + (bits.length ? ': ' + bits.join(', ') : ': nothing monthly')
-							: 'Back to ' + current.head.toLowerCase() + (bits.length ? ': ' + bits.join(', ') : '');
+							? current.head + (bits.length ? ': ' + bits.join(', ') : ': nada mensual')
+							: 'Vuelta a ' + current.head.toLowerCase() + (bits.length ? ': ' + bits.join(', ') : '');
 					} else if (reason.type === 'addon') {
-						deltaEl.textContent = (reason.on ? 'Added ' : 'Removed ') + reason.name + (bits.length ? ': ' + bits.join(', ') : '');
+						deltaEl.textContent = (reason.on ? 'Añadido ' : 'Quitado ') + reason.name + (bits.length ? ': ' + bits.join(', ') : '');
 					} else {
 						deltaEl.textContent = bits.length ? bits.join(', ') : '';
 					}
@@ -648,20 +648,20 @@ const faqs = [
 				const cta = root.querySelector('[data-cta]');
 				if (state.stage === 0 && state.on.size === 0) {
 					cta.hidden = true;
-					ctaLine.textContent = 'Slide right to see what the free core switches on.';
+					ctaLine.textContent = 'Desliza a la derecha para ver qué activa el núcleo gratis.';
 				} else {
 					cta.hidden = false;
 					ctaLine.textContent =
 						t.monthly > 0
-							? 'Everything monthly switches off the month you stop wanting it.'
+							? 'Todo lo mensual se apaga el mes que dejas de quererlo.'
 							: state.stage >= 2
-								? 'Your first 5 buyer leads are free.'
-								: 'Everything at this stage is free. No card.';
+								? 'Tus 5 primeros leads de compradores son gratis.'
+								: 'Todo en este paso es gratis. Sin tarjeta.';
 				}
 
 				// the receipt
 				const lines = [];
-				if (state.stage >= 1) lines.push(['The free core', 'Free']);
+				if (state.stage >= 1) lines.push(['El núcleo gratis', 'Gratis']);
 				stages.slice(0, state.stage + 1).forEach((s) =>
 					s.tools.forEach((tl) => {
 						if (!tl.soon && tl.monthly > 0) lines.push([tl.name, tl.monthly + ' cr']);
@@ -672,18 +672,18 @@ const faqs = [
 				});
 				const rl = root.querySelector('[data-rlines]');
 				if (!lines.length) {
-					rl.innerHTML = '<p class="rEmpty">Nothing switched on yet. Slide right to build one.</p>';
+					rl.innerHTML = '<p class="rEmpty">Nada activado todavía. Desliza a la derecha para montar una.</p>';
 				} else {
 					let html = lines
 						.map(([n, p]) => '<p class="rLine"><span>' + n + '</span><span class="rDots"></span><span>' + p + '</span></p>')
 						.join('');
-					html += '<p class="rLine rTot"><span>Total a month</span><span class="rDots"></span><span>' + t.monthly + ' cr' + (t.monthly > 0 ? ' (~' + t.monthly + '€)' : '') + '</span></p>';
+					html += '<p class="rLine rTot"><span>Total al mes</span><span class="rDots"></span><span>' + t.monthly + ' cr' + (t.monthly > 0 ? ' (~' + t.monthly + '€)' : '') + '</span></p>';
 					if (t.perUse.length) {
-						html += '<p class="rSub">Only when you use it:</p>';
+						html += '<p class="rSub">Solo cuando lo usas:</p>';
 						html += t.perUse.map((x) => '<p class="rPer">· ' + x + '</p>').join('');
 					}
 					if (t.hours >= 0.05) {
-						html += '<p class="rLine rBack"><span>Handed back</span><span class="rDots"></span><span>' + fmtH(t.hours) + ' h a week</span></p>';
+						html += '<p class="rLine rBack"><span>Devueltas</span><span class="rDots"></span><span>' + fmtH(t.hours) + ' h a la semana</span></p>';
 					}
 					rl.innerHTML = html;
 				}
@@ -801,15 +801,15 @@ const faqs = [
 				track('setup-share', { via: 'whatsapp', credits: t.monthly });
 				const msg =
 					t.monthly > 0
-						? 'My PropertyList setup: ' + t.monthly + ' credits a month (~' + t.monthly + '€), ' + fmtH(t.hours) + ' hours a week handed back. Built here: ' + shareUrl()
-						: 'The free PropertyList core alone hands back ' + fmtH(t.hours) + ' hours a week. See it: ' + shareUrl();
+						? 'Mi configuración de PropertyList: ' + t.monthly + ' créditos al mes (~' + t.monthly + '€), ' + fmtH(t.hours) + ' horas a la semana devueltas. Montada aquí: ' + shareUrl()
+						: 'Solo el núcleo gratis de PropertyList ya devuelve ' + fmtH(t.hours) + ' horas a la semana. Míralo: ' + shareUrl();
 				window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
 			});
 			root.querySelector('[data-share-copy]').addEventListener('click', (e) => {
 				track('setup-share', { via: 'copy', credits: totals().monthly });
 				if (navigator.clipboard) navigator.clipboard.writeText(shareUrl());
-				e.target.textContent = 'Copied';
-				setTimeout(() => { e.target.textContent = 'Copy link'; }, 1600);
+				e.target.textContent = 'Copiado';
+				setTimeout(() => { e.target.textContent = 'Copiar enlace'; }, 1600);
 			});
 			['[data-cta]', '[data-cta2]'].forEach((sel) =>
 				root.querySelector(sel).addEventListener('click', () => track('setup-cta', payload())),

@@ -183,6 +183,7 @@ export async function GET() {
     '/es/encuesta-agentes/',
     '/nl/agenten-enquete/', // noindex: roadmap survey
     '/your-setup/', // noindex: draft, pending review and its ES twin
+    '/es/tu-configuracion/', // noindex: draft, pending review
   ]);
 
   const derivedStaticPaths = Object.keys(import.meta.glob('./**/*.astro'))
