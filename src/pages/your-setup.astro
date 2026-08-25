@@ -324,7 +324,7 @@ const faqs = [
 						<h3 class="weekHead">Your week, by hand</h3>
 						<ul class="weekList" data-week>
 							{allTasks.map((t) => (
-								<li data-task={t.id} data-hours={t.hours} data-after={t.after} data-fix={t.fix} data-needs={t.needs || ''}>
+								<li data-task={t.id}>
 									<button type="button" class="wJump" data-jump={t.fix}>
 										<span class="wLabel">{t.label}</span>
 										<span class="wRight">
