@@ -1,0 +1,499 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../lib/portalStats';
+
+// A configurator, not a fifth telling of the value story. /free/ already does
+// money, /hours/ does time, /what-we-do/ follows a listing and /launch/ does
+// speed. The gap none of them fills is "which of these should I actually switch
+// on, and what will it cost me a month". That is what this answers.
+//
+// Every hour figure is lifted from /hours/ rather than invented, including the
+// afterMin residue, so the two pages cannot drift apart. Hours given back is
+// hours minus that residue, never the whole task, because none of these tools
+// removes a job entirely.
+//
+// Two rules the page has to keep:
+//   1. Monthly credits and pay-per-use are counted separately. Rolling a 1-credit
+//      buyer lead into a monthly figure would be fiction.
+//   2. Unbuilt tools are badged, priced at nothing and contribute no hours. They
+//      appear because agents ask where this is going, not to pad the total.
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/your-setup/`;
+const title = 'Your setup: what to switch on, and what it costs | PropertyList';
+const description =
+	'Start with how you work now and add one thing at a time. Every stage shows the tools, the credits a month, and the hours a week it gives back. The core is free and most of it stays free.';
+
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+
+// hours: weekly hours the task costs. after: minutes still left once the tool is
+// on. Both come straight from /hours/, where they are described as deliberately
+// conservative.
+type Task = { id: string; label: string; hours: number; after: number };
+
+const back = (t: Task) => t.hours - t.after / 60;
+
+type Tool = {
+	name: string;
+	href?: string;
+	price: string;
+	monthly: number;   // credits per month, 0 for free and for pay-per-use
+	perUse?: string;   // shown separately, never folded into the monthly figure
+	soon?: boolean;
+	note?: string;
+};
+
+type Stage = {
+	key: string;
+	label: string;
+	head: string;
+	sub: string;
+	tools: Tool[];
+	tasks: Task[];
+	only?: 'lettings' | 'nosite' | 'hassite';
+};
+
+const stages: Stage[] = [
+	{
+		key: 'now',
+		label: 'How you work now',
+		head: 'How you work now',
+		sub: 'Nothing switched on. Every job below is one you do by hand, in the evening, from memory.',
+		tools: [],
+		tasks: [],
+	},
+	{
+		key: 'free',
+		label: 'The free core',
+		head: 'The free core',
+		sub: 'This is what every agency gets for nothing, with no card and no trial clock. Most agencies never need to go further than this.',
+		tools: [
+			{ name: 'Shared MLS and CRM', href: '/pipelines/', price: 'Free', monthly: 0 },
+			{ name: 'Unlimited listings and staff', price: 'Free', monthly: 0 },
+			{ name: 'Instant Listing', href: '/instant-listing/', price: 'Free', monthly: 0 },
+			{ name: 'XML feeds, in and out', href: '/xml-feed-import/', price: 'Free', monthly: 0 },
+			{ name: 'Branded microsite', price: 'Free', monthly: 0 },
+			{ name: 'Mobile app', href: '/mobile-app/', price: 'Free', monthly: 0 },
+			{ name: 'AI Property Search', href: '/ai-property-search/', price: 'Free in beta', monthly: 0 },
+		],
+		tasks: [
+			{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, after: 15 },
+			{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, after: 0 },
+			{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10 },
+			{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0 },
+		],
+	},
+	{
+		key: 'demand',
+		label: 'Pay only when it works',
+		head: 'Pay only when it works',
+		sub: 'Nothing monthly here. You spend a credit at the moment something is worth having, and not before.',
+		tools: [
+			{ name: 'Buyer leads', href: '/pricing/', price: '1 credit each', monthly: 0, perUse: '1 credit per lead you move into the Buyer pipeline, first 5 free' },
+			{ name: 'Property Intelligence Report', href: '/property-intelligence-report/', price: '5 credits', monthly: 0, perUse: '5 credits per report' },
+			{ name: 'Feature a listing', price: 'from 10 credits', monthly: 0, perUse: 'from 10 credits for 3 days' },
+		],
+		tasks: [{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30 }],
+	},
+	{
+		key: 'auto',
+		label: 'The parts that run themselves',
+		head: 'The parts that run themselves',
+		sub: 'The first genuinely monthly thing. It works while you are at a viewing, and tells you who to ring when it finds something.',
+		tools: [
+			{ name: 'Automation and Nurture', href: '/nurture/', price: '20 credits a month', monthly: 20 },
+			{ name: 'Connected inbox', href: '/connected-inbox/', price: '10 credits per mailbox a month', monthly: 0, soon: true, note: 'Not built yet, so it costs nothing today.' },
+		],
+		tasks: [{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15 }],
+	},
+	{
+		key: 'web-none',
+		label: 'A website of your own',
+		head: 'A website of your own',
+		sub: 'You said you have not got one. This builds you a real site that loads your MLS stock on its own, so it is never out of date.',
+		only: 'nosite',
+		tools: [
+			{ name: 'Website Builder', href: '/website-builder/', price: '50 credits a month', monthly: 50, note: 'Build and preview for free. You only pay once you publish.' },
+			{ name: 'Instant Content', href: '/instant-content/', price: '30 credits a month', monthly: 30, note: 'Add-on to the Website Builder.' },
+		],
+		tasks: [{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10 }],
+	},
+	{
+		key: 'web-has',
+		label: 'Feed the site you have',
+		head: 'Feed the site you have',
+		sub: 'You said you already have a website. Then you do not need another one, you need it filled with stock you do not own yet.',
+		only: 'hassite',
+		tools: [
+			{ name: 'Network feed to your own site', href: '/xml-feed-import/', price: '35 credits a month', monthly: 35, note: 'Every shared listing on the network. Your own listings are free either way.' },
+			{ name: 'New developments feed', price: '25 credits a month', monthly: 25, note: 'Separate feed, off-plan and new build.' },
+		],
+		tasks: [{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10 }],
+	},
+	{
+		key: 'lettings',
+		label: 'Lettings as well',
+		head: 'Lettings as well',
+		sub: 'You said you do lettings. This is the one that chases its own renewal dates, which is the part nobody remembers until it is late.',
+		only: 'lettings',
+		tools: [
+			{ name: 'Rentals Module', href: '/rentals/', price: '50 credits per 30 days', monthly: 50, note: 'Free for 30 days, no card.' },
+		],
+		tasks: [{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30 }],
+	},
+	{
+		key: 'soon',
+		label: 'On the way',
+		head: 'On the way',
+		sub: 'None of this is built. It is here because agents ask where this is going, and it costs nothing and saves nothing until it ships.',
+		tools: [
+			{ name: 'CoAgent', href: '/coagent/', price: 'Not priced yet', monthly: 0, soon: true },
+			{ name: 'Instant Documents', href: '/instant-documents/', price: 'Not priced yet', monthly: 0, soon: true },
+			{ name: 'Instant Brochure', href: '/instant-brochure/', price: 'Not priced yet', monthly: 0, soon: true },
+			{ name: 'Instant Video and Images', href: '/instant-video/', price: 'Not priced yet', monthly: 0, soon: true },
+		],
+		tasks: [],
+	},
+];
+
+// the admin tally, straight from /hours/, used for the "before" figure
+const allTasks: Task[] = [
+	{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, after: 15 },
+	{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, after: 0 },
+	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10 },
+	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15 },
+	{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30 },
+	{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10 },
+	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 0 },
+	{ id: 'signatures', label: 'Chasing one signature for a week', hours: 1, after: 0 },
+	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30 },
+	{ id: 'brochures', label: 'Making brochures in Canva at midnight', hours: 1, after: 0 },
+	{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0 },
+];
+
+const faqs = [
+	{
+		q: 'Where do the hours come from?',
+		a: 'From the same list as the admin tally on the hours page, which is deliberately conservative. A tool almost never removes a job completely, so the figure here is the hours the task costs minus the minutes it still costs afterwards. Writing listings drops from two hours to fifteen minutes, for example, and this page counts the difference rather than the whole two hours.',
+	},
+	{
+		q: 'Why are the per-use credits kept out of the monthly total?',
+		a: 'Because rolling them in would be a made-up number. A buyer lead costs a credit at the moment you decide that lead is worth having, and if you take none in a month you spend none. Adding a guess about how many you might take would make the monthly figure look precise when it is not.',
+	},
+	{
+		q: 'Do I have to go left to right?',
+		a: 'No. Most agencies stop at the free core and that is a perfectly good place to stop. The order here is the one that tends to make sense, not a ladder you are meant to climb. Everything past the free core can be switched off again the month you stop wanting it.',
+	},
+	{
+		q: 'What about the ones marked coming soon?',
+		a: 'They are not built. They cost nothing, they save nothing, and they are on the page because agents ask what is next. When one ships it gets a price and starts counting, and not before.',
+	},
+];
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/tu-configuracion/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<div class="wrap" data-setup>
+		<section class="intro">
+			<p class="kicker">Your setup</p>
+			<h1>Start where you are.<br /><em>Add one thing at a time.</em></h1>
+			<p class="sub">
+				Nobody switches everything on at once, and most agencies never need to. Slide right and watch what each
+				step actually costs, and what it hands back. The core is free, and a lot of agencies stop there.
+			</p>
+		</section>
+
+		<section class="qs">
+			<div class="q">
+				<span class="qLab">Do you do lettings?</span>
+				<div class="seg" role="group" aria-label="Do you do lettings?">
+					<button type="button" class="segBtn on" data-lettings="no">No</button>
+					<button type="button" class="segBtn" data-lettings="yes">Yes</button>
+				</div>
+			</div>
+			<div class="q">
+				<span class="qLab">Have you got your own website?</span>
+				<div class="seg" role="group" aria-label="Have you got your own website?">
+					<button type="button" class="segBtn on" data-site="no">Not yet</button>
+					<button type="button" class="segBtn" data-site="yes">Yes</button>
+				</div>
+			</div>
+		</section>
+
+		<section class="rig">
+			<div class="sliderRow">
+				<label class="srLab" for="stage">How far along</label>
+				<input id="stage" class="slider" type="range" min="0" max={stages.length - 1} step="1" value="0" aria-describedby="stageName" />
+				<div class="ticks" aria-hidden="true">
+					{stages.map((s) => (
+						<span class="tick" data-tickfor={s.key}>{s.label}</span>
+					))}
+				</div>
+			</div>
+
+			<div class="board">
+				<div class="panel">
+					<div class="panelHead">
+						<h2 id="stageName">How you work now</h2>
+						<p class="panelSub" data-sub>Nothing switched on. Every job below is one you do by hand, in the evening, from memory.</p>
+					</div>
+					<div class="toolWrap" data-tools>
+						{stages.map((s) => (
+							<div class="toolSet" data-stage={s.key} data-only={s.only || ''}>
+								{s.tools.map((t) => (
+									<div class:list={['tool', { soon: t.soon }]}>
+										<div class="toolTop">
+											<span class="toolName">
+												{t.href ? <a href={t.href}>{t.name}</a> : t.name}
+												{t.soon ? <span class="soonBadge">Coming soon</span> : null}
+											</span>
+											<span class="toolPrice">{t.price}</span>
+										</div>
+										{t.note ? <p class="toolNote">{t.note}</p> : null}
+									</div>
+								))}
+							</div>
+						))}
+						<p class="empty" data-empty>Nothing on. This is the spreadsheet, the notepad and the evening.</p>
+					</div>
+				</div>
+
+				<aside class="meter">
+					<div class="mBlock">
+						<div class="mLab">Credits a month</div>
+						<div class="mNum" data-credits>0</div>
+						<div class="mNote" data-perUse>Nothing monthly. Nothing at all, in fact.</div>
+					</div>
+					<div class="mBlock">
+						<div class="mLab">Hours a week handed back</div>
+						<div class="mNum alt" data-hours>0</div>
+						<div class="mNote">Out of about <strong data-total>19</strong> hours of admin a week. Figures from the <a href="/hours/">admin tally</a>, and deliberately conservative.</div>
+					</div>
+					<div class="mBlock last">
+						<div class="mLab">Still by hand</div>
+						<ul class="left" data-left></ul>
+					</div>
+				</aside>
+			</div>
+		</section>
+
+		<section class="band">
+			<h2>Questions</h2>
+			<div class="faq">
+				{faqs.map((qa) => (
+					<details>
+						<summary>{qa.q}</summary>
+						<p>{qa.a}</p>
+					</details>
+				))}
+			</div>
+		</section>
+
+		<section class="band close">
+			<h2>The first step costs nothing</h2>
+			<p class="lead">
+				The free core is the whole left-hand side of that slider and it needs no card. {plAgents} agents are
+				already on it. You can decide about the rest once you have seen whether the free part is any good.
+			</p>
+			<div class="ctaRow">
+				<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
+					Create your free agency account
+				</a>
+				<a class="btnS" href="/pricing/">See every price</a>
+			</div>
+		</section>
+	</div>
+
+	<script define:vars={{ stages, allTasks }}>
+		// All the DOM above is server-rendered. This only toggles classes and
+		// writes numbers, so the page is complete and readable with JS off.
+		const root = document.querySelector('[data-setup]');
+		if (root) {
+			const slider = root.querySelector('#stage');
+			const state = { lettings: 'no', site: 'no', stage: 0 };
+
+			const relevant = (s) =>
+				!s.only ||
+				(s.only === 'lettings' && state.lettings === 'yes') ||
+				(s.only === 'nosite' && state.site === 'no') ||
+				(s.only === 'hassite' && state.site === 'yes');
+
+			const visibleStages = () => stages.filter(relevant);
+
+			const fmtH = (h) => (h < 0.05 ? '0' : h.toFixed(1).replace(/\.0$/, ''));
+
+			function render() {
+				const vis = visibleStages();
+				const max = vis.length - 1;
+				slider.max = String(max);
+				if (state.stage > max) state.stage = max;
+				slider.value = String(state.stage);
+
+				const upto = vis.slice(0, state.stage + 1);
+				const current = vis[state.stage];
+
+				root.querySelector('#stageName').textContent = current.head;
+				root.querySelector('[data-sub]').textContent = current.sub;
+
+				// show every tool set up to and including the current stage
+				const keys = new Set(upto.map((s) => s.key));
+				root.querySelectorAll('.toolSet').forEach((el) => {
+					el.classList.toggle('on', keys.has(el.dataset.stage));
+				});
+				root.querySelector('[data-empty]').style.display = state.stage === 0 ? 'block' : 'none';
+
+				// ticks
+				const visKeys = vis.map((s) => s.key);
+				root.querySelectorAll('.tick').forEach((el) => {
+					const i = visKeys.indexOf(el.dataset.tickfor);
+					el.style.display = i === -1 ? 'none' : '';
+					el.classList.toggle('on', i !== -1 && i <= state.stage);
+				});
+
+				// monthly credits, subscriptions only
+				let monthly = 0;
+				const perUse = [];
+				upto.forEach((s) =>
+					s.tools.forEach((t) => {
+						if (!t.soon) monthly += t.monthly || 0;
+						if (t.perUse) perUse.push(t.perUse);
+					}),
+				);
+				root.querySelector('[data-credits]').textContent = String(monthly);
+				root.querySelector('[data-perUse]').textContent = perUse.length
+					? 'Plus, only when you use them: ' + perUse.join('; ') + '.'
+					: monthly === 0
+						? 'Nothing monthly. Nothing at all, in fact.'
+						: 'No pay-per-use at this step.';
+
+				// hours handed back: the task's hours minus what it still costs after
+				const fixed = new Set();
+				let hours = 0;
+				upto.forEach((s) =>
+					s.tasks.forEach((t) => {
+						if (fixed.has(t.id)) return;
+						fixed.add(t.id);
+						hours += t.hours - t.after / 60;
+					}),
+				);
+				root.querySelector('[data-hours]').textContent = fmtH(hours);
+
+				// what is still done by hand, from the same tally
+				const mine = allTasks.filter(
+					(t) =>
+						!(t.id === 'tenants' && state.lettings === 'no') &&
+						!(t.id === 'website' && state.site === 'yes' && false),
+				);
+				root.querySelector('[data-total]').textContent = String(
+					mine.reduce((a, t) => a + t.hours, 0),
+				);
+				const still = mine.filter((t) => !fixed.has(t.id));
+				root.querySelector('[data-left]').innerHTML = still.length
+					? still.map((t) => '<li>' + t.label + '</li>').join('')
+					: '<li class="none">Nothing on this list.</li>';
+			}
+
+			slider.addEventListener('input', () => {
+				state.stage = Number(slider.value);
+				render();
+			});
+			root.querySelectorAll('[data-lettings]').forEach((b) =>
+				b.addEventListener('click', () => {
+					state.lettings = b.dataset.lettings;
+					root.querySelectorAll('[data-lettings]').forEach((x) => x.classList.toggle('on', x === b));
+					render();
+				}),
+			);
+			root.querySelectorAll('[data-site]').forEach((b) =>
+				b.addEventListener('click', () => {
+					state.site = b.dataset.site;
+					root.querySelectorAll('[data-site]').forEach((x) => x.classList.toggle('on', x === b));
+					render();
+				}),
+			);
+
+			render();
+		}
+	</script>
+</Layout>
+
+<style>
+	.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px 72px; }
+	.intro { padding: 44px 0 10px; }
+	.kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pl-accent); margin: 0 0 10px; }
+	h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.12; letter-spacing: -0.02em; margin: 0 0 16px; }
+	h1 em { font-style: normal; color: var(--pl-accent); }
+	.sub { font-size: 17.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.78); max-width: 64ch; margin: 0; }
+
+	.qs { display: flex; flex-wrap: wrap; gap: 14px 28px; padding: 24px 0 6px; }
+	.q { display: flex; align-items: center; gap: 11px; }
+	.qLab { font-size: 14.5px; font-weight: 700; }
+	.seg { display: inline-flex; border: 1px solid rgba(16, 24, 40, 0.14); border-radius: 999px; overflow: hidden; }
+	.segBtn { appearance: none; border: 0; background: #fff; padding: 7px 15px; font: inherit; font-size: 14px; font-weight: 700; color: rgba(16, 24, 40, 0.6); cursor: pointer; }
+	.segBtn.on { background: var(--pl-accent); color: #fff; }
+
+	.rig { padding: 18px 0 0; }
+	.sliderRow { margin-bottom: 18px; }
+	.srLab { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); margin-bottom: 8px; }
+	.slider { width: 100%; accent-color: var(--pl-accent); height: 26px; }
+	.ticks { display: flex; justify-content: space-between; gap: 6px; margin-top: 2px; }
+	.tick { font-size: 11.5px; font-weight: 700; color: rgba(16, 24, 40, 0.38); text-align: center; flex: 1 1 0; line-height: 1.3; }
+	.tick.on { color: #0a6d61; }
+
+	.board { display: grid; grid-template-columns: 1fr; gap: 16px; }
+	@media (min-width: 880px) { .board { grid-template-columns: 1fr 300px; } }
+
+	.panel { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 20px; padding: 20px 22px; background: #fff; }
+	.panelHead h2 { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.015em; }
+	.panelSub { margin: 0 0 14px; font-size: 15px; line-height: 1.6; color: rgba(16, 24, 40, 0.72); max-width: 62ch; }
+
+	.toolSet { display: none; }
+	.toolSet.on { display: block; }
+	.tool { padding: 11px 0; border-top: 1px solid rgba(16, 24, 40, 0.08); }
+	.toolTop { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
+	.toolName { font-size: 15px; font-weight: 700; }
+	.toolName a { color: #0a6d61; }
+	.toolPrice { font-size: 14px; font-weight: 800; color: #0a6d61; white-space: nowrap; }
+	.tool.soon .toolPrice { color: #8a5a00; }
+	.toolNote { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: rgba(16, 24, 40, 0.55); }
+	.soonBadge { margin-left: 8px; font-size: 10.5px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; color: #8a5a00; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.32); padding: 2px 8px; border-radius: 999px; }
+	.empty { margin: 8px 0 0; font-size: 15px; color: rgba(16, 24, 40, 0.5); }
+
+	.meter { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 20px; padding: 18px 20px; background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.06), rgba(255, 255, 255, 0)); }
+	.mBlock { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
+	.mBlock.last { padding-bottom: 0; margin-bottom: 0; border-bottom: 0; }
+	.mLab { font-size: 11.5px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); }
+	.mNum { font-size: 40px; font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; margin-top: 2px; }
+	.mNum.alt { color: var(--pl-accent); }
+	.mNote { margin-top: 5px; font-size: 12.5px; line-height: 1.5; color: rgba(16, 24, 40, 0.55); }
+	.left { list-style: none; margin: 8px 0 0; padding: 0; }
+	.left li { font-size: 13px; line-height: 1.45; color: rgba(16, 24, 40, 0.62); padding: 4px 0; border-top: 1px solid rgba(16, 24, 40, 0.06); }
+	.left li.none { color: #0a6d61; font-weight: 700; }
+
+	.band { padding: 34px 0 6px; border-top: 1px solid rgba(16, 24, 40, 0.08); margin-top: 30px; }
+	.band h2 { font-size: clamp(22px, 3.4vw, 29px); line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 10px; }
+	.lead { font-size: 16px; line-height: 1.62; color: rgba(16, 24, 40, 0.76); max-width: 66ch; margin: 0 0 18px; }
+
+	.faq details { border-top: 1px solid rgba(16, 24, 40, 0.08); padding: 4px 0; }
+	.faq summary { cursor: pointer; padding: 13px 0; font-weight: 700; font-size: 15.5px; list-style: none; }
+	.faq summary::-webkit-details-marker { display: none; }
+	.faq summary::after { content: '+'; float: right; color: var(--pl-accent); font-weight: 800; }
+	.faq details[open] summary::after { content: '\2212'; }
+	.faq p { margin: 0 0 14px; font-size: 15px; line-height: 1.62; color: rgba(16, 24, 40, 0.76); max-width: 72ch; }
+
+	.ctaRow { display: flex; flex-wrap: wrap; gap: 10px; }
+	.btnP, .btnS { display: inline-block; padding: 12px 20px; border-radius: 999px; font-weight: 800; font-size: 15px; text-decoration: none; }
+	.btnP { background: var(--pl-accent); color: #fff; }
+	.btnS { border: 1px solid rgba(16, 24, 40, 0.16); color: #0b1620; }
+	a { color: #0a6d61; }
+</style>
