@@ -15,34 +15,34 @@ const error = Astro.url.searchParams.get('error') === '1';
 		{sent ? (
 			<div class="card thanks">
 				<h2>Gracias. Hemos recibido tu reporte.</h2>
-				<p>Nuestro equipo de confianza revisa cada reporte de forma confidencial. Podemos contactarte si necesitamos mas detalles. No publicamos acusaciones ni nombramos a personas publicamente.</p>
-				<p><strong>Si has sido victima de un delito, denuncialo tambien ante las autoridades:</strong> Policia Nacional (091), Guardia Civil (062), o 112 en una emergencia.</p>
+				<p>Nuestro equipo de confianza revisa cada reporte de forma confidencial. Podemos contactarte si necesitamos más detalles. No publicamos acusaciones ni nombramos a personas públicamente.</p>
+				<p><strong>Si has sido víctima de un delito, denúncialo también ante las autoridades:</strong> Policía Nacional (091), Guardia Civil (062), o 112 en una emergencia.</p>
 				<p><a href="/es/">Volver a PropertyList</a></p>
 			</div>
 		) : (
 			<>
 				<p class="lead">
-					Si te han estafado, has detectado un anuncio fraudulento o tienes un problema serio con un agente o servicio, cuentanoslo aqui. Los reportes llegan directamente a nuestro equipo de confianza y se tratan de forma confidencial.
+					Si te han estafado, has detectado un anuncio fraudulento o tienes un problema serio con un agente o servicio, cuéntanoslo aquí. Los reportes llegan directamente a nuestro equipo de confianza y se tratan de forma confidencial.
 				</p>
 
 				<div class="card legal">
-					<h2>Como funciona</h2>
+					<h2>Cómo funciona</h2>
 					<ul>
-						<li><strong>Confidencial e interno.</strong> Tu reporte lo revisa en privado nuestro equipo. No publicamos acusaciones, no mantenemos una "lista negra" publica ni nombramos a personas publicamente.</li>
-						<li><strong>Justo y basado en pruebas.</strong> Para ser justos con todos, no actuamos ante un unico reporte sin verificar de forma aislada. Buscamos pruebas que lo corroboren y un patron entre reportes, investigamos, y cualquier parte reportada tiene la oportunidad de responder antes de que actuemos.</li>
-						<li><strong>Actuacion segun nuestros Terminos.</strong> Cuando encontramos pruebas creibles y suficientes de fraude o mala conducta grave, podemos suspender o retirar al miembro de PropertyList segun nuestros Terminos.</li>
-						<li><strong>El delito es cosa de las autoridades.</strong> Este formulario no denuncia un delito. Si eres victima, contacta con la Policia Nacional (091) o la Guardia Civil (062); llama al 112 en una emergencia. Cooperamos con cualquier requerimiento legal u orden judicial.</li>
-						<li><strong>Veraz, por favor.</strong> Manten tu reporte factual y de buena fe. Las acusaciones falsas a sabiendas pueden tener consecuencias legales para quien las hace.</li>
+						<li><strong>Confidencial e interno.</strong> Tu reporte lo revisa en privado nuestro equipo. No publicamos acusaciones, no mantenemos una "lista negra" pública ni nombramos a personas públicamente.</li>
+						<li><strong>Justo y basado en pruebas.</strong> Para ser justos con todos, no actuamos ante un único reporte sin verificar de forma aislada. Buscamos pruebas que lo corroboren y un patrón entre reportes, investigamos, y cualquier parte reportada tiene la oportunidad de responder antes de que actuemos.</li>
+						<li><strong>Actuación según nuestros Términos.</strong> Cuando encontramos pruebas creibles y suficientes de fraude o mala conducta grave, podemos suspender o retirar al miembro de PropertyList según nuestros Términos.</li>
+						<li><strong>El delito es cosa de las autoridades.</strong> Este formulario no denuncia un delito. Si eres víctima, contacta con la Policía Nacional (091) o la Guardia Civil (062); llama al 112 en una emergencia. Cooperamos con cualquier requerimiento legal u orden judicial.</li>
+						<li><strong>Veraz, por favor.</strong> Mantén tu reporte factual y de buena fe. Las acusaciones falsas a sabiendas pueden tener consecuencias legales para quien las hace.</li>
 					</ul>
 				</div>
 
-				{error && <div class="err">Anade una descripcion (al menos una frase) y marca la casilla de confirmacion.</div>}
+				{error && <div class="err">Añade una descripción (al menos una frase) y marca la casilla de confirmación.</div>}
 
 				<form method="post" action="/api/report-issue" class="card form">
 					<input type="hidden" name="lang" value="es" />
 					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
-					<label>Que quieres reportar?
+					<label>¿Qué quieres reportar?
 						<select name="type">
 							<option value="Agente inmobiliario">Un agente inmobiliario</option>
 							<option value="Servicio para la propiedad">Un servicio para la propiedad (abogado, fontanero, etc.)</option>
@@ -55,21 +55,21 @@ const error = Astro.url.searchParams.get('error') === '1';
 						<input type="text" name="subject" maxlength="200" placeholder="p. ej. nombre de la empresa, del agente, o referencia / URL del anuncio" />
 					</label>
 
-					<label>Que ha pasado? <span class="req">*</span>
-						<textarea name="detail" rows="6" maxlength="5000" required placeholder="Describe lo que ha pasado con tus palabras. Cinete a los hechos."></textarea>
+					<label>¿Qué ha pasado? <span class="req">*</span>
+						<textarea name="detail" rows="6" maxlength="5000" required placeholder="Describe lo que ha pasado con tus palabras. Cíñete a los hechos."></textarea>
 					</label>
 
 					<div class="row">
 						<label>Dinero implicado (si lo hay)
 							<input type="text" name="amount" maxlength="40" placeholder="p. ej. fianza de 3.000 EUR" />
 						</label>
-						<label>Cuando ocurrio?
+						<label>¿Cuándo ocurrió?
 							<input type="text" name="when" maxlength="60" placeholder="p. ej. junio de 2026" />
 						</label>
 					</div>
 
 					<label>Enlaces o referencias a pruebas (opcional)
-						<input type="text" name="evidence" maxlength="600" placeholder="p. ej. la URL del anuncio, un numero de referencia, o donde compartir documentos" />
+						<input type="text" name="evidence" maxlength="600" placeholder="p. ej. la URL del anuncio, un número de referencia, o donde compartir documentos" />
 					</label>
 
 					<div class="row">
@@ -77,7 +77,7 @@ const error = Astro.url.searchParams.get('error') === '1';
 							<input type="text" name="reporter_name" maxlength="120" placeholder="Para poder contactarte" />
 						</label>
 						<label>Tu email
-							<input type="email" name="reporter_email" maxlength="160" placeholder="Podemos contactarte para mas detalles" />
+							<input type="email" name="reporter_email" maxlength="160" placeholder="Podemos contactarte para más detalles" />
 						</label>
 					</div>
 
@@ -87,7 +87,7 @@ const error = Astro.url.searchParams.get('error') === '1';
 					</label>
 
 					<button type="submit">Enviar de forma confidencial</button>
-					<p class="fine">Nunca publicaremos tu reporte ni tu identidad. La informacion que facilitas se usa solo para revisar este reporte y, cuando proceda, para actuar segun nuestros Terminos. Consulta nuestra <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/">Politica de Privacidad</a>. Buscas un agente de confianza? Busca el sello de <a href="/es/docs/propertylist-mls-manual-de-usuario/verified-agencies/">Agencia Verificada</a>.</p>
+					<p class="fine">Nunca publicaremos tu reporte ni tu identidad. La información que facilitas se usa solo para revisar este reporte y, cuando proceda, para actuar según nuestros Términos. Consulta nuestra <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/">Politica de Privacidad</a>. Buscas un agente de confianza? Busca el sello de <a href="/es/docs/propertylist-mls-manual-de-usuario/verified-agencies/">Agencia Verificada</a>.</p>
 				</form>
 			</>
 		)}
