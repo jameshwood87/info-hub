@@ -2299,6 +2299,13 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 				) : null}
 
 				{isBlogLike ? (
+					<p class="prefSourceStrip" style="display:flex;gap:12px 18px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;margin:10px 0 6px;padding:14px 18px;border-radius:14px;border:1px dashed rgba(16,24,40,0.2);font-size:14px;color:rgba(16,24,40,0.72);">
+						<span style="min-width:0;max-width:640px;">¿Nos lees a menudo? Marca <strong>info.propertylist.es</strong> como fuente preferida en Google y nuestras novedades salen antes en tus Noticias destacadas.</span>
+						<a href="https://www.google.com/preferences/source?q=info.propertylist.es" target="_blank" rel="noopener" data-umami-event="preferred-source-click" style="white-space:nowrap;font-weight:800;color:#0a6d61;text-decoration:none;">Marcar como fuente preferida &rarr;</a>
+					</p>
+				) : null}
+
+				{isBlogLike ? (
 					<aside class="blogHomeCta" aria-label="Buscar vivienda" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:14px 0 6px;padding:20px 22px;border-radius:18px;background:linear-gradient(120deg,#00ae9a,#0b7d6d);color:#fff;">
 						<div style="min-width:0;max-width:640px;">
 							<strong style="display:block;font-size:17px;letter-spacing:-.01em;margin-bottom:3px;">¿Buscas una vivienda?</strong>
