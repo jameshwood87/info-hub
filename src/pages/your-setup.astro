@@ -7,16 +7,25 @@ import { getPortalStats, statPlus } from '../lib/portalStats';
 // speed. The gap none of them fills is "which of these should I actually switch
 // on, and what will it cost me a month". That is what this answers.
 //
+// Rebuilt 25-08-26 after a three-lens review. The shape now tells the truth the
+// old FAQ had to apologise for: the slider carries only the stages that ARE a
+// progression (now -> free core -> pay per use -> runs itself), and everything
+// optional is an add-on with its own switch. Nothing is bundled: sliding never
+// adds a paid tool the viewer did not flick on themselves.
+//
 // Every hour figure is lifted from /hours/ rather than invented, including the
 // afterMin residue, so the two pages cannot drift apart. Hours given back is
 // hours minus that residue, never the whole task, because none of these tools
 // removes a job entirely.
 //
-// Two rules the page has to keep:
+// Three rules the page has to keep:
 //   1. Monthly credits and pay-per-use are counted separately. Rolling a 1-credit
 //      buyer lead into a monthly figure would be fiction.
 //   2. Unbuilt tools are badged, priced at nothing and contribute no hours. They
-//      appear because agents ask where this is going, not to pad the total.
+//      live in a strip below the board, not on the slider, because a stage that
+//      changes nothing must not be the story's ending.
+//   3. The week list only shows jobs this viewer actually has: no lettings, no
+//      tenancies row; own website already, no nagging-a-developer row.
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/your-setup/`;
@@ -29,10 +38,30 @@ const plAgents = statPlus(__ps.agents, 'en');
 
 // hours: weekly hours the task costs. after: minutes still left once the tool is
 // on. Both come straight from /hours/, where they are described as deliberately
-// conservative.
-type Task = { id: string; label: string; hours: number; after: number };
+// conservative. fix names what strikes the task through: a spine stage, an
+// add-on switch, or a tool that is not built yet (never struck).
+type Task = {
+	id: string;
+	label: string;
+	hours: number;
+	after: number;
+	fix: string; // 'stage:<key>' | 'addon:<key>' | 'soon:<name>'
+	needs?: 'lettings' | 'nosite';
+};
 
-const back = (t: Task) => t.hours - t.after / 60;
+const allTasks: Task[] = [
+	{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, after: 15, fix: 'stage:free' },
+	{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, after: 0, fix: 'stage:free' },
+	{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10, fix: 'stage:free' },
+	{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0, fix: 'stage:free' },
+	{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30, fix: 'stage:demand' },
+	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15, fix: 'stage:auto' },
+	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
+	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
+	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 0, fix: 'soon:CoAgent' },
+	{ id: 'signatures', label: 'Chasing one signature for a week', hours: 1, after: 0, fix: 'soon:Instant Documents' },
+	{ id: 'brochures', label: 'Making brochures in Canva at midnight', hours: 1, after: 0, fix: 'soon:Instant Brochure' },
+];
 
 type Tool = {
 	name: string;
@@ -44,28 +73,21 @@ type Tool = {
 	note?: string;
 };
 
-type Stage = {
-	key: string;
-	label: string;
-	head: string;
-	sub: string;
-	tools: Tool[];
-	tasks: Task[];
-	only?: 'lettings' | 'nosite' | 'hassite';
-};
+type Stage = { key: string; tick: string; head: string; sub: string; tools: Tool[] };
 
+// The spine: only what is genuinely a progression. Everything optional is an
+// add-on below, with its own switch.
 const stages: Stage[] = [
 	{
 		key: 'now',
-		label: 'How you work now',
+		tick: 'Now',
 		head: 'How you work now',
 		sub: 'Nothing switched on. Every job below is one you do by hand, in the evening, from memory.',
 		tools: [],
-		tasks: [],
 	},
 	{
 		key: 'free',
-		label: 'The free core',
+		tick: 'Free core',
 		head: 'The free core',
 		sub: 'This is what every agency gets for nothing, with no card and no trial clock. Most agencies never need to go further than this.',
 		tools: [
@@ -77,99 +99,101 @@ const stages: Stage[] = [
 			{ name: 'Mobile app', href: '/mobile-app/', price: 'Free', monthly: 0 },
 			{ name: 'AI Property Search', href: '/ai-property-search/', price: 'Free in beta', monthly: 0 },
 		],
-		tasks: [
-			{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, after: 15 },
-			{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, after: 0 },
-			{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10 },
-			{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0 },
-		],
 	},
 	{
 		key: 'demand',
-		label: 'Pay only when it works',
+		tick: 'Pay per use',
 		head: 'Pay only when it works',
 		sub: 'Nothing monthly here. You spend a credit at the moment something is worth having, and not before.',
 		tools: [
 			{ name: 'Buyer leads', href: '/pricing/', price: '1 credit each', monthly: 0, perUse: '1 credit per lead you move into the Buyer pipeline, first 5 free' },
 			{ name: 'Property Intelligence Report', href: '/property-intelligence-report/', price: '5 credits', monthly: 0, perUse: '5 credits per report' },
-			{ name: 'Feature a listing', price: 'from 10 credits', monthly: 0, perUse: 'from 10 credits for 3 days' },
+			{ name: 'Feature a listing', price: '10 credits / 3 days', monthly: 0, perUse: '10 credits to feature a listing for 3 days' },
 		],
-		tasks: [{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30 }],
 	},
 	{
 		key: 'auto',
-		label: 'The parts that run themselves',
+		tick: 'Runs itself',
 		head: 'The parts that run themselves',
 		sub: 'The first genuinely monthly thing. It works while you are at a viewing, and tells you who to ring when it finds something.',
 		tools: [
 			{ name: 'Automation and Nurture', href: '/nurture/', price: '20 credits a month', monthly: 20 },
 			{ name: 'Connected inbox', href: '/connected-inbox/', price: '10 credits per mailbox a month', monthly: 0, soon: true, note: 'Not built yet, so it costs nothing today.' },
 		],
-		tasks: [{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15 }],
-	},
-	{
-		key: 'web-none',
-		label: 'A website of your own',
-		head: 'A website of your own',
-		sub: 'You said you have not got one. This builds you a real site that loads your MLS stock on its own, so it is never out of date.',
-		only: 'nosite',
-		tools: [
-			{ name: 'Website Builder', href: '/website-builder/', price: '50 credits a month', monthly: 50, note: 'Build and preview for free. You only pay once you publish.' },
-			{ name: 'Instant Content', href: '/instant-content/', price: '30 credits a month', monthly: 30, note: 'Add-on to the Website Builder.' },
-		],
-		tasks: [{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10 }],
-	},
-	{
-		key: 'web-has',
-		label: 'Feed the site you have',
-		head: 'Feed the site you have',
-		sub: 'You said you already have a website. Then you do not need another one, you need it filled with stock you do not own yet.',
-		only: 'hassite',
-		tools: [
-			{ name: 'Network feed to your own site', href: '/xml-feed-import/', price: '35 credits a month', monthly: 35, note: 'Every shared listing on the network. Your own listings are free either way.' },
-			{ name: 'New developments feed', price: '25 credits a month', monthly: 25, note: 'Separate feed, off-plan and new build.' },
-		],
-		tasks: [{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10 }],
-	},
-	{
-		key: 'lettings',
-		label: 'Lettings as well',
-		head: 'Lettings as well',
-		sub: 'You said you do lettings. This is the one that chases its own renewal dates, which is the part nobody remembers until it is late.',
-		only: 'lettings',
-		tools: [
-			{ name: 'Rentals Module', href: '/rentals/', price: '50 credits per 30 days', monthly: 50, note: 'Free for 30 days, no card.' },
-		],
-		tasks: [{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30 }],
-	},
-	{
-		key: 'soon',
-		label: 'On the way',
-		head: 'On the way',
-		sub: 'None of this is built. It is here because agents ask where this is going, and it costs nothing and saves nothing until it ships.',
-		tools: [
-			{ name: 'CoAgent', href: '/coagent/', price: 'Not priced yet', monthly: 0, soon: true },
-			{ name: 'Instant Documents', href: '/instant-documents/', price: 'Not priced yet', monthly: 0, soon: true },
-			{ name: 'Instant Brochure', href: '/instant-brochure/', price: 'Not priced yet', monthly: 0, soon: true },
-			{ name: 'Instant Video and Images', href: '/instant-video/', price: 'Not priced yet', monthly: 0, soon: true },
-		],
-		tasks: [],
 	},
 ];
 
-// the admin tally, straight from /hours/, used for the "before" figure
-const allTasks: Task[] = [
-	{ id: 'listings', label: 'Writing listings at 11pm', hours: 2, after: 15 },
-	{ id: 'portals', label: 'Re-typing the same flat into five portals', hours: 2, after: 0 },
-	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10 },
-	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15 },
-	{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30 },
-	{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10 },
-	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 0 },
-	{ id: 'signatures', label: 'Chasing one signature for a week', hours: 1, after: 0 },
-	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30 },
-	{ id: 'brochures', label: 'Making brochures in Canva at midnight', hours: 1, after: 0 },
-	{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0 },
+// Add-ons: opt-in, one switch each, nothing on by default. show decides which
+// cards exist for this viewer; needs ties a card to another one.
+type Addon = {
+	key: string;
+	name: string;
+	href?: string;
+	price: string;
+	monthly: number;
+	taskId?: string; // the week-list job this strikes through
+	note: string;
+	show: 'nosite' | 'hassite' | 'lettings';
+	needs?: string;
+};
+
+const addons: Addon[] = [
+	{
+		key: 'wb',
+		name: 'Website Builder',
+		href: '/website-builder/',
+		price: '50 credits a month',
+		monthly: 50,
+		taskId: 'website',
+		note: 'A real site that loads your MLS stock on its own. Build and preview free, pay only once you publish.',
+		show: 'nosite',
+	},
+	{
+		key: 'ic',
+		name: 'Instant Content',
+		href: '/instant-content/',
+		price: '30 credits a month',
+		monthly: 30,
+		note: 'Add-on to the Website Builder: AI blog and area guides for your site.',
+		show: 'nosite',
+		needs: 'wb',
+	},
+	{
+		key: 'feed',
+		name: 'Network feed to your own site',
+		href: '/xml-feed-import/',
+		price: '35 credits a month',
+		monthly: 35,
+		note: 'Every shared listing on the network, on the site you already have. Your own listings are free either way.',
+		show: 'hassite',
+	},
+	{
+		key: 'devfeed',
+		name: 'New developments feed',
+		price: '25 credits a month',
+		monthly: 25,
+		note: 'Separate feed, off-plan and new build.',
+		show: 'hassite',
+	},
+	{
+		key: 'rent',
+		name: 'Rentals Module',
+		href: '/rentals/',
+		price: '50 credits per 30 days',
+		monthly: 50,
+		taskId: 'tenants',
+		note: 'Chases its own renewal dates, which is the part nobody remembers until it is late. Free for 30 days, no card.',
+		show: 'lettings',
+	},
+];
+
+// Not built. In a strip below the board, never on the slider: a stage that
+// changes nothing must not be where the story ends.
+const soonTools = [
+	{ name: 'CoAgent', href: '/coagent/' },
+	{ name: 'Instant Documents', href: '/instant-documents/' },
+	{ name: 'Instant Brochure', href: '/instant-brochure/' },
+	{ name: 'Instant Video and Images', href: '/instant-video/' },
 ];
 
 const faqs = [
@@ -183,7 +207,7 @@ const faqs = [
 	},
 	{
 		q: 'Do I have to go left to right?',
-		a: 'No. Most agencies stop at the free core and that is a perfectly good place to stop. The order here is the one that tends to make sense, not a ladder you are meant to climb. Everything past the free core can be switched off again the month you stop wanting it.',
+		a: 'No. Most agencies stop at the free core and that is a perfectly good place to stop. The slider is the order that tends to make sense, and the add-ons are exactly that: add-ons, each with its own switch, none of them on unless you flick them. Everything past the free core can be switched off again the month you stop wanting it.',
 	},
 	{
 		q: 'What about the ones marked coming soon?',
@@ -209,8 +233,9 @@ const faqs = [
 			<p class="kicker">Your setup</p>
 			<h1>Start where you are.<br /><em>Add one thing at a time.</em></h1>
 			<p class="sub">
-				Nobody switches everything on at once, and most agencies never need to. Slide right and watch what each
-				step actually costs, and what it hands back. The core is free, and a lot of agencies stop there.
+				Nobody switches everything on at once, and most agencies never need to. Slide right, flick on only the
+				add-ons you would actually use, and watch what it costs and what it hands back. The core is free, and a
+				lot of agencies stop there.
 			</p>
 		</section>
 
@@ -233,13 +258,19 @@ const faqs = [
 
 		<section class="rig">
 			<div class="sliderRow">
-				<label class="srLab" for="stage">How far along</label>
-				<input id="stage" class="slider" type="range" min="0" max={stages.length - 1} step="1" value="0" aria-describedby="stageName" />
-				<div class="ticks" aria-hidden="true">
-					{stages.map((s) => (
-						<span class="tick" data-tickfor={s.key}>{s.label}</span>
+				<span class="srLab" id="sliderLab">Build it up</span>
+				<div class="sliderLine">
+					<button type="button" class="step" data-step="-1" aria-label="Previous step">&#8249;</button>
+					<input id="stage" class="slider" type="range" min="0" max={stages.length - 1} step="1" value="0" aria-labelledby="sliderLab" aria-describedby="stageName" />
+					<button type="button" class="step" data-step="1" aria-label="Next step">&#8250;</button>
+				</div>
+				<div class="ticks">
+					{stages.map((s, i) => (
+						<button type="button" class="tick" data-goto={String(i)}>{s.tick}</button>
 					))}
 				</div>
+				<p class="stepline" data-stepline aria-hidden="true">Step 1 of {stages.length} &middot; How you work now</p>
+				<p class="delta" data-delta aria-live="polite"></p>
 			</div>
 
 			<div class="board">
@@ -248,9 +279,10 @@ const faqs = [
 						<h2 id="stageName">How you work now</h2>
 						<p class="panelSub" data-sub>Nothing switched on. Every job below is one you do by hand, in the evening, from memory.</p>
 					</div>
+
 					<div class="toolWrap" data-tools>
 						{stages.map((s) => (
-							<div class="toolSet" data-stage={s.key} data-only={s.only || ''}>
+							<div class="toolSet" data-stage={s.key}>
 								{s.tools.map((t) => (
 									<div class:list={['tool', { soon: t.soon }]}>
 										<div class="toolTop">
@@ -265,7 +297,45 @@ const faqs = [
 								))}
 							</div>
 						))}
-						<p class="empty" data-empty>Nothing on. This is the spreadsheet, the notepad and the evening.</p>
+					</div>
+
+					<div class="addonWrap" data-addonwrap hidden>
+						<h3 class="addonHead">Add-ons, only if you want them</h3>
+						<p class="addonSub">Each one has its own switch. Nothing here is bundled, and nothing is on unless you turn it on.</p>
+						{addons.map((a) => (
+							<div class="addon" data-addon={a.key} data-show={a.show} data-needs={a.needs || ''}>
+								<div class="toolTop">
+									<span class="toolName">
+										{a.href ? <a href={a.href}>{a.name}</a> : a.name}
+									</span>
+									<span class="addonRight">
+										<span class="toolPrice">{a.price}</span>
+										<button type="button" class="sw" role="switch" aria-checked="false" data-sw={a.key} aria-label={`Switch ${a.name} on or off`}>
+											<span class="swKnob"></span>
+										</button>
+									</span>
+								</div>
+								<p class="toolNote">{a.note} <span class="offAgain">Off again any month.</span></p>
+							</div>
+						))}
+					</div>
+
+					<div class="week">
+						<h3 class="weekHead">Your week, by hand</h3>
+						<ul class="weekList" data-week>
+							{allTasks.map((t) => (
+								<li data-task={t.id} data-hours={t.hours} data-after={t.after} data-fix={t.fix} data-needs={t.needs || ''}>
+									<button type="button" class="wJump" data-jump={t.fix}>
+										<span class="wLabel">{t.label}</span>
+										<span class="wRight">
+											<span class="wH">{t.hours}h</span>
+											<span class="wFix" data-wfix></span>
+										</span>
+									</button>
+								</li>
+							))}
+						</ul>
+						<p class="weekTotal">About <strong data-weektotal>17</strong> hours of admin a week, from the <a href="/hours/">admin tally</a>. Deliberately conservative.</p>
 					</div>
 				</div>
 
@@ -273,19 +343,54 @@ const faqs = [
 					<div class="mBlock">
 						<div class="mLab">Credits a month</div>
 						<div class="mNum" data-credits>0</div>
+						<div class="mEuro" data-euro hidden></div>
 						<div class="mNote" data-perUse>Nothing monthly. Nothing at all, in fact.</div>
 					</div>
 					<div class="mBlock">
 						<div class="mLab">Hours a week handed back</div>
 						<div class="mNum alt" data-hours>0</div>
-						<div class="mNote">Out of about <strong data-total>19</strong> hours of admin a week. Figures from the <a href="/hours/">admin tally</a>, and deliberately conservative.</div>
+						<div class="mNote">Out of about <strong data-weektotal2>17</strong> hours of admin a week.</div>
 					</div>
-					<div class="mBlock last">
-						<div class="mLab">Still by hand</div>
-						<ul class="left" data-left></ul>
+					<div class="mBlock last mCta" data-ctablock>
+						<p class="mCtaLine" data-ctaline>Slide right to see what the free core switches on.</p>
+						<a class="btnP mBtn" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener" data-cta hidden>
+							Create your free agency account
+						</a>
 					</div>
 				</aside>
 			</div>
+
+			<div class="soonStrip">
+				<span class="soonStripLab">On the way, none of it built, none of it counted:</span>
+				{soonTools.map((t, i) => (
+					<span class="soonItem">
+						<a href={t.href}>{t.name}</a>{i < soonTools.length - 1 ? ',' : ''}
+					</span>
+				))}
+			</div>
+		</section>
+
+		<section class="band">
+			<h2>Keep this setup</h2>
+			<p class="lead" data-keeplead>
+				Slide and switch until it looks like your agency, then take it with you. The link reproduces exactly
+				what you built.
+			</p>
+			<div class="receipt" data-receipt>
+				<p class="rTitle">YOUR SETUP</p>
+				<div class="rLines" data-rlines>
+					<p class="rEmpty">Nothing switched on yet. Slide right to build one.</p>
+				</div>
+			</div>
+			<div class="ctaRow">
+				<button type="button" class="btnS" data-share-wa hidden>Share on WhatsApp</button>
+				<button type="button" class="btnS" data-share-copy hidden>Copy link</button>
+				<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener" data-cta2>
+					Create your free agency account
+				</a>
+				<a class="btnS" href="/pricing/">See every price</a>
+			</div>
+			<p class="agentsLine">{plAgents} agents are already on the free core. You can decide about the rest once you have seen whether the free part is any good.</p>
 		</section>
 
 		<section class="band">
@@ -300,130 +405,416 @@ const faqs = [
 			</div>
 		</section>
 
-		<section class="band close">
-			<h2>The first step costs nothing</h2>
-			<p class="lead">
-				The free core is the whole left-hand side of that slider and it needs no card. {plAgents} agents are
-				already on it. You can decide about the rest once you have seen whether the free part is any good.
-			</p>
-			<div class="ctaRow">
-				<a class="btnP" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
-					Create your free agency account
-				</a>
-				<a class="btnS" href="/pricing/">See every price</a>
-			</div>
-		</section>
+		<button type="button" class="bar" data-bar aria-label="Your running total. Tap to see the full figures.">
+			<span class="barC"><strong data-bar-c>0</strong> cr/mo</span>
+			<span class="barE" data-bar-e hidden></span>
+			<span class="barH"><strong data-bar-h>0</strong> h/wk back</span>
+		</button>
 	</div>
 
-	<script define:vars={{ stages, allTasks }}>
+	<script define:vars={{ stages, addons, allTasks }}>
 		// All the DOM above is server-rendered. This only toggles classes and
 		// writes numbers, so the page is complete and readable with JS off.
 		const root = document.querySelector('[data-setup]');
 		if (root) {
 			const slider = root.querySelector('#stage');
-			const state = { lettings: 'no', site: 'no', stage: 0 };
+			const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			const track = (n, d) => { try { if (window.umami && umami.track) umami.track(n, d); } catch (e) {} };
 
-			const relevant = (s) =>
-				!s.only ||
-				(s.only === 'lettings' && state.lettings === 'yes') ||
-				(s.only === 'nosite' && state.site === 'no') ||
-				(s.only === 'hassite' && state.site === 'yes');
+			const state = { lettings: 'no', site: 'no', stage: 0, on: new Set(), touched: false };
 
-			const visibleStages = () => stages.filter(relevant);
+			// restore a shared configuration from the URL
+			try {
+				const p = new URLSearchParams(location.search);
+				const st = parseInt(p.get('st') || '', 10);
+				if (st >= 0 && st < stages.length) { state.stage = st; state.touched = true; }
+				if (p.get('let') === 'y') { state.lettings = 'yes'; state.touched = true; }
+				if (p.get('site') === 'y') { state.site = 'yes'; state.touched = true; }
+				(p.get('add') || '').split(',').filter(Boolean).forEach((k) => {
+					if (addons.some((a) => a.key === k)) { state.on.add(k); state.touched = true; }
+				});
+			} catch (e) {}
 
 			const fmtH = (h) => (h < 0.05 ? '0' : h.toFixed(1).replace(/\.0$/, ''));
+			const back = (t) => t.hours - t.after / 60;
 
-			function render() {
-				const vis = visibleStages();
-				const max = vis.length - 1;
-				slider.max = String(max);
-				if (state.stage > max) state.stage = max;
-				slider.value = String(state.stage);
+			// which add-on cards exist for this viewer
+			const addonVisible = (a) =>
+				(a.show === 'lettings' && state.lettings === 'yes') ||
+				(a.show === 'nosite' && state.site === 'no') ||
+				(a.show === 'hassite' && state.site === 'yes');
 
-				const upto = vis.slice(0, state.stage + 1);
-				const current = vis[state.stage];
+			// which week-list jobs this viewer actually has
+			const taskVisible = (t) =>
+				(t.needs !== 'lettings' || state.lettings === 'yes') &&
+				(t.needs !== 'nosite' || state.site === 'no');
 
-				root.querySelector('#stageName').textContent = current.head;
-				root.querySelector('[data-sub]').textContent = current.sub;
+			const tween = (el, to, suffix) => {
+				const from = parseFloat(el.dataset.v || '0') || 0;
+				el.dataset.v = String(to);
+				if (reduced || Math.abs(to - from) < 0.01) { el.textContent = fmtH(to) + (suffix || ''); return; }
+				const t0 = performance.now();
+				const stepFn = (now) => {
+					const k = Math.min(1, (now - t0) / 300);
+					const v = from + (to - from) * (k * (2 - k));
+					el.textContent = fmtH(k === 1 ? to : v) + (suffix || '');
+					if (k < 1) requestAnimationFrame(stepFn);
+				};
+				requestAnimationFrame(stepFn);
+			};
 
-				// show every tool set up to and including the current stage
-				const keys = new Set(upto.map((s) => s.key));
-				root.querySelectorAll('.toolSet').forEach((el) => {
-					el.classList.toggle('on', keys.has(el.dataset.stage));
-				});
-				root.querySelector('[data-empty]').style.display = state.stage === 0 ? 'block' : 'none';
-
-				// ticks
-				const visKeys = vis.map((s) => s.key);
-				root.querySelectorAll('.tick').forEach((el) => {
-					const i = visKeys.indexOf(el.dataset.tickfor);
-					el.style.display = i === -1 ? 'none' : '';
-					el.classList.toggle('on', i !== -1 && i <= state.stage);
-				});
-
-				// monthly credits, subscriptions only
+			const totals = () => {
 				let monthly = 0;
+				let hours = 0;
 				const perUse = [];
-				upto.forEach((s) =>
+				stages.slice(0, state.stage + 1).forEach((s) =>
 					s.tools.forEach((t) => {
 						if (!t.soon) monthly += t.monthly || 0;
 						if (t.perUse) perUse.push(t.perUse);
 					}),
 				);
-				root.querySelector('[data-credits]').textContent = String(monthly);
-				root.querySelector('[data-perUse]').textContent = perUse.length
-					? 'Plus, only when you use them: ' + perUse.join('; ') + '.'
-					: monthly === 0
+				allTasks.forEach((t) => {
+					if (!taskVisible(t)) return;
+					const [kind, key] = t.fix.split(':');
+					const fixed =
+						(kind === 'stage' && stages.findIndex((s) => s.key === key) <= state.stage && stages.findIndex((s) => s.key === key) > 0) ||
+						(kind === 'addon' && state.on.has(key));
+					if (fixed) hours += back(t);
+				});
+				addons.forEach((a) => {
+					if (addonVisible(a) && state.on.has(a.key)) monthly += a.monthly;
+				});
+				return { monthly, hours, perUse };
+			};
+
+			let prev = { monthly: 0, hours: 0 };
+			let settleTimer = 0;
+			let settledSent = false;
+
+			const payload = () => ({
+				stage: stages[state.stage].key,
+				lettings: state.lettings,
+				site: state.site,
+				addons: [...state.on].join(',') || 'none',
+				credits: totals().monthly,
+			});
+
+			const writeUrl = () => {
+				if (!state.touched) return;
+				try {
+					const p = new URLSearchParams();
+					if (state.stage > 0) p.set('st', String(state.stage));
+					if (state.lettings === 'yes') p.set('let', 'y');
+					if (state.site === 'yes') p.set('site', 'y');
+					if (state.on.size) p.set('add', [...state.on].join(','));
+					const q = p.toString();
+					history.replaceState(null, '', q ? '?' + q : location.pathname);
+				} catch (e) {}
+			};
+
+			const shareUrl = () => location.origin + location.pathname + (location.search || '');
+
+			function render(reason) {
+				// drop switched-on add-ons that stopped being visible (toggle flip)
+				[...state.on].forEach((k) => {
+					const a = addons.find((x) => x.key === k);
+					if (a && !addonVisible(a)) state.on.delete(k);
+				});
+				// an add-on that needs another one follows it off
+				addons.forEach((a) => {
+					if (a.needs && state.on.has(a.key) && !state.on.has(a.needs)) state.on.delete(a.key);
+				});
+
+				slider.value = String(state.stage);
+				const current = stages[state.stage];
+
+				root.querySelector('#stageName').textContent = current.head;
+				root.querySelector('[data-sub]').textContent = current.sub;
+				root.querySelector('[data-stepline]').textContent =
+					'Step ' + (state.stage + 1) + ' of ' + stages.length + ' · ' + current.head;
+
+				const activeKeys = new Set(stages.slice(0, state.stage + 1).map((s) => s.key));
+				root.querySelectorAll('.toolSet').forEach((el) => {
+					el.classList.toggle('on', activeKeys.has(el.dataset.stage));
+				});
+
+				root.querySelectorAll('.tick').forEach((el, i) => {
+					el.classList.toggle('on', i <= state.stage);
+					el.setAttribute('aria-current', i === state.stage ? 'true' : 'false');
+				});
+				root.querySelectorAll('[data-step]').forEach((b) => {
+					const d = Number(b.dataset.step);
+					b.disabled = (d < 0 && state.stage === 0) || (d > 0 && state.stage === stages.length - 1);
+				});
+
+				// add-on cards: section appears once anything is switched on at all
+				root.querySelector('[data-addonwrap]').hidden = state.stage === 0;
+				root.querySelectorAll('.addon').forEach((el) => {
+					const a = addons.find((x) => x.key === el.dataset.addon);
+					const vis = a && addonVisible(a);
+					el.style.display = vis ? '' : 'none';
+					const needsOff = a && a.needs && !state.on.has(a.needs);
+					el.classList.toggle('locked', Boolean(needsOff));
+					const sw = el.querySelector('.sw');
+					sw.disabled = Boolean(needsOff);
+					sw.setAttribute('aria-checked', state.on.has(el.dataset.addon) ? 'true' : 'false');
+					el.classList.toggle('isOn', state.on.has(el.dataset.addon));
+				});
+
+				// the week list: strike what is fixed, tag what is not built
+				let weekTotal = 0;
+				root.querySelectorAll('[data-week] li').forEach((li) => {
+					const t = allTasks.find((x) => x.id === li.dataset.task);
+					if (!taskVisible(t)) { li.style.display = 'none'; return; }
+					li.style.display = '';
+					weekTotal += t.hours;
+					const [kind, key] = t.fix.split(':');
+					const fixEl = li.querySelector('[data-wfix]');
+					if (kind === 'soon') {
+						li.classList.add('soonTask');
+						fixEl.textContent = key + ' · not built yet';
+						return;
+					}
+					const fixed =
+						(kind === 'stage' && stages.findIndex((s) => s.key === key) <= state.stage) ||
+						(kind === 'addon' && state.on.has(key));
+					li.classList.toggle('done', fixed);
+					fixEl.textContent = fixed
+						? t.after > 0 ? t.hours + 'h → ' + t.after + ' min' : t.hours + 'h → 0'
+						: kind === 'stage'
+							? 'fixed at ' + stages.find((s) => s.key === key).tick.toLowerCase()
+							: 'fixed by ' + (addons.find((a) => a.key === key) || {}).name;
+				});
+				root.querySelectorAll('[data-weektotal], [data-weektotal2]').forEach((el) => {
+					el.textContent = String(weekTotal);
+				});
+
+				// the two numbers
+				const t = totals();
+				tween(root.querySelector('[data-credits]'), t.monthly);
+				tween(root.querySelector('[data-hours]'), t.hours);
+				const euro = root.querySelector('[data-euro]');
+				euro.hidden = t.monthly === 0;
+				euro.textContent = '1 credit is about 1€, so about ' + t.monthly + '€ a month.';
+				root.querySelector('[data-perUse]').textContent = t.perUse.length
+					? 'Plus, only when you use them: ' + t.perUse.join('; ') + '.'
+					: t.monthly === 0
 						? 'Nothing monthly. Nothing at all, in fact.'
 						: 'No pay-per-use at this step.';
 
-				// hours handed back: the task's hours minus what it still costs after
-				const fixed = new Set();
-				let hours = 0;
-				upto.forEach((s) =>
-					s.tasks.forEach((t) => {
-						if (fixed.has(t.id)) return;
-						fixed.add(t.id);
-						hours += t.hours - t.after / 60;
+				// sticky bar
+				root.querySelector('[data-bar-c]').textContent = String(t.monthly);
+				root.querySelector('[data-bar-h]').textContent = fmtH(t.hours);
+				const barE = root.querySelector('[data-bar-e]');
+				barE.hidden = t.monthly === 0;
+				barE.textContent = '~' + t.monthly + '€';
+				if (reason && !reduced) {
+					const bar = root.querySelector('[data-bar]');
+					bar.classList.remove('pulse');
+					void bar.offsetWidth;
+					bar.classList.add('pulse');
+				}
+
+				// the delta line: say what this interaction just did
+				const deltaEl = root.querySelector('[data-delta]');
+				if (reason) {
+					const dc = t.monthly - prev.monthly;
+					const dh = t.hours - prev.hours;
+					const bits = [];
+					if (dc !== 0) bits.push((dc > 0 ? '+' : '−') + Math.abs(dc) + ' credits a month');
+					if (Math.abs(dh) >= 0.05) bits.push((dh > 0 ? '+' : '−') + fmtH(Math.abs(dh)) + ' h a week back');
+					if (reason.type === 'stage') {
+						deltaEl.textContent = reason.dir > 0
+							? current.head + (bits.length ? ': ' + bits.join(', ') : ': nothing monthly')
+							: 'Back to ' + current.head.toLowerCase() + (bits.length ? ': ' + bits.join(', ') : '');
+					} else if (reason.type === 'addon') {
+						deltaEl.textContent = (reason.on ? 'Added ' : 'Removed ') + reason.name + (bits.length ? ': ' + bits.join(', ') : '');
+					} else {
+						deltaEl.textContent = bits.length ? bits.join(', ') : '';
+					}
+				}
+				prev = { monthly: t.monthly, hours: t.hours };
+
+				// stage-aware CTA
+				const ctaLine = root.querySelector('[data-ctaline]');
+				const cta = root.querySelector('[data-cta]');
+				if (state.stage === 0 && state.on.size === 0) {
+					cta.hidden = true;
+					ctaLine.textContent = 'Slide right to see what the free core switches on.';
+				} else {
+					cta.hidden = false;
+					ctaLine.textContent =
+						t.monthly > 0
+							? 'Everything monthly switches off the month you stop wanting it.'
+							: state.stage >= 2
+								? 'Your first 5 buyer leads are free.'
+								: 'Everything at this stage is free. No card.';
+				}
+
+				// the receipt
+				const lines = [];
+				if (state.stage >= 1) lines.push(['The free core', 'Free']);
+				stages.slice(0, state.stage + 1).forEach((s) =>
+					s.tools.forEach((tl) => {
+						if (!tl.soon && tl.monthly > 0) lines.push([tl.name, tl.monthly + ' cr']);
 					}),
 				);
-				root.querySelector('[data-hours]').textContent = fmtH(hours);
+				addons.forEach((a) => {
+					if (addonVisible(a) && state.on.has(a.key)) lines.push([a.name, a.monthly + ' cr']);
+				});
+				const rl = root.querySelector('[data-rlines]');
+				if (!lines.length) {
+					rl.innerHTML = '<p class="rEmpty">Nothing switched on yet. Slide right to build one.</p>';
+				} else {
+					let html = lines
+						.map(([n, p]) => '<p class="rLine"><span>' + n + '</span><span class="rDots"></span><span>' + p + '</span></p>')
+						.join('');
+					html += '<p class="rLine rTot"><span>Total a month</span><span class="rDots"></span><span>' + t.monthly + ' cr' + (t.monthly > 0 ? ' (~' + t.monthly + '€)' : '') + '</span></p>';
+					if (t.perUse.length) {
+						html += '<p class="rSub">Only when you use it:</p>';
+						html += t.perUse.map((x) => '<p class="rPer">· ' + x + '</p>').join('');
+					}
+					if (t.hours >= 0.05) {
+						html += '<p class="rLine rBack"><span>Handed back</span><span class="rDots"></span><span>' + fmtH(t.hours) + ' h a week</span></p>';
+					}
+					rl.innerHTML = html;
+				}
+				root.querySelector('[data-share-wa]').hidden = !lines.length;
+				root.querySelector('[data-share-copy]').hidden = !lines.length;
 
-				// what is still done by hand, from the same tally
-				const mine = allTasks.filter(
-					(t) =>
-						!(t.id === 'tenants' && state.lettings === 'no') &&
-						!(t.id === 'website' && state.site === 'yes' && false),
-				);
-				root.querySelector('[data-total]').textContent = String(
-					mine.reduce((a, t) => a + t.hours, 0),
-				);
-				const still = mine.filter((t) => !fixed.has(t.id));
-				root.querySelector('[data-left]').innerHTML = still.length
-					? still.map((t) => '<li>' + t.label + '</li>').join('')
-					: '<li class="none">Nothing on this list.</li>';
+				writeUrl();
+
+				// research: the configuration the viewer settles on, not every drag
+				settledSent = false;
+				clearTimeout(settleTimer);
+				if (state.touched) {
+					settleTimer = setTimeout(() => {
+						settledSent = true;
+						track('setup-settled', payload());
+					}, 5000);
+				}
 			}
 
 			slider.addEventListener('input', () => {
-				state.stage = Number(slider.value);
-				render();
+				const next = Number(slider.value);
+				const dir = next - state.stage;
+				state.stage = next;
+				state.touched = true;
+				track('setup-stage', { stage: stages[next].key });
+				render({ type: 'stage', dir });
 			});
+			root.querySelectorAll('.tick').forEach((b) =>
+				b.addEventListener('click', () => {
+					const next = Number(b.dataset.goto);
+					const dir = next - state.stage;
+					if (dir === 0) return;
+					state.stage = next;
+					state.touched = true;
+					track('setup-stage', { stage: stages[next].key, via: 'tick' });
+					render({ type: 'stage', dir });
+				}),
+			);
+			root.querySelectorAll('[data-step]').forEach((b) =>
+				b.addEventListener('click', () => {
+					const next = Math.max(0, Math.min(stages.length - 1, state.stage + Number(b.dataset.step)));
+					if (next === state.stage) return;
+					const dir = next - state.stage;
+					state.stage = next;
+					state.touched = true;
+					track('setup-stage', { stage: stages[next].key, via: 'step' });
+					render({ type: 'stage', dir });
+				}),
+			);
 			root.querySelectorAll('[data-lettings]').forEach((b) =>
 				b.addEventListener('click', () => {
 					state.lettings = b.dataset.lettings;
+					state.touched = true;
 					root.querySelectorAll('[data-lettings]').forEach((x) => x.classList.toggle('on', x === b));
-					render();
+					track('setup-toggle', { which: 'lettings', v: state.lettings });
+					render({ type: 'toggle' });
 				}),
 			);
 			root.querySelectorAll('[data-site]').forEach((b) =>
 				b.addEventListener('click', () => {
 					state.site = b.dataset.site;
+					state.touched = true;
 					root.querySelectorAll('[data-site]').forEach((x) => x.classList.toggle('on', x === b));
-					render();
+					track('setup-toggle', { which: 'site', v: state.site });
+					render({ type: 'toggle' });
+				}),
+			);
+			root.querySelectorAll('[data-sw]').forEach((b) =>
+				b.addEventListener('click', () => {
+					const key = b.dataset.sw;
+					const a = addons.find((x) => x.key === key);
+					const on = !state.on.has(key);
+					if (on) state.on.add(key); else state.on.delete(key);
+					state.touched = true;
+					track('setup-addon', { key, on: on ? 'yes' : 'no' });
+					render({ type: 'addon', name: a.name, on });
 				}),
 			);
 
-			render();
+			// tapping a job jumps to what fixes it. Never switches an add-on on:
+			// it shows you the switch and lets you decide.
+			root.querySelectorAll('.wJump').forEach((b) =>
+				b.addEventListener('click', () => {
+					const [kind, key] = b.dataset.jump.split(':');
+					const li = b.closest('li');
+					track('setup-pain-jump', { task: li.dataset.task });
+					if (kind === 'stage') {
+						const idx = stages.findIndex((s) => s.key === key);
+						if (idx > state.stage) {
+							const dir = idx - state.stage;
+							state.stage = idx;
+							state.touched = true;
+							render({ type: 'stage', dir });
+						}
+					} else if (kind === 'addon') {
+						if (state.stage === 0) { state.stage = 1; state.touched = true; render({ type: 'stage', dir: 1 }); }
+						const card = root.querySelector('.addon[data-addon="' + key + '"]');
+						if (card && card.style.display !== 'none') {
+							card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+							card.classList.remove('flash');
+							void card.offsetWidth;
+							card.classList.add('flash');
+						}
+					}
+				}),
+			);
+
+			root.querySelector('[data-bar]').addEventListener('click', () => {
+				root.querySelector('.meter').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+				track('setup-bar-tap', {});
+			});
+
+			root.querySelector('[data-share-wa]').addEventListener('click', () => {
+				const t = totals();
+				track('setup-share', { via: 'whatsapp', credits: t.monthly });
+				const msg =
+					t.monthly > 0
+						? 'My PropertyList setup: ' + t.monthly + ' credits a month (~' + t.monthly + '€), ' + fmtH(t.hours) + ' hours a week handed back. Built here: ' + shareUrl()
+						: 'The free PropertyList core alone hands back ' + fmtH(t.hours) + ' hours a week. See it: ' + shareUrl();
+				window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+			});
+			root.querySelector('[data-share-copy]').addEventListener('click', (e) => {
+				track('setup-share', { via: 'copy', credits: totals().monthly });
+				if (navigator.clipboard) navigator.clipboard.writeText(shareUrl());
+				e.target.textContent = 'Copied';
+				setTimeout(() => { e.target.textContent = 'Copy link'; }, 1600);
+			});
+			['[data-cta]', '[data-cta2]'].forEach((sel) =>
+				root.querySelector(sel).addEventListener('click', () => track('setup-cta', payload())),
+			);
+			addEventListener('pagehide', () => {
+				if (state.touched && !settledSent) track('setup-settled', payload());
+			});
+
+			render(null);
+			// restoring a shared link should land the viewer on their setup
+			if (state.touched && (state.stage > 0 || state.on.size)) {
+				root.querySelector('.board').scrollIntoView({ behavior: 'auto', block: 'start' });
+			}
 		}
 	</script>
 </Layout>
@@ -446,10 +837,21 @@ const faqs = [
 	.rig { padding: 18px 0 0; }
 	.sliderRow { margin-bottom: 18px; }
 	.srLab { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); margin-bottom: 8px; }
-	.slider { width: 100%; accent-color: var(--pl-accent); height: 26px; }
-	.ticks { display: flex; justify-content: space-between; gap: 6px; margin-top: 2px; }
-	.tick { font-size: 11.5px; font-weight: 700; color: rgba(16, 24, 40, 0.38); text-align: center; flex: 1 1 0; line-height: 1.3; }
+	.sliderLine { display: flex; align-items: center; gap: 10px; }
+	.slider { flex: 1 1 auto; width: 100%; accent-color: var(--pl-accent); height: 26px; }
+	.step { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(16, 24, 40, 0.14); background: #fff; font-size: 22px; line-height: 1; font-weight: 800; color: #0a6d61; cursor: pointer; }
+	.step:disabled { opacity: 0.3; cursor: default; }
+	.ticks { display: flex; justify-content: space-between; gap: 6px; margin-top: 4px; padding: 0 54px; }
+	.tick { appearance: none; border: 0; background: none; font: inherit; font-size: 12.5px; font-weight: 700; color: rgba(16, 24, 40, 0.4); text-align: center; flex: 1 1 0; line-height: 1.3; cursor: pointer; padding: 6px 2px; border-radius: 8px; }
+	.tick:hover { color: #0a6d61; background: rgba(var(--pl-accent-rgb), 0.07); }
 	.tick.on { color: #0a6d61; }
+	.tick[aria-current='true'] { font-weight: 900; }
+	.stepline { display: none; margin: 6px 0 0; font-size: 13px; font-weight: 700; color: rgba(16, 24, 40, 0.6); }
+	.delta { min-height: 20px; margin: 8px 0 0; font-size: 13.5px; font-weight: 700; color: #0a6d61; }
+	@media (max-width: 600px) {
+		.ticks { display: none; }
+		.stepline { display: block; }
+	}
 
 	.board { display: grid; grid-template-columns: 1fr; gap: 16px; }
 	@media (min-width: 880px) { .board { grid-template-columns: 1fr 300px; } }
@@ -468,22 +870,72 @@ const faqs = [
 	.tool.soon .toolPrice { color: #8a5a00; }
 	.toolNote { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: rgba(16, 24, 40, 0.55); }
 	.soonBadge { margin-left: 8px; font-size: 10.5px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; color: #8a5a00; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.32); padding: 2px 8px; border-radius: 999px; }
-	.empty { margin: 8px 0 0; font-size: 15px; color: rgba(16, 24, 40, 0.5); }
 
-	.meter { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 20px; padding: 18px 20px; background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.06), rgba(255, 255, 255, 0)); }
+	.addonWrap { margin-top: 18px; padding-top: 14px; border-top: 2px solid rgba(var(--pl-accent-rgb), 0.25); }
+	.addonHead { font-size: 12px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); margin: 0 0 4px; }
+	.addonSub { margin: 0 0 4px; font-size: 13px; line-height: 1.5; color: rgba(16, 24, 40, 0.55); }
+	.addon { padding: 11px 0; border-top: 1px solid rgba(16, 24, 40, 0.08); border-radius: 10px; }
+	.addon.isOn .toolName, .addon.isOn .toolPrice { color: #0a6d61; }
+	.addon.locked { opacity: 0.5; }
+	.addon.flash { animation: flash 1.4s ease-out 1; }
+	@keyframes flash { 0% { background: rgba(var(--pl-accent-rgb), 0.16); } 100% { background: none; } }
+	.addonRight { display: inline-flex; align-items: center; gap: 10px; }
+	.sw { appearance: none; border: 1px solid rgba(16, 24, 40, 0.18); background: rgba(16, 24, 40, 0.08); width: 44px; height: 26px; border-radius: 999px; position: relative; cursor: pointer; padding: 0; transition: background 0.15s; flex: none; }
+	.sw[aria-checked='true'] { background: var(--pl-accent); border-color: var(--pl-accent); }
+	.sw:disabled { cursor: default; }
+	.swKnob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(16, 24, 40, 0.25); transition: left 0.15s; }
+	.sw[aria-checked='true'] .swKnob { left: 20px; }
+	.offAgain { color: rgba(16, 24, 40, 0.4); }
+
+	.week { margin-top: 18px; padding-top: 14px; border-top: 2px solid rgba(16, 24, 40, 0.1); }
+	.weekHead { font-size: 12px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); margin: 0 0 4px; }
+	.weekList { list-style: none; margin: 0; padding: 0; }
+	.weekList li { border-top: 1px solid rgba(16, 24, 40, 0.06); }
+	.wJump { appearance: none; border: 0; background: none; font: inherit; width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; cursor: pointer; text-align: left; }
+	.wLabel { font-size: 14px; line-height: 1.45; color: rgba(16, 24, 40, 0.78); }
+	.wRight { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+	.wH { font-size: 13px; font-weight: 800; color: rgba(16, 24, 40, 0.55); }
+	.wFix { font-size: 12px; font-weight: 700; color: rgba(16, 24, 40, 0.38); }
+	li.done .wLabel { text-decoration: line-through; color: rgba(16, 24, 40, 0.38); transition: color 0.3s; }
+	li.done .wH { text-decoration: line-through; color: rgba(16, 24, 40, 0.3); }
+	li.done .wFix { color: #0a6d61; }
+	li.soonTask .wJump { cursor: default; }
+	li.soonTask .wFix { color: #8a5a00; }
+	.weekTotal { margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: rgba(16, 24, 40, 0.55); }
+
+	.meter { border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 20px; padding: 18px 20px; background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.06), rgba(255, 255, 255, 0)); align-self: start; }
+	@media (min-width: 880px) { .meter { position: sticky; top: 86px; } }
 	.mBlock { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
 	.mBlock.last { padding-bottom: 0; margin-bottom: 0; border-bottom: 0; }
 	.mLab { font-size: 11.5px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(16, 24, 40, 0.45); }
 	.mNum { font-size: 40px; font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; margin-top: 2px; }
 	.mNum.alt { color: var(--pl-accent); }
+	.mEuro { margin-top: 3px; font-size: 13px; font-weight: 700; color: #0a6d61; }
 	.mNote { margin-top: 5px; font-size: 12.5px; line-height: 1.5; color: rgba(16, 24, 40, 0.55); }
-	.left { list-style: none; margin: 8px 0 0; padding: 0; }
-	.left li { font-size: 13px; line-height: 1.45; color: rgba(16, 24, 40, 0.62); padding: 4px 0; border-top: 1px solid rgba(16, 24, 40, 0.06); }
-	.left li.none { color: #0a6d61; font-weight: 700; }
+	.mCtaLine { margin: 0 0 10px; font-size: 13.5px; line-height: 1.5; font-weight: 700; color: rgba(16, 24, 40, 0.7); }
+	.mBtn { font-size: 14px; padding: 11px 16px; display: inline-block; }
+
+	.soonStrip { margin-top: 16px; font-size: 13px; line-height: 1.6; color: rgba(16, 24, 40, 0.55); }
+	.soonStripLab { font-weight: 800; color: #8a5a00; margin-right: 6px; }
+	.soonItem { margin-right: 4px; }
 
 	.band { padding: 34px 0 6px; border-top: 1px solid rgba(16, 24, 40, 0.08); margin-top: 30px; }
 	.band h2 { font-size: clamp(22px, 3.4vw, 29px); line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 10px; }
 	.lead { font-size: 16px; line-height: 1.62; color: rgba(16, 24, 40, 0.76); max-width: 66ch; margin: 0 0 18px; }
+
+	.receipt { border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 16px; padding: 18px 20px; background: #fbfcfc; max-width: 560px; margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+	.rTitle { margin: 0 0 10px; font-size: 11.5px; font-weight: 900; letter-spacing: 0.14em; color: rgba(16, 24, 40, 0.45); }
+	.rEmpty { margin: 0; font-size: 14px; color: rgba(16, 24, 40, 0.5); }
+	.rLine { display: flex; align-items: baseline; gap: 8px; margin: 0; padding: 5px 0; font-size: 14px; }
+	.rLine span:first-child { flex: none; }
+	.rLine span:last-child { flex: none; font-weight: 800; color: #0a6d61; }
+	.rDots { flex: 1 1 auto; border-bottom: 1.5px dotted rgba(16, 24, 40, 0.22); transform: translateY(-3px); }
+	.rTot { border-top: 1px solid rgba(16, 24, 40, 0.14); margin-top: 4px; padding-top: 9px; font-weight: 800; }
+	.rTot span:last-child { font-size: 15px; }
+	.rSub { margin: 8px 0 2px; font-size: 12px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(16, 24, 40, 0.4); }
+	.rPer { margin: 0; padding: 2px 0; font-size: 13px; line-height: 1.5; color: rgba(16, 24, 40, 0.6); }
+	.rBack span:last-child { color: var(--pl-accent); }
+	.agentsLine { margin: 16px 0 0; font-size: 14px; line-height: 1.6; color: rgba(16, 24, 40, 0.62); max-width: 60ch; }
 
 	.faq details { border-top: 1px solid rgba(16, 24, 40, 0.08); padding: 4px 0; }
 	.faq summary { cursor: pointer; padding: 13px 0; font-weight: 700; font-size: 15.5px; list-style: none; }
@@ -492,9 +944,25 @@ const faqs = [
 	.faq details[open] summary::after { content: '\2212'; }
 	.faq p { margin: 0 0 14px; font-size: 15px; line-height: 1.62; color: rgba(16, 24, 40, 0.76); max-width: 72ch; }
 
-	.ctaRow { display: flex; flex-wrap: wrap; gap: 10px; }
+	.ctaRow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 	.btnP, .btnS { display: inline-block; padding: 12px 20px; border-radius: 999px; font-weight: 800; font-size: 15px; text-decoration: none; }
 	.btnP { background: var(--pl-accent); color: #fff; }
-	.btnS { border: 1px solid rgba(16, 24, 40, 0.16); color: #0b1620; }
+	.btnS { border: 1px solid rgba(16, 24, 40, 0.16); color: #0b1620; background: #fff; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; }
 	a { color: #0a6d61; }
+
+	/* the payoff follows the thumb on a phone */
+	.bar { display: none; }
+	@media (max-width: 879px) {
+		.wrap { padding-bottom: 110px; }
+		.bar { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 40; display: flex; justify-content: center; align-items: baseline; gap: 14px; appearance: none; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 999px; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(6px); box-shadow: 0 4px 18px rgba(16, 24, 40, 0.14); padding: 12px 18px; font: inherit; font-size: 13.5px; font-weight: 700; color: rgba(16, 24, 40, 0.7); cursor: pointer; }
+		.bar strong { font-size: 17px; font-weight: 900; color: #0b1620; }
+		.barH strong { color: var(--pl-accent); }
+		.barE { font-weight: 800; color: #0a6d61; }
+		.bar.pulse { animation: barPulse 0.5s ease-out 1; }
+		@keyframes barPulse { 0% { transform: scale(1.03); } 100% { transform: scale(1); } }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.bar.pulse, .addon.flash { animation: none; }
+		.sw, .swKnob, li.done .wLabel { transition: none; }
+	}
 </style>
