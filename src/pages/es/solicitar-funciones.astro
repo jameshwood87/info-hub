@@ -24,7 +24,7 @@ const sent = Astro.url.searchParams.get('sent') === '1';
 const error = Astro.url.searchParams.get('error') === '1';
 ---
 
-<Layout lang="es" title={title} description={description} canonical="https://info.propertylist.es/es/solicitar-funciones/">
+<Layout lang="es" title={title} description={description} canonical="https://info.propertylist.es/es/solicitar-funciones/" hreflangs={[{ hreflang: 'en', href: 'https://info.propertylist.es/request-new-features/' }, { hreflang: 'es', href: 'https://info.propertylist.es/es/solicitar-funciones/' }, { hreflang: 'x-default', href: 'https://info.propertylist.es/request-new-features/' }]}>
 	<main class="wrap">
 		<section class="hero">
 			<div class="badge">Roadmap de la comunidad</div>

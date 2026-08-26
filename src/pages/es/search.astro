@@ -4,7 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 const q = (Astro.url.searchParams.get('q') || '').trim();
 ---
 
-<Layout lang="es" title="Buscar • PropertyList Info Hub">
+<Layout lang="es" title="Buscar • PropertyList Info Hub" canonical="https://info.propertylist.es/es/search/" hreflangs={[{ hreflang: 'en', href: 'https://info.propertylist.es/search/' }, { hreflang: 'es', href: 'https://info.propertylist.es/es/search/' }, { hreflang: 'x-default', href: 'https://info.propertylist.es/search/' }]}>
 	<h1>Buscar</h1>
 	<div id="results"></div>
 	<script define:vars={{ q }} is:inline>

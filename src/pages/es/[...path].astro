@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import wpSlugMap from '../../data/wp-slug-map.json';
 import { areaImagePath } from '../../lib/areaImages';
 import { canonicalAreaPath } from '../../lib/areaProvince';
 import AreaGuide from '../../components/AreaGuide.astro';
@@ -69,6 +70,11 @@ const mapPairs: Array<{ en: string; es: string }> = [
 const toEnglishPath = (p: string) => {
 	const path = String(p || '');
 	if (!path.startsWith('/es/')) return path;
+	// WordPress-era articles have different slugs per language; the map is
+	// built from the TranslatePress switcher links embedded in the imported
+	// bodies and every pair is verified 200 both ways. Without it the prefix
+	// swap below keeps the Spanish slug and the en-hreflang 404s.
+	{ const _n = path.endsWith('/') ? path : path + '/'; const _m = (wpSlugMap as Record<string, string>)[_n]; if (_m) return _m; }
 	const withoutEs = path.replace(/^\/es\//, '/');
 	{ const _n = path.endsWith('/') ? path : path + '/'; if (_n === '/es/blog/como-evitar-estafas-inmobiliarias-en-espana/') return '/blog/how-to-avoid-property-scams-in-spain/'; }
 	if (withoutEs.startsWith('/informacion-general/')) {

@@ -54,7 +54,15 @@ const toAbsoluteUrl = (value: string | undefined | null) => {
 	const raw = String(value || '').trim();
 	if (!raw) return null;
 	if (!siteOrigin) return raw;
-	if (/^https?:\/\//i.test(raw)) return normalizeCanonical(raw) ?? raw;
+	if (/^https?:\/\//i.test(raw)) {
+		// Only normalize URLs already on our own host. normalizeCanonical
+		// rewrites ANY host to ours, which turned external og:image URLs
+		// (images.pexels.com/photos/...) into dead info.propertylist.es paths.
+		try {
+			if (new URL(raw).host === new URL(siteOrigin).host) return normalizeCanonical(raw) ?? raw;
+		} catch {}
+		return raw;
+	}
 	if (raw.startsWith('/')) return `${siteOrigin}${raw}`;
 	return raw;
 };

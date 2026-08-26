@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import wpSlugMap from '../data/wp-slug-map.json';
 import { readFileSync } from 'node:fs';
 import { areaImagePath } from '../lib/areaImages';
 import { canonicalAreaPath, provinceForAreaSlug } from '../lib/areaProvince';
@@ -48,6 +49,10 @@ const mapPairs: Array<{ en: string; es: string }> = [
 const toSpanishSwitchPath = (p: string) => {
 	const path = String(p || '');
 	if (path.startsWith('/es/')) return path;
+	// Reverse of the WP-era slug map (see es/[...path].astro): EN slug -> the
+	// real Spanish slug, so the es-hreflang existence check actually finds
+	// the twin instead of probing a Spanish path with an English slug.
+	{ const _n = path.endsWith('/') ? path : path + '/'; const _hit = Object.entries(wpSlugMap as Record<string, string>).find(([, en]) => en === _n); if (_hit) return _hit[0]; }
 	{ const _n = path.endsWith('/') ? path : path + '/'; if (_n === '/blog/how-to-avoid-property-scams-in-spain/') return '/es/blog/como-evitar-estafas-inmobiliarias-en-espana/'; }
 	if (path.startsWith('/neighbourhood/')) {
 		const parts = path.split('/').filter(Boolean);
