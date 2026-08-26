@@ -1830,6 +1830,12 @@ const blogListings: MarketListing[] = isBlogLike
 	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
 	: [];
 const blogPortalUrl = `https://www.propertylist.es/en/portal/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+// live cards for the neighbourhood guide's right rail; kb-meta's
+// neighbourhoodListings has never been populated, so these come from the
+// same live search the blog aside uses
+const neighbourhoodAsideListings: MarketListing[] = isNeighbourhood && areaNameClean
+	? await searchProperties(areaNameClean, 'for-sale', 4).catch(() => [] as MarketListing[])
+	: [];
 const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `\u20ac${Math.round(v).toLocaleString('en-GB')}${blogSearchType === 'for-rent' ? '/month' : blogSearchType === 'holiday-rentals' ? '/week' : ''}` : 'Price on request');
 const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + '-bed ' : ''}${blogTypeNoun}${l.suburb ? ` in ${l.suburb}` : ''}`.slice(0, 70);
 const isDocs = renderPath.startsWith('/docs/');
@@ -3543,17 +3549,17 @@ const ldJson = JSON.stringify([
 								</li>
 							))}
 					</ol>
-					{isNeighbourhood && (neighbourhoodMeta?.neighbourhoodListings || []).length ? (
+					{isNeighbourhood && neighbourhoodAsideListings.length ? (
 						<div class="tocProps" style="margin-top:16px;border-top:1px solid rgba(16,24,40,0.08);padding-top:12px;">
 							<div class="docTocTitle">Properties in {areaNameClean}</div>
 							<div style="display:flex;flex-direction:column;gap:12px;">
-								{(neighbourhoodMeta.neighbourhoodListings as any[]).slice(0, 3).map((l: any) => (
-									<a href={toHttps(String(l?.url || '')) || neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit;border:1px solid rgba(16,24,40,0.1);border-radius:12px;overflow:hidden;background:#fff;">
-										<div style={l?.imageUrl ? `height:110px;background:#eef2f4 center/cover no-repeat;background-image:url('${toHttps(String(l.imageUrl))}');` : 'height:110px;background:#eef2f4;'}></div>
+								{neighbourhoodAsideListings.slice(0, 3).map((l) => (
+									<a href={l.url || neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit;border:1px solid rgba(16,24,40,0.1);border-radius:12px;overflow:hidden;background:#fff;">
+										<div style={l.photoUrl ? `height:110px;background:#eef2f4 center/cover no-repeat;background-image:url('${l.photoUrl}');` : 'height:110px;background:#eef2f4;'}></div>
 										<div style="padding:9px 11px;">
-											<div style="font-weight:800;font-size:14px;">{typeof l?.priceEur === 'number' && l.priceEur > 0 ? `€${Math.round(l.priceEur).toLocaleString('en-GB')}` : 'Price on request'}</div>
-											<div style="font-size:12px;color:rgba(16,24,40,0.6);margin-top:2px;">{[l?.bedrooms ? `${l.bedrooms} bed` : '', l?.bathrooms ? `${l.bathrooms} bath` : '', l?.buildM2 ? `${l.buildM2} m²` : ''].filter(Boolean).join(' · ')}</div>
-											<div style="font-size:12px;color:rgba(16,24,40,0.55);margin-top:2px;">{areaNameClean}</div>
+											<div style="font-weight:800;font-size:14px;">{typeof l.price === 'number' && l.price > 0 ? `€${Math.round(l.price).toLocaleString('en-GB')}` : 'Price on request'}</div>
+											<div style="font-size:12px;color:rgba(16,24,40,0.6);margin-top:2px;">{[l.bedrooms ? `${l.bedrooms} bed` : '', l.bathrooms ? `${l.bathrooms} bath` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
+											<div style="font-size:12px;color:rgba(16,24,40,0.55);margin-top:2px;">{[l.suburb, l.city].filter(Boolean).join(', ') || areaNameClean}</div>
 										</div>
 									</a>
 								))}
