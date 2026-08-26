@@ -17,6 +17,7 @@ const HARD_PATTERNS = [
   // case-sensitive on purpose: 'todo' is an ordinary Spanish word, and the
   // insensitive version blocked any Spanish body containing it (26-08-26)
   [/\bTODO\b|\bTBD\b|\bLOREM IPSUM\b/, 'TODO/TBD/lorem left in text'],
+  [/-\s*-\s*(corrected|corregido):/i, 'model self-correction artifact left in text'],
   [/\{\{[^}]+\}\}/, 'unrendered template variable {{...}}'],
   [/�/, 'invalid UTF-8 replacement character'],
   [/[—–]/, 'em/en dash (house rule: plain hyphens only)'],

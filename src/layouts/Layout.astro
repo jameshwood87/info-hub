@@ -4209,6 +4209,11 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		margin: 1.25em 0;
 		font-size: 0.95em;
 		line-height: 1.6;
+		/* a wide table scrolls inside itself instead of running under the aside */
+		display: block;
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.docContent th,
