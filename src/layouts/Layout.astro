@@ -44,7 +44,14 @@ const __lps = await getPortalStats();
 const { logo, og, icon } = getSeasonalAssets();
 
 const stripInfoHubSuffix = (s: string) => String(s || '').replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '').trim();
-const pageTitle = stripInfoHubSuffix(title) || 'PropertyList Info Hub';
+const pageTitle = (() => {
+	// The suffix strip above is deliberate (long titles read better bare),
+	// but it left 24 pages with bare 4-14 char titles. Re-brand only those:
+	// short titles gain recognition and CTR, long ones stay untouched.
+	const t = stripInfoHubSuffix(title) || 'PropertyList Info Hub';
+	if (t !== 'PropertyList Info Hub' && t.length < 25) return t + ' • PropertyList Info Hub';
+	return t;
+})();
 
 const configuredSiteUrl = String(import.meta.env.PUBLIC_SITE_URL || '').trim();
 const requestOrigin = Astro.url ? `${Astro.url.protocol}//${Astro.url.host}` : '';

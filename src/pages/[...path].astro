@@ -2814,6 +2814,18 @@ const datePublished = isBlogLike ? toIso((page as any).date_created) : null;
 const dateModified = isBlogLike || isNeighbourhood ? toIso((page as any).date_updated || (page as any).date_created) : null;
 const absUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : `${origin}${u.startsWith('/') ? u : `/${u}`}`);
 const heroAbs = heroSrc ? absUrl(heroSrc) : null;
+const descriptionFinal = description || (() => {
+	// 49 docs-manual pages ship with no meta description at all; derive one
+	// from the body. Docs only: blog and WP-era bodies are not safe to
+	// excerpt blindly.
+	if (!isDocsLike) return undefined;
+	const txt = String(bodyHtml || '').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+	if (txt.length < 60) return undefined;
+	if (txt.length <= 158) return txt;
+	const cut = txt.slice(0, 158);
+	const sp = cut.lastIndexOf(' ');
+	return (sp > 80 ? cut.slice(0, sp) : cut).trim();
+})();
 
 const articleLd = {
 	'@context': 'https://schema.org',
@@ -2977,7 +2989,7 @@ const ldJson = JSON.stringify([
 	<Layout
 		lang={lang}
 		title={title}
-		description={description}
+		description={descriptionFinal}
 		canonical={canonical}
 		hreflangs={hreflangs}
 		ogImage={isBlogLike ? heroSrc : isNeighbourhood && areaImagePath(neighbourhoodSlug) ? `https://info.propertylist.es${areaImagePath(neighbourhoodSlug)}` : undefined}
