@@ -243,8 +243,15 @@ const priceRangeFor = (p: any) => {
 	const avgOk = Number.isFinite(avg) && avg > 0;
 	if (minOk && maxOk) return `${formatEurCompact(min)}-${formatEurCompact(max)}`;
 	if (avgOk) return `Around ${formatEurCompact(avg)}`;
-	return 'Estimate unavailable';
+	return '';
 };
+
+// top-searched eligibility: the area must have live stock on the network and
+// a price we can actually show. Guide views alone put areas with nothing to
+// sell in the showcase, wearing 'Estimate unavailable'.
+const stockCount = (p: any) =>
+	Number((((metaSnapshot as any)?.[String((p as any)?.id || '')] || {}).neighbourhoodStats || {}).listingCount) || 0;
+const hasLiveStock = (p: any) => stockCount(p) > 0 && Boolean(priceRangeFor(p));
 
 const items = [...itemsRaw]
 	.map((p) => {
@@ -280,7 +287,8 @@ const topItems = (() => {
 		.filter(Boolean)
 		.filter((p) => p !== '/neighbourhood/' && p !== '/neighbourhood/andalucia/')
 		.map((p) => itemsByCanonicalPath.get(p))
-		.filter(Boolean) as Array<(typeof items)[number]>;
+		.filter(Boolean)
+		.filter((p) => hasLiveStock(p)) as Array<(typeof items)[number]>;
 
 	const uniq: Array<(typeof items)[number]> = [];
 	const seen = new Set<string>();
@@ -293,14 +301,11 @@ const topItems = (() => {
 	}
 
 	if (uniq.length >= 5) return uniq;
-	const fallbackSlugs = ['marbella', 'puerto-banus', 'nueva-andalucia', 'benalmadena', 'estepona'];
-	for (const s of fallbackSlugs) {
+	// fill the remaining slots with the eligible areas holding the most stock,
+	// so the showcase never features an area with nothing to sell
+	const byStock = items.filter((p) => hasLiveStock(p)).sort((a, b) => stockCount(b) - stockCount(a));
+	for (const hit of byStock) {
 		if (uniq.length >= 5) break;
-		const hit =
-			items.find((p) => slugFromNeighbourhoodPath(p) === s) ||
-			items.find((p) => String((p as any)._label || '').toLowerCase() === s.replaceAll('-', ' ')) ||
-			null;
-		if (!hit) continue;
 		const id = String((hit as any)?.id || hit.path || '');
 		if (!id || seen.has(id)) continue;
 		seen.add(id);
@@ -386,10 +391,12 @@ const provinces = (() => {
 								<article class="topCard">
 									<h3 class="topCardTitle">{title}</h3>
 									<div class="topSummary">{topSummaryFor(p)}</div>
-									<div class="topMeta">
-										<div class="topMetaLabel">Est. price range</div>
-										<div class="topMetaValue">{priceRangeFor(p)}</div>
-									</div>
+									{priceRangeFor(p) ? (
+										<div class="topMeta">
+											<div class="topMetaLabel">Est. price range</div>
+											<div class="topMetaValue">{priceRangeFor(p)}</div>
+										</div>
+									) : null}
 									<a class="topCta" href={canonicalGuideHref(p)}>
 										View Details
 									</a>

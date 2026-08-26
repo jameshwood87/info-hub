@@ -2,6 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 import { areaImagePath } from '../../../lib/areaImages';
 import { adminCreateKbPage, listKbPagesByPrefix } from '../../../lib/directus';
+import { getKbMetaSnapshot } from '../../../lib/adminMeta';
 
 let itemsRaw = await listKbPagesByPrefix({ prefix: '/es/barrios/', lang: 'es', limit: 200 });
 if (!itemsRaw.length) {
@@ -92,6 +93,12 @@ const items = [...itemsRaw]
 	}))
 	.sort((a, b) => String((a as any)._label || a.title || '').localeCompare(String((b as any)._label || b.title || ''), 'es'));
 
+// only areas with live stock belong in the showcase (same rule as the EN
+// index): the curated order is kept as a preference, ineligible names drop
+// out, and empty slots fill from the eligible areas with the most stock
+const metaSnapshot = await getKbMetaSnapshot().catch(() => ({} as Record<string, any>));
+const stockCount = (p: any) =>
+	Number((((metaSnapshot as any)?.[String((p as any)?.id || '')] || {}).neighbourhoodStats || {}).listingCount) || 0;
 const topItems = (() => {
 	const fallbackSlugs = ['marbella', 'puerto-banus', 'nueva-andalucia', 'benalmadena', 'estepona'];
 	const uniq: typeof items = [];
@@ -101,12 +108,20 @@ const topItems = (() => {
 			items.find((p) => slugFromBarrioPath(p) === s) ||
 			items.find((p) => slugify(String((p as any)._label || '')) === s) ||
 			null;
-		if (!hit) continue;
+		if (!hit || stockCount(hit) <= 0) continue;
 		const id = String((hit as any)?.id || hit.path || '');
 		if (!id || seen.has(id)) continue;
 		seen.add(id);
 		uniq.push(hit);
 		if (uniq.length >= 5) break;
+	}
+	const byStock = items.filter((p) => stockCount(p) > 0).sort((a, b) => stockCount(b) - stockCount(a));
+	for (const hit of byStock) {
+		if (uniq.length >= 5) break;
+		const id = String((hit as any)?.id || hit.path || '');
+		if (!id || seen.has(id)) continue;
+		seen.add(id);
+		uniq.push(hit);
 	}
 	return uniq;
 })();
