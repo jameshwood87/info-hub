@@ -2818,7 +2818,7 @@ const descriptionFinal = description || (() => {
 	// 49 docs-manual pages ship with no meta description at all; derive one
 	// from the body. Docs only: blog and WP-era bodies are not safe to
 	// excerpt blindly.
-	if (!isDocsLike) return undefined;
+	if (!isDocs) return undefined;
 	const txt = String(bodyHtml || '').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
 	if (txt.length < 60) return undefined;
 	if (txt.length <= 158) return txt;
