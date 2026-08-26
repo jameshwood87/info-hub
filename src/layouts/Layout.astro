@@ -118,9 +118,7 @@ const mapDocsToSpanish = (p: string) => {
 };
 
 const mapPairs: Array<{ en: string; es: string }> = [
-	{ en: '/about-us', es: '/es/sobre-nosotros/' },
 	{ en: '/about-us/', es: '/es/sobre-nosotros/' },
-	{ en: '/about-us/', es: '/es/sobre-nosotros' },
 	{ en: '/what-we-offer/', es: '/es/lo-que-ofrecemos/' },
 	{ en: '/what-is-my-property-worth/', es: '/es/cuanto-vale-mi-propiedad/' },
 	{ en: '/xml-feed-import/', es: '/es/importar-feed-xml/' },
@@ -390,7 +388,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 					<div class="headerInner">
 						<nav class="nav" aria-label="Primary">
 							<div class="brand">
-								<a class="brandLogoLink" href="https://info.propertylist.es/">
+								<a class="brandLogoLink" href={lang === 'es' ? '/es/' : '/'}>
 									<img
 										class="brandLogo brandLogo--wide"
 										src={logo}
