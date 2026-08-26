@@ -693,9 +693,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<div class="footerColTitle">{lang === 'de' ? 'Daten & Doku' : lang === 'es' ? 'Datos y docs' : 'Data & docs'}</div>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : lang === 'es' ? 'Documentación' : 'Docs'}</a>
 							<a href={lang === 'es' ? '/es/docs/developers/' : '/docs/developers/'}>{lang === 'de' ? 'Entwickler-Dokumentation' : lang === 'es' ? 'Docs para promotores' : 'Developer docs'}</a>
-							<a href="https://intelligence.propertylist.es/">Market Intelligence</a>
+							<a href="https://intelligence.propertylist.es/">{lang === 'es' ? 'Inteligencia de mercado' : 'Market Intelligence'}</a>
 							<a href="https://oracle.propertylist.es/" target="_blank" rel="noopener">{lang === 'es' ? 'Oracle (precios verificados)' : 'PropertyList Oracle'}</a>
-							<a href="https://mcp.propertylist.es/" target="_blank" rel="noopener">MCP (Data API)</a>
+							<a href={lang === 'es' ? 'https://propertylist.es/mcp?lang=es' : 'https://propertylist.es/mcp?lang=en'} target="_blank" rel="noopener">MCP (Data API)</a>
 						</div>
 						<div class="footerCol">
 							<div class="footerColTitle">{lang === 'de' ? 'Unternehmen' : lang === 'es' ? 'Empresa' : 'Company'}</div>

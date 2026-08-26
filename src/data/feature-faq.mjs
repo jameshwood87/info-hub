@@ -186,19 +186,19 @@ export const featureFaqItems = [
     id: 'api-developers',
     q: 'Does PropertyList have an API for developers?',
     aHtml:
-      'Two, for different jobs. The Website API pulls your own PropertyList stock into your website (a REST key you create, rotate and revoke in your account, 35 credits a month for the whole network, free for your own listings). The MCP at mcp.propertylist.es is a Model Context Protocol server that lets AI agents search the market: search_properties, find_properties_by_description, autocomplete_location, get_property, area_market_summary and list_agencies. <a href="https://propertylist.es/api-docs" rel="noopener">Website API docs</a>, <a href="https://mcp.propertylist.es/" rel="noopener">MCP</a>.',
+      'Two, for different jobs. The Website API pulls your own PropertyList stock into your website (a REST key you create, rotate and revoke in your account, 35 credits a month for the whole network, free for your own listings). The MCP at propertylist.es/mcp is a Model Context Protocol server for Spanish and Portuguese property data: AI agents can search the market (search_properties, find_properties_by_description, autocomplete_location, get_property, area_market_summary, list_agencies), send a qualified enquiry straight to a listing agency (submit_enquiry), and, with a free agency key, work your own CRM: listings, leads, pipeline, contacts and notes. <a href="https://propertylist.es/api-docs" rel="noopener">Website API docs</a>, <a href="https://propertylist.es/mcp?lang=en" rel="noopener">MCP</a>.',
   },
   {
     id: 'ai-tools',
     q: 'Can I connect PropertyList to AI tools like Claude, Cursor, or Perplexity?',
     aHtml:
-      'Yes. The MCP connects live PropertyList data to any MCP-compatible client - Claude, Cursor, Zed, Perplexity and any Model Context Protocol tool - so an AI agent can search your market on your behalf. Install via Claude Desktop config, npx adapter or the direct JSON-RPC endpoint. Structured search works with no key; the natural-language AI matcher needs an agent key, which is approval only.',
+      'Yes. The MCP connects live PropertyList data to any MCP-compatible client - Claude, Cursor, Zed, Perplexity and any Model Context Protocol tool - so an AI agent can search your market on your behalf. Install via Claude Desktop config, npx adapter or the direct JSON-RPC endpoint. Structured search works with no key; the natural-language AI matcher and your CRM tools need an agency key, and the key is issued automatically: click Connect in Claude or ChatGPT and sign in with your PropertyList account.',
   },
   {
     id: 'mcp-free',
     q: 'Is the MCP free to use?',
     aHtml:
-      'Three tiers. Public: free, no signup, no key, structured search, location autocomplete, full listing detail and area market summaries at 60 requests a minute. Agent: a free key, approval only (each request is reviewed by hand), which switches on the natural-language AI matcher with 200 AI searches a month included, then 1 credit per 10 searches from your agency wallet and nothing else charged, at 600 requests a minute. Enterprise: custom, billed by contract, for banks, valuers, portals and AI product teams. <a href="https://mcp.propertylist.es/" rel="noopener">mcp.propertylist.es</a>.',
+      'Four tiers. Public: free, no signup, no key, structured search, location autocomplete, full listing detail and area market summaries at 60 requests a minute. Agent: a free key issued automatically when you sign in with your PropertyList account, which switches on the natural-language AI matcher and your own CRM tools (listings, leads, pipeline, contacts and notes), with 200 AI searches a month included, then 1 credit per 10 searches from your agency wallet, at 600 requests a minute. Pro: 50 credits a month from your credit wallet, which lifts the volume limits; upgrade self-serve in the CRM under Settings and drop back to the free key any time. Enterprise: custom, billed by contract, for banks, valuers, portals and AI product teams. <a href="https://propertylist.es/mcp?lang=en" rel="noopener">propertylist.es/mcp</a>.',
   },
 
   // ─── Oracle ────────────────────────────────────────────────────────────
