@@ -1396,6 +1396,17 @@ const cleanedSourceBody = (() => {
 				.replace(/<style\b[\s\S]*?<\/style>/gi, '')
 				.replace(/<(meta|link)\b[^>]*>/gi, '')
 				.replace(/<(header|nav|footer|aside)\b[\s\S]*?<\/\1>/gi, '')
+				// The imported bodies carry FOUR copies of the old WordPress
+				// "Regístrate GRATIS" button; the header strip above only catches
+				// the one inside <header>. The others sit in a duplicate mobile
+				// menu after </header> and pointed at a wp-content PNG that 404s,
+				// so a dead signup CTA was rendering on 58 Spanish pages. Strip by
+				// target rather than by block: the mobile menu has nested divs and
+				// a non-greedy block regex would cut at the first </div>.
+				.replace(/<a\b[^>]*href=["'][^"']*\/wp-content\/[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, '')
+				.replace(/<ion-icon\b[^>]*>[\s\S]*?<\/ion-icon>/gi, '')
+				.replace(/<ion-icon\b[^>]*\/?>/gi, '')
+				.replace(/<img\b[^>]*(?:src|data-srcset)=["'][^"']*\/wp-content\/[^"']*["'][^>]*>/gi, '')
 				.replace(/<form\b[\s\S]*?<\/form>/gi, '')
 				.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '')
 				.replace(/<!--[\s\S]*?(?:All in One SEO|Yoast|Rank Math)[\s\S]*?-->/gi, '');
