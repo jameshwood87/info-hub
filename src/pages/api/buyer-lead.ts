@@ -28,9 +28,14 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	let b: any = {};
 	try { b = await request.json(); } catch { return json({ ok: false, error: 'bad_request' }, 400); }
 
-	// bot checks: honeypot filled, or submitted inhumanly fast
-	if (String(b.company_fax || '').trim() !== '') return json({ ok: true });
-	if (typeof b.t === 'number' && b.t >= 0 && b.t < 3000) return json({ ok: true });
+	// Bot screens FLAG, they do not drop: Chrome autofills fax-shaped honeypots
+	// and silently binned a real 360 lead on 27-08-26. A false positive costs
+	// one marked email; a false negative costs a customer. Response is
+	// unchanged either way, so a real bot learns nothing.
+	const flags: string[] = [];
+	if (String(b.pl_hp_x9 || b.company_fax || '').trim() !== '') flags.push('honeypot');
+	if (typeof b.t === 'number' && b.t >= 0 && b.t < 3000) flags.push('fast');
+	const flagNote = flags.length ? ` [CHECK: ${flags.join('+')}]` : '';
 
 	const ip = String(clientAddress || request.headers.get('cf-connecting-ip') || 'unknown');
 	if (!allow(ip)) return json({ ok: false, error: 'rate_limited' }, 429);
@@ -69,7 +74,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		} catch { /* best effort - local copy is the backup */ }
 	}
 	await notifySubmission({
-		kind: 'buyer lead',
+		kind: 'buyer lead' + flagNote,
 		fields: [['Name', rec.name], ['Email', rec.email], ['Phone', rec.phone], ['Looking for', rec.op], ['Area', rec.area_name || rec.area], ['Budget', rec.budget]],
 		link: '/admin/leads',
 	});

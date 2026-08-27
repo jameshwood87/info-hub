@@ -39,9 +39,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		return json({ ok: false, error: 'invalid_json' }, 400);
 	}
 
-	// honeypot + time trap, same convention as the other public forms
-	if (clean(b.company_fax, 40)) return json({ ok: true });
-	if (typeof b.t === 'number' && b.t >= 0 && b.t < 2500) return json({ ok: true });
+	// Bot screens FLAG, they do not drop - see walkthrough-lead.ts (27-08-26):
+	// Chrome autofills fax-shaped honeypots and a real lead was lost silently.
+	const flags: string[] = [];
+	if (clean(b.pl_hp_x9, 40) || clean(b.company_fax, 40)) flags.push('honeypot');
+	if (typeof b.t === 'number' && b.t >= 0 && b.t < 2500) flags.push('fast');
+	const flagNote = flags.length ? ` [CHECK: ${flags.join('+')}]` : '';
 
 	if (!allow(clientIpOf(request, clientAddress))) return json({ ok: false, error: 'rate_limited' }, 429);
 
@@ -86,7 +89,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
 	// 2) tell James
 	await notifySubmission({
-		kind: 'seller enquiry',
+		kind: 'seller enquiry' + flagNote,
 		fields: [
 			['Name', rec.name],
 			['Email', rec.email],

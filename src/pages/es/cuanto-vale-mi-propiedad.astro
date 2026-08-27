@@ -172,7 +172,7 @@ const faqs = [
 				'<input class="wInput" name="name" type="text" placeholder="Tu nombre (opcional)" autocomplete="name" />' +
 				'<input class="wInput" name="email" type="email" required placeholder="tu@email.com" autocomplete="email" />' +
 				'</div>' +
-				'<input type="text" name="company_fax" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />' +
+				'<input type="text" name="pl_hp_x9" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true" />' +
 				'<label class="wOptIn"><input type="checkbox" name="agentOptIn" /> <span>Me gustaría que una agencia registrada de la zona me contactara sobre la venta. Opcional: si lo desmarcas, igualmente recibes el desglose.</span></label>' +
 				'<button class="wBtn" type="submit">Envíame el desglose</button>' +
 				'<p class="wMsg" data-w-msg role="status" aria-live="polite"></p>' +
@@ -196,7 +196,7 @@ const faqs = [
 						body: JSON.stringify({
 							email: email,
 							name: String(f2.get('name') || ''),
-							company_fax: String(f2.get('company_fax') || ''),
+							pl_hp_x9: String(f2.get('pl_hp_x9') || ''),
 							t: Date.now() - started,
 							area: area,
 							propertyType: String(fd.get('propertyType') || ''),

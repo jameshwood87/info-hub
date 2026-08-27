@@ -150,7 +150,7 @@ export const prerender = false;
       </div>
     </div>
 
-    <input class="hp" type="text" name="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input class="hp" type="text" name="pl_hp_x9" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button class="cta" id="submit">Enviar mis respuestas</button>
     <div class="fine">Privado y solo se usa para mejorar PropertyList para los agentes. Nada de spam, nunca.</div>
   </div>
@@ -182,7 +182,7 @@ export const prerender = false;
       switch_blocker:document.querySelector('[name=switch_blocker]').value,
       name:document.querySelector('[name=name]').value, agency:document.querySelector('[name=agency]').value,
       phone:document.querySelector('[name=phone]').value, email:document.querySelector('[name=email]').value,
-      company_fax:document.querySelector('[name=company_fax]').value, t:Date.now()-t0, lang:'es'
+      pl_hp_x9:document.querySelector('[name=pl_hp_x9]').value, t:Date.now()-t0, lang:'es'
     };
     if(!body.listings_band && !body.frustration && !body.top_value && !portals.length){
       btn.disabled=false; btn.textContent='Enviar mis respuestas'; alert('Por favor, responde al menos una pregunta.'); return;

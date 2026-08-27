@@ -13,7 +13,8 @@ type VerifyRequest = {
 	notes?: string;
 	lang?: string;
 	page?: string;
-	company_fax?: string; // honeypot - must stay empty
+	company_fax?: string; // legacy honeypot key, still read for in-flight pages
+	pl_hp_x9?: string; // honeypot - must stay empty
 	t?: number; // ms since form render - bots submit instantly
 };
 
@@ -47,9 +48,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		return json(400, { ok: false, error: 'invalid_json' });
 	}
 
-	// bot checks: honeypot filled or submitted inhumanly fast
-	if ((body.company_fax || '').trim() !== '') return json(200, { ok: true });
-	if (typeof body.t === 'number' && body.t >= 0 && body.t < 2500) return json(200, { ok: true });
+	// Bot screens FLAG, they do not drop - see walkthrough-lead.ts (27-08-26):
+	// Chrome autofills fax-shaped honeypots and a real lead was lost silently.
+	const flags: string[] = [];
+	if (((body as any).pl_hp_x9 || body.company_fax || '').trim() !== '') flags.push('honeypot');
+	if (typeof body.t === 'number' && body.t >= 0 && body.t < 2500) flags.push('fast');
+	const flagNote = flags.length ? ` [CHECK: ${flags.join('+')}]` : '';
 
 	const ip = String(clientAddress || request.headers.get('cf-connecting-ip') || 'unknown');
 	if (!allow(ip)) return json(429, { ok: false, error: 'rate_limited' });
@@ -92,7 +96,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	}
 
 	await notifySubmission({
-		kind: 'agency verification request',
+		kind: 'agency verification request' + flagNote,
 		fields: [['Agency', payload.agency_name], ['MLS email', payload.mls_email], ['Website', payload.website], ['Contact', payload.contact_name], ['Phone', payload.phone]],
 	});
 	return json(200, { ok: true });

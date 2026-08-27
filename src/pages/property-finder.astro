@@ -174,7 +174,7 @@ const AREAS = data.areas || [];
             <input type="text" name="email" placeholder="Email" inputmode="email" autocomplete="email">
           </div>
           <input type="text" name="phone" placeholder="WhatsApp number (optional, for alerts)" inputmode="tel" style="margin-bottom:0">
-          <input class="hp" type="text" name="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input class="hp" type="text" name="pl_hp_x9" tabindex="-1" autocomplete="off" aria-hidden="true">
           <label class="consent"><input type="checkbox" id="consent"> <span>Yes, PropertyList can contact me about matching properties. I can opt out anytime.</span></label>
           <button class="setbtn" id="setbtn">Set up my alert</button>
           <div class="done2" id="done2">You're all set - we'll alert you when new ${esc(a.name)} matches land.</div>
@@ -201,7 +201,7 @@ const AREAS = data.areas || [];
       op: state.op, area: state.area, area_name: a ? a.name : state.area,
       budget: q("budget"), beds: q("beds"), name: q("name"), email, phone,
       consent: document.getElementById("consent").checked,
-      company_fax: q("company_fax"), t: Date.now() - t0, lang: "en"
+      pl_hp_x9: q("pl_hp_x9"), t: Date.now() - t0, lang: "en"
     };
     try {
       const r = await fetch("/api/buyer-lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
