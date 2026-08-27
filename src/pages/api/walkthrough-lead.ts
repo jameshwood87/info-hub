@@ -29,9 +29,14 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	let b: any = {};
 	try { b = await request.json(); } catch { return json({ ok: false, error: 'bad_request' }, 400); }
 
-	// bot checks: honeypot filled, or submitted inhumanly fast
-	if (String(b.company_fax || '').trim() !== '') return json({ ok: true });
-	if (typeof b.t === 'number' && b.t >= 0 && b.t < 3000) return json({ ok: true });
+	// Bot screens FLAG, they no longer drop. A real lead was silently binned on
+	// 27-08-26 because Chrome autofilled the old fax-named honeypot: the sender
+	// saw the success screen and nothing reached us. On a low-volume, high-value
+	// form a false positive costs one marked email; a false negative costs a
+	// client. The response is identical either way, so a real bot learns nothing.
+	const flags: string[] = [];
+	if (String(b.pl_hp_x9 || b.company_fax || '').trim() !== '') flags.push('honeypot');
+	if (typeof b.t === 'number' && b.t >= 0 && b.t < 3000) flags.push('fast');
 
 	const ip = String(clientAddress || request.headers.get('cf-connecting-ip') || 'unknown');
 	if (!allow(ip)) return json({ ok: false, error: 'rate_limited' }, 429);
@@ -51,6 +56,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		agency: clean(b.agency, 120),
 		email, phone,
 		lang: clean(b.lang, 5) || 'en',
+		...(flags.length ? { flagged: flags.join('+') } : {}),
 	};
 
 	// durable local copy (atomic)
@@ -66,7 +72,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	}
 
 	await notifySubmission({
-		kind: '360 walkthrough request',
+		kind: flags.length
+			? `360 walkthrough request [CHECK: ${flags.join('+')}]`
+			: '360 walkthrough request',
 		fields: [
 			['Property type', ptype],
 			['Name', rec.name],
@@ -74,6 +82,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 			['Phone', phone],
 			['Email', email],
 			['Language', rec.lang],
+			...(flags.length ? [['Automated check', flags.join('+') + ' - likely a false positive, verify before discarding'] as [string, string]] : []),
 		],
 		link: '/admin/leads',
 	});

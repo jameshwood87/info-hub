@@ -207,7 +207,7 @@ const faqLd = {
 						<input type="text" data-f="agency" placeholder="Agency (optional)" autocomplete="organization" />
 						<input type="tel" data-f="phone" placeholder="Phone" autocomplete="tel" />
 						<input type="email" data-f="email" placeholder="Email" autocomplete="email" />
-						<input type="text" data-f="company_fax" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+						<input type="text" data-f="pl_hp_x9" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
 					</div>
 					<p class="reqErr" data-err hidden>We need a phone number or an email to be in touch.</p>
 					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Send my details to our filming partner &rarr;</button>
@@ -438,7 +438,7 @@ const faqLd = {
 				const r = await fetch('/api/walkthrough-lead', {
 					method: 'POST',
 					headers: { 'content-type': 'application/json' },
-					body: JSON.stringify({ ptype: chosen || 'apartment', name: f('name'), agency: f('agency'), phone: f('phone'), email: f('email'), company_fax: f('company_fax'), t: Date.now() - t0, lang }),
+					body: JSON.stringify({ ptype: chosen || 'apartment', name: f('name'), agency: f('agency'), phone: f('phone'), email: f('email'), pl_hp_x9: f('pl_hp_x9'), t: Date.now() - t0, lang }),
 				});
 				if (!r.ok) throw new Error();
 				(root.querySelector('[data-form]') as HTMLElement).hidden = true;
