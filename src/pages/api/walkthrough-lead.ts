@@ -85,6 +85,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 			...(flags.length ? [['Automated check', flags.join('+') + ' - likely a false positive, verify before discarding'] as [string, string]] : []),
 		],
 		link: '/admin/leads',
+		// The filming partner quotes, films and invoices the agent directly, so
+		// they need this lead as much as we do. Scoped to THIS form only.
+		// Override or disable without a deploy via NOTIFY_360_PARTNER_TO.
+		alsoTo: (process.env.NOTIFY_360_PARTNER_TO ?? 'alex@floorplans.es')
+			.split(',')
+			.map((a) => a.trim())
+			.filter(Boolean),
 	});
 
 	return json({ ok: true });

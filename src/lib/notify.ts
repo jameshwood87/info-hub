@@ -27,6 +27,10 @@ export type NotifyOptions = {
 	fields: Array<[string, unknown]>;
 	/** optional admin path to review it, e.g. "/admin/reports" */
 	link?: string;
+	/** extra recipients for this one submission type, on top of NOTIFY_TO.
+	 *  Used only by the 360 walkthrough form, which the filming partner has to
+	 *  act on directly. Defaults to none, so no other caller is affected. */
+	alsoTo?: string[];
 };
 
 export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
@@ -76,9 +80,10 @@ export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
 					message: {
 						from_email: FROM,
 						from_name: FROM_NAME,
-						to: TO.split(',')
+						to: [...TO.split(','), ...(opts.alsoTo || [])]
 							.map((a) => a.trim())
 							.filter(Boolean)
+							.filter((a, i, all) => all.indexOf(a) === i)
 							.map((email) => ({ email, type: 'to' })),
 						subject: `[PropertyList] New ${opts.kind}`,
 						html,
