@@ -83,7 +83,12 @@ const eventsLd = local.slice(0, 25).map((e) => ({
 	'@type': 'Event',
 	name: e.titleEn || e.title,
 	startDate: e.time ? `${e.start}T${e.time}:00` : e.start,
-	...(e.end ? { endDate: e.end } : {}),
+	// Single-day events had no endDate at all, which Search Console flags.
+	// schema.org treats endDate == startDate as correct for a one-day event.
+	endDate: e.end || e.start,
+	// No event in the feed carries its own image, so the diary's own OG image
+	// stands in as the representative image for the listing.
+	image: [`${origin}/og/whats-on-estepona.png`],
 	eventStatus: 'https://schema.org/EventScheduled',
 	location: { '@type': 'Place', name: e.venue || e.town, address: { '@type': 'PostalAddress', addressLocality: e.town, addressRegion: 'Malaga', addressCountry: 'ES' } },
 	description: e.blurbEn,
