@@ -5,6 +5,23 @@
 
 const MCP_URL = 'https://mcp.propertylist.es/mcp';
 const MCP_KEY = (process.env.PROPERTYLIST_MCP_KEY || '').trim(); // server-side only
+
+// Silence here cost us two months. PROPERTYLIST_MCP_KEY was absent (the .env
+// defined MCP_AGENT_KEY instead), so the conditional authorization header below
+// was never added and every call went out anonymous: onto the public tier's
+// shared per-IP rate limit, unattributed, and showing up on PropertyList's side
+// as two thirds of all 'external' MCP traffic. Degrade to anonymous if we must,
+// but never do it quietly.
+if (!MCP_KEY) {
+	console.warn(
+		'[marketData] PROPERTYLIST_MCP_KEY is not set. MCP calls will run ANONYMOUSLY on the public tier ' +
+			'(shared per-IP rate limit, no attribution). Set it in /opt/info-hub/.env and restart info-hub.service.',
+	);
+}
+
+// A key that is set but rejected is the other half of the same trap: it fails
+// every call while looking configured. Warn once rather than on every render.
+let warnedAuth = false;
 const PORTAL_ORIGIN = 'https://www.propertylist.es';
 
 export type SearchType = 'for-sale' | 'for-rent' | 'holiday-rentals';
@@ -94,6 +111,16 @@ const callMcp = async (name: string, args: Record<string, any>): Promise<any | u
 				headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'user-agent': 'Mozilla/5.0 (compatible; info-hub)', ...(MCP_KEY ? { authorization: `Bearer ${MCP_KEY}` } : {}) },
 				body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name, arguments: args } }),
 			});
+			if (res.status === 401 || res.status === 403) {
+				if (!warnedAuth) {
+					warnedAuth = true;
+					console.warn(
+						`[marketData] MCP rejected our credential (HTTP ${res.status}). PROPERTYLIST_MCP_KEY is set but ` +
+							'invalid or revoked, so market data is failing. Check the key in /opt/info-hub/.env.',
+					);
+				}
+				break; // retrying a rejected credential just burns a second request
+			}
 			if (res.ok) {
 				const data = await res.json().catch(() => null);
 				if (data && !(data as any).error) {
