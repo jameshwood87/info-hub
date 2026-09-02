@@ -102,7 +102,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 		) : null}
 		<div class="agChips">
 			<div class="agChip"><span class="agNum">{nfmt(sale!.totalListings)}</span><span class="agLab">{t('for sale', 'en venta')}</span></div>
-			{sale!.medianPrice ? <div class="agChip"><span class="agNum">{eurCompact(sale!.medianPrice)}</span><span class="agLab">{t('median price', 'precio mediano')}</span></div> : null}
+			{sale!.medianPrice && sale!.totalListings >= 3 ? <div class="agChip"><span class="agNum">{eurCompact(sale!.medianPrice)}</span><span class="agLab">{t('median price', 'precio mediano')}</span></div> : null}
 			{oracleSqm || listSqm ? <div class="agChip"><span class="agNum">€{nfmt(oracleSqm || listSqm)}</span><span class="agLab">{t('per m²', 'por m²')}{sale!.oracle.verified ? <span class="agVer"> · {t('verified', 'verificado')}</span> : null}</span></div> : null}
 			{rent && rent.totalListings ? <div class="agChip"><span class="agNum">{nfmt(rent.totalListings)}</span><span class="agLab">{t('to rent', 'en alquiler')}</span></div> : null}
 			{holiday && holiday.totalListings ? <div class="agChip"><span class="agNum">{nfmt(holiday.totalListings)}</span><span class="agLab">{t('holiday lets', 'vacacional')}</span></div> : null}
@@ -116,12 +116,14 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 					{m.data && m.data.totalListings ? (
 						<>
 							<div class="agMBig">{nfmt(m.data.totalListings)}<span> {t('listings', 'anuncios')}</span></div>
-							{m.data.medianPrice ? (
+							{m.data.medianPrice && m.data.totalListings >= 3 ? (
 								<dl class="agMStats">
 									{m.data.medianPrice ? <div><dt>{t('Median price', 'Precio mediano')}</dt><dd>{eurFull(m.data.medianPrice)}{unitLab(m.data)}</dd></div> : null}
 									{m.data.medianPricePerSqm ? <div><dt>{t('Per m²', 'Por m²')}</dt><dd>€{nfmt(m.data.medianPricePerSqm)}</dd></div> : null}
 									{m.data.minPrice && m.data.maxPrice ? <div><dt>{t('Range', 'Rango')}</dt><dd>{eurCompact(m.data.minPrice)} - {eurCompact(m.data.maxPrice)}{unitLab(m.data)}</dd></div> : null}
 								</dl>
+							) : m.data.medianPrice ? (
+								<div class="agMSubline">{t(`Only ${nfmt(m.data.totalListings)} listing${m.data.totalListings === 1 ? '' : 's'} right now - too few for a reliable median.`, `Solo ${nfmt(m.data.totalListings)} anuncio${m.data.totalListings === 1 ? '' : 's'} ahora mismo: pocos para una mediana fiable.`)}</div>
 							) : (
 								<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${areaName} right now.`, `Disponibilidad en directo en ${areaName}.`)}</div>
 							)}
@@ -179,7 +181,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 
 		<div class="agSecHead"><h2>{t(`Who ${areaName} suits`, `Para quién es ${areaName}`)}</h2></div>
 		<div class="agAudGrid">
-			<div class="agAudCard"><h3>{t('Buyers', 'Compradores')}</h3><p>{sale!.totalListings ? t(`${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, median ${eurFull(sale!.medianPrice) || '-'}${sale!.oracle.verified ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`, `${nfmt(sale!.totalListings)} viviendas en venta, desde ${eurCompact(sale!.minPrice) || '-'} hasta ${eurCompact(sale!.maxPrice) || '-'}, precio mediano ${eurFull(sale!.medianPrice) || '-'}${sale!.oracle.verified ? `. Valor verificado ante notario ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`) : t('No homes for sale here yet.', 'Aún no hay viviendas en venta aquí.')}</p></div>
+			<div class="agAudCard"><h3>{t('Buyers', 'Compradores')}</h3><p>{sale!.totalListings ? t(`${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `median ${eurFull(sale!.medianPrice) || '-'}` : 'too few for a reliable median'}${sale!.oracle.verified ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`, `${nfmt(sale!.totalListings)} viviendas en venta, desde ${eurCompact(sale!.minPrice) || '-'} hasta ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `precio mediano ${eurFull(sale!.medianPrice) || '-'}` : 'pocos anuncios para una mediana fiable'}${sale!.oracle.verified ? `. Valor verificado ante notario ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`) : t('No homes for sale here yet.', 'Aún no hay viviendas en venta aquí.')}</p></div>
 			<div class="agAudCard"><h3>{t('Long-term renters', 'Alquiler de larga duración')}</h3><p>{rent && rent.totalListings ? t(`${nfmt(rent.totalListings)} long-term rentals available to browse right now in ${areaName}.`, `${nfmt(rent.totalListings)} alquileres de larga duración disponibles ahora en ${areaName}.`) : t('No long-term rentals listed here yet.', 'Aún no hay alquileres de larga duración.')}</p></div>
 			<div class="agAudCard"><h3>{t('Holiday-makers', 'Vacacional')}</h3><p>{holiday && holiday.totalListings ? t(`${nfmt(holiday.totalListings)} holiday properties available for short stays in ${areaName}.`, `${nfmt(holiday.totalListings)} propiedades vacacionales disponibles en ${areaName}.`) : t('No holiday lets listed here yet.', 'Aún no hay alojamientos vacacionales.')}</p></div>
 		</div>
