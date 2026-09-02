@@ -4,7 +4,7 @@ import fs from 'node:fs';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/que-hacer/estepona/`;
-const title = 'Qué hacer en Estepona 2026: eventos, ferias y planes | PropertyList';
+const title = 'Eventos en Estepona 2026: agenda cultural, qué hacer hoy y este fin de semana | PropertyList';
 const description =
 	'Agenda de eventos en Estepona siempre al día: ferias, conciertos, exposiciones, deporte y planes en familia - de fuentes oficiales, actualizada automáticamente.';
 
@@ -67,10 +67,10 @@ const featured = local.filter((e) => durDays(e) <= 3 && (['starlite', 'marbella-
 const weekAheadIso = new Date(today.getTime() + 7 * msDay).toISOString().slice(0, 10);
 const bucketOf = (e: Ev) => (isOn(e) ? (durDays(e) > 21 ? 'ongoing' : 'today') : e.start <= weekAheadIso ? 'week' : 'later');
 const BUCKETS = [
-	{ k: 'today', icon: '\u{1F525}', title: 'Hoy', sub: null as string | null },
-	{ k: 'week', icon: '\u{1F4C5}', title: 'Esta semana', sub: null },
+	{ k: 'today', icon: '\u{1F525}', title: 'Hoy en Estepona', sub: null as string | null },
+	{ k: 'week', icon: '\u{1F4C5}', title: 'Esta semana y el fin de semana en Estepona', sub: null },
 	{ k: 'later', icon: '\u{1F52E}', title: 'Próximamente', sub: null },
-	{ k: 'ongoing', icon: '\u{1F3DB}\u{FE0F}', title: 'Exposiciones y temporadas en curso', sub: 'Duran semanas - pásate cuando te venga bien.' },
+	{ k: 'ongoing', icon: '\u{1F3DB}\u{FE0F}', title: 'Agenda cultural: exposiciones y temporadas en curso', sub: 'Duran semanas - pásate cuando te venga bien.' },
 ].map((b) => ({ ...b, list: local.filter((e) => bucketOf(e) === b.k) })).filter((b) => b.list.length);
 
 const CAT_ICON: Record<string, string> = {
@@ -186,7 +186,7 @@ const townLabel = (k: string) =>
 	<section class="hero">
 		<div class="heroInner">
 			<div class="kicker">Qué hacer &middot; Estepona</div>
-			<h1>Qué hacer en Estepona</h1>
+			<h1>Eventos y agenda de Estepona: qué hacer hoy y este fin de semana</h1>
 			<p class="lead">
 				Tu noche, tu feria, tu día de playa - todo lo que merece la pena en Estepona, del casco antiguo lleno de flores al puerto, en una agenda
 				siempre al día. Toca <strong>+ Añadir al plan</strong> para montar tu itinerario, compártelo con tus amigos y pásalo
