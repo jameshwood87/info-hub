@@ -54,43 +54,81 @@ const isoWeek = Math.ceil(((now - new Date(Date.UTC(year, 0, 1))) / 86400000 + 1
 const dow = now.getUTCDay(); // 5 = Fri
 
 const state = readState();
-let topic = null;
-let commit = () => {};
 
-// 1) ideas queue (from ideas-cron.mjs) takes priority on any day
+// ---- topic sources -------------------------------------------------------
+// A topic that fails generation used to sit at the head of the ideas queue and
+// take down every scheduled run with it: 21-08, 25-08, 28-08 and 01-09-26 all
+// died on the same article. Failures are now counted on the queue item, the
+// item is parked after MAX_FAILURES, and the run moves on to the next topic
+// instead of ending.
 const QUEUE_PATH = '/opt/info-hub/var/admin/blog-topics-queue.json';
-try {
-  const queue = JSON.parse(fs.readFileSync(QUEUE_PATH, 'utf8'));
-  if (Array.isArray(queue) && queue.length) {
-    const item = queue.shift();
-    if (item && item.topic) {
-      topic = String(item.topic);
-      commit = () => fs.writeFileSync(QUEUE_PATH, JSON.stringify(queue, null, 2));
-    }
-  }
-} catch {}
+const PARKED_PATH = '/opt/info-hub/var/admin/blog-topics-parked.json';
+const MAX_FAILURES = 2; // failed attempts, across runs, before a topic is parked
+const MAX_ATTEMPTS = 3; // generations tried in a single run
 
-if (!topic && dow === 5) {
-  const g = GUIDES.find((x) => !state.usedGuides.includes(x.key));
-  if (g) {
-    topic = g.topic;
-    commit = () => { state.usedGuides.push(g.key); writeState(state); };
+const readJsonArray = (p) => { try { const j = JSON.parse(fs.readFileSync(p, 'utf8')); return Array.isArray(j) ? j : []; } catch { return []; } };
+const writeJson = (p, v) => { try { fs.writeFileSync(p, JSON.stringify(v, null, 2)); } catch (e) { console.error(`blog-cron: could not write ${p}:`, e.message); } };
+const parkTopic = (item, why) => {
+  const parked = readJsonArray(PARKED_PATH);
+  parked.push({ ...item, parked_at: new Date().toISOString(), error: String(why || '').slice(0, 600) });
+  writeJson(PARKED_PATH, parked);
+};
+
+const attempted = new Set();
+
+// Queue items are matched by topic text, never by index: ideas-cron can append
+// to the queue while this run is in flight.
+function nextCandidate() {
+  const item = readJsonArray(QUEUE_PATH).find((q) => q && q.topic && !attempted.has(String(q.topic)));
+  if (item) {
+    const topic = String(item.topic);
+    return {
+      topic,
+      label: 'ideas queue',
+      commit: () => {
+        const q = readJsonArray(QUEUE_PATH);
+        const i = q.findIndex((x) => x && String(x.topic) === topic);
+        if (i >= 0) q.splice(i, 1);
+        writeJson(QUEUE_PATH, q);
+      },
+      fail: (reason) => {
+        const q = readJsonArray(QUEUE_PATH);
+        const i = q.findIndex((x) => x && String(x.topic) === topic);
+        const entry = i >= 0 ? q[i] : { ...item };
+        entry.failures = (Number(entry.failures) || 0) + 1;
+        entry.last_error = String(reason || '').slice(0, 300);
+        entry.last_failed = new Date().toISOString();
+        if (entry.failures >= MAX_FAILURES) {
+          if (i >= 0) q.splice(i, 1);
+          writeJson(QUEUE_PATH, q);
+          parkTopic(entry, entry.last_error);
+          console.error(`blog-cron: PARKED after ${entry.failures} failed attempts -> ${PARKED_PATH}`);
+          return 'parked';
+        }
+        if (i >= 0) q[i] = entry;
+        writeJson(QUEUE_PATH, q);
+        console.error(`blog-cron: failure ${entry.failures} of ${MAX_FAILURES}, topic kept in the queue for one more run.`);
+        return 'kept in queue';
+      },
+    };
   }
-}
-if (!topic) {
+  if (dow === 5) {
+    const g = GUIDES.find((x) => !state.usedGuides.includes(x.key) && !attempted.has(x.topic));
+    if (g) return { topic: g.topic, label: 'evergreen guide', commit: () => { state.usedGuides.push(g.key); writeState(state); }, fail: () => 'skipped for this run' };
+  }
   for (let i = 0; i < AREAS.length; i++) {
     const a = AREAS[(isoWeek + i) % AREAS.length];
     const areaMonth = `${a.toLowerCase().replace(/\s+/g, '-')}:${monthKey}`;
-    if (!state.areaMonths.includes(areaMonth)) {
-      topic = `${a} property market ${monthName} ${year}: live prices, listings and notary-verified values`;
-      commit = () => { state.areaMonths.push(areaMonth); writeState(state); };
-      break;
-    }
+    const t = `${a} property market ${monthName} ${year}: live prices, listings and notary-verified values`;
+    if (state.areaMonths.includes(areaMonth) || attempted.has(t)) continue;
+    return { topic: t, label: 'area market post', commit: () => { state.areaMonths.push(areaMonth); writeState(state); }, fail: () => 'skipped for this run' };
   }
+  return null;
 }
 
-if (!topic) { console.log('blog-cron: all topics covered for now - exiting.'); process.exit(0); }
-console.log(`blog-cron [${new Date().toISOString()}] topic:`, topic);
+const firstCandidate = nextCandidate();
+if (!firstCandidate) { console.log('blog-cron: all topics covered for now - exiting.'); process.exit(0); }
+console.log(`blog-cron [${new Date().toISOString()}] topic:`, firstCandidate.topic);
 if (DRY) process.exit(0);
 
 const before = await (async () => {
@@ -103,32 +141,70 @@ const before = await (async () => {
 // (11-08-26, after the blog audit found unfilled placeholders and a repealed
 // decree presented as current law on live pages.)
 const genPath = new URL('./generate-blog-post.mjs', import.meta.url).pathname;
-try {
-  execFileSync('node', [genPath, topic], { stdio: 'inherit' });
-} catch (genErr) {
-  // A silent crash here cost two runs (22-08 and 25-08) before anyone
-  // noticed. The pipeline's promise is that nothing needs watching, so a
-  // failure must announce itself the same way an approval does: by email.
+const failures = [];
+let topic = null;
+
+while (attempted.size < MAX_ATTEMPTS) {
+  const cand = nextCandidate();
+  if (!cand) break;
+  attempted.add(cand.topic);
+  console.log(`blog-cron: generating (${cand.label}): ${cand.topic}`);
+  try {
+    execFileSync('node', [genPath, cand.topic], { stdio: ['ignore', 'inherit', 'pipe'], encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+    cand.commit();
+    topic = cand.topic;
+    console.log(`blog-cron: generated OK: ${cand.topic}`);
+    break;
+  } catch (genErr) {
+    const stderr = String(genErr.stderr || '').trim();
+    if (stderr) console.error(stderr);
+    // The generator prints its own one-line diagnosis; prefer that over the
+    // last line, which can be a fragment of the model response.
+    const lines = stderr.split('\n').map((l) => l.trim()).filter(Boolean);
+    const reason = (lines.find((l) => /^generate-blog-post:/.test(l))
+      || [...lines].reverse().find((l) => /error|failed|exception/i.test(l))
+      || lines[0]
+      || String(genErr && genErr.message || genErr)).slice(0, 300);
+    console.error(`blog-cron: generation FAILED: ${cand.topic}`);
+    const outcome = cand.fail(reason);
+    failures.push({ topic: cand.topic, outcome, reason });
+  }
+}
+
+// A silent crash here cost two runs (22-08 and 25-08) before anyone noticed,
+// then four more before anyone looked. The pipeline's promise is that nothing
+// needs watching, so a failure still announces itself by email - once per run,
+// listing every topic that failed and what happened to it.
+if (failures.length) {
   try {
     const envText = fs.readFileSync('/opt/info-hub/.env', 'utf8');
     const cfg = (k) => (envText.match(new RegExp('^' + k + '=(.*)$', 'm'))?.[1] || '').trim().replace(/^[\"']|[\"']$/g, '');
-    await fetch('https://mandrillapp.com/api/1.0/messages/send', {
+    const listed = failures.map((f) => `- ${f.topic}\n  outcome: ${f.outcome}\n  error: ${f.reason}`).join('\n\n');
+    await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key: cfg('MANDRILL_API_KEY'), message: {
         from_email: cfg('NOTIFY_FROM') || 'noreply@propertylist.es',
         from_name: 'PropertyList Blog Cron',
         to: [{ email: cfg('NOTIFY_TO') }],
-        subject: 'Blog cron FAILED - no draft was completed',
-        text: 'The blog generator crashed and no approval email will follow.\n\nTopic: ' + topic + '\n\nError: ' + String(genErr && genErr.message || genErr).slice(0, 800) + '\n\nLog: /opt/info-hub/var/log/blog-cron.log on the info-hub droplet.',
+        subject: topic ? 'Blog cron: a topic failed, the run recovered' : 'Blog cron FAILED - no draft was completed',
+        text: (topic
+          ? 'The run moved on and generated a draft for: ' + topic + '\nAn approval email follows separately.\n\n'
+          : 'No draft was created, so no approval email will follow.\n\n')
+          + 'Failed topics:\n\n' + listed
+          + '\n\nParked topics: /opt/info-hub/var/admin/blog-topics-parked.json'
+          + '\nLog: /opt/info-hub/var/log/blog-cron.log on the info-hub droplet.',
       } }),
     });
   } catch (mailErr) {
     console.error('failure alert email also failed:', mailErr && mailErr.message);
   }
-  throw genErr;
 }
-commit();
+
+if (!topic) {
+  console.error(`blog-cron: no draft generated this run (${failures.length} topic(s) failed).`);
+  process.exit(1);
+}
 
 const { lintBlogPost } = await import('./lib/blog-lint.mjs');
 const { createHmac } = await import('node:crypto');

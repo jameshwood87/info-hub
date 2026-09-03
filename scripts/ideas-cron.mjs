@@ -9,6 +9,7 @@
  */
 import fs from 'fs';
 import { gscResearch } from './gsc.mjs';
+import { legalCurrencyBlock } from './lib/legal-currency.mjs';
 
 try {
   const envPath = new URL('../.env', import.meta.url).pathname;
@@ -135,6 +136,9 @@ ${sections.join('\n\n')}
 WE ALREADY COVER (do not duplicate):
 ${ours.map((t) => `- ${t}`).join('\n')}
 ${planned.length ? 'ALREADY QUEUED:\n' + planned.map((t) => `- ${t}`).join('\n') : ''}
+
+${legalCurrencyBlock()}
+Do not propose topics that treat these as current law. A news headline that still refers to them is out of date. You may propose a topic about what replaced them or about the position today.
 
 Give extra weight to the SEARCH CONSOLE sections: a striking-distance query is the strongest possible signal (real demand where we nearly rank). Propose the 5 best NEW blog-post ideas for next week. PRIORITISE, in order: (a) breaking or recent law / tax / regulation changes affecting Spanish or Andalucian property - rental caps, tourist-licence rules, ITP/IRPF/plusvalia, non-resident tax, new decrees (ALWAYS mark these hot=true; a dated, specific regulation post is our single best SEO bet because it ranks fast and earns for months), (b) topics competitors rank on where we can write a better, data-backed version, (c) strong buyer/landlord search intent. Avoid anything we already cover or that is queued.
 

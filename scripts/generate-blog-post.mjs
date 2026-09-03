@@ -12,6 +12,7 @@
  * Usage: node scripts/generate-blog-post.mjs ["optional topic"]  [--dry-run]
  */
 import fs from 'fs';
+import { legalCurrencyBlock } from './lib/legal-currency.mjs';
 
 // ---- minimal .env loader (does not override real env) ----
 try {
@@ -46,7 +47,20 @@ const TOPICS = [
 ];
 
 // ---- helpers ----
-async function aiJson(messages, maxTokens = 8000, temperature = 0.7) {
+// The model sometimes wraps its JSON in a markdown code fence, and sometimes it
+// runs out of output tokens and stops mid-string. Both used to kill the run: an
+// unterminated string at position 9423 blocked every scheduled run from
+// 21-08-26 to 01-09-26. Clean the response first, then retry once if needed.
+const extractJson = (raw) => {
+  let s = String(raw || '').trim();
+  s = s.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+  const first = s.indexOf('{');
+  const last = s.lastIndexOf('}');
+  if (first !== -1 && last > first) s = s.slice(first, last + 1);
+  return s;
+};
+
+async function aiRaw(messages, maxTokens, temperature) {
   const url = `${AI_BASE}/chat/completions`;
   const headers = { Authorization: `Bearer ${AI_KEY}`, 'Content-Type': 'application/json' };
   const base = { model: MODEL, messages, response_format: { type: 'json_object' } };
@@ -60,13 +74,28 @@ async function aiJson(messages, maxTokens = 8000, temperature = 0.7) {
     const text = await res.text();
     if (res.ok) {
       const j = JSON.parse(text);
-      const content = j.choices?.[0]?.message?.content || '';
-      return JSON.parse(content);
+      return { content: j.choices?.[0]?.message?.content || '', finish: j.choices?.[0]?.finish_reason || 'unknown' };
     }
     lastErr = `${res.status}: ${text.slice(0, 300)}`;
     if (!/max_tokens|max_completion_tokens|temperature|unsupported/i.test(text)) break;
   }
   throw new Error(`AI request failed: ${lastErr}`);
+}
+
+async function aiJson(messages, maxTokens = 8000, temperature = 0.7) {
+  const first = await aiRaw(messages, maxTokens, temperature);
+  try {
+    return JSON.parse(extractJson(first.content));
+  } catch (err) {
+    console.log(`AI response was not usable JSON (${err.message}; finish_reason=${first.finish}, ${String(first.content).length} chars) - retrying once with a larger output budget.`);
+  }
+  const retry = messages.concat([{ role: 'user', content: 'Your previous answer was truncated or was not valid JSON, so it could not be parsed. Send the same content again as one compact valid JSON object: no code fences, no commentary before or after it, every string closed and every HTML tag closed. Keep the article complete but do not pad it.' }]);
+  const second = await aiRaw(retry, Math.min(Math.round(maxTokens * 1.6), 32000), temperature);
+  try {
+    return JSON.parse(extractJson(second.content));
+  } catch (err) {
+    throw new Error(`AI returned unparseable JSON twice (${err.message}; finish_reason=${second.finish}). First 200 chars of the response: ${String(second.content).slice(0, 200)}`);
+  }
 }
 
 async function directus(path, { method = 'GET', body } = {}) {
@@ -127,7 +156,9 @@ console.log(`Topic: ${topic}\nModel: ${MODEL} @ ${AI_BASE}`);
 const market = await marketData();
 console.log(market ? `Market data: ${market.split('\n').length} areas (incl. Oracle-verified)` : 'Market data: unavailable (continuing without)');
 
-const system = 'You are a senior property-market editor for PropertyList, the Spanish property MLS information hub. You write authoritative, genuinely useful, original guides for buyers, sellers and agents. Voice: calm, expert, data-led, plain-spoken. Use plain hyphens only - NEVER em-dashes or en-dashes.';
+const system = 'You are a senior property-market editor for PropertyList, the Spanish property MLS information hub. You write authoritative, genuinely useful, original guides for buyers, sellers and agents. Voice: calm, expert, data-led, plain-spoken. Use plain hyphens only - NEVER em-dashes or en-dashes.\n\n'
+  + legalCurrencyBlock()
+  + '\nIf the topic refers to one of the retired laws above, write about the current position instead and say plainly that the decree was repealed on 30-04-26. Never present it as in force.';
 const user = `Write a comprehensive, original blog article in English on: "${topic}".
 ${market ? `\nVERIFIED MARKET DATA (use ONLY these real figures; never invent numbers; when you cite a notary-verified price, link its source as an HTML <a> tag):\n${market}\n` : ''}
 Requirements:
@@ -137,7 +168,16 @@ Requirements:
 - Sources: when citing, prefer PRIMARY sources (BOE, ministries, INE, notarial bodies) and major news wires. NEVER link competitor property portals or their blogs (Idealista, Fotocasa, Kyero, ThinkSpain and similar).
 Return a JSON object with keys: title, slug, description (a 150-200 character excerpt), body (HTML string), seo_title (<=60 chars), seo_description (<=160 chars).`;
 
-const post = await aiJson([{ role: 'system', content: system }, { role: 'user', content: user }], 9000);
+// 9,000 output tokens was not enough for a 2,000 word HTML article once the
+// model spent part of the budget on reasoning: the body came back cut in half
+// and the JSON would not parse. 20,000 leaves headroom.
+let post;
+try {
+  post = await aiJson([{ role: 'system', content: system }, { role: 'user', content: user }], 20000);
+} catch (err) {
+  console.error('generate-blog-post: EN article generation failed.', err.message);
+  process.exit(1);
+}
 for (const k of ['title', 'description', 'body', 'seo_title', 'seo_description']) post[k] = noDashes(post[k]);
 for (const k of ['title', 'description', 'seo_title', 'seo_description']) post[k] = decodeEntities(post[k]);
 const slug = slugify(post.slug || post.title);
@@ -153,7 +193,14 @@ const en = await directus('/items/kb_pages', { method: 'POST', body: {
 console.log(`EN draft created: id=${en.data?.id} path=/blog/${slug}`);
 
 // translate to ES
-const tr = await aiJson([{ role: 'user', content: `Translate this property blog content from English to Spanish. Keep ALL HTML tags, attributes and URLs exactly. Translate only visible text. Use plain hyphens, no em-dashes. Return JSON with keys: title, description, body, seo_title, seo_description.\n\nTITLE:\n${post.title}\n\nDESCRIPTION:\n${post.description}\n\nBODY:\n${post.body}\n\nSEO_TITLE:\n${post.seo_title}\n\nSEO_DESCRIPTION:\n${post.seo_description}` }], 14000, 0.2);
+let tr;
+try {
+  tr = await aiJson([{ role: 'user', content: `Translate this property blog content from English to Spanish. Keep ALL HTML tags, attributes and URLs exactly. Translate only visible text. Use plain hyphens, no em-dashes. Return JSON with keys: title, description, body, seo_title, seo_description.\n\nTITLE:\n${post.title}\n\nDESCRIPTION:\n${post.description}\n\nBODY:\n${post.body}\n\nSEO_TITLE:\n${post.seo_title}\n\nSEO_DESCRIPTION:\n${post.seo_description}` }], 24000, 0.2);
+} catch (err) {
+  console.error('generate-blog-post: ES translation failed.', err.message);
+  console.error(`The EN draft was already created at /blog/${slug}; delete or rename it before this topic is retried.`);
+  process.exit(1);
+}
 for (const k of ['title', 'description', 'body', 'seo_title', 'seo_description']) tr[k] = noDashes(tr[k]);
 for (const k of ['title', 'description', 'seo_title', 'seo_description']) tr[k] = decodeEntities(tr[k]);
 const es = await directus('/items/kb_pages', { method: 'POST', body: {
