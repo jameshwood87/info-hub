@@ -6,7 +6,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/connected-inbox/`;
 const title = 'Connected inbox: your email and your CRM, one record | PropertyList';
 const description =
-	'Coming soon: connect the mailbox you already use, so client replies land on the right contact by themselves and everything you send goes out from your own address. 10 credits per mailbox per month when it arrives.';
+	'Connect the mailbox you already use, so client replies land on the right contact by themselves and everything you send goes out from your own address. 10 credits per mailbox per month.';
 
 const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'en');
@@ -45,27 +45,27 @@ const notDoing = [
 const faqs = [
 	{
 		q: 'What does it cost?',
-		a: 'Ten credits per connected mailbox per month, from the same credit balance you already use for featuring a listing or pulling a report. Two mailboxes will be ten credits each, and disconnecting will stop the charge. Nothing is charged until it launches.',
+		a: 'Ten credits per connected mailbox per month, from the same credit balance you already use for featuring a listing or pulling a report. Two mailboxes are ten credits each, and disconnecting stops the charge.',
 	},
 	{
 		q: 'Does PropertyList get my password?',
-		a: 'No. You will sign in on Google’s own page, or on Microsoft’s, and they hand back a permission you can withdraw at any time. Your password is typed on their site and never reaches us. That is what the Google and Outlook buttons do, and it is the reason they exist rather than a box asking for your password.',
+		a: 'No. You sign in on Google’s own page, or on Microsoft’s, and they hand back a permission you can withdraw at any time. Your password is typed on their site and never reaches us. That is what the Google and Outlook buttons do, and it is the reason they exist rather than a box asking for your password.',
 	},
 	{
 		q: 'How do I disconnect?',
-		a: 'You will disconnect it from Settings, then Connected inbox, in the CRM. You will also be able to revoke the permission from the provider’s own side at any time, at myaccount.google.com/permissions for Google or account.live.com/consent/Manage for Microsoft. Either way the sync stops.',
+		a: 'You disconnect it from Settings, then Connected inbox, in the CRM. You can also revoke the permission from the provider’s own side at any time, at myaccount.google.com/permissions for Google or account.live.com/consent/Manage for Microsoft. Either way the sync stops.',
 	},
 	{
 		q: 'Which addresses can I connect?',
-		a: 'Gmail and Google Workspace through the Google button, Outlook and Microsoft 365 through the Outlook button. If your agency runs its mail somewhere else, there will be an Other option for it.',
+		a: 'Gmail and Google Workspace through the Google button, Outlook and Microsoft 365 through the Outlook button. If your agency runs its mail somewhere else, there is an Other option for it.',
 	},
 	{
 		q: 'Do my clients see PropertyList?',
-		a: 'No. Mail you send will go out from your own address, so a client sees you and your agency, replies to you, and files the conversation under your name. That is the point of connecting your real mailbox rather than sending from a platform address.',
+		a: 'No. Mail you send goes out from your own address, so a client sees you and your agency, replies to you, and files the conversation under your name. That is the point of connecting your real mailbox rather than sending from a platform address.',
 	},
 	{
 		q: 'Does my agency admin need to allow it?',
-		a: 'On Google Workspace and Microsoft 365 an administrator can restrict which applications staff are allowed to connect. If your first attempt is blocked once it launches, that will be why. The manual chapter has the exact path your administrator needs, for both providers, and it is worth doing now.',
+		a: 'On Google Workspace and Microsoft 365 an administrator can restrict which applications staff are allowed to connect. If your first attempt is blocked, that will be why. The manual chapter has the exact path your administrator needs, for both providers.',
 	},
 ];
 ---
@@ -84,22 +84,22 @@ const faqs = [
 >
 	<div class="wrap">
 		<section class="intro">
-			<p class="kicker"><span class="soonBadge">Coming soon</span> Connected inbox</p>
+			<p class="kicker"><span class="soonBadge live">Live</span> Connected inbox</p>
 			<h1>The email <em>is</em> the record.<br />Stop copying it across.</h1>
 			<p class="sub">
-				Coming soon. You will connect the mailbox you already use, client replies will land on the right contact on
-				their own, and everything you send will go out from your own address. Ten credits per mailbox per month, and
-				you will be able to disconnect it in the same two clicks that turned it on.
+				Connect the mailbox you already use, client replies land on the right contact on
+				their own, and everything you send goes out from your own address. Ten credits per mailbox per month, and
+				you can disconnect it in the same two clicks that turned it on.
 			</p>
 			<p class="subtle">
-				It will live in the CRM under <strong>Settings</strong>, then <strong>Connected inbox</strong>.
+				It lives in the CRM under <strong>Settings</strong>, then <strong>Connected inbox</strong>.
 			</p>
 		</section>
 
 		<section class="band">
-			<h2>How connecting it will work</h2>
+			<h2>How connecting it works</h2>
 			<p class="lead">
-				Four steps, and the only one that will take any thought is the third, where you decide whether to allow it.
+				Four steps, and the only one that takes any thought is the third, where you decide whether to allow it.
 			</p>
 			<div class="dflow">
 				<span class="dstep"><span class="n">1</span> Settings, Connected inbox</span>
@@ -121,7 +121,7 @@ const faqs = [
 		</section>
 
 		<section class="band">
-			<h2>What will happen after that</h2>
+			<h2>What happens after that</h2>
 			<p class="lead">
 				Two directions, one contact. That is the whole feature.
 			</p>
@@ -179,7 +179,7 @@ const faqs = [
 		</section>
 
 		<section class="band tight">
-			<h2>What it will cost</h2>
+			<h2>What it costs</h2>
 			<table class="costs">
 				<tbody>
 					{cost.map(([a, b]) => (
@@ -259,12 +259,12 @@ const faqs = [
 		</section>
 
 		<section class="band close">
-			<h2>Not yet, but not far off</h2>
+			<h2>Already in the CRM you use</h2>
 			<p class="lead">
-				Connected inbox will sit in the CRM that {plAgents} agents already use, next to the contacts the mail
+				Connected inbox sits in the CRM that {plAgents} agents already use, next to the contacts the mail
 				belongs to. The <a href="/docs/propertylist-mls-user-manual/contacts-crm/connect-your-email/">manual
-				chapter</a> explains what it will do, and what to send your Google Workspace or Microsoft 365
-				administrator now if your agency restricts which applications staff can connect.
+				chapter</a> explains what it does, and what to send your Google Workspace or Microsoft 365
+				administrator if your agency restricts which applications staff can connect.
 			</p>
 			<p class="lead">
 				It works best beside the boards you already run: <a href="/pipelines/">the pipelines</a> the contact
@@ -298,6 +298,12 @@ const faqs = [
 		color: #8a5a00;
 		background: rgba(245, 158, 11, 0.15);
 		border: 1px solid rgba(245, 158, 11, 0.32);
+	}
+
+	.soonBadge.live {
+		color: #0a6d61;
+		background: rgba(0, 174, 154, 0.14);
+		border: 1px solid rgba(0, 174, 154, 0.25);
 	}
 
 	.kicker {

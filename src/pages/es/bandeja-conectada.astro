@@ -6,7 +6,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/bandeja-conectada/`;
 const title = 'Bandeja conectada: tu correo y tu CRM, un solo registro | PropertyList';
 const description =
-	'Muy pronto: conecta el buzón que ya usas para que las respuestas del cliente caigan solas en el contacto correcto y todo lo que envíes salga desde tu propia dirección. 10 créditos por buzón al mes cuando llegue.';
+	'Conecta el buzón que ya usas para que las respuestas del cliente caigan solas en el contacto correcto y todo lo que envíes salga desde tu propia dirección. 10 créditos por buzón al mes.';
 
 const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'es');
@@ -43,27 +43,27 @@ const notDoing = [
 const faqs = [
 	{
 		q: '¿Cuánto cuesta?',
-		a: 'Diez créditos por buzón conectado y mes, del mismo saldo de créditos que ya usas para destacar un anuncio o sacar un informe. Dos buzones serán diez créditos cada uno, y desconectarlo detendrá el cobro. No se cobra nada hasta que se lance.',
+		a: 'Diez créditos por buzón conectado y mes, del mismo saldo de créditos que ya usas para destacar un anuncio o sacar un informe. Dos buzones son diez créditos cada uno, y desconectarlo detiene el cobro.',
 	},
 	{
 		q: '¿PropertyList se queda con mi contraseña?',
-		a: 'No. Iniciarás sesión en la propia página de Google, o en la de Microsoft, y ellos devuelven un permiso que puedes retirar cuando quieras. Tu contraseña se escribe en su sitio y nunca llega hasta nosotros. Eso es exactamente lo que hacen los botones de Google y de Outlook, y por eso están ahí en lugar de una casilla pidiéndote la contraseña.',
+		a: 'No. Inicias sesión en la propia página de Google, o en la de Microsoft, y ellos devuelven un permiso que puedes retirar cuando quieras. Tu contraseña se escribe en su sitio y nunca llega hasta nosotros. Eso es exactamente lo que hacen los botones de Google y de Outlook, y por eso están ahí en lugar de una casilla pidiéndote la contraseña.',
 	},
 	{
 		q: '¿Cómo lo desconecto?',
-		a: 'Lo desconectarás desde Ajustes y luego Bandeja conectada, en el CRM. También podrás revocar el permiso desde el lado del proveedor cuando quieras, en myaccount.google.com/permissions para Google o en account.live.com/consent/Manage para Microsoft. En cualquiera de los dos casos la sincronización se detiene.',
+		a: 'Lo desconectas desde Ajustes y luego Bandeja conectada, en el CRM. También puedes revocar el permiso desde el lado del proveedor cuando quieras, en myaccount.google.com/permissions para Google o en account.live.com/consent/Manage para Microsoft. En cualquiera de los dos casos la sincronización se detiene.',
 	},
 	{
 		q: '¿Qué direcciones puedo conectar?',
-		a: 'Gmail y Google Workspace con el botón de Google, Outlook y Microsoft 365 con el botón de Outlook. Si tu agencia tiene el correo en otro sitio, habrá una opción de Otro para eso.',
+		a: 'Gmail y Google Workspace con el botón de Google, Outlook y Microsoft 365 con el botón de Outlook. Si tu agencia tiene el correo en otro sitio, hay una opción de Otro para eso.',
 	},
 	{
 		q: '¿Mis clientes ven PropertyList?',
-		a: 'No. El correo que envíes saldrá desde tu propia dirección, así que el cliente te ve a ti y a tu agencia, te responde a ti, y archiva la conversación con tu nombre. Ese es el sentido de conectar tu buzón real en lugar de enviar desde una dirección de plataforma.',
+		a: 'No. El correo que envíes sale desde tu propia dirección, así que el cliente te ve a ti y a tu agencia, te responde a ti, y archiva la conversación con tu nombre. Ese es el sentido de conectar tu buzón real en lugar de enviar desde una dirección de plataforma.',
 	},
 	{
 		q: '¿Tiene que autorizarlo el administrador de mi agencia?',
-		a: 'En Google Workspace y en Microsoft 365 un administrador puede restringir qué aplicaciones puede conectar el personal. Si tu primer intento se bloquea cuando se lance, será por eso. El capítulo del manual tiene la ruta exacta que necesita tu administrador, para los dos proveedores, y conviene hacerlo ya.',
+		a: 'En Google Workspace y en Microsoft 365 un administrador puede restringir qué aplicaciones puede conectar el personal. Si tu primer intento se bloquea, será por eso. El capítulo del manual tiene la ruta exacta que necesita tu administrador, para los dos proveedores.',
 	},
 ];
 ---
@@ -82,22 +82,22 @@ const faqs = [
 >
 	<div class="wrap">
 		<section class="intro">
-			<p class="kicker"><span class="soonBadge">Muy pronto</span> Bandeja conectada</p>
+			<p class="kicker"><span class="soonBadge live">Disponible</span> Bandeja conectada</p>
 			<h1>El correo <em>ya es</em> el registro.<br />Deja de copiarlo a mano.</h1>
 			<p class="sub">
-				Muy pronto. Conectarás el buzón que ya usas, las respuestas del cliente caerán solas en el contacto
-				correcto y todo lo que envíes saldrá desde tu propia dirección. Diez créditos por buzón al mes, y podrás
+				Conecta el buzón que ya usas, las respuestas del cliente caen solas en el contacto
+				correcto y todo lo que envíes sale desde tu propia dirección. Diez créditos por buzón al mes, y puedes
 				desconectarlo con los mismos dos clics con los que lo enciendas.
 			</p>
 			<p class="subtle">
-				Vivirá en el CRM, en <strong>Ajustes</strong> y luego <strong>Bandeja conectada</strong>.
+				Vive en el CRM, en <strong>Ajustes</strong> y luego <strong>Bandeja conectada</strong>.
 			</p>
 		</section>
 
 		<section class="band">
-			<h2>Cómo será conectarlo</h2>
+			<h2>Cómo se conecta</h2>
 			<p class="lead">
-				Cuatro pasos, y el único que exigirá pensar algo será el tercero, donde decides si lo autorizas.
+				Cuatro pasos, y el único que exige pensar algo es el tercero, donde decides si lo autorizas.
 			</p>
 			<div class="dflow">
 				<span class="dstep"><span class="n">1</span> Ajustes, Bandeja conectada</span>
@@ -119,7 +119,7 @@ const faqs = [
 		</section>
 
 		<section class="band">
-			<h2>Qué pasará después</h2>
+			<h2>Qué pasa después</h2>
 			<p class="lead">
 				Dos direcciones, un contacto. Esa es toda la función.
 			</p>
@@ -177,7 +177,7 @@ const faqs = [
 		</section>
 
 		<section class="band tight">
-			<h2>Lo que costará</h2>
+			<h2>Lo que cuesta</h2>
 			<table class="costs">
 				<tbody>
 					{cost.map(([a, b]) => (
@@ -256,11 +256,11 @@ const faqs = [
 		</section>
 
 		<section class="band close">
-			<h2>Todavía no, pero queda poco</h2>
+			<h2>Ya está en el CRM que usas</h2>
 			<p class="lead">
-				La bandeja conectada vivirá en el CRM que ya usan {plAgents} agentes, junto a los contactos a los que
+				La bandeja conectada vive en el CRM que ya usan {plAgents} agentes, junto a los contactos a los que
 				pertenece el correo. El <a href="/es/docs/propertylist-mls-manual-de-usuario/contacts-crm/connect-your-email/">capítulo
-				del manual</a> explica qué hará, y qué enviarle ya al administrador de tu Google Workspace o tu
+				del manual</a> explica qué hace, y qué enviarle al administrador de tu Google Workspace o tu
 				Microsoft 365 si tu agencia restringe qué aplicaciones puede conectar el personal.
 			</p>
 			<p class="lead">
@@ -295,6 +295,12 @@ const faqs = [
 		color: #8a5a00;
 		background: rgba(245, 158, 11, 0.15);
 		border: 1px solid rgba(245, 158, 11, 0.32);
+	}
+
+	.soonBadge.live {
+		color: #0a6d61;
+		background: rgba(0, 174, 154, 0.14);
+		border: 1px solid rgba(0, 174, 154, 0.25);
 	}
 
 	.kicker {
