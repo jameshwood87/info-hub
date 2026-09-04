@@ -153,7 +153,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 					<div class="agMHead"><div class="agMLabel">{m.label}</div><div class="agMSub">{m.sub}</div></div>
 					{m.data && m.data.totalListings ? (
 						<>
-							<div class="agMBig">{nfmt(m.data.totalListings)}<span> {t('listings', 'anuncios')}</span></div>
+							<div class="agMBig">{nfmt(m.data.totalListings)}<span> {m.data.totalListings === 1 ? t('listing', 'anuncio') : t('listings', 'anuncios')}</span></div>
 							{m.data.medianPrice && m.data.totalListings >= 3 ? (
 								<dl class="agMStats">
 									{m.data.medianPrice ? <div><dt>{t('Median price', 'Precio mediano')}</dt><dd>{eurFull(m.data.medianPrice)}{unitLab(m.data)}</dd></div> : null}
@@ -165,7 +165,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 							) : (
 								<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${areaName} right now.`, `Disponibilidad en directo en ${areaName}.`)}</div>
 							)}
-							<a class="agMCta" href={portalSearch(m.type)} target="_blank" rel="noopener">{t('View all', 'Ver los')} {nfmt(m.data.totalListings)} →</a>
+							<a class="agMCta" href={portalSearch(m.type)} target="_blank" rel="noopener">{`${t('View all', 'Ver los')} ${nfmt(m.data.totalListings)} →`}</a>
 						</>
 					) : (
 						<div class="agMNone">{t(`No live ${m.label.toLowerCase()} listings yet.`, 'Aún no hay anuncios aquí.')}</div>
@@ -188,7 +188,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 				<div class="agBandWrap">
 					{bands.map((b) => (
 						<div class="agBandRow">
-							<div class="agBandLab">{b.label} {t('bed', 'dorm')}{b.label === '5+' ? t('s', '') : ''}</div>
+							<div class="agBandLab">{`${b.label} ${t('bed', 'dorm')}${b.label === '5+' ? t('s', '') : ''}`}</div>
 							<div class="agBandBar"><div class="agBandFill" style={`width:${b.pct}%`}></div></div>
 							<div class="agBandN">{nfmt(b.n)}</div>
 						</div>
