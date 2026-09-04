@@ -15,6 +15,12 @@ import { getTotalViewCounts } from '../../lib/weeklyViews';
 import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../lib/deepl';
 import mlsManualArchive from '../../data/mls-manual-archive.json';
 
+// Hrefs left behind by the WordPress import that point at routes this site never
+// rebuilt. Both forms show up in the bodies: root-relative and absolute on our own
+// host. Anything else (a real external link) is left alone.
+const DEAD_TAXONOMY_HREF = /^(?:https?:\/\/(?:www\.)?info\.propertylist\.es)?\/(?:es\/)?(?:categoria|category)\//i;
+const DEAD_DATE_ARCHIVE_HREF = /^(?:https?:\/\/(?:www\.)?info\.propertylist\.es)?\/(?:es\/)?20\d\d\/\d\d\/\d\d\//i;
+
 const rawPath = Astro.params.path ?? '';
 const requestUrl = new URL(Astro.request.url);
 const normalizedPathProp = typeof (Astro.props as any)?.normalizedPath === 'string' ? String((Astro.props as any).normalizedPath) : '';
@@ -917,7 +923,12 @@ const hreflangs = isFallback
 			{ hreflang: 'es', href: `https://info.propertylist.es${renderPath}` },
 			{ hreflang: 'x-default', href: `https://info.propertylist.es${englishPath}` },
 		];
-const robots = isFallback ? 'noindex,follow' : undefined;
+// /es/docs/property-services/ is a coming-soon section: a heading and nothing
+// beneath it, which Google files as a soft 404. It stays reachable and crawlable
+// for its links, but out of the index until it has content. Also dropped from the
+// sitemap.
+const NOINDEX_PATHS = new Set(['/es/docs/property-services/']);
+const robots = isFallback || NOINDEX_PATHS.has(renderPath) ? 'noindex,follow' : undefined;
 
 const notFoundTitle = 'Página no encontrada • PropertyList Info Hub';
 const notFoundDescription = 'No pudimos encontrar esta página. Usa la búsqueda o vuelve al inicio.';
@@ -1419,6 +1430,20 @@ const cleanedSourceBody = (() => {
 		};
 		out = stripImportedHead(out);
 	}
+	// Dead WordPress-era links, stripped for both branches. The taxonomy archives
+	// (/es/categoria/, /categoria/, /category/) and the /yyyy/mm/dd/ date archives
+	// were never rebuilt on Astro, so each one was an internal link into a 404.
+	// Unwrap them: the words stay, the anchor goes. Cloudflare email-protection
+	// anchors are different - their inner text is an obfuscated address only the CF
+	// script can decode - so the whole anchor goes.
+	out = out.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (whole: string, attrs: string, inner: string) => {
+		const m = String(attrs).match(/href\s*=\s*["']([^"']*)["']/i);
+		const href = m ? String(m[1] || '') : '';
+		if (!href) return whole;
+		if (/\/cdn-cgi\/l\/email-protection/i.test(href)) return '';
+		if (DEAD_TAXONOMY_HREF.test(href) || DEAD_DATE_ARCHIVE_HREF.test(href)) return inner;
+		return whole;
+	});
 	return out;
 })();
 
@@ -1843,6 +1868,65 @@ const docFolderChildren = await (async () => {
 		}));
 })();
 const folderArticlesAll = folderArticles.length ? folderArticles : docFolderChildren;
+
+// Directus stores the newer post paths without a trailing slash and the
+// WordPress-era ones with; the site canonicalises to the slash and 301s the bare
+// form, so every link built from a raw path would go through a redirect.
+const withSlashEs = (p: string) => (p && !p.endsWith('/') ? `${p}/` : p);
+const ES_POST_ROOTS = ['/es/blog/', '/es/informacion-general/', '/es/agentes-inmobiliarios/'];
+const esPostRootSet = new Set(ES_POST_ROOTS);
+const stripBrandSuffixEs = (s: string) =>
+	String(s || '')
+		.replace(/\s*(?:•|\||-)\s*PropertyList(?:\s+Info\s+Hub)?\s*$/i, '')
+		.trim();
+const esPostItems =
+	isBlogLike
+		? ((await listKbPagesByPrefixes({ prefixes: ES_POST_ROOTS, lang: 'es', limit: 500 }).catch(() => [])) as any[])
+		: [];
+const esPostList = esPostItems
+	.map((it) => ({
+		path: withSlashEs(String(it?.path || '')),
+		title: stripBrandSuffixEs(String(it?.title || '')),
+		description: it?.description ? String(it.description) : null,
+		when: Date.parse(String(it?.date_updated || it?.date_created || '')) || 0,
+	}))
+	.filter((c) => c.path && c.title && !esPostRootSet.has(c.path));
+
+// The Spanish blog index is a WordPress-imported body that links a single post, so
+// 35 Spanish articles had no internal link from their own index. This adds the
+// complete list under the imported content, newest first.
+const isEsBlogIndex = renderPath === '/es/blog/';
+const esAllPosts = isEsBlogIndex
+	? [...esPostList].filter((c) => c.path.startsWith('/es/blog/')).sort((a, b) => b.when - a.when)
+	: [];
+const esDateFmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+const esFormatDate = (ms: number) => (ms ? esDateFmt.format(new Date(ms)) : '');
+
+// Related guides: Spanish posts had no outbound link to another post, so each one
+// was a dead end for readers and a leaf for crawlers. Scoring is deliberately dumb
+// - shared title words longer than four letters - and when nothing overlaps it
+// falls through to the three most recent posts.
+const relatedPosts = (() => {
+	if (!isBlogLike || isEsBlogIndex) return [] as Array<{ path: string; title: string; description: string | null }>;
+	const keyWords = (s: string) =>
+		new Set(
+			stripAccentsBlog(String(s || ''))
+				.split(/[^a-z0-9]+/)
+				.filter((w) => w.length > 4),
+		);
+	const here = withSlashEs(renderPath);
+	const mine = keyWords(stripBrandSuffixEs(String(h1 || '')));
+	return esPostList
+		.filter((c) => c.path !== here)
+		.map((c) => {
+			let score = 0;
+			for (const w of keyWords(c.title)) if (mine.has(w)) score += 1;
+			return { ...c, score };
+		})
+		.sort((a, b) => (b.score !== a.score ? b.score - a.score : b.when - a.when))
+		.slice(0, 3)
+		.map(({ path, title, description }) => ({ path, title, description }));
+})();
 
 const docPager = (() => {
 	if (!isDocs) {
@@ -2364,6 +2448,39 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						<p class="blogPropertyCta">
 							<a href={blogPortalUrl} target="_blank" rel="noopener">Ver todos los anuncios de {blogPropertyLocation} en PropertyList →</a>
 						</p>
+					</section>
+				) : null}
+
+				{esAllPosts.length ? (
+					<section class="docArticles" aria-label="Todos los artículos">
+						<div class="docArticlesTitle">Todos los artículos</div>
+						<ul class="docArticlesList">
+							{esAllPosts.map((r) => (
+								<li>
+									<a class="docArticlesLink" href={r.path}>
+										<span class="docArticlesLinkTitle">{r.title}</span>
+										{r.when ? <span class="docArticlesLinkDesc">{esFormatDate(r.when)}</span> : null}
+										{r.description ? <span class="docArticlesLinkDesc">{r.description}</span> : null}
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				) : null}
+
+				{relatedPosts.length ? (
+					<section class="docArticles" aria-label="Guías relacionadas">
+						<div class="docArticlesTitle">Guías relacionadas</div>
+						<ul class="docArticlesList">
+							{relatedPosts.map((r) => (
+								<li>
+									<a class="docArticlesLink" href={r.path}>
+										<span class="docArticlesLinkTitle">{r.title}</span>
+										{r.description ? <span class="docArticlesLinkDesc">{r.description}</span> : null}
+									</a>
+								</li>
+							))}
+						</ul>
 					</section>
 				) : null}
 

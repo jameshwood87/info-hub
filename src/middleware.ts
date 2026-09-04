@@ -228,6 +228,33 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			}
 		}
 
+		// WordPress-era archive URLs. None of these routes were rebuilt on Astro, so
+		// every one was a 404 that still carried inbound links and internal links from
+		// the imported article bodies. Category archives go to the blog index in their
+		// own language, date archives to the blog index, and nightlife to the events
+		// hub that replaced it. Handled here rather than in the trailing-slash block
+		// below so the slashless form redirects once instead of chaining.
+		// /nightlife/ is matched exactly: /nightlife/best-nightlife-in-marbella/ is a
+		// real published post and must keep working.
+		{
+			const p = pathname.endsWith('/') ? pathname : `${pathname}/`;
+			const legacyArchiveTarget =
+				p === '/nightlife/' || p === '/category/nightlife/'
+					? '/whats-on/'
+					: p.startsWith('/es/categoria/') || p.startsWith('/categoria/')
+						? '/es/blog/'
+						: p.startsWith('/category/')
+							? '/blog/'
+							: /^\/es\/20\d\d\/\d{2}\/\d{2}\//.test(p)
+								? '/es/blog/'
+								: /^\/20\d\d\/\d{2}\/\d{2}\//.test(p)
+									? '/blog/'
+									: '';
+			if (legacyArchiveTarget) {
+				return new Response(null, { status: 301, headers: { Location: `${legacyArchiveTarget}${url.search}` } });
+			}
+		}
+
 		const prefixRedirects: Array<{ from: string; to: string }> = [
 			{ from: '/docs/propertylist-mls-user-manual/mls-user-manual/', to: '/docs/propertylist-mls-user-manual/your-account/' },
 			{ from: '/docs/propertylist-mls-user-manual/how-to-use-contacts/', to: '/docs/propertylist-mls-user-manual/contacts/' },

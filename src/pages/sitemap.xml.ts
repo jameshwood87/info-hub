@@ -184,6 +184,10 @@ export async function GET() {
     '/nl/agenten-enquete/', // noindex: roadmap survey
     '/your-setup/', // noindex: draft, pending review and its ES twin
     '/es/tu-configuracion/', // noindex: draft, pending review
+    // Empty coming-soon docs section: a heading and nothing under it, which Google
+    // reports as a soft 404. The catch-alls also emit noindex,follow for these two.
+    '/docs/property-services/',
+    '/es/docs/property-services/',
   ]);
 
   const derivedStaticPaths = Object.keys(import.meta.glob('./**/*.astro'))
@@ -229,6 +233,10 @@ export async function GET() {
 
   const push = (path: string, lastmod: string | null, alternates?: Alt[]) => {
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    // The exclude set has to apply to Directus-derived paths too, not just the
+    // static routes above: /docs/property-services/ is a published kb_pages record
+    // and was reaching the sitemap through addPrefix('/docs/').
+    if (SITEMAP_EXCLUDE.has(cleanPath)) return;
     const loc = `${origin}${cleanPath}`;
     if (alternates && alternates.length && !altsByLoc.has(loc)) altsByLoc.set(loc, alternates);
     if (seen.has(loc)) return;

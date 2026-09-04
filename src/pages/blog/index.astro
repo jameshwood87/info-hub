@@ -284,6 +284,22 @@ const effectiveCategoryFor = (p: KbPageListItem) => {
 	return categoryFor(p);
 };
 
+// Directus stores generator-written post paths WITHOUT a trailing slash and the
+// WordPress-era ones WITH one, but the site canonicalises to the trailing-slash
+// form and the middleware 301s the bare form. Linking p.path raw meant 28 of the
+// 38 posts were linked through a redirect, so crawlers saw a hop on every card.
+const hrefFor = (p: KbPageListItem) => normalisePath(p.path);
+
+// The card grid is tree-ordered and the client-side filter hides cards, so a flat
+// newest-first list below it guarantees every published post keeps one plain
+// internal link from this page whatever the filter is doing.
+const allPostsNewestFirst = [...sorted].sort((a, b) => {
+	const ad = (updatedFor(a) ?? publishedFor(a))?.getTime() ?? 0;
+	const bd = (updatedFor(b) ?? publishedFor(b))?.getTime() ?? 0;
+	if (ad !== bd) return bd - ad;
+	return String(a.title || '').localeCompare(String(b.title || ''));
+});
+
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/blog/`;
 const pageDescription = 'News, insights, and updates for estate agents, buyers, and the PropertyList community.';
@@ -379,12 +395,12 @@ const ldJson = JSON.stringify({
 			itemListElement: sorted.slice(0, 200).map((p, idx) => ({
 				'@type': 'ListItem',
 				position: idx + 1,
-				url: `${origin}${p.path}`,
+				url: `${origin}${hrefFor(p)}`,
 				name: p.title,
 			})),
 		},
 		...sorted.slice(0, 200).map((p) => {
-			const url = `${origin}${p.path}`;
+			const url = `${origin}${hrefFor(p)}`;
 			const published = publishedFor(p);
 			const updated = updatedFor(p);
 			const section = effectiveCategoryFor(p);
@@ -511,7 +527,7 @@ const ldJson = JSON.stringify({
 								data-cat={cat.toLowerCase()}
 								data-label={`${decodeTextEntities(stripSuffix(p.title))} ${cat}`.toLowerCase()}
 							>
-								<a class="thumbLink" href={p.path} aria-label={`Read: ${decodeTextEntities(stripSuffix(p.title))}`}>
+								<a class="thumbLink" href={hrefFor(p)} aria-label={`Read: ${decodeTextEntities(stripSuffix(p.title))}`}>
 									{responsive ? (
 										<picture>
 											<source type="image/avif" srcset={responsive.avifSrcset} sizes={responsive.sizes} />
@@ -550,13 +566,13 @@ const ldJson = JSON.stringify({
 										) : null}
 									</div>
 									<h2 class="title">
-										<a class="link" href={p.path}>
+										<a class="link" href={hrefFor(p)}>
 											{decodeTextEntities(stripSuffix(p.title))}
 										</a>
 									</h2>
 									{p.description ? <p class="desc">{decodeTextEntities(p.description)}</p> : null}
 									<div class="footer">
-										<a class="readMore" href={p.path}>
+										<a class="readMore" href={hrefFor(p)}>
 											Read article
 										</a>
 										{published ? (
@@ -575,6 +591,31 @@ const ldJson = JSON.stringify({
 	) : (
 		<div class="empty">No blog posts yet.</div>
 	)}
+
+	{allPostsNewestFirst.length ? (
+		<section class="allPosts" aria-labelledby="allPostsTitle">
+			<h2 class="allPostsTitle" id="allPostsTitle">All posts</h2>
+			<p class="allPostsSub">Every published article, newest first.</p>
+			<ul class="allPostsList" role="list">
+				{allPostsNewestFirst.map((p) => {
+					const d = updatedFor(p) ?? publishedFor(p);
+					return (
+						<li class="allPostsItem">
+							<a class="allPostsLink" href={hrefFor(p)}>
+								<span class="allPostsLinkTitle">{decodeTextEntities(stripSuffix(p.title))}</span>
+								{d ? (
+									<time class="allPostsDate" datetime={d.toISOString()}>
+										{formatDate(d)}
+									</time>
+								) : null}
+								{p.description ? <span class="allPostsDesc">{decodeTextEntities(p.description)}</span> : null}
+							</a>
+						</li>
+					);
+				})}
+			</ul>
+		</section>
+	) : null}
 </Layout>
 
 <style>
@@ -898,6 +939,74 @@ const ldJson = JSON.stringify({
 		border: 1px dashed rgba(16, 24, 40, 0.18);
 		border-radius: 16px;
 		color: rgba(16, 24, 40, 0.7);
+	}
+
+	.allPosts {
+		margin-top: 28px;
+		padding-top: 20px;
+		border-top: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.allPostsTitle {
+		margin: 0;
+		font-size: 20px;
+		letter-spacing: -0.02em;
+	}
+
+	.allPostsSub {
+		margin: 4px 0 14px;
+		color: rgba(16, 24, 40, 0.7);
+		font-size: 14px;
+	}
+
+	.allPostsList {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 8px;
+	}
+
+	.allPostsLink {
+		display: grid;
+		gap: 4px;
+		padding: 12px 14px;
+		border-radius: 16px;
+		text-decoration: none;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(16, 24, 40, 0.08);
+	}
+
+	.allPostsLink:hover {
+		border-color: rgba(var(--accent-rgb), 0.35);
+		background: rgba(var(--accent-rgb), 0.06);
+	}
+
+	.allPostsLink:focus-visible {
+		outline: 3px solid rgba(var(--accent-rgb), 0.35);
+		outline-offset: 2px;
+	}
+
+	.allPostsLinkTitle {
+		font-weight: 900;
+		color: rgba(16, 24, 40, 0.9);
+		line-height: 1.25;
+	}
+
+	.allPostsDate {
+		color: rgba(16, 24, 40, 0.6);
+		font-size: 12px;
+		font-weight: 800;
+	}
+
+	.allPostsDesc {
+		color: rgba(16, 24, 40, 0.72);
+		font-size: 14px;
+		line-height: 1.45;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	@media (max-width: 620px) {

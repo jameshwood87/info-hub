@@ -3,6 +3,11 @@ import Layout from '../layouts/Layout.astro';
 
 export const prerender = false;
 
+// The English catch-all hands unknown paths here with Astro.rewrite('/404'), and a
+// rewrite adopts the status of the route it renders. Without this the browser and
+// every crawler would get a 200 on a page that says "not found".
+Astro.response.status = 404;
+
 const pathname = Astro.url?.pathname || '/';
 const isEs = pathname.startsWith('/es/');
 const lang = isEs ? 'es' : 'en';
