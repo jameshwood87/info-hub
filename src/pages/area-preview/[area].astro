@@ -58,7 +58,7 @@ const bands = (() => {
 	return rows.map((r) => ({ ...r, pct: Math.round((r.n / max) * 100) }));
 })();
 
-const portalBase = 'https://www.propertylist.es';
+const portalBase = 'https://propertylist.es/en';
 const portalSearch = (t: 'for-sale' | 'for-rent' | 'holiday-rentals') =>
 	`${portalBase}/${t}/${encodeURIComponent(areaParam || areaName.toLowerCase())}`;
 

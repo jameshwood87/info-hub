@@ -136,7 +136,7 @@ const fmtNum = (n: number | null | undefined) => (typeof n === 'number' && Numbe
 const fmtKm = (n: number | null | undefined) => (typeof n === 'number' && Number.isFinite(n) ? `${n.toFixed(0)} km` : '—');
 const fmtPct = (n: number | null | undefined) => (typeof n === 'number' && Number.isFinite(n) ? `${n.toFixed(0)}%` : '—');
 
-const searchBase = 'https://propertylist.es/search';
+const searchBase = 'https://propertylist.es/en';
 const buildSearchUrl = (opts?: { q?: string; type?: string }) => {
 	const params = new URLSearchParams();
 	if (opts?.q) params.set('q', opts.q);

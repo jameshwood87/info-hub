@@ -115,7 +115,7 @@ const heroPick = [...listings].sort((a, b) => {
 })[0];
 const heroPhoto = heroPick?.photoUrl || listings.find((l) => l.photoUrl)?.photoUrl || null;
 
-const portalBase = 'https://www.propertylist.es';
+const portalBase = `https://propertylist.es${es ? '' : '/en'}`;
 const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const areaImage = areaImagePath(areaSlug);
 const heroImage = areaImage || heroPhoto;

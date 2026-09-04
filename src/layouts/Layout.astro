@@ -424,7 +424,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 									/>
 								</a>
 							</div>
-							<a class="brandText brandText--centered" href="https://propertylist.es/">{lang === 'de' ? 'Immobiliensuche' : lang === 'es' ? 'Buscar propiedades' : 'Property Search'}</a>
+							<a class="brandText brandText--centered" href={lang === 'es' ? 'https://propertylist.es/' : 'https://propertylist.es/en'}>{lang === 'de' ? 'Immobiliensuche' : lang === 'es' ? 'Buscar propiedades' : 'Property Search'}</a>
 							<div class="navLinks">
 								<div class="navDrop">
 									<button class="navDropBtn" type="button" aria-haspopup="true" aria-expanded="false">
@@ -642,7 +642,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				<div class="footerInner2">
 					<div class="footer2Grid">
 						<div class="footer2Brand">
-							<a href="https://propertylist.es/" class="footerLogoLink">
+							<a href={lang === 'es' ? 'https://propertylist.es/' : 'https://propertylist.es/en'} class="footerLogoLink">
 								<img src="/favicon.png" alt="PropertyList" width="34" height="34" loading="lazy" decoding="async" />
 								<span>PropertyList</span>
 							</a>
@@ -676,7 +676,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a href={lang === 'es' ? '/es/propietarios/' : '/landlord/'}>{lang === 'es' ? 'Para propietarios' : 'For landlords'}</a>
 							<a href={lang === 'es' ? '/es/importar-feed-xml/' : '/xml-feed-import/'}>{lang === 'es' ? 'Feeds XML' : 'XML feeds'}</a>
 							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
-							<a href="https://propertylist.es/">{lang === 'de' ? 'Immobilien suchen' : lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
+							<a href={lang === 'es' ? 'https://propertylist.es/' : 'https://propertylist.es/en'}>{lang === 'de' ? 'Immobilien suchen' : lang === 'es' ? 'Buscar propiedades' : 'Search Properties'}</a>
 							<a href={lang === 'es' ? '/es/busqueda-ia/' : '/ai-property-search/'}>{lang === 'de' ? 'KI-Immobiliensuche' : lang === 'es' ? 'Búsqueda con IA' : 'AI Property Search'}</a>
 							<a href={lang === 'es' ? '/es/app-movil/' : '/mobile-app/'}>{lang === 'de' ? 'Mobile-App' : lang === 'es' ? 'App móvil' : 'Mobile app'}</a>
 						</div>
