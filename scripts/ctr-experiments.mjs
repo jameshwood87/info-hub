@@ -63,6 +63,14 @@ for (const e of ledger) {
 }
 
 // ---- 2) start one new experiment ----
+// Language guard (04-09-26): a page is only rewritten from queries in its own language,
+// and always in its own language. Other-language impressions belong to the twin page.
+const EN_WORDS = /\b(the|and|of|in|your|what|how|to|for|guide|with|is|a|do|does|can|spain|spanish)\b/i;
+const ES_WORDS = /\b(de|la|el|y|que|qu\u00e9|como|c\u00f3mo|en|para|del|los|las|gu\u00eda|una|un|es|cuanto|cu\u00e1nto|espa\u00f1a)\b/i;
+const queryLang = (q) => { const e = (q.match(new RegExp(EN_WORDS.source, 'gi')) || []).length; const s = (q.match(new RegExp(ES_WORDS.source, 'gi')) || []).length; return e > s ? 'en' : s > e ? 'es' : '?'; };
+const pageLang = (p) => (p.startsWith('/es/') ? 'es' : 'en');
+const NOT_OURS = /property\s*finder|idealista|fotocasa|kyero|rightmove|zoopla|bayut|dubizzle/i;
+
 const rows28 = await rawQuery(['page'], { days: 28, rowLimit: 2000 });
 const CONTENT = /^\/(blog|general-information|estate-agents|lifestyle|food|nightlife|neighbourhood|docs)\//;
 const recent = new Set(ledger.filter((e) => now - Date.parse(e.applied) < 60 * 86400000).map((e) => e.path));
@@ -78,7 +86,12 @@ if (!candidates.length) {
   const rec = (await directus(`/items/kb_pages?filter[path][_eq]=${encodeURIComponent(c.path)}&filter[language][_eq]=en&fields=id,title,seo_title,seo_description`)).data?.[0];
   if (!rec) { console.log('no directus record for', c.path); continue; }
     const slug = c.path.split('/').filter(Boolean).pop();
-    const qRows = await rawQuery(['query', 'page'], { days: 28, rowLimit: 500, pageContains: slug });
+    const qRowsAll = await rawQuery(['query', 'page'], { days: 28, rowLimit: 500, pageContains: slug });
+    const lang = pageLang(c.path);
+    const totalImp = qRowsAll.reduce((a, r) => a + r.impressions, 0) || 1;
+    const qRows = qRowsAll.filter((r) => queryLang(r.keys[0]) !== (lang === 'en' ? 'es' : 'en') && !NOT_OURS.test(r.keys[0]));
+    const ownImp = qRows.reduce((a, r) => a + r.impressions, 0);
+    if (ownImp / totalImp < 0.4) { console.log('skip (other-language or third-party queries dominate, belongs to the twin page):', c.path); continue; }
     const topQ = qRows.sort((a, b) => b.impressions - a.impressions).slice(0, 6).map((r) => `"${r.keys[0]}" (${r.impressions} imp, pos ${r.position.toFixed(1)})`);
     console.log('candidate:', c.path, `imp=${c.impressions} ctr=${(c.ctr * 100).toFixed(1)}% pos=${c.position.toFixed(1)}`);
 
@@ -91,7 +104,7 @@ CURRENT META DESCRIPTION: ${rec.seo_description || '-'}
 28-DAY STATS: ${c.impressions} impressions, ${(c.ctr * 100).toFixed(1)}% CTR, avg position ${c.position.toFixed(1)}
 REAL QUERIES IT APPEARS FOR: ${topQ.join('; ') || 'unknown'}
 
-Write a replacement that matches the query language, answers the searcher's question in the description first sentence, and earns the click without clickbait. Plain hyphens only, no em-dashes. Return JSON: {"title": "...", "seo_title": "max 60 chars", "seo_description": "max 158 chars"}` }]);
+Write the replacement in ${lang === 'es' ? 'SPANISH' : 'ENGLISH'}, the language of the page, whatever language the queries are in, answers the searcher's question in the description first sentence, and earns the click without clickbait. Plain hyphens only, no em-dashes. Return JSON: {"title": "...", "seo_title": "max 60 chars", "seo_description": "max 158 chars"}` }]);
     const clean = (s) => String(s || '').replace(/\s*[—–]\s*/g, ' - ').trim();
     const title = clean(out.title), seoT = clean(out.seo_title), seoD = clean(out.seo_description);
     if (title && seoT && seoD && !DRY) {
