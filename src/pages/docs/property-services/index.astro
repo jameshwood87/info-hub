@@ -9,6 +9,13 @@ import {
 const title = 'Property Services Docs • PropertyList Info Hub';
 const description = 'Guides for service providers: photographers, legal, finance, insurance, and property professionals.';
 
+// Coming-soon section: nothing is filed under /docs/property-services/ yet, so the
+// topic grid renders "No docs yet." and Google reports the page as a soft 404. It
+// stays reachable and its links stay crawlable, but it is out of the index until
+// it has content. It is excluded from the sitemap too, with its Spanish twin.
+// Delete this line once the section has guides.
+const robots = 'noindex,follow';
+
 const base = '/docs/property-services/';
 const itemsRaw = await listKbPagesByPrefixes({
 	prefixes: [base, mapDocsEnglishToSpanishPath(base), `/es${base}`],
@@ -125,6 +132,7 @@ const listDescendantPages = (node: Node): PageLink[] => {
 	title={title}
 	description={description}
 	canonical="https://info.propertylist.es/docs/property-services/"
+	robots={robots}
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/docs/property-services/' },
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/docs/property-services/' },

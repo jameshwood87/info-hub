@@ -923,12 +923,7 @@ const hreflangs = isFallback
 			{ hreflang: 'es', href: `https://info.propertylist.es${renderPath}` },
 			{ hreflang: 'x-default', href: `https://info.propertylist.es${englishPath}` },
 		];
-// /es/docs/property-services/ is a coming-soon section: a heading and nothing
-// beneath it, which Google files as a soft 404. It stays reachable and crawlable
-// for its links, but out of the index until it has content. Also dropped from the
-// sitemap.
-const NOINDEX_PATHS = new Set(['/es/docs/property-services/']);
-const robots = isFallback || NOINDEX_PATHS.has(renderPath) ? 'noindex,follow' : undefined;
+const robots = isFallback ? 'noindex,follow' : undefined;
 
 const notFoundTitle = 'Página no encontrada • PropertyList Info Hub';
 const notFoundDescription = 'No pudimos encontrar esta página. Usa la búsqueda o vuelve al inicio.';

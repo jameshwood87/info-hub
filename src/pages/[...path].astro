@@ -1493,7 +1493,9 @@ if (!page) {
 	// dead English URL, with no header, no search box and no way back into the site.
 	// src/pages/404.astro is the real page and sets its own 404 status, so hand off
 	// to it instead of inventing a second, worse one here.
-	return Astro.rewrite('/404');
+	// The trailing slash matters: a rewrite re-runs the middleware, and the
+	// trailing-slash normaliser there would answer /404 with a 301 instead.
+	return Astro.rewrite('/404/');
 }
 
 const lang = 'en';
@@ -1526,11 +1528,6 @@ const h1 = cleanText(page.title);
 const areaNameClean = String(h1 || '').replace(/\s+(?:neighbourhood|area)\s+guide\s*$/i, '').replace(/\s+/g, ' ').trim();
 const description = page.seo_description || page.description ? cleanText(page.seo_description || page.description) : undefined;
 const canonical = `https://info.propertylist.es${renderPath}`;
-// /docs/property-services/ is a coming-soon section: an H1 and nothing beneath it.
-// Google files it as a soft 404. It stays reachable and crawlable for its links,
-// but out of the index until it has content. Also dropped from the sitemap.
-const NOINDEX_PATHS = new Set(['/docs/property-services/']);
-const robots = NOINDEX_PATHS.has(renderPath) ? 'noindex,follow' : undefined;
 const viewCount = Number((await getTotalViewCounts([renderPath]).catch(() => ({} as any)))[renderPath] || 0);
 const viewCountLabel = new Intl.NumberFormat('en-US').format(viewCount);
 const spanishPath = toSpanishSwitchPath(renderPath);
@@ -3059,7 +3056,6 @@ const ldJson = JSON.stringify([
 		description={descriptionFinal}
 		canonical={canonical}
 		hreflangs={hreflangs}
-		robots={robots}
 		ogImage={isBlogLike ? heroSrc : isNeighbourhood && areaImagePath(neighbourhoodSlug) ? `https://info.propertylist.es${areaImagePath(neighbourhoodSlug)}` : undefined}
 		twitterCard="summary_large_image"
 	>

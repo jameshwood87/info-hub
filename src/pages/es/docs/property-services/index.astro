@@ -1,5 +1,12 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
+
+// Coming-soon section: nothing is filed under /es/docs/property-services/ yet, so
+// the page is a heading and two links, and Google reports it as a soft 404. It
+// stays reachable and its links stay crawlable, but it is out of the index until
+// it has content. It is excluded from the sitemap too, with its English twin.
+// Delete this line once the section has guides.
+const robots = 'noindex,follow';
 ---
 
 <Layout
@@ -7,6 +14,7 @@ import Layout from '../../../../layouts/Layout.astro';
 	title="Docs de servicios inmobiliarios • PropertyList Info Hub"
 	description="Guías y documentación para profesionales de servicios inmobiliarios."
 	canonical="https://info.propertylist.es/es/docs/property-services/"
+	robots={robots}
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/docs/property-services/' },
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/docs/property-services/' },
