@@ -44,12 +44,46 @@ const slugify = (s: string) =>
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
 
-const trimTo = (s: string, max: number) => {
-	const t = String(s || '').trim();
+// El texto de la tarjeta sale de la descripción del registro. Cortar por número
+// de caracteres dejaba las tarjetas partidas a media palabra, así que tomamos
+// frases completas y solo cortamos por palabra cuando la primera frase ya pasa
+// del límite.
+const CARD_DESC_MAX = 150;
+const TOP_DESC_MAX = 240;
+
+const sentenceTrim = (s: string, max = CARD_DESC_MAX) => {
+	const t = String(s || '')
+		.replace(/\s+/g, ' ')
+		.trim();
 	if (!t) return '';
-	const n = Math.max(1, Number(max) || 80);
+	const n = Math.max(20, Number(max) || CARD_DESC_MAX);
 	if (t.length <= n) return t;
-	return `${t.slice(0, Math.max(0, n - 1)).trimEnd()}…`;
+	const sentences = t.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || [t];
+	let out = '';
+	for (const raw of sentences) {
+		const piece = raw.trim();
+		if (!piece) continue;
+		const next = out ? `${out} ${piece}` : piece;
+		if (next.length > n) break;
+		out = next;
+	}
+	if (out) return out;
+	const head = t.slice(0, n);
+	const cut = head.lastIndexOf(' ');
+	return `${(cut > 0 ? head.slice(0, cut) : head).replace(/[\s,;:.]+$/, '')}...`;
+};
+
+// Las tarjetas imprimen la descripción del registro tal cual, así que un
+// registro antiguo no puede colar adjetivos de marketing en el índice. El
+// nombre propio "El Paraíso" queda fuera del filtro a propósito.
+const HYPE_RE = /\b(impresionantes?|exclusiv[oa]s?|lujos[oa]s?|lujo|vibrantes?|encantador(?:a|es|as)?|id[ií]lic[oa]s?|joyas?)\b/i;
+
+const isGenericDesc = (s: string) => {
+	const t = String(s || '').trim().toLowerCase();
+	if (!t) return true;
+	if (t.includes('resumen práctico de estilo de vida')) return true;
+	if (t.includes('resumen local de')) return true;
+	return false;
 };
 
 const slugFromBarrioPath = (p: any) => {
@@ -60,7 +94,15 @@ const slugFromBarrioPath = (p: any) => {
 	return '';
 };
 
-const cardDescFor = (p: any) => trimTo(String(p?.description || '').trim(), 120);
+// La descripción del registro es la fuente; el mapa de abajo solo actúa como
+// respaldo cuando un registro no trae descripción utilizable.
+const usableDesc = (p: any) => {
+	const d = String(p?.description || '').trim();
+	if (!d || isGenericDesc(d) || HYPE_RE.test(d)) return '';
+	return d;
+};
+
+const cardDescFor = (p: any) => sentenceTrim(usableDesc(p), CARD_DESC_MAX);
 
 const TOP_SUMMARY_BY_SLUG: Record<string, string> = {
 	marbella:
@@ -76,11 +118,13 @@ const TOP_SUMMARY_BY_SLUG: Record<string, string> = {
 };
 
 const topSummaryFor = (p: any) => {
+	const fromRecord = usableDesc(p);
+	if (fromRecord) return sentenceTrim(fromRecord, TOP_DESC_MAX);
 	const slug = slugFromBarrioPath(p) || slugify(String((p as any)._label || ''));
 	const mapped = slug && TOP_SUMMARY_BY_SLUG[slug] ? TOP_SUMMARY_BY_SLUG[slug] : '';
 	if (mapped) return mapped;
 	const first = cardDescFor(p);
-	const s1 = first ? (first.endsWith('.') || first.endsWith('…') ? first : `${first}.`) : '';
+	const s1 = first ? (/[.…]$|\.\.\.$/.test(first) ? first : `${first}.`) : '';
 	const s2 = 'Consulta lo destacado, consejos prácticos y la instantánea actual del mercado en la guía.';
 	return s1 ? `${s1} ${s2}` : s2;
 };

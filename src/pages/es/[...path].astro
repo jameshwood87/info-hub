@@ -907,7 +907,16 @@ const page =
 const renderPath = normalizedPath;
 const title = page.seo_title || page.title;
 const h1 = page.title;
-const areaNameClean = String(h1 || '').replace(/^gu[ií]a\s+del\s+barrio\s+(?:de\s+|del\s+)?/i, '').replace(/^gu[ií]a\s+de\s+/i, '').replace(/\s+/g, ' ').trim();
+// Los títulos de barrio llevan el formato "Marbella, Málaga: guía del barrio",
+// así que hay que quitar el sufijo y la provincia para quedarnos con el nombre
+// del lugar. Sin esto el CTA del portal imprimía el título entero.
+const areaNameClean = String(h1 || '')
+	.replace(/\s*:\s*gu[ií]a\s+(?:de\s+|del\s+)?barrios?\s*$/i, '')
+	.replace(/^gu[ií]a\s+del\s+barrio\s+(?:de\s+|del\s+)?/i, '')
+	.replace(/^gu[ií]a\s+de\s+/i, '')
+	.replace(/,\s*(?:M[áa]laga|C[áa]diz|Granada|Almer[íi]a|Sevilla|C[óo]rdoba|Huelva|Ja[ée]n|Madrid|Islas\s+Baleares|Baleares)\s*$/i, '')
+	.replace(/\s+/g, ' ')
+	.trim();
 const description = page.seo_description || page.description || undefined;
 const isFallback = !pageEsResolved && !strictEs;
 const canonical = `https://info.propertylist.es${isFallback ? englishPath : renderPath}`;

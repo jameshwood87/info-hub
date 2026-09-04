@@ -4,22 +4,48 @@
 // all three markets; prices only for for-sale (MCP rent/holiday prices are unreliable).
 import { marketsForArea, searchProperties, type AreaMarketSummary, type MarketListing } from '../lib/marketData';
 import { areaImagePath } from '../lib/areaImages';
-import { regionFromProvince, countryOfRegion, type Region, type Country } from '../data/geo';
+import { REGIONS, regionFromProvince, countryOfRegion, type Region, type Country } from '../data/geo';
 
 interface Props {
 	areaName: string;
 	lang?: 'en' | 'es';
 }
 const { areaName: rawName, lang = 'en' } = Astro.props as Props;
-const areaName = String(rawName || '')
-	.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '')
-	.replace(/\s+(?:neighbourhood\s+guide|area\s+guide)\s*$/i, '')
-	.replace(/^gu[ií]a\s+del\s+barrio\s+(?:de\s+|del\s+)?/i, '')
-	.replace(/^gu[ií]a\s+de\s+/i, '')
-	.replace(/\s+/g, ' ')
-	.trim();
-
 const es = lang === 'es';
+
+// Spanish guide titles read "Marbella, Málaga: guía del barrio", so the place
+// name needs that suffix and the province tail taken off as well as the English
+// "... Neighbourhood Guide" pattern. Until this was here the whole Spanish title
+// went to the market lookup, matched nothing, and every Spanish guide rendered
+// without a market block.
+const deaccent = (s: string) =>
+	String(s || '')
+		.normalize('NFD')
+		.replace(/[̀-ͯ]/g, '')
+		.toLowerCase()
+		.trim();
+
+const PROVINCE_TAILS = new Set(
+	[...Object.values(REGIONS).map((r) => String(r.label || '')), 'Islas Baleares', 'Baleares', 'Madrid', 'Andalucia', 'Andalucía'].map(deaccent),
+);
+
+const stripProvinceTail = (s: string) => {
+	const m = String(s || '').match(/^(.+),\s*([^,]+)$/);
+	if (!m) return s;
+	const head = String(m[1] || '').trim();
+	return head && PROVINCE_TAILS.has(deaccent(m[2] || '')) ? head : s;
+};
+
+const areaName = stripProvinceTail(
+	String(rawName || '')
+		.replace(/\s*(?:•|-)\s*PropertyList Info Hub\s*$/i, '')
+		.replace(/\s+(?:neighbourhood\s+guide|area\s+guide)\s*$/i, '')
+		.replace(/\s*:\s*gu[ií]a\s+(?:de\s+|del\s+)?barrios?\s*$/i, '')
+		.replace(/^gu[ií]a\s+del\s+barrio\s+(?:de\s+|del\s+)?/i, '')
+		.replace(/^gu[ií]a\s+de\s+/i, '')
+		.replace(/\s+/g, ' ')
+		.trim(),
+);
 const [markets, listings] = await Promise.all([marketsForArea(areaName), searchProperties(areaName, 'for-sale', 6)]);
 const sale = markets.sale;
 const rent = markets.rent;
@@ -43,17 +69,29 @@ const eurCompact = (n: number | null | undefined) => {
 	if (v >= 1_000) return `€${Math.round(v / 1_000)}k`;
 	return `€${Math.round(v)}`;
 };
+// Spanish pages get Spanish digit grouping too, or the figures read as English.
+const numLocale = es ? 'es-ES' : 'en-GB';
 const eurFull = (n: number | null | undefined) => {
 	const v = Number(n);
 	if (!Number.isFinite(v) || v <= 0) return null;
-	return `€${Math.round(v).toLocaleString('en-GB')}`;
+	return `€${Math.round(v).toLocaleString(numLocale)}`;
 };
 const nfmt = (n: number | null | undefined) => {
 	const v = Number(n);
-	return Number.isFinite(v) ? v.toLocaleString('en-GB') : '0';
+	return Number.isFinite(v) ? v.toLocaleString(numLocale) : '0';
 };
 
 const t = (en: string, esT: string) => (es ? esT : en);
+const regionLabel = region ? (es ? region.labelEs || region.label : region.label) : '';
+
+// The Oracle source arrives from the MCP as English prose, so it has to be
+// translated here rather than printed straight onto a Spanish page.
+const oracleSource = (() => {
+	const raw = String(sale?.oracle?.source || '').trim();
+	if (!es) return raw || 'Spanish notarial register';
+	if (!raw) return 'registro notarial español';
+	return raw.replace(/spanish notarial register/i, 'registro notarial español');
+})();
 const unitLab = (d: AreaMarketSummary | null) => (d?.priceUnit === 'per_month' ? t('/mo', '/mes') : d?.priceUnit === 'per_week' ? t('/wk', '/sem') : '');
 const oracleSqm = sale?.oracle?.verified ? sale.oracle.verifiedPricePerSqm : null;
 const listSqm = sale?.medianPricePerSqm || null;
@@ -96,8 +134,8 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 {hasSale ? (
 	<div class="ag">
 		{heroImage ? (
-			<div class="agHero" style={`background-image:url('${heroImage}')`} role="img" aria-label={areaImage ? `View of ${areaName}` : `Property in ${areaName}`}>
-				<div class="agHeroCap">{areaName}{region ? `, ${region.label}` : ''}</div>
+			<div class="agHero" style={`background-image:url('${heroImage}')`} role="img" aria-label={areaImage ? t(`View of ${areaName}`, `Vista de ${areaName}`) : t(`Property in ${areaName}`, `Propiedad en ${areaName}`)}>
+				<div class="agHeroCap">{areaName}{regionLabel ? `, ${regionLabel}` : ''}</div>
 			</div>
 		) : null}
 		<div class="agChips">
@@ -140,7 +178,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			<p class="agOracle">
 				{t('The "verified" €/m² is notary-verified by', 'El €/m² "verificado" está verificado ante notario por')}{' '}
 				<a href={sale!.oracle.attestationUrl} target="_blank" rel="noopener">PropertyList Oracle</a>
-				{`. ${sale!.oracle.source || 'Spanish notarial register'}${sale!.oracle.sampleSize ? `, ${nfmt(sale!.oracle.sampleSize)} ${t('transactions', 'transacciones')}` : ''}${sale!.oracle.periodEnd ? ` ${t('to', 'hasta')} ${sale!.oracle.periodEnd}` : ''}.`}
+				{`. ${oracleSource}${sale!.oracle.sampleSize ? `, ${nfmt(sale!.oracle.sampleSize)} ${t('transactions', 'transacciones')}` : ''}${sale!.oracle.periodEnd ? ` ${t('to', 'hasta')} ${sale!.oracle.periodEnd}` : ''}.`}
 			</p>
 		) : null}
 
@@ -150,7 +188,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 				<div class="agBandWrap">
 					{bands.map((b) => (
 						<div class="agBandRow">
-							<div class="agBandLab">{b.label} {t('bed', 'dorm')}{b.label === '5+' ? 's' : ''}</div>
+							<div class="agBandLab">{b.label} {t('bed', 'dorm')}{b.label === '5+' ? t('s', '') : ''}</div>
 							<div class="agBandBar"><div class="agBandFill" style={`width:${b.pct}%`}></div></div>
 							<div class="agBandN">{nfmt(b.n)}</div>
 						</div>
@@ -170,7 +208,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 							</div>
 							<div class="agLBody">
 								<div class="agLPrice">{eurFull(l.price) || t('Price on request', 'Precio a consultar')}</div>
-								<div class="agLMeta">{[l.bedrooms ? `${l.bedrooms} ${t('bed', 'dorm')}` : '', l.bathrooms ? `${l.bathrooms} ${t('bath', 'baño')}` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
+								<div class="agLMeta">{[l.bedrooms ? `${l.bedrooms} ${t('bed', 'dorm')}` : '', l.bathrooms ? `${l.bathrooms} ${t('bath', Number(l.bathrooms) === 1 ? 'baño' : 'baños')}` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
 								<div class="agLLoc">{[l.suburb, l.city].filter(Boolean).join(', ') || areaName}</div>
 							</div>
 						</a>
@@ -211,7 +249,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 		<div class="agFInner">
 			<div class="agFBadge">{t('Founding member opportunity', 'Oportunidad de miembro fundador')}</div>
 			<h2>{t(`No agency has claimed ${areaName} yet`, `Ninguna agencia tiene ${areaName} todavía`)}</h2>
-			<p class="agFLead">{t(`Be the founding agent for ${areaName}${region ? `, ${region.label}` : ''}. List all your properties for free and they show right here, in front of every buyer, renter and holiday-maker searching this area.`, `Sé el agente fundador de ${areaName}${region ? `, ${region.label}` : ''}. Publica todas tus propiedades gratis y aparecerán aquí, ante cada comprador, inquilino y viajero que busca en esta zona.`)}</p>
+			<p class="agFLead">{t(`Be the founding agent for ${areaName}${region ? `, ${region.label}` : ''}. List all your properties for free and they show right here, in front of every buyer, renter and holiday-maker searching this area.`, `Sé el agente fundador de ${areaName}${regionLabel ? `, ${regionLabel}` : ''}. Publica todas tus propiedades gratis y aparecerán aquí, ante cada comprador, inquilino y viajero que busca en esta zona.`)}</p>
 			<ul class="agFPerks">
 				<li>{t('List everything free', 'Publica todo gratis')} - {t('your whole portfolio, live on PropertyList and on this page.', 'toda tu cartera, en directo en PropertyList y en esta página.')}</li>
 				<li>{t('50€ of credits', '50€ en créditos')} {t('to feature your listings or generate area-specific market reports.', 'para destacar tus anuncios o generar informes de mercado de la zona.')}</li>

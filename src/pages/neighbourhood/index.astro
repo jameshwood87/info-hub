@@ -108,41 +108,39 @@ const slugFromNeighbourhoodPath = (p: any) => {
 	return '';
 };
 
-const trimTo = (s: string, max: number) => {
-	const t = String(s || '').trim();
+// Card copy is cut from the record description. A fixed character count used to
+// end cards mid-word, so take whole sentences up to roughly a card's worth of
+// text and only fall back to a word-boundary cut when the first sentence alone
+// is longer than that.
+const CARD_DESC_MAX = 150;
+const TOP_DESC_MAX = 240;
+
+const sentenceTrim = (s: string, max = CARD_DESC_MAX) => {
+	const t = String(s || '')
+		.replace(/\s+/g, ' ')
+		.trim();
 	if (!t) return '';
-	const n = Math.max(1, Number(max) || 80);
+	const n = Math.max(20, Number(max) || CARD_DESC_MAX);
 	if (t.length <= n) return t;
-	return `${t.slice(0, Math.max(0, n - 1)).trimEnd()}…`;
+	const sentences = t.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || [t];
+	let out = '';
+	for (const raw of sentences) {
+		const piece = raw.trim();
+		if (!piece) continue;
+		const next = out ? `${out} ${piece}` : piece;
+		if (next.length > n) break;
+		out = next;
+	}
+	if (out) return out;
+	const head = t.slice(0, n);
+	const cut = head.lastIndexOf(' ');
+	return `${(cut > 0 ? head.slice(0, cut) : head).replace(/[\s,;:.]+$/, '')}...`;
 };
 
-const CARD_DESC_BY_SLUG: Record<string, string> = {
-	benahavis: 'Benahavís hillside village: golf resorts, dining, gated villas and views.',
-	benalmadena: 'Benalmádena coast: marina, beaches, family amenities and airport access.',
-	cancelada: 'Cancelada: quieter Estepona pocket near golf; low-rise homes and local cafés.',
-	'el-limonar': 'El Limonar (Málaga): leafy villas, schools, and quick walks to the sea.',
-	elviria: 'Elviria: Marbella East for dunes, beach clubs and golf; villas and apartments.',
-	'estepona-old-town': 'Estepona Old Town: flowered lanes, tapas squares and charming homes.',
-	estepona: 'Estepona: renovated centre, marina, and promenade with year-round life.',
-	fuengirola: 'Fuengirola: long beachfront, train to Málaga, and an amenity-rich promenade.',
-	'golden-mile': 'Golden Mile: Marbella-Banús prime strip with luxury villas and beach resorts.',
-	guadalmina: 'Guadalmina: established golf area by San Pedro; gated homes and beach access.',
-	'la-cala-de-mijas': 'La Cala de Mijas: walkable beach village, markets, chiringuitos and cafés.',
-	'la-quinta': 'La Quinta: Benahavís golf valley with views and secure communities near Marbella.',
-	'la-zagaleta': 'La Zagaleta: ultra-private estate with big plots, top security and club living.',
-	'los-monteros': 'Los Monteros: Marbella East luxury by the dunes; beachfront villas and golf.',
-	'malaga-centre': 'Málaga Centre: historic core, museums and dining; strong city rental demand.',
-	marbella: 'Marbella: beach town glamour, dining, and prime districts from centre to hills.',
-	'mijas-costa': 'Mijas Costa: stretch between Fuengirola and Marbella with varied homes by sea.',
-	nerja: 'Nerja: coves, caves and Balcón de Europa views with relaxed Andalusian charm.',
-	'new-golden-mile': 'New Golden Mile: Marbella-Estepona coast with modern complexes and beaches.',
-	'nueva-andalucia': 'Nueva Andalucía: Golf Valley behind Banús; villas, gated flats and schools.',
-	pedregalejo: 'Pedregalejo (Málaga): relaxed promenade, chiringuitos and low-rise beach living.',
-	'puerto-banus': 'Puerto Banús: marina, nightlife and designer shops; high-end flats and rentals.',
-	'san-pedro-de-alcantara': 'San Pedro: local town feel, new boulevard, beach walks and amenities.',
-	'sierra-blanca': 'Sierra Blanca: prestige gated hillside above Marbella with privacy and views.',
-	torremolinos: 'Torremolinos: wide beaches, nightlife and a quick train ride into Málaga.',
-};
+// The cards now print the record description verbatim, so a stale record must
+// not be able to put marketing adjectives on the index. Anything carrying hype
+// falls back to the generated summary instead.
+const HYPE_RE = /\b(stunning|exclusive|luxury|luxurious|vibrant|charming|idyllic|paradise|gem)\b/i;
 
 const isGenericDesc = (s: string) => {
 	const t = String(s || '').trim().toLowerCase();
@@ -169,15 +167,20 @@ const autoCardDescFor = (p: any) => {
 	if (tokenSet.has('sierra') || tokenSet.has('hills') || tokenSet.has('blanca')) hints.push('views & privacy');
 
 	const detail = hints.length ? hints.slice(0, 2).join(', ') : 'lifestyle and property mix';
-	return trimTo(`${base}: ${detail}.`, 82);
+	return sentenceTrim(`${base}: ${detail}.`);
+};
+
+// The record description is the source. The generated summary is only a fallback
+// for a record that has none, or one that is still generic or hype-laden.
+const usableDesc = (p: any) => {
+	const d = String(p?.description || '').trim();
+	if (!d || isGenericDesc(d) || HYPE_RE.test(d)) return '';
+	return d;
 };
 
 const cardDescFor = (p: any) => {
-	const slug = slugFromNeighbourhoodPath(p);
-	const fromMap = slug ? CARD_DESC_BY_SLUG[slug] : '';
-	if (fromMap) return trimTo(fromMap, 82);
-	const fromPage = String(p?.description || '').trim();
-	if (fromPage && !isGenericDesc(fromPage)) return trimTo(fromPage, 82);
+	const d = usableDesc(p);
+	if (d) return sentenceTrim(d, CARD_DESC_MAX);
 	return autoCardDescFor(p);
 };
 
@@ -215,6 +218,8 @@ const TOP_SUMMARY_BY_SLUG: Record<string, { summary: string; priceHint?: string 
 };
 
 const topSummaryFor = (p: any) => {
+	const fromRecord = usableDesc(p);
+	if (fromRecord) return sentenceTrim(fromRecord, TOP_DESC_MAX);
 	const slug = slugFromNeighbourhoodPath(p);
 	const mapped = slug && TOP_SUMMARY_BY_SLUG[slug]?.summary ? TOP_SUMMARY_BY_SLUG[slug]!.summary : '';
 	if (mapped) return mapped;
