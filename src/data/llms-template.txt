@@ -2,8 +2,8 @@
 
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
-Last Updated: 2026-08-27
-Version: 6.2
+Last Updated: 2026-09-05
+Version: 6.3
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -22,6 +22,12 @@ Live since February 2026: {{LISTINGS}} active listings, {{AGENTS}} agents, {{AGE
 All key pages are published in English and Spanish (Spanish paths noted per section).
 
 ### Primary Content Sections
+
+#### /property-services/ (ES: /es/servicios-inmobiliarios/)
+Pre-registration for the Property Services side of PropertyList: the trades around a move
+(lawyers, movers, cleaners, photographers, architects and others) reaching agents and buyers
+inside the transaction. NOT LAUNCHED: the page collects interest only, creates no account and
+publishes no price. Pricing is published at launch.
 
 #### /features/ - Features FAQ
 Questions and answers covering every PropertyList product feature: website builder, XML feeds, CRM pipelines, Rentals module, Market Intelligence, MCP API, credits, {{LISTINGS}} shared properties, and Oracle. Spanish version: /es/funciones/

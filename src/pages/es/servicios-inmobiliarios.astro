@@ -1,0 +1,257 @@
+---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+import Layout from '../../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/servicios-inmobiliarios/`;
+const title = 'Servicios inmobiliarios en PropertyList: apúntate a la lista | PropertyList';
+const description =
+	'Abogados, mudanzas, limpieza, fotógrafos y los demás oficios que rodean una compraventa podrán llegar a agentes y compradores dentro de PropertyList. Todavía no está abierto: déjanos tus datos y te avisamos.';
+
+// El marketplace de servicios NO está construido. Nada puede leerse como disponible
+// y no puede aparecer ningún precio: la tarifa se publica en el lanzamiento.
+const trades = [
+	'Abogado o gestor',
+	'Arquitecto o aparejador',
+	'Constructor o reformas',
+	'Fotógrafo o vídeo',
+	'Home staging',
+	'Mudanzas',
+	'Limpieza',
+	'Piscina o jardinería',
+	'Cerrajería o seguridad',
+	'Seguros',
+	'Bróker hipotecario',
+	'Cambio de divisas',
+	'Interiorismo',
+	'Suministros y altas',
+	'Otro',
+];
+
+const faqs = [
+	{
+		q: '¿Está abierto ya?',
+		a: 'No. La parte de servicios de PropertyList todavía se está construyendo. Esta página solo registra a quién le interesa entrar, para avisarte el día que abra y para darle forma según los oficios que de verdad aparezcan.',
+	},
+	{
+		q: '¿Cuánto costará?',
+		a: 'No está decidido, así que no vamos a inventarlo aquí. La tarifa se publica cuando el servicio se lanza, y quien se haya registrado será el primero en saberlo.',
+	},
+	{
+		q: '¿Qué estáis construyendo exactamente?',
+		a: 'Un sitio donde los profesionales que rodean una mudanza aparezcan en el momento en que hacen falta, dentro de la operación y no en un directorio que nadie abre. Un agente que cierra una venta, o un comprador que acaba de firmar, necesita abogado, fotógrafo, mudanza y limpieza con pocos días de diferencia.',
+	},
+	{
+		q: '¿Registrarme me compromete a algo?',
+		a: 'No. Es un correo y una línea sobre lo que haces. No se crea ninguna cuenta, no se cobra nada y puedes pedir que te quitemos cuando quieras.',
+	},
+	{
+		q: 'Soy una agencia inmobiliaria, ¿es para mí?',
+		a: 'No. Las agencias entran en el MLS y el CRM, que son gratuitos y están abiertos hoy. Esta página es para los oficios y profesionales que contratan las agencias y sus clientes.',
+	},
+	{
+		q: '¿Cuándo abre?',
+		a: 'Todavía no hay fecha. Está en la hoja de ruta pública y avanza más rápido cuanta más gente lo pide, así que registrarte aquí cuenta de verdad.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/property-services/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/property-services/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+	<div class="wrap">
+		<section class="hero">
+			<p class="kicker"><span class="soonBadge">Todavía no está abierto</span> Servicios inmobiliarios</p>
+			<h1>Los oficios que rodean cada mudanza, dentro de la operación</h1>
+			<p class="lede">
+				PropertyList es donde {plAgents} agentes de {plAgencies} agencias publican y venden vivienda en España. La parte de servicios
+				pone en el mismo sitio a los profesionales de los que dependen: encontrados cuando hacen falta, no en un directorio que nadie abre.
+			</p>
+			<p class="lede">Todavía no está construido. Si quieres estar dentro, déjanos tus datos y te avisamos el día que abra.</p>
+			<a class="btnPrimary heroCta" href="#registro">Apúntate a la lista</a>
+		</section>
+
+		<section class="section">
+			<div class="sectionHead">
+				<h2>Por qué dentro de la operación es distinto</h2>
+				<p>Un directorio espera a que lo busquen. Esto no.</p>
+			</div>
+			<div class="cards">
+				<div class="card">
+					<h3>El momento es el producto</h3>
+					<p>
+						Se firma una venta y en pocos días ese mismo comprador necesita abogado, empresa de mudanzas, limpieza y alguien que dé de
+						alta los suministros. Esa secuencia se ve dentro de la plataforma porque la operación se trabaja ahí.
+					</p>
+				</div>
+				<div class="card">
+					<h3>El agente ya es quien recomienda</h3>
+					<p>
+						A los agentes les piden fontanero, fotógrafo y gestor constantemente, y responden de memoria. La idea es que esa
+						recomendación se pueda hacer en un toque, y que tú formes parte de ella.
+					</p>
+				</div>
+				<div class="card">
+					<h3>Sobre operaciones reales</h3>
+					<p>
+						Cada anuncio de la red pertenece a una agencia registrada y las cifras de mercado vienen del registro notarial. La parte de
+						servicios se apoya en la misma base, no en pagar por aparecer.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="registro">
+			<div class="sectionHead">
+				<h2>Apúntate a la lista</h2>
+				<p>Tres campos. Sin cuenta, sin cobro y sin nada que cancelar.</p>
+			</div>
+			<form class="svcForm" data-source="servicios-inmobiliarios">
+				<label>
+					<span>¿A qué te dedicas?</span>
+					<select name="trade" required aria-label="Tu oficio o profesión">
+						<option value="">Elige una opción</option>
+						{trades.map((t) => <option value={t}>{t}</option>)}
+					</select>
+				</label>
+				<label>
+					<span>Nombre del negocio <em>opcional</em></span>
+					<input type="text" name="business" placeholder="Tu empresa" autocomplete="organization" />
+				</label>
+				<label>
+					<span>¿Dónde trabajas? <em>opcional</em></span>
+					<input type="text" name="area" placeholder="Marbella, Estepona, provincia de Málaga" autocomplete="off" />
+				</label>
+				<label>
+					<span>Correo</span>
+					<input type="email" name="email" required placeholder="tu@tunegocio.com" autocomplete="email" />
+				</label>
+				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+				<button type="submit">Apuntarme</button>
+				<p class="svcStatus" role="status" aria-live="polite"></p>
+				<p class="privacy">
+					Usamos esto para avisarte cuando abra el servicio y para nada más. Consulta la
+					<a href="/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/">política de privacidad</a>.
+				</p>
+			</form>
+		</section>
+
+		<section class="section">
+			<div class="sectionHead"><h2>Preguntas</h2></div>
+			<div class="faq">
+				{faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+			<p class="foot">
+				¿Lo quieres antes? Está en el <a href="/es/solicitar-funciones/">tablero público de funciones</a>, y cuanta más gente lo pide,
+				antes se construye. Si tienes una agencia inmobiliaria en lugar de un negocio de servicios, el
+				<a href="/es/mls-gratuito/">MLS y el CRM</a> son gratuitos y están abiertos hoy.
+			</p>
+		</section>
+	</div>
+
+	<script is:inline>
+		document.querySelectorAll('.svcForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.svcStatus');
+				const val = (n) => {
+					const el = form.querySelector('[name="' + n + '"]');
+					return el ? el.value : '';
+				};
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'svcStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/services-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({
+							email: val('email'),
+							trade: val('trade'),
+							business: val('business'),
+							area: val('area'),
+							website: val('website'),
+							lang: es ? 'es' : 'en',
+						}),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'svcStatus ok';
+						status.textContent = es
+							? 'Registrado. Te avisamos el dia que abra.'
+							: 'Registered. We will email you the day it opens.';
+					} else {
+						status.className = 'svcStatus err';
+						status.textContent = es
+							? 'Revisa el correo y el oficio, e intentalo de nuevo.'
+							: 'Please check your email and trade, then try again.';
+					}
+				} catch (err) {
+					status.className = 'svcStatus err';
+					status.textContent = es ? 'Algo ha fallado. Intentalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<style>
+		.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 72px; }
+		.hero { padding: 40px 0 28px; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; font-size: 13px; font-weight: 700; color: rgba(16,24,40,0.6); }
+		.soonBadge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #8a5a00; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.32); padding: 4px 10px; border-radius: 999px; }
+		h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.08; margin: 0 0 16px; letter-spacing: -0.015em; }
+		.lede { font-size: 18px; line-height: 1.6; color: rgba(16,24,40,0.72); max-width: 68ch; margin: 0 0 14px; }
+		.heroCta { display: inline-block; margin-top: 10px; }
+		.section { padding: 34px 0 0; }
+		.sectionHead h2 { font-size: 24px; margin: 0 0 6px; }
+		.sectionHead p { margin: 0 0 18px; color: rgba(16,24,40,0.62); }
+		.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+		.card { background: #fff; border: 1px solid rgba(16,24,40,0.1); border-radius: 14px; padding: 18px 20px; }
+		.card h3 { font-size: 17px; margin: 0 0 8px; }
+		.card p { margin: 0; color: rgba(16,24,40,0.7); line-height: 1.55; }
+		.svcForm { display: grid; gap: 14px; max-width: 520px; background: #fff; border: 1px solid rgba(16,24,40,0.1); border-radius: 16px; padding: 22px; }
+		.svcForm label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+		.svcForm label em { font-style: normal; font-weight: 400; color: rgba(16,24,40,0.5); }
+		.svcForm input, .svcForm select { width: 100%; padding: 11px 13px; border: 1px solid rgba(16,24,40,0.18); border-radius: 10px; font: inherit; font-weight: 400; background: #fff; }
+		.svcForm button { padding: 12px 18px; border: 0; border-radius: 10px; background: var(--pl-accent, #00ae9a); color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; }
+		.svcForm.done button, .svcForm.done input, .svcForm.done select { opacity: 0.55; pointer-events: none; }
+		.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		.svcStatus { margin: 0; font-size: 14px; min-height: 1em; }
+		.svcStatus.ok { color: #0a6d61; font-weight: 700; }
+		.svcStatus.err { color: #b42318; }
+		.privacy { margin: 0; font-size: 12.5px; color: rgba(16,24,40,0.55); }
+		.faq details { border-bottom: 1px solid rgba(16,24,40,0.1); padding: 12px 0; }
+		.faq summary { cursor: pointer; font-weight: 700; font-size: 16px; }
+		.faq p { margin: 8px 0 0; color: rgba(16,24,40,0.72); line-height: 1.6; max-width: 72ch; }
+		.foot { margin: 22px 0 0; color: rgba(16,24,40,0.62); font-size: 15px; }
+	</style>
+</Layout>

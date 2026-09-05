@@ -1,0 +1,259 @@
+---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+import Layout from '../layouts/Layout.astro';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/property-services/`;
+const title = 'Property Services on PropertyList: register your interest | PropertyList';
+const description =
+	'Cleaners, lawyers, movers, photographers and the other trades around a move will be able to reach agents and buyers inside PropertyList. Not open yet: register your interest and we will tell you when it is.';
+
+// The services marketplace is NOT built. Nothing on this page may read as available,
+// and no price may appear: pricing is unpublished until launch.
+const trades = [
+	'Lawyer or gestor',
+	'Architect or surveyor',
+	'Builder or reformer',
+	'Photographer or videographer',
+	'Home staging',
+	'Removals',
+	'Cleaning',
+	'Pool or garden maintenance',
+	'Locksmith or security',
+	'Insurance',
+	'Mortgage broker',
+	'Currency exchange',
+	'Interior design',
+	'Utilities and connections',
+	'Other',
+];
+
+const faqs = [
+	{
+		q: 'Is this open now?',
+		a: 'No. The services side of PropertyList is still being built. This page only records who wants in, so we can tell you the day it opens and shape it around the trades that actually turn up.',
+	},
+	{
+		q: 'What will it cost?',
+		a: 'That is not decided, so we are not going to guess at it here. Pricing is published when the service launches, and anyone who registered will hear it first.',
+	},
+	{
+		q: 'What are you actually building?',
+		a: 'A place for the professionals around a move to be found at the moment they are needed, inside the transaction rather than in a directory nobody opens. An agent closing a sale, or a buyer who has just completed, needs a lawyer, a photographer, a removals firm and a cleaner within days of each other.',
+	},
+	{
+		q: 'Does registering commit me to anything?',
+		a: 'No. It is an email address and a line about what you do. No account is created, nothing is charged, and you can ask us to remove you at any time.',
+	},
+	{
+		q: 'I am an estate agency, is this for me?',
+		a: 'No. Agencies join the MLS and CRM, which is free and open today. This page is for the trades and professionals agencies and their clients hire.',
+	},
+	{
+		q: 'When will it open?',
+		a: 'There is no date yet. It is on the public roadmap, and it moves faster when more people ask for it, so registering here genuinely counts.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/servicios-inmobiliarios/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+
+	<div class="wrap">
+		<section class="hero">
+			<p class="kicker"><span class="soonBadge">Not open yet</span> Property Services</p>
+			<h1>The trades around every move, inside the deal</h1>
+			<p class="lede">
+				PropertyList is where {plAgents} agents across {plAgencies} agencies list and sell property in Spain. The services side puts the
+				professionals they rely on in the same place: found at the moment they are needed, not in a directory nobody opens.
+			</p>
+			<p class="lede">
+				It is not built yet. If you want to be in it, leave your details and we will tell you the day it opens.
+			</p>
+			<a class="btnPrimary heroCta" href="#register">Register your interest</a>
+		</section>
+
+		<section class="section">
+			<div class="sectionHead">
+				<h2>Why inside the transaction is different</h2>
+				<p>A directory waits to be searched. This does not.</p>
+			</div>
+			<div class="cards">
+				<div class="card">
+					<h3>The timing is the product</h3>
+					<p>
+						A sale completes and within days the same buyer needs a lawyer, a removals firm, a cleaner and someone to connect the
+						utilities. That sequence is visible inside the platform because the deal is being worked there.
+					</p>
+				</div>
+				<div class="card">
+					<h3>The agent is already the recommender</h3>
+					<p>
+						Agents are asked for a plumber, a photographer and a gestor constantly, and they answer from memory. The intention is to
+						make that recommendation something they can make in one tap, and something you can be part of.
+					</p>
+				</div>
+				<div class="card">
+					<h3>Built on real transactions</h3>
+					<p>
+						Every listing on the network belongs to a registered agency, and the market figures come from the notarial register. The
+						services side sits on the same foundation rather than on paid placement.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="register">
+			<div class="sectionHead">
+				<h2>Register your interest</h2>
+				<p>Three fields. No account, no charge, and nothing to cancel.</p>
+			</div>
+			<form class="svcForm" data-source="property-services">
+				<label>
+					<span>What do you do?</span>
+					<select name="trade" required aria-label="Your trade or profession">
+						<option value="">Choose one</option>
+						{trades.map((t) => <option value={t}>{t}</option>)}
+					</select>
+				</label>
+				<label>
+					<span>Business name <em>optional</em></span>
+					<input type="text" name="business" placeholder="Your company" autocomplete="organization" />
+				</label>
+				<label>
+					<span>Where do you work? <em>optional</em></span>
+					<input type="text" name="area" placeholder="Marbella, Estepona, Malaga province" autocomplete="off" />
+				</label>
+				<label>
+					<span>Email</span>
+					<input type="email" name="email" required placeholder="you@yourbusiness.com" autocomplete="email" />
+				</label>
+				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+				<button type="submit">Register my interest</button>
+				<p class="svcStatus" role="status" aria-live="polite"></p>
+				<p class="privacy">
+					We use this to tell you when the service opens and nothing else. See the
+					<a href="/docs/propertylist-mls-user-manual/legal/privacy-policy/">privacy policy</a>.
+				</p>
+			</form>
+		</section>
+
+		<section class="section">
+			<div class="sectionHead"><h2>Questions</h2></div>
+			<div class="faq">
+				{faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+			<p class="foot">
+				Want it sooner? It is on the <a href="/request-new-features/">public feature board</a>, and the more people who ask, the
+				sooner it gets built. If you run an estate agency rather than a service business, the
+				<a href="/free-mls/">MLS and CRM</a> are free and open today.
+			</p>
+		</section>
+	</div>
+
+	<script is:inline>
+		document.querySelectorAll('.svcForm').forEach((form) => {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const status = form.querySelector('.svcStatus');
+				const val = (n) => {
+					const el = form.querySelector('[name="' + n + '"]');
+					return el ? el.value : '';
+				};
+				const es = (document.documentElement.lang || '').indexOf('es') === 0;
+				status.className = 'svcStatus';
+				status.textContent = es ? 'Enviando...' : 'Sending...';
+				try {
+					const r = await fetch('/api/services-waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({
+							email: val('email'),
+							trade: val('trade'),
+							business: val('business'),
+							area: val('area'),
+							website: val('website'),
+							lang: es ? 'es' : 'en',
+						}),
+					});
+					const j = await r.json().catch(() => ({}));
+					if (r.ok && j && j.ok) {
+						form.classList.add('done');
+						status.className = 'svcStatus ok';
+						status.textContent = es
+							? 'Registrado. Te avisamos el dia que abra.'
+							: 'Registered. We will email you the day it opens.';
+					} else {
+						status.className = 'svcStatus err';
+						status.textContent = es
+							? 'Revisa el correo y el oficio, e intentalo de nuevo.'
+							: 'Please check your email and trade, then try again.';
+					}
+				} catch (err) {
+					status.className = 'svcStatus err';
+					status.textContent = es ? 'Algo ha fallado. Intentalo de nuevo.' : 'Something went wrong. Please try again.';
+				}
+			});
+		});
+	</script>
+
+	<style>
+		.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 72px; }
+		.hero { padding: 40px 0 28px; }
+		.kicker { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; font-size: 13px; font-weight: 700; color: rgba(16,24,40,0.6); }
+		.soonBadge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #8a5a00; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.32); padding: 4px 10px; border-radius: 999px; }
+		h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.08; margin: 0 0 16px; letter-spacing: -0.015em; }
+		.lede { font-size: 18px; line-height: 1.6; color: rgba(16,24,40,0.72); max-width: 68ch; margin: 0 0 14px; }
+		.heroCta { display: inline-block; margin-top: 10px; }
+		.section { padding: 34px 0 0; }
+		.sectionHead h2 { font-size: 24px; margin: 0 0 6px; }
+		.sectionHead p { margin: 0 0 18px; color: rgba(16,24,40,0.62); }
+		.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+		.card { background: #fff; border: 1px solid rgba(16,24,40,0.1); border-radius: 14px; padding: 18px 20px; }
+		.card h3 { font-size: 17px; margin: 0 0 8px; }
+		.card p { margin: 0; color: rgba(16,24,40,0.7); line-height: 1.55; }
+		.svcForm { display: grid; gap: 14px; max-width: 520px; background: #fff; border: 1px solid rgba(16,24,40,0.1); border-radius: 16px; padding: 22px; }
+		.svcForm label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+		.svcForm label em { font-style: normal; font-weight: 400; color: rgba(16,24,40,0.5); }
+		.svcForm input, .svcForm select { width: 100%; padding: 11px 13px; border: 1px solid rgba(16,24,40,0.18); border-radius: 10px; font: inherit; font-weight: 400; background: #fff; }
+		.svcForm button { padding: 12px 18px; border: 0; border-radius: 10px; background: var(--pl-accent, #00ae9a); color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; }
+		.svcForm.done button, .svcForm.done input, .svcForm.done select { opacity: 0.55; pointer-events: none; }
+		.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+		.svcStatus { margin: 0; font-size: 14px; min-height: 1em; }
+		.svcStatus.ok { color: #0a6d61; font-weight: 700; }
+		.svcStatus.err { color: #b42318; }
+		.privacy { margin: 0; font-size: 12.5px; color: rgba(16,24,40,0.55); }
+		.faq details { border-bottom: 1px solid rgba(16,24,40,0.1); padding: 12px 0; }
+		.faq summary { cursor: pointer; font-weight: 700; font-size: 16px; }
+		.faq p { margin: 8px 0 0; color: rgba(16,24,40,0.72); line-height: 1.6; max-width: 72ch; }
+		.foot { margin: 22px 0 0; color: rgba(16,24,40,0.62); font-size: 15px; }
+	</style>
+</Layout>
