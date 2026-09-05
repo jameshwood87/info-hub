@@ -52,9 +52,12 @@ export async function getPortalStats(): Promise<PortalStats> {
 // Format a live count as a safe marketing figure that rounds DOWN to the nearest 10 and adds "+",
 // e.g. 6493 -> "6,490+", 995 -> "990+", 1388 -> "1,380+". Never overstates; grows on its own,
 // and stays within 9 of the exact figure the stats strip shows (2026-09-05, was two significant digits).
-export function statPlus(n: number, lang: 'en' | 'es' | 'de' = 'en'): string {
+export function statPlus(n: number, lang: 'en' | 'es' | 'de' | 'fr' | 'sv' | 'ru' = 'en'): string {
 	if (!Number.isFinite(n) || n <= 0) return '0';
 	const floored = Math.floor(n / 10) * 10;
-	const sep = lang === 'en' ? ',' : '.';
+	// English groups thousands with a comma, Spanish and German with a full
+	// stop, and French, Swedish and Russian with a space. The space is
+	// non-breaking so a figure never wraps in half at the end of a line.
+	const sep = lang === 'en' ? ',' : lang === 'fr' || lang === 'sv' || lang === 'ru' ? '\u00a0' : '.';
 	return String(floored).replace(/\B(?=(\d{3})+(?!\d))/g, sep) + '+';
 }

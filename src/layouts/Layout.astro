@@ -1,4 +1,5 @@
 ---
+import LangPicker from '../components/LangPicker.astro';
 type HreflangLink = { hreflang: string; href: string };
 
 type Props = {
@@ -221,10 +222,29 @@ const toSpanishSwitchPath = (p: string) => {
 
 const enHreflang = (hreflangs || []).find((h) => h.hreflang === 'en')?.href;
 const esHreflang = (hreflangs || []).find((h) => h.hreflang === 'es')?.href;
-const deHreflang = (hreflangs || []).find((h) => h.hreflang === 'de')?.href;
-const enPath = lang === 'de' ? (enHreflang ?? '/') : toEnglishSwitchPath(pathname);
-const esPath = lang === 'de' ? (esHreflang ?? '/es/') : toSpanishSwitchPath(pathname);
-const deSwitchHref = deHreflang ?? '/de/';
+// Languages beyond the EN/ES core. A page opts in by publishing an hreflang for
+// one: the switcher then shows a pill for it, and the EN and ES pills follow the
+// page's own declarations instead of the /es/ path convention, which only
+// describes the two-language site. Pages that publish nothing extra are
+// unaffected, which is why this was safe to turn on everywhere at once.
+const EXTRA_LANG_CODES = ['de', 'fr', 'sv', 'ru'] as const;
+const switchLangs = EXTRA_LANG_CODES.map((code) => ({
+	code,
+	href: (hreflangs || []).find((h) => h.hreflang === code)?.href,
+})).filter((l): l is { code: string; href: string } => Boolean(l.href));
+const isExtraLang = (EXTRA_LANG_CODES as readonly string[]).includes(lang);
+// The complete set this page offers, English first, in the order the picker
+// lists them. Only pages with something beyond EN/ES get the dropdown.
+const pickerLangs = [
+	{ code: 'en', href: '' },
+	{ code: 'es', href: '' },
+	...switchLangs,
+];
+
+const enPath = isExtraLang ? (enHreflang ?? '/') : toEnglishSwitchPath(pathname);
+const esPath = isExtraLang ? (esHreflang ?? '/es/') : toSpanishSwitchPath(pathname);
+pickerLangs[0].href = enPath;
+pickerLangs[1].href = esPath;
 
 const searchQ = (Astro.url.searchParams.get('q') || '').trim();
 
@@ -490,6 +510,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								</div>
 								<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre' : 'About'}</a>
 							</div>
+							{switchLangs.length > 0 ? (
+								<LangPicker lang={lang} langs={pickerLangs} />
+							) : (
 							<div class="navLang" aria-label={lang === 'de' ? 'Sprache' : lang === 'es' ? 'Idioma' : 'Language'}>
 								<a class:list={['navLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
 									EN
@@ -497,12 +520,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								<a class:list={['navLangLink', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">
 									ES
 								</a>
-								{lang === 'de' && (
-									<a class:list={['navLangLink', 'isActive']} href={deSwitchHref} hreflang="de">
-										DE
-									</a>
-								)}
 							</div>
+							)}
 							<div class="navCtas">
 								<button class="navAuthBtn" type="button" data-auth-open>
 									{lang === 'de' ? 'Anmelden / Registrieren' : lang === 'es' ? 'Entrar / Crear cuenta' : 'Sign in / Sign up'}
@@ -589,6 +608,9 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<a href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
 							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
 							<a href={lang === 'es' ? '/es/sobre-nosotros/' : '/about-us/'}>{lang === 'de' ? 'Über uns' : lang === 'es' ? 'Sobre nosotros' : 'About us'}</a>
+							{switchLangs.length > 0 ? (
+								<LangPicker lang={lang} langs={pickerLangs} variant="mobile" />
+							) : (
 							<div class="mobileLang">
 								<a class:list={['mobileLangLink', lang === 'en' ? 'isActive' : null]} href={enPath} hreflang="en">
 									EN
@@ -596,12 +618,8 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 								<a class:list={['mobileLangLink', lang === 'es' ? 'isActive' : null]} href={esPath} hreflang="es">
 									ES
 								</a>
-								{lang === 'de' && (
-									<a class:list={['mobileLangLink', 'isActive']} href={deSwitchHref} hreflang="de">
-										DE
-									</a>
-								)}
 							</div>
+							)}
 						</nav>
 					</div>
 				</div>

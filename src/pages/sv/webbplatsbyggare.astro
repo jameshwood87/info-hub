@@ -1,14 +1,18 @@
 ---
+/* GENERATED FILE - do not edit by hand.
+   Source: src/pages/website-builder.astro (English).
+   Rebuild: node scripts/gen-wb-langs.mjs --only=sv
+   Hand edits are lost on the next run; change the English page instead. */
 import Layout from '../../layouts/Layout.astro';
 import { getPortalStats, statPlus } from '../../lib/portalStats';
 const __ps = await getPortalStats();
-const plAgents = statPlus(__ps.agents, 'es');
-const plAgencies = statPlus(__ps.agencies, 'es');
-const plListings = statPlus(__ps.listings, 'es');
+const plAgents = statPlus(__ps.agents, 'sv');
+const plAgencies = statPlus(__ps.agencies, 'sv');
+const plListings = statPlus(__ps.listings, 'sv');
 
-const title = 'Creador de Webs para Agencias Inmobiliarias | PropertyList.es';
+const title = 'Website Builder för mäklare | PropertyList.es';
 const description =
-	'Elige uno de los quince diseños de web de agencia ya terminados, hazlo tuyo, y todas las propiedades de la red PropertyList están en ella, filtradas como tú quieras, con las consultas llegando a tu CRM. Gratis para crear y previsualizar, desde 50 créditos al mes en cuanto publicas.';
+	'Välj en av femton färdiga byråwebbplatser, gör den till din, och varje objekt på PropertyList-nätverket finns där, filtrerat som du vill, med förfrågningar som hamnar i din CRM. Gratis att bygga och förhandsgranska, från 50 krediter i månaden när du publicerar.';
 const BUILD = 'https://agents.propertylist.es/website-builder';
 const DOCS = 'https://info.propertylist.es/docs/propertylist-mls-user-manual/website-builder/';
 const REFERRALS = 'https://agents.propertylist.es/referrals';
@@ -17,54 +21,54 @@ const DASHBOARD = 'https://agents.propertylist.es';
 // The fifteen templates, as captured from the real files (public/wb). Order is
 // the order shown; the style filter hides the rest.
 const templates = [
-	{ id: '14-solaz', name: 'Solaz', style: 'Escaparate', line: 'Empieza con una película: cipreses y costa al atardecer, el titular colocado en la parte baja de la imagen.' },
-	{ id: '01-marina', name: 'Marina', style: 'Moderno', line: 'Cabecera en verde azulado y blanco, un buscador en vivo arriba y tus últimos anuncios en una cuadrícula debajo.' },
-	{ id: '03-onyx', name: 'Onyx', style: 'Lujo', line: 'Una fotografía nocturna de una villa iluminada, un titular serif en blanco, un solo botón.' },
-	{ id: '13-horizon', name: 'Horizon', style: 'Escaparate', line: 'Pantalla dividida: un titular destacado a un lado, una fotografía de interior a toda altura al otro.' },
-	{ id: '02-blanca', name: 'Blanca', style: 'Minimalista', line: 'Una fotografía a todo ancho de una villa con piscina, un menú pequeño, sin titular sobre la imagen.' },
-	{ id: '05-puerto', name: 'Puerto', style: 'Moderno', line: 'Una fotografía a todo ancho al atardecer con una tarjeta flotante encima que muestra el precio y los detalles.' },
-	{ id: '07-noir', name: 'Noir', style: 'Lujo', line: 'Empieza con una película: un paisaje oscuro y cinematográfico con un titular grande y destacado encima, menú mínimo.' },
-	{ id: '04-sierra', name: 'Sierra', style: 'Clásico', line: 'Fondo color crema, espacio para tu fotografía junto a tu nombre y un párrafo editorial.' },
-	{ id: '09-continental', name: 'Continental', style: 'Moderno', line: 'Una fotografía en azul marino al atardecer, un titular blanco destacado y una tarjeta de precio superpuesta a la imagen.' },
-	{ id: '06-atrium', name: 'Atrium', style: 'Minimalista', line: 'Gris claro y blanco, un color de acento en el titular, un buscador y una franja con los últimos inmuebles.' },
-	{ id: '11-imperial', name: 'Imperial', style: 'Lujo', line: 'Fondo color crema, un titular serif destacado, dos fotografías debajo en una galería sencilla.' },
-	{ id: '08-cortijo', name: 'Cortijo', style: 'Clásico', line: 'Fondo color pergamino cálido, un marco en arco junto a tu nombre y una presentación.' },
-	{ id: '10-meridian', name: 'Meridian', style: 'Minimalista', line: 'Fondo pálido, un titular serif en cursiva, un buscador sencillo, nada que compita por la atención.' },
-	{ id: '12-heritage', name: 'Heritage', style: 'Clásico', line: 'Fondo blanco, tu nombre y un párrafo de presentación, botones de llamada a la acción en verde.' },
-	{ id: '15-faro', name: 'Faro', style: 'Escaparate', line: 'Empieza con una película: la silueta oscura de una montaña y el mar, un titular serif grande, menú mínimo.' },
+	{ id: '14-solaz', name: 'Solaz', style: 'Showcase', line: 'Öppnar som en film. Cypressträd och kustlinje i skymningen, rubriken ligger lågt över bilden.' },
+	{ id: '01-marina', name: 'Marina', style: 'Modern', line: 'En blågrön och vit header, ett live-sökfält högst upp och dina senaste annonser i ett rutnät nedanför.' },
+	{ id: '03-onyx', name: 'Onyx', style: 'Lyx', line: 'Ett nattfoto av en upplyst villa, en serif-rubrik i vitt, en knapp.' },
+	{ id: '13-horizon', name: 'Horizon', style: 'Showcase', line: 'En delad skärm: en kraftig rubrik på ena sidan, ett interiörfoto i full höjd på den andra.' },
+	{ id: '02-blanca', name: 'Blanca', style: 'Minimalistisk', line: 'Ett foto i full bredd av en villa och pool, en liten navigeringsmeny, ingen rubrik över bilden.' },
+	{ id: '05-puerto', name: 'Puerto', style: 'Modern', line: 'Ett foto i full bredd i skymningen med ett flytande kort ovanpå som visar pris och detaljer.' },
+	{ id: '07-noir', name: 'Noir', style: 'Lyx', line: 'Börjar med en film. Ett filmiskt mörkt landskap med en stor fet rubrik över bilden och minimal navigering.' },
+	{ id: '04-sierra', name: 'Sierra', style: 'Klassisk', line: 'En krämfärgad bakgrund, plats för ditt fotografi bredvid ditt namn och en redaktionell text.' },
+	{ id: '09-continental', name: 'Continental', style: 'Modern', line: 'Ett marinblått skymningsfoto, en vit fet rubrik och en prisruta överlagd på bilden.' },
+	{ id: '06-atrium', name: 'Atrium', style: 'Minimalistisk', line: 'Ljusgrått och vitt, en accentfärg i rubriken, en sökruta och en remsa med senaste objekt.' },
+	{ id: '11-imperial', name: 'Imperial', style: 'Lyx', line: 'En krämfärgad bakgrund, en fet serif-rubrik och två fotografier under i ett enkelt galleri.' },
+	{ id: '08-cortijo', name: 'Cortijo', style: 'Klassisk', line: 'En varm pergamentbakgrund, en bågformad bildram bredvid ditt namn och en introduktion.' },
+	{ id: '10-meridian', name: 'Meridian', style: 'Minimalistisk', line: 'En blek bakgrund, en kursiv serif-rubrik, en enkel sökruta och inget som konkurrerar om uppmärksamheten.' },
+	{ id: '12-heritage', name: 'Heritage', style: 'Klassisk', line: 'En vit bakgrund, ditt namn och ett introduktionsstycke, gröna uppmaningsknappar.' },
+	{ id: '15-faro', name: 'Faro', style: 'Showcase', line: 'Börjar med en film. En mörk siluett av berg och hav, en stor serif-rubrik och minimal navigering.' },
 ];
-const styles = ['Moderno', 'Minimalista', 'Lujo', 'Clásico', 'Escaparate'];
+const styles = ['Modern', 'Minimalistisk', 'Lyx', 'Klassisk', 'Showcase'];
 
 const addons = [
-	{ name: 'Página extra', what: 'Una página más además de las incluidas', price: '10 créditos al mes' },
-	{ name: 'Instant Content', what: 'Guías de zona y un blog, escritos para ti, sin límite', price: '30 créditos al mes' },
-	{ name: 'Tu propio dominio', what: 'Tu dominio en vez de tu-agencia.estate-agency.co', price: '20 créditos al mes' },
-	{ name: 'Quitar la marca de PropertyList', what: 'Elimina el distintivo de PropertyList de tu web', price: '50 créditos al mes' },
-	{ name: 'Captura de leads con pop-up', what: 'Un pop-up que capta leads en tu web', price: '8 créditos al mes' },
-	{ name: 'Respuestas con IA en los anuncios', what: 'Genera una FAQ a partir de lo que preguntan de verdad los compradores', price: '8 créditos al mes' },
-	{ name: 'SEO y GEO automáticos', what: 'Revisa tu web cada semana y corrige lo que puede', price: '5 créditos al mes' },
-	{ name: 'Informe mensual por email', what: 'Un resumen de rendimiento enviado por email el día 1 de cada mes', price: '5 créditos al mes' },
+	{ name: 'Extra sida', what: 'Ytterligare en sida utöver den inkluderade uppsättningen', price: '10 krediter per månad' },
+	{ name: 'Instant Content', what: 'Områdesguider och en blogg, skrivna åt dig, obegränsat', price: '30 krediter per månad' },
+	{ name: 'Din egen domän', what: 'Din domän istället för your-agency.estate-agency.co', price: '20 krediter per månad' },
+	{ name: 'Ta bort PropertyList-märkning', what: 'Tar bort PropertyList-märket från din webbplats', price: '50 krediter per månad' },
+	{ name: 'Pop-up för att fånga leads', what: 'En pop-up som fångar leads på din webbplats', price: '8 krediter i månaden' },
+	{ name: 'AI-svar på annonser', what: 'Skapar en FAQ utifrån vad köpare faktiskt frågar', price: '8 krediter i månaden' },
+	{ name: 'Automatisk SEO och GEO', what: 'Kontrollerar din sajt varje vecka och åtgärdar det den kan', price: '5 krediter i månaden' },
+	{ name: 'Månadsrapport via e-post', what: 'En prestandasammanfattning skickas via e-post den 1st varje månad', price: '5 krediter i månaden' },
 ];
 
 const faqs = [
-	{ q: '¿De verdad es gratis crearla?', a: 'Sí. Crear y previsualizar tu web no cuesta nada. Solo se te cobra cuando la publicas: 50 créditos al mes a partir de ese momento, más los extras que actives.' },
-	{ q: '¿Qué pasa cuando publico?', a: 'Tu web se pone en marcha con todas las propiedades de la red que hayas elegido mostrar, y tus propios anuncios, de inmediato. A partir de ahí se te cobran 50 créditos al mes por la web, más los extras que tengas activados, cada uno con su cuota mensual.' },
-	{ q: '¿Puedo cambiar de plantilla más adelante?', a: 'Sí. Cambia a cualquiera de los quince diseños cuando quieras, y conservas tus textos, tus páginas y tus ajustes.' },
-	{ q: '¿Tengo que subir mis anuncios?', a: 'No. Todas las propiedades de la red ya están ahí, filtradas como tú quieras, con tus propios anuncios al lado, y todo se actualiza cuando un anuncio cambia en el CRM. Nada se escribe dos veces.' },
-	{ q: '¿A dónde van las consultas?', a: 'Directas a tu CRM de PropertyList, y recibes un email por cada una. Los pipelines de Lead, Seller y Property son gratis y sin límite. Mover un lead cualificado al pipeline de Buyer cuesta 1 crédito.' },
-	{ q: '¿Puedo usar mi propio dominio?', a: 'Sí, por 20 créditos al mes. Hasta entonces tu web funciona en nombre-de-tu-agencia.estate-agency.co: tu nombre en la dirección, no el nuestro.' },
-	{ q: '¿Qué pasa si cancelo?', a: 'Tu web vuelve al microsite gratuito de agencia al final del periodo de facturación. Conservas tu dominio.' },
-	{ q: '¿El SEO es bueno de verdad?', a: 'Bueno desde el primer día: cada página sale con estructura limpia, títulos y descripciones. Activa SEO y GEO automáticos (5 créditos al mes) y un agente dedicado a tu web trabaja en ella cada semana: revisa todas las páginas, actualiza las palabras clave a lo que buscan los compradores ahora y corrige lo que encuentra. Seguimos sin prometer posiciones; ninguna plataforma honesta puede.' },
-	{ q: '¿Necesito ser técnico?', a: 'No. Eliges una plantilla, la editas en un editor que muestra tu web real mientras trabajas, y publicas cuando estés listo. Editar con IA también te permite describir un cambio en lenguaje sencillo.' },
-	{ q: '¿Quién aloja la web y es segura?', a: 'Nosotros. El alojamiento y la protección de Cloudflare van incluidos: tu web se sirve rápido desde la red de Cloudflare y queda protegida frente a ataques, sin nada que gestionar ni renovar por tu parte.' },
-	{ q: '¿Están incluidas las páginas legales?', a: 'Sí. El aviso legal, la política de privacidad y de cookies, más un banner de cookies, vienen con cada plantilla. Están incluidos y nunca se facturan aparte.' },
+	{ q: 'Är det verkligen gratis att bygga?', a: 'Ja. Det kostar inget att bygga och förhandsgranska din sajt. Du debiteras först när du publicerar den: 50 krediter i månaden därefter, plus eventuella tillägg du aktiverar.' },
+	{ q: 'Vad händer när jag publicerar?', a: 'Din sajt går live direkt med alla objekt på det nätverk du valt att visa, och dina egna annonser. Från den tidpunkten debiteras du 50 krediter i månaden för sajten, plus eventuella tillägg du aktiverat, allt faktureras månadsvis.' },
+	{ q: 'Kan jag byta mall senare?', a: 'Ja. Byt till en annan av de femton designerna när du vill, och du behåller dina texter, dina sidor och dina inställningar.' },
+	{ q: 'Måste jag ladda upp mina objekt?', a: 'Nej. Varje objekt i nätverket finns redan där, filtrerat som du vill, med dina egna objekt vid sidan av, och allt uppdateras när ett objekt ändras i CRM. Inget skrivs in två gånger.' },
+	{ q: 'Vart går förfrågningarna?', a: 'Rakt in i ditt PropertyList CRM, och du får ett e-postmeddelande för varje. Lead-, Seller- och Property-pipelines är gratis utan begränsning. Att flytta en kvalificerad lead till Buyer-pipelinen kostar 1 kredit.' },
+	{ q: 'Kan jag använda min egen domän?', a: 'Ja, för 20 krediter per månad. Fram tills dess körs din sajt på your-agency-name.estate-agency.co: ditt namn i adressen, inte vårt.' },
+	{ q: 'Vad händer om jag avslutar?', a: 'Din sajt återgår till den kostnadsfria byråmikrosajten i slutet av faktureringsperioden. Du behåller din domän.' },
+	{ q: 'Är SEO bra?', a: 'Bra från dag ett: varje sida levereras med ren struktur, titlar och beskrivningar. Slå på Auto SEO och GEO (5 krediter per månad) så arbetar en agent dedikerad till din sajt med den varje vecka: agenten kontrollerar varje sida, uppdaterar sökorden till det köparna söker efter nu och åtgärdar det som behövs. Vi lovar fortfarande inte placeringar; ingen ärlig plattform kan det.' },
+	{ q: 'Behöver du vara teknisk?', a: 'Nej. Du väljer en mall, redigerar den i en editor som visar din riktiga sajt medan du jobbar, och publicerar när du är redo. Redigera med AI låter dig också beskriva en ändring på enkel engelska.' },
+	{ q: 'Vem hostar den och är den säker?', a: 'Det gör vi. Hosting och Cloudflare-skydd ingår: din sajt levereras snabbt från Cloudflare-nätverket och är skyddad från attacker, utan något för dig att hantera eller förnya.' },
+	{ q: 'Ingår de juridiska sidorna?', a: 'Ja. Aviso legal, sidor för integritet och cookies, plus en cookie-banner, följer med varje mall. De ingår och debiteras aldrig separat.' },
 ];
 
 const ldWebsite = {
 	'@context': 'https://schema.org',
 	'@type': 'WebSite',
-	name: 'PropertyList Creador de Webs',
-	url: 'https://info.propertylist.es/es/constructor-de-webs/',
+	name: 'PropertyList Website Builder',
+	url: 'https://info.propertylist.es/sv/webbplatsbyggare/',
 	description,
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es', logo: { '@type': 'ImageObject', url: 'https://info.propertylist.es/og/logo-default.png' } },
 };
@@ -72,15 +76,15 @@ const ldBreadcrumb = {
 	'@context': 'https://schema.org',
 	'@type': 'BreadcrumbList',
 	itemListElement: [
-		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/' },
-		{ '@type': 'ListItem', position: 2, name: 'Creador de Webs' },
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Website Builder' },
 	],
 };
 const ldVideo = {
 	'@context': 'https://schema.org',
 	'@type': 'VideoObject',
-	name: 'PropertyList Creador de Webs: elige un diseño, edítalo, publica',
-	description: 'Una grabación de 33 segundos del Creador de Webs de PropertyList con una agencia de ejemplo: los quince diseños, uno elegido, el titular seleccionado, la cabecera reorganizada y después Revisar y publicar. Sin sonido.',
+	name: 'PropertyList Website Builder: pick a design, edit it, publish',
+	description: 'A 33 second recording of the PropertyList Website Builder with a sample agency: the fifteen designs, one chosen, the headline selected, the hero rearranged, then Review and publish. No sound.',
 	thumbnailUrl: ['https://info.propertylist.es/hero/wb-hero-poster.jpg'],
 	contentUrl: 'https://info.propertylist.es/hero/wb-hero.mp4',
 	uploadDate: '2026-09-05',
@@ -95,10 +99,10 @@ const ldFaq = {
 ---
 
 <Layout
-	lang="es"
+	lang="sv"
 	title={title}
 	description={description}
-	canonical="https://info.propertylist.es/es/constructor-de-webs/"
+	canonical="https://info.propertylist.es/sv/webbplatsbyggare/"
 	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/website-builder/' },
@@ -120,24 +124,24 @@ const ldFaq = {
 		<div class="wrap">
 			<div class="wb-hero-grid">
 				<div class="wb-hero-text">
-					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; todos los anuncios de la red &middot; leads a tu CRM</span></div>
-					<h1 class="wb-hero-h1">Elige un diseño.<br />Tus anuncios <em>la llenan.</em></h1>
-					<p class="wb-hero-sub">Quince webs de agencia ya terminadas, cargadas con todas las propiedades de la red y filtradas como tú quieras. Las consultas llegan a tu CRM y a tus pipelines, y tus propios anuncios están en la web el día que publicas.</p>
+					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; alla annonser i nätverket &middot; leads till ditt CRM</span></div>
+					<h1 class="wb-hero-h1">Välj en design.<br />Dina annonser <em>fyll i den.</em></h1>
+					<p class="wb-hero-sub">Femton färdiga byråwebbplatser, fyllda med varje objekt i nätverket och filtrerade som du vill. Förfrågningar hamnar i ditt CRM och i pipelines, och dina egna annonser finns på sajten den dag du publicerar.</p>
 					<div class="wb-hero-ctas">
-						<a class="btn btn-primary btn-large" href={BUILD}>Crea gratis</a>
-						<a class="btn btn-secondary on-dark" href="#xml">Ya tengo una web</a>
+						<a class="btn btn-primary btn-large" href={BUILD}>Bygg gratis</a>
+						<a class="btn btn-secondary on-dark" href="#xml">Jag har redan en webbplats</a>
 					</div>
-					<p class="wb-hero-trust">Gratis para crear y previsualizar. Desde 50 créditos al mes (unos 50 EUR) en cuanto publicas. Cancela al final de cualquier mes.</p>
+					<p class="wb-hero-trust">Gratis att bygga och förhandsgranska. Från 50 krediter per månad (cirka 50 EUR) när du publicerar. Avsluta i slutet av vilken månad som helst.</p>
 				</div>
 				<div class="wb-hero-visual">
 					<figure class="film wb-film">
 						<div class="wb-frame wb-frame-dark">
 							<div class="wb-frame-bar"><span></span><span></span><span></span><i>Website Builder</i></div>
-							<video class="filmVid" autoplay muted loop playsinline preload="auto" poster="/hero/wb-hero-poster.jpg" width="1440" height="900" aria-label="El creador de webs: las quince plantillas, Solaz elegida, el editor con el titular seleccionado, la cabecera reorganizada y después Revisar y publicar">
+							<video class="filmVid" autoplay muted loop playsinline preload="auto" poster="/hero/wb-hero-poster.jpg" width="1440" height="900" aria-label="The Website Builder: de femton mallarna, Solaz vald, redigeraren med rubriken vald, huvudbilden omplacerad, sedan granska och publicera">
 								<source src="/hero/wb-hero.mp4" type="video/mp4" />
 							</video>
 						</div>
-						<figcaption class="filmCap">Grabado en el nuevo creador: los quince diseños, Solaz elegida, el titular seleccionado, la cabecera reorganizada y después Revisar y publicar. 33 segundos. Los extras y los totales que se ven son los de la web de ejemplo y se pueden editar.</figcaption>
+						<figcaption class="filmCap">Inspelat från det nya byggverktyget: de femton designerna, Solaz vald, rubriken vald, huvudbilden omplacerad, sedan granska och publicera. 33 sekunder. Tilläggen och totalsummorna som visas är exempelwebbplatsens och kan redigeras.</figcaption>
 					</figure>
 				</div>
 			</div>
@@ -148,38 +152,38 @@ const ldFaq = {
 	<section class="wb-trust">
 		<div class="wrap">
 			<div class="wb-trust-grid">
-				<div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">agentes registrados en PropertyList</div></div>
-				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">agencias que gestionan su negocio en ella</div></div>
-				<div><div class="wb-trust-num">{plListings}</div><div class="wb-trust-label">anuncios en la red</div></div>
+				<div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">registrerade mäklare på PropertyList</div></div>
+				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">mäklarbyråer som driver sin verksamhet på den</div></div>
+				<div><div class="wb-trust-num">{plListings}</div><div class="wb-trust-label">objekt på nätverket</div></div>
 			</div>
-			<p class="wb-trust-line">Tu web lee de la misma red que tu MLS y tu CRM. Todas las propiedades de la red pueden estar en tu web el día que publicas, filtradas como tú quieras, y se actualizan en el momento en que un anuncio cambia.</p>
+			<p class="wb-trust-line">Din webbplats hämtar från samma nätverk som ditt MLS och CRM. Varje objekt där kan finnas på din webbplats den dag du publicerar, filtrerat som du vill, och det uppdateras i samma stund ett objekt ändras.</p>
 		</div>
 	</section>
 
-	<!-- LAS QUINCE -->
+	<!-- THE FIFTEEN -->
 	<section class="wb-section wb-fifteen" id="templates">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow">Las quince</p>
-				<h2 class="wb-section-h2">Quince diseños, <em>una sola plataforma.</em></h2>
-				<p class="wb-lead">Cada plantilla es una web de agencia completa: las mismas páginas, los mismos bloques que necesita una agencia, con un aspecto distinto. Elige la que se adapte a cómo trabajas, no al revés.</p>
+				<p class="eyebrow">De femton</p>
+				<h2 class="wb-section-h2">Femton designer, <em>en plattform.</em></h2>
+				<p class="wb-lead">Varje mall är en komplett webbplats för en mäklarbyrå: samma sidor, samma block som en byrå behöver, i ett annat utseende. Välj den som matchar hur du redan arbetar, inte tvärtom.</p>
 			</div>
-			<div class="wb-chips" role="tablist" aria-label="Filtrar plantillas por estilo">
-				<button class="wb-chip on" type="button" data-style="all" aria-pressed="true">Las quince</button>
+			<div class="wb-chips" role="tablist" aria-label="Filtrera mallar efter stil">
+				<button class="wb-chip on" type="button" data-style="all" aria-pressed="true">Alla femton</button>
 				{styles.map((s) => <button class="wb-chip" type="button" data-style={s} aria-pressed="false">{s}</button>)}
 			</div>
 		</div>
 		<div class="wb-rail-wrap">
-			<button class="wb-rail-btn prev" type="button" aria-label="Plantillas anteriores">&lsaquo;</button>
+			<button class="wb-rail-btn prev" type="button" aria-label="Föregående mallar">&lsaquo;</button>
 			<div class="wb-rail" id="wbRail">
 				{templates.map((t, i) => (
 					<article class="wb-tpl" data-style={t.style}>
 						<div class="wb-tpl-shots">
 							<div class="wb-frame">
-								<div class="wb-frame-bar"><span></span><span></span><span></span><i>tumarca.estate-agency.co</i></div>
-								<img src={`/wb/${t.id}-desktop.webp`} width="1440" height="900" alt={`Plantilla ${t.name}, página de inicio en una pantalla de escritorio`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+								<div class="wb-frame-bar"><span></span><span></span><span></span><i>yourbrand.estate-agency.co</i></div>
+								<img src={`/wb/${t.id}-desktop.webp`} width="1440" height="900" alt={`${t.name} template, home page on a desktop screen`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
 							</div>
-							<img class="wb-phone" src={`/wb/${t.id}-phone.webp`} width="390" height="844" alt={`Plantilla ${t.name} en un móvil`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+							<img class="wb-phone" src={`/wb/${t.id}-phone.webp`} width="390" height="844" alt={`${t.name} template on a phone`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
 						</div>
 						<div class="wb-tpl-meta">
 							<span class="wb-tpl-style">{t.style}</span>
@@ -189,161 +193,161 @@ const ldFaq = {
 					</article>
 				))}
 			</div>
-			<button class="wb-rail-btn next" type="button" aria-label="Plantillas siguientes">&rsaquo;</button>
+			<button class="wb-rail-btn next" type="button" aria-label="Nästa mallar">&rsaquo;</button>
 		</div>
-		<div class="wrap"><p class="wb-fifteen-note">Cambia de opinión más adelante: cambia de plantilla y conserva tus textos, tus páginas y tus ajustes. Tres de las quince (Solaz, Noir, Faro) empiezan con una película.</p></div>
+		<div class="wrap"><p class="wb-fifteen-note">Du kan ändra dig senare: byt mall och behåll dina texter, dina sidor och dina inställningar. Tre av de femton (Solaz, Noir, Faro) öppnas med en film.</p></div>
 	</section>
 
-	<!-- CÓMO FUNCIONA -->
+	<!-- HOW IT WORKS -->
 	<section class="wb-section wb-steps">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow">Cómo funciona</p>
-				<h2 class="wb-section-h2">Elige. Hazla tuya. <em>Publica.</em></h2>
+				<p class="eyebrow">Så fungerar det</p>
+				<h2 class="wb-section-h2">Välj. Gör den till din. <em>Publicera.</em></h2>
 			</div>
 			<div class="wb-steps-grid">
 				<article class="wb-step">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Elige una plantilla</i></div><img src="/wb/step-1-pick.webp" width="1440" height="900" alt="El selector de plantillas con Solaz elegida y su vista previa al lado" loading="lazy" decoding="async" /></div>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Välj en mall</i></div><img src="/wb/step-1-pick.webp" width="1440" height="900" alt="Mallväljaren med Solaz valt och förhandsgranskningen bredvid" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">1</div>
-					<h3>Elige una plantilla</h3>
-					<p>Elige entre quince diseños de web de agencia ya terminados. Todos tienen ya las páginas que necesita una agencia.</p>
+					<h3>Välj en mall</h3>
+					<p>Välj bland femton färdiga webbplatser för mäklarbyråer. Var och en har redan de sidor en byrå behöver.</p>
 				</article>
 				<article class="wb-step">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Edita tu web</i></div><img src="/wb/step-2-edit.webp" width="1440" height="900" alt="El editor con los ajustes del bloque principal abiertos, mostrando tres disposiciones" loading="lazy" decoding="async" /></div>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Redigera din webbplats</i></div><img src="/wb/step-2-edit.webp" width="1440" height="900" alt="Editorn med inställningarna för heroblocket öppna, som visar tre upplägg" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">2</div>
-					<h3>Hazla tuya</h3>
-					<p>Añade tu color de marca, tus textos y tus fotos en un editor que muestra la web real mientras trabajas. Cada bloque tiene varias disposiciones; elige una.</p>
+					<h3>Gör den till din egen</h3>
+					<p>Lägg till din varumärkesfärg, dina texter och dina bilder i en redigerare som visar den verkliga webbplatsen medan du arbetar. Varje block har flera upplägg; välj ett.</p>
 				</article>
 				<article class="wb-step">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Revisar y publicar</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="El diálogo de Revisar y publicar con los créditos mensuales antes de que la web se ponga en marcha" loading="lazy" decoding="async" /></div>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Granska och publicera</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="Dialogrutan Granska och publicera som visar de månatliga krediter innan webbplatsen går live." loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">3</div>
-					<h3>Publica</h3>
-					<p>Las propiedades de la red y las tuyas ya están ahí, así que publicar no significa subir nada. Las consultas empiezan a llegar a tu CRM de inmediato.</p>
+					<h3>Publicera</h3>
+					<p>Nätverkets objekt och dina egna finns redan där, så att publicera inte innebär att ladda upp något. Förfrågningar börjar landa i ditt CRM direkt.</p>
 				</article>
 			</div>
 		</div>
 	</section>
 
-	<!-- HECHO PARA UNA AGENCIA -->
+	<!-- BUILT FOR AN AGENCY -->
 	<section class="wb-section wb-agency">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow">Hecho para una agencia, no para una cafetería</p>
-				<h2 class="wb-section-h2">Los bloques que un agente inmobiliario <em>de verdad necesita.</em></h2>
-				<p class="wb-lead">Cuadrícula de propiedades, propiedad destacada, buscador, formulario de valoración, guías de zona, equipo, reseñas, cifras, qué cuesta comprar, obra nueva. Cada uno lee de tu cuenta en vez de pedirte que escribas.</p>
+				<p class="eyebrow">Byggt för en mäklarbyrå, inte ett kafé</p>
+				<h2 class="wb-section-h2">De block som en mäklare <em>verkligen behöver.</em></h2>
+				<p class="wb-lead">Rutnät för objekt, utvald annons, sök, värderingsformulär, områdesguider, team, omdömen, siffror, vad köpet kostar, nyproduktion. Var och en hämtar uppgifter från ditt konto istället för att be dig skriva in dem.</p>
 			</div>
 			<div class="wb-cards">
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Todos los anuncios de la red, listos para mostrar.</strong><p>Tus propios anuncios están en tu web el día que publicas. Los de la red también: fíltralos y muestra los que encajan con tus compradores, desde el primer momento.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Los leads llegan a tu CRM.</strong><p>Cada consulta entra como lead. Pasa los que quieras por tus pipelines: Lead, Seller y Property son gratis y sin límite, y mover un lead cualificado al pipeline de Buyer cuesta 1 crédito.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Un buscador que funciona como un portal.</strong><p>Los compradores filtran la cartera por zona, tipo y precio en la página de Propiedades, y pueden guardar una búsqueda.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>Un formulario de valoración gratis que hace más.</strong><p>Cada solicitud de un vendedor llega como un lead con un Property Intelligence Report ya rellenado, listo para comprar por 5 créditos si lo quieres.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>Los gastos de compra, siempre al día.</strong><p>Gastos de compra en España con la ley citada. Comprobamos si hay tipos nuevos o actualizados y refrescamos el bloque, así tu web sigue correcta sin que la toques. Tu abogado confirma la cifra final.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Cifras que se cuentan solas.</strong><p>El bloque de cifras lee de tus anuncios en directo. Nadie lo escribe a mano.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Reseñas y equipo, de lo que ya tienes.</strong><p>Conecta tu Perfil de Empresa de Google y tus reseñas aparecen en la web, o escríbelas tú. Nada se inventa. Tu equipo sale del personal que ya está en tu cuenta de agencia.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Todos los idiomas que hablan tus compradores.</strong><p>Inglés y español vienen de serie. Añade los demás idiomas que usan tus compradores, en la misma web.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Varje annons i nätverket, redo att visas.</strong><p>Dina egna annonser finns på din sajt samma dag du publicerar. Nätverkets utbud finns där också: filtrera det och visa vad som passar dina köpare direkt.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Leads hamnar i ditt CRM.</strong><p>Varje förfrågan kommer in som en lead. Skjut de du vill genom dina pipelines: Lead, Seller och Property är gratis utan begränsning, och att flytta en kvalificerad lead till Buyer-pipelinen kostar 1 kredit.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Sök som fungerar som en portal.</strong><p>Köpare filtrerar utbudet efter område, typ och pris på sidan Properties, och kan spara en sökning.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>Ett gratis värderingsformulär som gör mer.</strong><p>Varje säljarförfrågan kommer in som en lead med en Property Intelligence Report redan ifylld, färdig att köpa för 5 krediter om du vill.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>Köpkostnader, alltid uppdaterade.</strong><p>Spanska köpkostnader med laghänvisning. Vi kontrollerar nya och uppdaterade avgifter och uppdaterar blocket, så att din sajt blir korrekt utan att du behöver röra den. Din advokat bekräftar slutbeloppet.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Siffror som räknas automatiskt.</strong><p>Sifferblocket hämtar information från dina aktiva annonser. Ingen skriver in dem.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Omdömen och team, hämtade från det du redan har.</strong><p>Koppla din Google Business Profile så visas dina omdömen på sajten, eller mata in dem själv. Inget är uppdiktat. Ditt team hämtas från personalen som redan finns i ditt byråkonto.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Alla språk dina köpare talar.</strong><p>Engelska och spanska ingår som standard. Lägg till de andra språk dina köpare använder på samma sajt.</p></article>
 			</div>
 		</div>
 	</section>
 
-	<!-- INCLUIDO: ALOJAMIENTO, SSL, SEGURIDAD -->
+	<!-- INCLUDED: HOSTING, SSL, SECURITY -->
 	<section class="wb-section wb-incl">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow">Incluido en cada web</p>
-				<h2 class="wb-section-h2">Alojamiento, SSL y seguridad de Cloudflare, <em>todo incluido.</em></h2>
-				<p class="wb-lead">Nada que alquilar, instalar ni renovar. Tu web es rápida y está protegida desde el día que publicas, y sigue así.</p>
+				<p class="eyebrow">Ingår i varje sajt</p>
+				<h2 class="wb-section-h2">Hosting, SSL och Cloudflare-säkerhet, <em>allt ingår.</em></h2>
+				<p class="wb-lead">Inget att hyra, installera eller förnya. Din sajt är snabb och skyddad från den dag du publicerar, och förblir så.</p>
 			</div>
 			<div class="wb-incl-grid">
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Alojamiento</strong><p>Servida desde la red de Cloudflare, así las páginas cargan rápido esté donde esté tu comprador. Sin factura de hosting ni servidor que cuidar.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>Certificado SSL</strong><p>Cada web funciona en https con un certificado que se renueva solo. El candado que esperan los compradores, sin que hagas nada.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Seguridad de Cloudflare</strong><p>Protección frente a DDoS y la seguridad perimetral de Cloudflare delante de tu web. Los ataques se absorben antes de llegar a ella.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Tu dirección</strong><p>nombre-de-tu-agencia.estate-agency.co desde el primer día. Añade tu propio dominio por 20 créditos al mes.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Hosting</strong><p>Serveras från Cloudflare-nätverket, så sidorna laddar snabbt var din köpare än är. Ingen hostingfaktura, ingen server att sköta.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL-certifikat</strong><p>Alla sajter körs på https med ett certifikat som förnyas automatiskt. Hänglåset köparna förväntar sig, utan att du behöver göra något.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Cloudflare-säkerhet</strong><p>DDoS-skydd och Cloudflare edge-säkerhet ligger framför din sajt. Angrepp absorberas innan de når den.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Din adress</strong><p>your-agency-name.estate-agency.co från dag ett. Lägg till din egen domän för 20 krediter i månaden.</p></article>
 			</div>
 		</div>
 	</section>
 
-	<!-- EDITAR CON IA -->
+	<!-- EDIT WITH AI -->
 	<section class="wb-section wb-ai">
 		<div class="wrap">
 			<div class="wb-ai-grid">
 				<div class="wb-ai-text">
-					<p class="eyebrow" style="color:#6fe5d3">Editar con IA</p>
-					<h2 class="wb-section-h2 on-dark">Haz clic en cualquier cosa. <em>Di qué quieres cambiar.</em></h2>
-					<p class="wb-lead" style="color:#b8c9cb">Describe un cambio en lenguaje normal y la página se actualiza. Cada cambio es un borrador hasta que lo publicas, y Deshacer siempre está ahí.</p>
+					<p class="eyebrow" style="color:#6fe5d3">Redigera med AI</p>
+					<h2 class="wb-section-h2 on-dark">Klicka på vad som helst. <em>Säg vad som ska ändras.</em></h2>
+					<p class="wb-lead" style="color:#b8c9cb">Beskriv en ändring på klar engelska så uppdateras sidan. Varje ändring är ett utkast tills du publicerar den, och Ångra finns alltid där.</p>
 				</div>
 				<figure class="wb-ai-shot">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Edita tu web</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="El titular seleccionado en el editor, con los cambios que el agente puede pedir" loading="lazy" decoding="async" /></div>
-					<figcaption>El titular seleccionado en el editor. Más corto, un tono más cercano, que mencione la localidad, o tus propias palabras.</figcaption>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Redigera din webbplats</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="Rubriken som valts i redigeraren, med de ändringar du kan begära" loading="lazy" decoding="async" /></div>
+					<figcaption>Rubriken som valts i redigeraren. Kortare, varmare ton, nämn orten eller dina egna ord.</figcaption>
 				</figure>
 			</div>
 		</div>
 	</section>
 
-	<!-- PRECIOS -->
+	<!-- PRICING -->
 	<section id="pricing" class="wb-pricing wb-section">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow" style="color:#6fe5d3">Precios</p>
-				<h2 class="wb-section-h2 on-dark">Gratis para crear. <em>50 créditos al mes en cuanto publicas.</em></h2>
-				<p class="wb-lead" style="color:#b8c9cb">Un plan base, extras en créditos, y puedes cancelar cualquiera de ellos al final de cualquier mes.</p>
+				<p class="eyebrow" style="color:#6fe5d3">Priser</p>
+				<h2 class="wb-section-h2 on-dark">Gratis att bygga. <em>50 krediter per månad när du publicerar.</em></h2>
+				<p class="wb-lead" style="color:#b8c9cb">En grundplan, tillägg i krediter, och du kan avsluta dem i slutet av vilken månad som helst.</p>
 			</div>
 			<div class="wb-price-grid">
 				<div class="wb-pricing-card">
 					<div class="wb-pricing-name">Website Builder</div>
-					<div class="wb-pricing-price">50 créditos <span class="unit">al mes</span></div>
-					<p class="wb-pricing-tagline">No se cobra nada mientras creas y previsualizas; la suscripción empieza el día que publicas.</p>
+					<div class="wb-pricing-price">50 krediter <span class="unit">per månad</span></div>
+					<p class="wb-pricing-tagline">Inget debiteras medan du bygger och förhandsgranskar; prenumerationen börjar den dag du publicerar.</p>
 					<ul class="wb-pricing-features">
-						<li>Inicio, Propiedades (búsqueda y resultados, con filtros y una búsqueda guardada), una página de propiedad para cada anuncio, Sobre Nosotros y Contacto</li>
-						<li>Páginas legales (aviso legal, privacidad, cookies) y un banner de cookies, incluidos y nunca facturados</li>
-						<li>Alojamiento y protección de Cloudflare incluidos: rápida y protegida, sin nada que gestionar</li>
-						<li>Inglés y español de serie, se pueden añadir más idiomas</li>
-						<li>Las quince plantillas, cambia cuando quieras y conserva tu trabajo</li>
-						<li>Consultas directas a tu CRM de PropertyList</li>
-						<li>Cancela al final de cualquier mes; la web vuelve al microsite gratuito de agencia y conservas tu dominio</li>
+						<li>Startsida, Objekt (sök och resultat, med filter och en sparad sökning), en objektsida för varje annons, Om och Kontakt</li>
+						<li>Juridiska sidor (aviso legal, integritetspolicy, cookies) och en cookie-banner ingår och debiteras aldrig</li>
+						<li>Hosting och Cloudflare-skydd ingår: snabbt och skyddat, inget för dig att hantera</li>
+						<li>Engelska och spanska som standard, fler språk kan läggas till</li>
+						<li>Alla femton designer, byt när som helst och behåll ditt arbete</li>
+						<li>Förfrågningar direkt i din PropertyList CRM</li>
+						<li>Avsluta i slutet av en månad; webbplatsen återgår till den kostnadsfria byråmikrosajten och du behåller din domän</li>
 					</ul>
-					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Crea gratis</a></div>
-					<p class="wb-pricing-note">Páginas extra: <strong>10 créditos al mes</strong> cada una.</p>
+					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Bygg gratis</a></div>
+					<p class="wb-pricing-note">Extra sidor: <strong>10 krediter per månad</strong> styck.</p>
 				</div>
 				<div class="wb-pricing-aside">
 					<div class="wb-addon-card">
-						<h4>Extras, <em>si los quieres</em></h4>
-						<p class="wb-addon-intro">Cada uno es mensual, se activa desde tu cuenta, y puede cancelarse al final de cualquier mes.</p>
+						<h4>Tillägg, <em>om du vill ha dem</em></h4>
+						<p class="wb-addon-intro">Varje tillägg är månadsvis, aktiveras från ditt konto och kan stoppas i slutet av vilken månad som helst.</p>
 						<ul class="wb-addon-list">
 							{addons.map((a) => (
 								<li><span class="wb-addon-name">{a.name}<small>{a.what}</small></span><span class="wb-addon-price">{a.price}</span></li>
 							))}
 						</ul>
-						<div class="wb-addon-footer">Feed de obra nueva: un módulo aparte, con precio en tu cuenta.</div>
+						<div class="wb-addon-footer">Flöde för nya projekt: en separat modul, prissatt i ditt konto.</div>
 					</div>
 					<div class="wb-credit-info">
-						<h4>Qué es un crédito</h4>
-						<p>La unidad de PropertyList para las funciones de pago, que se compra en packs: 1 crédito (alrededor de 1 EUR) en el pack más pequeño, menos en los packs más grandes. Los créditos no caducan, así que lo que no uses este mes sigue disponible el mes siguiente.</p>
-						<p style="margin:0"><a href={REFERRALS}>Recomienda a otra agencia</a> y consigues 20 créditos (unos 20 EUR) cuando completa la verificación, no al registrarse. La nueva agencia recibe 10 créditos.</p>
+						<h4>Vad är en krediter</h4>
+						<p>PropertyList's enhet för betalda funktioner, köps i paket: 1 kredit (ca 1 EUR) i det minsta paketet, mindre i större. krediter förfaller inte, så allt du inte använder den här månaden finns kvar nästa månad.</p>
+						<p style="margin:0"><a href={REFERRALS}>Hänvisa en annan byrå</a> och du får 20 krediter (cirka 20 EUR) när de blivit verifierade, inte vid registrering. Den nya byrån får 10 krediter.</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- YA TIENES UNA WEB -->
+	<!-- ALREADY HAVE A WEBSITE -->
 	<section id="xml" class="wb-xml wb-section">
 		<div class="wrap">
 			<div class="wb-xml-inner">
 				<div>
-					<p class="eyebrow">¿Ya tienes una web?</p>
-					<h2 class="wb-section-h2">Conserva tu web. <em>Aliméntala con toda la red.</em></h2>
-					<p class="wb-lead">Lleva todos los anuncios de la red a la web que ya tienes, filtrados como tú quieras: solo tu propia cartera, o una selección de la red junto a ella. XML o la API para webs; tu desarrollador lo conecta una vez y desde entonces la web lee de la misma cuenta que tu MLS y tu CRM.</p>
+					<p class="eyebrow">Har du redan en webbplats?</p>
+					<h2 class="wb-section-h2">Behåll din webbplats. <em>Mata din webbplats med hela nätverket.</em></h2>
+					<p class="wb-lead">Mata in varje objekt i nätverket på den webbplats du redan har, filtrerat som du vill: endast dina egna objekt, eller ett urval från nätverket bredvid. XML eller webbplats-API; din utvecklare ansluter det en gång och från och med då läser webbplatsen från samma konto som din MLS och CRM.</p>
 				</div>
 				<div class="wb-xml-card">
-					<div class="wb-xml-price-row"><span class="wb-xml-price">35 créditos</span><span class="wb-xml-price-unit">al mes</span></div>
-					<p class="wb-xml-detail">Feed XML o API para webs. Cancela cuando quieras.</p>
+					<div class="wb-xml-price-row"><span class="wb-xml-price">35 krediter</span><span class="wb-xml-price-unit">per månad</span></div>
+					<p class="wb-xml-detail">XML-flöde eller webbplats-API. Avsluta när som helst.</p>
 					<ul class="wb-pricing-features">
-						<li>Todos los anuncios de la red en tu propia web, filtrados como quieras</li>
-						<li>Feed XML o API para webs, como prefiera tu desarrollador</li>
-						<li>La documentación es pública; no hay que comprar nada para leerla</li>
+						<li>Alla nätverkets objekt på din egen webbplats, filtrerade som du vill</li>
+						<li>XML-flöde eller webbplats-API, din utvecklare väljer.</li>
+						<li>Dokumentationen är offentlig; du behöver inte köpa något för att läsa den</li>
 					</ul>
-					<a class="btn btn-primary" href={DASHBOARD}>Configura un feed</a>
-					<p class="wb-xml-docs"><a href={DOCS}>Lee la documentación del Creador de Webs y del feed</a></p>
+					<a class="btn btn-primary" href={DASHBOARD}>Ställ in ett flöde</a>
+					<p class="wb-xml-docs"><a href={DOCS}>Läs dokumentationen för Website Builder och feed</a></p>
 				</div>
 			</div>
 		</div>
@@ -353,8 +357,8 @@ const ldFaq = {
 	<section class="wb-faq wb-section">
 		<div class="narrow">
 			<div class="wb-section-head">
-				<p class="eyebrow">Preguntas</p>
-				<h2 class="wb-section-h2">Lo que los agentes <em>preguntan primero.</em></h2>
+				<p class="eyebrow">Frågor</p>
+				<h2 class="wb-section-h2">Vad fastighetsmäklare <em>frågar först.</em></h2>
 			</div>
 			<div>
 				{faqs.map((f) => (
@@ -364,14 +368,14 @@ const ldFaq = {
 		</div>
 	</section>
 
-	<!-- CTA FINAL -->
+	<!-- FINAL CTA -->
 	<section class="wb-final wb-section">
 		<div class="narrow">
-			<p class="eyebrow" style="color:#6fe5d3">Construido en la Costa del Sol &middot; usado en toda España</p>
-			<h2 class="wb-section-h2 on-dark">Tus anuncios ya están listos.<br /><em>¿Y tu web?</em></h2>
-			<p class="wb-lead">Elige un diseño, hazlo tuyo, y publica cuando quieras.</p>
-			<a class="btn btn-primary btn-large" href={BUILD}>Crea gratis</a>
-			<p class="wb-final-note">Gratis para crear y previsualizar. Desde 50 créditos al mes en cuanto publicas. <a href={DOCS}>Lee la documentación</a>.</p>
+			<p class="eyebrow" style="color:#6fe5d3">Byggd på Costa del Sol &middot; används över hela Spanien</p>
+			<h2 class="wb-section-h2 on-dark">Dina objekt är klara.<br /><em>Är din webbplats också klar?</em></h2>
+			<p class="wb-lead">Välj en design, gör den till din och publicera när du vill.</p>
+			<a class="btn btn-primary btn-large" href={BUILD}>Bygg gratis</a>
+			<p class="wb-final-note">Gratis att bygga och förhandsgranska. Från 50 krediter per månad när du publicerar. <a href={DOCS}>Läs dokumentationen</a>.</p>
 		</div>
 	</section>
 

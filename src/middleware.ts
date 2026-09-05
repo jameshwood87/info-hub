@@ -189,6 +189,28 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			return new Response(null, { status: 301, headers: { Location: `${dynamicRedirect}${url.search}` } });
 		}
 
+		// The German pilot's seven pages, deleted 05-08-26. They answered 404,
+		// which reads to a crawler as "maybe it comes back" and keeps them in the
+		// recrawl queue; 410 is the honest answer and retires them. Listed one by
+		// one rather than as a /de/ prefix, because German is a live site language
+		// again and a prefix rule would take the new pages down with them.
+		const DE_PILOT_GONE = new Set([
+			'/de/',
+			'/de/immobilie-in-spanien-kaufen/',
+			'/de/immobilienbetrug-in-spanien-vermeiden/',
+			'/de/gebiete/elviria/',
+			'/de/gebiete/golden-mile/',
+			'/de/gebiete/la-cala-de-mijas/',
+			'/de/gebiete/los-monteros/',
+			'/de/gebiete/puerto-banus/',
+		]);
+		{
+			const p = pathname.endsWith('/') ? pathname : pathname + '/';
+			if (DE_PILOT_GONE.has(p)) {
+				return new Response('Gone', { status: 410, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+			}
+		}
+
 		// Blog redirects - duplicate/filler posts → canonical versions
 		const blogRedirects: Array<{ from: string; to: string }> = [
 			{ from: '/blog/rdl-8-2026-rent-cap-extension-explained/', to: '/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/' },

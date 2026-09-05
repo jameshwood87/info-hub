@@ -1,0 +1,596 @@
+---
+/* GENERATED FILE - do not edit by hand.
+   Source: src/pages/website-builder.astro (English).
+   Rebuild: node scripts/gen-wb-langs.mjs --only=ru
+   Hand edits are lost on the next run; change the English page instead. */
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'ru');
+const plAgencies = statPlus(__ps.agencies, 'ru');
+const plListings = statPlus(__ps.listings, 'ru');
+
+const title = 'Конструктор сайтов для агентств недвижимости | PropertyList.es';
+const description =
+	'Выберите один из пятнадцати готовых дизайнов сайта агентства, сделайте его своим, и в нём будут все объекты из сети PropertyList, отфильтрованные так, как вам нужно, а запросы будут поступать в ваш CRM. Сборка и предварительный просмотр бесплатны. После публикации - от 50 кредитов в месяц.';
+const BUILD = 'https://agents.propertylist.es/website-builder';
+const DOCS = 'https://info.propertylist.es/docs/propertylist-mls-user-manual/website-builder/';
+const REFERRALS = 'https://agents.propertylist.es/referrals';
+const DASHBOARD = 'https://agents.propertylist.es';
+
+// The fifteen templates, as captured from the real files (public/wb). Order is
+// the order shown; the style filter hides the rest.
+const templates = [
+	{ id: '14-solaz', name: 'Solaz', style: 'Витрина', line: 'Открывается видеороликом. Кипарисы и побережье в сумерках, заголовок расположен низко над изображением.' },
+	{ id: '01-marina', name: 'Marina', style: 'Современный', line: 'Бирюзово-белая шапка, вверху поле живого поиска и ниже ваши последние объявления в сетке.' },
+	{ id: '03-onyx', name: 'Onyx', style: 'Роскошный', line: 'Ночное фото освещённой виллы, заголовок с засечками белого цвета, одна кнопка.' },
+	{ id: '13-horizon', name: 'Horizon', style: 'Витрина', line: 'Разделённый экран: с одной стороны - жирный заголовок, с другой - интерьерная фотография на всю высоту.' },
+	{ id: '02-blanca', name: 'Blanca', style: 'Минималистичный', line: 'Одна фотография во всю ширину виллы и бассейна, небольшая навигационная панель, без заголовка поверх изображения.' },
+	{ id: '05-puerto', name: 'Puerto', style: 'Современный', line: 'Фотография сумерек во всю ширину с плавающей карточкой поверх неё, показывающей цену и подробности.' },
+	{ id: '07-noir', name: 'Noir', style: 'Роскошный', line: 'Открывается эффектом плёнки. Тёмный кинематографичный пейзаж с крупным жирным заголовком поверх, минимальная навигация.' },
+	{ id: '04-sierra', name: 'Sierra', style: 'Классический', line: 'Кремовый фон, место для вашей фотографии рядом с именем и редакционный абзац.' },
+	{ id: '09-continental', name: 'Continental', style: 'Современный', line: 'Фотография сумерек в тёмно-синем тоне, крупный белый заголовок и карточка с ценой поверх изображения.' },
+	{ id: '06-atrium', name: 'Atrium', style: 'Минималистичный', line: 'Светло-серый и белый, один акцентный цвет в заголовке, поле поиска и полоса с последними объектами.' },
+	{ id: '11-imperial', name: 'Imperial', style: 'Роскошный', line: 'Кремовый фон, крупный заголовок с засечками, две фотографии под ним в простой галерее.' },
+	{ id: '08-cortijo', name: 'Cortijo', style: 'Классический', line: 'Тёплый пергаментный фон, арочная рамка для изображения рядом с вашим именем и вводный текст.' },
+	{ id: '10-meridian', name: 'Meridian', style: 'Минималистичный', line: 'Бледный фон, курсивный заголовок с засечками, простое поле поиска, ничего, что отвлекало бы внимание.' },
+	{ id: '12-heritage', name: 'Heritage', style: 'Классический', line: 'Белый фон, ваше имя и вводный абзац, зелёные кнопки призыва к действию.' },
+	{ id: '15-faro', name: 'Faro', style: 'Витрина', line: 'Открывается эффектом плёнки. Силуэт гор и моря на тёмном фоне, крупный заголовок с засечками, минимальная навигация.' },
+];
+const styles = ['Современный', 'Минималистичный', 'Роскошный', 'Классический', 'Витрина'];
+
+const addons = [
+	{ name: 'Дополнительная страница', what: 'Ещё одна страница сверх включённого набора', price: '10 кредитов в месяц' },
+	{ name: 'Instant Content', what: 'Гиды по районам и блог, написанные для вас, без ограничений', price: '30 кредитов в месяц' },
+	{ name: 'Ваш собственный домен', what: 'Ваш домен вместо your-agency.estate-agency.co', price: '20 кредитов в месяц' },
+	{ name: 'Удалить брендинг PropertyList', what: 'Удаляет отметку PropertyList с вашего сайта', price: '50 кредитов в месяц' },
+	{ name: 'Всплывающее окно для сбора лидов', what: 'Всплывающее окно, которое собирает лиды на вашем сайте', price: '8 кредитов в месяц' },
+	{ name: 'Ответы ИИ в объявлениях', what: 'Формирует раздел FAQ на основе реальных вопросов покупателей', price: '8 кредитов в месяц' },
+	{ name: 'Автоматическое SEO и GEO', what: 'Проверяет ваш сайт еженедельно и исправляет то, что может', price: '5 кредитов в месяц' },
+	{ name: 'Ежемесячный отчет по электронной почте', what: 'Сводка по результатам работы отправляется по электронной почте 1-го числа месяца', price: '5 кредитов в месяц' },
+];
+
+const faqs = [
+	{ q: 'Действительно ли бесплатно создать сайт?', a: 'Да. Создание и предварительный просмотр вашего сайта ничего не стоят. С вас начнут взимать плату только после публикации: 50 кредитов в месяц с этого момента, плюс любые дополнения, которые вы подключите.' },
+	{ q: 'Что происходит, когда вы публикуете сайт?', a: 'Ваш сайт становится доступен сразу со всеми объектами в сети, которые вы выбрали для показа, а также с вашими собственными объявлениями. С этого момента с вас взимается 50 кредитов в месяц за сайт, плюс любые дополнения, которые вы включили; все списания происходят ежемесячно.' },
+	{ q: 'Можете ли вы сменить шаблон позже?', a: 'Да. Вы можете переключиться на любой из пятнадцати дизайнов в любой момент, при этом сохраняются ваши тексты, страницы и настройки.' },
+	{ q: 'Нужно ли вам загружать ваши объявления?', a: 'Нет. Каждое объявление в сети уже присутствует, отфильтровано так, как вам нужно, рядом показаны ваши объявления, и всё обновляется, когда объявление меняется в CRM. Ничего не приходится вводить дважды.' },
+	{ q: 'Куда поступают запросы?', a: 'Они попадают прямо в ваш PropertyList CRM, и вы получаете письмо по каждому запросу. Воронки Lead, Seller и Property бесплатны и без ограничений. Перевод квалифицированного лида в воронку Buyer стоит 1 кредит.' },
+	{ q: 'Можете ли вы использовать собственный домен?', a: 'Да, за 20 кредитов в месяц. До этого ваш сайт работает по адресу your-agency-name.estate-agency.co: ваше имя в адресе, не наше.' },
+	{ q: 'Что произойдёт, если вы отмените?', a: 'Ваш сайт возвращается к бесплатному микросайту агентства в конце платёжного периода. Вы сохраняете свой домен.' },
+	{ q: 'Насколько хороша SEO?', a: 'Хорошо с первого дня: каждая страница сразу имеет чистую структуру, заголовки и описания. Включите Auto SEO и GEO (5 кредитов в месяц), и назначенный вашему сайту агент будет заниматься им каждую неделю: он проверяет каждую страницу, обновляет ключевые слова в соответствии с тем, что сейчас ищут покупатели, и исправляет найденные проблемы. Мы по-прежнему не обещаем места в выдаче; ни одна честная платформа этого не может.' },
+	{ q: 'Нужно ли вам обладать техническими навыками?', a: 'Нет. вы выбираете шаблон, редактируете его в редакторе, который показывает ваш реальный сайт по мере работы, и публикуете, когда будете готовы. Редактирование с помощью ИИ также позволяет описать изменение простыми словами.' },
+	{ q: 'Кто размещает сайт и безопасно ли это?', a: 'Мы. Хостинг и защита Cloudflare включены: ваш сайт быстро обслуживается сетью Cloudflare и защищён от атак, вам не нужно ничего настраивать или продлевать.' },
+	{ q: 'Включены ли юридические страницы?', a: 'Да. aviso legal, страницы конфиденциальности и cookie, а также баннер cookie поставляются с каждым шаблоном. Они включены и никогда не выставляются отдельно.' },
+];
+
+const ldWebsite = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: 'PropertyList Website Builder',
+	url: 'https://info.propertylist.es/ru/konstruktor-saytov/',
+	description,
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es', logo: { '@type': 'ImageObject', url: 'https://info.propertylist.es/og/logo-default.png' } },
+};
+const ldBreadcrumb = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Website Builder' },
+	],
+};
+const ldVideo = {
+	'@context': 'https://schema.org',
+	'@type': 'VideoObject',
+	name: 'PropertyList Website Builder: pick a design, edit it, publish',
+	description: 'A 33 second recording of the PropertyList Website Builder with a sample agency: the fifteen designs, one chosen, the headline selected, the hero rearranged, then Review and publish. No sound.',
+	thumbnailUrl: ['https://info.propertylist.es/hero/wb-hero-poster.jpg'],
+	contentUrl: 'https://info.propertylist.es/hero/wb-hero.mp4',
+	uploadDate: '2026-09-05',
+	duration: 'PT33S',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es' },
+};
+const ldFaq = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<Layout
+	lang="ru"
+	title={title}
+	description={description}
+	canonical="https://info.propertylist.es/ru/konstruktor-saytov/"
+	fullBleed
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/website-builder/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/constructor-de-webs/' },
+		{ hreflang: 'de', href: 'https://info.propertylist.es/de/website-baukasten/' },
+		{ hreflang: 'fr', href: 'https://info.propertylist.es/fr/createur-de-site-immobilier/' },
+		{ hreflang: 'sv', href: 'https://info.propertylist.es/sv/webbplatsbyggare/' },
+		{ hreflang: 'ru', href: 'https://info.propertylist.es/ru/konstruktor-saytov/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/website-builder/' },
+	]}
+>
+	<script type="application/ld+json" set:html={JSON.stringify(ldWebsite)} />
+	<script type="application/ld+json" set:html={JSON.stringify(ldBreadcrumb)} />
+	<script type="application/ld+json" set:html={JSON.stringify(ldVideo)} />
+	<script type="application/ld+json" set:html={JSON.stringify(ldFaq)} />
+
+	<!-- HERO -->
+	<header class="wb-hero">
+		<div class="wrap">
+			<div class="wb-hero-grid">
+				<div class="wb-hero-text">
+					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; все объявления сети &middot; лиды попадают в вашу CRM</span></div>
+					<h1 class="wb-hero-h1">Выберите дизайн.<br />Ваши объявления <em>заполните его.</em></h1>
+					<p class="wb-hero-sub">Пятнадцать готовых сайтов агентства, заполненных всеми объектами сети и отфильтрованных так, как вы хотите. Запросы попадают в вашу CRM и в ваши воронки, а ваши собственные объявления появляются на сайте в день публикации.</p>
+					<div class="wb-hero-ctas">
+						<a class="btn btn-primary btn-large" href={BUILD}>Создайте бесплатно</a>
+						<a class="btn btn-secondary on-dark" href="#xml">У меня уже есть сайт</a>
+					</div>
+					<p class="wb-hero-trust">Бесплатно для создания и предварительного просмотра. От 50 кредитов в месяц (примерно 50 EUR) после публикации. Вы можете отменить в конце любого месяца.</p>
+				</div>
+				<div class="wb-hero-visual">
+					<figure class="film wb-film">
+						<div class="wb-frame wb-frame-dark">
+							<div class="wb-frame-bar"><span></span><span></span><span></span><i>Website Builder</i></div>
+							<video class="filmVid" autoplay muted loop playsinline preload="auto" poster="/hero/wb-hero-poster.jpg" width="1440" height="900" aria-label="Конструктор Website Builder: пятнадцать шаблонов, выбран Solaz, в редакторе заголовок установлен, главный блок переставлен, затем Просмотреть и опубликовать">
+								<source src="/hero/wb-hero.mp4" type="video/mp4" />
+							</video>
+						</div>
+						<figcaption class="filmCap">Запись из нового конструктора: пятнадцать дизайнов, выбран Solaz, заголовок установлен, главный блок переставлен, затем Просмотреть и опубликовать. 33 секунды. Показанные дополнения и итоговые суммы относятся к демонстрационному сайту и могут быть отредактированы.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- PROOF -->
+	<section class="wb-trust">
+		<div class="wrap">
+			<div class="wb-trust-grid">
+				<div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">зарегистрированные агенты на PropertyList</div></div>
+				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">агентства, ведущие свой бизнес на ней</div></div>
+				<div><div class="wb-trust-num">{plListings}</div><div class="wb-trust-label">объявления в сети</div></div>
+			</div>
+			<p class="wb-trust-line">Ваш сайт получает данные из той же сети, что и ваша MLS и CRM. Любая недвижимость оттуда может появиться на вашем сайте в день публикации, с фильтрацией по вашему желанию, и обновляется в тот же момент, когда меняется объявление.</p>
+		</div>
+	</section>
+
+	<!-- THE FIFTEEN -->
+	<section class="wb-section wb-fifteen" id="templates">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Пятнадцать</p>
+				<h2 class="wb-section-h2">Пятнадцать дизайнов, <em>одна платформа.</em></h2>
+				<p class="wb-lead">Каждый шаблон - это полный веб-сайт агентства: те же страницы, те же блоки, которые нужны агентству, в другом оформлении. Выберите тот, который соответствует тому, как вы уже работаете, а не наоборот.</p>
+			</div>
+			<div class="wb-chips" role="tablist" aria-label="Фильтровать шаблоны по стилю">
+				<button class="wb-chip on" type="button" data-style="all" aria-pressed="true">Все пятнадцать</button>
+				{styles.map((s) => <button class="wb-chip" type="button" data-style={s} aria-pressed="false">{s}</button>)}
+			</div>
+		</div>
+		<div class="wb-rail-wrap">
+			<button class="wb-rail-btn prev" type="button" aria-label="Предыдущие шаблоны">&lsaquo;</button>
+			<div class="wb-rail" id="wbRail">
+				{templates.map((t, i) => (
+					<article class="wb-tpl" data-style={t.style}>
+						<div class="wb-tpl-shots">
+							<div class="wb-frame">
+								<div class="wb-frame-bar"><span></span><span></span><span></span><i>yourbrand.estate-agency.co</i></div>
+								<img src={`/wb/${t.id}-desktop.webp`} width="1440" height="900" alt={`${t.name} template, home page on a desktop screen`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+							</div>
+							<img class="wb-phone" src={`/wb/${t.id}-phone.webp`} width="390" height="844" alt={`${t.name} template on a phone`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+						</div>
+						<div class="wb-tpl-meta">
+							<span class="wb-tpl-style">{t.style}</span>
+							<h3>{t.name}</h3>
+							<p>{t.line}</p>
+						</div>
+					</article>
+				))}
+			</div>
+			<button class="wb-rail-btn next" type="button" aria-label="Следующие шаблоны">&rsaquo;</button>
+		</div>
+		<div class="wrap"><p class="wb-fifteen-note">Вы можете изменить решение позже: смените шаблон и сохраните свои тексты, страницы и настройки. Три из пятнадцати (Solaz, Noir, Faro) открываются с видеороликом.</p></div>
+	</section>
+
+	<!-- HOW IT WORKS -->
+	<section class="wb-section wb-steps">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Как это работает</p>
+				<h2 class="wb-section-h2">Выберите. Сделайте его своим. <em>Опубликуйте.</em></h2>
+			</div>
+			<div class="wb-steps-grid">
+				<article class="wb-step">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Выберите шаблон</i></div><img src="/wb/step-1-pick.webp" width="1440" height="900" alt="Выбор шаблона с выбранным Solaz и предпросмотром рядом" loading="lazy" decoding="async" /></div>
+					<div class="wb-step-num">1</div>
+					<h3>Выберите шаблон</h3>
+					<p>Выберите из пятнадцати готовых дизайнов сайтов для агентств. У каждого уже есть страницы, которые нужны агентству.</p>
+				</article>
+				<article class="wb-step">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Редактируйте ваш сайт</i></div><img src="/wb/step-2-edit.webp" width="1440" height="900" alt="Редактор с открытыми настройками главного блока, показывающий три варианта компоновки" loading="lazy" decoding="async" /></div>
+					<div class="wb-step-num">2</div>
+					<h3>Сделайте его вашим</h3>
+					<p>Добавьте цвет вашего бренда, ваш текст и ваши фотографии в редакторе, который показывает реальный сайт по мере работы. У каждого блока несколько вариантов компоновки; выберите один.</p>
+				</article>
+				<article class="wb-step">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Проверьте и опубликуйте</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="Диалог Просмотра и публикации, содержащий список ежемесячных кредитов перед публикацией сайта" loading="lazy" decoding="async" /></div>
+					<div class="wb-step-num">3</div>
+					<h3>Опубликовать</h3>
+					<p>Объявления сети и ваши собственные уже там, поэтому публикация не означает загрузку чего-либо. Запросы сразу же поступают в ваш CRM.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- BUILT FOR AN AGENCY -->
+	<section class="wb-section wb-agency">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Создан для агентства, а не для кафе</p>
+				<h2 class="wb-section-h2">Блоки, которые агентству по недвижимости <em>действительно нужны.</em></h2>
+				<p class="wb-lead">Сетка объектов, избранные объекты, поиск, форма оценки, справочники по районам, команда, отзывы, цифры, сколько стоит покупка, новые застройки. Каждый элемент берет данные из вашего аккаунта, вместо того чтобы просить вас вводить их вручную.</p>
+			</div>
+			<div class="wb-cards">
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Каждое объявление в сети готово к показу.</strong><p>Ваши объявления появляются на сайте в день публикации. Объявления сети тоже там: отфильтруйте их и сразу показывайте то, что подходит вашим покупателям.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Лиды попадают в ваш CRM.</strong><p>Каждое обращение приходит как лид. Продвигайте нужные через ваши воронки: Lead, Seller и Property бесплатны без ограничений, а перевод квалифицированного лида в воронку Buyer стоит 1 кредит.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Поиск, который работает как портал.</strong><p>Покупатели фильтруют предложения по району, типу и цене на странице Properties и могут сохранить поиск.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>Бесплатная форма оценки, которая делает больше.</strong><p>Каждый запрос продавца поступает как лид с уже заполненным Property Intelligence Report, который можно купить за 5 кредитов, если вы хотите.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>Актуальные расходы при покупке.</strong><p>Испанские расходы при покупке с указанием применимого закона. Мы проверяем новые и обновленные ставки и обновляем блок, чтобы ваш сайт оставался корректным без вашего вмешательства. Ваш юрист подтверждает окончательную сумму.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Числа, которые считаются автоматически.</strong><p>Блок с числами берет данные из ваших актуальных объявлений. Никто не вводит их вручную.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Отзывы и команда из того, что у вас уже есть.</strong><p>Подключите Google Business Profile, и ваши отзывы появятся на сайте, или введите их вручную. Ничего не выдумывается. Ваша команда формируется из сотрудников, уже указанных в учетной записи вашего агентства.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>На всех языках, на которых говорят ваши покупатели.</strong><p>Английский и испанский включены по умолчанию. Добавьте другие языки, которыми пользуются ваши покупатели, на том же сайте.</p></article>
+			</div>
+		</div>
+	</section>
+
+	<!-- INCLUDED: HOSTING, SSL, SECURITY -->
+	<section class="wb-section wb-incl">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Включено для каждого сайта</p>
+				<h2 class="wb-section-h2">Хостинг, SSL и безопасность Cloudflare, <em>все включено.</em></h2>
+				<p class="wb-lead">Нечего арендовать, устанавливать или продлевать. Ваш сайт быстр и защищен с момента публикации и остается таким.</p>
+			</div>
+			<div class="wb-incl-grid">
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Хостинг</strong><p>Размещается в сети Cloudflare, поэтому страницы быстро загружаются, где бы ни находился ваш покупатель. Никаких счетов за хостинг, никакого сервера, за которым нужно следить.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL-сертификат</strong><p>Каждый сайт работает по https с сертификатом, который обновляется автоматически. Замочек, которого ожидают покупатели, и вам ничего делать не нужно.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Безопасность Cloudflare</strong><p>Защита от DDoS и пограничная безопасность Cloudflare стоят перед вашим сайтом. Атаки поглощаются до того, как достигают его.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Ваш адрес</strong><p>your-agency-name.estate-agency.co с первого дня. Добавьте свой домен за 20 кредитов в месяц.</p></article>
+			</div>
+		</div>
+	</section>
+
+	<!-- EDIT WITH AI -->
+	<section class="wb-section wb-ai">
+		<div class="wrap">
+			<div class="wb-ai-grid">
+				<div class="wb-ai-text">
+					<p class="eyebrow" style="color:#6fe5d3">Редактировать с помощью ИИ</p>
+					<h2 class="wb-section-h2 on-dark">Кликните по любому элементу. <em>Скажите, что изменить.</em></h2>
+					<p class="wb-lead" style="color:#b8c9cb">Опишите изменение на простом английском, и страница обновится. Каждое изменение хранится как черновик, пока вы его не опубликуете, а функция отмены всегда доступна.</p>
+				</div>
+				<figure class="wb-ai-shot">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Редактируйте ваш сайт</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="Заголовок, выбранный в редакторе, с изменениями, которые агент может запросить" loading="lazy" decoding="async" /></div>
+					<figcaption>Заголовок, выбранный в редакторе. Более короткий, более тёплый тон, упомяните город или используйте свои слова.</figcaption>
+				</figure>
+			</div>
+		</div>
+	</section>
+
+	<!-- PRICING -->
+	<section id="pricing" class="wb-pricing wb-section">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow" style="color:#6fe5d3">Тарифы</p>
+				<h2 class="wb-section-h2 on-dark">Создание бесплатно. <em>50 кредитов в месяц с момента публикации.</em></h2>
+				<p class="wb-lead" style="color:#b8c9cb">Один базовый план, дополнения оплачиваются кредитами, и вы можете отключить любое из них в конце любого месяца.</p>
+			</div>
+			<div class="wb-price-grid">
+				<div class="wb-pricing-card">
+					<div class="wb-pricing-name">Website Builder</div>
+					<div class="wb-pricing-price">50 кредитов <span class="unit">в месяц</span></div>
+					<p class="wb-pricing-tagline">Ничего не взимается, пока вы создаёте и просматриваете; подписка начинается в день публикации.</p>
+					<ul class="wb-pricing-features">
+						<li>Главная, Объекты (поиск и результаты, с фильтрами и сохранённым поиском), страница объекта для каждого объявления, О компании и Контакты</li>
+						<li>Юридические страницы (aviso legal, политика конфиденциальности, файлы cookie) и баннер cookie включены и вам никогда не выставляют счёт</li>
+						<li>Хостинг и защита Cloudflare включены: быстро и защищено, вам не нужно ничего настраивать.</li>
+						<li>Английский и испанский по умолчанию, можно добавить другие языки</li>
+						<li>Все пятнадцать дизайнов, переключайтесь в любой момент и сохраняйте свою работу</li>
+						<li>Запросы напрямую в ваш PropertyList CRM</li>
+						<li>Отмените в конце любого месяца; сайт вернётся к бесплатному агентскому микросайту, и вы сохраните свой домен</li>
+					</ul>
+					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Создайте бесплатно</a></div>
+					<p class="wb-pricing-note">Дополнительные страницы: <strong>10 кредитов в месяц</strong> каждая.</p>
+				</div>
+				<div class="wb-pricing-aside">
+					<div class="wb-addon-card">
+						<h4>Дополнения, <em>если они вам нужны</em></h4>
+						<p class="wb-addon-intro">Каждая опция предоставляется ежемесячно, активируется в вашей учётной записи и может быть отключена в конце любого месяца.</p>
+						<ul class="wb-addon-list">
+							{addons.map((a) => (
+								<li><span class="wb-addon-name">{a.name}<small>{a.what}</small></span><span class="wb-addon-price">{a.price}</span></li>
+							))}
+						</ul>
+						<div class="wb-addon-footer">Лента новостроек: отдельный модуль, цена указана в вашей учётной записи.</div>
+					</div>
+					<div class="wb-credit-info">
+						<h4>Что такое кредит</h4>
+						<p>Единица PropertyList для платных функций, приобретаемая пакетами: 1 кредит (приблизительно 1 EUR) в самом маленьком пакете, меньше в крупных. Кредиты не истекают, поэтому всё, что вы не использовали в этом месяце, остаётся на следующий месяц.</p>
+						<p style="margin:0"><a href={REFERRALS}>Порекомендуйте другое агентство</a> и вы получите 20 кредитов (примерно 20 EUR) после того, как оно завершит верификацию, а не при регистрации. Новое агентство получит 10 кредитов.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ALREADY HAVE A WEBSITE -->
+	<section id="xml" class="wb-xml wb-section">
+		<div class="wrap">
+			<div class="wb-xml-inner">
+				<div>
+					<p class="eyebrow">У вас уже есть сайт?</p>
+					<h2 class="wb-section-h2">Сохраните свой сайт. <em>Подключите к нему всю сеть.</em></h2>
+					<p class="wb-lead">Наполняйте ваш сайт объявлениями всей сети с фильтрацией по вашему выбору: только ваши собственные объекты или подборка из сети наряду с ними. XML или API сайта; ваш разработчик подключает один раз, и с этого момента сайт читает данные из того же аккаунта, что и ваш MLS и CRM.</p>
+				</div>
+				<div class="wb-xml-card">
+					<div class="wb-xml-price-row"><span class="wb-xml-price">35 кредитов</span><span class="wb-xml-price-unit">в месяц</span></div>
+					<p class="wb-xml-detail">XML-лента или API сайта. Отменить можно в любой момент.</p>
+					<ul class="wb-pricing-features">
+						<li>Все объявления сети на вашем сайте, отфильтрованные по вашему выбору</li>
+						<li>XML-лента или API сайта, по выбору вашего разработчика</li>
+						<li>Документация общедоступна; чтобы её прочитать, ничего не нужно покупать</li>
+					</ul>
+					<a class="btn btn-primary" href={DASHBOARD}>Настройте XML-ленту</a>
+					<p class="wb-xml-docs"><a href={DOCS}>Прочитайте документацию Website Builder и документацию по фидам</a></p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section class="wb-faq wb-section">
+		<div class="narrow">
+			<div class="wb-section-head">
+				<p class="eyebrow">Вопросы</p>
+				<h2 class="wb-section-h2">Что агенты <em>спрашивают в первую очередь.</em></h2>
+			</div>
+			<div>
+				{faqs.map((f) => (
+					<div class="wb-faq-item"><details><summary>{f.q}</summary><p>{f.a}</p></details></div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- FINAL CTA -->
+	<section class="wb-final wb-section">
+		<div class="narrow">
+			<p class="eyebrow" style="color:#6fe5d3">Создано на Costa del Sol &middot; используется по всей Испании</p>
+			<h2 class="wb-section-h2 on-dark">Ваши объявления готовы.<br /><em>Готов ли ваш сайт?</em></h2>
+			<p class="wb-lead">Выберите дизайн, сделайте его своим и публикуйте, когда захотите.</p>
+			<a class="btn btn-primary btn-large" href={BUILD}>Создайте бесплатно</a>
+			<p class="wb-final-note">Создание и предварительный просмотр бесплатны. От 50 кредитов в месяц после публикации. <a href={DOCS}>Прочитайте документацию</a>.</p>
+		</div>
+	</section>
+
+	<script is:inline>
+		(function () {
+			var rail = document.getElementById('wbRail');
+			if (!rail) return;
+			var chips = document.querySelectorAll('.wb-chip');
+			var cards = rail.querySelectorAll('.wb-tpl');
+			chips.forEach(function (c) {
+				c.addEventListener('click', function () {
+					var s = c.getAttribute('data-style');
+					chips.forEach(function (x) { var on = x === c; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+					cards.forEach(function (k) { k.hidden = !(s === 'all' || k.getAttribute('data-style') === s); });
+					rail.scrollTo({ left: 0, behavior: 'smooth' });
+				});
+			});
+			function step(dir) {
+				var first = rail.querySelector('.wb-tpl:not([hidden])');
+				var w = first ? first.getBoundingClientRect().width + 24 : rail.clientWidth * 0.8;
+				rail.scrollBy({ left: dir * w, behavior: 'smooth' });
+			}
+			document.querySelector('.wb-rail-btn.prev').addEventListener('click', function () { step(-1); });
+			document.querySelector('.wb-rail-btn.next').addEventListener('click', function () { step(1); });
+		})();
+	</script>
+</Layout>
+
+<style is:global>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;color:#0d2b2e;background:#fff;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:#00ae9a;text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.narrow{max-width:880px;margin:0 auto;padding:0 24px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:#00ae9a;text-transform:uppercase;margin-bottom:12px}
+.btn{display:inline-block;padding:16px 28px;font-size:15px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;text-decoration:none}
+.btn-primary{background:#00ae9a;color:#fff;box-shadow:0 4px 14px rgba(0,174,154,.3)}
+.btn-primary:hover{background:#008f7e;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,174,154,.4);text-decoration:none}
+.btn-secondary{background:transparent;color:#0d2b2e;border:1.5px solid #0d2b2e}
+.btn-secondary.on-dark{color:#fff;border-color:rgba(255,255,255,.4)}
+.btn-secondary:hover{background:#0d2b2e;color:#fff;text-decoration:none}
+.btn-secondary.on-dark:hover{background:#fff;color:#0d2b2e}
+.btn-large{padding:18px 36px;font-size:16px}
+.wb-section{padding:100px 0}
+.wb-section-head{text-align:center;margin-bottom:56px}
+.wb-section-head p{max-width:680px;margin:0 auto}
+.wb-section-head .eyebrow{margin-bottom:12px}
+.wb-section-h2{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.15;letter-spacing:-.01em;color:#0d2b2e;margin-bottom:18px;text-wrap:balance}
+.wb-section-h2 em{color:#00ae9a;font-style:italic}
+.wb-section-h2.on-dark{color:#fff}
+.wb-lead{font-size:18px;line-height:1.6;color:#4a5b5d}
+
+/* browser frame used for every real capture */
+.wb-frame{background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e5ecec;box-shadow:0 20px 60px rgba(13,43,46,.12)}
+.wb-frame-bar{background:#f3f5f5;padding:10px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #e5ecec}
+.wb-frame-bar span{width:10px;height:10px;border-radius:50%;background:#d6dede}
+.wb-frame-bar span:nth-child(1){background:#ff5f57}.wb-frame-bar span:nth-child(2){background:#febd2e}.wb-frame-bar span:nth-child(3){background:#28c941}
+.wb-frame-bar i{flex:1;font-style:normal;background:#fff;padding:3px 12px;border-radius:6px;font-size:11px;color:#7a8a8c;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb-frame img{width:100%;aspect-ratio:1440/900;object-fit:cover;object-position:top}
+.wb-frame-dark{border-color:rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.wb-frame-dark .wb-frame-bar{background:#12373b;border-color:rgba(255,255,255,.08)}
+.wb-frame-dark .wb-frame-bar i{background:rgba(255,255,255,.08);color:#b8c9cb}
+
+/* hero */
+.wb-hero{background:#0d2b2e;color:#fff;padding:80px 0 56px;position:relative;overflow:hidden}
+.wb-hero::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,174,154,.15),transparent 70%);pointer-events:none}
+.wb-hero-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center;position:relative;z-index:1}
+.wb-hero-grid>*{min-width:0}
+.wb-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(0,174,154,.16);border:1px solid rgba(0,174,154,.35);padding:8px 14px;border-radius:18px;font-size:11.5px;line-height:1.5;font-weight:700;color:#00ae9a;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:28px;text-align:left}
+.wb-hero-eyebrow img{width:18px;height:18px}
+.wb-hero-h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(40px,5.4vw,62px);line-height:1.05;letter-spacing:-.02em;color:#fff}
+.wb-hero-h1 em{color:#00ae9a;font-style:italic;white-space:nowrap}
+.wb-hero-sub{font-size:19px;line-height:1.55;color:#b8c9cb;margin:24px 0 32px;max-width:520px}
+.wb-hero-ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.wb-hero-trust{margin-top:22px;font-size:13.5px;color:#8aa5a8;letter-spacing:.2px;max-width:480px}
+.wb-hero-visual{transform:none}
+.film{margin:0;padding:0}
+.filmVid{display:block;width:100%;height:auto;aspect-ratio:1440/900;object-fit:cover;background:#0d2b2e}
+.filmCap{margin:10px 4px 0;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.5)}
+@media (prefers-reduced-motion: reduce){.filmVid{display:none}.wb-film .wb-frame-dark{aspect-ratio:1440/940;background:url('/hero/wb-hero-poster.jpg') center bottom/cover no-repeat}}
+
+/* proof */
+.wb-trust{background:#0d2b2e;padding:72px 0 64px;color:#fff}
+.wb-trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;text-align:center}
+.wb-trust-num{font-family:'Playfair Display',Georgia,serif;font-size:42px;line-height:1;color:#00ae9a;margin-bottom:8px}
+.wb-trust-label{font-size:12px;color:#b8c9cb;letter-spacing:1px;text-transform:uppercase}
+.wb-trust-line{text-align:center;max-width:720px;margin:40px auto 0;font-size:17px;line-height:1.6;color:#cfdedf}
+
+/* the fifteen */
+.wb-fifteen{background:#faf6ee;padding-bottom:70px}
+.wb-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:-24px 0 34px}
+.wb-chip{background:#fff;border:1px solid #e5ecec;color:#0d2b2e;padding:9px 16px;border-radius:50px;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.wb-chip:hover{border-color:#00ae9a}
+.wb-chip.on{background:#0d2b2e;color:#fff;border-color:#0d2b2e}
+.wb-rail-wrap{position:relative}
+.wb-rail{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px max(24px,calc((100vw - 1200px)/2 + 24px)) 30px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.wb-rail::-webkit-scrollbar{display:none}
+.wb-tpl{flex:0 0 min(78vw,720px);scroll-snap-align:start;min-width:0}
+.wb-tpl[hidden]{display:none}
+.wb-tpl-shots{position:relative;padding:0 9% 9% 0}
+.wb-tpl-shots .wb-frame img{transition:object-position 2.4s ease}
+.wb-tpl-shots .wb-phone{position:absolute;right:0;bottom:0;width:23%;border-radius:22px;border:5px solid #0d2b2e;box-shadow:0 24px 50px rgba(13,43,46,.28);aspect-ratio:390/844;object-fit:cover;object-position:top;background:#0d2b2e}
+.wb-tpl-meta{margin-top:18px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline}
+.wb-tpl-style{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#00ae9a;background:#e5f5f3;padding:5px 10px;border-radius:50px;grid-row:1}
+.wb-tpl-meta h3{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:26px;line-height:1.1;color:#0d2b2e;grid-row:1}
+.wb-tpl-meta p{grid-column:1/-1;color:#4a5b5d;font-size:15px;line-height:1.55;max-width:600px}
+.wb-rail-btn{position:absolute;top:36%;width:46px;height:46px;border-radius:50%;border:1px solid #e5ecec;background:#fff;color:#0d2b2e;font-size:30px;line-height:1;cursor:pointer;box-shadow:0 8px 24px rgba(13,43,46,.14);z-index:2;display:flex;align-items:center;justify-content:center;padding-bottom:4px}
+.wb-rail-btn:hover{background:#0d2b2e;color:#fff}
+.wb-rail-btn.prev{left:max(8px,calc((100vw - 1200px)/2 - 20px))}
+.wb-rail-btn.next{right:max(8px,calc((100vw - 1200px)/2 - 20px))}
+.wb-fifteen-note{text-align:center;color:#4a5b5d;font-size:15px;margin-top:6px}
+
+/* steps */
+.wb-steps{background:#fff}
+.wb-steps-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.wb-step{min-width:0}
+.wb-step-num{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:#e5f5f3;color:#00ae9a;border-radius:12px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:19px;margin:22px 0 12px}
+.wb-step h3{font-size:20px;font-weight:700;color:#0d2b2e;margin-bottom:8px}
+.wb-step p{color:#4a5b5d;font-size:15px;line-height:1.6}
+
+/* agency cards */
+.wb-agency{background:#f5efe6}
+.wb-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.wb-card{background:#fff;border:1px solid #e5ecec;border-radius:18px;padding:26px 24px;min-width:0;transition:transform .2s,box-shadow .2s}
+.wb-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(13,43,46,.08)}
+.wb-card svg{width:30px;height:30px;fill:none;stroke:#00ae9a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:16px}
+.wb-card strong{display:block;font-size:16px;line-height:1.35;color:#0d2b2e;margin-bottom:8px}
+.wb-card p{color:#4a5b5d;font-size:14.5px;line-height:1.6}
+
+/* included strip */
+.wb-incl{background:#fff}
+.wb-incl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.wb-incl-item{background:#faf6ee;border:1px solid #e5ecec;border-radius:18px;padding:26px 24px;min-width:0}
+.wb-incl-item svg{width:30px;height:30px;fill:none;stroke:#00ae9a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:16px}
+.wb-incl-item strong{display:block;font-size:17px;line-height:1.3;color:#0d2b2e;margin-bottom:8px}
+.wb-incl-item p{color:#4a5b5d;font-size:14.5px;line-height:1.6}
+
+/* edit with AI */
+.wb-ai{background:#0d2b2e;color:#fff;position:relative;overflow:hidden}
+.wb-ai::before{content:"";position:absolute;top:-180px;left:-160px;width:560px;height:560px;background:radial-gradient(circle,rgba(0,174,154,.18),transparent 70%);pointer-events:none}
+.wb-ai-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;align-items:center;position:relative;z-index:1}
+.wb-ai-grid>*{min-width:0}
+.wb-ai-text h2{margin-bottom:18px}
+.wb-ai-shot{margin:0}
+.wb-ai-shot .wb-frame{border-color:rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.wb-ai-shot figcaption{margin:10px 4px 0;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.5)}
+
+/* pricing */
+.wb-pricing{background:#0d2b2e;color:#fff}
+.wb-price-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:stretch}
+.wb-price-grid>*{min-width:0}
+.wb-pricing-card{background:linear-gradient(135deg,#fff,#f5fbfa);color:#0d2b2e;border-radius:24px;padding:44px 40px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.wb-pricing-name{font-family:'Playfair Display',Georgia,serif;font-size:26px;margin-bottom:6px}
+.wb-pricing-price{font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,5vw,40px);line-height:1.1;color:#00ae9a;margin:12px 0 6px;text-wrap:balance}
+.wb-pricing-price .unit{font-size:18px;color:#7a8a8c;margin-left:4px;font-family:'Inter',system-ui,sans-serif}
+.wb-pricing-tagline{font-size:14.5px;color:#4a5b5d;margin-bottom:20px;line-height:1.55}
+.wb-pricing-features{list-style:none;padding:0;margin:20px 0 28px}
+.wb-pricing-features li{padding:8px 0 8px 34px;position:relative;color:#2a3b3d;font-size:15px;line-height:1.5}
+.wb-pricing-features li::before{content:"✓";position:absolute;left:0;top:7px;color:#00ae9a;font-weight:700;width:22px;height:22px;background:#e5f5f3;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+.wb-pricing-cta{text-align:center}
+.wb-pricing-cta a{display:block}
+.wb-pricing-note{text-align:center;margin-top:16px;font-size:13.5px;color:#4a5b5d}
+.wb-pricing-note strong{color:#00ae9a}
+.wb-pricing-aside{display:flex;flex-direction:column;gap:22px}
+.wb-addon-card{background:#fff;border-radius:20px;padding:28px 26px;color:#0d2b2e;box-shadow:0 10px 30px rgba(0,0,0,.15);flex:1}
+.wb-addon-card h4{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:22px;line-height:1.2;margin-bottom:6px;color:#0d2b2e}
+.wb-addon-card h4 em{color:#00ae9a;font-style:italic}
+.wb-addon-intro{font-size:13px;color:#4a5b5d;margin-bottom:14px;line-height:1.55}
+.wb-addon-list{list-style:none;padding:0;margin:0}
+.wb-addon-list li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e5ecec;gap:14px}
+.wb-addon-list li:last-child{border-bottom:none}
+.wb-addon-name{font-size:14px;font-weight:600;color:#0d2b2e;flex:1;min-width:0}
+.wb-addon-name small{display:block;font-size:11.5px;font-weight:500;color:#7a8a8c;letter-spacing:.2px;margin-top:2px}
+.wb-addon-price{font-size:13px;font-weight:700;color:#00ae9a;white-space:nowrap;background:#e5f5f3;padding:5px 10px;border-radius:8px}
+.wb-addon-footer{margin-top:16px;padding:12px 14px;background:#f5fbfa;border-radius:10px;font-size:12.5px;color:#4a5b5d;line-height:1.5}
+.wb-credit-info{background:linear-gradient(135deg,#f5efe6,#faf6ee);border-radius:20px;padding:26px;color:#0d2b2e;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+.wb-credit-info h4{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:20px;margin-bottom:8px;color:#0d2b2e}
+.wb-credit-info p{font-size:13.5px;color:#4a5b5d;line-height:1.55;margin-bottom:12px}
+.wb-credit-info a{font-weight:700}
+
+/* feed */
+.wb-xml{background:#f5efe6;position:relative}
+.wb-xml::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#00ae9a,transparent)}
+.wb-xml-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.wb-xml-inner>*{min-width:0}
+.wb-xml-card{background:#fff;border-radius:20px;padding:40px 36px;border:1px solid #e5ecec;box-shadow:0 20px 50px rgba(13,43,46,.08)}
+.wb-xml-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.wb-xml-price{font-family:'Playfair Display',Georgia,serif;font-size:44px;line-height:1;color:#0d2b2e}
+.wb-xml-price-unit{font-size:16px;color:#7a8a8c}
+.wb-xml-detail{font-size:13.5px;color:#00ae9a;font-weight:700;margin-bottom:8px}
+.wb-xml-card .wb-pricing-features{margin:10px 0 24px}
+.wb-xml-docs{margin-top:16px;font-size:13.5px}
+
+/* faq */
+.wb-faq{background:#fff}
+.wb-faq-item{border-bottom:1px solid #e5ecec;padding:24px 0}
+.wb-faq-item:first-of-type{border-top:1px solid #e5ecec}
+.wb-faq details summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:18px;font-weight:700;color:#0d2b2e;transition:color .15s}
+.wb-faq details summary::-webkit-details-marker{display:none}
+.wb-faq details summary::after{content:"+";font-size:28px;font-weight:300;color:#00ae9a;transition:transform .2s;line-height:1}
+.wb-faq details[open] summary::after{content:"-"}
+.wb-faq details summary:hover{color:#00ae9a}
+.wb-faq details>p{margin-top:14px;color:#4a5b5d;line-height:1.7;font-size:15px}
+
+/* final */
+.wb-final{background:#0d2b2e;color:#fff;text-align:center}
+.wb-final .wb-lead{color:#b8c9cb;max-width:620px;margin:0 auto 36px}
+.wb-final-note{margin-top:20px;font-size:14px;color:#8aa5a8}
+.wb-final-note a{color:#00ae9a;font-weight:700}
+
+/* Media queries last: rules above would otherwise win at every width. */
+@media(max-width:1024px){.wb-cards,.wb-incl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wb-steps-grid{grid-template-columns:1fr;max-width:720px;margin:0 auto}}
+@media(max-width:900px){.wb-section{padding:70px 0}.wb-hero{padding:50px 0 44px}.wb-hero-grid{grid-template-columns:minmax(0,1fr);gap:36px}.wb-hero-visual{transform:none}.wb-trust{padding:60px 0 50px}.wb-trust-grid{gap:20px}.wb-trust-num{font-size:32px}.wb-ai-grid,.wb-xml-inner,.wb-price-grid{grid-template-columns:minmax(0,1fr);gap:36px}.wb-pricing-card{padding:34px 26px}.wb-tpl{flex-basis:84vw}.wb-rail-btn{display:none}}
+@media(max-width:560px){.wb-trust-grid{grid-template-columns:1fr}.wb-cards,.wb-incl-grid{grid-template-columns:1fr}.wb-hero-ctas{flex-direction:column;align-items:stretch}.wb-hero-ctas .btn{text-align:center}.wb-tpl-meta h3{font-size:22px}.wb-chips{margin-top:-10px}.wb-xml-card{padding:28px 22px}.wb-addon-list li{flex-wrap:wrap}}
+@media(max-width:380px){.wrap,.narrow{padding:0 16px}}
+</style>
