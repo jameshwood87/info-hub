@@ -82,8 +82,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	}
 	await mirrorSubmission({
 		kind: 'issue-report',
-		email: (rec as any)?.email,
-		name: (rec as any)?.name,
+		email: (rec as any)?.reporterEmail,
+		name: (rec as any)?.reporterName,
 		phone: (rec as any)?.phone,
 		lang: (rec as any)?.lang,
 		source: (rec as any)?.source,
@@ -92,7 +92,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	});
 	await notifySubmission({
 		kind: 'scam / problem report',
-		fields: [['Reporter', rec.name || 'anonymous'], ['Email', rec.email], ['About', rec.subject], ['Detail', String(rec.detail).slice(0, 300)]],
+		fields: [['Reporter', rec.reporterName || 'anonymous'], ['Email', rec.reporterEmail], ['About', rec.subject], ['Detail', String(rec.detail).slice(0, 300)]],
 		link: '/admin/reports',
 	});
 	return redirect(back + '?sent=1');

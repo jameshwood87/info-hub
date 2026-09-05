@@ -5,65 +5,166 @@ import path from 'node:path';
 
 // Every direct enquiry the public forms collect, in one place.
 //
-// These stores had no admin view at all, so the "Review it" button in the notification
-// email had nowhere to point and fell back to the public homepage. Rendered server-side
-// from the JSON queues; /admin/* is behind the auth middleware, so no separate API is
-// needed and the emails and phone numbers here never reach an unauthenticated request.
+// This used to read six hardcoded JSON files, which meant it silently missed any form
+// added afterwards - the Property Services waitlist shipped and did not appear. Every
+// endpoint now also writes a form_submissions row carrying a `kind`, so the table is read
+// first and a NEW form shows up here without this page being touched.
 //
-// Columns are derived from the records themselves, so a form that starts capturing a new
-// field shows it here without this page needing a change.
+// The JSON files are still read as well: they are the endpoints' own writes, they predate
+// the database mirror, and if Directus is unreachable they are the only copy. Rows are
+// merged and de-duplicated on kind + email + minute, preferring the database row.
+//
+// /admin/* sits behind the auth middleware, so the emails and phone numbers here never
+// reach an unauthenticated request.
 
+const DIRECTUS = 'http://127.0.0.1:8055';
+const TOKEN = (process.env.DIRECTUS_ADMIN_TOKEN || '').trim();
 const VAR = '/opt/info-hub/var/admin';
 
-type Store = { key: string; title: string; note: string; file: string };
+type Row = {
+	kind: string;
+	at: string;
+	/** the id the endpoint's own JSON store gave this record, when there is one */
+	origId?: string | null;
+	email?: string | null;
+	name?: string | null;
+	phone?: string | null;
+	lang?: string | null;
+	source?: string | null;
+	extra: Record<string, unknown>;
+	from: 'db' | 'file';
+};
 
-const STORES: Store[] = [
-	{ key: 'app-waitlist', title: 'App waitlist', note: 'Early access for the mobile app, from /mobile-app/ and the holiday-lets page.', file: 'app-waitlist.json' },
-	{ key: 'seller-leads', title: 'Seller enquiries', note: 'Owners asking what their property is worth.', file: 'seller-leads.json' },
-	{ key: 'buyer-leads', title: 'Buyer leads', note: 'From the property finder.', file: 'buyer-leads.json' },
-	{ key: 'walkthrough-leads', title: '360 walkthrough requests', note: 'Agencies asking for a virtual tour.', file: 'walkthrough-leads.json' },
-	{ key: 'newsletter', title: 'Newsletter signups', note: '', file: 'newsletter.json' },
-	{ key: 'agents-survey', title: 'Agents survey', note: 'Roadmap survey responses. Credit grants are still manual.', file: 'agents-survey.json' },
+// A file store and its database `kind`. Keep in step with the endpoints' mirrorSubmission
+// calls; anything not listed still appears, sourced from the database.
+const FILES: Array<[string, string]> = [
+	['app-waitlist.json', 'app-waitlist'],
+	['services-waitlist.json', 'services-waitlist'],
+	['seller-leads.json', 'seller-lead'],
+	['buyer-leads.json', 'buyer-lead'],
+	['walkthrough-leads.json', 'walkthrough-lead'],
+	['newsletter.json', 'newsletter'],
+	['agents-survey.json', 'agents-survey'],
+	['feature-requests.json', 'feature-request'],
+	['issue-reports.json', 'report-issue'],
 ];
 
-const readStore = (file: string): any[] => {
-	try {
-		const raw = fs.readFileSync(path.join(VAR, file), 'utf8');
-		const d = JSON.parse(raw);
-		if (Array.isArray(d)) return d;
-		return d?.entries ?? d?.items ?? [];
-	} catch {
-		return [];
+const TITLES: Record<string, string> = {
+	'app-waitlist': 'App waitlist',
+	'services-waitlist': 'Property Services pre-registration',
+	'seller-lead': 'Seller enquiries',
+	'buyer-lead': 'Buyer leads',
+	'walkthrough-lead': '360 walkthrough requests',
+	newsletter: 'Newsletter signups',
+	'agents-survey': 'Agents survey',
+	'feature-request': 'Feature requests',
+	'report-issue': 'Scam and problem reports',
+	'verify-agency': 'Agency verification requests',
+	'event-submit': 'Event submissions',
+	'whatson-submit': "What's-on suggestions",
+};
+const titleFor = (k: string) => TITLES[k] ?? k.replace(/[-_]/g, ' ').replace(/^./, (c) => c.toUpperCase());
+
+const SKIP = new Set(['id', 'at', 'date', 'created_at', 'ip', 'ua', 'kind', 'email', 'name', 'phone', 'lang', 'source', 'website']);
+
+const pick = (o: Record<string, any>): Record<string, unknown> => {
+	const out: Record<string, unknown> = {};
+	for (const [k, v] of Object.entries(o ?? {})) {
+		if (SKIP.has(k)) continue;
+		if (v === null || v === undefined || v === '') continue;
+		out[k] = v;
 	}
+	return out;
 };
 
-// 'at' and 'id' are rendered separately; everything else becomes a column
-const HIDE = new Set(['id', 'at', 'ip', 'ua']);
-const LABELS: Record<string, string> = {
-	ptype: 'Property type',
-	op: 'Looking for',
-	lang: 'Lang',
-	listings_band: 'Listings',
-	top_value: 'Most valued',
-	mls_value: 'MLS value',
-	switch_blocker: 'Blocker',
-	wants_followup: 'Follow up',
-	area_name: 'Area',
-};
-const label = (k: string) => LABELS[k] ?? k.charAt(0).toUpperCase() + k.slice(1).replace(/_/g, ' ');
+let dbRows: Row[] = [];
+let dbError: string | null = null;
+if (TOKEN) {
+	try {
+		const res = await fetch(
+			`${DIRECTUS}/items/form_submissions?fields=id,kind,email,name,phone,lang,source,page,payload,flags,status,created_at&limit=2000&sort=-id`,
+			{ headers: { Authorization: `Bearer ${TOKEN}` }, signal: AbortSignal.timeout(8000) },
+		);
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const j: any = await res.json();
+		dbRows = (j?.data ?? []).map((r: any): Row => {
+			const p = r.payload && typeof r.payload === 'object' ? r.payload : {};
+			return {
+				kind: r.kind || 'unknown',
+				// the backfill stamped created_at with its own run time, so the payload's
+				// own timestamp is the one the person actually submitted at
+				at: p.at || p.date || r.created_at || '',
+				origId: p.id ?? null,
+				email: r.email ?? p.email ?? null,
+				name: r.name ?? p.name ?? null,
+				phone: r.phone ?? p.phone ?? null,
+				lang: r.lang ?? p.lang ?? null,
+				source: r.source,
+				extra: { ...pick(p), ...(r.flags ? { flags: r.flags } : {}), ...(r.status && r.status !== 'new' ? { status: r.status } : {}) },
+				from: 'db',
+			};
+		});
+	} catch (e: any) {
+		dbError = String(e?.message ?? e);
+	}
+} else {
+	dbError = 'DIRECTUS_ADMIN_TOKEN not set';
+}
 
-const sections = STORES.map((s) => {
-	const rows = readStore(s.file)
-		.slice()
-		.sort((a, b) => String(b?.at ?? '').localeCompare(String(a?.at ?? '')));
-	const cols: string[] = [];
-	rows.forEach((r) => Object.keys(r ?? {}).forEach((k) => { if (!HIDE.has(k) && !cols.includes(k)) cols.push(k); }));
-	return { ...s, rows, cols };
+const fileRows: Row[] = [];
+for (const [fn, kind] of FILES) {
+	try {
+		const raw = fs.readFileSync(path.join(VAR, fn), 'utf8');
+		const d = JSON.parse(raw);
+		const list = Array.isArray(d) ? d : (d?.entries ?? d?.items ?? []);
+		for (const r of list) {
+			if (!r || typeof r !== 'object') continue;
+			fileRows.push({
+				kind,
+				at: r.at || r.date || r.created_at || '',
+				origId: r.id ?? null,
+				email: r.email ?? null,
+				name: r.name ?? null,
+				phone: r.phone ?? null,
+				lang: r.lang ?? null,
+				source: r.source ?? null,
+				extra: pick(r),
+				from: 'file',
+			});
+		}
+	} catch {
+		/* store absent or unreadable - the database copy still shows */
+	}
+}
+
+// The same submission exists in both places. The endpoint's own record id is the only
+// stable join - the backfill rewrote created_at, so times do not match. Fall back to
+// kind + email + minute for rows that never had an id.
+const keyOf = (r: Row) =>
+	r.origId ? `${r.kind}|${r.origId}` : `${r.kind}|${(r.email ?? '').toLowerCase()}|${String(r.at).slice(0, 16)}`;
+const merged = new Map<string, Row>();
+for (const r of dbRows) merged.set(keyOf(r), r);
+for (const r of fileRows) if (!merged.has(keyOf(r))) merged.set(keyOf(r), r);
+
+const all = [...merged.values()].sort((a, b) => String(b.at).localeCompare(String(a.at)));
+
+const groups = new Map<string, Row[]>();
+for (const r of all) {
+	if (!groups.has(r.kind)) groups.set(r.kind, []);
+	groups.get(r.kind)!.push(r);
+}
+// known kinds first, in a sensible order, then anything new the database has taught us
+const ORDER = ['app-waitlist', 'services-waitlist', 'seller-lead', 'buyer-lead', 'walkthrough-lead',
+	'verify-agency', 'newsletter', 'agents-survey', 'feature-request', 'report-issue'];
+const kinds = [...groups.keys()].sort((a, b) => {
+	const ia = ORDER.indexOf(a), ib = ORDER.indexOf(b);
+	return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b);
 });
 
-const total = sections.reduce((n, s) => n + s.rows.length, 0);
+const total = all.length;
 const when = (v: unknown) => String(v ?? '').slice(0, 16).replace('T', ' ');
 const cell = (v: unknown) => {
+	if (v && typeof v === 'object') return JSON.stringify(v).slice(0, 160);
 	const s = String(v ?? '').trim();
 	if (!s) return '-';
 	return s.length > 160 ? s.slice(0, 160) + '...' : s;
@@ -81,50 +182,66 @@ const cell = (v: unknown) => {
 		<header class="topbar">
 			<div class="title"><a class="back" href="/admin/">&larr; Dashboard</a><h1>Leads</h1></div>
 			<div class="hint">
-				Everything the public forms collect. Private, never published. {total} record{total === 1 ? '' : 's'} in total.
+				Everything the public forms collect. Private, never published. {total} record{total === 1 ? '' : 's'}.
+				Read from the form_submissions table plus the JSON stores, so a newly added form appears here on its own.
 			</div>
+			{dbError && (
+				<div class="warn">
+					Database unreachable ({dbError}) - showing the JSON stores only, so anything that exists
+					<strong> only</strong> in the database (agency verification requests) is missing from this view.
+				</div>
+			)}
 		</header>
 
 		<nav class="jump">
-			{sections.map((s) => (
-				<a href={`#${s.key}`} class={s.rows.length ? 'has' : ''}>
-					{s.title} <b>{s.rows.length}</b>
-				</a>
+			{kinds.map((k) => (
+				<a href={`#${k}`} class={groups.get(k)!.length ? 'has' : ''}>{titleFor(k)} <b>{groups.get(k)!.length}</b></a>
 			))}
 		</nav>
 
-		{sections.map((s) => (
-			<section id={s.key} class="block">
-				<h2>{s.title} <span class="count">{s.rows.length}</span></h2>
-				{s.note && <p class="note">{s.note}</p>}
-				{s.rows.length === 0 ? (
-					<p class="empty">Nothing yet.</p>
-				) : (
+		{kinds.length === 0 && <p class="empty">Nothing yet.</p>}
+
+		{kinds.map((k) => {
+			const rows = groups.get(k)!;
+			const cols: string[] = [];
+			rows.forEach((r) => Object.keys(r.extra).forEach((c) => { if (!cols.includes(c)) cols.push(c); }));
+			const showName = rows.some((r) => r.name);
+			const showPhone = rows.some((r) => r.phone);
+			const showSource = rows.some((r) => r.source && r.source !== k);
+			return (
+				<section id={k} class="block">
+					<h2>{titleFor(k)} <span class="count">{rows.length}</span></h2>
 					<div class="tablewrap">
 						<table>
 							<thead>
 								<tr>
 									<th class="w">When</th>
-									{s.cols.map((c) => <th>{label(c)}</th>)}
+									<th>Email</th>
+									{showName && <th>Name</th>}
+									{showPhone && <th>Phone</th>}
+									{showSource && <th>Source</th>}
+									<th class="w">Lang</th>
+									{cols.map((c) => <th>{c.replace(/[-_]/g, ' ')}</th>)}
 								</tr>
 							</thead>
 							<tbody>
-								{s.rows.map((r) => (
+								{rows.map((r) => (
 									<tr>
-										<td class="w mono">{when(r?.at)}</td>
-										{s.cols.map((c) => (
-											<td>
-												{c === 'email' && r?.[c] ? <a href={`mailto:${r[c]}`}>{cell(r[c])}</a> : cell(r?.[c])}
-											</td>
-										))}
+										<td class="w mono">{when(r.at)}</td>
+										<td>{r.email ? <a href={`mailto:${r.email}`}>{r.email}</a> : '-'}</td>
+										{showName && <td>{cell(r.name)}</td>}
+										{showPhone && <td>{cell(r.phone)}</td>}
+										{showSource && <td>{cell(r.source)}</td>}
+										<td class="w">{cell(r.lang)}</td>
+										{cols.map((c) => <td>{cell(r.extra[c])}</td>)}
 									</tr>
 								))}
 							</tbody>
 						</table>
 					</div>
-				)}
-			</section>
-		))}
+				</section>
+			);
+		})}
 	</div>
 </Layout>
 
@@ -134,7 +251,8 @@ const cell = (v: unknown) => {
 	.title { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
 	.back { color: #00867a; text-decoration: none; font-size: 14px; font-weight: 700; }
 	.topbar h1 { font-size: 26px; letter-spacing: -0.6px; margin: 0; color: #0b1b22; }
-	.hint { color: #5b6b73; font-size: 14px; margin-top: 6px; }
+	.hint { color: #5b6b73; font-size: 14px; margin-top: 6px; max-width: 900px; line-height: 1.5; }
+	.warn { margin-top: 10px; padding: 10px 13px; border-radius: 8px; background: #fff5f2; border: 1px solid #f6d9d0; color: #8a4b39; font-size: 13.5px; }
 
 	.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
 	.jump a { border: 1.5px solid #e2eaec; border-radius: 999px; padding: 7px 15px; font-size: 13.5px; color: #8aa0a6; text-decoration: none; }
@@ -142,10 +260,9 @@ const cell = (v: unknown) => {
 	.jump a b { color: #00867a; }
 
 	.block { margin-bottom: 34px; }
-	.block h2 { font-size: 18px; letter-spacing: -0.3px; color: #0b1b22; margin: 0 0 4px; }
+	.block h2 { font-size: 18px; letter-spacing: -0.3px; color: #0b1b22; margin: 0 0 10px; }
 	.count { display: inline-block; background: #eef7f6; color: #00867a; border-radius: 999px; font-size: 12.5px; padding: 2px 10px; margin-left: 6px; vertical-align: middle; }
-	.note { color: #5b6b73; font-size: 13.5px; margin: 0 0 12px; }
-	.empty { color: #8aa0a6; font-size: 14px; margin: 6px 0 0; }
+	.empty { color: #8aa0a6; font-size: 14px; }
 
 	.tablewrap { overflow-x: auto; border: 1px solid #e7eef1; border-radius: 12px; }
 	table { width: 100%; border-collapse: collapse; font-size: 14px; }

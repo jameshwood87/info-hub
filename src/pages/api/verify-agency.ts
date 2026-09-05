@@ -107,6 +107,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	await notifySubmission({
 		kind: 'agency verification request' + flagNote,
 		fields: [['Agency', payload.agency_name], ['MLS email', payload.mls_email], ['Website', payload.website], ['Contact', payload.contact_name], ['Phone', payload.phone]],
+		link: '/admin/leads',
 	});
 	return json(200, { ok: true });
 };

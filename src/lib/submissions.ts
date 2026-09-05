@@ -54,7 +54,6 @@ export async function mirrorSubmission(s: SubmissionRow): Promise<number | null>
 				page: trim(s.page, 300),
 				payload: s.payload && Object.keys(s.payload).length ? s.payload : null,
 				flags: trim(s.flags, 120),
-				notified: s.notified ?? false,
 				status: 'new',
 			}),
 			signal: AbortSignal.timeout(6000),
