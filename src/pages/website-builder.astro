@@ -241,6 +241,23 @@ const ldFaq = {
 		</div>
 	</section>
 
+	<!-- INCLUDED: HOSTING, SSL, SECURITY -->
+	<section class="wb-section wb-incl">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Included with every site</p>
+				<h2 class="wb-section-h2">Hosting, SSL and Cloudflare security, <em>all included.</em></h2>
+				<p class="wb-lead">Nothing to rent, install or renew. Your site is fast and protected from the day you publish, and stays that way.</p>
+			</div>
+			<div class="wb-incl-grid">
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Hosting</strong><p>Served from the Cloudflare network, so pages load fast wherever your buyer is. No hosting bill, no server to look after.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL certificate</strong><p>Every site runs on https with a certificate that renews itself. The padlock buyers expect, without you doing anything.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Cloudflare security</strong><p>DDoS protection and Cloudflare's edge security sit in front of your site. Attacks are absorbed before they reach it.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Your address</strong><p>your-agency-name.estate-agency.co from day one. Add your own domain for 20 credits a month.</p></article>
+			</div>
+		</div>
+	</section>
+
 	<!-- EDIT WITH AI -->
 	<section class="wb-section wb-ai">
 		<div class="wrap">
@@ -482,6 +499,14 @@ a:hover{text-decoration:underline}
 .wb-card strong{display:block;font-size:16px;line-height:1.35;color:#0d2b2e;margin-bottom:8px}
 .wb-card p{color:#4a5b5d;font-size:14.5px;line-height:1.6}
 
+/* included strip */
+.wb-incl{background:#fff}
+.wb-incl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.wb-incl-item{background:#faf6ee;border:1px solid #e5ecec;border-radius:18px;padding:26px 24px;min-width:0}
+.wb-incl-item svg{width:30px;height:30px;fill:none;stroke:#00ae9a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:16px}
+.wb-incl-item strong{display:block;font-size:17px;line-height:1.3;color:#0d2b2e;margin-bottom:8px}
+.wb-incl-item p{color:#4a5b5d;font-size:14.5px;line-height:1.6}
+
 /* edit with AI */
 .wb-ai{background:#0d2b2e;color:#fff;position:relative;overflow:hidden}
 .wb-ai::before{content:"";position:absolute;top:-180px;left:-160px;width:560px;height:560px;background:radial-gradient(circle,rgba(0,174,154,.18),transparent 70%);pointer-events:none}
@@ -556,8 +581,8 @@ a:hover{text-decoration:underline}
 .wb-final-note a{color:#00ae9a;font-weight:700}
 
 /* Media queries last: rules above would otherwise win at every width. */
-@media(max-width:1024px){.wb-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.wb-steps-grid{grid-template-columns:1fr;max-width:720px;margin:0 auto}}
+@media(max-width:1024px){.wb-cards,.wb-incl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wb-steps-grid{grid-template-columns:1fr;max-width:720px;margin:0 auto}}
 @media(max-width:900px){.wb-section{padding:70px 0}.wb-hero{padding:50px 0 44px}.wb-hero-grid{grid-template-columns:minmax(0,1fr);gap:36px}.wb-hero-visual{transform:none}.wb-trust{padding:60px 0 50px}.wb-trust-grid{gap:20px}.wb-trust-num{font-size:32px}.wb-ai-grid,.wb-xml-inner,.wb-price-grid{grid-template-columns:minmax(0,1fr);gap:36px}.wb-pricing-card{padding:34px 26px}.wb-tpl{flex-basis:84vw}.wb-rail-btn{display:none}}
-@media(max-width:560px){.wb-trust-grid{grid-template-columns:1fr}.wb-cards{grid-template-columns:1fr}.wb-hero-ctas{flex-direction:column;align-items:stretch}.wb-hero-ctas .btn{text-align:center}.wb-tpl-meta h3{font-size:22px}.wb-chips{margin-top:-10px}.wb-xml-card{padding:28px 22px}.wb-addon-list li{flex-wrap:wrap}}
+@media(max-width:560px){.wb-trust-grid{grid-template-columns:1fr}.wb-cards,.wb-incl-grid{grid-template-columns:1fr}.wb-hero-ctas{flex-direction:column;align-items:stretch}.wb-hero-ctas .btn{text-align:center}.wb-tpl-meta h3{font-size:22px}.wb-chips{margin-top:-10px}.wb-xml-card{padding:28px 22px}.wb-addon-list li{flex-wrap:wrap}}
 @media(max-width:380px){.wrap,.narrow{padding:0 16px}}
 </style>
