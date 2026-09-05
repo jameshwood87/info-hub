@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 import fs from 'node:fs/promises';
 
 // Agents survey intake (2026-07-08). Stores a local durable copy AND forwards to the Operations
@@ -70,6 +71,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 				body: JSON.stringify(rec) });
 		} catch { /* best effort - local copy is the backup */ }
 	}
+	await mirrorSubmission({
+		kind: 'agents-survey',
+		email: (rec as any)?.email,
+		name: (rec as any)?.name,
+		phone: (rec as any)?.phone,
+		lang: (rec as any)?.lang,
+		source: (rec as any)?.source,
+		flags: Array.isArray((rec as any)?.flags) ? (rec as any).flags.join(', ') : (rec as any)?.flags,
+		payload: rec as any,
+	});
 	await notifySubmission({
 		kind: 'agents survey response' + flagNote,
 		fields: [['Name', rec.name], ['Email', rec.email], ['Phone', rec.phone], ['Agency', rec.agency], ['Language', rec.lang]],

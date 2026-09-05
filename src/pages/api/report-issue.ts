@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 import fs from 'node:fs/promises';
 
 // Confidential issue/scam intake. Stores to a private queue; notifies a trust
@@ -79,6 +80,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 			/* best effort */
 		}
 	}
+	await mirrorSubmission({
+		kind: 'issue-report',
+		email: (rec as any)?.email,
+		name: (rec as any)?.name,
+		phone: (rec as any)?.phone,
+		lang: (rec as any)?.lang,
+		source: (rec as any)?.source,
+		flags: Array.isArray((rec as any)?.flags) ? (rec as any).flags.join(', ') : (rec as any)?.flags,
+		payload: rec as any,
+	});
 	await notifySubmission({
 		kind: 'scam / problem report',
 		fields: [['Reporter', rec.name || 'anonymous'], ['Email', rec.email], ['About', rec.subject], ['Detail', String(rec.detail).slice(0, 300)]],

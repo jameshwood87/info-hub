@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 import { sendSellerBreakdown } from '../../lib/sellerBreakdown';
 
 // Seller enquiry from the "what is my property worth" page. Stores first, then notifies,
@@ -88,6 +89,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 	}
 
 	// 2) tell James
+	await mirrorSubmission({
+		kind: 'seller-lead',
+		email: (rec as any)?.email,
+		name: (rec as any)?.name,
+		phone: (rec as any)?.phone,
+		lang: (rec as any)?.lang,
+		source: (rec as any)?.source,
+		flags: Array.isArray((rec as any)?.flags) ? (rec as any).flags.join(', ') : (rec as any)?.flags,
+		payload: rec as any,
+	});
 	await notifySubmission({
 		kind: 'seller enquiry' + flagNote,
 		fields: [

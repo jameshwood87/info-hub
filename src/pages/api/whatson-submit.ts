@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 import fs from 'node:fs/promises';
 
 // "Add your place" + "Add your event feed" intake for the What's-On pages.
@@ -62,6 +63,12 @@ export const POST: APIRoute = async ({ request }) => {
 			if (web && !URL_RE.test(web)) return json({ ok: false, error: 'invalid_url' }, 400);
 			const res = await appendTo(PLACES_QUEUE, { ...base, name, cat, town, area: area || null, web: web || null, desc },
 				(r) => `${String(r?.name || '').toLowerCase()}|${r?.town || ''}`);
+			await mirrorSubmission({
+				kind: 'place-suggestion',
+				name: name,
+				source: 'whats-on',
+				payload: { ...base, name, cat, town, area, web, desc } as any,
+			});
 			await notifySubmission({
 				kind: 'place suggestion',
 				fields: [['Name', name], ['Category', cat], ['Town', town], ['Website', web], ['Description', desc]],
@@ -76,6 +83,12 @@ export const POST: APIRoute = async ({ request }) => {
 			if (!URL_RE.test(url)) return json({ ok: false, error: 'invalid_url' }, 400);
 			const res = await appendTo(FEEDS_STORE, { ...base, organizer, url, town },
 				(r) => String(r?.url || '').toLowerCase().replace(/\/+$/, ''));
+			await mirrorSubmission({
+				kind: 'event-feed-suggestion',
+				name: organizer,
+				source: 'whats-on',
+				payload: { ...base, organizer, url, town } as any,
+			});
 			await notifySubmission({
 				kind: 'event feed suggestion',
 				fields: [['Organizer', organizer], ['Feed URL', url], ['Town', town]],

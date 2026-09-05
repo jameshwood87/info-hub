@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 import fs from 'node:fs/promises';
 
 // 360 walkthrough interest lead (2026-08-09). The service is coming soon; the
@@ -71,6 +72,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		return json({ ok: false, error: 'store_failed' }, 500);
 	}
 
+	await mirrorSubmission({
+		kind: 'walkthrough-lead',
+		email: (rec as any)?.email,
+		name: (rec as any)?.name,
+		phone: (rec as any)?.phone,
+		lang: (rec as any)?.lang,
+		source: (rec as any)?.source,
+		flags: Array.isArray((rec as any)?.flags) ? (rec as any).flags.join(', ') : (rec as any)?.flags,
+		payload: rec as any,
+	});
 	await notifySubmission({
 		kind: flags.length
 			? `360 walkthrough request [CHECK: ${flags.join('+')}]`

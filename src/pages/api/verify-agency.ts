@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 
 type VerifyRequest = {
 	agency_name?: string;
@@ -95,6 +96,14 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		return json(502, { ok: false, error: 'store_failed' });
 	}
 
+	await mirrorSubmission({
+		kind: 'agency-verification',
+		email: (payload as any)?.mls_email,
+		name: (payload as any)?.agency_name,
+		phone: (payload as any)?.phone,
+		source: 'verify-agency',
+		payload: payload as any,
+	});
 	await notifySubmission({
 		kind: 'agency verification request' + flagNote,
 		fields: [['Agency', payload.agency_name], ['MLS email', payload.mls_email], ['Website', payload.website], ['Contact', payload.contact_name], ['Phone', payload.phone]],

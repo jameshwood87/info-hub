@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { notifySubmission } from '../../lib/notify';
+import { mirrorSubmission } from '../../lib/submissions';
 import fs from 'node:fs/promises';
 
 // Footer newsletter signup. Capture-only on purpose: no email provider is
@@ -117,6 +118,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		}
 	}
 	if (isNew) {
+		await mirrorSubmission({
+			kind: 'newsletter',
+			email: (rec as any)?.email,
+			name: (rec as any)?.name,
+			phone: (rec as any)?.phone,
+			lang: (rec as any)?.lang,
+			source: (rec as any)?.source,
+			flags: Array.isArray((rec as any)?.flags) ? (rec as any).flags.join(', ') : (rec as any)?.flags,
+			payload: rec as any,
+		});
 		await notifySubmission({
 			kind: 'newsletter signup',
 			fields: [
