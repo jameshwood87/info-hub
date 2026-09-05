@@ -38,7 +38,7 @@ const styles = ['Moderno', 'Minimalista', 'Lujo', 'Clásico', 'Escaparate'];
 const addons = [
 	{ name: 'Página extra', what: 'Una página más además de las incluidas', price: '10 créditos al mes' },
 	{ name: 'Instant Content', what: 'Guías de zona y un blog, escritos para ti, sin límite', price: '30 créditos al mes' },
-	{ name: 'Tu propio dominio', what: 'Tu dominio en vez de una dirección de PropertyList', price: '20 créditos al mes' },
+	{ name: 'Tu propio dominio', what: 'Tu dominio en vez de tu-agencia.estate-agency.co', price: '20 créditos al mes' },
 	{ name: 'Quitar la marca de PropertyList', what: 'Elimina el distintivo de PropertyList de tu web', price: '50 créditos al mes' },
 	{ name: 'Captura de leads con pop-up', what: 'Un pop-up que capta leads en tu web', price: '8 créditos al mes' },
 	{ name: 'Respuestas con IA en los anuncios', what: 'Genera una FAQ a partir de lo que preguntan de verdad los compradores', price: '8 créditos al mes' },
@@ -47,15 +47,16 @@ const addons = [
 ];
 
 const faqs = [
-	{ q: '¿De verdad es gratis crearla?', a: 'Sí. Crear y previsualizar tu web no cuesta nada. Solo se te cobra cuando la publicas, 50 créditos al mes a partir de ese momento.' },
+	{ q: '¿De verdad es gratis crearla?', a: 'Sí. Crear y previsualizar tu web no cuesta nada. Solo se te cobra cuando la publicas: 50 créditos al mes a partir de ese momento, más los extras que actives.' },
 	{ q: '¿Qué pasa cuando publico?', a: 'Tu web se pone en marcha y cada anuncio de tu cuenta de PropertyList aparece en ella de inmediato. A partir de ahí se te cobran 50 créditos al mes por la web, más los extras que tengas activados, cada uno con su cuota mensual.' },
 	{ q: '¿Puedo cambiar de plantilla más adelante?', a: 'Sí. Cambia a cualquiera de los quince diseños cuando quieras, y conservas tus textos, tus páginas y tus ajustes.' },
 	{ q: '¿Tengo que subir mis anuncios?', a: 'No. Cada anuncio de tu cuenta de PropertyList ya está en la web, y se actualiza cuando cambias el anuncio en el CRM. Nada se escribe dos veces.' },
-	{ q: '¿A dónde van las consultas?', a: 'Directas a tu CRM de PropertyList. Los pipelines de Lead, Seller y Property son gratis y sin límite. Mover un lead cualificado al pipeline de Buyer cuesta 1 crédito.' },
-	{ q: '¿Puedo usar mi propio dominio?', a: 'Sí, por 20 créditos al mes. Hasta entonces tu web funciona con una dirección de PropertyList.' },
+	{ q: '¿A dónde van las consultas?', a: 'Directas a tu CRM de PropertyList, y recibes un email por cada una. Los pipelines de Lead, Seller y Property son gratis y sin límite. Mover un lead cualificado al pipeline de Buyer cuesta 1 crédito.' },
+	{ q: '¿Puedo usar mi propio dominio?', a: 'Sí, por 20 créditos al mes. Hasta entonces tu web funciona en nombre-de-tu-agencia.estate-agency.co: tu nombre en la dirección, no el nuestro.' },
 	{ q: '¿Qué pasa si cancelo?', a: 'Tu web vuelve al microsite gratuito de agencia al final del periodo de facturación. Conservas tu dominio.' },
-	{ q: '¿El SEO es bueno de verdad?', a: 'SEO y GEO automáticos revisa tu web cada semana y corrige lo que puede, por 5 créditos al mes. No prometemos posiciones; cómo rinde una web depende de más factores que una sola plataforma.' },
+	{ q: '¿El SEO es bueno de verdad?', a: 'Bueno desde el primer día: cada página sale con estructura limpia, títulos y descripciones. Activa SEO y GEO automáticos (5 créditos al mes) y un agente dedicado a tu web trabaja en ella cada semana: revisa todas las páginas, actualiza las palabras clave a lo que buscan los compradores ahora y corrige lo que encuentra. Seguimos sin prometer posiciones; ninguna plataforma honesta puede.' },
 	{ q: '¿Necesito ser técnico?', a: 'No. Eliges una plantilla, la editas en un editor que muestra tu web real mientras trabajas, y publicas cuando estés listo. Editar con IA también te permite describir un cambio en lenguaje sencillo.' },
+	{ q: '¿Quién aloja la web y es segura?', a: 'Nosotros. El alojamiento y la protección de Cloudflare van incluidos: tu web se sirve rápido desde la red de Cloudflare y queda protegida frente a ataques, sin nada que gestionar ni renovar por tu parte.' },
 	{ q: '¿Están incluidas las páginas legales?', a: 'Sí. El aviso legal, la política de privacidad y de cookies, más un banner de cookies, vienen con cada plantilla. Están incluidos y nunca se facturan aparte.' },
 ];
 
@@ -273,6 +274,7 @@ const ldFaq = {
 					<ul class="wb-pricing-features">
 						<li>Inicio, Propiedades (búsqueda y resultados, con filtros y una búsqueda guardada), una página de propiedad para cada anuncio, Sobre Nosotros y Contacto</li>
 						<li>Páginas legales (aviso legal, privacidad, cookies) y un banner de cookies, incluidos y nunca facturados</li>
+						<li>Alojamiento y protección de Cloudflare incluidos: rápida y protegida, sin nada que gestionar</li>
 						<li>Inglés y español de serie, se pueden añadir más idiomas</li>
 						<li>Las quince plantillas, cambia cuando quieras y conserva tu trabajo</li>
 						<li>Consultas directas a tu CRM de PropertyList</li>

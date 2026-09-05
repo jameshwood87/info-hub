@@ -38,7 +38,7 @@ const styles = ['Modern', 'Minimalist', 'Luxury', 'Classic', 'Showcase'];
 const addons = [
 	{ name: 'Extra page', what: 'One more page beyond the included set', price: '10 credits a month' },
 	{ name: 'Instant Content', what: 'Area guides and a blog, written for you, unlimited', price: '30 credits a month' },
-	{ name: 'Your own domain', what: 'Your domain instead of a PropertyList address', price: '20 credits a month' },
+	{ name: 'Your own domain', what: 'Your domain instead of your-agency.estate-agency.co', price: '20 credits a month' },
 	{ name: 'Remove PropertyList branding', what: 'Takes the PropertyList mark off your site', price: '50 credits a month' },
 	{ name: 'Pop-up lead capture', what: 'A pop-up that captures leads on your site', price: '8 credits a month' },
 	{ name: 'AI answers on listings', what: 'Builds an FAQ from what buyers actually ask', price: '8 credits a month' },
@@ -47,15 +47,16 @@ const addons = [
 ];
 
 const faqs = [
-	{ q: 'Is it really free to build?', a: 'Yes. Building and previewing your site costs nothing. You are only charged once you publish it, 50 credits a month from then on.' },
+	{ q: 'Is it really free to build?', a: 'Yes. Building and previewing your site costs nothing. You are only charged once you publish it: 50 credits a month from then on, plus any add-ons you switch on.' },
 	{ q: 'What happens when I publish?', a: 'Your site goes live and every listing in your PropertyList account appears on it straight away. From that point you are charged 50 credits a month for the site, plus any add-ons you have switched on, each billed monthly.' },
 	{ q: 'Can I change template later?', a: 'Yes. Switch to a different one of the fifteen designs whenever you want, and you keep your words, your pages and your settings.' },
 	{ q: 'Do I have to upload my listings?', a: 'No. Every listing in your PropertyList account is already on the site, and it updates when you change the listing in the CRM. Nothing is typed twice.' },
-	{ q: 'Where do enquiries go?', a: 'Straight into your PropertyList CRM. Lead, Seller and Property pipelines are free with no limit. Moving a qualified lead into the Buyer pipeline costs 1 credit.' },
-	{ q: 'Can I use my own domain?', a: 'Yes, for 20 credits a month. Until then your site runs on a PropertyList address.' },
+	{ q: 'Where do enquiries go?', a: 'Straight into your PropertyList CRM, and you get an email for each one. Lead, Seller and Property pipelines are free with no limit. Moving a qualified lead into the Buyer pipeline costs 1 credit.' },
+	{ q: 'Can I use my own domain?', a: 'Yes, for 20 credits a month. Until then your site runs at your-agency-name.estate-agency.co: your name in the address, not ours.' },
 	{ q: 'What if I cancel?', a: 'Your site reverts to the free agency microsite at the end of the billing period. You keep your domain.' },
-	{ q: 'Is the SEO any good?', a: 'Auto SEO and GEO checks your site weekly and fixes what it can, for 5 credits a month. We do not promise rankings; how a site performs depends on more than any one platform.' },
+	{ q: 'Is the SEO any good?', a: 'Good from day one: every page ships with clean structure, titles and descriptions. Switch on Auto SEO and GEO (5 credits a month) and an agent dedicated to your site works on it every week: it checks every page, refreshes the keywords to what buyers are searching for now, and fixes what it finds. We still do not promise rankings; no honest platform can.' },
 	{ q: 'Do I need to be technical?', a: 'No. You pick a template, edit it in an editor that shows your real site as you work, and publish when you are ready. Edit with AI lets you describe a change in plain English too.' },
+	{ q: 'Who hosts it, and is it secure?', a: 'We do. Hosting and Cloudflare protection are included: your site is served fast from the Cloudflare network and shielded from attacks, with nothing for you to manage or renew.' },
 	{ q: 'Are the legal pages included?', a: 'Yes. Aviso legal, privacy and cookies pages, plus a cookie banner, come with every template. They are included and never billed separately.' },
 ];
 
@@ -273,6 +274,7 @@ const ldFaq = {
 					<ul class="wb-pricing-features">
 						<li>Home, Properties (search and results, with filters and a saved search), a property page for every listing, About and Contact</li>
 						<li>Legal pages (aviso legal, privacy, cookies) and a cookie banner, included and never billed</li>
+						<li>Hosting and Cloudflare protection included: fast and protected, nothing for you to manage</li>
 						<li>English and Spanish as standard, more languages can be added</li>
 						<li>All fifteen designs, switch any time and keep your work</li>
 						<li>Enquiries straight into your PropertyList CRM</li>
