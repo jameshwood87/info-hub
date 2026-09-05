@@ -199,6 +199,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			}
 		}
 
+		// Legacy WordPress video page -> the real video guides (it still said COMING SOON)
+		if (pathname === '/propertylist-video-tutorials/' || pathname === '/propertylist-video-tutorials') {
+			return new Response(null, { status: 301, headers: { Location: `/video-guides/${url.search}` } });
+		}
+
 		// Removed page /mls/ -> moved to the agents app (property sharing)
 		const externalRedirects: Array<{ from: string; to: string }> = [
 			{ from: '/mls/', to: 'https://agents.propertylist.es/' },
