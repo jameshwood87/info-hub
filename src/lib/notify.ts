@@ -4,8 +4,9 @@
 // (domains, templates, webhooks, subaccounts). The same Mandrill account powers
 // propertylist.es transactional mail, so we only ever call messages/send.
 //
-// Failures are swallowed on purpose. Every caller writes its submission to storage
-// BEFORE calling this, so a mail outage can delay a notification but never lose a lead.
+// Failures never propagate: every caller writes its submission to storage BEFORE
+// calling this, so a mail outage can delay a notification but never lose a lead.
+// They are logged with a [notify] prefix, so journalctl -u info-hub shows them.
 
 const KEY = (process.env.MANDRILL_API_KEY || '').trim();
 const FROM = (process.env.NOTIFY_FROM || '').trim();
@@ -71,7 +72,7 @@ export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
 		const ctl = new AbortController();
 		const timer = setTimeout(() => ctl.abort(), 8000);
 		try {
-			await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+			const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
 				signal: ctl.signal,
@@ -95,10 +96,24 @@ export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
 					},
 				}),
 			});
+			if (!res.ok) {
+				console.error('[notify] mandrill http %s for %s', res.status, opts.kind);
+			} else {
+				// Mandrill answers 200 even when it refuses a recipient; the reason is per address.
+				const sent: any = await res.json().catch(() => null);
+				const bad = Array.isArray(sent)
+					? sent.filter((r: any) => r && r.status !== 'sent' && r.status !== 'queued')
+					: [];
+				if (bad.length) {
+					console.error('[notify] mandrill rejected %s: %s', opts.kind, JSON.stringify(bad));
+				}
+			}
 		} finally {
 			clearTimeout(timer);
 		}
-	} catch {
-		// swallow: the submission is already stored
+	} catch (err) {
+		// Never fail the request: the submission is already stored. But do not
+		// disappear either, or a dead key loses notifications in silence.
+		console.error('[notify] send failed for', opts.kind, err);
 	}
 };

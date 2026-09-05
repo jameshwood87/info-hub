@@ -26,8 +26,6 @@ export type SubmissionRow = {
 	payload?: Record<string, unknown>;
 	/** set when a bot screen fired; the row is kept so nothing disappears silently */
 	flags?: string;
-	/** whether the notification email was accepted */
-	notified?: boolean;
 };
 
 const trim = (v: unknown, max: number) => {
