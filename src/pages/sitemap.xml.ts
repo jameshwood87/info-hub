@@ -186,6 +186,8 @@ export async function GET() {
     '/es/tu-configuracion/', // noindex: draft, pending review
     // Empty coming-soon docs section: a heading and nothing under it, which Google
     // reports as a soft 404. The catch-alls also emit noindex,follow for these two.
+    '/unsubscribe/',
+    '/es/baja/', // noindex: unsubscribe confirmation, reached only from an email
     '/docs/property-services/',
     '/es/docs/property-services/',
   ]);

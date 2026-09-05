@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Where /api/unsubscribe lands the reader. Noindex: it is a confirmation, not a
+// page anyone should find in search. The address is never printed back, so a
+// forwarded link cannot tell the next person who was on the list.
+const bad = Astro.url.searchParams.has('bad');
+---
+
+<Layout
+	lang="en"
+	title="Unsubscribed | PropertyList"
+	description="You have been removed from the PropertyList market email."
+	canonical="https://info.propertylist.es/unsubscribe/"
+	robots="noindex,follow"
+>
+	<section class="unsubWrap">
+		<div class="unsubCard">
+			{bad ? (
+				<>
+					<h1>That link did not work</h1>
+					<p>The unsubscribe link was incomplete or had been changed, so we could not act on it. Forward the email to <a href="mailto:info@propertylist.es">info@propertylist.es</a> and we will take the address off the list by hand.</p>
+				</>
+			) : (
+				<>
+					<h1>You are unsubscribed</h1>
+					<p>That address will not get the Costa del Sol market email again. Nothing else changes: if you have a PropertyList account, it is untouched.</p>
+				</>
+			)}
+			<p class="unsubBack"><a href="/">Back to the info hub</a></p>
+		</div>
+	</section>
+</Layout>
+
+<style is:global>
+	.unsubWrap { max-width: 640px; margin: 0 auto; padding: 72px 24px 96px; }
+	.unsubCard { background: #fff; border: 1px solid #e5ecec; border-radius: 18px; padding: 36px 32px; }
+	.unsubCard h1 { font-size: 28px; line-height: 1.2; color: #0d2b2e; margin: 0 0 14px; }
+	.unsubCard p { font-size: 16px; line-height: 1.65; color: #4a5b5d; margin: 0 0 14px; }
+	.unsubCard a { color: #00ae9a; }
+	.unsubBack { margin-top: 22px !important; font-size: 14px !important; }
+	@media (max-width: 560px) { .unsubWrap { padding: 48px 18px 72px; } .unsubCard { padding: 26px 22px; } }
+</style>
