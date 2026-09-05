@@ -5,8 +5,92 @@ const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'es');
 const plAgencies = statPlus(__ps.agencies, 'es');
 const plListings = statPlus(__ps.listings, 'es');
-const title = 'Creador de Sitios Web para Agencias Inmobiliarias | PropertyList.es';
-const description = 'Lanza un sitio web de agencia con marca propia en minutos. Cada propiedad MLS cargada automáticamente y actualizada en tiempo real, un asistente con IA que crea tus páginas a partir de una frase, captura de leads y SEO - desde 50 créditos/mes.';
+
+const title = 'Creador de Webs para Agencias Inmobiliarias | PropertyList.es';
+const description =
+	'Elige uno de los quince diseños de web de agencia ya terminados, hazlo tuyo, y cada anuncio de tu cuenta de PropertyList ya está en ella. Gratis para crear y previsualizar, 50 créditos al mes en cuanto publicas.';
+const BUILD = 'https://agents.propertylist.es/website-builder';
+const DOCS = 'https://info.propertylist.es/docs/propertylist-mls-user-manual/website-builder/';
+const REFERRALS = 'https://agents.propertylist.es/referrals';
+const DASHBOARD = 'https://agents.propertylist.es';
+
+// The fifteen templates, as captured from the real files (public/wb). Order is
+// the order shown; the style filter hides the rest.
+const templates = [
+	{ id: '14-solaz', name: 'Solaz', style: 'Escaparate', line: 'Empieza con una película: cipreses y costa al atardecer, el titular colocado en la parte baja de la imagen.' },
+	{ id: '01-marina', name: 'Marina', style: 'Moderno', line: 'Cabecera en verde azulado y blanco, un buscador en vivo arriba y tus últimos anuncios en una cuadrícula debajo.' },
+	{ id: '03-onyx', name: 'Onyx', style: 'Lujo', line: 'Una fotografía nocturna de una villa iluminada, un titular serif en blanco, un solo botón.' },
+	{ id: '13-horizon', name: 'Horizon', style: 'Escaparate', line: 'Pantalla dividida: un titular destacado a un lado, una fotografía de interior a toda altura al otro.' },
+	{ id: '02-blanca', name: 'Blanca', style: 'Minimalista', line: 'Una fotografía a todo ancho de una villa con piscina, un menú pequeño, sin titular sobre la imagen.' },
+	{ id: '05-puerto', name: 'Puerto', style: 'Moderno', line: 'Una fotografía a todo ancho al atardecer con una tarjeta flotante encima que muestra el precio y los detalles.' },
+	{ id: '07-noir', name: 'Noir', style: 'Lujo', line: 'Empieza con una película: un paisaje oscuro y cinematográfico con un titular grande y destacado encima, menú mínimo.' },
+	{ id: '04-sierra', name: 'Sierra', style: 'Clásico', line: 'Fondo color crema, espacio para tu fotografía junto a tu nombre y un párrafo editorial.' },
+	{ id: '09-continental', name: 'Continental', style: 'Moderno', line: 'Una fotografía en azul marino al atardecer, un titular blanco destacado y una tarjeta de precio superpuesta a la imagen.' },
+	{ id: '06-atrium', name: 'Atrium', style: 'Minimalista', line: 'Gris claro y blanco, un color de acento en el titular, un buscador y una franja con los últimos inmuebles.' },
+	{ id: '11-imperial', name: 'Imperial', style: 'Lujo', line: 'Fondo color crema, un titular serif destacado, dos fotografías debajo en una galería sencilla.' },
+	{ id: '08-cortijo', name: 'Cortijo', style: 'Clásico', line: 'Fondo color pergamino cálido, un marco en arco junto a tu nombre y una presentación.' },
+	{ id: '10-meridian', name: 'Meridian', style: 'Minimalista', line: 'Fondo pálido, un titular serif en cursiva, un buscador sencillo, nada que compita por la atención.' },
+	{ id: '12-heritage', name: 'Heritage', style: 'Clásico', line: 'Fondo blanco, tu nombre y un párrafo de presentación, botones de llamada a la acción en verde.' },
+	{ id: '15-faro', name: 'Faro', style: 'Escaparate', line: 'Empieza con una película: la silueta oscura de una montaña y el mar, un titular serif grande, menú mínimo.' },
+];
+const styles = ['Moderno', 'Minimalista', 'Lujo', 'Clásico', 'Escaparate'];
+
+const addons = [
+	{ name: 'Página extra', what: 'Una página más además de las incluidas', price: '10 créditos al mes' },
+	{ name: 'Instant Content', what: 'Guías de zona y un blog, escritos para ti, sin límite', price: '30 créditos al mes' },
+	{ name: 'Tu propio dominio', what: 'Tu dominio en vez de una dirección de PropertyList', price: '20 créditos al mes' },
+	{ name: 'Quitar la marca de PropertyList', what: 'Elimina el distintivo de PropertyList de tu web', price: '50 créditos al mes' },
+	{ name: 'Captura de leads con pop-up', what: 'Un pop-up que capta leads en tu web', price: '8 créditos al mes' },
+	{ name: 'Respuestas con IA en los anuncios', what: 'Genera una FAQ a partir de lo que preguntan de verdad los compradores', price: '8 créditos al mes' },
+	{ name: 'SEO y GEO automáticos', what: 'Revisa tu web cada semana y corrige lo que puede', price: '5 créditos al mes' },
+	{ name: 'Informe mensual por email', what: 'Un resumen de rendimiento enviado por email el día 1 de cada mes', price: '5 créditos al mes' },
+];
+
+const faqs = [
+	{ q: '¿De verdad es gratis crearla?', a: 'Sí. Crear y previsualizar tu web no cuesta nada. Solo se te cobra cuando la publicas, 50 créditos al mes a partir de ese momento.' },
+	{ q: '¿Qué pasa cuando publico?', a: 'Tu web se pone en marcha y cada anuncio de tu cuenta de PropertyList aparece en ella de inmediato. A partir de ahí, los 50 créditos al mes cubren el mantenimiento de la web.' },
+	{ q: '¿Puedo cambiar de plantilla más adelante?', a: 'Sí. Cambia a cualquiera de los quince diseños cuando quieras, y conservas tus textos, tus páginas y tus ajustes.' },
+	{ q: '¿Tengo que subir mis anuncios?', a: 'No. Cada anuncio de tu cuenta de PropertyList ya está en la web, y se actualiza cuando cambias el anuncio en el CRM. Nada se escribe dos veces.' },
+	{ q: '¿A dónde van las consultas?', a: 'Directas a tu CRM de PropertyList. Los pipelines de Lead, Seller y Property son gratis y sin límite. Mover un lead cualificado al pipeline de Buyer cuesta 1 crédito.' },
+	{ q: '¿Puedo usar mi propio dominio?', a: 'Sí, por 20 créditos al mes. Hasta entonces tu web funciona con una dirección de PropertyList.' },
+	{ q: '¿Qué pasa si cancelo?', a: 'Tu web vuelve al microsite gratuito de agencia al final del periodo de facturación. Conservas tu dominio.' },
+	{ q: '¿El SEO es bueno de verdad?', a: 'SEO y GEO automáticos revisa tu web cada semana y corrige lo que puede, por 5 créditos al mes. No prometemos posiciones; cómo rinde una web depende de más factores que una sola plataforma.' },
+	{ q: '¿Necesito ser técnico?', a: 'No. Eliges una plantilla, la editas en un editor que muestra tu web real mientras trabajas, y publicas cuando estés listo. Editar con IA también te permite describir un cambio en lenguaje sencillo.' },
+	{ q: '¿Están incluidas las páginas legales?', a: 'Sí. El aviso legal, la política de privacidad y de cookies, más un banner de cookies, vienen con cada plantilla. Están incluidos y nunca se facturan aparte.' },
+];
+
+const ldWebsite = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: 'PropertyList Creador de Webs',
+	url: 'https://info.propertylist.es/es/constructor-de-webs/',
+	description,
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es', logo: { '@type': 'ImageObject', url: 'https://info.propertylist.es/og/logo-default.png' } },
+};
+const ldBreadcrumb = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: 'Creador de Webs' },
+	],
+};
+const ldVideo = {
+	'@context': 'https://schema.org',
+	'@type': 'VideoObject',
+	name: 'PropertyList Creador de Webs: elige un diseño, edítalo, publica',
+	description: 'Una grabación de 33 segundos del Creador de Webs de PropertyList con una agencia de ejemplo: los quince diseños, uno elegido, el titular seleccionado, la cabecera reorganizada y después Revisar y publicar. Sin sonido.',
+	thumbnailUrl: ['https://info.propertylist.es/hero/wb-hero-poster.jpg'],
+	contentUrl: 'https://info.propertylist.es/hero/wb-hero.mp4',
+	uploadDate: '2026-09-05',
+	duration: 'PT33S',
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es' },
+};
+const ldFaq = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
 ---
 
 <Layout
@@ -21,192 +105,276 @@ const description = 'Lanza un sitio web de agencia con marca propia en minutos. 
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/website-builder/' },
 	]}
 >
-	<script type="application/ld+json" is:inline>
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "PropertyList Creador de Sitios Web",
-  "url": "https://info.propertylist.es/es/constructor-de-webs/",
-  "description": "AI-powered website builder for Spanish estate agents. Auto-loads MLS properties, writes SEO meta, generates location pages - no developer needed.",
-  "publisher": {
-    "@type": "Organization",
-    "name": "PropertyList",
-    "url": "https://propertylist.es",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://info.propertylist.es/og/logo-default.png"
-    }
-  }
-}
-</script>
-	<script type="application/ld+json" is:inline>
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "description": "Navigation path for PropertyList Creador de Sitios Web page",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://info.propertylist.es/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Creador de Sitios Web"
-    }
-  ]
-}
-</script>
-	<script type="application/ld+json" is:inline>
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "¿De verdad la IA puede crear mi sitio?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Sí. Abre Editar con IA, describe lo que quieres en lenguaje natural - por ejemplo añade una sección sobre nuestro servicio de alquiler y haz el titular más cercano - y el asistente reescribe la página, ajusta tus colores y fuentes o añade secciones enteras en segundos. Cada cambio es un borrador, así que lo afinas y publicas solo cuando estés contento."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Cuánto tiempo tarda en estar listo un sitio?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Most agencies launch in 1 day or 2. Elige un diseño, brand it, point your domain - and your MLS properties are already there. No content to upload, no developer to brief, no waiting."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Tengo que subir las propiedades yo mismo?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Every property already in your PropertyList account appears on your site automatically. Add a property in your CRM and it is on your site within minutes - prices, photos, descriptions, the lot."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Y si quiero usar mi propio dominio?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Connect your own domain - your-agency.com - in minutes. We handle SSL and hosting automatically. If you do not have a domain yet, we can help you register one."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Ya tengo un sitio web. Puedo usar PropertyList de todas formas?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Sí. El feed a tu propia web son 35 créditos al mes, como feed XML en directo o a través de la API para webs, lo que mejor le venga a tu sitio. Lleva cada propiedad de PropertyList a tu web existente, y el mismo feed puede publicar también en otros portales con los que trabajes."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Qué pasa si cancelo?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Tu sitio vuelve a la versión gratuita de MicroSite al final de tu periodo de facturación. Sin cuota de cancelación, sin compromiso. Te quedas con tu dominio. Puedes volver cuando quieras."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿El SEO es realmente bueno?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The AI writes meta titles and descriptions tuned for the way buyers in Spain actually search - villa con piscina en Marbella rather than generic real estate copy. Schema markup is built in for every listing. Auto-generated location pages cover the areas you list in. We do not promise rankings (no one honest can), but we give you the technical foundation most agency sites lack."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Cómo llegan los leads de mi sitio a mi CRM?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Automáticamente. Cada formulario de contacto, popup y botón de consulta de propiedad se envía directamente al CRM de PropertyList con seguimiento de origen. Las reglas de auto-asignación envían cada lead al agente adecuado de tu equipo."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Necesito ser técnico para usarlo?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "En absoluto. El editor es arrastrar y soltar - si sabes mover diapositivas en PowerPoint, puedes construir una página. Para agentes que quieren control total, hay bloques HTML personalizados disponibles."
-      }
-    }
-  ]
-}
-</script>
-	<script type="application/ld+json" is:inline>
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "PropertyList Creador de Sitios Web",
-  "description": "AI-powered website builder for estate agents in Spain. Auto-loads MLS listings, generates location pages, writes SEO meta, captures leads. 50 credits per month.",
-  "url": "https://info.propertylist.es/es/constructor-de-webs/",
-  "image": "https://info.propertylist.es/og/logo-default.png",
-  "brand": {
-    "@type": "Brand",
-    "name": "PropertyList"
-  },
-  "offers": {
-    "@type": "Offer",
-    "price": "50",
-    "priceCurrency": "EUR",
-    "description": "50 credits a month. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum.",
-    "priceValidUntil": "2027-12-31",
-    "availability": "https://schema.org/InStock",
-    "url": "https://info.propertylist.es/es/constructor-de-webs/#pricing",
-    "seller": {
-      "@type": "Organization",
-      "name": "PropertyList"
-    }
-  },
-  "areaServed": {
-    "@type": "Country",
-    "name": "Spain"
-  }
-}
-</script>
-	<script type="application/ld+json" is:inline>
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "PropertyList Creador de Sitios Web",
-  "description": "Drag-and-drop website builder with AI SEO, MLS property auto-load, lead capture, and auto-generated location pages for Spanish estate agents.",
-  "url": "https://info.propertylist.es/es/constructor-de-webs/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "offers": {
-    "@type": "Offer",
-    "price": "50",
-    "priceCurrency": "EUR",
-    "availability": "https://schema.org/InStock"
-  },
-  "browserRequirements": "Requires JavaScript. Modern browser recommended.",
-  "softwareVersion": "1.0"
-}
-</script>
-<header class="wb-hero"><div class="wrap"><div class="wb-hero-grid"><div class="wb-hero-text"><div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" /><span>Nuevo: asistente web con IA &middot; Hecho para agencias en España</span></div><h1 class="wb-hero-h1">Tu sitio web de agencia,<br /><em>listo en minutos.</em></h1><p class="wb-hero-sub">Cada propiedad MLS cargada automáticamente, más un asistente con IA que crea y edita tus páginas a partir de una sola frase. SEO con IA, captura de leads, páginas de ubicación y destino, todo incluido - sin desarrollador, sin hosting, sin complicaciones.</p><div class="wb-hero-ctas"><a href="#pricing" class="btn btn-primary btn-large">Build my agency site &rarr;</a><a href="#xml" class="btn btn-secondary on-dark btn-large">Ya tengo un sitio web</a></div><div class="wb-hero-price"><span class="wb-hero-price-badge">&#10003; Gratis para crear y previsualizar</span><span class="wb-hero-price-then">luego <strong>50 créditos</strong>/mes (unos 50 €) cuando publicas &middot; cancela cuando quieras</span></div><p style="margin-top:20px;font-size:14px;color:#b8c9cb"><a href="https://info.propertylist.es/docs/propertylist-mls-user-manual/website-builder/" target="_blank" style="color:#6fe5d3;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(111,229,211,.45);padding-bottom:2px">&#128214; ¿Nuevo? Cómo usar el Creador de Sitios Web &rarr;</a></p></div><div class="wb-hero-visual"><a href="https://your-domain-here.estate-agency.co/" target="_blank" rel="noopener noreferrer"><img src="https://info.propertylist.es/email-images/originals/email-mock-website-builder.png?v=20260514" alt="PropertyList Creador de Sitios Web" /></a></div></div></div></header>
+	<script type="application/ld+json" set:html={JSON.stringify(ldWebsite)} />
+	<script type="application/ld+json" set:html={JSON.stringify(ldBreadcrumb)} />
+	<script type="application/ld+json" set:html={JSON.stringify(ldVideo)} />
+	<script type="application/ld+json" set:html={JSON.stringify(ldFaq)} />
 
-<section class="wb-trust"><div class="wrap"><div class="wb-trust-grid"><div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">agentes españoles</div></div><div><div class="wb-trust-num">40.000+</div><div class="wb-trust-label">Páginas y grupos de Facebook</div></div><div><div class="wb-trust-num">Ilimitado</div><div class="wb-trust-label">Listings &amp; pages</div></div><div><div class="wb-trust-num">0€</div><div class="wb-trust-label">Configuración. Para siempre.</div></div></div></div></section>
-<section class="wb-bento wb-section"><div class="wrap"><div class="wb-section-head"><p class="eyebrow">Cómo funciona</p><h2 class="wb-section-h2">Un sitio web que se construye <em>solo.</em></h2><p class="wb-lead">Tres pasos. Sin código. Sin presupuestos de agencia. Sin esperar semanas a que un desarrollador cambie un solo precio.</p></div><div class="wb-bento-grid"><div class="wb-bento-card"><div class="wb-bento-num">1</div><h3>Elige un diseño, o solo descríbelo</h3><p>Empieza con una plantilla limpia y moderna, luego arrastra y suelta bloques para personalizarla - o simplemente dile al asistente de IA lo que quieres y míralo construirlo.</p></div><div class="wb-bento-card"><div class="wb-bento-num">2</div><h3>Propiedades MLS, cargadas automáticamente</h3><p>Cada propiedad que ya tienes en PropertyList aparece en tu sitio - con fotos, descripciones, precios y datos de ubicación. Sin tener que mover un dedo.</p></div><div class="wb-bento-card"><div class="wb-bento-num">3</div><h3>Publish &amp; capture leads</h3><p>Dale a publicar. Las consultas llegan a tu CRM en el momento en que un comprador rellena el formulario. La IA escribe el meta SEO de cada página automáticamente.</p></div></div></div></section>
-<section class="wb-ai wb-section"><div class="wrap"><div class="wb-ai-grid"><div class="wb-ai-text"><p class="eyebrow" style="color:#6fe5d3">Nuevo &middot; Asistente web con IA</p><h2 class="wb-section-h2 on-dark">No lo construyas. <em>Solo descríbelo.</em></h2><p class="wb-lead" style="color:#b8c9cb">Escribe lo que quieres en lenguaje natural y tu sitio se reescribe solo - textos, colores, fuentes, secciones enteras. Sin bloques que arrastrar, sin menús que aprender. Cada cambio es un borrador hasta que publicas, así que puedes experimentar sin ningún riesgo.</p><ul class="wb-feature-list wb-feature-list-dark"><li>Reescribe cualquier página con una sola frase</li><li>Cambia tus colores, fuentes y tono en segundos</li><li>Añade secciones - testimonios, una FAQ, un formulario de contacto - solo pidiéndolo</li><li>La IA también escribe tus meta títulos SEO y el contenido de las FAQ</li><li>Funciona en español e inglés - nada se publica hasta que tú lo digas</li></ul><a href="https://agents.propertylist.es/website-builder" class="btn btn-primary btn-large">Prueba el creador con IA gratis &rarr;</a></div><div class="wb-ai-visual"><div class="wb-ai-chat"><div class="wb-ai-chat-head"><span class="wb-ai-spark">&#10022;</span> Editar con IA</div><div class="wb-ai-prompt">"Haz que el hero diga <strong>'Tu hogar en la Costa del Sol'</strong>, añade una sección de testimonios cerca del final y cambia los colores a azul marino y dorado."</div><div class="wb-ai-chips"><span>Titular más directo</span><span>Añadir testimonios</span><span>Marino y dorado</span></div><div class="wb-ai-status"><span class="wb-ai-dot"></span> Actualizando tu sitio&hellip;</div><div class="wb-ai-result"><div class="wb-ai-result-h">Tu hogar en la Costa del Sol</div><div class="wb-ai-result-p">Expertos locales de confianza - explora cada villa, apartamento y adosado, actualizado en directo desde el MLS.</div><div class="wb-ai-result-bar"></div></div></div></div></div></div></section>
-<section class="wb-section"><div class="wrap">
-<div class="wb-feature-row"><div class="wb-feature-text"><p class="eyebrow">Editor visual</p><h3>Diseña como un profesional, <em>sin serlo.</em></h3><p>Arrastrar y soltar de verdad. Añade un hero, un carrusel de propiedades, un bloque de contacto, un vídeo, un mapa - coloca, posiciona, hecho. Previsualización en directo mientras construyes.</p><ul class="wb-feature-list"><li>Editor basado en bloques con hero, titulares, galería, formularios, vídeo</li><li>HTML personalizado cuando necesitas control total</li><li>Colores de marca y tipografía aplicados en todo el sitio</li><li>Guarda borradores, previsualiza en directo, publica cuando estés listo</li></ul></div><div class="wb-feature-visual"><a href="https://your-domain-here.estate-agency.co/" target="_blank" rel="noopener noreferrer"><img src="https://info.propertylist.es/email-images/originals/email-mock-devices-example.png?v=20260514" alt="Creador de Sitios Web drag-and-drop editor" /></a><p style="text-align:center;margin-top:10px;font-size:13px;color:#7a8a8c"><a href="https://your-domain-here.estate-agency.co/" target="_blank" rel="noopener noreferrer">your-domain-here.estate-agency.co &rarr;</a></p></div></div>
-<div class="wb-feature-row"><div class="wb-feature-text"><p class="eyebrow">AI SEO &amp; geo pages</p><h3>Posiciona donde tus compradores <em>buscan de verdad.</em></h3><p>Cada página - incluyendo cada propiedad y cada ubicación - recibe títulos y descripciones meta generados por IA optimizados para como buscan de verdad los compradores. La plataforma crea páginas geo-dirigidas para las zonas que cubres, así apareces en resultados locales sin escribir una palabra.</p><ul class="wb-feature-list"><li>Títulos y descripciones meta escritos por IA para cada página</li><li>Páginas de ubicación generadas automáticamente: Marbella, Estepona, Mijas, cualquier zona donde tengas propiedades</li><li>Markup schema incluido para anuncios de propiedades</li><li>Actualizado automáticamente según cambia tu MLS</li></ul></div><div class="wb-feature-visual"><div class="wb-visual-box"><div class="wb-browser-frame"><div class="wb-browser-bar"><span class="wb-browser-dot r"></span><span class="wb-browser-dot y"></span><span class="wb-browser-dot g"></span><span class="wb-browser-url">your-domain-here.estate-agency.co</span></div><div style="padding:28px 24px"><div style="font-family:'Playfair Display',serif;font-size:22px;color:#0d2b2e;margin-bottom:8px">Villas en venta en Marbella</div><div style="font-size:13px;color:#4a5b5d;margin-bottom:16px;line-height:1.5">Explora 248 villas de lujo en Marbella desde €485.000 hasta €8,5M. Actualizadas diariamente desde el MLS de PropertyList.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><div style="background:linear-gradient(135deg,#dac8ad,#ae9c82);height:70px;border-radius:8px"></div><div style="background:linear-gradient(135deg,#9bbcc8,#5f8aa2);height:70px;border-radius:8px"></div></div></div></div></div></div></div>
-<div class="wb-feature-row"><div class="wb-feature-text"><p class="eyebrow">Captura de leads</p><h3>Cada consulta, <em>directo a tu CRM.</em></h3><p>Formularios integrados, popups de salida, botones de consulta de propiedad - todo va directo al CRM de PropertyList. Tu equipo ve el lead en el momento en que llega. Sin Zapier. Sin hojas de cálculo. Sin leads que se pierdan.</p><ul class="wb-feature-list"><li>Formularios de contacto integrados en cualquier parte del sitio</li><li>Botones de consulta en cada página de anuncio</li><li>Captura de leads popups with custom triggers</li><li>Auto-asignados al personal de tu CRM con seguimiento completo de origen</li></ul></div><div class="wb-feature-visual"><div class="wb-visual-box"><div class="wb-lead-card"><div class="wb-lead-tag">NEW LEAD &bull; 12 SEC AGO</div><div class="wb-lead-name">Sarah Mitchell</div><div class="wb-lead-email">sarah.m@email.com &middot; +44 7700 900124</div><div class="wb-lead-quote">"Interesado en el 3 dorms en Estepona Hills. Cuándo puedo verlo?"</div><div class="wb-lead-pills"><span class="wb-pill-teal">Auto-asignado</span><span class="wb-pill">Origen: Sitio web</span></div></div></div></div></div>
-<div class="wb-feature-row"><div class="wb-feature-text"><p class="eyebrow">Hazlo tuyo</p><h3>Hero de vídeo, dominio propio, <em>tu marca en todo.</em></h3><p>Añade un vídeo a pantalla completa en tu portada. Conecta tu dominio personalizado en minutos. Cambia de tema sin perder contenido. Tu sitio parece tuyo - porque lo es.</p><div class="wb-pill-set"><span class="wb-pill">Secciones hero de vídeo</span><span class="wb-pill">Dominio personalizado</span><span class="wb-pill">Brand colours &amp; fonts</span><span class="wb-pill">Bloques HTML personalizados</span><span class="wb-pill">Móvil perfecto por defecto</span><span class="wb-pill">Marca en el pie</span><span class="wb-pill">Banner de cookies</span></div></div><div class="wb-feature-visual"><div class="wb-visual-box" style="background:linear-gradient(135deg,#0d2b2e,#1a3f43);padding:0;overflow:hidden"><div style="aspect-ratio:16/10;background:linear-gradient(135deg,#2a3b3d,#0d2b2e);display:flex;align-items:center;justify-content:center;padding:40px;text-align:center;color:#fff"><div><div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><div style="width:0;height:0;border-style:solid;border-width:14px 0 14px 22px;border-color:transparent transparent transparent #fff;margin-left:4px"></div></div><div style="font-family:'Playfair Display',serif;font-size:28px;line-height:1.2;margin-bottom:8px">Costa Homes</div><div style="font-size:13px;opacity:.7;letter-spacing:2px;text-transform:uppercase">Especialistas en Propiedades de Lujo</div></div></div></div></div></div>
-</div></section>
-<section id="pricing" class="wb-pricing wb-section"><div class="wrap"><div class="wb-section-head"><p class="eyebrow" style="color:#6fe5d3">Precios justos</p><h2 class="wb-section-h2 on-dark">Paga por lo que usas. <em>Nada más.</em></h2><p class="wb-lead">Un plan base simple, más extras opcionales en créditos. Añade lo que necesites, quite lo que no, cuando quieras.</p></div><div class="wb-price-grid-3"><div class="wb-pricing-card"><div class="wb-pricing-badge">Empieza aquí</div><div class="wb-pricing-name">Creador de Sitios Web</div><div class="wb-pricing-tagline">Todo lo que necesitas para lanzar.</div><div class="wb-pricing-anchor">Una web de agencia a medida normalmente cuesta <span class="wb-anchor-strike">miles</span> y tarda <span class="wb-anchor-strike">semanas</span>. La tuya está lista hoy.</div><div class="wb-pricing-price">50 créditos<span class="unit">/mes</span></div><ul class="wb-pricing-features"><li><strong>3 páginas</strong> - portada, about, contacto, destino o area</li><li>Editor arrastrar y soltar con bloques de contenido</li><li>Cabecera hero, formularios, bloques HTML personalizados</li><li>Tus colores de marca y fuentes en todo el sitio</li><li>Todas tus propiedades MLS cargadas automáticamente</li><li>Hosting y SSL incluidos</li><li>Construye y previsualiza gratis, solo paga cuando publiques</li><li>Cancela cuando quieras, sin contrato</li></ul><div class="wb-pricing-cta"><a href="https://agents.propertylist.es/website-builder" class="btn btn-primary btn-large">Start building free &rarr;</a></div><p class="wb-pricing-note"><strong>✓ Construye y previsualiza gratis.</strong> 50 créditos/mes empiezan solo cuando publiques.</p></div><div class="wb-pricing-aside"><div class="wb-addon-card"><h4>Extras, <em>a la carta.</em></h4><p class="wb-addon-intro">Añade solo lo que tu agencia necesita. Actívalos, desactívalos, nunca pagues por funciones que no uses.</p><ul class="wb-addon-list"><li><div class="wb-addon-name">AI keyword &amp; meta<small>Meta optimizado para SEO en cada página</small></div><span class="wb-addon-price">5/mes</span></li><li><div class="wb-addon-name">Resumen mensual por email<small>Nuevos anuncios enviados a tus contactos</small></div><span class="wb-addon-price">5/mes</span></li><li><div class="wb-addon-name">Captura de leads con popup<small>Popups de salida e instantáneos a tu CRM</small></div><span class="wb-addon-price">8/mes</span></li><li><div class="wb-addon-name">FAQ con IA<small>Secciones FAQ generadas automáticamente por página</small></div><span class="wb-addon-price">8/mes</span></li><li><div class="wb-addon-name">Dominio personalizado<small>tu-agencia.com en vez de nuestro subdominio</small></div><span class="wb-addon-price">20/mes</span></li><li><div class="wb-addon-name">Páginas extra<small>Haz clic en "Añadir página" cuando quieras</small></div><span class="wb-addon-price">10/mes cada una</span></li></ul><div class="wb-addon-footer"><strong>Precios en créditos.</strong> Nuevos extras publicados regularmente - herramientas de IA, integraciones, más.</div></div><div class="wb-credit-info"><h4>¿Qué es un crédito?</h4><p>Un crédito sale a un euro o menos según el pack. Recarga en cualquier momento, o <strong>compra en volumen con descuento</strong>. Los créditos nunca caducan y se aplican en cada extra de tu cuenta.</p><div class="wb-credit-rate"><span>1 crédito</span><span class="equals">&asymp;</span><span>1€</span></div></div></div></div><div class="wb-referral"><div class="wb-referral-grid"><div><p class="eyebrow" style="color:#00ae9a">¿No quieres pagar?</p><h3>Gana tus créditos. <em>Sólo comparte PropertyList.</em></h3><p>Cada agente tiene un enlace de推荐 único. Compártelo con otra agencia - en el momento en que se registran, los créditos llegan a ambas cuentas. Dinero real, crédito real en la plataforma, sin condiciones.</p><p class="wb-referral-cta"><strong>Recomienda suficientes agencias y tu plataforma se paga sola.</strong></p></div><div class="wb-referral-numbers"><div class="wb-referral-num-card"><div class="wb-referral-amount">20 créditos</div><div class="wb-referral-who">Ganas</div></div><div class="wb-referral-num-card"><div class="wb-referral-amount">10 créditos</div><div class="wb-referral-who">Ellos reciben</div></div></div></div></div><div class="wb-referral-cta-link"><a href="https://agents.propertylist.es/referrals" class="btn btn-secondary">Start referring &rarr;</a></div></section>
-<section id="xml" class="wb-xml wb-section"><div class="wrap"><div class="wb-xml-inner"><div><p class="eyebrow">¿Ya tienes un sitio web?</p><h2 class="wb-section-h2">Conserva tu sitio. <em>Consigue cada propiedad.</em></h2><p class="wb-lead" style="margin-bottom:20px">Tu web actual puede traer tu cartera viva de PropertyList automáticamente, para que nunca muestre una propiedad que ya has vendido. Dos formas de hacerlo, al mismo precio: un <strong>feed XML</strong> en directo o la <strong>API para webs</strong>.</p><p style="color:#4a5b5d;font-size:16px;line-height:1.65;margin-bottom:18px">Tu sitio sigue siendo tuyo. Tus anuncios se mantienen sincronizados. Sin cargas manuales, sin datos obsoletos, sin administración.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px"><div style="border:1px solid #d9e2e3;border-radius:12px;padding:14px 16px;background:#fff"><p style="font-weight:800;margin:0 0 6px;color:#0a6d61">Feed XML</p><p style="margin:0;font-size:15px;color:#4a5b5d;line-height:1.6">Un archivo que tu web lee cada cierto tiempo. La mayoría de plantillas e importadores de portales ya lo entienden, así que normalmente no hace falta desarrollo. Es también lo que apuntas a otros portales.</p></div><div style="border:1px solid #d9e2e3;border-radius:12px;padding:14px 16px;background:#fff"><p style="font-weight:800;margin:0 0 6px;color:#0a6d61">API para webs</p><p style="margin:0;font-size:15px;color:#4a5b5d;line-height:1.6">Una clave REST que tu web consulta directamente, así los resultados son en vivo y no dependen de la última importación. Mejor para webs a medida y apps. Tú creas, rotas y revocas las claves, y ves las llamadas de cada una.</p></div></div><ul class="wb-feature-list"><li>Todos los anuncios de tu cuenta, elijas el método que elijas</li><li>Ventas, alquileres de larga temporada y vacacionales en un solo feed; obra nueva y sobre plano en un feed aparte a 25 créditos al mes</li><li>Alimenta tu propia web y cualquier otro portal con el que trabajes, a la vez</li><li>Soporte de configuración incluido</li></ul><p style="font-size:15px;margin-top:14px"><a href="https://propertylist.es/api-docs" target="_blank" rel="noopener">Lee la documentación de la API &rarr;</a></p></div><div class="wb-xml-card"><div class="wb-xml-toggle" id="xmlToggle"><div class="wb-xml-toggle-option active" data-period="xml">Feed XML<span class="save" style="visibility:hidden">.</span></div><div class="wb-xml-toggle-option" data-period="api">API<span class="save" style="visibility:hidden">.</span></div></div><div id="xml-price-display"><p style="font-size:13px;color:#7a8a8c;letter-spacing:.5px;margin-bottom:4px">Feed a tu propia web - XML</p><div class="wb-xml-price-row"><span class="wb-xml-price" id="xml-price-value">35 créditos</span><span class="wb-xml-price-unit" id="xml-price-unit">/mes</span></div><p class="wb-xml-price-detail" id="xml-price-detail">35 créditos al mes &middot; un XML en directo que tu web lee cada cierto tiempo</p></div><div class="wb-pricing-cta"><a href="https://agents.propertylist.es" class="btn btn-primary btn-large">Consigue el feed &rarr;</a></div><p class="wb-pricing-note" style="margin-top:16px">Cancel anytime &middot; Setup included &middot; No contract</p></div></div></div></section>
-<section class="wb-mcp-strip"><div class="wrap"><div class="wb-mcp-grid"><div class="wb-mcp-text"><p class="eyebrow">Para los técnicamente inclinados</p><h3>Tu sitio tiene una API que tus desarrolladores apreciarán.</h3><p>Cada sitio web que construimos viene con acceso al servidor MCP de PropertyList - la misma capa de Model Context Protocol que impulsa agentes de IA como Claude, Cursor y Perplexity. Tus desarrolladores pueden consultar datos MLS en directo: búsqueda, coincidencia de ubicación, resúmenes de mercado por zona y detalles completos de anuncios, a través de una interfaz estándar.</p><div class="wb-mcp-tools"><div class="wb-mcp-tool"><strong>search_properties</strong><span>Búsqueda estructurada por ubicación, dormitorios, precio, tipo</span></div><div class="wb-mcp-tool"><strong>find_properties_by_description</strong><span>Coincidencia en lenguaje natural para compradores</span></div><div class="wb-mcp-tool"><strong>area_market_summary</strong><span>Precio medio, por m2, conteo por bandas de dormitorios</span></div><div class="wb-mcp-tool"><strong>autocomplete_location</strong><span>Nombres de lugares a IDs de zona PropertyList</span></div><div class="wb-mcp-tool"><strong>get_property</strong><span>Detalle completo del anuncio por referencia</span></div><div class="wb-mcp-tool"><strong>list_agencies</strong><span>Mejores agencias en un zona por anuncios activos</span></div></div><p class="wb-mcp-link"><a href="https://propertylist.es/mcp?lang=es" target="_blank">Explore the MCP docs &rarr;</a></p></div><div class="wb-mcp-terminal"><div class="wb-terminal-header"><span class="wb-terminal-dot r"></span><span class="wb-terminal-dot y"></span><span class="wb-terminal-dot g"></span><span class="wb-terminal-title">Claude Desktop - propertylist mcp</span></div><div class="wb-terminal-body"><div class="wb-terminal-line"><span class="wb-t-comment">// Conectar a PropertyList MCP</span></div><div class="wb-terminal-line"><span class="wb-t-key">"mcpServers"</span><span class="wb-t-punct">: {</span></div><div class="wb-terminal-line wb-t-indent"><span class="wb-t-key">"propertylist"</span><span class="wb-t-punct">: {</span></div><div class="wb-terminal-line wb-t-indent2"><span class="wb-t-key">"url"</span><span class="wb-t-punct">: </span><span class="wb-t-str">"https://mcp.propertylist.es/mcp"</span></div><div class="wb-terminal-line wb-t-indent"><span class="wb-t-punct">}</span></div><div class="wb-terminal-line"><span class="wb-t-punct">}</span></div><div class="wb-terminal-line wb-t-spacer"></div><div class="wb-terminal-line"><span class="wb-t-comment">// Buscar villas en Marbella</span></div><div class="wb-terminal-line"><span class="wb-t-fn">search_properties</span><span class="wb-t-punct">({</span></div><div class="wb-terminal-line wb-t-indent"><span class="wb-t-key">location</span><span class="wb-t-punct">: </span><span class="wb-t-str">"Marbella"</span><span class="wb-t-punct">,</span></div><div class="wb-terminal-line wb-t-indent"><span class="wb-t-key">property_type</span><span class="wb-t-punct">: </span><span class="wb-t-str">"villa"</span><span class="wb-t-punct">,</span></div><div class="wb-terminal-line wb-t-indent"><span class="wb-t-key">min_beds</span><span class="wb-t-punct">: </span><span class="wb-t-num">3</span></div><div class="wb-terminal-line"><span class="wb-t-punct">})</span></div></div></div></div></div></section>
-<section class="wb-faq wb-section"><div class="narrow"><div class="wb-section-head"><p class="eyebrow">¿Preguntas?</p><h2 class="wb-section-h2">Todo <em>que te puedas preguntar.</em></h2></div><div><div class="wb-faq-item"><details><summary>¿De verdad la IA puede crear mi sitio?</summary><p>Sí. Abre Editar con IA, describe lo que quieres en lenguaje natural - "añade una sección sobre nuestro servicio de gestión de alquileres y haz el titular más cercano" - y el asistente reescribe la página, ajusta tus colores y fuentes o añade secciones enteras en segundos. Cada cambio es un borrador, así que puedes afinarlo y publicar solo cuando estés contento. Mantienes el control total; la IA solo hace el trabajo pesado.</p></details></div><div class="wb-faq-item"><details><summary>¿Cuánto tiempo tarda en estar listo un sitio?</summary><p>Most agencies launch in 1 day or 2. Elige un diseño, brand it, point your domain - and your MLS properties are already there. No content to upload, no developer to brief, no waiting.</p></details></div><div class="wb-faq-item"><details><summary>¿Tengo que subir las propiedades yo mismo?</summary><p>No. Cada propiedad que ya tienes en tu cuenta de PropertyList aparece en tu sitio automáticamente. Añade una propiedad en tu CRM y aparece en tu sitio en minutos - precios, fotos, descripciones, todo.</p></details></div><div class="wb-faq-item"><details><summary>¿Y si quiero usar mi propio dominio?</summary><p>Conecta tu propio dominio - tu-agencia.com - en minutos. Nosotros gestionamos el SSL y el hosting automáticamente. Si aún no tienes dominio, podemos ayudarte a registrar uno.</p></details></div><div class="wb-faq-item"><details><summary>¿Ya tengo un sitio web. Puedo usar PropertyList de todas formas?</summary><p>Sí. El feed a tu propia web son 35 créditos al mes, como feed XML en directo o a través de la API, lo que prefiera tu sitio. Lleva cada propiedad de PropertyList a tu web existente, y el mismo feed puede publicar en otros portales con los que trabajes. <a href="#xml">Ver los detalles del feed &rarr;</a></p></details></div><div class="wb-faq-item"><details><summary>¿Qué pasa si cancelo?</summary><p>Tu sitio vuelve a la versión gratuita de MicroSite al final de tu periodo de facturación. Sin cuota de cancelación, sin compromiso. Te quedas con tu dominio. Puedes volver cuando quieras. Y si prefieres no pensar en ello, activa la recarga automática: tu saldo se repone por el coste de tus suscripciones antes de cada renovación, así la web nunca se pausa por descuido.</p></details></div><div class="wb-faq-item"><details><summary>¿El SEO es realmente bueno?</summary><p>The AI writes meta titles and descriptions tuned for the way buyers in Spain actually search - "villa con piscina en Marbella" rather than generic real estate copy. Schema markup is built in for every listing. Auto-generated location pages cover the areas you list in. We don't promise rankings (no one honest can), but we give you the technical foundation most agency sites lack.</p></details></div><div class="wb-faq-item"><details><summary>¿Cómo llegan los leads de mi sitio a mi CRM?</summary><p>Automáticamente. Cada formulario de contacto, popup y botón de consulta de propiedad se envía directamente al CRM de PropertyList con seguimiento de origen. Las reglas de auto-asignación envían cada lead al agente adecuado de tu equipo.</p></details></div><div class="wb-faq-item"><details><summary>¿Necesito ser técnico para usarlo?</summary><p>En absoluto. El editor es arrastrar y soltar - si sabes mover diapositivas en PowerPoint, puedes construir una página. Para agentes que quieren control total, hay bloques HTML personalizados disponibles.</p></details></div><div class="wb-faq-item"><details><summary>¿Qué markup schema está incluido?</summary><p>Cada sitio incluye datos estructurados para RealEstateAgent, Location, FAQPage, BreadcrumbList y WebSite schema. Todo construido automáticamente - sin código, sin plugins, sin experto SEO necesario. Apareces en rich snippets de Google y resúmenes de IA sin trabajo extra.</p></details></div></div></div></section>
-<section class="wb-final wb-section"><div class="narrow"><p class="eyebrow" style="color:#6fe5d3">Born on the Costa del Sol &middot; Rolling out across Spain</p><h2 class="wb-section-h2 on-dark">Deja de alquilar los portales de otros.<br /><em>Construye el tuyo.</em></h2><p class="wb-lead">Tu agencia merece un sitio web que trabaje tan duro como tú - y se actualice mientras duermes.</p><a href="https://agents.propertylist.es/website-builder" class="btn btn-primary btn-large">Start building free &rarr;</a><p class="wb-final-note">Or <a href="#xml">feed your existing site for 35€/month</a> &middot; ¿Preguntas? <a href="https://wa.me/34610951177">WhatsApp +34 610 95 11 77</a></p></div></section>
-<script>(function(){var options=document.querySelectorAll(".wb-xml-toggle-option");var priceLabel=document.querySelector("#xml-price-display p:first-child");var priceValue=document.getElementById("xml-price-value");var priceUnit=document.getElementById("xml-price-unit");var priceDetail=document.getElementById("xml-price-detail");var data={xml:{label:"Feed a tu propia web - XML",value:"35 cr\u00e9ditos",unit:"/mes",detail:"Unos 35\u20ac \u00b7 un XML en directo que tu web lee cada cierto tiempo"},api:{label:"Feed a tu propia web - API",value:"35 cr\u00e9ditos",unit:"/mes",detail:"Unos 35\u20ac \u00b7 una clave REST que tu web consulta directamente, misma cartera, en vivo"}};options.forEach(function(opt){opt.addEventListener("click",function(){options.forEach(function(o){o.classList.remove("active")});opt.classList.add("active");var period=opt.dataset.period;var d=data[period];priceLabel.textContent=d.label;priceValue.textContent=d.value;priceUnit.textContent=d.unit;priceDetail.textContent=d.detail})})})();</script>
-<style>.aiCta{max-width:680px;margin:40px auto;padding:26px 28px;border:1px solid rgba(0,174,154,.26);border-radius:16px;background:linear-gradient(180deg,rgba(0,174,154,.07),rgba(0,174,154,.02));font-family:-apple-system,Segoe UI,Roboto,sans-serif;text-align:left}.aiCtaTitle{margin:0 0 8px;font-size:20px;line-height:1.25;font-weight:800;color:#101828}.aiCtaBody{margin:0 0 16px;font-size:14.5px;line-height:1.6;color:rgba(16,24,40,.7)}.aiCtaForm{display:flex;gap:8px;flex-wrap:wrap}.aiCtaInput{flex:1 1 240px;min-width:0;padding:11px 14px;font-size:15px;border:1px solid rgba(16,24,40,.18);border-radius:10px;background:#fff;color:#101828}.aiCtaInput:focus{outline:2px solid rgba(0,174,154,.5);outline-offset:1px}.aiCtaBtn{flex:0 0 auto;padding:11px 22px;font-size:15px;font-weight:800;color:#fff;background:#00ae9a;border:0;border-radius:10px;cursor:pointer}.aiCtaBtn:hover{background:#0a9285}.aiCtaBtn:disabled{opacity:.6;cursor:default}.aiCtaNote{margin:10px 0 0;font-size:12.5px;color:rgba(16,24,40,.5)}.aiCtaMsg{margin:8px 0 0;font-size:13.5px;min-height:1em}.aiCtaMsg.ok{color:#0a6d61;font-weight:700}.aiCtaMsg.bad{color:#b42318}</style><section class="aiCta" data-agent-cta data-lang="es" data-page="/es/constructor-de-webs/" data-ok="Hecho. Va camino de tu bandeja de entrada." data-bad="Introduce un email válido." data-err="Algo ha fallado. Inténtalo de nuevo."><h2 class="aiCtaTitle">¿Aún no quieres crear la cuenta?</h2><p class="aiCtaBody">Te enviamos el resumen por email: qué está incluido gratis, qué cuesta el Creador de Webs y a qué sustituye. Así lo miras con calma o se lo pasas a tu socio.</p><form class="aiCtaForm" data-agent-cta-form><input class="aiCtaInput" type="email" name="email" required placeholder="tu@email.com" aria-label="tu@email.com" autocomplete="email" /><button class="aiCtaBtn" type="submit">Envíame los detalles</button></form><p class="aiCtaNote">Un email. Puedes darte de baja cuando quieras.</p><p class="aiCtaMsg" data-agent-cta-msg role="status" aria-live="polite"></p></section><script>(function(){var box=document.querySelector("[data-agent-cta]");if(!box)return;var form=box.querySelector("[data-agent-cta-form]"),msg=box.querySelector("[data-agent-cta-msg]");var input=form.querySelector("input[type=email]"),btn=form.querySelector("button");form.addEventListener("submit",async function(e){e.preventDefault();var email=String(input.value||"").trim();if(!email||email.indexOf("@")<0){msg.textContent=box.dataset.bad;msg.className="aiCtaMsg bad";return;}btn.disabled=true;msg.textContent="";try{var res=await fetch("/api/subscribe",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:email,audience:"agent",tag:"agent-interested",lang:box.dataset.lang,page:box.dataset.page})});var d=await res.json().catch(function(){return{}});if(!res.ok||!d.ok){msg.textContent=box.dataset.err;msg.className="aiCtaMsg bad";btn.disabled=false;return;}msg.textContent=box.dataset.ok;msg.className="aiCtaMsg ok";input.value="";if(window.umami&&window.umami.track){window.umami.track("agent-interested",{page:box.dataset.page});}}catch(_){msg.textContent=box.dataset.err;msg.className="aiCtaMsg bad";}btn.disabled=false;});})();</script>
+	<!-- HERO -->
+	<header class="wb-hero">
+		<div class="wrap">
+			<div class="wb-hero-grid">
+				<div class="wb-hero-text">
+					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; funciona con tu cuenta MLS</span></div>
+					<h1 class="wb-hero-h1">Elige un diseño.<br />Tus anuncios <em>la llenan.</em></h1>
+					<p class="wb-hero-sub">Quince webs de agencia ya terminadas, listas para tus anuncios y tus consultas. Cada propiedad de tu cuenta de PropertyList ya está en la web el día que publicas.</p>
+					<div class="wb-hero-ctas">
+						<a class="btn btn-primary btn-large" href={BUILD}>Crea gratis</a>
+						<a class="btn btn-secondary on-dark" href="#xml">Ya tengo una web</a>
+					</div>
+					<p class="wb-hero-trust">Gratis para crear y previsualizar. 50 créditos al mes (unos 50 EUR) en cuanto publicas. Cancela al final de cualquier mes.</p>
+				</div>
+				<div class="wb-hero-visual">
+					<figure class="film wb-film">
+						<div class="wb-frame wb-frame-dark">
+							<div class="wb-frame-bar"><span></span><span></span><span></span><i>Website Builder</i></div>
+							<video class="filmVid" autoplay muted loop playsinline preload="auto" poster="/hero/wb-hero-poster.jpg" width="1440" height="900" aria-label="El creador de webs: las quince plantillas, Solaz elegida, el editor con el titular seleccionado, la cabecera reorganizada y después Revisar y publicar">
+								<source src="/hero/wb-hero.mp4" type="video/mp4" />
+							</video>
+						</div>
+						<figcaption class="filmCap">Grabado en el nuevo creador con una agencia de ejemplo: los quince diseños, Solaz elegida, el titular seleccionado, la cabecera reorganizada y después Revisar y publicar. 33 segundos, sin sonido. Los extras y los totales que se ven son los de la web de ejemplo.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- PROOF -->
+	<section class="wb-trust">
+		<div class="wrap">
+			<div class="wb-trust-grid">
+				<div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">agentes registrados en PropertyList</div></div>
+				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">agencias que gestionan su negocio en ella</div></div>
+				<div><div class="wb-trust-num">{plListings}</div><div class="wb-trust-label">anuncios en la red</div></div>
+			</div>
+			<p class="wb-trust-line">Tu web lee de la misma cuenta que tu MLS y tu CRM. Cada anuncio ya está en tu web el día que publicas, y se actualiza en el momento en que lo editas.</p>
+		</div>
+	</section>
+
+	<!-- LAS QUINCE -->
+	<section class="wb-section wb-fifteen" id="templates">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Las quince</p>
+				<h2 class="wb-section-h2">Quince diseños, <em>una sola plataforma.</em></h2>
+				<p class="wb-lead">Cada plantilla es una web de agencia completa: las mismas páginas, los mismos bloques que necesita una agencia, con un aspecto distinto. Elige la que se adapte a cómo trabajas, no al revés.</p>
+			</div>
+			<div class="wb-chips" role="tablist" aria-label="Filtrar plantillas por estilo">
+				<button class="wb-chip on" type="button" data-style="all" aria-pressed="true">Las quince</button>
+				{styles.map((s) => <button class="wb-chip" type="button" data-style={s} aria-pressed="false">{s}</button>)}
+			</div>
+		</div>
+		<div class="wb-rail-wrap">
+			<button class="wb-rail-btn prev" type="button" aria-label="Plantillas anteriores">&lsaquo;</button>
+			<div class="wb-rail" id="wbRail">
+				{templates.map((t, i) => (
+					<article class="wb-tpl" data-style={t.style}>
+						<div class="wb-tpl-shots">
+							<div class="wb-frame">
+								<div class="wb-frame-bar"><span></span><span></span><span></span><i>tumarca.estate-agency.co</i></div>
+								<img src={`/wb/${t.id}-desktop.webp`} width="1440" height="900" alt={`Plantilla ${t.name}, página de inicio en una pantalla de escritorio`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+							</div>
+							<img class="wb-phone" src={`/wb/${t.id}-phone.webp`} width="390" height="844" alt={`Plantilla ${t.name} en un móvil`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+						</div>
+						<div class="wb-tpl-meta">
+							<span class="wb-tpl-style">{t.style}</span>
+							<h3>{t.name}</h3>
+							<p>{t.line}</p>
+						</div>
+					</article>
+				))}
+			</div>
+			<button class="wb-rail-btn next" type="button" aria-label="Plantillas siguientes">&rsaquo;</button>
+		</div>
+		<div class="wrap"><p class="wb-fifteen-note">Cambia de opinión más adelante: cambia de plantilla y conserva tus textos, tus páginas y tus ajustes. Tres de las quince (Solaz, Noir, Faro) empiezan con una película.</p></div>
+	</section>
+
+	<!-- CÓMO FUNCIONA -->
+	<section class="wb-section wb-steps">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Cómo funciona</p>
+				<h2 class="wb-section-h2">Elige. Hazla tuya. <em>Publica.</em></h2>
+			</div>
+			<div class="wb-steps-grid">
+				<article class="wb-step">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Elige una plantilla</i></div><img src="/wb/step-1-pick.webp" width="1440" height="900" alt="El selector de plantillas con Solaz elegida y su vista previa al lado" loading="lazy" decoding="async" /></div>
+					<div class="wb-step-num">1</div>
+					<h3>Elige una plantilla</h3>
+					<p>Elige entre quince diseños de web de agencia ya terminados. Todos tienen ya las páginas que necesita una agencia.</p>
+				</article>
+				<article class="wb-step">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Edita tu web</i></div><img src="/wb/step-2-edit.webp" width="1440" height="900" alt="El editor con los ajustes del bloque principal abiertos, mostrando tres disposiciones" loading="lazy" decoding="async" /></div>
+					<div class="wb-step-num">2</div>
+					<h3>Hazla tuya</h3>
+					<p>Añade tu color de marca, tus textos y tus fotos en un editor que muestra la web real mientras trabajas. Cada bloque tiene varias disposiciones; elige una.</p>
+				</article>
+				<article class="wb-step">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Revisar y publicar</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="El diálogo de Revisar y publicar con los créditos mensuales antes de que la web se ponga en marcha" loading="lazy" decoding="async" /></div>
+					<div class="wb-step-num">3</div>
+					<h3>Publica</h3>
+					<p>Tus anuncios ya están ahí, así que publicar no significa subir nada. Las consultas empiezan a llegar a tu CRM de inmediato.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- HECHO PARA UNA AGENCIA -->
+	<section class="wb-section wb-agency">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow">Hecho para una agencia, no para una cafetería</p>
+				<h2 class="wb-section-h2">Los bloques que un agente inmobiliario <em>de verdad necesita.</em></h2>
+				<p class="wb-lead">Cuadrícula de propiedades, propiedad destacada, buscador, formulario de valoración, guías de zona, equipo, reseñas, cifras, qué cuesta comprar, obra nueva. Cada uno lee de tu cuenta en vez de pedirte que escribas.</p>
+			</div>
+			<div class="wb-cards">
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Cada anuncio, ya está ahí.</strong><p>Cargado automáticamente desde tu cuenta de PropertyList y actualizado en el momento en que lo editas en el CRM.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Las consultas van directas a tu CRM.</strong><p>Los pipelines de Lead, Seller y Property son gratis y sin límite. Mover un lead cualificado al pipeline de Buyer cuesta 1 crédito.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Una página de propiedad, hecha para el buscador.</strong><p>Cada anuncio usa el mismo diseño de página, y es donde llega tu tráfico de búsqueda orgánica.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>Un formulario de valoración gratis que hace más.</strong><p>Cada solicitud de un vendedor llega como un lead con un Property Intelligence Report ya rellenado, listo para comprar por 5 créditos si lo quieres.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>Qué cuesta comprar, hecho bien.</strong><p>Los costes de compra en España con la ley citada, comprobados para Andalucía. Las tarifas cambian, así que tu abogado confirma la cifra, y el bloque lo indica.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Cifras que se cuentan solas.</strong><p>El bloque de cifras lee de tus anuncios en directo. Nadie lo escribe a mano.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Reseñas y equipo, a partir de lo que ya tienes.</strong><p>Las reseñas vienen de tu perfil de Google Business o de las que escribes tú, y empiezan vacías. El bloque de equipo lee tu personal desde tu cuenta de agencia.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Dos idiomas, una sola web.</strong><p>Inglés y español, incluidos en todas las plantillas.</p></article>
+			</div>
+		</div>
+	</section>
+
+	<!-- EDITAR CON IA -->
+	<section class="wb-section wb-ai">
+		<div class="wrap">
+			<div class="wb-ai-grid">
+				<div class="wb-ai-text">
+					<p class="eyebrow" style="color:#6fe5d3">Editar con IA</p>
+					<h2 class="wb-section-h2 on-dark">Haz clic en cualquier cosa. <em>Di qué quieres cambiar.</em></h2>
+					<p class="wb-lead" style="color:#b8c9cb">Describe un cambio en lenguaje normal y la página se actualiza. Cada cambio es un borrador hasta que lo publicas, y Deshacer siempre está ahí.</p>
+				</div>
+				<figure class="wb-ai-shot">
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Edita tu web</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="El titular seleccionado en el editor, con los cambios que el agente puede pedir" loading="lazy" decoding="async" /></div>
+					<figcaption>El titular seleccionado en el editor. Más corto, un tono más cercano, que mencione la localidad, o tus propias palabras.</figcaption>
+				</figure>
+			</div>
+		</div>
+	</section>
+
+	<!-- PRECIOS -->
+	<section id="pricing" class="wb-pricing wb-section">
+		<div class="wrap">
+			<div class="wb-section-head">
+				<p class="eyebrow" style="color:#6fe5d3">Precios</p>
+				<h2 class="wb-section-h2 on-dark">Gratis para crear. <em>50 créditos al mes en cuanto publicas.</em></h2>
+				<p class="wb-lead" style="color:#b8c9cb">Un plan base, extras en créditos, y puedes cancelar cualquiera de ellos al final de cualquier mes.</p>
+			</div>
+			<div class="wb-price-grid">
+				<div class="wb-pricing-card">
+					<div class="wb-pricing-name">Website Builder</div>
+					<div class="wb-pricing-price">50 créditos <span class="unit">al mes</span></div>
+					<p class="wb-pricing-tagline">No se cobra nada mientras creas y previsualizas; la suscripción empieza el día que publicas.</p>
+					<ul class="wb-pricing-features">
+						<li>Inicio, Propiedades (búsqueda y resultados, con filtros y una búsqueda guardada), una página de propiedad para cada anuncio, Sobre Nosotros y Contacto</li>
+						<li>Páginas legales (aviso legal, privacidad, cookies) y un banner de cookies, incluidos y nunca facturados</li>
+						<li>Inglés y español</li>
+						<li>Las quince plantillas, cambia cuando quieras y conserva tu trabajo</li>
+						<li>Consultas directas a tu CRM de PropertyList</li>
+						<li>Cancela al final de cualquier mes; la web vuelve al microsite gratuito de agencia y conservas tu dominio</li>
+					</ul>
+					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Crea gratis</a></div>
+					<p class="wb-pricing-note">Páginas extra: <strong>10 créditos al mes</strong> cada una.</p>
+				</div>
+				<div class="wb-pricing-aside">
+					<div class="wb-addon-card">
+						<h4>Extras, <em>si los quieres</em></h4>
+						<p class="wb-addon-intro">Cada uno es mensual, se activa desde tu cuenta, y puede cancelarse al final de cualquier mes.</p>
+						<ul class="wb-addon-list">
+							{addons.map((a) => (
+								<li><span class="wb-addon-name">{a.name}<small>{a.what}</small></span><span class="wb-addon-price">{a.price}</span></li>
+							))}
+						</ul>
+						<div class="wb-addon-footer">Feed de obra nueva: un módulo aparte, con precio en tu cuenta.</div>
+					</div>
+					<div class="wb-credit-info">
+						<h4>Qué es un crédito</h4>
+						<p>La unidad de PropertyList para las funciones de pago, que se compra en packs: 1 crédito (alrededor de 1 EUR) en el pack más pequeño, menos en los packs más grandes. Los créditos no caducan, así que lo que no uses este mes sigue disponible el mes siguiente.</p>
+						<p style="margin:0"><a href={REFERRALS}>Recomienda a otra agencia</a> y consigues 20 créditos (unos 20 EUR) cuando completa la verificación, no al registrarse. La nueva agencia recibe 10 créditos.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- YA TIENES UNA WEB -->
+	<section id="xml" class="wb-xml wb-section">
+		<div class="wrap">
+			<div class="wb-xml-inner">
+				<div>
+					<p class="eyebrow">¿Ya tienes una web?</p>
+					<h2 class="wb-section-h2">Conserva tu web. <em>Aliméntala con tus anuncios.</em></h2>
+					<p class="wb-lead">Lleva tus anuncios de PropertyList a la web que ya tienes, por XML o por la API para webs. Tu desarrollador lo conecta una vez; desde entonces la web lee de la misma cuenta que tu MLS y tu CRM.</p>
+				</div>
+				<div class="wb-xml-card">
+					<div class="wb-xml-price-row"><span class="wb-xml-price">35 créditos</span><span class="wb-xml-price-unit">al mes</span></div>
+					<p class="wb-xml-detail">Feed XML o API para webs. Cancela cuando quieras.</p>
+					<ul class="wb-pricing-features">
+						<li>Tus anuncios de PropertyList en tu propia web</li>
+						<li>Feed XML o API para webs, como prefiera tu desarrollador</li>
+						<li>La documentación es pública; no hay que comprar nada para leerla</li>
+					</ul>
+					<a class="btn btn-primary" href={DASHBOARD}>Configura un feed</a>
+					<p class="wb-xml-docs"><a href={DOCS}>Lee la documentación del Creador de Webs y del feed</a></p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section class="wb-faq wb-section">
+		<div class="narrow">
+			<div class="wb-section-head">
+				<p class="eyebrow">Preguntas</p>
+				<h2 class="wb-section-h2">Lo que los agentes <em>preguntan primero.</em></h2>
+			</div>
+			<div>
+				{faqs.map((f) => (
+					<div class="wb-faq-item"><details><summary>{f.q}</summary><p>{f.a}</p></details></div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA FINAL -->
+	<section class="wb-final wb-section">
+		<div class="narrow">
+			<p class="eyebrow" style="color:#6fe5d3">Construido en la Costa del Sol &middot; usado en toda España</p>
+			<h2 class="wb-section-h2 on-dark">Tus anuncios ya están listos.<br /><em>¿Y tu web?</em></h2>
+			<p class="wb-lead">Elige un diseño, hazlo tuyo, y publica cuando quieras.</p>
+			<a class="btn btn-primary btn-large" href={BUILD}>Crea gratis</a>
+			<p class="wb-final-note">Gratis para crear y previsualizar. 50 créditos al mes en cuanto publicas. <a href={DOCS}>Lee la documentación</a>.</p>
+		</div>
+	</section>
+
+	<script is:inline>
+		(function () {
+			var rail = document.getElementById('wbRail');
+			if (!rail) return;
+			var chips = document.querySelectorAll('.wb-chip');
+			var cards = rail.querySelectorAll('.wb-tpl');
+			chips.forEach(function (c) {
+				c.addEventListener('click', function () {
+					var s = c.getAttribute('data-style');
+					chips.forEach(function (x) { var on = x === c; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+					cards.forEach(function (k) { k.hidden = !(s === 'all' || k.getAttribute('data-style') === s); });
+					rail.scrollTo({ left: 0, behavior: 'smooth' });
+				});
+			});
+			function step(dir) {
+				var first = rail.querySelector('.wb-tpl:not([hidden])');
+				var w = first ? first.getBoundingClientRect().width + 24 : rail.clientWidth * 0.8;
+				rail.scrollBy({ left: dir * w, behavior: 'smooth' });
+			}
+			document.querySelector('.wb-rail-btn.prev').addEventListener('click', function () { step(-1); });
+			document.querySelector('.wb-rail-btn.next').addEventListener('click', function () { step(1); });
+		})();
+	</script>
 </Layout>
 
 <style is:global>
@@ -218,7 +386,6 @@ a:hover{text-decoration:underline}
 .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
 .narrow{max-width:880px;margin:0 auto;padding:0 24px}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:#00ae9a;text-transform:uppercase;margin-bottom:12px}
-.serif{font-family:'Playfair Display',Georgia,serif}
 .btn{display:inline-block;padding:16px 28px;font-size:15px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;text-decoration:none}
 .btn-primary{background:#00ae9a;color:#fff;box-shadow:0 4px 14px rgba(0,174,154,.3)}
 .btn-primary:hover{background:#008f7e;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,174,154,.4);text-decoration:none}
@@ -227,232 +394,168 @@ a:hover{text-decoration:underline}
 .btn-secondary:hover{background:#0d2b2e;color:#fff;text-decoration:none}
 .btn-secondary.on-dark:hover{background:#fff;color:#0d2b2e}
 .btn-large{padding:18px 36px;font-size:16px}
-.wb-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid #e5ecec}
-.wb-nav-inner{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;max-width:1200px;margin:0 auto}
-.wb-nav-logo img{height:48px;width:auto}
-.wb-nav-actions{display:flex;align-items:center;gap:18px}
-.wb-nav-link{color:#0d2b2e;font-weight:600;font-size:14px}
-.wb-nav-link:hover{color:#00ae9a;text-decoration:none}
-.wb-nav-cta{background:#00ae9a;color:#fff;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:700}
-.wb-nav-cta:hover{background:#008f7e;text-decoration:none}
-.wb-hero{background:#0d2b2e;color:#fff;padding:80px 0 0;position:relative;overflow:hidden}
-.wb-hero::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,174,154,.15),transparent 70%);pointer-events:none}
-.wb-hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
-.wb-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(0,174,154,.16);border:1px solid rgba(0,174,154,.35);padding:8px 14px;border-radius:50px;font-size:12px;font-weight:700;color:#00ae9a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px}
-.wb-hero-eyebrow img{width:18px;height:18px}
-.wb-hero-h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.02em;color:#fff}
-.wb-hero-h1 em{color:#00ae9a;font-style:italic}
-.wb-hero-sub{font-size:19px;line-height:1.55;color:#b8c9cb;margin:24px 0 36px;max-width:540px}
-.wb-hero-ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.wb-hero-trust{margin-top:24px;font-size:13px;color:#8aa5a8;letter-spacing:.3px}
-.wb-hero-visual img{border-radius:14px;transform:translateY(60px)}
-.wb-schema-strip{background:#0d2b2e;padding:80px 0;border-bottom:1px solid #1a3f43}
-.wb-schema-head{text-align:center;margin-bottom:40px}
-.wb-schema-head h3{font-family:'Playfair Display',serif;font-size:28px;font-weight:500;color:#fff;margin:6px 0 8px}
-.wb-schema-head p{font-size:15px;color:#b8c9cb}
-.wb-schema-grid{display:grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap:24px}
-.wb-schema-card{background:#1a3f43;border-radius:16px;padding:28px 24px;text-align:center;transition:transform .2s}
-.wb-schema-card:hover{transform:translateY(-3px)}
-.wb-schema-icon{width:48px;height:48px;background:#00ae9a;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff}
-.wb-schema-card strong{display:block;font-size:15px;font-weight:700;color:#fff;margin-bottom:6px}
-.wb-schema-card p{font-size:12px;color:#b8c9cb;line-height:1.5}
-.wb-schema-cta{text-align:center;margin-top:36px}
-.wb-schema-cta a{display:inline-block;background:#00ae9a;color:#fff;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:700;text-decoration:none;transition:background .2s}
-.wb-schema-cta a:hover{background:#00c4aa}
-.wb-mcp-strip{background:#f0f7f4;padding:80px 0;border-bottom:1px solid #e5ecec}
-.wb-mcp-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.wb-mcp-text h3{font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:#0d2b2e;margin:8px 0 12px;line-height:1.3}
-.wb-mcp-text p{font-size:16px;color:#4a5b5d;line-height:1.65}
-.wb-mcp-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
-.wb-mcp-tool{background:#fff;border:1px solid #e5ecec;border-radius:8px;padding:12px 14px}
-.wb-mcp-tool strong{font-size:12px;color:#0d2b2e;display:block;margin-bottom:2px}
-.wb-mcp-tool span{font-size:11px;color:#7a8a8c;line-height:1.4}
-.wb-mcp-link{margin-top:16px}
-.wb-mcp-link a{font-size:14px;font-weight:600;color:#00ae9a;text-decoration:none}
-.wb-mcp-link a:hover{text-decoration:underline}
-.wb-terminal-header{display:flex;align-items:center;gap:6px;background:#1e1e1e;border-radius:10px 10px 0 0;padding:10px 14px}
-.wb-terminal-dot{width:12px;height:12px;border-radius:50%;display:inline-block}
-.wb-terminal-dot.r{background:#ff5f56}
-.wb-terminal-dot.y{background:#ffbd2e}
-.wb-terminal-dot.g{background:#27c93f}
-.wb-terminal-title{font-size:12px;color:#888;margin-left:6px;font-family:monospace}
-.wb-terminal-body{background:#1e1e1e;border-radius:0 0 10px 10px;padding:20px;font-family:monospace;font-size:13px;line-height:1.6}
-.wb-terminal-line{display:flex;flex-wrap:wrap}
-.wb-t-comment{color:#6a9955}
-.wb-t-key{color:#9cdcfe}
-.wb-t-str{color:#ce9178}
-.wb-t-num{color:#b5cea8}
-.wb-t-fn{color:#dcdcaa}
-.wb-t-punct{color:#d4d4d4}
-.wb-t-indent{margin-left:24px}
-.wb-t-indent2{margin-left:48px}
-.wb-t-spacer{height:8px}
-.wb-trust{background:#0d2b2e;padding:80px 0 56px;color:#fff}
-.wb-trust-grid{display:grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap:30px;text-align:center}
-.wb-trust-num{font-family:'Playfair Display',serif;font-size:38px;line-height:1;color:#00ae9a;margin-bottom:6px}
-.wb-trust-label{font-size:12px;color:#b8c9cb;letter-spacing:1px;text-transform:uppercase}
 .wb-section{padding:100px 0}
-.wb-section-head{text-align:center;margin-bottom:60px}
-.wb-section-head p{max-width:640px;margin:0 auto}
-.wb-section-h2{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.15;letter-spacing:-.01em;color:#0d2b2e;margin-bottom:18px}
+.wb-section-head{text-align:center;margin-bottom:56px}
+.wb-section-head p{max-width:680px;margin:0 auto}
+.wb-section-head .eyebrow{margin-bottom:12px}
+.wb-section-h2{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.15;letter-spacing:-.01em;color:#0d2b2e;margin-bottom:18px;text-wrap:balance}
 .wb-section-h2 em{color:#00ae9a;font-style:italic}
 .wb-section-h2.on-dark{color:#fff}
 .wb-lead{font-size:18px;line-height:1.6;color:#4a5b5d}
-.wb-bento{background:#faf6ee}
-.wb-bento-grid{display:grid;grid-template-columns: repeat(3, minmax(0, 1fr));gap:24px}
-.wb-bento-card{background:#fff;border-radius:18px;padding:32px 28px;border:1px solid #e5ecec;transition:transform .2s,box-shadow .2s}
-.wb-bento-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(13,43,46,.08)}
-.wb-bento-num{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:#e5f5f3;color:#00ae9a;border-radius:12px;font-family:'Playfair Display',serif;font-weight:700;font-size:20px;margin-bottom:20px}
-.wb-bento-card h3{margin-bottom:10px}
-.wb-bento-card p{color:#4a5b5d;font-size:15px;line-height:1.6}
-.wb-feature-row{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:100px}
-.wb-feature-row:last-child{margin-bottom:0}
-.wb-feature-text h3{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(26px,3vw,34px);line-height:1.2;color:#0d2b2e;letter-spacing:-.01em;margin-bottom:16px}
-.wb-feature-text h3 em{color:#00ae9a;font-style:italic}
-.wb-feature-text p{color:#4a5b5d;font-size:16px;line-height:1.65;margin-bottom:16px}
-.wb-feature-list{list-style:none;padding:0;margin-top:18px}
-.wb-feature-list li{display:flex;align-items:flex-start;gap:12px;padding:8px 0;font-size:15px;color:#2a3b3d}
-.wb-feature-list li::before{content:"✓";color:#00ae9a;font-weight:700;flex-shrink:0;width:22px;height:22px;background:#e5f5f3;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px}
-.wb-feature-visual{position:relative}
-.wb-feature-visual img,.wb-visual-box{border-radius:16px;box-shadow:0 20px 60px rgba(13,43,46,.12)}
-.wb-visual-box{background:linear-gradient(135deg,#f5fbfa,#fff);padding:40px;border:1px solid #e5ecec}
-.wb-pill-set{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
-.wb-pill{display:inline-block;background:#f5efe6;color:#0d2b2e;padding:6px 14px;border-radius:50px;font-size:13px;font-weight:500}
-.wb-browser-frame{background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e5ecec;box-shadow:0 20px 60px rgba(13,43,46,.12)}
-.wb-browser-bar{background:#f3f5f5;padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5ecec}
-.wb-browser-dot{width:11px;height:11px;border-radius:50%}
-.wb-browser-dot.r{background:#ff5f57}
-.wb-browser-dot.y{background:#febd2e}
-.wb-browser-dot.g{background:#28c941}
-.wb-browser-url{flex:1;background:#fff;padding:4px 12px;border-radius:6px;font-size:11px;color:#7a8a8c;margin-left:12px}
+
+/* browser frame used for every real capture */
+.wb-frame{background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e5ecec;box-shadow:0 20px 60px rgba(13,43,46,.12)}
+.wb-frame-bar{background:#f3f5f5;padding:10px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #e5ecec}
+.wb-frame-bar span{width:10px;height:10px;border-radius:50%;background:#d6dede}
+.wb-frame-bar span:nth-child(1){background:#ff5f57}.wb-frame-bar span:nth-child(2){background:#febd2e}.wb-frame-bar span:nth-child(3){background:#28c941}
+.wb-frame-bar i{flex:1;font-style:normal;background:#fff;padding:3px 12px;border-radius:6px;font-size:11px;color:#7a8a8c;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb-frame img{width:100%;aspect-ratio:1440/900;object-fit:cover;object-position:top}
+.wb-frame-dark{border-color:rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.wb-frame-dark .wb-frame-bar{background:#12373b;border-color:rgba(255,255,255,.08)}
+.wb-frame-dark .wb-frame-bar i{background:rgba(255,255,255,.08);color:#b8c9cb}
+
+/* hero */
+.wb-hero{background:#0d2b2e;color:#fff;padding:80px 0 0;position:relative;overflow:hidden}
+.wb-hero::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,174,154,.15),transparent 70%);pointer-events:none}
+.wb-hero-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center;position:relative;z-index:1}
+.wb-hero-grid>*{min-width:0}
+.wb-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(0,174,154,.16);border:1px solid rgba(0,174,154,.35);padding:8px 14px;border-radius:50px;font-size:12px;font-weight:700;color:#00ae9a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px}
+.wb-hero-eyebrow img{width:18px;height:18px}
+.wb-hero-h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(40px,5.4vw,62px);line-height:1.05;letter-spacing:-.02em;color:#fff}
+.wb-hero-h1 em{color:#00ae9a;font-style:italic}
+.wb-hero-sub{font-size:19px;line-height:1.55;color:#b8c9cb;margin:24px 0 32px;max-width:520px}
+.wb-hero-ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.wb-hero-trust{margin-top:22px;font-size:13.5px;color:#8aa5a8;letter-spacing:.2px;max-width:480px}
+.wb-hero-visual{transform:translateY(56px)}
+.film{margin:0;padding:0}
+.filmVid{display:block;width:100%;aspect-ratio:1440/900;object-fit:cover;background:#0d2b2e}
+.filmCap{margin:10px 4px 0;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.5)}
+@media (prefers-reduced-motion: reduce){.filmVid{display:none}.wb-film .wb-frame-dark{aspect-ratio:1440/940;background:url('/hero/wb-hero-poster.jpg') center bottom/cover no-repeat}}
+
+/* proof */
+.wb-trust{background:#0d2b2e;padding:110px 0 64px;color:#fff}
+.wb-trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;text-align:center}
+.wb-trust-num{font-family:'Playfair Display',Georgia,serif;font-size:42px;line-height:1;color:#00ae9a;margin-bottom:8px}
+.wb-trust-label{font-size:12px;color:#b8c9cb;letter-spacing:1px;text-transform:uppercase}
+.wb-trust-line{text-align:center;max-width:720px;margin:40px auto 0;font-size:17px;line-height:1.6;color:#cfdedf}
+
+/* the fifteen */
+.wb-fifteen{background:#faf6ee;padding-bottom:70px}
+.wb-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:-24px 0 34px}
+.wb-chip{background:#fff;border:1px solid #e5ecec;color:#0d2b2e;padding:9px 16px;border-radius:50px;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.wb-chip:hover{border-color:#00ae9a}
+.wb-chip.on{background:#0d2b2e;color:#fff;border-color:#0d2b2e}
+.wb-rail-wrap{position:relative}
+.wb-rail{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px max(24px,calc((100vw - 1200px)/2 + 24px)) 30px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.wb-rail::-webkit-scrollbar{display:none}
+.wb-tpl{flex:0 0 min(78vw,720px);scroll-snap-align:start;min-width:0}
+.wb-tpl[hidden]{display:none}
+.wb-tpl-shots{position:relative;padding:0 9% 9% 0}
+.wb-tpl-shots .wb-frame img{transition:object-position 2.4s ease}
+.wb-tpl-shots .wb-phone{position:absolute;right:0;bottom:0;width:23%;border-radius:22px;border:5px solid #0d2b2e;box-shadow:0 24px 50px rgba(13,43,46,.28);aspect-ratio:390/844;object-fit:cover;object-position:top;background:#0d2b2e}
+.wb-tpl-meta{margin-top:18px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline}
+.wb-tpl-style{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#00ae9a;background:#e5f5f3;padding:5px 10px;border-radius:50px;grid-row:1}
+.wb-tpl-meta h3{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:26px;line-height:1.1;color:#0d2b2e;grid-row:1}
+.wb-tpl-meta p{grid-column:1/-1;color:#4a5b5d;font-size:15px;line-height:1.55;max-width:600px}
+.wb-rail-btn{position:absolute;top:36%;width:46px;height:46px;border-radius:50%;border:1px solid #e5ecec;background:#fff;color:#0d2b2e;font-size:30px;line-height:1;cursor:pointer;box-shadow:0 8px 24px rgba(13,43,46,.14);z-index:2;display:flex;align-items:center;justify-content:center;padding-bottom:4px}
+.wb-rail-btn:hover{background:#0d2b2e;color:#fff}
+.wb-rail-btn.prev{left:max(8px,calc((100vw - 1200px)/2 - 20px))}
+.wb-rail-btn.next{right:max(8px,calc((100vw - 1200px)/2 - 20px))}
+.wb-fifteen-note{text-align:center;color:#4a5b5d;font-size:15px;margin-top:6px}
+
+/* steps */
+.wb-steps{background:#fff}
+.wb-steps-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.wb-step{min-width:0}
+.wb-step-num{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:#e5f5f3;color:#00ae9a;border-radius:12px;font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:19px;margin:22px 0 12px}
+.wb-step h3{font-size:20px;font-weight:700;color:#0d2b2e;margin-bottom:8px}
+.wb-step p{color:#4a5b5d;font-size:15px;line-height:1.6}
+
+/* agency cards */
+.wb-agency{background:#f5efe6}
+.wb-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.wb-card{background:#fff;border:1px solid #e5ecec;border-radius:18px;padding:26px 24px;min-width:0;transition:transform .2s,box-shadow .2s}
+.wb-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(13,43,46,.08)}
+.wb-card svg{width:30px;height:30px;fill:none;stroke:#00ae9a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:16px}
+.wb-card strong{display:block;font-size:16px;line-height:1.35;color:#0d2b2e;margin-bottom:8px}
+.wb-card p{color:#4a5b5d;font-size:14.5px;line-height:1.6}
+
+/* edit with AI */
+.wb-ai{background:#0d2b2e;color:#fff;position:relative;overflow:hidden}
+.wb-ai::before{content:"";position:absolute;top:-180px;left:-160px;width:560px;height:560px;background:radial-gradient(circle,rgba(0,174,154,.18),transparent 70%);pointer-events:none}
+.wb-ai-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;align-items:center;position:relative;z-index:1}
+.wb-ai-grid>*{min-width:0}
+.wb-ai-text h2{margin-bottom:18px}
+.wb-ai-shot{margin:0}
+.wb-ai-shot .wb-frame{border-color:rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.wb-ai-shot figcaption{margin:10px 4px 0;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.5)}
+
+/* pricing */
 .wb-pricing{background:#0d2b2e;color:#fff}
-.wb-pricing h2{color:#fff}
-.wb-pricing .lead{color:#b8c9cb}
-.wb-pricing-card{max-width:560px;margin:50px auto 0;background:linear-gradient(135deg,#fff,#f5fbfa);color:#0d2b2e;border-radius:24px;padding:48px 44px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.4)}
-.wb-pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#00ae9a;color:#fff;padding:6px 16px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.wb-pricing-name{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px}
-.wb-pricing-price{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,40px);line-height:1.1;color:#00ae9a;margin:14px 0 4px;text-wrap:balance}.wb-pricing-price .unit{font-size:.5em;color:#7d8f91;margin-left:4px}
-.wb-pricing-price .unit{font-size:18px;color:#7a8a8c;margin-left:4px}
-.wb-pricing-tagline{font-size:14px;color:#4a5b5d;margin-bottom:24px}
-.wb-pricing-features{list-style:none;padding:0;margin:24px 0 32px}
+.wb-price-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:stretch}
+.wb-price-grid>*{min-width:0}
+.wb-pricing-card{background:linear-gradient(135deg,#fff,#f5fbfa);color:#0d2b2e;border-radius:24px;padding:44px 40px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.wb-pricing-name{font-family:'Playfair Display',Georgia,serif;font-size:26px;margin-bottom:6px}
+.wb-pricing-price{font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,5vw,40px);line-height:1.1;color:#00ae9a;margin:12px 0 6px;text-wrap:balance}
+.wb-pricing-price .unit{font-size:18px;color:#7a8a8c;margin-left:4px;font-family:'Inter',system-ui,sans-serif}
+.wb-pricing-tagline{font-size:14.5px;color:#4a5b5d;margin-bottom:20px;line-height:1.55}
+.wb-pricing-features{list-style:none;padding:0;margin:20px 0 28px}
 .wb-pricing-features li{padding:8px 0 8px 34px;position:relative;color:#2a3b3d;font-size:15px;line-height:1.5}
 .wb-pricing-features li::before{content:"✓";position:absolute;left:0;top:7px;color:#00ae9a;font-weight:700;width:22px;height:22px;background:#e5f5f3;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
-.wb-pricing-cta{width:100%;text-align:center}
+.wb-pricing-cta{text-align:center}
 .wb-pricing-cta a{display:block}
-.wb-pricing-note{text-align:center;margin-top:18px;font-size:13px;color:#4a5b5d}
+.wb-pricing-note{text-align:center;margin-top:16px;font-size:13.5px;color:#4a5b5d}
 .wb-pricing-note strong{color:#00ae9a}
-.wb-price-grid-3{display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:stretch;margin-top:50px}
-.wb-price-grid-3 .wb-pricing-card{margin:0;max-width:none}
-.wb-pricing-aside{display:flex;flex-direction:column;gap:24px}
+.wb-pricing-aside{display:flex;flex-direction:column;gap:22px}
 .wb-addon-card{background:#fff;border-radius:20px;padding:28px 26px;color:#0d2b2e;box-shadow:0 10px 30px rgba(0,0,0,.15);flex:1}
-.wb-addon-card h4{font-family:'Playfair Display',serif;font-weight:400;font-size:22px;line-height:1.2;margin-bottom:6px;color:#0d2b2e}
+.wb-addon-card h4{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:22px;line-height:1.2;margin-bottom:6px;color:#0d2b2e}
 .wb-addon-card h4 em{color:#00ae9a;font-style:italic}
-.wb-addon-intro{font-size:13px;color:#4a5b5d;margin-bottom:18px;line-height:1.55}
+.wb-addon-intro{font-size:13px;color:#4a5b5d;margin-bottom:14px;line-height:1.55}
 .wb-addon-list{list-style:none;padding:0;margin:0}
-.wb-addon-list li{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #e5ecec;gap:14px}
+.wb-addon-list li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e5ecec;gap:14px}
 .wb-addon-list li:last-child{border-bottom:none}
-.wb-addon-name{font-size:14px;font-weight:600;color:#0d2b2e;flex:1}
-.wb-addon-name small{display:block;font-size:11px;font-weight:500;color:#7a8a8c;letter-spacing:.3px;margin-top:2px}
-.wb-addon-price{font-size:14px;font-weight:700;color:#00ae9a;white-space:nowrap;background:#e5f5f3;padding:5px 11px;border-radius:8px}
-.wb-addon-footer{margin-top:18px;padding:12px 14px;background:#f5fbfa;border-radius:10px;font-size:12px;color:#4a5b5d;line-height:1.5}
-.wb-addon-footer strong{color:#0d2b2e}
+.wb-addon-name{font-size:14px;font-weight:600;color:#0d2b2e;flex:1;min-width:0}
+.wb-addon-name small{display:block;font-size:11.5px;font-weight:500;color:#7a8a8c;letter-spacing:.2px;margin-top:2px}
+.wb-addon-price{font-size:13px;font-weight:700;color:#00ae9a;white-space:nowrap;background:#e5f5f3;padding:5px 10px;border-radius:8px}
+.wb-addon-footer{margin-top:16px;padding:12px 14px;background:#f5fbfa;border-radius:10px;font-size:12.5px;color:#4a5b5d;line-height:1.5}
 .wb-credit-info{background:linear-gradient(135deg,#f5efe6,#faf6ee);border-radius:20px;padding:26px;color:#0d2b2e;box-shadow:0 10px 30px rgba(0,0,0,.1)}
-.wb-credit-info h4{font-family:'Playfair Display',serif;font-weight:400;font-size:20px;margin-bottom:8px;color:#0d2b2e}
-.wb-credit-info p{font-size:13px;color:#4a5b5d;line-height:1.55;margin-bottom:14px}
-.wb-credit-rate{display:inline-flex;align-items:center;gap:8px;background:#fff;padding:8px 14px;border-radius:50px;font-size:13px;font-weight:700;color:#0d2b2e;border:1px solid #e5ecec}
-.wb-credit-rate .equals{color:#00ae9a}
-.wb-referral{background:linear-gradient(135deg,#f5efe6,#faf6ee);border-radius:24px;padding:48px 44px;margin-top:70px;position:relative;overflow:hidden;border:1px solid #e5ecec}
-.wb-referral::before{content:"";position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,174,154,.12),transparent 70%);pointer-events:none}
-.wb-referral-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:50px;align-items:center;position:relative;z-index:1}
-.wb-referral-grid h3{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(26px,3vw,34px);line-height:1.2;color:#0d2b2e;letter-spacing:-.01em;margin-bottom:14px}
-.wb-referral-grid h3 em{color:#00ae9a;font-style:italic}
-.wb-referral-grid p{color:#4a5b5d;font-size:16px;line-height:1.65;margin-bottom:18px}
-.wb-referral-numbers{display:grid;grid-template-columns:1fr 1fr;gap:16px;justify-items:stretch;align-items:stretch}
-.wb-referral-num-card{background:#fff;border-radius:14px;padding:22px 20px;text-align:center;border:1px solid #e5ecec;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.wb-referral-amount{font-family:'Playfair Display',serif;font-size:clamp(22px,5.6vw,36px);line-height:1;color:#00ae9a;margin-bottom:6px}
-.wb-referral-who{font-size:12px;color:#4a5b5d;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
-.wb-referral-cta{margin-top:20px;font-size:14px;color:#4a5b5d}
-.wb-referral-cta strong{color:#0d2b2e}
+.wb-credit-info h4{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:20px;margin-bottom:8px;color:#0d2b2e}
+.wb-credit-info p{font-size:13.5px;color:#4a5b5d;line-height:1.55;margin-bottom:12px}
+.wb-credit-info a{font-weight:700}
+
+/* feed */
 .wb-xml{background:#f5efe6;position:relative}
 .wb-xml::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#00ae9a,transparent)}
 .wb-xml-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.wb-xml-inner>*{min-width:0}
 .wb-xml-card{background:#fff;border-radius:20px;padding:40px 36px;border:1px solid #e5ecec;box-shadow:0 20px 50px rgba(13,43,46,.08)}
-.wb-xml-toggle{display:flex;background:#faf6ee;border-radius:12px;padding:4px;margin-bottom:30px}
-.wb-xml-toggle-option{flex:1;padding:14px 16px;text-align:center;border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;color:#4a5b5d;transition:all .2s}
-.wb-xml-toggle-option.active{background:#0d2b2e;color:#fff;box-shadow:0 4px 10px rgba(13,43,46,.15)}
-.wb-xml-toggle-option .save{font-size:10px;color:#00ae9a;display:block;margin-top:2px;font-weight:700;letter-spacing:1px}
-.wb-xml-toggle-option.active .save{color:#6fe5d3}
-.wb-xml-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
-.wb-xml-price{font-family:'Playfair Display',serif;font-size:48px;line-height:1;color:#0d2b2e}
+.wb-xml-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.wb-xml-price{font-family:'Playfair Display',Georgia,serif;font-size:44px;line-height:1;color:#0d2b2e}
 .wb-xml-price-unit{font-size:16px;color:#7a8a8c}
-.wb-xml-price-detail{font-size:13px;color:#00ae9a;font-weight:700;margin-bottom:24px;min-height:18px}
+.wb-xml-detail{font-size:13.5px;color:#00ae9a;font-weight:700;margin-bottom:8px}
+.wb-xml-card .wb-pricing-features{margin:10px 0 24px}
+.wb-xml-docs{margin-top:16px;font-size:13.5px}
+
+/* faq */
 .wb-faq{background:#fff}
-.wb-faq-item{border-bottom:1px solid #e5ecec;padding:26px 0}
+.wb-faq-item{border-bottom:1px solid #e5ecec;padding:24px 0}
 .wb-faq-item:first-of-type{border-top:1px solid #e5ecec}
-details summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:18px;font-weight:700;color:#0d2b2e;transition:color .15s}
-details summary::-webkit-details-marker{display:none}
-details summary::after{content:"+";font-size:28px;font-weight:300;color:#00ae9a;transition:transform .2s;line-height:1}
-details[open] summary::after{content:"-"}
-details summary:hover{color:#00ae9a}
-details>p{margin-top:14px;color:#4a5b5d;line-height:1.7;font-size:15px}
+.wb-faq details summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:18px;font-weight:700;color:#0d2b2e;transition:color .15s}
+.wb-faq details summary::-webkit-details-marker{display:none}
+.wb-faq details summary::after{content:"+";font-size:28px;font-weight:300;color:#00ae9a;transition:transform .2s;line-height:1}
+.wb-faq details[open] summary::after{content:"-"}
+.wb-faq details summary:hover{color:#00ae9a}
+.wb-faq details>p{margin-top:14px;color:#4a5b5d;line-height:1.7;font-size:15px}
+
+/* final */
 .wb-final{background:#0d2b2e;color:#fff;text-align:center}
-.wb-final h2{color:#fff}
-.wb-final .lead{color:#b8c9cb;max-width:620px;margin:0 auto 36px}
+.wb-final .wb-lead{color:#b8c9cb;max-width:620px;margin:0 auto 36px}
 .wb-final-note{margin-top:20px;font-size:14px;color:#8aa5a8}
 .wb-final-note a{color:#00ae9a;font-weight:700}
-.wb-footer{background:#fff;padding:50px 0 30px;border-top:1px solid #e5ecec}
-.wb-footer-inner{text-align:center}
-.wb-footer-logo img{height:48px;margin:0 auto 20px;opacity:.85}
-.wb-footer-links{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;font-size:14px;margin-bottom:18px}
-.wb-footer-links a{color:#0d2b2e;font-weight:600}
-.wb-footer-links a:hover{color:#00ae9a;text-decoration:none}
-.wb-footer-fine{font-size:12px;color:#7a8a8c;line-height:1.6}
-.wb-lead-card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-.wb-lead-tag{font-size:11px;color:#00ae9a;font-weight:700;letter-spacing:1px;margin-bottom:12px}
-.wb-lead-name{font-size:16px;font-weight:700;color:#0d2b2e;margin-bottom:4px}
-.wb-lead-email{font-size:13px;color:#4a5b5d;margin-bottom:14px}
-.wb-lead-quote{border-left:3px solid #00ae9a;padding:8px 14px;background:#f5fbfa;border-radius:0 8px 8px 0;font-size:13px;color:#2a3b3d;line-height:1.5;font-style:italic}
-.wb-lead-pills{display:flex;gap:8px;margin-top:16px}
-.wb-pill-teal{background:#e5f5f3;color:#00ae9a;font-weight:700;padding:6px 14px;border-radius:50px;font-size:13px}
 
-.wb-mcp-grid>*,.wb-hero-grid>*,.wb-referral-grid>*,.wb-ai-grid>*,.wb-mcp-tools>*{min-width:0}.wb-mcp-tool strong{overflow-wrap:anywhere;word-break:break-word}.wb-hero,.wb-mcp-strip,.wb-referral{overflow-x:hidden}
-.wb-ai-chat-head>*,.wb-ai-chips>*,.wb-ai-grid>*,.wb-ai-status>*,.wb-bento-grid>*,.wb-browser-bar>*,.wb-feature-row>*,.wb-footer-links>*,.wb-hero-ctas>*,.wb-hero-grid>*,.wb-hero-price>*,.wb-lead-pills>*,.wb-mcp-grid>*,.wb-mcp-tools>*,.wb-nav-actions>*,.wb-nav-inner>*,.wb-pill-set>*,.wb-pricing-aside>*,.wb-referral-grid>*,.wb-referral-numbers>*,.wb-schema-grid>*,.wb-terminal-header>*,.wb-terminal-line>*,.wb-trust-grid>*,.wb-xml-inner>*,.wb-xml-price-row>*,.wb-xml-toggle>*{min-width:0}
-
-.wb-ai{background:#0d2b2e;color:#fff;position:relative;overflow:hidden}
-.wb-ai::before{content:"";position:absolute;top:-180px;left:-160px;width:560px;height:560px;background:radial-gradient(circle,rgba(0,174,154,.18),transparent 70%);pointer-events:none}
-.wb-ai-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:70px;align-items:center;position:relative;z-index:1}
-.wb-ai-text h2{margin-bottom:18px}
-.wb-feature-list-dark li{color:#cfdedf}
-.wb-feature-list-dark li::before{background:rgba(0,174,154,.22)}
-.wb-ai-text .btn{margin-top:28px}
-.wb-ai-chat{background:rgba(255,255,255,.04);border:1px solid rgba(0,174,154,.32);border-radius:18px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06)}
-.wb-ai-chat-head{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:#fff;margin-bottom:16px}
-.wb-ai-spark{color:#6fe5d3;font-size:18px}
-.wb-ai-prompt{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px;font-size:15px;line-height:1.55;color:#eaf3f3}
-.wb-ai-prompt strong{color:#fff}
-.wb-ai-chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-.wb-ai-chips span{background:rgba(0,174,154,.14);border:1px solid rgba(0,174,154,.3);color:#9fe9dc;font-size:12px;font-weight:600;padding:6px 12px;border-radius:50px}
-.wb-ai-status{display:flex;align-items:center;gap:10px;font-size:13px;color:#8aa5a8;margin:6px 0 16px}
-.wb-ai-dot{width:9px;height:9px;border-radius:50%;background:#6fe5d3;animation:wbpulse 1.6s infinite}
-@keyframes wbpulse{0%{box-shadow:0 0 0 0 rgba(111,229,211,.5)}70%{box-shadow:0 0 0 10px rgba(111,229,211,0)}100%{box-shadow:0 0 0 0 rgba(111,229,211,0)}}
-.wb-ai-result{background:#fff;border-radius:12px;padding:18px 20px;color:#0d2b2e}
-.wb-ai-result-h{font-family:'Playfair Display',serif;font-size:20px;color:#0d2b2e;margin-bottom:4px}
-.wb-ai-result-p{font-size:13px;color:#4a5b5d;line-height:1.5}
-.wb-ai-result-bar{height:8px;border-radius:6px;margin-top:12px;background:linear-gradient(90deg,#16234e,#c9a24a)}
-.wb-hero-price{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:26px}
-.wb-hero-price-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,174,154,.16);border:1px solid rgba(0,174,154,.42);color:#6fe5d3;font-weight:700;font-size:13px;letter-spacing:.3px;padding:9px 15px;border-radius:50px}
-.wb-hero-price-then{font-size:14px;color:#b8c9cb}
-.wb-hero-price-then strong{color:#fff;font-size:19px;font-family:'Playfair Display',Georgia,serif}
-.wb-pricing-anchor{font-size:14px;color:#4a5b5d;margin:4px 0 0;line-height:1.5}
-.wb-anchor-strike{text-decoration:line-through;text-decoration-thickness:2px;color:#b0413e;font-weight:700}
-
-/* Media queries last: several .wb-* rules are declared after them in
-   source order and would otherwise win at every width (this is why the AI
-   section stayed side-by-side on phones). */
-@media(max-width:900px){.wb-section{padding:70px 0}.wb-nav-link{display:none}.wb-hero{padding:50px 0 0}.wb-hero-grid{grid-template-columns: minmax(0, 1fr);gap:40px}.wb-hero-visual img{transform:translateY(30px)}.wb-trust{padding:90px 0 50px}.wb-trust-grid{grid-template-columns: repeat(2, minmax(0, 1fr));gap:30px}.wb-bento-grid{grid-template-columns:1fr}.wb-feature-row{grid-template-columns: minmax(0, 1fr);gap:36px;margin-bottom:70px}.wb-mcp-grid{grid-template-columns: minmax(0, 1fr);gap:36px}.wb-xml-inner{grid-template-columns: minmax(0, 1fr);gap:40px}.wb-pricing-card{padding:36px 28px}.wb-price-grid-3{grid-template-columns: minmax(0, 1fr);gap:24px}.wb-referral{padding:36px 28px;margin-top:50px}.wb-referral-grid{grid-template-columns: minmax(0, 1fr);gap:30px}.wb-ai-grid{grid-template-columns: minmax(0, 1fr);gap:44px}}
-@media(max-width:560px){.wb-mcp-tools{grid-template-columns:1fr}}
-@media(max-width:380px){.wrap{padding:0 16px}.wb-trust-grid{grid-template-columns: minmax(0, 1fr);gap:20px}}
-@media(max-width:520px){.wb-trust-grid{grid-template-columns:1fr 1fr;gap:24px}.wb-nav-actions{gap:10px}.wb-hero-ctas{flex-direction:column;align-items:stretch}.wb-hero-ctas .btn{text-align:center}}
-@media(max-width:560px){.wb-referral-num-card{padding:16px 10px}.wb-referral-who{font-size:10.5px;letter-spacing:.2px}}
-
+/* Media queries last: rules above would otherwise win at every width. */
+@media(max-width:1024px){.wb-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.wb-steps-grid{grid-template-columns:1fr;max-width:720px;margin:0 auto}}
+@media(max-width:900px){.wb-section{padding:70px 0}.wb-hero{padding:50px 0 0}.wb-hero-grid{grid-template-columns:minmax(0,1fr);gap:36px}.wb-hero-visual{transform:translateY(30px)}.wb-trust{padding:90px 0 50px}.wb-trust-grid{gap:20px}.wb-trust-num{font-size:32px}.wb-ai-grid,.wb-xml-inner,.wb-price-grid{grid-template-columns:minmax(0,1fr);gap:36px}.wb-pricing-card{padding:34px 26px}.wb-tpl{flex-basis:84vw}.wb-rail-btn{display:none}}
+@media(max-width:560px){.wb-trust-grid{grid-template-columns:1fr}.wb-cards{grid-template-columns:1fr}.wb-hero-ctas{flex-direction:column;align-items:stretch}.wb-hero-ctas .btn{text-align:center}.wb-tpl-meta h3{font-size:22px}.wb-chips{margin-top:-10px}.wb-xml-card{padding:28px 22px}.wb-addon-list li{flex-wrap:wrap}}
+@media(max-width:380px){.wrap,.narrow{padding:0 16px}}
 </style>
