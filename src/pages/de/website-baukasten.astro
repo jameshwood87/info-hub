@@ -12,7 +12,7 @@ const plListings = statPlus(__ps.listings, 'de');
 
 const title = 'Website Builder für Immobilienmakler | PropertyList.es';
 const description =
-	'Wählen Sie eines von fünfzehn fertigen Website-Designs für Agenturen, machen Sie es zu Ihrem, und jede Immobilie im PropertyList-Netzwerk erscheint darauf, gefiltert wie Sie es wünschen, mit Anfragen, die in Ihrem CRM eingehen. Kostenlos zu erstellen und in der Vorschau anzusehen, ab 50 Credits pro Monat, sobald Sie veröffentlichen.';
+	'Fünfzehn fertige Website-Designs für Agenturen, die das gesamte PropertyList-Netzwerk zeigen und nach Ihren Vorgaben gefiltert werden. Anfragen landen in Ihrem CRM. Kostenlos zu erstellen, ab 50 Credits im Monat, sobald Sie veröffentlichen.';
 const BUILD = 'https://agents.propertylist.es/website-builder';
 const DOCS = 'https://info.propertylist.es/docs/propertylist-mls-user-manual/website-builder/';
 const REFERRALS = 'https://agents.propertylist.es/referrals';
@@ -21,47 +21,47 @@ const DASHBOARD = 'https://agents.propertylist.es';
 // The fifteen templates, as captured from the real files (public/wb). Order is
 // the order shown; the style filter hides the rest.
 const templates = [
-	{ id: '14-solaz', name: 'Solaz', style: 'Präsentation', line: 'Eröffnet wie ein Film. Zypressen und Küste in der Dämmerung, die Überschrift sitzt tief über dem Bild.' },
+	{ id: '14-solaz', name: 'Solaz', style: 'Präsentation', line: 'Beginnt mit einem Film. Zypressen und Küste in der Dämmerung, die Überschrift liegt tief über dem Bild.' },
 	{ id: '01-marina', name: 'Marina', style: 'Modern', line: 'Eine türkis-weiße Kopfzeile, eine Live-Suchleiste oben und Ihre neuesten Inserate in einem Raster darunter.' },
 	{ id: '03-onyx', name: 'Onyx', style: 'Luxus', line: 'Eine Nachtaufnahme einer beleuchteten Villa, eine Überschrift in Serifenschrift in Weiß, eine Schaltfläche.' },
-	{ id: '13-horizon', name: 'Horizon', style: 'Präsentation', line: 'Geteilter Bildschirm: auf der einen Seite eine kräftige Überschrift, auf der anderen ein Innenfoto in voller Höhe.' },
-	{ id: '02-blanca', name: 'Blanca', style: 'Minimalistisch', line: 'Ein Foto in voller Breite einer Villa und eines Pools, eine kleine Navigationsleiste, keine Überschrift über dem Bild.' },
-	{ id: '05-puerto', name: 'Puerto', style: 'Modern', line: 'Ein Foto in voller Breite bei Dämmerung mit einer schwebenden Karte darüber, die den Preis und die Details anzeigt.' },
-	{ id: '07-noir', name: 'Noir', style: 'Luxus', line: 'Beginnt mit einem Film. Eine filmische, dunkle Landschaft mit einer großen, fetten Überschrift darüber und minimaler Navigation.' },
+	{ id: '13-horizon', name: 'Horizon', style: 'Präsentation', line: 'Geteilte Ansicht: auf der einen Seite eine fette Überschrift, auf der anderen ein Innenfoto in voller Höhe.' },
+	{ id: '02-blanca', name: 'Blanca', style: 'Minimalistisch', line: 'Ein Foto in voller Breite einer Villa mit Pool, eine kleine Navigationsleiste, keine Überschrift über dem Bild.' },
+	{ id: '05-puerto', name: 'Puerto', style: 'Modern', line: 'Ein Dämmerungsfoto in voller Breite mit einer darüber schwebenden Karte, die Preis und Details zeigt.' },
+	{ id: '07-noir', name: 'Noir', style: 'Luxus', line: 'Beginnt mit einem Film. Eine filmische dunkle Landschaft mit einer großen, fetten Überschrift darüber, minimale Navigation.' },
 	{ id: '04-sierra', name: 'Sierra', style: 'Klassisch', line: 'Ein cremefarbener Hintergrund, Platz für Ihr Foto neben Ihrem Namen und ein redaktioneller Absatz.' },
-	{ id: '09-continental', name: 'Continental', style: 'Modern', line: 'Ein dunkelblaues Dämmerungsfoto, eine fette weiße Überschrift und eine Preiskarte, die über dem Bild liegt.' },
-	{ id: '06-atrium', name: 'Atrium', style: 'Minimalistisch', line: 'Hellgrau und Weiß, eine Akzentfarbe in der Überschrift, eine Suchleiste und eine Leiste mit den neuesten Immobilien.' },
-	{ id: '11-imperial', name: 'Imperial', style: 'Luxus', line: 'Ein cremefarbener Hintergrund, eine fette Serifüberschrift, zwei Fotos darunter in einer einfachen Galerie.' },
+	{ id: '09-continental', name: 'Continental', style: 'Modern', line: 'Ein Foto in marineblauem Dämmerungslicht, eine fette weiße Überschrift und eine Preiskarte über dem Bild.' },
+	{ id: '06-atrium', name: 'Atrium', style: 'Minimalistisch', line: 'Hellgrau und Weiß, eine Akzentfarbe in der Überschrift, eine Suchleiste und ein Streifen mit den neuesten Immobilien.' },
+	{ id: '11-imperial', name: 'Imperial', style: 'Luxus', line: 'Ein cremefarbener Hintergrund, eine fette Überschrift in Serifenschrift, zwei Fotos darunter in einer einfachen Galerie.' },
 	{ id: '08-cortijo', name: 'Cortijo', style: 'Klassisch', line: 'Ein warmer Pergamenthintergrund, ein bogenförmiger Bilderrahmen neben Ihrem Namen und eine Einleitung.' },
-	{ id: '10-meridian', name: 'Meridian', style: 'Minimalistisch', line: 'Ein blasser Hintergrund, eine kursive Serifüberschrift, eine schlichte Suchleiste, nichts, das um Aufmerksamkeit konkurriert.' },
-	{ id: '12-heritage', name: 'Heritage', style: 'Klassisch', line: 'Ein weißer Hintergrund, Ihr Name und ein Einleitungsabsatz, grüne Call-to-Action-Buttons.' },
-	{ id: '15-faro', name: 'Faro', style: 'Präsentation', line: 'Beginnt mit einem Film. Eine dunkle Silhouette von Bergen und Meer, eine große Serifüberschrift, minimale Navigation.' },
+	{ id: '10-meridian', name: 'Meridian', style: 'Minimalistisch', line: 'Ein heller Hintergrund, eine kursive Überschrift in Serifenschrift, eine schlichte Suchleiste, nichts, das um Aufmerksamkeit konkurriert.' },
+	{ id: '12-heritage', name: 'Heritage', style: 'Klassisch', line: 'Ein weißer Hintergrund, Ihr Name und ein einleitender Absatz, grüne Aktions-Buttons.' },
+	{ id: '15-faro', name: 'Faro', style: 'Präsentation', line: 'Beginnt mit einem Film. Eine dunkle Silhouette von Berg und Meer, eine große Überschrift in Serifenschrift, minimale Navigation.' },
 ];
 const styles = ['Modern', 'Minimalistisch', 'Luxus', 'Klassisch', 'Präsentation'];
 
 const addons = [
-	{ name: 'Zusätzliche Seite', what: 'Eine weitere Seite über das enthaltene Set hinaus', price: '10 Credits pro Monat' },
-	{ name: 'Instant Content', what: 'Gebietsführer und ein Blog, für Sie geschrieben, unbegrenzt', price: '30 Credits pro Monat' },
+	{ name: 'Zusätzliche Seite', what: 'Eine weitere Seite zusätzlich zum enthaltenen Set', price: '10 Credits pro Monat' },
+	{ name: 'Instant Content', what: 'Regionale Leitfäden und ein Blog, für Sie geschrieben, unbegrenzt', price: '30 Credits pro Monat' },
 	{ name: 'Ihre eigene Domain', what: 'Ihre Domain statt your-agency.estate-agency.co', price: '20 Credits pro Monat' },
-	{ name: 'PropertyList-Branding entfernen', what: 'Entfernt das PropertyList-Branding von Ihrer Website', price: '50 Credits pro Monat' },
+	{ name: 'PropertyList-Branding entfernen', what: 'Entfernt das PropertyList-Zeichen von Ihrer Website', price: '50 Credits pro Monat' },
 	{ name: 'Pop-up zur Lead-Erfassung', what: 'Ein Pop-up, das Leads auf Ihrer Website erfasst', price: '8 Credits pro Monat' },
-	{ name: 'KI-Antworten bei Inseraten', what: 'Erstellt ein FAQ aus den Fragen, die Käufer tatsächlich stellen', price: '8 Credits pro Monat' },
-	{ name: 'Auto-SEO und GEO', what: 'Überprüft Ihre Website wöchentlich und behebt, was möglich ist', price: '5 Credits pro Monat' },
-	{ name: 'Monatlicher E-Mail-Bericht', what: 'Eine Leistungsübersicht, die am 1st des Monats per E-Mail zugesandt wird', price: '5 Credits pro Monat' },
+	{ name: 'KI-Antworten bei Exposés', what: 'Erstellt ein FAQ aus den Fragen, die Käufer tatsächlich stellen.', price: '8 Credits pro Monat' },
+	{ name: 'Automatisches SEO und GEO', what: 'Prüft Ihre Website wöchentlich und behebt, was möglich ist.', price: '5 Credits pro Monat' },
+	{ name: 'Monatlicher E-Mail-Bericht', what: 'Eine Leistungszusammenfassung, die am 1. jedes Monats per E-Mail gesendet wird.', price: '5 Credits pro Monat' },
 ];
 
 const faqs = [
-	{ q: 'Ist das Erstellen wirklich kostenlos?', a: 'Ja. Das Erstellen und die Vorschau Ihrer Website kosten nichts. Sie werden erst belastet, sobald Sie sie veröffentlichen: 50 Credits pro Monat ab dann, zuzüglich aller Add-ons, die Sie aktivieren.' },
-	{ q: 'Was passiert, wenn ich veröffentliche?', a: 'Ihre Website geht mit allen Immobilien aus dem Netzwerk, das Sie zur Anzeige ausgewählt haben, sowie mit Ihren eigenen Inseraten sofort online. Ab diesem Zeitpunkt werden Ihnen für die Website 50 Credits pro Monat berechnet, zuzüglich aller Add-ons, die Sie aktiviert haben. Alle Posten werden monatlich abgerechnet.' },
-	{ q: 'Können Sie die Vorlage später ändern?', a: 'Ja. Wechseln Sie jederzeit zu einem der fünfzehn Designs, und Sie behalten Ihre Texte, Ihre Seiten und Ihre Einstellungen.' },
-	{ q: 'Müssen Sie Ihre Inserate hochladen?', a: 'Nein. Jede Immobilie im Netzwerk ist bereits dort, gefiltert wie Sie es wünschen, mit Ihren eigenen Inseraten daneben, und alles aktualisiert sich, wenn ein Inserat im CRM geändert wird. Nichts wird zweimal eingegeben.' },
-	{ q: 'Wohin gehen Ihre Anfragen?', a: 'Direkt in Ihr PropertyList CRM, und Sie erhalten für jede eine E-Mail. Lead-, Verkäufer- und Objekt-Pipelines sind kostenlos und ohne Begrenzung. Das Verschieben eines qualifizierten Leads in die Käufer-Pipeline kostet 1 Credit.' },
-	{ q: 'Können Sie Ihre eigene Domain verwenden?', a: 'Ja, für 20 Credits pro Monat. Bis dahin läuft Ihre Seite unter your-agency-name.estate-agency.co: Ihr Name in der Adresse, nicht unserer.' },
-	{ q: 'Was passiert, wenn Sie kündigen?', a: 'Ihre Seite fällt am Ende des Abrechnungszeitraums auf die kostenlose Agentur-Microsite zurück. Sie behalten Ihre Domain.' },
-	{ q: 'Ist die SEO gut?', a: 'Von Anfang an gut: jede Seite wird mit sauberer Struktur, Titeln und Beschreibungen geliefert. Schalten Sie Auto SEO und GEO (5 Credits pro Monat) ein, dann arbeitet ein Agent, der Ihrer Website gewidmet ist, jede Woche daran: Er prüft jede Seite, aktualisiert die Keywords entsprechend dem, wonach Käufer jetzt suchen, und behebt, was er findet. Wir versprechen weiterhin keine Rankings; keine ehrliche Plattform kann das.' },
-	{ q: 'Muss ich technisch versiert sein?', a: 'Nein. Sie wählen eine Vorlage, bearbeiten sie in einem Editor, der Ihnen Ihre echte Website während der Arbeit zeigt, und veröffentlichen, wenn Sie fertig sind. Mit der Funktion \'Mit AI bearbeiten\' können Sie eine Änderung auch in einfachem Englisch beschreiben.' },
-	{ q: 'Wer hostet sie und ist sie sicher?', a: 'Wir übernehmen das. Hosting und Cloudflare-Schutz sind inklusive: Ihre Seite wird schnell aus dem Cloudflare-Netzwerk ausgeliefert und vor Angriffen geschützt, ohne dass Sie etwas verwalten oder erneuern müssen.' },
-	{ q: 'Sind die rechtlichen Seiten enthalten?', a: 'Ja. aviso legal, Datenschutz- und Cookie-Seiten sowie ein Cookie-Banner sind in jeder Vorlage enthalten. Sie sind inklusive und werden nie separat berechnet.' },
+	{ q: 'Ist das Erstellen wirklich kostenlos?', a: 'Ja. Das Erstellen und die Vorschau kosten nichts. Sie werden erst beim Veröffentlichen belastet: 50 Credits pro Monat, zuzüglich etwaiger Zusatzfunktionen, die Sie aktivieren.' },
+	{ q: 'Was passiert, wenn ich veröffentliche?', a: 'Ihre Website geht mit Ihren Exposés und dem Netzwerkbestand, den Sie zur Anzeige ausgewählt haben, online. Ab dann zahlen Sie 50 Credits pro Monat, zuzüglich etwaiger Zusatzfunktionen, die Sie aktiviert haben.' },
+	{ q: 'Kann ich das Template später ändern?', a: 'Ja. Wechseln Sie jederzeit zu einer der fünfzehn und behalten Sie Ihre Texte, Seiten und Einstellungen.' },
+	{ q: 'Muss ich meine Inserate hochladen?', a: 'Nein. Ihre Inserate und der Netzwerkbestand sind bereits vorhanden und werden aktualisiert, wenn sich ein Inserat im CRM ändert. Nichts wird zweimal eingetippt.' },
+	{ q: 'Wohin gehen Anfragen?', a: 'In Ihrem PropertyList CRM, mit einer E-Mail für jede Anfrage. Lead-, Seller- und Property-Pipelines sind kostenlos und unbegrenzt; das Verschieben eines Kontakts in Buyer kostet 1 Credit.' },
+	{ q: 'Kann ich meine eigene Domain verwenden?', a: 'Ja, für 20 Credits pro Monat. Bis dahin läuft Ihre Seite unter your-agency-name.estate-agency.co, sodass Ihr Name in der Adresse steht, nicht unserer.' },
+	{ q: 'Was passiert, wenn ich kündige?', a: 'Ihre Website wird am Ende des Abrechnungszeitraums auf die kostenlose Agentur-Microsite zurückgesetzt. Sie behalten Ihre Domain.' },
+	{ q: 'Ist die SEO gut?', a: 'Saubere Struktur, Titel und Beschreibungen auf jeder Seite von Anfang an. Auto SEO und GEO (5 Credits pro Monat) prüfen Ihre Seite wöchentlich und aktualisieren die Keywords entsprechend dem, wonach Käufer jetzt suchen. Keine Plattform kann ernsthaft Platzierungen versprechen.' },
+	{ q: 'Müssen Sie technisch versiert sein?', a: 'Nein. Wählen Sie eine Vorlage, bearbeiten Sie sie in einem Editor, der die echte Seite zeigt, und veröffentlichen Sie, wenn Sie bereit sind. Oder beschreiben Sie die Änderung in einfachem Englisch und lassen Sie die KI das erledigen.' },
+	{ q: 'Wer übernimmt das Hosting, und ist es sicher?', a: 'Wir übernehmen das. Hosting und Cloudflare-Schutz sind enthalten: schnell, vor Angriffen geschützt, nichts, das Sie verwalten oder erneuern müssen.' },
+	{ q: 'Sind die rechtlichen Seiten enthalten?', a: 'Ja. Aviso legal, Datenschutz- und Cookie-Seiten sowie ein Cookie-Banner sind bei jeder Vorlage enthalten und werden nie separat berechnet.' },
 ];
 
 const ldWebsite = {
@@ -124,24 +124,24 @@ const ldFaq = {
 		<div class="wrap">
 			<div class="wb-hero-grid">
 				<div class="wb-hero-text">
-					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; alle Inserate im Netzwerk &middot; Leads in Ihr CRM</span></div>
+					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; alle Inserate des Netzwerks &middot; Leads in Ihr CRM</span></div>
 					<h1 class="wb-hero-h1">Wählen Sie ein Design.<br />Ihre Inserate <em>Füllen Sie es aus.</em></h1>
-					<p class="wb-hero-sub">Fünfzehn fertige Agentur-Websites, geladen mit allen Objekten im Netzwerk und so gefiltert, wie Sie es wünschen. Anfragen landen in Ihrem CRM und in Ihren Pipelines, und Ihre eigenen Inserate sind am Tag der Veröffentlichung auf der Website.</p>
+					<p class="wb-hero-sub">Fünfzehn fertige Agenturwebsites, gefüllt mit dem gesamten Netzwerk und gefiltert, wie Sie es wollen. Anfragen landen in Ihrem CRM.</p>
 					<div class="wb-hero-ctas">
-						<a class="btn btn-primary btn-large" href={BUILD}>Kostenlos erstellen</a>
+						<a class="btn btn-primary btn-large" href={BUILD}>Erstellen Sie kostenlos</a>
 						<a class="btn btn-secondary on-dark" href="#xml">Ich habe bereits eine Website</a>
 					</div>
-					<p class="wb-hero-trust">Kostenlos zu erstellen und anzusehen. Ab 50 Credits pro Monat (etwa 50 EUR), sobald Sie es veröffentlichen. Kündigen Sie zum Ende eines beliebigen Monats.</p>
+					<p class="wb-hero-trust">Kostenlos zum Erstellen und zur Vorschau. Ab 50 Credits pro Monat (etwa 50 EUR), sobald Sie veröffentlichen. Kündigen Sie zum Ende eines jeden Monats.</p>
 				</div>
 				<div class="wb-hero-visual">
 					<figure class="film wb-film">
 						<div class="wb-frame wb-frame-dark">
 							<div class="wb-frame-bar"><span></span><span></span><span></span><i>Website Builder</i></div>
-							<video class="filmVid" autoplay muted loop playsinline preload="auto" poster="/hero/wb-hero-poster.jpg" width="1440" height="900" aria-label="Der Website Builder: die fünfzehn Vorlagen, Solaz ausgewählt, der Editor mit der ausgewählten Überschrift, der Hero-Bereich umgestellt, dann Überprüfen und Veröffentlichen">
+							<video class="filmVid" autoplay muted loop playsinline preload="auto" poster="/hero/wb-hero-poster.jpg" width="1440" height="900" aria-label="The Website Builder: die fünfzehn Designs, Solaz ausgewählt, der Editor mit der ausgewählten Überschrift, das Hero-Element neu angeordnet, dann Überprüfen und Veröffentlichen">
 								<source src="/hero/wb-hero.mp4" type="video/mp4" />
 							</video>
 						</div>
-						<figcaption class="filmCap">Aufnahme aus dem neuen Builder: die fünfzehn Designs, Solaz ausgewählt, die Überschrift ausgewählt, der Hero-Bereich umgestellt, dann Überprüfen und Veröffentlichen. 33 Sekunden. Die angezeigten Add-ons und Summen stammen von der Beispielseite und können bearbeitet werden.</figcaption>
+						
 					</figure>
 				</div>
 			</div>
@@ -152,11 +152,11 @@ const ldFaq = {
 	<section class="wb-trust">
 		<div class="wrap">
 			<div class="wb-trust-grid">
-				<div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">eingetragene Makler auf PropertyList</div></div>
-				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">Agenturen, die dort ihr Geschäft betreiben</div></div>
+				<div><div class="wb-trust-num">{plAgents}</div><div class="wb-trust-label">registrierte Makler auf PropertyList</div></div>
+				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">Agenturen, die ihr Geschäft darauf betreiben</div></div>
 				<div><div class="wb-trust-num">{plListings}</div><div class="wb-trust-label">Angebote im Netzwerk</div></div>
 			</div>
-			<p class="wb-trust-line">Ihre Website liest aus demselben Netzwerk wie Ihr MLS und CRM. Jede Immobilie darin kann am Tag der Veröffentlichung auf Ihrer Website erscheinen, nach Ihren Wünschen gefiltert, und sie aktualisiert sich in dem Moment, in dem ein Inserat geändert wird.</p>
+			<p class="wb-trust-line">Ihre Website nutzt dasselbe Netzwerk wie Ihr MLS und CRM. Sie ist am Tag der Veröffentlichung aktuell und aktualisiert sich danach selbst.</p>
 		</div>
 	</section>
 
@@ -166,7 +166,7 @@ const ldFaq = {
 			<div class="wb-section-head">
 				<p class="eyebrow">Die fünfzehn</p>
 				<h2 class="wb-section-h2">Fünfzehn Designs, <em>eine Plattform.</em></h2>
-				<p class="wb-lead">Jedes Template ist eine vollständige Agentur-Website: dieselben Seiten, dieselben Bausteine, die eine Agentur braucht, nur in anderem Erscheinungsbild. Wählen Sie das Template, das zu Ihrer Arbeitsweise passt, nicht umgekehrt.</p>
+				<p class="wb-lead">Jede ist eine komplette Agentur-Website: dieselben Seiten, dieselben Bausteine, anderes Aussehen. Wählen Sie diejenige, die zu Ihrer Arbeitsweise passt.</p>
 			</div>
 			<div class="wb-chips" role="tablist" aria-label="Vorlagen nach Stil filtern">
 				<button class="wb-chip on" type="button" data-style="all" aria-pressed="true">Alle fünfzehn</button>
@@ -195,7 +195,7 @@ const ldFaq = {
 			</div>
 			<button class="wb-rail-btn next" type="button" aria-label="Nächste Vorlagen">&rsaquo;</button>
 		</div>
-		<div class="wrap"><p class="wb-fifteen-note">Sie können später Ihre Wahl ändern: wechseln Sie die Vorlage und behalten Sie Ihre Texte, Ihre Seiten und Ihre Einstellungen. Drei der fünfzehn (Solaz, Noir, Faro) öffnen mit einem Film.</p></div>
+		<div class="wrap"><p class="wb-fifteen-note">Wechseln Sie die Vorlage später und behalten Sie Ihre Texte, Seiten und Einstellungen. Solaz, Noir und Faro starten mit einem Film.</p></div>
 	</section>
 
 	<!-- HOW IT WORKS -->
@@ -203,26 +203,26 @@ const ldFaq = {
 		<div class="wrap">
 			<div class="wb-section-head">
 				<p class="eyebrow">So funktioniert es</p>
-				<h2 class="wb-section-h2">Wählen. Machen Sie es zu Ihrem. <em>Veröffentlichen.</em></h2>
+				<h2 class="wb-section-h2">Wählen. Personalisieren Sie es. <em>Veröffentlichen.</em></h2>
 			</div>
 			<div class="wb-steps-grid">
 				<article class="wb-step">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Wählen Sie eine Vorlage</i></div><img src="/wb/step-1-pick.webp" width="1440" height="900" alt="Die Vorlagenauswahl mit Solaz ausgewählt und der Vorschau daneben" loading="lazy" decoding="async" /></div>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Wählen Sie eine Vorlage</i></div><img src="/wb/step-1-pick.webp" width="1440" height="900" alt="Der Vorlagen-Auswahl mit ausgewähltem Solaz und Vorschau daneben" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">1</div>
 					<h3>Wählen Sie eine Vorlage</h3>
-					<p>Wählen Sie aus fünfzehn fertigen Website-Designs für Agenturen. Jedes einzelne enthält bereits die Seiten, die eine Agentur braucht.</p>
+					<p>Wählen Sie aus fünfzehn fertigen Website-Designs für Agenturen. Alle haben bereits die Seiten, die ein Maklerbüro braucht.</p>
 				</article>
 				<article class="wb-step">
 					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Bearbeiten Sie Ihre Website</i></div><img src="/wb/step-2-edit.webp" width="1440" height="900" alt="Der Editor mit geöffneten Einstellungen des Hero-Blocks, der drei Anordnungen zeigt" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">2</div>
-					<h3>Machen Sie es zu Ihrem eigenen</h3>
-					<p>Fügen Sie Ihre Markenfarbe, Ihre Texte und Ihre Fotos in einem Editor hinzu, der die echte Website zeigt, während Sie arbeiten. Jeder Block hat mehrere Anordnungen; wählen Sie eine.</p>
+					<h3>Machen Sie sie zu Ihrer eigenen</h3>
+					<p>Ihre Markenfarbe, Ihre Texte, Ihre Fotos in einem Editor, der die echte Website zeigt. Jeder Block hat mehrere Anordnungen.</p>
 				</article>
 				<article class="wb-step">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Überprüfen und veröffentlichen</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="Der Dialog Überprüfen und veröffentlichen listet die monatlichen Credits auf, bevor die Website live geschaltet wird." loading="lazy" decoding="async" /></div>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Überprüfen und veröffentlichen</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="Der Dialog 'Überprüfen und veröffentlichen', der die monatlichen Credits auflistet, bevor die Seite live geht" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">3</div>
 					<h3>Veröffentlichen</h3>
-					<p>Die Immobilien des Netzwerks und Ihre eigenen sind bereits vorhanden, daher müssen Sie beim Veröffentlichen nichts hochladen. Anfragen landen sofort in Ihrem CRM.</p>
+					<p>Nichts hochzuladen: Die Inserate sind bereits vorhanden. Anfragen landen in Ihrem CRM.</p>
 				</article>
 			</div>
 		</div>
@@ -232,19 +232,19 @@ const ldFaq = {
 	<section class="wb-section wb-agency">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow">Für Ihre Agentur gebaut, nicht für ein Café</p>
-				<h2 class="wb-section-h2">Die Bausteine, die Ihr Immobilienbüro <em>wirklich braucht.</em></h2>
-				<p class="wb-lead">Objektraster, hervorgehobene Immobilie, Suche, Bewertungsformular, Gebietsleitfäden, Team, Bewertungen, Zahlen, Kaufnebenkosten, Neubauprojekte. Jedes liest aus Ihrem Konto, statt Sie zur Eingabe aufzufordern.</p>
+				<p class="eyebrow">Für ein Maklerbüro gebaut, nicht für ein Café</p>
+				<h2 class="wb-section-h2">Die Bausteine, die ein Immobilienmakler <em>tatsächlich braucht.</em></h2>
+				<p class="wb-lead">Objektraster, hervorgehobene Immobilie, Suche, Bewertungsformular, Bereichsführer, Team, Bewertungen, Zahlen, was der Kauf kostet, Neubauprojekte. Jeder einzelne liest aus Ihrem Account, statt Sie zum Tippen aufzufordern.</p>
 			</div>
 			<div class="wb-cards">
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Jedes Inserat im Netzwerk, bereit zur Präsentation.</strong><p>Ihre eigenen Inserate sind am Tag der Veröffentlichung auf Ihrer Website. Der Bestand des Netzwerks ist ebenfalls dort: Filtern Sie ihn und präsentieren Sie sofort, was zu Ihren Käufern passt.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Leads landen in Ihrem CRM.</strong><p>Jede Anfrage kommt als Lead an. Leiten Sie die gewünschten durch Ihre Pipelines: Lead, Seller und Property sind ohne Limit kostenlos, und das Verschieben eines qualifizierten Leads in die Buyer-Pipeline kostet 1 Credit.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Suche, die wie ein Portal funktioniert.</strong><p>Käufer filtern den Bestand auf der Properties-Seite nach Gebiet, Typ und Preis und können eine Suche speichern.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>Ein kostenloses Bewertungsformular, das mehr kann.</strong><p>Jede Verkäuferanfrage kommt als Lead an, mit einem bereits ausgefüllten Property Intelligence Report, den Sie bei Bedarf für 5 Credits kaufen können.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>Welche Kaufnebenkosten anfallen, stets aktuell.</strong><p>Spanische Kaufnebenkosten mit Zitierung der Gesetzesgrundlage. Wir prüfen neue und geänderte Sätze und aktualisieren den Block, damit Ihre Website korrekt bleibt, ohne dass Sie etwas tun müssen. Ihr Anwalt bestätigt die endgültige Zahl.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Zahlen, die sich selbst berechnen.</strong><p>Der Zahlenblock liest aus Ihren aktiven Inseraten. Niemand tippt das manuell ein.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Bewertungen und Team, basierend auf dem, was Sie bereits haben.</strong><p>Verbinden Sie Ihr Google Business Profile und Ihre Bewertungen erscheinen auf der Seite, oder geben Sie sie selbst ein. Es wird nichts erfunden. Ihr Team stammt aus den Mitarbeitern, die bereits in Ihrem Agenturkonto eingetragen sind.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Jede Sprache, die Ihre Käufer sprechen.</strong><p>Englisch und Spanisch sind standardmäßig enthalten. Fügen Sie die anderen Sprachen hinzu, die Ihre Käufer verwenden, auf derselben Website.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Jedes Inserat im Netzwerk, bereit zur Ansicht.</strong><p>Ihre Inserate sind am Tag der Veröffentlichung live. Der Bestand des Netzwerks ist ebenfalls dort: filtern Sie ihn und zeigen Sie, was zu Ihren Käufern passt.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Leads landen in Ihrem CRM.</strong><p>Jede Anfrage kommt als Lead an. Lead-, Seller- und Property-Pipelines sind kostenlos und ohne Begrenzung; das Verschieben eines qualifizierten Leads in Buyer kostet 1 Credit.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Suche, die wie ein Portal funktioniert.</strong><p>Käufer filtern den Bestand nach Gebiet, Typ und Preis auf der Properties-Seite und können eine Suche speichern.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>Ein kostenloses Bewertungsformular, das mehr kann.</strong><p>Jede Anfrage kommt als Lead mit einem bereits ausgefüllten Property Intelligence Report, der Ihnen für 5 Credits zur Verfügung steht, wenn Sie ihn möchten.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>Was der Kauf kostet, aktuell gehalten.</strong><p>Spanische Kaufnebenkosten, Gesetz zitiert. Wir aktualisieren die Sätze, wenn sie sich ändern, damit alles korrekt bleibt, ohne dass Sie eingreifen müssen. Ihr Anwalt bestätigt den Betrag.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Zahlen, die automatisch ermittelt werden.</strong><p>Immobilien auf Ihrer Website, Gebiete, die Sie abdecken, Sprachen, in denen Sie arbeiten: aus Ihren Live-Anzeigen ermittelt, nie manuell eingegeben, nie veraltet.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Bewertungen und Team, aus dem, was Sie bereits haben.</strong><p>Verbinden Sie Google Business Profile und Ihre Bewertungen erscheinen, oder geben Sie sie ein. Nichts wird erfunden. Ihr Team stammt aus Ihrem Agenturkonto.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Jede Sprache, die Ihre Käufer sprechen.</strong><p>Englisch und Spanisch als Standard. Fügen Sie die anderen Sprachen hinzu, die Ihre Käufer sprechen.</p></article>
 			</div>
 		</div>
 	</section>
@@ -253,15 +253,15 @@ const ldFaq = {
 	<section class="wb-section wb-incl">
 		<div class="wrap">
 			<div class="wb-section-head">
-				<p class="eyebrow">Inklusive bei jeder Website</p>
-				<h2 class="wb-section-h2">Hosting, SSL und Cloudflare-Sicherheit, <em>Alles inbegriffen.</em></h2>
-				<p class="wb-lead">Nichts zu mieten, zu installieren oder zu erneuern. Ihre Website ist vom Tag der Veröffentlichung an schnell und geschützt und bleibt so.</p>
+				<p class="eyebrow">Bei jeder Website enthalten</p>
+				<h2 class="wb-section-h2">Hosting, SSL und Cloudflare-Sicherheit, <em>alles enthalten.</em></h2>
+				<p class="wb-lead">Sie müssen nichts mieten, installieren oder erneuern.</p>
 			</div>
 			<div class="wb-incl-grid">
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Hosting</strong><p>Über das Cloudflare-Netzwerk ausgeliefert, laden die Seiten schnell, egal wo sich Ihr Käufer befindet. Keine Hosting-Rechnung, kein Server, um den Sie sich kümmern müssen.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL-Zertifikat</strong><p>Jede Seite läuft über https mit einem Zertifikat, das sich automatisch erneuert. Das Vorhängeschloss, das Käufer erwarten, ohne dass Sie etwas tun müssen.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Cloudflare-Sicherheit</strong><p>DDoS-Schutz und die Edge-Sicherheit von Cloudflare stehen vor Ihrer Website. Angriffe werden abgefangen, bevor sie diese erreichen.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Ihre Adresse</strong><p>your-agency-name.estate-agency.co von Anfang an. Fügen Sie Ihre eigene Domain für 20 Credits pro Monat hinzu.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Hosting</strong><p>Wird über das Cloudflare-Netzwerk ausgeliefert, sodass Seiten schnell laden, egal wo sich Ihr Käufer befindet. Keine Hosting-Gebühren.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL-Zertifikat</strong><p>Jede Seite läuft über https mit einem Zertifikat, das sich automatisch erneuert.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Cloudflare-Sicherheit</strong><p>DDoS-Schutz vor Ihrer Website. Angriffe werden abgefangen, bevor sie diese erreichen.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Ihre Adresse</strong><p>your-agency-name.estate-agency.co ab dem ersten Tag. Fügen Sie Ihre eigene Domain für 20 Credits pro Monat hinzu.</p></article>
 			</div>
 		</div>
 	</section>
@@ -272,12 +272,12 @@ const ldFaq = {
 			<div class="wb-ai-grid">
 				<div class="wb-ai-text">
 					<p class="eyebrow" style="color:#6fe5d3">Mit KI bearbeiten</p>
-					<h2 class="wb-section-h2 on-dark">Klicken Sie ein Element an. <em>Sagen Sie, was geändert werden soll.</em></h2>
-					<p class="wb-lead" style="color:#b8c9cb">Beschreiben Sie eine Änderung in einfachem Englisch, und die Seite aktualisiert sich. Jede Änderung ist ein Entwurf, bis Sie sie veröffentlichen, und die Rückgängig-Funktion ist immer verfügbar.</p>
+					<h2 class="wb-section-h2 on-dark">Klicken Sie auf ein beliebiges Element. <em>Sagen Sie, was geändert werden soll.</em></h2>
+					<p class="wb-lead" style="color:#b8c9cb">Beschreiben Sie eine Änderung in einfachem Englisch, und die Seite aktualisiert sich. Alles bleibt ein Entwurf, bis Sie sie veröffentlichen.</p>
 				</div>
 				<figure class="wb-ai-shot">
-					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Bearbeiten Sie Ihre Website</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="Die im Editor ausgewählte Überschrift, mit den Änderungen, die Sie anfordern können" loading="lazy" decoding="async" /></div>
-					<figcaption>Die im Editor ausgewählte Überschrift. Kürzer, wärmerer Ton, erwähnen Sie die Stadt oder formulieren Sie es selbst.</figcaption>
+					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Bearbeiten Sie Ihre Website</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="Die im Editor ausgewählte Überschrift mit den Änderungen, die der Makler anfordern kann" loading="lazy" decoding="async" /></div>
+					<figcaption>Die im Editor ausgewählte Überschrift.</figcaption>
 				</figure>
 			</div>
 		</div>
@@ -288,41 +288,41 @@ const ldFaq = {
 		<div class="wrap">
 			<div class="wb-section-head">
 				<p class="eyebrow" style="color:#6fe5d3">Preise</p>
-				<h2 class="wb-section-h2 on-dark">Kostenlos zu erstellen. <em>50 Credits pro Monat, sobald Sie veröffentlichen.</em></h2>
-				<p class="wb-lead" style="color:#b8c9cb">Ein Basisplan, Add-ons in Credits, und Sie können jedes davon am Ende eines Monats kündigen.</p>
+				<h2 class="wb-section-h2 on-dark">Kostenlos erstellbar. <em>50 Credits pro Monat ab Veröffentlichung.</em></h2>
+				<p class="wb-lead" style="color:#b8c9cb">Ein Basisplan, Add-ons mit Credits, und Sie können jeden davon am Ende eines Monats kündigen.</p>
 			</div>
 			<div class="wb-price-grid">
 				<div class="wb-pricing-card">
 					<div class="wb-pricing-name">Website Builder</div>
 					<div class="wb-pricing-price">50 Credits <span class="unit">pro Monat</span></div>
-					<p class="wb-pricing-tagline">Während Sie bauen und die Vorschau nutzen, wird nichts berechnet; das Abonnement beginnt an dem Tag, an dem Sie veröffentlichen.</p>
+					<p class="wb-pricing-tagline">Es wird bis zur Veröffentlichung nichts berechnet.</p>
 					<ul class="wb-pricing-features">
-						<li>Startseite, Immobilien (Suche und Ergebnisse, mit Filtern und einer gespeicherten Suche), eine Objektseite für jedes Inserat, Über uns und Kontakt</li>
-						<li>Rechtsseiten (aviso legal, Datenschutz, Cookies) und ein Cookie-Banner, inbegriffen und nie in Rechnung gestellt</li>
-						<li>Hosting und Cloudflare-Schutz inbegriffen: schnell und geschützt, nichts, das Sie verwalten müssen</li>
-						<li>Englisch und Spanisch sind standardmäßig verfügbar, weitere Sprachen können hinzugefügt werden</li>
-						<li>Alle fünfzehn Designs, Sie können jederzeit wechseln und Ihre Arbeit behalten</li>
-						<li>Anfragen gelangen direkt in Ihr PropertyList CRM</li>
-						<li>Kündigen Sie zum Ende eines Monats; die Website wird wieder zur kostenlosen Agentur-Microsite und Sie behalten Ihre Domain</li>
+						<li>Startseite, Immobilien (Suche, Filter, gespeicherte Suche), eine Seite für jedes Objekt, Über uns und Kontakt</li>
+						<li>Rechtliche Seiten (aviso legal, privacy, cookies) und ein Cookie-Banner, inklusive und nie in Rechnung gestellt</li>
+						<li>Hosting und Cloudflare-Schutz inklusive</li>
+						<li>Englisch und Spanisch sind standardmäßig enthalten, weitere Sprachen können hinzugefügt werden</li>
+						<li>Alle fünfzehn Designs. Sie können jederzeit wechseln und Ihre Arbeit behalten</li>
+						<li>Anfragen direkt in Ihr PropertyList CRM</li>
+						<li>Sie können jeden Monat kündigen; die Seite wird zur kostenlosen Agentur-Microsite und Sie behalten Ihre Domain</li>
 					</ul>
-					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Kostenlos erstellen</a></div>
+					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Erstellen Sie kostenlos</a></div>
 					<p class="wb-pricing-note">Zusätzliche Seiten: <strong>10 Credits pro Monat</strong> jeweils.</p>
 				</div>
 				<div class="wb-pricing-aside">
 					<div class="wb-addon-card">
-						<h4>Add-ons, <em>Wenn Sie sie möchten</em></h4>
-						<p class="wb-addon-intro">Jeder Zusatz ist monatlich, wird in Ihrem Konto eingeschaltet und kann zum Ende eines Monats beendet werden.</p>
+						<h4>Add-ons, <em>wenn Sie sie möchten</em></h4>
+						<p class="wb-addon-intro">Jedes ist monatlich, kann in Ihrem Konto aktiviert und jederzeit gestoppt werden.</p>
 						<ul class="wb-addon-list">
 							{addons.map((a) => (
 								<li><span class="wb-addon-name">{a.name}<small>{a.what}</small></span><span class="wb-addon-price">{a.price}</span></li>
 							))}
 						</ul>
-						<div class="wb-addon-footer">Feed für Neubauprojekte: ein separates Modul, Preisangabe in Ihrem Konto.</div>
+						<div class="wb-addon-footer">Feed für Neubauprojekte: ein separates Modul, der Preis wird in Ihrem Konto angezeigt.</div>
 					</div>
 					<div class="wb-credit-info">
-						<h4>Was ist ein Credits</h4>
-						<p>PropertyList's Einheit für kostenpflichtige Funktionen, gekauft in Paketen: 1 Credit (etwa 1 EUR) im kleinsten Paket, weniger bei größeren. Credits verfallen nicht, alles, was Sie in diesem Monat nicht nutzen, steht Ihnen im nächsten Monat noch zur Verfügung.</p>
-						<p style="margin:0"><a href={REFERRALS}>Empfehlen Sie eine andere Agentur</a> und Sie erhalten 20 Credits (etwa 20 EUR), sobald die neue Agentur die Verifizierung abgeschlossen hat, nicht bei der Anmeldung. Die neue Agentur erhält 10 Credits.</p>
+						<h4>Was ist ein Credit</h4>
+						<p>Die Einheit von PropertyList für kostenpflichtige Funktionen, die in Paketen gekauft werden: 1 Credit entspricht etwa 1 EUR im kleinsten Paket, weniger bei größeren. Credits verfallen nicht.</p>
+						<p style="margin:0"><a href={REFERRALS}>Empfehlen Sie eine andere Agentur</a> und Sie erhalten 20 Credits (etwa 20 EUR), sobald sie die Verifizierung abschließen, nicht bei der Anmeldung. Die neue Agentur erhält 10 Credits.</p>
 					</div>
 				</div>
 			</div>
@@ -335,18 +335,18 @@ const ldFaq = {
 			<div class="wb-xml-inner">
 				<div>
 					<p class="eyebrow">Haben Sie bereits eine Website?</p>
-					<h2 class="wb-section-h2">Behalten Sie Ihre Website. <em>Speisen Sie Ihre Website mit dem gesamten Netzwerk.</em></h2>
-					<p class="wb-lead">Speisen Sie alle Inserate des Netzwerks in die Website ein, die Sie bereits haben, gefiltert nach Ihren Vorgaben: nur Ihr eigenes Angebot oder zusätzlich eine Auswahl aus dem Netzwerk. XML oder die Website API; Ihr Entwickler richtet die Verbindung einmal ein und danach liest die Website aus demselben Konto wie Ihr MLS und CRM.</p>
+					<h2 class="wb-section-h2">Behalten Sie Ihre Website. <em>Versorgen Sie die Website mit dem gesamten Netzwerk.</em></h2>
+					<p class="wb-lead">Speisen Sie das Netzwerk in die Website, die Sie bereits haben, gefiltert nach Ihren Wünschen: Ihr eigener Bestand oder eine Auswahl aus dem Netzwerk daneben. XML oder die Website API, einmal verbunden.</p>
 				</div>
 				<div class="wb-xml-card">
 					<div class="wb-xml-price-row"><span class="wb-xml-price">35 Credits</span><span class="wb-xml-price-unit">pro Monat</span></div>
-					<p class="wb-xml-detail">XML-Feed oder Website API. Kündigen Sie jederzeit.</p>
+					<p class="wb-xml-detail">XML-Feed oder Website API. Jederzeit kündbar.</p>
 					<ul class="wb-pricing-features">
-						<li>Alle Inserate des Netzwerks auf Ihrer eigenen Website, nach Ihren Wünschen gefiltert</li>
-						<li>XML-Feed oder Website API, die Wahl Ihres Entwicklers</li>
-						<li>Die Dokumentation ist öffentlich; zum Lesen müssen Sie nichts kaufen.</li>
+						<li>Alle Angebote aus dem Netzwerk auf Ihrer eigenen Website, nach Ihren Wünschen gefiltert</li>
+						<li>XML-Feed oder Website API, nach Wahl Ihres Entwicklers</li>
+						<li>Die Dokumentation ist öffentlich; Sie müssen nichts kaufen, um sie zu lesen.</li>
 					</ul>
-					<a class="btn btn-primary" href={DASHBOARD}>Richten Sie einen Feed ein</a>
+					<a class="btn btn-primary" href={DASHBOARD}>Feed einrichten</a>
 					<p class="wb-xml-docs"><a href={DOCS}>Lesen Sie die Website Builder- und Feed-Dokumentation</a></p>
 				</div>
 			</div>
@@ -358,7 +358,7 @@ const ldFaq = {
 		<div class="narrow">
 			<div class="wb-section-head">
 				<p class="eyebrow">Fragen</p>
-				<h2 class="wb-section-h2">Welche Makler <em>fragen zuerst.</em></h2>
+				<h2 class="wb-section-h2">Was Makler <em>zuerst fragen.</em></h2>
 			</div>
 			<div>
 				{faqs.map((f) => (
@@ -373,8 +373,8 @@ const ldFaq = {
 		<div class="narrow">
 			<p class="eyebrow" style="color:#6fe5d3">Entwickelt an der Costa del Sol &middot; in ganz Spanien im Einsatz</p>
 			<h2 class="wb-section-h2 on-dark">Ihre Inserate sind bereit.<br /><em>Ist Ihre Website?</em></h2>
-			<p class="wb-lead">Wählen Sie ein Design, machen Sie es zu Ihrem und veröffentlichen Sie es, wann Sie wollen.</p>
-			<a class="btn btn-primary btn-large" href={BUILD}>Kostenlos erstellen</a>
+			<p class="wb-lead">Wählen Sie ein Design, passen Sie es an und veröffentlichen Sie, wann Sie wollen.</p>
+			<a class="btn btn-primary btn-large" href={BUILD}>Erstellen Sie kostenlos</a>
 			<p class="wb-final-note">Kostenlos zum Erstellen und zur Vorschau. Ab 50 Credits pro Monat, sobald Sie veröffentlichen. <a href={DOCS}>Lesen Sie die Dokumentation</a>.</p>
 		</div>
 	</section>
