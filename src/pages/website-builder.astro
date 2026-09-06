@@ -8,7 +8,7 @@ const plListings = statPlus(__ps.listings, 'en');
 
 const title = 'Website Builder for Estate Agents | PropertyList.es';
 const description =
-	'Pick one of fifteen finished agency website designs, make it yours, and every property on the PropertyList network is on it, filtered how you want, with enquiries landing in your CRM. Free to build and preview, from 50 credits a month once you publish.';
+	'Fifteen finished agency website designs, showing the whole PropertyList network filtered how you want. Enquiries land in your CRM. Free to build, from 50 credits a month once you publish.';
 const BUILD = 'https://agents.propertylist.es/website-builder';
 const DOCS = 'https://info.propertylist.es/docs/propertylist-mls-user-manual/website-builder/';
 const REFERRALS = 'https://agents.propertylist.es/referrals';
@@ -47,17 +47,17 @@ const addons = [
 ];
 
 const faqs = [
-	{ q: 'Is it really free to build?', a: 'Yes. Building and previewing your site costs nothing. You are only charged once you publish it: 50 credits a month from then on, plus any add-ons you switch on.' },
-	{ q: 'What happens when I publish?', a: 'Your site goes live with every property on the network you have chosen to show, and your own listings, on it straight away. From that point you are charged 50 credits a month for the site, plus any add-ons you have switched on, each billed monthly.' },
-	{ q: 'Can I change template later?', a: 'Yes. Switch to a different one of the fifteen designs whenever you want, and you keep your words, your pages and your settings.' },
-	{ q: 'Do I have to upload my listings?', a: 'No. Every property on the network is already there, filtered how you want, with your own listings alongside, and it all updates when a listing changes in the CRM. Nothing is typed twice.' },
-	{ q: 'Where do enquiries go?', a: 'Straight into your PropertyList CRM, and you get an email for each one. Lead, Seller and Property pipelines are free with no limit. Moving a qualified lead into the Buyer pipeline costs 1 credit.' },
-	{ q: 'Can I use my own domain?', a: 'Yes, for 20 credits a month. Until then your site runs at your-agency-name.estate-agency.co: your name in the address, not ours.' },
+	{ q: 'Is it really free to build?', a: 'Yes. Building and previewing cost nothing. You are charged only when you publish: 50 credits a month, plus any add-ons you switch on.' },
+	{ q: 'What happens when I publish?', a: 'Your site goes live with your listings and whatever network stock you chose to show. From then you pay 50 credits a month, plus any add-ons you switched on.' },
+	{ q: 'Can I change template later?', a: 'Yes. Switch to any of the fifteen whenever you want, and keep your words, pages and settings.' },
+	{ q: 'Do I have to upload my listings?', a: 'No. Your listings and the network stock are already there, and update when a listing changes in the CRM. Nothing is typed twice.' },
+	{ q: 'Where do enquiries go?', a: 'Into your PropertyList CRM, with an email for each one. Lead, Seller and Property pipelines are free with no limit; moving one into Buyer costs 1 credit.' },
+	{ q: 'Can I use my own domain?', a: 'Yes, for 20 credits a month. Until then your site runs at your-agency-name.estate-agency.co, so your name is in the address, not ours.' },
 	{ q: 'What if I cancel?', a: 'Your site reverts to the free agency microsite at the end of the billing period. You keep your domain.' },
-	{ q: 'Is the SEO any good?', a: 'Good from day one: every page ships with clean structure, titles and descriptions. Switch on Auto SEO and GEO (5 credits a month) and an agent dedicated to your site works on it every week: it checks every page, refreshes the keywords to what buyers are searching for now, and fixes what it finds. We still do not promise rankings; no honest platform can.' },
-	{ q: 'Do I need to be technical?', a: 'No. You pick a template, edit it in an editor that shows your real site as you work, and publish when you are ready. Edit with AI lets you describe a change in plain English too.' },
-	{ q: 'Who hosts it, and is it secure?', a: 'We do. Hosting and Cloudflare protection are included: your site is served fast from the Cloudflare network and shielded from attacks, with nothing for you to manage or renew.' },
-	{ q: 'Are the legal pages included?', a: 'Yes. Aviso legal, privacy and cookies pages, plus a cookie banner, come with every template. They are included and never billed separately.' },
+	{ q: 'Is the SEO any good?', a: 'Clean structure, titles and descriptions on every page from day one. Auto SEO and GEO (5 credits a month) rechecks your site weekly and updates the keywords to what buyers search for now. No platform can honestly promise rankings.' },
+	{ q: 'Do I need to be technical?', a: 'No. Pick a template, edit it in an editor showing the real site, publish when you are ready. Or describe the change in plain English and let the AI do it.' },
+	{ q: 'Who hosts it, and is it secure?', a: 'We do. Hosting and Cloudflare protection are included: fast, shielded from attacks, nothing for you to manage or renew.' },
+	{ q: 'Are the legal pages included?', a: 'Yes. Aviso legal, privacy and cookies pages, plus a cookie banner, come with every template and are never billed separately.' },
 ];
 
 const ldWebsite = {
@@ -122,7 +122,7 @@ const ldFaq = {
 				<div class="wb-hero-text">
 					<div class="wb-hero-eyebrow"><img src="https://info.propertylist.es/og/icon-default.png" alt="" width="18" height="18" /><span>Website Builder &middot; all network listings &middot; leads to your CRM</span></div>
 					<h1 class="wb-hero-h1">Pick a design.<br />Your listings <em>fill it.</em></h1>
-					<p class="wb-hero-sub">Fifteen finished agency websites, loaded with every property on the network and filtered how you want. Enquiries land in your CRM and pipelines, and your own listings are on the site the day you publish.</p>
+					<p class="wb-hero-sub">Fifteen finished agency websites, loaded with the whole network and filtered how you want. Enquiries land in your CRM.</p>
 					<div class="wb-hero-ctas">
 						<a class="btn btn-primary btn-large" href={BUILD}>Build for free</a>
 						<a class="btn btn-secondary on-dark" href="#xml">I already have a website</a>
@@ -137,7 +137,7 @@ const ldFaq = {
 								<source src="/hero/wb-hero.mp4" type="video/mp4" />
 							</video>
 						</div>
-						<figcaption class="filmCap">Recorded from the new builder: the fifteen designs, Solaz chosen, the headline selected, the hero rearranged, then Review and publish. 33 seconds. The add-ons and totals shown are the sample site's and can be edited.</figcaption>
+						
 					</figure>
 				</div>
 			</div>
@@ -152,7 +152,7 @@ const ldFaq = {
 				<div><div class="wb-trust-num">{plAgencies}</div><div class="wb-trust-label">agencies running their business on it</div></div>
 				<div><div class="wb-trust-num">{plListings}</div><div class="wb-trust-label">listings on the network</div></div>
 			</div>
-			<p class="wb-trust-line">Your site reads from the same network as your MLS and CRM. Every property on it can be on your site the day you publish, filtered how you want, and it updates the moment a listing changes.</p>
+			<p class="wb-trust-line">Your site reads the same network as your MLS and CRM. Current the day you publish, and it updates itself after that.</p>
 		</div>
 	</section>
 
@@ -162,7 +162,7 @@ const ldFaq = {
 			<div class="wb-section-head">
 				<p class="eyebrow">The fifteen</p>
 				<h2 class="wb-section-h2">Fifteen designs, <em>one platform.</em></h2>
-				<p class="wb-lead">Every template is a complete agency website: the same pages, the same blocks an agency needs, in a different look. Pick the one that matches how you already work, not the other way round.</p>
+				<p class="wb-lead">Every one is a complete agency website: same pages, same blocks, different look. Pick the one that matches how you already work.</p>
 			</div>
 			<div class="wb-chips" role="tablist" aria-label="Filter templates by style">
 				<button class="wb-chip on" type="button" data-style="all" aria-pressed="true">All fifteen</button>
@@ -191,7 +191,7 @@ const ldFaq = {
 			</div>
 			<button class="wb-rail-btn next" type="button" aria-label="Next templates">&rsaquo;</button>
 		</div>
-		<div class="wrap"><p class="wb-fifteen-note">Change your mind later: switch template and keep your words, your pages and your settings. Three of the fifteen (Solaz, Noir, Faro) open on a film.</p></div>
+		<div class="wrap"><p class="wb-fifteen-note">Switch template later and keep your words, pages and settings. Solaz, Noir and Faro open on a film.</p></div>
 	</section>
 
 	<!-- HOW IT WORKS -->
@@ -212,13 +212,13 @@ const ldFaq = {
 					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Edit your website</i></div><img src="/wb/step-2-edit.webp" width="1440" height="900" alt="The editor with the hero block's settings open, showing three arrangements" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">2</div>
 					<h3>Make it yours</h3>
-					<p>Add your brand colour, your words and your photos in an editor that shows the real site as you work. Each block has several arrangements; pick one.</p>
+					<p>Your brand colour, your words, your photos, in an editor showing the real site. Each block has several arrangements.</p>
 				</article>
 				<article class="wb-step">
 					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Review and publish</i></div><img src="/wb/step-3-publish.webp" width="1440" height="900" alt="The Review and publish dialog listing the monthly credits before the site goes live" loading="lazy" decoding="async" /></div>
 					<div class="wb-step-num">3</div>
 					<h3>Publish</h3>
-					<p>The network's properties and your own are already there, so publishing does not mean uploading anything. Enquiries start landing in your CRM straight away.</p>
+					<p>Nothing to upload: the listings are already there. Enquiries start landing in your CRM.</p>
 				</article>
 			</div>
 		</div>
@@ -233,14 +233,14 @@ const ldFaq = {
 				<p class="wb-lead">Property grid, featured property, search, valuation form, area guides, team, reviews, numbers, what buying costs, new developments. Each one reads from your account instead of asking you to type.</p>
 			</div>
 			<div class="wb-cards">
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Every listing on the network, ready to show.</strong><p>Your own listings are on your site the day you publish. The network's stock is there too: filter it and showcase what fits your buyers, straight away.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Leads land in your CRM.</strong><p>Every enquiry arrives as a lead. Push the ones you want through your pipelines: Lead, Seller and Property are free with no limit, and moving a qualified lead into the Buyer pipeline costs 1 credit.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9 21v-6h6v6" /></svg><strong>Every listing on the network, ready to show.</strong><p>Your listings are live the day you publish. The network's stock is there too: filter it and show what fits your buyers.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M18 15l3 3-3 3" /></svg><strong>Leads land in your CRM.</strong><p>Every enquiry arrives as a lead. Lead, Seller and Property pipelines are free with no limit; moving a qualified lead into Buyer costs 1 credit.</p></article>
 				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="m20 20-4.5-4.5" /></svg><strong>Search that works like a portal.</strong><p>Buyers filter the stock by area, type and price on the Properties page, and can save a search.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>A free valuation form that does more.</strong><p>Each seller request arrives as a lead with a Property Intelligence Report already filled in, ready to buy for 5 credits if you want it.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>What buying costs, kept current.</strong><p>Spanish purchase costs with the law cited. We check for new and updated rates and refresh the block, so your site stays right without you touching it. Your lawyer confirms the final figure.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10M9 20v-5h6v5" /><path d="M2 20h20" /></svg><strong>A free valuation form that does more.</strong><p>Each request arrives as a lead with a Property Intelligence Report already filled in, yours for 5 credits if you want it.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h6M9 16h6M15 3v4h4" /></svg><strong>What buying costs, kept current.</strong><p>Spanish purchase costs, law cited. We refresh the rates when they change, so it stays right without you touching it. Your lawyer confirms the figure.</p></article>
 				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16V9M11 16V5M16 16v-7" /></svg><strong>Numbers that count themselves.</strong><p>The numbers block reads from your live listings. Nobody types it in.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Reviews and team, from what you already have.</strong><p>Connect your Google Business Profile and your reviews appear on the site, or type them in yourself. Nothing is invented. Your team comes from the staff already in your agency account.</p></article>
-				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Every language your buyers speak.</strong><p>English and Spanish come as standard. Add the other languages your buyers use, on the same site.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" /></svg><strong>Reviews and team, from what you already have.</strong><p>Connect Google Business Profile and your reviews appear, or type them in. Nothing is invented. Your team comes from your agency account.</p></article>
+				<article class="wb-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Every language your buyers speak.</strong><p>English and Spanish as standard. Add the other languages your buyers use.</p></article>
 			</div>
 		</div>
 	</section>
@@ -251,12 +251,12 @@ const ldFaq = {
 			<div class="wb-section-head">
 				<p class="eyebrow">Included with every site</p>
 				<h2 class="wb-section-h2">Hosting, SSL and Cloudflare security, <em>all included.</em></h2>
-				<p class="wb-lead">Nothing to rent, install or renew. Your site is fast and protected from the day you publish, and stays that way.</p>
+				<p class="wb-lead">Nothing to rent, install or renew.</p>
 			</div>
 			<div class="wb-incl-grid">
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Hosting</strong><p>Served from the Cloudflare network, so pages load fast wherever your buyer is. No hosting bill, no server to look after.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL certificate</strong><p>Every site runs on https with a certificate that renews itself. The padlock buyers expect, without you doing anything.</p></article>
-				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Cloudflare security</strong><p>DDoS protection and Cloudflare's edge security sit in front of your site. Attacks are absorbed before they reach it.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /><path d="M7 7h.01M7 17h.01" /></svg><strong>Hosting</strong><p>Served from the Cloudflare network, so pages load fast wherever your buyer is. No hosting bill.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" /></svg><strong>SSL certificate</strong><p>Every site runs on https with a certificate that renews itself.</p></article>
+				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></svg><strong>Cloudflare security</strong><p>DDoS protection in front of your site. Attacks are absorbed before they reach it.</p></article>
 				<article class="wb-incl-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg><strong>Your address</strong><p>your-agency-name.estate-agency.co from day one. Add your own domain for 20 credits a month.</p></article>
 			</div>
 		</div>
@@ -269,11 +269,11 @@ const ldFaq = {
 				<div class="wb-ai-text">
 					<p class="eyebrow" style="color:#6fe5d3">Edit with AI</p>
 					<h2 class="wb-section-h2 on-dark">Click anything. <em>Say what to change.</em></h2>
-					<p class="wb-lead" style="color:#b8c9cb">Describe a change in plain English and the page updates. Every change is a draft until you publish it, and Undo is always there.</p>
+					<p class="wb-lead" style="color:#b8c9cb">Describe a change in plain English and the page updates. Everything stays a draft until you publish.</p>
 				</div>
 				<figure class="wb-ai-shot">
 					<div class="wb-frame"><div class="wb-frame-bar"><span></span><span></span><span></span><i>Edit your website</i></div><img src="/wb/ai-bubble.webp" width="1440" height="900" alt="The headline selected in the editor, with the changes the agent can ask for" loading="lazy" decoding="async" /></div>
-					<figcaption>The headline selected in the editor. Shorter, warmer tone, mention the town, or your own words.</figcaption>
+					<figcaption>The headline selected in the editor.</figcaption>
 				</figure>
 			</div>
 		</div>
@@ -291,15 +291,15 @@ const ldFaq = {
 				<div class="wb-pricing-card">
 					<div class="wb-pricing-name">Website Builder</div>
 					<div class="wb-pricing-price">50 credits <span class="unit">a month</span></div>
-					<p class="wb-pricing-tagline">Nothing is charged while you build and preview; the subscription starts the day you publish.</p>
+					<p class="wb-pricing-tagline">Nothing is charged until you publish.</p>
 					<ul class="wb-pricing-features">
-						<li>Home, Properties (search and results, with filters and a saved search), a property page for every listing, About and Contact</li>
+						<li>Home, Properties (search, filters, saved search), a page for every listing, About and Contact</li>
 						<li>Legal pages (aviso legal, privacy, cookies) and a cookie banner, included and never billed</li>
-						<li>Hosting and Cloudflare protection included: fast and protected, nothing for you to manage</li>
+						<li>Hosting and Cloudflare protection included</li>
 						<li>English and Spanish as standard, more languages can be added</li>
 						<li>All fifteen designs, switch any time and keep your work</li>
 						<li>Enquiries straight into your PropertyList CRM</li>
-						<li>Cancel at the end of any month; the site reverts to the free agency microsite and you keep your domain</li>
+						<li>Cancel any month; the site reverts to the free agency microsite and you keep your domain</li>
 					</ul>
 					<div class="wb-pricing-cta"><a class="btn btn-primary btn-large" href={BUILD}>Build for free</a></div>
 					<p class="wb-pricing-note">Extra pages: <strong>10 credits a month</strong> each.</p>
@@ -307,7 +307,7 @@ const ldFaq = {
 				<div class="wb-pricing-aside">
 					<div class="wb-addon-card">
 						<h4>Add-ons, <em>if you want them</em></h4>
-						<p class="wb-addon-intro">Each is monthly, switched on from your account, and can be stopped at the end of any month.</p>
+						<p class="wb-addon-intro">Each is monthly, switched on from your account, stopped whenever you like.</p>
 						<ul class="wb-addon-list">
 							{addons.map((a) => (
 								<li><span class="wb-addon-name">{a.name}<small>{a.what}</small></span><span class="wb-addon-price">{a.price}</span></li>
@@ -317,7 +317,7 @@ const ldFaq = {
 					</div>
 					<div class="wb-credit-info">
 						<h4>What is a credit</h4>
-						<p>PropertyList's unit for paid features, bought in packs: 1 credit (about 1 EUR) at the smallest pack, less at larger ones. Credits do not expire, so anything you do not use this month is still there next month.</p>
+						<p>PropertyList's unit for paid features, bought in packs: 1 credit is about 1 EUR at the smallest pack, less at larger ones. Credits do not expire.</p>
 						<p style="margin:0"><a href={REFERRALS}>Refer another agency</a> and you get 20 credits (about 20 EUR) once they complete verification, not on signup. The new agency gets 10 credits.</p>
 					</div>
 				</div>
@@ -332,7 +332,7 @@ const ldFaq = {
 				<div>
 					<p class="eyebrow">Already have a website?</p>
 					<h2 class="wb-section-h2">Keep your site. <em>Feed it the whole network.</em></h2>
-					<p class="wb-lead">Feed every listing on the network into the site you already have, filtered how you want: only your own stock, or a selection from the network alongside it. XML or the Website API; your developer connects it once and from then on the site reads from the same account as your MLS and CRM.</p>
+					<p class="wb-lead">Feed the network into the site you already have, filtered how you want: your own stock, or a selection from the network alongside it. XML or the Website API, connected once.</p>
 				</div>
 				<div class="wb-xml-card">
 					<div class="wb-xml-price-row"><span class="wb-xml-price">35 credits</span><span class="wb-xml-price-unit">a month</span></div>
