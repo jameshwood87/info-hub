@@ -55,7 +55,29 @@ const segmentDescriptions: Record<string, string> = {
 	'property-insurance-in-andalucia': 'Tipos de seguro, coberturas y qué preguntar.',
 };
 
-const segLabel = (s: string) => segmentLabels[s] || titleCase(s);
+const segIndexByRest = new Map(
+	items
+		.filter((p) => {
+			const rest = p.path.startsWith(base) ? p.path.slice(base.length) : '';
+			return rest.replace(/\/$/, '').split('/').filter(Boolean).length === 1;
+		})
+		.map((p) => [p.path.slice(base.length).replace(/\/$/, ''), p]),
+);
+
+// Prefer the section's own page: its title and description are already Spanish.
+// The curated maps below are only a fallback, because ES doc slugs stay English
+// and title-casing one would print English on a Spanish page.
+const segLabel = (s: string) => {
+	const idx = segIndexByRest.get(s);
+	const t = idx?.title ? cleanTitle(idx.title) : '';
+	return t || segmentLabels[s] || titleCase(s);
+};
+
+const segDesc = (s: string) => {
+	const idx = segIndexByRest.get(s);
+	const d = idx?.description ? decodeHtmlEntities(idx.description).trim() : '';
+	return d || segmentDescriptions[s] || '';
+};
 
 const grouped = new Map<string, typeof items>();
 const segMeta = new Map<string, { count: number; hasChildren: boolean }>();
@@ -133,7 +155,7 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 					<section class="card">
 						<div class="cardHeader">
 							<h3>{segLabel(seg)}</h3>
-							{segmentDescriptions[seg] ? <p class="rowDesc">{segmentDescriptions[seg]}</p> : null}
+							{segDesc(seg) ? <p class="rowDesc">{segDesc(seg)}</p> : null}
 						</div>
 						{listItems.length ? (
 							<ul class="mini">
