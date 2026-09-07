@@ -36,11 +36,16 @@ const MAPTEXT = {
 	agenciesHere: 'Agencias que publican aquí',
 	askPre: '¿Publicas en ',
 	askPost: '?',
+	viewFlat: 'Vista plana',
+	view3d: 'Vista 3D',
+	coopWin: 'Usa Ctrl + rueda para hacer zoom en el mapa',
+	coopMac: 'Usa Command + rueda para hacer zoom en el mapa',
+	coopMobile: 'Usa dos dedos para mover el mapa',
 };
 
 const title = 'Mapa de la red inmobiliaria - todas las propiedades, en 3D | PropertyList';
 const description =
-	'Un mapa 3D en directo de todas las viviendas de la red de PropertyList en Espana y Portugal. Gira el globo, baja hasta la Costa del Sol y consulta el numero de anuncios, los precios medios, el precio por m2 y el precio verificado ante notario que pagaron de verdad los compradores.';
+	'Un mapa 3D en directo de todas las viviendas de la red de PropertyList en España y Portugal. Gira el globo, baja hasta la Costa del Sol y consulta el número de anuncios, los precios medios, el precio por m2 y el precio verificado ante notario que pagaron de verdad los compradores.';
 
 // read per render, not via a process-lifetime ESM import - see src/lib/mapData.ts
 const data: any = readMapJson('map-data.json');
@@ -197,7 +202,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 							<tr>
 								<th scope="row">{r}</th>
 								<td class="n">{n.toLocaleString('es-ES')}</td>
-								<td class="n">{totalListings ? ((n / totalListings) * 100).toFixed(1) + '%' : '-'}</td>
+								<td class="n">{totalListings ? ((n / totalListings) * 100).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '-'}</td>
 							</tr>
 						))}
 					</tbody>

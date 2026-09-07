@@ -8,6 +8,7 @@ Guards:
 Both are recorded on the feature so the UI can explain absence honestly.
 """
 import io, json, os, time, urllib.request
+import atomicjson
 
 ROOT = "/opt/info-hub"
 UA = "PropertyList-map/1.0 (+https://info.propertylist.es/map)"
@@ -65,7 +66,7 @@ def main():
             p["vwhy"] = "none"
             none += 1
         time.sleep(0.3)
-    json.dump(cj, io.open(cp, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    atomicjson.dump(cj, cp)
     d = os.path.join(ROOT, "dist/client/map/cities.json")
     if os.path.isdir(os.path.dirname(d)):
         json.dump(cj, io.open(d, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))

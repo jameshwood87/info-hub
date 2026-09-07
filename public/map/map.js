@@ -8,7 +8,7 @@
 	var ALIAS = { 'Benahavís': 'Benahavis', 'Benalmádena': 'Benalmadena' };
 
 	var SIGNUP = window.__PLSIGNUP__ || 'https://agents.propertylist.es/new_agency/new?locale=en';
-	var T = window.__PLTEXT__ || {
+	var TDEFAULTS = {
 		thin: 'List them free, forever. Your properties reach every agent on the network.',
 		cta: 'List for free',
 		thinTitle: 'Room for another agency',
@@ -26,10 +26,20 @@
 		agenciesHere: 'Agencies listing here',
 		askPre: 'Do you list in ',
 		askPost: '?',
+		viewFlat: 'Flat view',
+		view3d: '3D view',
+		coopWin: 'Use Ctrl + scroll to zoom the map',
+		coopMac: 'Use Command + scroll to zoom the map',
+		coopMobile: 'Use two fingers to move the map',
 		cov: 'listed per 10,000 residents',
 		popLbl: 'Population',
 		gapThin: 'Barely covered for a place this size.'
 	};
+	// map.js ships as a copied file while MAPTEXT needs an Astro build, so the two can
+	// be out of step. Merge key by key: a page that predates a new string degrades to
+	// English for that one key instead of rendering the word "undefined" at a visitor.
+	var T = window.__PLTEXT__ || {};
+	for (var _k in TDEFAULTS) { if (!T[_k]) T[_k] = TDEFAULTS[_k]; }
 	var LOC = T.loc || 'en-GB';
 	var el = document.getElementById('map');
 	var panel = document.getElementById('panel');
@@ -57,7 +67,14 @@
 		bearing: 0,
 		antialias: true,
 		attributionControl: false,
-		cooperativeGestures: true
+		cooperativeGestures: true,
+		// the overlay these produce is shown by the exact gesture a Spanish mobile
+		// visitor is most likely to make, so it cannot stay English-only
+		locale: {
+			'CooperativeGesturesHandler.WindowsHelpText': T.coopWin,
+			'CooperativeGesturesHandler.MacHelpText': T.coopMac,
+			'CooperativeGesturesHandler.MobileHelpText': T.coopMobile
+		}
 	});
 	try { map.setProjection({ type: 'globe' }); } catch (e) {}
 	window.__PLMAPOBJ__ = map;
@@ -176,8 +193,14 @@
 	function ramp(key) {
 		var s = stats(key);
 		var cols = ['#0d5f57', '#12907f', '#17b39c', '#42d6bd', '#7deede'];
-		var e = ['interpolate', ['linear'], ['coalesce', ['feature-state', key], s.lo]];
-		for (var i = 0; i < cols.length; i++) e.push(s.lo + ((s.hi - s.lo) * i) / (cols.length - 1), cols[i]);
+		// interpolate stops must be strictly ascending. When every municipality shares a
+		// value - two tie, or all but one verified figure drops out for a night - lo and hi
+		// are equal, every stop is identical, and MapLibre silently discards the whole
+		// paint update, leaving the previous chip's colours under a legend that says
+		// otherwise. Nudge the top so the array is always valid.
+		var lo = s.lo, hi = s.hi > s.lo ? s.hi : s.lo + 1;
+		var e = ['interpolate', ['linear'], ['coalesce', ['feature-state', key], lo]];
+		for (var i = 0; i < cols.length; i++) e.push(lo + ((hi - lo) * i) / (cols.length - 1), cols[i]);
 		return e;
 	}
 
@@ -194,6 +217,8 @@
 			gapStep(['coalesce', ['feature-state', 'p10'], 0])];
 	}
 	var DOTCOLOR = ['case', ['>=', ['get', 'n'], 100], '#7deede', ['>=', ['get', 'n'], 20], '#2fe3cb', '#0affd8'];
+	// built once the town data is loaded, because the ranges come from the data itself
+	var DOTPSM = null, DOTVER = null;
 	var DOTGAP = ['case',
 		['<', ['get', 'n'], GAPMIN], GAPGREY,
 		['<', ['coalesce', ['get', 'p10'], -1], 0], GAPGREY,
@@ -312,6 +337,28 @@
 			// Features arrive topmost-first, and cities.json is written largest-n first, so the
 			// TOP feature is the smallest town - clicking the big Sotogrande dot used to open
 			// "Guadiaro, 1 home listed". Pick the most significant town under the cursor instead.
+			// The price chips used to recolour only the 8 polygons, so 185 of 210 features
+			// kept their listing-count colours while the legend claimed they showed price.
+			function dotRamp(prop) {
+				var vals = [];
+				cj.features.forEach(function (f) {
+					if (f.properties.inside === true) return;
+					var v = f.properties[prop];
+					if (typeof v === 'number' && v > 0) vals.push(v);
+				});
+				if (vals.length < 2) return null;
+				vals.sort(function (a, b) { return a - b; });
+				var lo = vals[0], hi = vals[vals.length - 1];
+				if (hi <= lo) hi = lo + 1;
+				var cols = ['#0d5f57', '#12907f', '#17b39c', '#42d6bd', '#7deede'];
+				var e = ['interpolate', ['linear'], ['get', prop]];
+				for (var i = 0; i < cols.length; i++) e.push(lo + ((hi - lo) * i) / (cols.length - 1), cols[i]);
+				// a town with no figure for this metric is grey, not the bottom of the ramp
+				return ['case', ['<', ['coalesce', ['get', prop], -1], 0], GAPGREY, e];
+			}
+			DOTPSM = dotRamp('psm');
+			DOTVER = dotRamp('v');
+
 			map.on('click', 'city-hit', function (e) {
 				userPicked = true;
 				clearSel();
@@ -365,7 +412,7 @@
 		var thin = p10 < GAPSTOPS[1];
 		return '<div style="margin-top:13px;padding:11px 12px;border-radius:10px;background:'
 			+ (thin ? '#fff5f2' : '#f4f8f9') + ';border:1px solid ' + (thin ? '#f6d9d0' : '#e6eef0') + '">'
-			+ '<strong style="font-size:18px;color:#0b1b22">' + p10 + '</strong> '
+			+ '<strong style="font-size:18px;color:#0b1b22">' + Number(p10).toLocaleString(LOC) + '</strong> '
 			+ '<span style="font-size:13px;color:#5b6b73">' + T.cov + '</span>'
 			+ '<span style="display:block;font-size:12px;color:#8aa0a6;margin-top:2px">' + T.popLbl + ' '
 			+ Number(pop).toLocaleString(LOC) + (thin ? ' \u00b7 ' + T.gapThin : '') + '</span></div>';
@@ -450,7 +497,11 @@
 				map.setPaintProperty('muni-3d', 'fill-color', current === 'gap' ? gapPaint() : ramp(cfg.key));
 			}
 			if (map.getLayer('city-dots')) {
-				map.setPaintProperty('city-dots', 'circle-color', current === 'gap' ? DOTGAP : DOTCOLOR);
+				var dc = DOTCOLOR;
+				if (current === 'gap') dc = DOTGAP;
+				else if (current === 'psm' && DOTPSM) dc = DOTPSM;
+				else if (current === 'verified' && DOTVER) dc = DOTVER;
+				map.setPaintProperty('city-dots', 'circle-color', dc);
 			}
 			var lab = document.getElementById('legendlabel');
 			if (lab) lab.textContent = cfg.label;
@@ -460,7 +511,7 @@
 	if (flat) flat.addEventListener('click', function () {
 		var is3d = map.getPitch() > 5;
 		map.easeTo({ pitch: is3d ? 0 : 50, bearing: is3d ? 0 : -14, duration: 700 });
-		flat.textContent = is3d ? '3D view' : 'Flat view';
+		flat.textContent = is3d ? T.view3d : T.viewFlat;
 	});
 	var home = document.getElementById('homebtn');
 	if (home) home.addEventListener('click', function () { userPicked = true; cancelIntro(); map.fitBounds(COAST, { padding: 30, pitch: 46, bearing: -18, duration: 1400 }); });

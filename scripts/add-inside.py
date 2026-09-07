@@ -11,6 +11,7 @@ single dot vanished instead. It is now part of post_passes() in build-cities.py 
 run BEFORE add-verified.py and add-population.py, both of which skip 'inside' features.
 """
 import io, json, os, sys
+import atomicjson
 
 ROOT = "/opt/info-hub"
 OUTDIRS = [ROOT + "/public/map", ROOT + "/dist/client/map"]
@@ -87,8 +88,7 @@ def main():
 
     for d in OUTDIRS:
         if os.path.isdir(d):
-            json.dump(cj, io.open(os.path.join(d, "cities.json"), "w", encoding="utf-8"),
-                      ensure_ascii=False, separators=(",", ":"))
+            atomicjson.dump(cj, os.path.join(d, "cities.json"))
 
     total = len(cj["features"])
     listings_in = sum(f["properties"]["n"] for f in cj["features"] if f["properties"]["inside"])

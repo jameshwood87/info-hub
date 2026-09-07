@@ -1,4 +1,7 @@
 import urllib.request, json, time, sys
+import datetime as _dt
+print('=== RUN STARTED %s UTC ===' % _dt.datetime.now(_dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S'), flush=True)
+import atomicjson
 UA="PropertyList-map/1.0 (+https://info.propertylist.es/map)"
 MCP="https://mcp.propertylist.es/mcp"
 def mcp(tool,args,tries=3):
@@ -36,8 +39,14 @@ for m in MUNIS:
     print("%-12s sale=%-5s rent=%-4s hol=%-4s agencies=%-3s verified=%s"%(m,rec["ops"].get("sale",{}).get("n"),rec["ops"].get("rent",{}).get("n"),rec["ops"].get("holiday",{}).get("n"),rec["agencies"]["count"],(rec.get("verified") or {}).get("psm")),flush=True)
     time.sleep(0.5)
 import os
+# If the MCP was unreachable, every municipality's ops is empty. Writing that would
+# overwrite a perfectly good file with nothing, in both the public and dist copies, and
+# the page would show a map with no figures. build-cities.py already guards this case.
+if not any((rec.get("ops") or {}) for rec in out["municipalities"].values()):
+    print("MCP returned nothing for any municipality - keeping the previous map-data.json", flush=True)
+    raise SystemExit(1)
 for d in ["/opt/info-hub/public/map","/opt/info-hub/dist/client/map"]:
-    if os.path.isdir(d): json.dump(out,open(d+"/map-data.json","w"),separators=(",",":"))
+    if os.path.isdir(d): atomicjson.dump(out, d + "/map-data.json")
 print("\nwrote map-data.json")
 
 # refresh cities.json from the Website API (all listings, geocode cache is static)

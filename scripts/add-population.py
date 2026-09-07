@@ -14,6 +14,7 @@ within MAX_KM of the matched municipality centre, so a coincidental name match i
 province cannot silently produce a wrong population.
 """
 import io, json, math, os, re, subprocess, sys, time, unicodedata
+import atomicjson
 
 ROOT = "/opt/info-hub"
 OUTDIRS = [ROOT + "/public/map", ROOT + "/dist/client/map"]
@@ -168,8 +169,7 @@ def main():
         hit += 1
     for d in OUTDIRS:
         if os.path.isdir(d):
-            json.dump(md, io.open(os.path.join(d, "map-data.json"), "w", encoding="utf-8"),
-                      ensure_ascii=False, separators=(",", ":"))
+            atomicjson.dump(md, os.path.join(d, "map-data.json"))
     print("municipalities matched: %d/%d" % (hit, len(md.get("municipalities", {}))))
 
     # --- the town dots, joined on name + proximity ---
@@ -199,8 +199,7 @@ def main():
         matched += 1
     for d in OUTDIRS:
         if os.path.isdir(d):
-            json.dump(cj, io.open(os.path.join(d, "cities.json"), "w", encoding="utf-8"),
-                      ensure_ascii=False, separators=(",", ":"))
+            atomicjson.dump(cj, os.path.join(d, "cities.json"))
     drawn = len([f for f in cj["features"] if not f["properties"].get("inside")])
     print("town dots: %d matched, %d rejected on distance, %d not a municipality name (of %d drawn)"
           % (matched, far, nomatch, drawn))

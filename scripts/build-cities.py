@@ -10,6 +10,7 @@ Writes to public/map/ and, if present, the live dist/client/map/ so the page upd
 without a rebuild. Run nightly from build-map-data.py.
 """
 import json, os, time, urllib.request, urllib.parse, collections, statistics, sys
+import atomicjson
 
 ROOT = "/opt/info-hub"
 ENV = os.path.join(ROOT, ".env")
@@ -150,7 +151,7 @@ def main():
     payload = {"type": "FeatureCollection", "features": feats}
     for d in OUTDIRS:
         if os.path.isdir(d):
-            json.dump(payload, open(os.path.join(d, "cities.json"), "w", encoding="utf-8"), separators=(",", ":"))
+            atomicjson.dump(payload, os.path.join(d, "cities.json"))
     print("towns %d | listings placed %d/%d (%.1f%%)" % (len(feats), placed, total_n, 100.0 * placed / max(total_n, 1)))
     return 0
 

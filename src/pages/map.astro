@@ -36,6 +36,11 @@ const MAPTEXT = {
 	agenciesHere: 'Agencies listing here',
 	askPre: 'Do you list in ',
 	askPost: '?',
+	viewFlat: 'Flat view',
+	view3d: '3D view',
+	coopWin: 'Use Ctrl + scroll to zoom the map',
+	coopMac: 'Use Command + scroll to zoom the map',
+	coopMobile: 'Use two fingers to move the map',
 };
 
 const title = 'Property network map - every listing, in 3D | PropertyList';
@@ -196,7 +201,7 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 							<tr>
 								<th scope="row">{r}</th>
 								<td class="n">{n.toLocaleString('en-GB')}</td>
-								<td class="n">{totalListings ? ((n / totalListings) * 100).toFixed(1) + '%' : '-'}</td>
+								<td class="n">{totalListings ? ((n / totalListings) * 100).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '-'}</td>
 							</tr>
 						))}
 					</tbody>
