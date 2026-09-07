@@ -13,7 +13,7 @@ Municipalities join on the INE code. Town dots join on a normalised name AND mus
 within MAX_KM of the matched municipality centre, so a coincidental name match in another
 province cannot silently produce a wrong population.
 """
-import io, json, math, os, re, subprocess, sys, time, unicodedata
+import io, json, math, os, re, subprocess, sys, time, unicodedata, urllib.parse
 import atomicjson
 
 ROOT = "/opt/info-hub"
@@ -147,6 +147,40 @@ def load_population():
     return c
 
 
+
+REVCACHE = ROOT + "/scripts/revgeocache.json"
+
+
+def reverse_municipality(lon, lat, cache):
+    """Ask OSM which municipality actually contains this point.
+
+    Used only for dots whose name matched no municipality. Guessing a parent by name would
+    risk attaching the wrong population, and a wrong coverage figure is worse than none.
+    """
+    key = "%.4f,%.4f" % (lon, lat)
+    if key in cache:
+        return cache[key]
+    url = ("https://nominatim.openstreetmap.org/reverse?"
+           + urllib.parse.urlencode({"lat": lat, "lon": lon, "format": "json",
+                                     "zoom": 10, "addressdetails": 1}))
+    val = None
+    try:
+        r = subprocess.run(["curl", "-sS", "--max-time", "25",
+                            "-H", "User-Agent: PropertyList-map/1.0", url],
+                           capture_output=True)
+        if r.returncode == 0 and r.stdout.strip().startswith(b"{"):
+            a = (json.loads(r.stdout.decode()) or {}).get("address") or {}
+            for f in ("municipality", "city", "town", "village", "county"):
+                if a.get(f):
+                    val = a[f]
+                    break
+    except Exception:
+        val = None
+    cache[key] = val
+    time.sleep(1.05)   # Nominatim usage policy
+    return val
+
+
 def per10k(n, pop):
     return round(n / pop * 10000.0, 1) if pop else None
 
@@ -172,37 +206,80 @@ def main():
             atomicjson.dump(md, os.path.join(d, "map-data.json"))
     print("municipalities matched: %d/%d" % (hit, len(md.get("municipalities", {}))))
 
-    # --- the town dots, joined on name + proximity ---
+    # --- the town dots: resolve each to a real municipality, then measure per municipality ---
     cp = os.path.join(OUTDIRS[0], "cities.json")
     cj = json.load(io.open(cp, encoding="utf-8"))
-    matched = far = nomatch = 0
+    try:
+        revcache = json.load(io.open(REVCACHE, encoding="utf-8"))
+    except Exception:
+        revcache = {}
+    before_cache = len(revcache)
+
+    matched = far = nomatch = viarev = 0
     for f in cj["features"]:
         p = f["properties"]
-        p.pop("pop", None)
-        p.pop("p10", None)
+        for k in ("pop", "p10", "covArea"):
+            p.pop(k, None)
         if p.get("inside"):
             continue
-        r = None
+        lon, lat = f["geometry"]["coordinates"]
+
+        rec = None
         for k in keys(p["city"]):
             if k in by_name:
-                r = by_name[k]
-                break
-        if not r:
+                cand = by_name[k]
+                if km(lon, lat, cand["lon"], cand["lat"]) <= MAX_KM:
+                    rec = cand
+                    break
+                far += 1
+
+        # the name told us nothing useful - ask what actually contains this point
+        if rec is None:
+            muni = reverse_municipality(lon, lat, revcache)
+            if muni:
+                for k in keys(muni):
+                    if k in by_name:
+                        rec = by_name[k]
+                        viarev += 1
+                        break
+
+        if rec is None:
             nomatch += 1
             continue
-        lon, lat = f["geometry"]["coordinates"]
-        if km(lon, lat, r["lon"], r["lat"]) > MAX_KM:
-            far += 1          # same name, different province - not our town
-            continue
-        p["pop"] = r["pop"]
-        p["p10"] = per10k(p["n"], r["pop"])
+        p["pop"] = rec["pop"]
+        p["covArea"] = rec["name"]
         matched += 1
+
+    if len(revcache) != before_cache:
+        json.dump(revcache, io.open(REVCACHE, "w", encoding="utf-8"), ensure_ascii=False)
+        print("reverse-geocoded %d new points" % (len(revcache) - before_cache))
+
+    # Coverage belongs to a municipality, not to a dot. Sum every dot that resolves to the
+    # same municipality, plus that municipality's own polygon count where it has one, and
+    # measure the total against one population.
+    totals = {}
+    for f in cj["features"]:
+        p = f["properties"]
+        if p.get("inside") or not p.get("covArea"):
+            continue
+        totals[p["covArea"]] = totals.get(p["covArea"], 0) + (p.get("n") or 0)
+    for name, rec in md.get("municipalities", {}).items():
+        r = by_ine.get(str(rec.get("ine") or "")) or by_name.get(norm(name))
+        if r and r["name"] in totals:
+            totals[r["name"]] += (rec.get("ops", {}).get("sale") or {}).get("n") or 0
+
+    for f in cj["features"]:
+        p = f["properties"]
+        if p.get("inside") or not p.get("covArea"):
+            continue
+        p["p10"] = per10k(totals.get(p["covArea"], p.get("n") or 0), p["pop"])
+
     for d in OUTDIRS:
         if os.path.isdir(d):
             atomicjson.dump(cj, os.path.join(d, "cities.json"))
     drawn = len([f for f in cj["features"] if not f["properties"].get("inside")])
-    print("town dots: %d matched, %d rejected on distance, %d not a municipality name (of %d drawn)"
-          % (matched, far, nomatch, drawn))
+    print("town dots: %d measured (%d of them resolved by reverse geocoding), "
+          "%d still unidentifiable (of %d drawn)" % (matched, viarev, nomatch, drawn))
 
     rows = [f["properties"] for f in cj["features"] if f["properties"].get("p10") is not None]
     rows += [dict(city=k, n=(v.get("ops", {}).get("sale") or {}).get("n") or 0,

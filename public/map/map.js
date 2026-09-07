@@ -407,7 +407,7 @@
 	}
 
 	// ---- panel ----
-	function covBlock(pop, p10) {
+	function covBlock(pop, p10, area) {
 		if (typeof p10 !== 'number' || !pop) return '';
 		var thin = p10 < GAPSTOPS[1];
 		return '<div style="margin-top:13px;padding:11px 12px;border-radius:10px;background:'
@@ -415,7 +415,9 @@
 			+ '<strong style="font-size:18px;color:#0b1b22">' + Number(p10).toLocaleString(LOC) + '</strong> '
 			+ '<span style="font-size:13px;color:#5b6b73">' + T.cov + '</span>'
 			+ '<span style="display:block;font-size:12px;color:#8aa0a6;margin-top:2px">' + T.popLbl + ' '
-			+ Number(pop).toLocaleString(LOC) + (thin ? ' \u00b7 ' + T.gapThin : '') + '</span></div>';
+			+ Number(pop).toLocaleString(LOC)
+			+ (area ? ' \u00b7 ' + T.covIn + ' ' + area : '')
+			+ (thin ? ' \u00b7 ' + T.gapThin : '') + '</span></div>';
 	}
 	function lbl(t, v) {
 		return '<div><span style="display:block;font-size:11.5px;color:#8aa0a6;text-transform:uppercase;letter-spacing:.6px">' + t + '</span><strong>' + v + '</strong></div>';
@@ -476,7 +478,8 @@
 			var why = p.vwhy === 'pt' ? T.whyPt : (p.vwhy === 'thin' ? T.whyThin : T.whyNone);
 			h += '<p style="margin-top:13px;font-size:12.5px;color:#8aa0a6;line-height:1.5">' + why + '</p>';
 		}
-		h += covBlock(p.pop, Number(p.n) >= GAPMIN ? p.p10 : null);
+		h += covBlock(p.pop, Number(p.n) >= GAPMIN ? p.p10 : null,
+			p.covArea && p.covArea !== p.city ? p.covArea : null);
 		if (Number(p.n) < GAPMIN || (typeof p.p10 === 'number' && p.p10 < GAPSTOPS[1])) {
 			h += '<div style="margin-top:15px;padding:13px;border-radius:10px;background:#f0faf8;border:1px solid #d6ede8">';
 			h += '<strong style="display:block;font-size:14px;color:#0b1b22;margin-bottom:3px">' + T.askPre + p.city + T.askPost + '</strong>';
