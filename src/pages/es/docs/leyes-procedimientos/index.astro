@@ -29,6 +29,34 @@ const toSeg = (path: string) => {
 
 const titleCase = (s: string) => s.replace(/[_-]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
 
+const segmentLabels: Record<string, string> = {
+	'listing-a-property-what-to-know': 'Publicar una propiedad: lo que debes saber',
+	'buying-a-property': 'Comprar una propiedad',
+	'selling-a-property': 'Vender una propiedad',
+	'renovating-a-property': 'Reformar una propiedad',
+	'building-a-property': 'Construir una propiedad',
+	'renting-a-property': 'Alquilar una propiedad',
+	'traspaso-business-transfer': 'Traspaso de negocio',
+	'property-taxes-in-andalucia': 'Impuestos sobre la propiedad en Andalucía',
+	'inheritance-laws-in-andalucia': 'Herencias en Andalucía',
+	'property-insurance-in-andalucia': 'Seguros de hogar en Andalucía',
+};
+
+const segmentDescriptions: Record<string, string> = {
+	'listing-a-property-what-to-know': 'Qué preparar antes de sacar una propiedad al mercado.',
+	'buying-a-property': 'Guías para compradores: comprobaciones, contratos y plazos.',
+	'selling-a-property': 'Guías para vendedores: papeleo, proceso y costes.',
+	'renovating-a-property': 'Reformas: normativa, cumplimiento y pasos prácticos.',
+	'building-a-property': 'Obra nueva: licencias, normativa y planificación del proyecto.',
+	'renting-a-property': 'Alquileres: obligaciones del propietario, derechos del inquilino e impuestos.',
+	'traspaso-business-transfer': 'El traspaso: cómo funciona y qué conviene comprobar.',
+	'property-taxes-in-andalucia': 'Impuestos y costes recurrentes de tener una propiedad.',
+	'inheritance-laws-in-andalucia': 'Herencias: pasos legales y errores frecuentes.',
+	'property-insurance-in-andalucia': 'Tipos de seguro, coberturas y qué preguntar.',
+};
+
+const segLabel = (s: string) => segmentLabels[s] || titleCase(s);
+
 const grouped = new Map<string, typeof items>();
 const segMeta = new Map<string, { count: number; hasChildren: boolean }>();
 
@@ -79,8 +107,8 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/docs/laws-procedures/' },
 	]}
 >
-	<h1>Docs Leyes y Procedimientos</h1>
-	<p class="sub">Explora por tema o empieza con las guías populares.</p>
+	<h1>LEYES Y PROCEDIMIENTOS</h1>
+	<p class="sub">Guías sobre leyes, trámites, impuestos, alquileres y normativa inmobiliaria en España. Explora por tema o empieza con las guías populares.</p>
 
 	{singlePages.length ? (
 		<section class="popular">
@@ -104,7 +132,8 @@ const cleanTitle = (t: string) => decodeHtmlEntities(stripSuffix(t)).trim();
 				return (
 					<section class="card">
 						<div class="cardHeader">
-							<h3>{titleCase(seg)}</h3>
+							<h3>{segLabel(seg)}</h3>
+							{segmentDescriptions[seg] ? <p class="rowDesc">{segmentDescriptions[seg]}</p> : null}
 						</div>
 						{listItems.length ? (
 							<ul class="mini">
