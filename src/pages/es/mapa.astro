@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { readMapJson } from '../../lib/mapData';
 
 // Live network map. map-data.json (8 deep-coverage municipalities) is rebuilt nightly by
 // scripts/build-map-data.py. cities.json holds every listing's town, geocoded once.
@@ -41,16 +42,9 @@ const title = 'Mapa de la red inmobiliaria - todas las propiedades, en 3D | Prop
 const description =
 	'Un mapa 3D en directo de todas las viviendas de la red de PropertyList en Espana y Portugal. Gira el globo, baja hasta la Costa del Sol y consulta el numero de anuncios, los precios medios, el precio por m2 y el precio verificado ante notario que pagaron de verdad los compradores.';
 
-let data: any = null;
-let cities: any = null;
-try {
-	const raw = await import('../../../public/map/map-data.json');
-	data = raw.default ?? raw;
-} catch (e) {}
-try {
-	const raw = await import('../../../public/map/cities.json');
-	cities = raw.default ?? raw;
-} catch (e) {}
+// read per render, not via a process-lifetime ESM import - see src/lib/mapData.ts
+const data: any = readMapJson('map-data.json');
+const cities: any = readMapJson('cities.json');
 
 const munis = data?.municipalities ?? {};
 const rows = Object.entries(munis)

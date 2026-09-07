@@ -46,6 +46,12 @@ def main():
             p["vwhy"] = "pt"
             pt += 1
             continue
+        # clear first, then set - otherwise a town that once verified keeps its old
+        # price forever, and map.js checks `if (p.v)` before the vwhy explanation, so the
+        # stale figure wins. Same pattern as add-inside.py and add-population.py.
+        p.pop("v", None)
+        p.pop("vn", None)
+        p.pop("vwhy", None)
         r = mcp(p["city"])
         o = (r or {}).get("oracle") or {}
         if o.get("verified") and (o.get("sample_size") or 0) >= MIN_SAMPLE:
