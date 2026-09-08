@@ -33,7 +33,21 @@ import Layout from '../../layouts/Layout.astro';
 	const csrf = (document.cookie.match(/(?:^|;\s*)pl_admin_csrf=([^;]+)/) || [])[1] || '';
 	let DATA = { reports: [], repeats: [] };
 
-	const badge = (r) => r.flagCount >= 2 ? `<span class="flag">⚠ reported ${r.flagCount}x</span>` : '';
+	// mirrors src/lib/reportTaxonomy.ts - keep the two in step
+	const CATS = [
+		['damage', 'Damage to property'], ['work-quality', 'Poor workmanship'],
+		['no-show', 'Did not turn up'], ['refusal-to-remedy', 'Refused to put it right'],
+		['rudeness', 'Rude or abusive'], ['threats', 'Threats or intimidation'],
+		['overcharging', 'Overcharging'], ['non-payment', 'Did not pay'],
+		['misrepresentation', 'Misrepresented service'], ['unlicensed', 'Unlicensed or uninsured'],
+		['data-misuse', 'Misused contacts or data'], ['fraud', 'Took money, did not deliver'],
+	];
+
+	const badge = (r) => {
+		if (r.contactCount >= 2) return `<span class="flag">⚠ same contact reported ${r.contactCount}x</span>`;
+		if (r.flagCount >= 2) return `<span class="flag warnSoft">⚠ name reported ${r.flagCount}x - name only, confirm the contact</span>`;
+		return '';
+	};
 	const statusPill = (s) => `<span class="pill p-${s}">${s}</span>`;
 
 	const card = (r) => `<div class="rep" data-id="${esc(r.id)}">
@@ -47,6 +61,18 @@ import Layout from '../../layouts/Layout.astro';
 			${r.when ? `<span><b>When:</b> ${esc(r.when)}</span>` : ''}
 			${r.evidence ? `<span><b>Evidence:</b> ${esc(r.evidence)}</span>` : ''}
 			${(r.reporterName || r.reporterEmail) ? `<span><b>Reporter:</b> ${esc(r.reporterName || '')} ${r.reporterEmail ? `&lt;${esc(r.reporterEmail)}&gt;` : ''}</span>` : ''}
+		</div>
+		<div class="tagrow">
+			${CATS.map(([id, label]) => `<label class="tag${(r.categories || []).includes(id) ? ' on' : ''}">
+				<input type="checkbox" data-cat="${id}"${(r.categories || []).includes(id) ? ' checked' : ''}> ${label}
+			</label>`).join('')}
+		</div>
+		<div class="contactrow">
+			<label>Contact (WhatsApp number, CIF or email) - this is what repeat detection matches on
+				<input class="contact" type="text" value="${esc(r.contact || '')}" placeholder="e.g. 612345678 or B12345678">
+			</label>
+			<button data-act="savemeta">Save tags and contact</button>
+			<span class="metamsg"></span>
 		</div>
 		<div class="acts">
 			<button data-act="reviewing">Reviewing</button>
@@ -88,6 +114,20 @@ import Layout from '../../layouts/Layout.astro';
 			return;
 		}
 		msg.textContent = 'saving…';
+		if (action === 'savemeta') {
+			const card = e.target.closest('.rep');
+			const cats = [...card.querySelectorAll('[data-cat]')].filter((c) => c.checked).map((c) => c.dataset.cat);
+			const contact = card.querySelector('.contact').value.trim();
+			const out = card.querySelector('.metamsg');
+			out.textContent = 'saving...';
+			if (await act(id, { categories: cats, contact })) {
+				const r = DATA.reports.find((x) => x.id === id);
+				if (r) { r.categories = cats; r.contact = contact; }
+				out.textContent = 'saved';
+				setTimeout(() => location.reload(), 600);   // repeat counts are computed server-side
+			} else out.textContent = 'failed';
+			return;
+		}
 		if (await act(id, { status: action })) { const r = DATA.reports.find((x) => x.id === id); if (r) r.status = action; render(); } else msg.textContent = 'failed';
 	});
 	$('statusFilter')?.addEventListener('change', render);
@@ -107,6 +147,15 @@ import Layout from '../../layouts/Layout.astro';
 	.title h1 { margin: 4px 0 0; font-size: 26px; letter-spacing: -0.02em; }
 	.back { font-size: 13px; color: rgba(16,24,40,0.6); text-decoration: none; }
 	.hint { font-size: 12.5px; color: rgba(16,24,40,0.55); }
+	.tagrow { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; }
+	.tag { font-size: 12.5px; border: 1px solid #e2eaec; border-radius: 999px; padding: 4px 10px; color: #5b6b73; cursor: pointer; user-select: none; }
+	.tag.on { border-color: #00ae9a; color: #0b1b22; background: #f0faf8; }
+	.tag input { margin-right: 5px; vertical-align: middle; }
+	.contactrow { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+	.contactrow label { font-size: 12px; color: #5b6b73; display: block; }
+	.contactrow input { display: block; margin-top: 4px; padding: 7px 10px; border: 1px solid #d5e2e0; border-radius: 8px; font-size: 14px; min-width: 280px; }
+	.metamsg { font-size: 12.5px; color: #00867a; }
+	.warnSoft { background: #fff8ec !important; color: #8a6a2f !important; }
 	.status { padding: 14px; border: 1px solid rgba(16,24,40,0.12); border-radius: 12px; background: #fff; font-size: 14px; }
 	.muted { color: rgba(16,24,40,0.5); }
 	.repeatBox { background: radial-gradient(600px 160px at 15% 0%, rgba(220,38,38,0.10), #fff); border: 1px solid rgba(220,38,38,0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }

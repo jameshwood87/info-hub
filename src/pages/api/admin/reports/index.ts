@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import fs from 'node:fs/promises';
 import { assertAdmin, assertCsrf } from '../../../../lib/adminAuth';
+import { CATEGORY_IDS, contactKey } from '../../../../lib/reportTaxonomy';
 
 const STORE = '/opt/info-hub/var/admin/issue-reports.json';
 const json = (status: number, body: any) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
@@ -30,8 +31,24 @@ export const GET: APIRoute = async ({ request }) => {
 		const k = norm(r.subject);
 		if (k) counts[k] = (counts[k] || 0) + 1;
 	}
+	// A shared CONTACT is a real pattern; a shared name may just be a generic trading name,
+	// so the two are counted separately and the UI can say which it found.
+	const contactCounts: Record<string, number> = {};
+	for (const r of all) {
+		const k = contactKey(r.contact);
+		if (k) contactCounts[k] = (contactCounts[k] || 0) + 1;
+	}
 	const enriched = all
-		.map((r) => ({ ...r, flagKey: norm(r.subject), flagCount: norm(r.subject) ? counts[norm(r.subject)] : 1 }))
+		.map((r) => {
+			const ck = contactKey(r.contact);
+			return {
+				...r,
+				flagKey: norm(r.subject),
+				flagCount: norm(r.subject) ? counts[norm(r.subject)] : 1,
+				contactKey: ck,
+				contactCount: ck ? contactCounts[ck] : 0,
+			};
+		})
 		.sort((a, b) => String(b.at).localeCompare(String(a.at)));
 	const repeats = Object.entries(counts)
 		.filter(([, n]) => n >= 2)
@@ -60,6 +77,11 @@ export const POST: APIRoute = async ({ request }) => {
 		if (!r) return json(404, { ok: false, error: 'not_found' });
 		if (['new', 'reviewing', 'actioned', 'dismissed'].includes(status)) r.status = status;
 		if (note) r.note = note;
+		// categories are set on review, never by the reporter - see src/lib/reportTaxonomy.ts
+		if (Array.isArray(body?.categories)) {
+			r.categories = body.categories.filter((c: any) => CATEGORY_IDS.includes(String(c))).slice(0, 12);
+		}
+		if (typeof body?.contact === 'string') r.contact = body.contact.trim().slice(0, 120);
 		r.decidedAt = new Date().toISOString();
 		await writeAll(all);
 		return json(200, { ok: true, status: r.status });
