@@ -10,6 +10,7 @@ import { getKbTreeOrderSnapshot } from '../../lib/kbTreeOrder';
 import { getKbMeta } from '../../lib/adminMeta';
 import { searchProperties, enrichListingPrices, type MarketListing } from '../../lib/marketData';
 import PropertyCard from '../../components/PropertyCard.astro';
+import DocLightbox from '../../components/DocLightbox.astro';
 import { listPrefixRedirects } from '../../lib/kbRedirects';
 import { getTotalViewCounts } from '../../lib/weeklyViews';
 import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../lib/deepl';
@@ -2389,6 +2390,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			<div class="docMain">
 				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" /> : null}
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+				<DocLightbox lang="es" />
 				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
 					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Última revisión: {blogDateFmt.format(docReviewedDate)}</p>
 				) : null}

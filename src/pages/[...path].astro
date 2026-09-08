@@ -7,6 +7,7 @@ import { canonicalAreaPath, provinceForAreaSlug } from '../lib/areaProvince';
 import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
 import PropertyCard from '../components/PropertyCard.astro';
+import DocLightbox from '../components/DocLightbox.astro';
 import { searchProperties, enrichListingPrices, type MarketListing } from '../lib/marketData';
 import {
 	adminCreateKbPage,
@@ -3498,6 +3499,7 @@ const ldJson = JSON.stringify([
 				</style>
 
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+				<DocLightbox lang="en" />
 				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
 					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Last reviewed: {blogDateFmt.format(docReviewedDate)}</p>
 				) : null}
