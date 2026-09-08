@@ -241,8 +241,18 @@ const pickerLangs = [
 	...switchLangs,
 ];
 
-const enPath = isExtraLang ? (enHreflang ?? '/') : toEnglishSwitchPath(pathname);
-const esPath = isExtraLang ? (esHreflang ?? '/es/') : toSpanishSwitchPath(pathname);
+// Prefer the page's OWN declared hreflang over recomputing the path here.
+// The catch-all routes resolve the twin through wp-slug-map and only emit the
+// alternate after confirming the page actually exists, so their answer is
+// authoritative; this layout's mapPairs copy is a prefix map that cannot know
+// about translated per-page slugs and silently produced 404 hrefs for them.
+// Fall back to the computed path for pages that declare no alternate.
+const hrefPath = (u: string | undefined) => {
+	if (!u) return undefined;
+	try { return new URL(u).pathname; } catch { return u.startsWith('/') ? u : undefined; }
+};
+const enPath = isExtraLang ? (enHreflang ?? '/') : (hrefPath(enHreflang) ?? toEnglishSwitchPath(pathname));
+const esPath = isExtraLang ? (esHreflang ?? '/es/') : (hrefPath(esHreflang) ?? toSpanishSwitchPath(pathname));
 pickerLangs[0].href = enPath;
 pickerLangs[1].href = esPath;
 
