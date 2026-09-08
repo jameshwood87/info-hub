@@ -1520,7 +1520,7 @@ const blogSearchType = (() => {
 const blogListings: MarketListing[] = isBlogLike
 	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
 	: [];
-const blogPortalUrl = `https://www.propertylist.es/portal/${blogSearchType}/${stripAccentsBlog(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const blogPortalUrl = `https://propertylist.es/${blogSearchType}/${stripAccentsBlog(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
 const fmtEurBlog = (v: number | null) => (typeof v === 'number' && v > 0 ? `€${Math.round(v).toLocaleString('es-ES')}${blogSearchType === 'for-rent' ? '/mes' : ''}` : 'Precio a consultar');
 const blogTypeNoun = blogSearchType === 'for-rent' ? 'propiedad en alquiler' : blogSearchType === 'holiday-rentals' ? 'alquiler vacacional' : 'propiedad en venta';
 const blogCardTitle = (l: MarketListing) => `${l.bedrooms ? l.bedrooms + ' dorm. ' : ''}${blogTypeNoun}${l.suburb ? ` en ${l.suburb}` : ''}`.slice(0, 70);

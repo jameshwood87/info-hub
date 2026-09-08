@@ -1872,7 +1872,7 @@ const blogTypeNoun = blogSearchType === 'for-rent' ? 'property for rent' : blogS
 const blogListings: MarketListing[] = isBlogLike
 	? await searchProperties(blogPropertyLocation, blogSearchType, 8).then((ls) => (blogSearchType !== 'for-sale' ? enrichListingPrices(ls, 6) : [...ls.filter((l) => l.price), ...ls.filter((l) => !l.price)])).catch(() => [] as MarketListing[])
 	: [];
-const blogPortalUrl = `https://www.propertylist.es/en/portal/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const blogPortalUrl = `https://propertylist.es/en/${blogSearchType}/${stripAccents(blogPropertyLocation).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
 // live cards for the neighbourhood guide's right rail; kb-meta's
 // neighbourhoodListings has never been populated, so these come from the
 // same live search the blog aside uses

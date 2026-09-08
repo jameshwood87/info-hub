@@ -22,7 +22,17 @@ if (!MCP_KEY) {
 // A key that is set but rejected is the other half of the same trap: it fails
 // every call while looking configured. Warn once rather than on every render.
 let warnedAuth = false;
-const PORTAL_ORIGIN = 'https://www.propertylist.es';
+const PORTAL_ORIGIN = 'https://propertylist.es';
+
+// The MCP hands back absolute URLs on the www host, which 301s to the bare
+// host, and the house rule is never to publish a www link. Normalise what
+// comes in from the API rather than trusting it: same defensive class as the
+// host-less photo paths in bug #197.
+const canonicalPortalUrl = (u: string | null | undefined): string | null => {
+	const v = String(u || '').trim();
+	if (!v) return null;
+	return v.replace(/^https?:\/\/www\.propertylist\.es/i, PORTAL_ORIGIN);
+};
 
 export type SearchType = 'for-sale' | 'for-rent' | 'holiday-rentals';
 
@@ -212,7 +222,7 @@ export const searchProperties = async (
 	const props = Array.isArray(sc?.properties) ? sc.properties : [];
 	return props.map((p: any): MarketListing => {
 		const photo = String(p?.photo || '').trim();
-		const photoUrl = photo ? (/^https?:\/\//i.test(photo) ? photo : `${PORTAL_ORIGIN}${photo}`) : null;
+		const photoUrl = canonicalPortalUrl(photo ? (/^https?:\/\//i.test(photo) ? photo : `${PORTAL_ORIGIN}${photo}`) : null);
 		const locObj = p?.location && typeof p.location === 'object' ? p.location : {};
 		const id = num(p?.id);
 		return {
@@ -237,7 +247,7 @@ export const searchProperties = async (
 			lon: num(locObj?.longitude),
 			excerpt: p?.description_excerpt ? String(p.description_excerpt) : null,
 			photoUrl,
-			url: p?.url ? String(p.url) : id ? `${PORTAL_ORIGIN}/p/${id}` : null,
+			url: p?.url ? canonicalPortalUrl(String(p.url)) : id ? `${PORTAL_ORIGIN}/p/${id}` : null,
 			oracleVerified: Boolean(p?.oracle_verified),
 			oracleAttestationUrl: p?.oracle_attestation_url ? String(p.oracle_attestation_url) : null,
 		};
