@@ -101,18 +101,25 @@ const questions = queries
 const STOP = new Set(['the','and','for','are','can','how','what','which','with','you','your','from','that','this','does','did','was','were','has','have','get','not','all','any','its','who','when','where','why','will','should','que','los','las','del','por','para','como','una','uno','con','sobre','mas','muy','hay','ser','son']);
 const stem = (w) => (w.length > 5 ? w.slice(0, 5) : w);
 const keyset = (q) => new Set(words(q).filter((w) => !STOP.has(w)).map(stem));
+// Terms so common on this site that two queries sharing one tell us nothing.
+// Keeping them out of the MATCHING set stops them bridging unrelated intents.
+const WEAK = new Set(['prope','porta','list','listi','spain','spani','espan','inmob','marbe','malag','estep','casa','home','house','agent','agenc','costa','sol','del']);
 const clusters = [];
-for (const r of queries.filter((x) => x.impressions >= 3)) {
+for (const r of queries.filter((x) => x.impressions >= 3).sort((a, b) => b.impressions - a.impressions)) {
   const ks = keyset(r.q);
+  const strong = new Set([...ks].filter((k) => !WEAK.has(k)));
   if (ks.size < 2) continue;
   let hit = null;
   for (const c of clusters) {
-    let shared = 0;
-    for (const k of ks) if (c.keys.has(k)) shared++;
-    if (shared >= 2) { hit = c; break; }
+    // Match against the SEED only. Matching the accumulated union let A-B and
+    // B-C chain A and C together even when A and C share nothing.
+    let shared = 0, sharedStrong = 0;
+    for (const k of ks) if (c.seed.has(k)) { shared++; if (!WEAK.has(k)) sharedStrong++; }
+    // Two shared terms, at least one of them distinctive.
+    if (shared >= 2 && sharedStrong >= 1) { hit = c; break; }
   }
-  if (hit) { hit.queries.push(r); for (const k of ks) hit.keys.add(k); }
-  else clusters.push({ keys: ks, queries: [r] });
+  if (hit) hit.queries.push(r);
+  else clusters.push({ seed: ks, strong, queries: [r] });
 }
 const intents = clusters
   .filter((c) => c.queries.length >= 3)
@@ -126,8 +133,12 @@ const intents = clusters
       const k = rel(p.page);
       pageImpr.set(k, (pageImpr.get(k) || 0) + p.impressions);
     }
+    // Normalise against the page totals themselves, not the separately fetched
+    // query total: the two come from different API calls and do not reconcile,
+    // which let shares sum past 100% and flag spurious splits.
+    const pageTotal = [...pageImpr.values()].reduce((s2, v) => s2 + v, 0) || 1;
     const pages = [...pageImpr.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)
-      .map(([path, impr]) => ({ path, impr, share: impr / (impressions || 1) }));
+      .map(([path, impr]) => ({ path, impr, share: impr / pageTotal }));
     return {
       label: qs[0].q, n: qs.length, impressions, clicks, position,
       split: pages.filter((p) => p.share >= 0.15).length >= 2,
@@ -254,7 +265,7 @@ try {
 } catch {}
 
 const qHtml = `<section><h2>Question queries</h2><p class="lede">Long-tail questions people actually typed, English and Spanish, at any position. The job is not a new blog post: open the ranking page and check it answers the question in its first 100 words.</p>${questions.length ? `<div class="tw"><table><tr><th>Question</th><th class="num">Impr</th><th class="num">Clicks</th><th class="num">Pos</th><th>Ranking page</th></tr>${questions.map((r) => `<tr><td>${esc(r.q)}</td><td class="num">${r.impressions}</td><td class="num">${r.clicks}</td><td class="num">${r.position.toFixed(1)}</td><td>${esc(r.page || '?')}</td></tr>`).join('')}</table></div>` : '<p class="lede">None this period.</p>'}</section>`;
-const iHtml = `<section><h2>Intent clusters</h2><p class="lede">Queries grouped by shared terms, so an intent typed several ways shows its real size. A cluster marked SPLIT has two or more of our pages each taking 15% or more of it: decide which page owns the intent and point the others at it.</p>${intents.length ? intents.map((c) => `<div class="fx"><div class="fxh"><b>${esc(c.label)}</b><span class="meta">${c.n} phrasings · ${c.impressions.toLocaleString('en-GB')} impr · ${c.clicks} clicks · pos ${c.position}${c.split ? ' · SPLIT' : ''}</span></div><div class="fxb">${c.queries.map((r) => esc(r.q) + ' (' + r.impressions + ')').join(' · ')}</div><div class="fxp">${c.pages.map((p) => esc(p.path) + ' ' + Math.round(p.share * 100) + '%').join('   |   ')}</div></div>`).join('') : '<p class="lede">None this period.</p>'}</section>`;
+const iHtml = `<section><h2>Intent clusters</h2><p class="lede">Queries grouped by shared terms, so an intent typed several ways shows its real size. Clustering is a heuristic on shared terms, so read the phrasings first and confirm they really are one intent. Where they are, a cluster marked SPLIT has two or more of our pages each taking 15% or more of it, and the question is which page should own it.</p>${intents.length ? intents.map((c) => `<div class="fx"><div class="fxh"><b>${esc(c.label)}</b><span class="meta">${c.n} phrasings · ${c.impressions.toLocaleString('en-GB')} impr · ${c.clicks} clicks · pos ${c.position}${c.split ? ' · SPLIT' : ''}</span></div><div class="fxb">${c.queries.map((r) => esc(r.q) + ' (' + r.impressions + ')').join(' · ')}</div><div class="fxp">${c.pages.map((p) => esc(p.path) + ' ' + Math.round(p.share * 100) + '%').join('   |   ')}</div></div>`).join('') : '<p class="lede">None this period.</p>'}</section>`;
 
 const html = `<title>Page-2 SEO Audit</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
