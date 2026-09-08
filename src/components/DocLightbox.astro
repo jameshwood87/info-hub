@@ -30,7 +30,7 @@ const t = lang === 'es'
 	.docContent img[data-lb] { cursor: zoom-in; }
 	.docContent img[data-lb]:focus-visible { outline: 2px solid #00ae9a; outline-offset: 3px; }
 
-	.docLb { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 32px 16px; background: rgba(9, 18, 26, 0.88); }
+	.docLb { position: fixed; inset: 0; z-index: 1000000001;  /* above the Tidio chat widget, which sits at 999999999 */ display: flex; align-items: center; justify-content: center; padding: 32px 16px; background: rgba(9, 18, 26, 0.88); }
 	.docLb[hidden] { display: none; }
 	.docLbFig { margin: 0; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 	.docLbImg { max-width: 100%; max-height: calc(100vh - 118px); width: auto; height: auto; border-radius: 8px; background: #fff; box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45); }
