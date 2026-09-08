@@ -75,6 +75,69 @@ const top = band.slice(0, 20);
 const snippet = queries.filter((r) => r.position >= 8 && r.position < 11 && r.impressions >= 50 && r.ctr < 0.02).sort((a, b) => b.impressions - a.impressions);
 const farBack = queries.filter((r) => r.position >= 21 && r.impressions >= 50).sort((a, b) => b.impressions - a.impressions).slice(0, 15);
 
+// ---------------------------------------------------------------- 2b. question queries
+// The GSC question filter. English question words alone miss most of our
+// demand (roughly a quarter of our named queries are Spanish), so the Spanish
+// set runs alongside. Reported at ANY position: the job these surface is not a
+// new post, it is opening the ranking page and checking it answers the
+// question in its first 100 words, which is also what earns an AI Overview
+// citation.
+const Q_EN = /^(\S+\s+)*(who|what|when|where|why|how|which|can|do|does|did|is|are|should|will)\b(\s+\S+){4,}$/i;
+const Q_ES = /^(\S+\s+)*(qu[eé]|c[oó]mo|cu[aá]ndo|d[oó]nde|cu[aá]l|cu[aá]nto|cu[aá]ntos|puedo|puede|hay|necesito|debo|sirve|vale)\b(\s+\S+){4,}$/i;
+const questions = queries
+  .filter((r) => r.impressions >= 3 && (Q_EN.test(r.q) || Q_ES.test(r.q)))
+  .map((r) => {
+    const p = (pagesByQ.get(r.q) || [])[0];
+    return { ...r, lang: Q_ES.test(r.q) ? 'es' : 'en', page: p ? rel(p.page) : null };
+  })
+  .sort((a, b) => b.impressions - a.impressions)
+  .slice(0, 25);
+
+// ---------------------------------------------------------------- 2c. intent clusters
+// One intent is often typed five different ways, each too small on its own to
+// clear the page-2 threshold, which is how a cannibalized commercial query can
+// sit invisible for months. Cluster on shared stemmed content words so the
+// intent's real size shows and any split across our pages becomes visible.
+const STOP = new Set(['the','and','for','are','can','how','what','which','with','you','your','from','that','this','does','did','was','were','has','have','get','not','all','any','its','who','when','where','why','will','should','que','los','las','del','por','para','como','una','uno','con','sobre','mas','muy','hay','ser','son']);
+const stem = (w) => (w.length > 5 ? w.slice(0, 5) : w);
+const keyset = (q) => new Set(words(q).filter((w) => !STOP.has(w)).map(stem));
+const clusters = [];
+for (const r of queries.filter((x) => x.impressions >= 3)) {
+  const ks = keyset(r.q);
+  if (ks.size < 2) continue;
+  let hit = null;
+  for (const c of clusters) {
+    let shared = 0;
+    for (const k of ks) if (c.keys.has(k)) shared++;
+    if (shared >= 2) { hit = c; break; }
+  }
+  if (hit) { hit.queries.push(r); for (const k of ks) hit.keys.add(k); }
+  else clusters.push({ keys: ks, queries: [r] });
+}
+const intents = clusters
+  .filter((c) => c.queries.length >= 3)
+  .map((c) => {
+    const qs = c.queries.slice().sort((a, b) => b.impressions - a.impressions);
+    const impressions = qs.reduce((s2, r) => s2 + r.impressions, 0);
+    const clicks = qs.reduce((s2, r) => s2 + r.clicks, 0);
+    const position = +(qs.reduce((s2, r) => s2 + r.position * r.impressions, 0) / (impressions || 1)).toFixed(1);
+    const pageImpr = new Map();
+    for (const r of qs) for (const p of pagesByQ.get(r.q) || []) {
+      const k = rel(p.page);
+      pageImpr.set(k, (pageImpr.get(k) || 0) + p.impressions);
+    }
+    const pages = [...pageImpr.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)
+      .map(([path, impr]) => ({ path, impr, share: impr / (impressions || 1) }));
+    return {
+      label: qs[0].q, n: qs.length, impressions, clicks, position,
+      split: pages.filter((p) => p.share >= 0.15).length >= 2,
+      queries: qs.slice(0, 6), pages,
+    };
+  })
+  .filter((c) => c.impressions >= 20)
+  .sort((a, b) => b.impressions - a.impressions)
+  .slice(0, 12);
+
 // ---------------------------------------------------------------- 3. pages + cannibalization
 const pageCache = new Map();
 async function auditPage(url) {
@@ -155,7 +218,7 @@ const report = {
   site: { clicks: site.clicks, impressions: site.impressions, ctr: site.ctr, position: site.position },
   bandCount: band.length, bandImpressions: band.reduce((s, r) => s + r.impressions, 0),
   clicksInPlay: top.reduce((s, r) => s + r.gain, 0),
-  top, snippet, farBack, previousRun: runs.length ? runs[runs.length - 1] : null,
+  top, snippet, farBack, questions, intents, previousRun: runs.length ? runs[runs.length - 1] : null,
 };
 fs.writeFileSync(path.join(OUT, `${stamp}.json`), JSON.stringify(report, null, 2));
 fs.writeFileSync(path.join(OUT, 'latest.json'), JSON.stringify(report, null, 2));
@@ -190,6 +253,9 @@ try {
     (notes.items || []).map((n, i) => `<div class="fx"><div class="fxh"><span class="n">${i + 1}</span><b>${esc(n.label)}</b></div><div class="fxp">${esc(n.page)}</div>${n.impressions ? `<div class="fxm">${esc(n.impressions)}</div>` : ''}${block('Before', n.before)}${block('After', n.after)}<div class="fxb">${esc(n.why)}</div></div>`).join('') + `</section>`;
 } catch {}
 
+const qHtml = `<section><h2>Question queries</h2><p class="lede">Long-tail questions people actually typed, English and Spanish, at any position. The job is not a new blog post: open the ranking page and check it answers the question in its first 100 words.</p>${questions.length ? `<div class="tw"><table><tr><th>Question</th><th class="num">Impr</th><th class="num">Clicks</th><th class="num">Pos</th><th>Ranking page</th></tr>${questions.map((r) => `<tr><td>${esc(r.q)}</td><td class="num">${r.impressions}</td><td class="num">${r.clicks}</td><td class="num">${r.position.toFixed(1)}</td><td>${esc(r.page || '?')}</td></tr>`).join('')}</table></div>` : '<p class="lede">None this period.</p>'}</section>`;
+const iHtml = `<section><h2>Intent clusters</h2><p class="lede">Queries grouped by shared terms, so an intent typed several ways shows its real size. A cluster marked SPLIT has two or more of our pages each taking 15% or more of it: decide which page owns the intent and point the others at it.</p>${intents.length ? intents.map((c) => `<div class="fx"><div class="fxh"><b>${esc(c.label)}</b><span class="meta">${c.n} phrasings · ${c.impressions.toLocaleString('en-GB')} impr · ${c.clicks} clicks · pos ${c.position}${c.split ? ' · SPLIT' : ''}</span></div><div class="fxb">${c.queries.map((r) => esc(r.q) + ' (' + r.impressions + ')').join(' · ')}</div><div class="fxp">${c.pages.map((p) => esc(p.path) + ' ' + Math.round(p.share * 100) + '%').join('   |   ')}</div></div>`).join('') : '<p class="lede">None this period.</p>'}</section>`;
+
 const html = `<title>Page-2 SEO Audit</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <style>
@@ -218,6 +284,8 @@ ${notesHtml}
 <section><h2>Fixes, by return</h2><p class="lede">Exact on-page state and what to change. Where title, H1 and meta already match, it says so rather than inventing a tweak.</p>${fixes}</section>
 ${side(snippet, 'Already on page 1, still not clicked', 'Position 8-11, 50+ impressions, under 2% CTR. A snippet problem (title / meta), not a ranking problem, and a faster fix than moving anything up.')}
 ${side(farBack, 'Too far back for a tweak', '50+ impressions but position 21+. Listed so you know they exist; these need a better page, not a title edit.')}
+${qHtml}
+${iHtml}
 <footer>Generated ${today.toISOString()} · ${queries.length} queries pulled · ${qpRows.length} query-page rows · previous stored run: ${report.previousRun || 'none'}</footer></div>`;
 fs.writeFileSync(path.join(OUT, 'latest.html'), html);
 
@@ -246,7 +314,7 @@ Full dashboard: ${DASH || 'var/admin/page2-audit/latest.html on the droplet'}
 Movement from on-page changes shows in 2-4 weeks. Do not re-edit a page every Friday.`;
   const res = await fetch('https://mandrillapp.com/api/1.0/messages/send', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO }], subject: `[SEO] Page-2 audit ${ddmmyy(today)}: +${report.clicksInPlay} clicks/mo in play, ${cann.length} cannibalization`, text, tags: ['info-hub', 'page2-audit'], track_opens: false, track_clicks: false } }),
+    body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO }], subject: `[SEO] Page-2 audit ${ddmmyy(today)}: +${report.clicksInPlay} clicks/mo in play, ${cann.length} cannibalization, ${report.intents.filter((c) => c.split).length} split intents`, text, tags: ['info-hub', 'page2-audit'], track_opens: false, track_clicks: false } }),
   });
   console.log('page2-audit: email', res.status, (await res.text()).slice(0, 120));
 }
