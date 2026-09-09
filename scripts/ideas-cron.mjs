@@ -117,8 +117,10 @@ if (!sections.length) { console.log('no sources reachable - exiting'); process.e
 // ---- our existing coverage ----
 const ours = [];
 for (const pfx of ['/blog/', '/general-information/', '/estate-agents/', '/lifestyle/', '/food/', '/nightlife/']) {
-  const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=${encodeURIComponent(pfx)}&filter[language][_eq]=en&fields=title&limit=-1`, { headers: { Authorization: `Bearer ${TOKEN}` } });
-  for (const x of (await r.json()).data || []) ours.push(String(x.title || ''));
+  const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=${encodeURIComponent(pfx)}&filter[language][_eq]=en&fields=title,path&limit=-1`, { headers: { Authorization: `Bearer ${TOKEN}` } });
+  // Title alone hides what a page answers; the path is a second signal against
+  // proposing a post we already have.
+  for (const x of (await r.json()).data || []) ours.push(`${String(x.title || '')} (${String(x.path || '')})`);
 }
 
 // current queue + static topics (avoid proposing what is already planned)
@@ -140,9 +142,9 @@ ${planned.length ? 'ALREADY QUEUED:\n' + planned.map((t) => `- ${t}`).join('\n')
 ${legalCurrencyBlock()}
 Do not propose topics that treat these as current law. A news headline that still refers to them is out of date. You may propose a topic about what replaced them or about the position today.
 
-Give extra weight to the SEARCH CONSOLE sections: a striking-distance query is the strongest possible signal (real demand where we nearly rank). Propose the 5 best NEW blog-post ideas for next week. PRIORITISE, in order: (a) breaking or recent law / tax / regulation changes affecting Spanish or Andalucian property - rental caps, tourist-licence rules, ITP/IRPF/plusvalia, non-resident tax, new decrees (ALWAYS mark these hot=true; a dated, specific regulation post is our single best SEO bet because it ranks fast and earns for months), (b) topics competitors rank on where we can write a better, data-backed version, (c) strong buyer/landlord search intent. Avoid anything we already cover or that is queued.
+Give extra weight to the SEARCH CONSOLE sections: a striking-distance query is the strongest possible signal (real demand where we nearly rank). Propose the 5 best NEW blog-post ideas for next week. PRIORITISE, in order: (a) topics only PropertyList can write because they rest on our live MLS listings or notary-verified Price Oracle prices - who is buying, what sells, what a feature is worth, how one town compares with another - using only figures present in the market-data block or live listing data the writer is given; never calculate, estimate or infer a number that data does not contain; (b) a specific question that buyers, owners or landlords are demonstrably typing (a Search Console query with impressions) that none of our existing pages answers - check the paths in WE ALREADY COVER, and if one of our pages already targets it, set skip=true and say which page in the angle; (c) proven local formats that earn: events, area comparisons, what things actually cost. Regulation only when an instrument is IN FORCE and you can name its BOE reference. Never propose forecasts, drafts, proposals, "plans to", "could hit", "the next registry" or "what happens if": the last four weeks of our own Search Console show that genre ranks for queries nobody types and earns nothing, one such post has already been withdrawn for an unsourced forecast about government policy, and four pages needed correction notices for stating law that was no longer in force. hot=true means one thing only: an in-force change with a BOE date inside the last 30 days. Avoid anything we already cover or that is queued.
 
-Write every topic, angle and keyword in ENGLISH (articles are written in English first, then translated to Spanish). Return JSON: {"ideas":[{"topic":"full working title","angle":"1 sentence: our unique angle / why we win","target_keyword":"main search phrase","hot":true|false,"source":"which headline/competitor inspired it"}]} with exactly 5 ideas, best first. Plain hyphens only, no em-dashes.`;
+Write every topic, angle and keyword in ENGLISH (articles are written in English first, then translated to Spanish). Return JSON: {"ideas":[{"topic":"full working title","angle":"1 sentence: our unique angle / why we win","target_keyword":"main search phrase","hot":true|false,"skip":true|false,"source":"which headline/competitor inspired it"}]} with exactly 5 ideas, best first. skip=true means one of our existing pages already targets this question and the idea must not be queued. Plain hyphens only, no em-dashes.`;
 
 const out = await aiJson([{ role: 'user', content: prompt }], 4000);
 const ideas = Array.isArray(out.ideas) ? out.ideas.slice(0, 5) : [];
@@ -151,12 +153,16 @@ for (const i of ideas) console.log(`${i.hot ? '[HOT] ' : ''}${i.topic} | ${i.tar
 
 if (DRY) { console.log('--- dry run: not queueing / posting ---'); process.exit(0); }
 
-// ---- queue ALL hot (breaking law/regulation) ideas + best evergreen; cap at 4 so we do not overfill ----
-const hot = ideas.filter((i) => i.hot);
-const evergreen = ideas.filter((i) => !i.hot);
-const toQueue = [...hot, ...evergreen].slice(0, Math.max(2, Math.min(4, hot.length + 1)));
+// ---- queue the 2 best non-skipped ideas in the model's own ranked order. hot no
+// longer jumps the queue: the cron runs twice a week, so 2 keeps the queue lean ----
+const skipped = ideas.filter((i) => i.skip);
+for (const i of skipped) console.log(`skipped (already covered): ${i.topic}`);
+const toQueue = ideas.filter((i) => !i.skip).slice(0, 2);
 const now = new Date().toISOString();
-for (const i of toQueue) queue.push({ topic: String(i.topic), hot: Boolean(i.hot), keyword: String(i.target_keyword || ''), added: now, source: 'ideas-cron' });
+// The model ignores "no em-dashes" often enough that a dash in a topic reaches the
+// title, fails lint, and parks the topic after two silent failures. Normalise here.
+const plain = (s) => String(s || '').replace(/[\u2013\u2014]/g, '-').replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
+for (const i of toQueue) queue.push({ topic: plain(i.topic), hot: Boolean(i.hot), keyword: plain(i.target_keyword), added: now, source: 'ideas-cron' });
 fs.writeFileSync(QUEUE_PATH, JSON.stringify(queue, null, 2));
 console.log(`queued ${toQueue.length} topics (queue length now ${queue.length})`);
 
