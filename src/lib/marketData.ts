@@ -290,7 +290,13 @@ export const marketsForArea = async (
 const portalPriceCache = new Map<string, { v: number | null; at: number }>();
 const PORTAL_PRICE_TTL_MS = 6 * 60 * 60 * 1000;
 
-export const fetchPortalPrice = async (url: string): Promise<number | null> => {
+// Takes a nullable url on purpose. The first line already treats a missing or
+// non-http url as an ordinary "no price" result, and the caller reaches this
+// from a filtered list where TypeScript cannot carry the narrowing into the
+// later closure. Declaring a bare string here left only assertions at the call
+// site, and a type predicate is no better: TS does not verify that a predicate's
+// condition actually implies the type it asserts, so that route only looks safe.
+export const fetchPortalPrice = async (url: string | null): Promise<number | null> => {
 	if (!url || !/^https?:\/\//i.test(url)) return null;
 	const hit = portalPriceCache.get(url);
 	if (hit && Date.now() - hit.at < PORTAL_PRICE_TTL_MS) return hit.v;
