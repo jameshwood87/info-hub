@@ -613,7 +613,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							<div class="mobDivider"></div>
 							<a href={lang === 'es' ? '/es/referidos/' : '/referrals/'}>{lang === 'de' ? 'Empfehlungen' : lang === 'es' ? 'Referidos' : 'Referrals'}</a>
 							<a href={lang === 'es' ? '/es/docs/' : '/docs/'}>{lang === 'de' ? 'Dokumentation' : 'Docs'}</a>
-							<a href={lang === 'es' ? '/es/informacion-general/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
+							<a href={lang === 'es' ? '/es/blog/' : '/blog/'}>{lang === 'de' ? 'Blog' : lang === 'es' ? 'Noticias' : 'Blog'}</a>
 							<a href={lang === 'es' ? '/es/barrios/' : '/neighbourhood/'}>{lang === 'de' ? 'Gebiete' : lang === 'es' ? 'Zonas' : 'Areas'}</a>
 							<a href={lang === 'es' ? '/es/que-hacer/' : '/whats-on/'}>{lang === 'de' ? 'Events (Costa del Sol)' : lang === 'es' ? 'Qué hacer (eventos)' : "What's On (events)"}</a>
 							<a href={lang === 'es' ? '/es/precios/' : '/pricing/'}>{lang === 'de' ? 'Preise' : lang === 'es' ? 'Precios' : 'Pricing'}</a>
@@ -977,7 +977,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
     var p = String(path || '').replace(/\\/+$/, '/') || '/';
     if (p.indexOf('/neighbourhood/') === 0 || p.indexOf('/es/barrios/') === 0) return 'neighbourhood';
     if (p.indexOf('/docs/') === 0 || p.indexOf('/es/docs/') === 0) return 'docs';
-    if (p.indexOf('/blog/') === 0 || p.indexOf('/es/informacion-general/') === 0) return 'blog';
+    if (p.indexOf('/blog/') === 0 || p.indexOf('/es/blog/') === 0 || p.indexOf('/es/informacion-general/') === 0) return 'blog';
     if (p.indexOf('/pricing/') === 0 || p.indexOf('/es/precios/') === 0) return 'pricing';
     if (p.indexOf('/search') === 0 || p.indexOf('/es/search') === 0) return 'search';
     return 'content';
