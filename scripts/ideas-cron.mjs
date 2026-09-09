@@ -116,7 +116,7 @@ if (!sections.length) { console.log('no sources reachable - exiting'); process.e
 
 // ---- our existing coverage ----
 const ours = [];
-for (const pfx of ['/blog/', '/general-information/', '/estate-agents/', '/lifestyle/', '/food/', '/nightlife/']) {
+for (const pfx of ['/blog/', '/general-information/', '/estate-agents/', '/lifestyle/', '/food/', '/nightlife/', '/neighbourhood/']) {
   const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=${encodeURIComponent(pfx)}&filter[language][_eq]=en&fields=title,path&limit=-1`, { headers: { Authorization: `Bearer ${TOKEN}` } });
   // Title alone hides what a page answers; the path is a second signal against
   // proposing a post we already have.
