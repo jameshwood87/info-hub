@@ -149,7 +149,7 @@ Write every topic, angle and keyword in ENGLISH (articles are written in English
 const out = await aiJson([{ role: 'user', content: prompt }], 4000);
 const ideas = Array.isArray(out.ideas) ? out.ideas.slice(0, 5) : [];
 if (!ideas.length) { console.log('AI returned no ideas - exiting'); process.exit(0); }
-for (const i of ideas) console.log(`${i.hot ? '[HOT] ' : ''}${i.topic} | ${i.target_keyword}`);
+for (const i of ideas) console.log(`${i.skip ? '[SKIP - already covered] ' : ''}${i.hot ? '[HOT] ' : ''}${i.topic} | ${i.target_keyword}`);
 
 if (DRY) { console.log('--- dry run: not queueing / posting ---'); process.exit(0); }
 
