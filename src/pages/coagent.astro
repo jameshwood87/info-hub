@@ -4,24 +4,42 @@ import AgentInterestCta from '../components/AgentInterestCta.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/coagent/`;
-const title = 'PropertyList CoAgent (coming soon) - the CRM that writes itself after every call | PropertyList';
+const title = 'PropertyList CoAgent - the CRM you talk to on WhatsApp | PropertyList';
 const description =
-	'Coming soon: CoAgent will turn every client call and WhatsApp chat into CRM updates, follow-ups and ranked property matches, and brief you before you answer. Call audio never stored.';
+	'Send a voice note after a viewing and CoAgent writes up the CRM for you to approve. Ask it for properties, a client brief, your next viewing or what an area is worth, in the WhatsApp you already use. Audio is never stored and nothing is saved until you reply YES.';
+
+const asks = [
+	{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
+	{ q: 'Where is my next viewing?', a: 'Your diary, leading with the address and the client’s phone number, because you are reading it in the car.' },
+	{ q: 'What have I got tomorrow?', a: 'The whole day, in order, with the property and who you are meeting.' },
+	{ q: 'Tell me about PL22234', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
+	{ q: 'What is Marta Ruiz’s number?', a: 'Her phone and email first, so your thumb is already on the call button.' },
+	{ q: 'Brief me on the Bergs', a: 'Where they are up to, what they are looking for, and the last thing that happened, before you dial.' },
+	{ q: 'What is Nueva Andalucía worth?', a: 'The middle asking price and the range across what is actually on the market there. If we do not hold enough stock in an area, it says so rather than guessing.' },
+	{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
+	{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
+];
 
 const trust = [
-	{ name: 'Audio is never stored', desc: 'Calls will be transcribed live and the audio discarded as it happens. The summary is kept; a recording never exists, so there is nothing to leak and nothing to hand over.' },
-	{ name: 'You have the last word', desc: 'Nothing reaches the CRM until you approve it. CoAgent shows you exactly what will change, field by field, and a visible button stops transcription mid-call.' },
-	{ name: 'Your private life stays private', desc: 'Only conversations with people in your agency CRM are captured. Family, friends, your plumber: never synced, never stored. You can exclude any chat, even with a client.' },
+	{ name: 'Your voice is not kept', desc: 'The audio is transcribed and thrown away. Only the text survives, on the record it belongs to, where you can read it and correct it. There is no recording to leak and none to hand over.' },
+	{ name: 'Nothing is saved until you say so', desc: 'CoAgent lays out what it wants to change, then waits. No client record is edited and no enquiry leaves for another agency until you reply YES. Say nothing and nothing happens.' },
+	{ name: 'It answers from your data or not at all', desc: 'Every answer comes from your CRM and the shared MLS. Ask it something outside that and it says so plainly, instead of inventing a fact you might repeat to a client.' },
+];
+
+const soon = [
+	{ name: 'Your own WhatsApp, connected', desc: 'Keep messaging clients from your own number and have those conversations file themselves, in both directions, with anyone who is not a client never captured. In design now.' },
+	{ name: 'A dedicated work line', desc: 'A business number that lives in the PropertyList app beside your personal SIM, with calls written up the same way a voice note is. On the roadmap.' },
+	{ name: 'The brief on your caller screen', desc: 'Today you can ask for a client brief any time. Having it appear by itself as the phone rings needs work inside the mobile app, and that is the next piece we build.' },
 ];
 
 const faqs = [
-	{ q: 'When will CoAgent arrive?', a: 'It is in build now and will roll out to PropertyList agents first, in stages: capture first, then connected WhatsApp, then the dedicated work line. Agents already on the platform will be first in the queue.' },
-	{ q: 'Which way should I start?', a: 'Voice notes. There is nothing to set up, nothing to connect and nothing to learn - you talk for 30 seconds after a call and watch what comes back. Most agents will connect their WhatsApp once they have seen their CRM fill itself a few times, and the work line is there for whoever wants a separate business number on top.' },
-	{ q: 'Will it write to my CRM automatically?', a: 'No. CoAgent proposes, you approve. It will show you exactly what is about to change - budget, areas, bedrooms, timeframe - field by field, and nothing is saved until you tap confirm. A wrong guess costs you one tap, not a corrupted record.' },
-	{ q: 'Are my calls recorded?', a: 'No. Calls will be transcribed live and the audio discarded as it happens. The transcript and the summary are kept; a recording never exists. You will also be able to stop transcription mid-call with one visible button.' },
-	{ q: 'What about my personal WhatsApp chats?', a: 'Only conversations with people in your agency CRM will be captured. Messages from anyone else are never captured and never stored. And you will be able to exclude any conversation you choose, even with a client.' },
-	{ q: 'Do I have to change my number?', a: 'No. CoAgent starts with a voice note from your own phone, and connecting your own WhatsApp is optional. For agents who want a separate business line, a dedicated work number will be available - your personal number stays personal either way.' },
-	{ q: 'What will it cost?', a: 'The MLS and the CRM core stay free. The CRM is not 100% free: moving a qualified buyer lead into the Buyer pipeline costs 1 credit, and your first 5 buyer leads are free. CoAgent plans and pricing will be announced at launch - and every paid CoAgent plan will include those pipeline lead credits, so while you subscribe, moving a buyer into your pipeline costs nothing extra. Creating your free account now costs nothing and puts you in the first wave.' },
+	{ q: 'What do I have to install?', a: 'Nothing. CoAgent works in WhatsApp, which you already use all day. Save the PropertyList number, make sure your mobile is on your CRM profile so it knows you are an agent rather than a client, and send it a voice note.' },
+	{ q: 'Will it change my CRM automatically?', a: 'No. CoAgent proposes and waits. It shows you the client it matched and the changes it wants to make, field by field, and nothing is written until you reply YES. If it mishears, it costs you one word, not a wrong budget sitting quietly in a shared record.' },
+	{ q: 'Are my voice notes recorded?', a: 'No. The audio is transcribed and discarded. The transcript is kept on the client record, where you can read exactly what the CRM was told.' },
+	{ q: 'Does it work in Spanish?', a: 'Yes, and in German, French, Portuguese, Bulgarian and Greek. It replies in your own language and it copes with a note that switches language halfway through, which on this coast is most of them.' },
+	{ q: 'Do I need to name a client every time?', a: 'No. Naming a client turns a voice note into CRM updates. Without one you can still ask for properties, your diary, a listing by reference or what an area is worth, which is what you want when a walk-in is standing next to you.' },
+	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
+	{ q: 'What does it cost?', a: 'The MLS and the CRM core stay free. The CRM is not 100% free: moving a qualified buyer lead into the Buyer pipeline costs 1 credit, and your first 5 buyer leads are free. CoAgent plans and pricing will be announced separately. Creating your free account costs nothing.' },
 ];
 
 const faqLd = {
@@ -40,9 +58,10 @@ const softwareLd = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
 	name: 'PropertyList CoAgent',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
-	description: 'Coming soon: an AI assistant for estate agents that turns every call and WhatsApp chat into CRM updates, follow-ups and ranked property matches, with a briefing before every call. Call audio is never stored.',
+	description: 'An assistant for estate agents that works over WhatsApp: voice notes become CRM updates the agent approves, and questions about clients, listings, the diary and area prices are answered from the agency CRM and the shared MLS. Audio is never stored.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
+
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 ---
 
@@ -65,50 +84,50 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 	<section class="hero">
 		<div class="heroInner heroGrid">
 			<div>
-				<div class="kicker">CoAgent - Coming soon</div>
-				<h1>CoAgent listens to your calls, reads your WhatsApp, and fills in the CRM for you.</h1>
-				<p class="heroSub">The call ends. The write-up is already done.</p>
+				<div class="kicker">CoAgent</div>
+				<h1>Talk to your CRM the way you talk to a colleague.</h1>
+				<p class="heroSub">Walk out of the viewing. Send a voice note. The write-up is waiting for you to approve.</p>
 				<div class="whatIs">
-					<div class="whatIsTitle">What it does</div>
+					<div class="whatIsTitle">How it goes</div>
 					<ol>
-						<li>You talk to a client, on the phone or on WhatsApp. CoAgent listens.</li>
-						<li>You hang up. It saves the contact and writes up the call.</li>
-						<li>They call back. Everything you need for that call is already on screen.</li>
-						<li>It reminds you what you promised.</li>
+						<li>You finish a call or a viewing and send a voice note, in the WhatsApp you already use.</li>
+						<li>CoAgent works out what changed, and shows you before it touches anything.</li>
+						<li>You reply YES. The requirement, the note and the reminders are in the CRM.</li>
+						<li>While you are there, ask it for properties, a phone number or your next appointment.</li>
 					</ol>
 				</div>
 				<p class="lead">
-					The admin that eats your evenings will write itself. The promise you made last Tuesday will be on screen before you
-					dial. The buyer from three weeks ago will hear about the new listing from you first. CoAgent will turn every call
-					and WhatsApp chat into CRM updates, follow-ups and ranked matches - you confirm, it files.
+					The admin that eats your evenings writes itself. The promise you made last Tuesday becomes a reminder. And when a
+					client is standing next to you asking what is available in Marbella at two million, you ask out loud and the
+					answer comes back into the thread.
 				</p>
 				<div class="winRow" aria-label="What CoAgent gives back">
-					<div class="win"><b>Evenings back</b><span>The after-call admin writes itself.</span></div>
-					<div class="win"><b>Promises kept</b><span>What you owe each client, surfaced before you dial.</span></div>
-					<div class="win"><b>Leads kept warm</b><span>New matches reach them from you first.</span></div>
+					<div class="win"><b>Evenings back</b><span>The after-viewing write-up does itself.</span></div>
+					<div class="win"><b>Promises kept</b><span>What you said you would do becomes a reminder.</span></div>
+					<div class="win"><b>Answers in the car</b><span>Diary, listings and numbers without opening a laptop.</span></div>
 				</div>
 				<div class="ctaRow">
 					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
-					<a class="btnSecondary" href="#how">See how it will work</a>
+					<a class="btnSecondary" href="#ask">See what you can ask it</a>
 				</div>
-				<div class="note">Coming soon. CoAgent arrives for PropertyList agents first - create your free account now and you are ready on day one.</div>
+				<div class="note">Live for PropertyList agents. Nothing to install.</div>
 			</div>
 
 			<div class="bfWrap" aria-hidden="true">
-				<div class="bfTag">Before you answer</div>
+				<div class="bfTag">After the viewing</div>
 				<div class="bfCard">
 					<div class="bfHead">
 						<span class="bfAvatar">MR</span>
 						<span>
 							<b>Marta Ruiz</b>
-							<i>Buyer &middot; active &middot; calling now</i>
+							<i>Buyer &middot; matched from your note</i>
 						</span>
 						<span class="bfRing"></span>
 					</div>
-					<div class="bfReq">3-bed apartment &middot; Nueva Andaluc&iacute;a &middot; up to &euro;850k &middot; sea view</div>
-					<div class="bfMeta">Last spoke 6 days ago &middot; viewed PL12345 twice</div>
-					<div class="bfWarn">You said you would send her the Puerto Ban&uacute;s listing. Not sent yet.</div>
-					<div class="bfFoot">Transcribed live &middot; audio never stored</div>
+					<div class="bfReq">Budget &euro;800k &rarr; <b>&euro;850k</b> &middot; + Nueva Andaluc&iacute;a &middot; 3 beds</div>
+					<div class="bfMeta">Reminder: send the Cerquilla listing &middot; Saturday</div>
+					<div class="bfWarn">Reply YES to save it all. Nothing is written yet.</div>
+					<div class="bfFoot">Transcribed, then the audio is discarded</div>
 				</div>
 			</div>
 		</div>
@@ -116,183 +135,49 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 
 	<section class="section" id="how">
 		<div class="sectionHead">
-			<h2>When you would use it</h2>
-			<p>This is the shape of a working day with CoAgent. Notice what you are not doing in any of them: typing.</p>
+			<h2>The bit nobody does: writing it up</h2>
+			<p>Everyone knows a CRM only pays you back if it is current, and everyone knows what actually happens between viewings. CoAgent takes the note where you already are, in the format you already use, and does the typing.</p>
 		</div>
 		<div class="grid3 steps">
 			<div class="card step">
-				<div class="stepTime">09:41</div>
-				<h3>Before you answer</h3>
-				<p>The phone rings and the brief is already on screen: who it is, the budget, the areas, and the one thing you promised. You answer knowing more than the caller expects you to remember.</p>
+				<div class="stepTime">Step 1</div>
+				<h3>Send the voice note</h3>
+				<p>"Just saw the Nueva Andaluc&iacute;a apartment with Marta. She is open to three beds now, up to eight fifty, and I said I would send her the Cerquilla one on Saturday."</p>
 			</div>
 			<div class="card step">
-				<div class="stepTime">09:58</div>
-				<h3>When you hang up</h3>
-				<p>The summary appears with every change laid out for a one-tap confirm: budget up to &euro;850k, San Pedro added, viewing Saturday. Two tasks created. Three matching listings ready to send on WhatsApp.</p>
+				<div class="stepTime">Step 2</div>
+				<h3>Read what it heard</h3>
+				<p>Back comes the client it matched, the changes it proposes to her requirements, the reminder it will set for Saturday, and the listings that now match her.</p>
 			</div>
 			<div class="card step">
-				<div class="stepTime">3 weeks later</div>
-				<h3>While you sell</h3>
-				<p>A new listing matches her brief the day it goes live. CoAgent flags it to you first - she hears about it from you, not from a portal. That is what a pipeline that runs itself looks like.</p>
+				<div class="stepTime">Step 3</div>
+				<h3>Reply YES</h3>
+				<p>Only then does anything move. The requirement is updated, the note lands on her timeline, Saturday is on your calendar. Say nothing and nothing happens.</p>
 			</div>
 		</div>
 	</section>
 
-	<section class="section" id="ways">
+	<section class="section" id="ask">
 		<div class="sectionHead">
-			<h2>How to start: three options, easiest first</h2>
-			<p>CoAgent is not all-or-nothing. Start with a voice note and nothing to set up, connect your WhatsApp when you are ready, and add a dedicated work line if you want one. Each step captures more for you; none of them is required for the one before it.</p>
+			<h2>Everything else you can ask it</h2>
+			<p>By voice or by typing, in your own words. CoAgent works out what you meant rather than making you learn commands, and when a question is outside what it holds it tells you so.</p>
 		</div>
-		<div class="grid3">
-			<div class="card way">
-				<div class="wayNum">1</div>
-				<h3>Start with a voice note</h3>
-				<div class="gBox" aria-hidden="true">
-					<div class="waRow me"><span class="waMic">&#9679;</span><span class="waBars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="waTime">0:31</span></div>
-					<div class="waRow bot">
-						<b>Marta Ruiz updated</b>
-						<i>Budget &euro;850k &middot; +San Pedro &middot; 2 tasks &middot; 3 matches ready</i>
+		<div class="grid2">
+			{
+				asks.map((item) => (
+					<div class="card">
+						<h3>&ldquo;{item.q}&rdquo;</h3>
+						<p>{item.a}</p>
 					</div>
-				</div>
-				<p>Finish any call, open WhatsApp, hold the mic and talk for 30 seconds: "Spoke to Marta, budget up to 850, add San Pedro, viewing Saturday, I need to send her the Puerto Ban&uacute;s listing." The CRM update, the tasks and the matching properties come back in the same thread before you reach the car.</p>
-				<p class="wayFor">For: every agent, from day one. Nothing to install, nothing to connect.</p>
-			</div>
-			<div class="card way">
-				<div class="wayNum">2</div>
-				<h3>Connect your WhatsApp</h3>
-				<div class="gBox" aria-hidden="true">
-					<div class="syncRow ok"><span class="syncDot"></span>Marta Ruiz &rarr; saved to CRM</div>
-					<div class="syncRow ok"><span class="syncDot"></span>Thomas B. (buyer) &rarr; saved to CRM</div>
-					<div class="syncRow no"><span class="syncDot"></span>Mum &rarr; not captured, never stored</div>
-				</div>
-				<p>Keep messaging clients exactly as you do today, from your own number, in the WhatsApp you already use. Every conversation with a CRM contact files itself - both directions, automatically. Messages from anyone who is not a client are never captured, never stored.</p>
-				<p class="wayFor">For: agents who live in WhatsApp - which on this coast is everyone.</p>
-			</div>
-			<div class="card way">
-				<div class="wayNum">3</div>
-				<h3>Add a work line</h3>
-				<div class="gBox" aria-hidden="true">
-					<div class="simRow"><span class="simTag">Personal</span><span class="simNum">+34 6XX XX XX XX</span><i>stays yours, stays private</i></div>
-					<div class="simRow work"><span class="simTag">Work</span><span class="simNum">+34 951 24 68 10</span><i>rings in the app &middot; every call written up</i></div>
-				</div>
-				<p>A real business number that lives in the PropertyList app, next to your personal SIM. Two numbers, one phone. Every call on it is transcribed live and written up, the legal notice plays itself, and if you miss it on data the call forwards to your mobile. The number belongs to your agency - so the clients on it do too.</p>
-				<p class="wayFor">For: agents who want work and life separated, and agency owners who want the book to stay.</p>
-			</div>
-		</div>
-	</section>
-
-	<section class="section" id="functions">
-		<div class="sectionHead">
-			<h2>What CoAgent will do, function by function</h2>
-			<p>Not another notes app. An assistant that remembers, files and follows up - so the only thing left in your hands is the part that pays: the conversation.</p>
-		</div>
-
-		<div class="featRow">
-			<div class="card">
-				<h3>The brief before every call</h3>
-				<p>
-					Who is calling, what they are looking for, their budget, when you last spoke and what happened - on screen in the two
-					seconds before you answer. On a WhatsApp call you get the full card; on a normal mobile call, a short line on the
-					caller screen. Either way, you never again say "remind me, which property was it?" to a serious buyer.
-				</p>
-				<p>
-					And the line that matters most: <strong>what you promised and have not done.</strong> "You said you would send her the
-					Puerto Ban&uacute;s listing." Shown privately to you, before you speak. Clients decide who to trust by whether you remember -
-					CoAgent makes sure you always do.
-				</p>
-			</div>
-			<div class="gCard" aria-hidden="true">
-				<div class="gLabel">Incoming call</div>
-				<div class="gMini">
-					<b>Marta Ruiz</b>
-					<span>3-bed &middot; Nueva Andaluc&iacute;a &middot; &euro;850k</span>
-					<em>You said you would send her the Puerto Ban&uacute;s listing</em>
-				</div>
-			</div>
-		</div>
-
-		<div class="featRow rev">
-			<div class="card">
-				<h3>You approve everything before it is saved</h3>
-				<p>
-					After every call or voice note, CoAgent lays out exactly what it wants to change - budget, areas, bedrooms, timeframe -
-					old value and new value, side by side. One tap confirms, one tap edits any field. Nothing touches your CRM until you
-					say so.
-				</p>
-				<p>
-					This matters because clients here switch between English, Spanish and four other languages mid-sentence - a hard
-					job for any listener, human or AI. So CoAgent checks with you instead of guessing: if it ever mishears, it costs
-					you one tap - not a wrong budget quietly sitting in a shared record.
-				</p>
-			</div>
-			<div class="gCard" aria-hidden="true">
-				<div class="gLabel">Confirm changes</div>
-				<div class="gDiff">
-					<div><span>Budget</span><span><s>&euro;800k</s> &rarr; <b>&euro;850k</b></span></div>
-					<div><span>Areas</span><span><b>+ San Pedro</b></span></div>
-					<div><span>Viewing</span><span><b>Sat 11:00</b></span></div>
-					<div class="gBtns"><span>Edit</span><span class="ok">Confirm all</span></div>
-				</div>
-			</div>
-		</div>
-
-		<div class="featRow">
-			<div class="card">
-				<h3>It ends in properties, not paperwork</h3>
-				<p>
-					The moment the CRM is updated, CoAgent searches the shared MLS - 5,000+ listings - against what the client just told
-					you, and hands back the best matches ranked. Send one on WhatsApp with a tap, while the conversation is still warm in
-					both your minds.
-				</p>
-				<p>
-					Notes get read later, if ever. A matching property sent within five minutes of hanging up is what turns a phone call
-					into a viewing.
-				</p>
-			</div>
-			<div class="gCard" aria-hidden="true">
-				<div class="gLabel">Matches ready</div>
-				<div class="gMatch"><b>PL18220</b><span>3 bed &middot; &euro;835,000</span><em>Send</em></div>
-				<div class="gMatch"><b>R5401816</b><span>3 bed &middot; &euro;799,000</span><em>Send</em></div>
-			</div>
-		</div>
-
-		<div class="featRow rev">
-			<div class="card">
-				<h3>A pipeline that keeps working after you stop</h3>
-				<p>
-					Every captured requirement becomes a living search. When a new listing hits the market that fits a client from three
-					weeks ago, CoAgent flags it to you the day it goes live - so they hear it from you first, not from a portal alert.
-					Follow-ups, viewing reminders and the promises you made all land in your tasks at the right moment.
-				</p>
-				<p>
-					This is the difference between a CRM you feed and a CRM that feeds you.
-				</p>
-			</div>
-			<div class="gCard" aria-hidden="true">
-				<div class="gLabel">Nurture, running</div>
-				<div class="gPipe">
-					<span>New</span><span class="on">Qualified</span><span>Viewing</span><span>Offer</span>
-				</div>
-				<div class="gAlert">New listing matches Marta - day one</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="cta">
-		<div class="ctaInner">
-			<h2>It remembers every promise you made</h2>
-			<p>
-				Your memory is excellent. Until Thursday. Every agent carries fifty open promises in their head, and the one that slips is always the one that mattered: the buyer
-				who was ready, the vendor quietly testing whether you listen. CoAgent will carry all of them, and hand each one back at
-				exactly the moment you need it.
-			</p>
+				))
+			}
 		</div>
 	</section>
 
 	<section class="section">
 		<div class="sectionHead">
-			<h2>Your privacy: what is recorded and what is not</h2>
-			<p>An assistant that hears your conversations has to earn its place. These three promises are design decisions, not settings.</p>
+			<h2>Your privacy: what is kept and what is not</h2>
+			<p>An assistant that hears your conversations has to earn its place. These are design decisions, not settings you have to find.</p>
 		</div>
 		<div class="grid3">
 			{
@@ -309,19 +194,37 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 	<section class="section">
 		<div class="grid2">
 			<div class="card accent">
-				<h2>It works in English, Spanish and your clients' languages</h2>
+				<h2>It speaks this coast</h2>
 				<p>
-					It speaks this coast. Clients here switch language mid-sentence, and CoAgent is being built for exactly that - English, Spanish and the
-					other languages of the coast, in the same call. The names, the budgets and the areas still land in the right fields.
+					Clients here switch between English and Spanish mid-sentence, and so do agents. CoAgent understands a note that
+					changes language halfway through, and replies in yours: English, Spanish, German, French, Portuguese, Bulgarian or
+					Greek. The names, the budgets and the areas still land in the right fields.
 				</p>
 			</div>
 			<div class="card">
 				<h2>No new app to learn</h2>
 				<p>
-					CoAgent is not another app to adopt: it lives inside the platform you already use. It will live inside PropertyList, where 1,300+ agents and 970+ agencies already
-					work - matching against 5,000+ shared listings the moment a client tells you what they want.
+					CoAgent is not another app to adopt. It lives in WhatsApp, and behind it sits the platform where 1,300+ agents and
+					970+ agencies already work, matching against 4,400+ shared listings the moment a client tells you what they want.
 				</p>
 			</div>
+		</div>
+	</section>
+
+	<section class="section" id="next">
+		<div class="sectionHead">
+			<h2>What we are building next</h2>
+			<p>Everything above works today. These do not yet, and we would rather say so here than let you find out later.</p>
+		</div>
+		<div class="grid3">
+			{
+				soon.map((s) => (
+					<div class="card">
+						<h3>{s.name}</h3>
+						<p>{s.desc}</p>
+					</div>
+				))
+			}
 		</div>
 	</section>
 
@@ -341,8 +244,8 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 
 	<section class="cta">
 		<div class="ctaInner">
-			<h2>Never walk into a call cold again.</h2>
-			<p>CoAgent arrives for PropertyList agents first. Create your free account now - no card required - and be ready on day one, inside the free <a href="/features/">PropertyList platform</a>.</p>
+			<h2>It remembers every promise you made.</h2>
+			<p>Your memory is excellent. Until Thursday. Every agent carries fifty open promises, and the one that slips is always the one that mattered. Create your free account and start talking to it, inside the free <a href="/features/">PropertyList platform</a>.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
 			</div>
@@ -495,3 +398,4 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 	</style>
 	<AgentInterestCta lang="en" page="/coagent/" />
 </Layout>
+
