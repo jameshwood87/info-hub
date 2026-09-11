@@ -25,6 +25,12 @@ const asks = [
 	{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
 	{ q: 'What is PL22234 worth?', a: 'A value from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
 	{ q: 'REPORT', a: 'After a valuation, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
+	{ q: 'How many apartments are for sale in San Pedro?', a: 'The real number on the market there, the best matches, and a link to the full list in your CRM.' },
+	{ q: 'BROCHURE PL22234', a: 'A brochure of the listing with your own branding: a page your client can open, with today’s price and a way to enquire, plus the PDF. It tells you the price in credits first, and a brochure you already made is sent again for free.' },
+	{ photo: true, q: 'A photo of a tired room, with "renovate"', a: 'Mid-viewing, send the kitchen as it is and get it back renovated a minute later, to show your buyer what it could be. It costs the same credits as in the CRM, and only a render that comes out well is charged.' },
+	{ q: 'Marta has made an offer', a: 'CoAgent moves her card to the right stage on your pipeline when you reply YES, the same as dragging it in the CRM. Marking a client won or lost stays in the CRM, where it asks for the details.' },
+	{ q: 'REPLY', a: 'CoAgent writes an email to your latest lead in their own language, from what they asked. Reply YES and it goes out from you through the CRM, and their answer comes back to your email. Or just answer the new-lead alert.' },
+	{ q: 'Let’s list a property', a: 'CoAgent tells you how: send the photos, then DONE with the details, and the draft listing is waiting in your CRM.' },
 ];
 
 const trust = [
@@ -53,6 +59,7 @@ const faqs = [
 	{ q: 'Do I need to name a client every time?', a: 'No. Naming a client turns a voice note into CRM updates. Without one you can still ask for properties, your diary, a listing by reference or what an area is worth, which is what you want when a walk-in is standing next to you.' },
 	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
 	{ q: 'What if CoAgent does not know my number?', a: 'It replies, in Spanish and English, with a link to create your free account and a link to the Staff page of your CRM, where you add your mobile to your profile. Put the country code in front if your number is not Spanish, then write to it again.' },
+	{ q: 'What costs credits?', a: 'Messages are covered by your plan. A brochure, the market report after your first free one, and a renovated room are paid in PropertyList credits, at the same price as in the CRM. CoAgent always tells you the price and waits for your YES before it spends anything, and a brochure or render that fails is never charged.' },
 	{ q: 'What does it cost?', a: 'CoAgent is free for everyone in September. The first 10 agents to message it keep it free and unlimited until 1 January. From October every agent gets 5 free messages a day, and approving with YES never counts toward them; unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. The MLS and the CRM core stay free, and creating your account costs nothing.' },
 ];
 
