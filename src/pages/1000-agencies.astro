@@ -10,9 +10,9 @@ const plListings = statPlus(__ps.listings, 'en');
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 
-// Paste the CoAgent WhatsApp number here on Monday 14 September and nothing else
-// needs touching. While it is empty the page tells people the number goes live
-// that morning, so this file is publishable before the number exists.
+// Paste the CoAgent WhatsApp number here at 9am on Tuesday 15 September and
+// nothing else needs touching. While it is empty the page tells people it goes live
+// then, so this file is publishable before the number exists.
 const COAGENT_NUMBER = '';
 const COAGENT_WA_LINK = COAGENT_NUMBER ? `https://wa.me/${COAGENT_NUMBER.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('PropertyList CoAgent')}` : '';
 
@@ -155,11 +155,11 @@ const breadcrumbLd = {
 				<div class="step">
 					<span class="stepNo">2</span>
 					<div>
-						<b>On Monday 14 September</b>
+						<b>On Tuesday 15 September, 9am</b>
 						{COAGENT_NUMBER ? (
 							<span>WhatsApp <b>{COAGENT_NUMBER}</b> and send the words <b>PropertyList CoAgent</b>. First 10. We will reply either way.</span>
 						) : (
-							<span>The CoAgent number goes live here on Monday morning. Nobody has it before then, so everyone starts at the same moment. Message it with the words <b>PropertyList CoAgent</b>. First 10, and we will reply either way.</span>
+							<span>The CoAgent number goes live here at 9am on Tuesday 15 September. Nobody has it before then, so everyone starts at the same moment. Message it with the words <b>PropertyList CoAgent</b>. First 10, and we will reply either way.</span>
 						)}
 					</div>
 				</div>
