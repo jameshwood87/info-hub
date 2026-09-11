@@ -2,8 +2,8 @@
 
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
-Last Updated: 2026-09-05
-Version: 6.7
+Last Updated: 2026-09-14
+Version: 6.8
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -76,6 +76,10 @@ A scroll-driven visual guide to nine Costa del Sol towns from Malaga to Sotogran
 
 #### /launch/ - Launch your estate agency in minutes (scroll story)
 A scroll-driven walkthrough for agents going independent: a stopwatch runs from 00:00 to 09:12 while a new agency assembles from the free PropertyList stack. Steps shown (all live features, all free): account signup (no card), first listing via Instant Listing (voice + photos), exposure on {{AGENTS}} agents' MLS dashboards across {{AGENCIES}} agencies, the listing live on the propertylist.es portal next to {{LISTINGS}} homes, a free branded MicroSite at youragency.estate-agency.co, free XML push to other portals, leads landing in the CRM pipeline, AI Property Match reading a pasted client message (own stock first, then the shared network; free in beta), and property alerts that email when a matching home comes online. Paid extras are listed openly at the end: Property Intelligence Report 5 credits, featuring from 10 credits, Website Builder 50 credits/month (build and preview free), private listings first 5 free. Spanish version: /es/lanza-tu-agencia/
+
+#### /1000-agencies/ - 1,000 agencies, and CoAgent
+Spanish: /es/1000-agencias/
+PropertyList passed 1,000 registered agencies. What that means for a listing: publish once and every agency on the network can sell it, unless the listing is marked private. Also announces CoAgent, the PropertyList CRM on WhatsApp: send it a voice note after a viewing and it writes the note, updates the requirement, sets the follow-up and proposes matching listings, changing nothing until the agent replies yes; audio is transcribed and never stored. CoAgent is free for every registered agency until 1 October 2026, then 5 messages a day free per agent, or 50 EUR a month per agent without the limit.
 
 #### /free/ - Everything an estate agency needs, free
 A comparison + conversion page for agents: the full list of what PropertyList gives estate agents for free (shared MLS across {{AGENTS}} agents/{{AGENCIES}} agencies, full CRM, listings on the propertylist.es portal, a branded MicroSite, Instant Listing, AI Property Match beta, property alerts, XML import + free push to other portals, the Android app, WhatsApp community). It contrasts this against the cost stack agents normally pay for the same capability (a portal subscription + CRM + website + brochure/valuation tools + XML feed), typically 300-700 EUR/month at Spanish market rates, vs 0 EUR on PropertyList. FAQs answer is-it-really-free, how PropertyList makes money (optional credit extras only), and what the catch is (listings are shared with the network). Ends with the openly-priced credit extras (Property Intelligence Report 5cr, featuring from 10cr, Website Builder 50cr/mo, Instant Content 30cr/mo). Spanish version: /es/gratis/

@@ -1,0 +1,277 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+import AgentInterestCta from '../../components/AgentInterestCta.astro';
+
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+
+// Pega aqui el numero de WhatsApp de CoAgent el lunes 14 de septiembre y no hace
+// falta tocar nada mas. Mientras este vacio, la pagina dice que el numero se
+// publica esa manana, asi que se puede publicar antes de que el numero exista.
+const COAGENT_NUMBER = '';
+const COAGENT_WA_LINK = COAGENT_NUMBER ? `https://wa.me/${COAGENT_NUMBER.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('PropertyList CoAgent')}` : '';
+
+// Las reseñas las manda James. La sección se oculta sola hasta que haya una.
+const reviews = [];
+
+const changes = [
+	{
+		t: 'Un anuncio, todas las agencias',
+		d: 'Publicas una vez y tu propiedad es visible para todas las agencias de la red a la vez, salvo que la marques como privada. Sin llamadas, sin presentaciones, sin pedir permiso.',
+	},
+	{
+		t: 'Ellos traen al comprador, tú mantienes al cliente',
+		d: 'El agente de Estepona que tiene un comprador buscando justo lo que tú tienes no necesita conocerte. Busca, lo ve y trae al comprador. Tu cliente sigue siendo tuyo, tu referencia sigue en el anuncio y tú mantienes tu parte de los honorarios.',
+	},
+	{
+		t: 'Solo funciona a escala',
+		d: 'Con 100 agencias esto es una idea bonita. Con 1.000 es un mercado. Por eso importa el número.',
+	},
+];
+
+const faqs = [
+	{
+		q: '¿Cuánto cuesta CoAgent?',
+		a: 'Nada para cualquier agencia registrada hasta el 1 de octubre de 2026, sin límite de uso. Después, cada agente mantiene 5 mensajes al día gratis, para siempre. Sin límite son 50 euros al mes por agente. Si tienes más de 3 agentes que añadir, pregúntanos por un paquete.',
+	},
+	{
+		q: '¿Cambia mi CRM por su cuenta?',
+		a: 'No. CoAgent propone y espera. Te enseña la nota que ha escrito, el requisito que quiere actualizar y el seguimiento que quiere programar, y no se guarda nada hasta que respondes que sí.',
+	},
+	{
+		q: '¿Qué pasa con mis notas de voz?',
+		a: 'El audio se transcribe y nunca se guarda. La nota que escribe sí queda en la ficha del cliente en tu CRM, que es justo para lo que sirve.',
+	},
+	{
+		q: '¿Cómo sabe quién soy?',
+		a: 'Por tu número de WhatsApp. Tiene que estar en tu cuenta de PropertyList, por eso importa el paso de abajo. Si escribes desde un número que no reconoce, te responde igual, solo que todavía no sabrá tu nombre, y te dirá cómo arreglarlo.',
+	},
+];
+
+const faqLd = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/es/' },
+		{ '@type': 'ListItem', position: 2, name: '1.000 agencias', item: 'https://info.propertylist.es/es/1000-agencias/' },
+	],
+};
+---
+
+<Layout
+	lang="es"
+	title="1.000 agencias comparten propiedades en PropertyList | PropertyList"
+	description="PropertyList ha superado las 1.000 agencias registradas. Mira lo que eso significa para tu próximo anuncio, y llévate CoAgent, tu CRM en WhatsApp, gratis para todas las agencias hasta el 1 de octubre."
+	canonical="https://info.propertylist.es/es/1000-agencias/"
+	hreflangs={[
+		{ hreflang: 'en', href: 'https://info.propertylist.es/1000-agencies/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/1000-agencias/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/1000-agencies/' },
+	]}
+>
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<div class="wrap">
+		<section class="hero">
+			<div class="badge"><span class="dot"></span> 1.000 agencias</div>
+			<h1>Tu próximo anuncio llega a<br /><span class="accent">1.000+ agencias.</span></h1>
+			<p class="lead">
+				{plAgents} agentes por toda España, compartiendo propiedades en vez de guardárselas. Publicar es gratis, sin contrato y sin comisiones de alta. Y ahora CoAgent, tu CRM en WhatsApp, gratis para todas las agencias hasta el 1 de octubre.
+			</p>
+			<div class="ctaRow">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+				<a class="btnGhost" href="#coagent">Conoce CoAgent &darr;</a>
+			</div>
+			<p class="micro">{plAgencies} agencias &middot; {plAgents} agentes &middot; {plListings} anuncios activos &middot; sin tarjeta</p>
+		</section>
+
+		<section class="proof">
+			<div class="proofGrid">
+				<div class="proofCell"><b>{plAgencies}</b><span>agencias registradas</span></div>
+				<div class="proofCell"><b>{plAgents}</b><span>agentes</span></div>
+				<div class="proofCell"><b>960+ a 1.000+</b><span>agencias desde mediados de agosto</span></div>
+				<div class="proofCell"><b>0 &euro;</b><span>por publicar, siempre</span></div>
+			</div>
+		</section>
+
+		<section class="block">
+			<h2>Qué cambia con 1.000</h2>
+			<p class="sub">Nada en cómo publicas. Todo en quién lo ve.</p>
+			<div class="grid3">
+				{changes.map((c) => (
+					<div class="card">
+						<b>{c.t}</b>
+						<span>{c.d}</span>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class="block" id="coagent">
+			<h2>Y lo que hemos construido para que no tengas que cambiar tu forma de trabajar</h2>
+			<div class="honestInner">
+				<span class="honestTag">El problema, sin rodeos</span>
+				<p>El CRM es donde se registra el trabajo. WhatsApp es donde el trabajo pasa de verdad. Coges la llamada en el coche, prometes mandar el anuncio, y cuando llegas a una mesa hay otras nueve cosas. La nota no se escribe. El seguimiento no se programa. Nadie está siendo vago. Es que el día va más rápido que el papeleo.</p>
+			</div>
+			<p class="sub afterHonest">
+				Así que no hemos construido otra pantalla en la que entrar. <b>CoAgent es tu CRM, en WhatsApp.</b> Le mandas una nota de voz al salir de una visita y escribe la nota, actualiza el requisito, programa el seguimiento y te dice qué propiedades tuyas encajan ahora. Le pides el teléfono de un cliente y te manda el teléfono. Le pides que te prepare antes de una llamada y te cuenta qué acordasteis y qué prometiste.
+			</p>
+			<p class="sub">
+				Él propone y espera. No cambia nada en tu CRM hasta que respondes que sí. El audio se transcribe y nunca se guarda.
+			</p>
+			<div class="priceBox">
+				<b>Gratis para todas las agencias registradas hasta el 1 de octubre</b>
+				<span>Sin límite de uso. Después, cada agente mantiene 5 mensajes al día gratis, para siempre. Sin límite son 50 &euro; al mes por agente. ¿Más de 3 agentes que añadir? Pregúntanos por un paquete.</span>
+			</div>
+			<p class="micro center"><a href="/es/coagent/">Mira cómo funciona CoAgent &rarr;</a></p>
+		</section>
+
+		<section class="block" id="first10">
+			<h2>Los 10 primeros tienen tres meses</h2>
+			<p class="sub">
+				Los 10 primeros agentes que escriban tienen tres meses gratis desde su primer mensaje, hasta mediados de diciembre más o menos. Y se llevan lo que más importa: estar dentro. Tú nos dices dónde estorba, y cambia. Lo que reciban las demás agencias dentro de unas semanas será lo que vosotros 10 hayáis hecho de ello.
+			</p>
+
+			<div class="steps">
+				<div class="step">
+					<span class="stepNo">1</span>
+					<div>
+						<b>Haz esto hoy</b>
+						<span>Tu cuenta de PropertyList necesita tu número de WhatsApp, porque así es como CoAgent sabe quién eres. Si gestionas la cuenta de tu agencia: abre <b>Personal</b>, abre tu propia ficha, <b>Editar</b>, y comprueba el campo <b>Teléfono</b>. Si no la gestionas tú, pídeselo a quien la lleve. Si escribes sin hacerlo, CoAgent te responde igual, solo que todavía no sabrá tu nombre.</span>
+					</div>
+				</div>
+				<div class="step">
+					<span class="stepNo">2</span>
+					<div>
+						<b>El lunes 14 de septiembre</b>
+						{COAGENT_NUMBER ? (
+							<span>Escribe por WhatsApp a <b>{COAGENT_NUMBER}</b> con el texto <b>PropertyList CoAgent</b>. Solo los 10 primeros. Te responderemos en cualquier caso.</span>
+						) : (
+							<span>El número de CoAgent se publica aquí el lunes por la mañana. Nadie lo tiene antes, así que empezamos todos a la vez. Escríbele con el texto <b>PropertyList CoAgent</b>. Los 10 primeros, y te responderemos en cualquier caso.</span>
+						)}
+					</div>
+				</div>
+			</div>
+
+			{COAGENT_WA_LINK && (
+				<div class="ctaRow center">
+					<a class="btnPrimary" href={COAGENT_WA_LINK} target="_blank" rel="noopener">Escribe a CoAgent por WhatsApp</a>
+				</div>
+			)}
+		</section>
+
+		{reviews.length > 0 && (
+			<section class="block">
+				<h2>Lo que dicen las agencias</h2>
+				<div class="quotes">
+					{reviews.map((r) => (
+						<figure class="quote">
+							<blockquote>{r.quote}</blockquote>
+							<figcaption>{r.agency}</figcaption>
+						</figure>
+					))}
+				</div>
+			</section>
+		)}
+
+		<section class="block">
+			<h2>Preguntas</h2>
+			<div class="faqs">
+				{faqs.map((f) => (
+					<details class="faq">
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+		</section>
+
+		<section class="block closing">
+			<h2>Publicar gratis. Compartir gratis.</h2>
+			<p class="sub">
+				Publicar en PropertyList es gratis y siempre lo ha sido. Sin comisiones por anuncio, sin contrato y sin coste de alta. Crea una cuenta, sube tus propiedades, y tu próximo anuncio llega a todas esas agencias el mismo día. CoAgent viene incluido, gratis hasta el 1 de octubre.
+			</p>
+			<div class="ctaRow center">
+				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+			</div>
+		</section>
+
+		<AgentInterestCta lang="es" />
+	</div>
+</Layout>
+
+<style>
+	.wrap { max-width: 900px; margin: 0 auto; padding: 42px 20px 72px; }
+	.hero { text-align: center; margin-bottom: 12px; }
+	.badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0, 174, 154, 0.35); background: rgba(0, 174, 154, 0.07); color: #0a6d61; font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; margin-bottom: 18px; }
+	.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; }
+	h1 { font-size: clamp(32px, 5.4vw, 56px); line-height: 1.05; letter-spacing: -0.025em; margin: 0 0 14px; font-weight: 900; }
+	.accent { color: #00ae9a; }
+	.lead { max-width: 640px; margin: 0 auto 22px; color: rgba(16, 24, 40, 0.72); font-size: 17px; line-height: 1.62; }
+	.micro { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin: 14px 0 0; }
+	.micro.center { text-align: center; }
+	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+	.ctaRow.center { justify-content: center; margin-top: 22px; }
+	.btnPrimary { background: #00ae9a; color: #fff; font-weight: 800; font-size: 15px; padding: 14px 26px; border-radius: 12px; text-decoration: none; box-shadow: 0 12px 30px -12px rgba(0, 174, 154, 0.6); }
+	.btnPrimary:hover { background: #008a7a; text-decoration: none; }
+	.btnGhost { background: #fff; color: #0a6d61; border: 1px solid rgba(0, 174, 154, 0.4); font-weight: 700; font-size: 15px; padding: 13px 22px; border-radius: 12px; text-decoration: none; }
+	.btnGhost:hover { background: rgba(0, 174, 154, 0.06); text-decoration: none; }
+
+	.proof { margin-top: 34px; }
+	.proofGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+	.proofCell { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 18px 14px; text-align: center; }
+	.proofCell b { display: block; font-size: clamp(20px, 3vw, 28px); font-weight: 900; color: #00ae9a; letter-spacing: -0.02em; }
+	.proofCell span { display: block; font-size: 12.5px; color: rgba(16, 24, 40, 0.6); margin-top: 4px; line-height: 1.4; }
+
+	.block { margin-top: 52px; }
+	.block h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.02em; margin: 0 0 8px; text-align: center; font-weight: 900; }
+	.sub { text-align: center; max-width: 660px; margin: 0 auto 20px; color: rgba(16, 24, 40, 0.72); font-size: 15.5px; line-height: 1.65; }
+	.sub.afterHonest { margin-top: 22px; }
+
+	.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+	.card { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 20px; }
+	.card b { display: block; font-size: 16px; margin-bottom: 7px; }
+	.card span { font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.72); }
+
+	.honestInner { max-width: 720px; margin: 0 auto; background: #fff; border: 1px solid rgba(0, 174, 154, 0.3); border-left: 4px solid #00ae9a; border-radius: 14px; padding: 20px 24px; }
+	.honestTag { display: block; font-size: 15.5px; font-weight: 900; color: #0a6d61; margin-bottom: 6px; }
+	.honestInner p { font-size: 14.5px; line-height: 1.62; color: rgba(16, 24, 40, 0.76); margin: 0; }
+
+	.priceBox { max-width: 720px; margin: 26px auto 0; background: rgba(0, 174, 154, 0.06); border: 1px solid rgba(0, 174, 154, 0.3); border-radius: 14px; padding: 20px 24px; text-align: center; }
+	.priceBox b { display: block; font-size: 17px; color: #0a6d61; margin-bottom: 6px; }
+	.priceBox span { font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.74); }
+
+	.steps { max-width: 720px; margin: 24px auto 0; display: grid; gap: 14px; }
+	.step { display: flex; gap: 14px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 18px 20px; }
+	.stepNo { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; background: #00ae9a; color: #fff; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+	.step b { display: block; font-size: 15.5px; margin-bottom: 5px; }
+	.step span { font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.72); }
+
+	.quotes { display: grid; gap: 14px; max-width: 720px; margin: 22px auto 0; }
+	.quote { margin: 0; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 20px 24px; }
+	.quote blockquote { margin: 0 0 8px; font-size: 15.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.82); }
+	.quote figcaption { font-size: 13px; font-weight: 700; color: #0a6d61; }
+
+	.faqs { max-width: 720px; margin: 22px auto 0; display: grid; gap: 10px; }
+	.faq { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 14px 18px; }
+	.faq summary { font-weight: 800; font-size: 15px; cursor: pointer; }
+	.faq p { margin: 10px 0 0; font-size: 14.5px; line-height: 1.62; color: rgba(16, 24, 40, 0.74); }
+
+	.closing { text-align: center; }
+
+	@media (max-width: 860px) {
+		.proofGrid { grid-template-columns: repeat(2, 1fr); }
+		.grid3 { grid-template-columns: 1fr; }
+	}
+</style>
