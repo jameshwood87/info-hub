@@ -17,7 +17,24 @@ const COAGENT_NUMBER = '';
 const COAGENT_WA_LINK = COAGENT_NUMBER ? `https://wa.me/${COAGENT_NUMBER.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('PropertyList CoAgent')}` : '';
 
 // Las reseñas las manda James. La sección se oculta sola hasta que haya una.
-const reviews = [];
+const reviews = [
+	{
+		quote: 'La plataforma es muy fácil de usar, intuitiva, y está pensada para el día a día real de un agente inmobiliario. Ahorra tiempo, mantiene los procesos ordenados y te ayuda a trabajar a un nivel más profesional.',
+		agency: 'Alain Fiddelers',
+	},
+	{
+		quote: 'Es un MLS, CRM y portal inmobiliario muy bien pensado, todo en uno: ágil, profesional y claramente diseñado pensando en los intereses del agente. Una plataforma fantástica para agentes que valoran la colaboración, la transparencia y proteger su cartera.',
+		agency: 'By Frances Concierge',
+	},
+	{
+		quote: 'La plataforma está bien estructurada, es fiable y mejora continuamente. Añaden funciones con regularidad, y el equipo es proactivo y rápido aplicando mejoras que de verdad ayudan a los agentes. Mi web está conectada por completo a través del feed de PropertyList y todo funciona sin problemas.',
+		agency: 'Nathalie Sergeant',
+	},
+	{
+		quote: 'Es un portal muy útil para trabajar con inmuebles de costa. Ninguna de mis búsquedas se hace sin él.',
+		agency: 'Valeria Kriptova',
+	},
+];
 
 const changes = [
 	{
