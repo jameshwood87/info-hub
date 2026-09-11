@@ -18,6 +18,7 @@ const asks = [
 	{ q: 'What is Nueva Andalucía worth?', a: 'The middle asking price and the range across what is actually on the market there. If we do not hold enough stock in an area, it says so rather than guessing.' },
 	{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
 	{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
+	{ q: 'Add Maria Lopez 600 111 222 maria@email.com', a: 'Or share her contact card straight from your phone. CoAgent reads the name, number and email back and adds her to your CRM when you reply YES. If she is already there, it links her record instead of making a duplicate.' },
 ];
 
 const trust = [
@@ -32,6 +33,12 @@ const soon = [
 	{ name: 'The brief on your caller screen', desc: 'Today you can ask for a client brief any time. Having it appear by itself as the phone rings needs work inside the mobile app, and that is the next piece we build.' },
 ];
 
+const plans = [
+	{ name: 'September: free for everyone', desc: 'Every agent, every message, no limit, while we launch.' },
+	{ name: 'The first 10 agents: free to the end of December', desc: 'The first ten agents to message CoAgent keep it free and unlimited for three more months, until 31 December.' },
+	{ name: 'From October: 5 a day free, or unlimited', desc: 'Every agent gets 5 free messages a day, and approving with YES never counts. For more, unlimited CoAgent is 50 credits a month per agent, turned on from the Billing page or by replying SUBSCRIBE.' },
+];
+
 const faqs = [
 	{ q: 'What do I have to install?', a: 'Nothing. CoAgent works in WhatsApp, which you already use all day. Save the PropertyList number, make sure your mobile is on your CRM profile so it knows you are an agent rather than a client, and send it a voice note.' },
 	{ q: 'Will it change my CRM automatically?', a: 'No. CoAgent proposes and waits. It shows you the client it matched and the changes it wants to make, field by field, and nothing is written until you reply YES. If it mishears, it costs you one word, not a wrong budget sitting quietly in a shared record.' },
@@ -39,7 +46,7 @@ const faqs = [
 	{ q: 'Does it work in Spanish?', a: 'Yes, and in German, French, Portuguese, Bulgarian and Greek. It replies in your own language and it copes with a note that switches language halfway through, which on this coast is most of them.' },
 	{ q: 'Do I need to name a client every time?', a: 'No. Naming a client turns a voice note into CRM updates. Without one you can still ask for properties, your diary, a listing by reference or what an area is worth, which is what you want when a walk-in is standing next to you.' },
 	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
-	{ q: 'What does it cost?', a: 'The MLS and the CRM core stay free. The CRM is not 100% free: moving a qualified buyer lead into the Buyer pipeline costs 1 credit, and your first 5 buyer leads are free. CoAgent plans and pricing will be announced separately. Creating your free account costs nothing.' },
+	{ q: 'What does it cost?', a: 'CoAgent is free for everyone in September. The first 10 agents to message it keep it free and unlimited until 31 December. From October every agent gets 5 free messages a day, and approving with YES never counts toward them; unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. The MLS and the CRM core stay free, and creating your account costs nothing.' },
 ];
 
 const faqLd = {
@@ -208,6 +215,23 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 					970+ agencies already work, matching against 4,400+ shared listings the moment a client tells you what they want.
 				</p>
 			</div>
+		</div>
+	</section>
+
+	<section class="section" id="pricing">
+		<div class="sectionHead">
+			<h2>What it costs</h2>
+			<p>No contract. Unlimited is paid in credits, from the same wallet as everything else on PropertyList, and you can stop it renewing any time.</p>
+		</div>
+		<div class="grid3">
+			{
+				plans.map((p) => (
+					<div class="card">
+						<h3>{p.name}</h3>
+						<p>{p.desc}</p>
+					</div>
+				))
+			}
 		</div>
 	</section>
 
