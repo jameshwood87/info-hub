@@ -19,7 +19,7 @@ const asks = [
 	{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
 	{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
 	{ q: 'Add Maria Lopez 600 111 222 maria@email.com', a: 'Or share her contact card straight from your phone. CoAgent reads the name, number and email back and adds her to your CRM when you reply YES. If she is already there, it links her record instead of making a duplicate.' },
-	{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, with a line about the property if you like. CoAgent starts a draft listing, and when you reply DONE it writes the title, description and features from the photos. The draft waits in your CRM for you to check. It is never published by itself.' },
+	{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, then tell CoAgent about the property, typed or as a voice note. It asks for anything missing, like the price, reads the listing back, and on YES writes the title, description and features. Reply PUBLISH and it goes to review, as it would from the CRM. Nothing goes live without that.' },
 	{ photo: true, q: 'A photo of a Se Vende sign', a: 'CoAgent reads the phone number off the sign, with any name or price on it. Reply YES and the owner is saved as a contact in your CRM with a note of the sign, ready for you to call.' },
 	{ photo: true, q: 'A photo of a client’s ID', a: 'Only the name, surnames and date of birth are read, and added as a new contact when you reply YES. The document number is never kept, and neither is the photo.' },
 	{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
@@ -30,7 +30,7 @@ const asks = [
 	{ photo: true, q: 'A photo of a tired room, with "renovate"', a: 'Mid-viewing, send the kitchen as it is and get it back renovated a minute later, to show your buyer what it could be. It costs the same credits as in the CRM, and only a render that comes out well is charged.' },
 	{ q: 'Marta has made an offer', a: 'CoAgent moves her card to the right stage on your pipeline when you reply YES, the same as dragging it in the CRM. Marking a client won or lost stays in the CRM, where it asks for the details.' },
 	{ q: 'REPLY', a: 'CoAgent writes an email to your latest lead in their own language, from what they asked. Reply YES and it goes out from you through the CRM, and their answer comes back to your email. Or just answer the new-lead alert.' },
-	{ q: 'Let’s list a property', a: 'CoAgent tells you how: send the photos, then DONE with the details, and the draft listing is waiting in your CRM.' },
+	{ q: 'Let’s list a property', a: 'CoAgent tells you what to send: the photos, then the price, where it is and the bedrooms, in your own words. No commands to learn.' },
 ];
 
 const trust = [

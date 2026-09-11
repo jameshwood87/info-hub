@@ -19,7 +19,7 @@ const asks = [
 	{ q: 'Anade una nota a Marta: quiere verla otra vez el sabado', a: 'Te lee la nota con tus propias palabras y la guarda en su ficha cuando respondes SI.' },
 	{ q: 'Sigue disponible PL22234?', a: 'Si la propiedad es de otra agencia, CoAgent se ofrece a preguntarles por ti. Responde SI y la consulta les llega por el MLS, y su respuesta vuelve a ti.' },
 	{ q: 'Anade a Maria Lopez 600 111 222 maria@email.com', a: 'O comparte su tarjeta de contacto desde el movil. CoAgent te lee el nombre, el telefono y el email y la anade a tu CRM cuando respondes SI. Si ya esta, te enlaza su ficha en vez de crear un duplicado.' },
-	{ photo: true, q: 'Fotos de una propiedad nueva', a: 'Mandalas directamente desde la galeria, con una frase sobre la propiedad si quieres. CoAgent empieza un borrador de anuncio y, cuando respondes LISTO, escribe el titulo, la descripcion y las caracteristicas a partir de las fotos. El borrador te espera en el CRM para que lo revises. Nunca se publica solo.' },
+	{ photo: true, q: 'Fotos de una propiedad nueva', a: 'Mándalas directamente desde la galería y después cuéntale a CoAgent cómo es la propiedad, escribiendo o con una nota de voz. Te pide lo que falte, como el precio, te lee el anuncio y, cuando respondes SÍ, escribe el título, la descripción y las características. Responde PUBLICAR y pasa a revisión, igual que desde el CRM. Nada se publica sin eso.' },
 	{ photo: true, q: 'La foto de un cartel de Se Vende', a: 'CoAgent lee el telefono del cartel, y el nombre o el precio si aparecen. Responde SI y el propietario queda guardado como contacto en tu CRM, con una nota del cartel, listo para que le llames.' },
 	{ photo: true, q: 'La foto del DNI de un cliente', a: 'Solo se leen el nombre, los apellidos y la fecha de nacimiento, y se anade como contacto nuevo cuando respondes SI. El numero del documento nunca se guarda, y la foto tampoco.' },
 	{ q: 'Cual es la mejor compra, PL5001, PL5002 o PL5003?', a: 'Las compara con viviendas parecidas en venta en la zona, con el precio por metro cuadrado, para que puedas decirle al cliente cual tiene buen precio y cual pide demasiado. Preguntalo justo despues de una busqueda y compara esos resultados.' },
@@ -30,7 +30,7 @@ const asks = [
 	{ photo: true, q: 'La foto de una estancia antigua, con "reformar"', a: 'En plena visita, manda la cocina tal como está y recíbela reformada un minuto después, para enseñarle al comprador lo que podría ser. Cuesta lo mismo que en el CRM, y solo se cobra un render que sale bien.' },
 	{ q: 'Marta ha hecho una oferta', a: 'CoAgent mueve su tarjeta a la etapa correcta de tu pipeline cuando respondes SÍ, igual que arrastrarla en el CRM. Marcar un cliente como ganado o perdido se queda en el CRM, donde te pide los detalles.' },
 	{ q: 'RESPONDER', a: 'CoAgent escribe un email a tu último lead en su propio idioma, a partir de lo que preguntó. Responde SÍ y sale de tu parte a través del CRM, y su respuesta llega a tu email. O simplemente contesta al aviso de lead nuevo.' },
-	{ q: 'Vamos a anunciar una propiedad', a: 'CoAgent te dice cómo: manda las fotos, después LISTO con los detalles, y el borrador te espera en tu CRM.' },
+	{ q: 'Vamos a anunciar una propiedad', a: 'CoAgent te dice qué enviar: las fotos, y después el precio, dónde está y los dormitorios, con tus propias palabras. Sin comandos que aprender.' },
 ];
 
 const trust = [
