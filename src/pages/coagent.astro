@@ -6,7 +6,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/coagent/`;
 const title = 'PropertyList CoAgent - the CRM you talk to on WhatsApp | PropertyList';
 const description =
-	'Send a voice note after a viewing and CoAgent writes up the CRM for you to approve. Ask it for properties, a client brief, your next viewing or what an area is worth, in the WhatsApp you already use. Audio is never stored and nothing is saved until you reply YES.';
+	'Send a voice note after a viewing and CoAgent writes up the CRM for you to approve. Ask it for properties, a client brief, your next viewing or what a home is worth, or send photos to start a listing, in the WhatsApp you already use. Audio is never stored and nothing is saved until you reply YES.';
 
 const asks = [
 	{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
@@ -19,6 +19,12 @@ const asks = [
 	{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
 	{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
 	{ q: 'Add Maria Lopez 600 111 222 maria@email.com', a: 'Or share her contact card straight from your phone. CoAgent reads the name, number and email back and adds her to your CRM when you reply YES. If she is already there, it links her record instead of making a duplicate.' },
+	{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, with a line about the property if you like. CoAgent starts a draft listing, and when you reply DONE it writes the title, description and features from the photos. The draft waits in your CRM for you to check. It is never published by itself.' },
+	{ photo: true, q: 'A photo of a Se Vende sign', a: 'CoAgent reads the phone number off the sign, with any name or price on it. Reply YES and the owner is saved as a contact in your CRM with a note of the sign, ready for you to call.' },
+	{ photo: true, q: 'A photo of a client’s ID', a: 'Only the name, surnames and date of birth are read, and added as a new contact when you reply YES. The document number is never kept, and neither is the photo.' },
+	{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
+	{ q: 'What is PL22234 worth?', a: 'A value from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
+	{ q: 'REPORT', a: 'After a valuation, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
 ];
 
 const trust = [
@@ -46,6 +52,7 @@ const faqs = [
 	{ q: 'Does it work in Spanish?', a: 'Yes, and in German, French, Portuguese, Bulgarian and Greek. It replies in your own language and it copes with a note that switches language halfway through, which on this coast is most of them.' },
 	{ q: 'Do I need to name a client every time?', a: 'No. Naming a client turns a voice note into CRM updates. Without one you can still ask for properties, your diary, a listing by reference or what an area is worth, which is what you want when a walk-in is standing next to you.' },
 	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
+	{ q: 'What if CoAgent does not know my number?', a: 'It replies, in Spanish and English, with a link to create your free account and a link to the Staff page of your CRM, where you add your mobile to your profile. Put the country code in front if your number is not Spanish, then write to it again.' },
 	{ q: 'What does it cost?', a: 'CoAgent is free for everyone in September. The first 10 agents to message it keep it free and unlimited until 31 December. From October every agent gets 5 free messages a day, and approving with YES never counts toward them; unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. The MLS and the CRM core stay free, and creating your account costs nothing.' },
 ];
 
@@ -173,7 +180,8 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 			{
 				asks.map((item) => (
 					<div class="card">
-						<h3>&ldquo;{item.q}&rdquo;</h3>
+						{item.photo && <div class="stepTime">Send a photo</div>}
+						<h3>{item.photo ? item.q : `“${item.q}”`}</h3>
 						<p>{item.a}</p>
 					</div>
 				))
