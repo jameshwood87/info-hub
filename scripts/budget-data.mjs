@@ -113,7 +113,15 @@ async function oracleFor(mcpName, key) {
 }
 
 const env = await fs.readFile("/opt/info-hub/.env", "utf8").catch(() => "");
-const mcpKey = env.match(/PROPERTYLIST_MCP_KEY=(\S+)/)?.[1] || "";
+// Anchored to the start of a line, or a commented-out key wins. The .env
+// keeps dead keys as comments for the record, and an unanchored match took
+// the first one it saw anywhere in the file: from 21 Aug 2026 that was
+// "#EXPIRED-2026-08-21 PROPERTYLIST_MCP_KEY=...", sitting twelve lines above
+// the live key. Every Oracle call 401d, oracleFor swallowed it, and the
+// notary-verified column on /budget/ was empty for three weeks with nothing
+// in the logs to say why.
+const mcpKey = env.match(/^PROPERTYLIST_MCP_KEY=(\S+)/m)?.[1] || "";
+if (!mcpKey) console.error("WARN: no PROPERTYLIST_MCP_KEY in .env - the notary-verified column will be empty");
 
 const towns = [];
 const thin = [];
@@ -145,6 +153,13 @@ for (const [slug, name, mcpName] of TOWNS) {
   });
   console.error(`${name}: n=${n} m2eur=${m2eur} min=${prices[0]} oracle=${oracle ? oracle.m2 : "-"}`);
   await sleep(1200);
+}
+
+// A key that has expired or been revoked fails exactly like a town with no
+// notarial coverage: quietly, one town at a time. Losing every one of them
+// at once is a broken credential, not the market, so say so.
+if (mcpKey && towns.length && !towns.some((t) => t.oracle)) {
+  console.error("WARN: no town returned an Oracle figure - check PROPERTYLIST_MCP_KEY is live");
 }
 
 // Cheapest EUR/m2 first: the "your money goes furthest" order the page renders.
