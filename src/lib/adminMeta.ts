@@ -87,6 +87,7 @@ export type KbMeta = {
 			featuredImageTitle?: string;
 			featuredImageCaption?: string;
 			featuredImageCredit?: string;
+			featuredImageCreditUrl?: string;
 			scheduledAt?: string;
 			docCategory?: 'estate-agent' | 'developer' | 'property-service' | 'public';
 			docCategories?: Array<'estate-agent' | 'developer' | 'property-service' | 'public'>;
@@ -160,6 +161,7 @@ export const setKbMeta = async (
 		featuredImageTitle?: string | null;
 		featuredImageCaption?: string | null;
 		featuredImageCredit?: string | null;
+		featuredImageCreditUrl?: string | null;
 		scheduledAt?: string | null;
 		reviewedAt?: string | null;
 		docCategory?: 'estate-agent' | 'developer' | 'property-service' | 'public' | null;
@@ -194,6 +196,8 @@ export const setKbMeta = async (
 	else if (typeof patch.featuredImageCaption === 'string') next.featuredImageCaption = patch.featuredImageCaption;
 	if (patch.featuredImageCredit === null) delete next.featuredImageCredit;
 	else if (typeof patch.featuredImageCredit === 'string') next.featuredImageCredit = patch.featuredImageCredit;
+	if (patch.featuredImageCreditUrl === null) delete next.featuredImageCreditUrl;
+	else if (typeof patch.featuredImageCreditUrl === 'string') next.featuredImageCreditUrl = patch.featuredImageCreditUrl;
 	if (patch.scheduledAt === null) delete next.scheduledAt;
 	else if (typeof patch.scheduledAt === 'string') next.scheduledAt = patch.scheduledAt;
 	if (patch.reviewedAt === null) delete next.reviewedAt;

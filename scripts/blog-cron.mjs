@@ -228,6 +228,17 @@ const envText = fs.readFileSync('/opt/info-hub/.env', 'utf8');
 const cfg = (k) => (envText.match(new RegExp('^' + k + '=(.*)$', 'm'))?.[1] || '').trim().replace(/^["']|["']$/g, '');
 const KEY = cfg('MANDRILL_API_KEY'), TO = cfg('NOTIFY_TO'), FROM = cfg('NOTIFY_FROM') || 'noreply@propertylist.es', SECRET = cfg('BLOG_APPROVE_SECRET');
 const SITE = 'https://info.propertylist.es';
+// The featured image goes in the approval email so a person sees it before
+// approving. Photos picked from Pexels passed a vision check; this is the human one.
+let heroImg = null;
+try {
+  await new Promise((r) => setTimeout(r, 2000));
+  const heroMeta = (JSON.parse(fs.readFileSync('/opt/info-hub/var/admin/kb-meta.json', 'utf8')).items || {})[String(en.id)] || {};
+  if (heroMeta.featuredImageUrl) {
+    const u = String(heroMeta.featuredImageUrl);
+    heroImg = { src: u.startsWith('/') ? SITE + u : u, credit: String(heroMeta.featuredImageCredit || '') };
+  }
+} catch {}
 const exp = Math.floor(Date.now() / 1000) + 7 * 86400;
 const sign = (action) => createHmac('sha256', SECRET).update(`${en.id}|${es ? es.id : ''}|${exp}|${action}`).digest('hex');
 const link = (action) => `${SITE}/api/blog/approve?id=${encodeURIComponent(en.id)}&es=${encodeURIComponent(es ? es.id : '')}&exp=${exp}&action=${action}&sig=${sign(action)}`;
@@ -242,6 +253,8 @@ const html = `<div style="font-family:system-ui,sans-serif;max-width:680px;margi
 <p style="font-size:13px;color:#667085;margin:0 0 6px">Info hub blog draft for review ${badge}</p>
 <h2 style="margin:0 0 6px;font-size:22px;line-height:1.3">${esc(en.title)}</h2>
 <p style="margin:0 0 14px;color:#667085;font-size:14px">${esc(en.path)} ${es ? ' + Spanish twin' : ' (no Spanish twin found)'} · ${plain.split(' ').length} words</p>
+${heroImg ? `<img src="${esc(heroImg.src)}" alt="" width="680" style="display:block;width:100%;max-width:680px;height:auto;border-radius:10px;margin:0 0 6px">
+<p style="margin:0 0 14px;font-size:13px;color:#667085">${heroImg.credit ? 'Featured image picked automatically (' + esc(heroImg.credit) + '). Check it fits the article before approving.' : 'Featured image from our own library.'}</p>` : '<p style="margin:0 0 14px;font-size:13px;color:#b42318">No featured image assigned - the post will show the default hero.</p>'}
 ${lint.errors.length ? `<div style="border:2px solid #b42318;background:#fef3f2;border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#b42318">BLOCKED, cannot be approved until fixed:</b><ul style="margin:6px 0 0;padding-left:18px">${li(lint.errors, '#b42318')}</ul></div>` : ''}
 ${lint.warnings.length ? `<div style="border:1px solid #f59e0b;background:#fffbeb;border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#92400e">Read these before approving:</b><ul style="margin:6px 0 0;padding-left:18px">${li(lint.warnings, '#78350f')}</ul></div>` : '<p style="color:#065f46;font-size:14px">Lint: no warnings.</p>'}
 <div style="border:1px solid #e4e7ec;border-radius:10px;padding:14px 16px;margin:0 0 16px;font-size:14px;line-height:1.6;color:#344054;max-height:none">${esc(plain.slice(0, 1800))}${plain.length > 1800 ? ' [...]' : ''}</div>

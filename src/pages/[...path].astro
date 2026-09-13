@@ -2038,6 +2038,10 @@ const featuredImageCredit =
 	typeof (kbMeta as any).featuredImageCredit === 'string' && String((kbMeta as any).featuredImageCredit).trim()
 		? String((kbMeta as any).featuredImageCredit).trim()
 		: null;
+const featuredImageCreditUrl =
+	typeof (kbMeta as any).featuredImageCreditUrl === 'string' && String((kbMeta as any).featuredImageCreditUrl).trim().startsWith('https://')
+		? String((kbMeta as any).featuredImageCreditUrl).trim()
+		: null;
 
 const fallbackHeroSrc =
 	/\bcosta del sol\b/i.test(h1) ? '/blog/hero-costa-del-sol.jpg' :
@@ -2375,9 +2379,10 @@ const finalBodyHtml = (() => {
 		const titleAttr = featuredImageTitle ? ` title="${escapeHtmlAttr(featuredImageTitle)}"` : '';
 		const captionText = featuredImageCaption || '';
 		const creditText = featuredImageCredit || '';
+		const creditHtml = creditText && featuredImageCreditUrl ? `<a href="${escapeHtmlAttr(featuredImageCreditUrl)}" rel="nofollow noopener" target="_blank">${escapeHtmlAttr(creditText)}</a>` : escapeHtmlAttr(creditText);
 		const figcaption =
 			captionText || creditText
-				? `<figcaption class="blogHeroCaption">${escapeHtmlAttr(captionText)}${captionText && creditText ? ' - ' : ''}${escapeHtmlAttr(creditText)}</figcaption>`
+				? `<figcaption class="blogHeroCaption">${escapeHtmlAttr(captionText)}${captionText && creditText ? ' - ' : ''}${creditHtml}</figcaption>`
 				: '';
 		const isUnsplash = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.unsplash\.com/i.test(heroSrc);
 		const isPexels = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.pexels\.com/i.test(heroSrc);

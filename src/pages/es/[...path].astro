@@ -983,6 +983,10 @@ const featuredImageCredit =
 	typeof (kbMetaEnglish as any).featuredImageCredit === 'string' && String((kbMetaEnglish as any).featuredImageCredit).trim()
 		? String((kbMetaEnglish as any).featuredImageCredit).trim()
 		: null;
+const featuredImageCreditUrl =
+	typeof (kbMetaEnglish as any).featuredImageCreditUrl === 'string' && String((kbMetaEnglish as any).featuredImageCreditUrl).trim().startsWith('https://')
+		? String((kbMetaEnglish as any).featuredImageCreditUrl).trim()
+		: null;
 
 const areaMeta = (() => {
 	if (!isArea) return null;
@@ -1583,10 +1587,11 @@ const finalBodyHtml = (() => {
 		const alt = featuredImageAlt || h1;
 		const titleAttr = featuredImageTitle ? ` title="${escapeHtml(featuredImageTitle)}"` : '';
 		const captionText = featuredImageCaption || '';
-		const creditText = featuredImageCredit || '';
+		const creditText = (featuredImageCredit || '').replace(/^Photo by (.+) on Pexels$/, 'Foto de $1 en Pexels');
+		const creditHtml = creditText && featuredImageCreditUrl ? `<a href="${escapeHtml(featuredImageCreditUrl)}" rel="nofollow noopener" target="_blank">${escapeHtml(creditText)}</a>` : escapeHtml(creditText);
 		const figcaption =
 			captionText || creditText
-				? `<figcaption class="blogHeroCaption">${escapeHtml(captionText)}${captionText && creditText ? ' - ' : ''}${escapeHtml(creditText)}</figcaption>`
+				? `<figcaption class="blogHeroCaption">${escapeHtml(captionText)}${captionText && creditText ? ' - ' : ''}${creditHtml}</figcaption>`
 				: '';
 		const isUnsplash = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.unsplash\.com/i.test(heroSrc);
 		const isPexels = typeof heroSrc === 'string' && /^https?:\/\//i.test(heroSrc) && /images\.pexels\.com/i.test(heroSrc);

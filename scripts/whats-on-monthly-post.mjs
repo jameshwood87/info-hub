@@ -100,14 +100,14 @@ async function directus(path, { method = 'GET', body } = {}) {
 	return res.json();
 }
 
-async function setFeaturedImage(id, url, alt) {
+async function setFeaturedImage(id, url, alt, credit = null) {
 	const token = (process.env.INTERNAL_META_TOKEN || '').trim();
 	if (!token || !id) return;
 	try {
 		await fetch('http://127.0.0.1:3000/api/internal/set-meta', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'x-internal-token': token },
-			body: JSON.stringify({ id: String(id), featuredImageUrl: url, featuredImageAlt: alt }),
+			body: JSON.stringify({ id: String(id), featuredImageUrl: url, featuredImageAlt: alt, featuredImageCredit: credit ? credit.credit : null, featuredImageCreditUrl: credit ? credit.creditUrl : null }),
 		});
 	} catch {}
 }
@@ -252,12 +252,18 @@ Voice: warm, useful, local-expert; write for holiday-makers and residents. Plain
 		} catch (e) { console.log('event image: could not read kb-meta, assigning none:', e.message); return null; }
 		return town.images.find((img) => !taken.has(norm(img[0]))) || null;
 	};
-	const townImg = pickTownImage();
+	let townImg = pickTownImage();
+	let townCredit = null;
+	if (!townImg) {
+		const { pickPexelsImage } = await import('./lib/pexels-image.mjs');
+		const px = await pickPexelsImage({ title: titleEn });
+		if (px) { townImg = [px.url, px.alt]; townCredit = px; }
+	}
 	if (townImg) {
-		await setFeaturedImage(en.data?.id, townImg[0], townImg[1]);
-		await setFeaturedImage(es.data?.id, townImg[0], townImg[1]);
+		await setFeaturedImage(en.data?.id, townImg[0], townImg[1], townCredit);
+		await setFeaturedImage(es.data?.id, townImg[0], townImg[1], townCredit);
 	} else {
-		console.log('WARNING event image: every image in the ' + town.nameEn + ' pool is already used, so none was assigned (default hero). Add one to its images pool.');
+		console.log('WARNING event image: every image in the ' + town.nameEn + ' pool is already used and no Pexels photo passed the check, so none was assigned (default hero). Add one to its images pool.');
 	}
 
 	// IndexNow (best effort)

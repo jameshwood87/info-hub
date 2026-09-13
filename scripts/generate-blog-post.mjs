@@ -260,14 +260,14 @@ const pushRecent = (url) => {
   const recent = [url, ...recentImages().filter((u) => u !== url)].slice(0, 10);
   try { fs.writeFileSync(IMG_STATE_PATH, JSON.stringify({ recent }, null, 2)); } catch {}
 };
-async function setFeaturedImage(id, url, alt) {
+async function setFeaturedImage(id, url, alt, credit = null) {
   const token = (process.env.INTERNAL_META_TOKEN || '').trim();
   if (!token || !id) { console.log('featured image: skipped (no token or id)'); return; }
   try {
     const res = await fetch('http://127.0.0.1:3000/api/internal/set-meta', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-internal-token': token },
-      body: JSON.stringify({ id: String(id), featuredImageUrl: url, featuredImageAlt: alt }),
+      body: JSON.stringify({ id: String(id), featuredImageUrl: url, featuredImageAlt: alt, featuredImageCredit: credit ? credit.credit : null, featuredImageCreditUrl: credit ? credit.creditUrl : null }),
     });
     console.log(`featured image ${id} -> ${url} (${res.status})`);
   } catch (e) { console.log('featured image failed:', e.message); }
@@ -295,13 +295,23 @@ try {
   console.log('featured image: could not read kb-meta, so assigning none rather than risk a duplicate:', e.message);
 }
 const isFreeImg = (c) => Boolean(takenImgs) && !takenImgs.has(normImg(c[0]));
-const chosenImg = candidates.find(isFreeImg) || FALLBACK_IMAGES.find(isFreeImg) || null;
+// Order: an unused library image for this topic (chosen by hand), then a fresh
+// Pexels photo that passes the vision check (scripts/lib/pexels-image.mjs), then
+// the generic fallbacks. Never an image another article already uses.
+let chosenImg = candidates.find(isFreeImg) || null;
+let imgCredit = null;
+if (!chosenImg && takenImgs) {
+  const { pickPexelsImage } = await import('./lib/pexels-image.mjs');
+  const px = await pickPexelsImage({ title: post.title });
+  if (px) { chosenImg = [px.url, px.alt]; imgCredit = px; }
+}
+if (!chosenImg) chosenImg = FALLBACK_IMAGES.find(isFreeImg) || null;
 if (chosenImg) {
   pushRecent(chosenImg[0]);
-  await setFeaturedImage(en.data?.id, chosenImg[0], chosenImg[1]);
-  await setFeaturedImage(es.data?.id, chosenImg[0], chosenImg[1]);
+  await setFeaturedImage(en.data?.id, chosenImg[0], chosenImg[1], imgCredit);
+  await setFeaturedImage(es.data?.id, chosenImg[0], chosenImg[1], imgCredit);
 } else {
-  console.log('WARNING featured image: every image for this topic is already used on another article, so none was assigned and the post shows the default hero. Add a new image to public/blog-img/ and to IMAGE_RULES.');
+  console.log('WARNING featured image: no unused library image for this topic, no Pexels photo passed the check, and every fallback is taken, so none was assigned and the post shows the default hero.');
 }
 
 console.log(PUBLISH ? '\nDONE - both pages PUBLISHED.' : '\nDONE - both drafts are status=draft; review and publish in the admin.');
