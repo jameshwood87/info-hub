@@ -49,9 +49,9 @@ const scenes: Scene[] = es
 				label: 'Pasando por un cartel',
 				msgs: [
 					{ me: true, sign: true, time: '11:05' },
-					{ text: `Del cartel: <b>6XX XXX XXX</b>. ¿Guardo al propietario como contacto, con una nota del cartel? Responde <b>${yes}</b>.`, time: '11:05' },
+					{ text: `Del cartel: <b>6XX XXX XXX</b>. ¿Guardo al propietario como contacto, con una nota del cartel y un seguimiento para llamarle? Responde <b>${yes}</b>.`, time: '11:05' },
 					{ me: true, text: yes, time: '11:06' },
-					{ text: 'Guardado en tu CRM, listo para que le llames.', time: '11:06' },
+					{ text: 'Guardado en tu CRM, con un seguimiento para llamar al propietario.', time: '11:06' },
 				],
 			},
 			{
@@ -110,9 +110,9 @@ const scenes: Scene[] = es
 				label: 'Walking past a sign',
 				msgs: [
 					{ me: true, sign: true, time: '11:05' },
-					{ text: `From the sign: <b>6XX XXX XXX</b>. Save the owner as a contact, with a note of the sign? Reply <b>${yes}</b>.`, time: '11:05' },
+					{ text: `From the sign: <b>6XX XXX XXX</b>. Save the owner as a contact, with a note of the sign and a follow-up to call them? Reply <b>${yes}</b>.`, time: '11:05' },
 					{ me: true, text: yes, time: '11:06' },
-					{ text: 'Saved to your CRM, ready for you to call.', time: '11:06' },
+					{ text: 'Saved to your CRM, with a follow-up to call the owner.', time: '11:06' },
 				],
 			},
 			{
@@ -285,20 +285,20 @@ const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 
 			select(i);
 			const msgs = Array.from(scenes[i].querySelectorAll<HTMLElement>('.cphMsg'));
 			msgs.forEach((m) => m.classList.remove('on', 'playing'));
-			if (!(await wait(500, id))) return;
+			if (!(await wait(150, id))) return;
 
 			for (const m of msgs) {
 				const bot = m.classList.contains('bot');
 				if (bot && typing) {
 					typing.classList.add('on');
 					if (status) status.textContent = typingLabel;
-					if (!(await wait(m.querySelector('.cphCard') ? 1500 : 1100, id))) return;
+					if (!(await wait(m.querySelector('.cphCard') ? 1100 : 800, id))) return;
 					typing.classList.remove('on');
 					if (status) status.textContent = online;
 				}
 				m.classList.add('on');
 				if (m.querySelector('.cphVoice')) m.classList.add('playing');
-				const hold = m.querySelector('.cphVoice') ? 2600 : m.querySelector('.cphCard') ? 2600 : bot ? 1900 : 900;
+				const hold = m.querySelector('.cphVoice') ? 1900 : m.querySelector('.cphCard') ? 2400 : bot ? 1700 : 700;
 				if (!(await wait(hold, id))) return;
 			}
 			if (!(await wait(3600, id))) return;
@@ -313,17 +313,24 @@ const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 
 			}),
 		);
 
+		// Start from an empty chat, so the conversation builds as the phone scrolls in
+		// instead of showing the finished thread and then wiping it.
+		scenes[0]?.querySelectorAll<HTMLElement>('.cphMsg').forEach((m) => m.classList.remove('on'));
+
+		// Begin as soon as half the phone is on screen; keep counting down while any of it is.
+		const phone = root.querySelector<HTMLElement>('.cphPhone') || root;
 		const io = new IntersectionObserver(
 			(entries) => {
-				visible = entries.some((e) => e.isIntersecting);
-				if (visible && !started) {
+				const e = entries[entries.length - 1];
+				visible = e.isIntersecting;
+				if (!started && e.intersectionRatio >= 0.5) {
 					started = true;
 					play(0);
 				}
 			},
-			{ threshold: 0.25 },
+			{ threshold: [0, 0.25, 0.5, 0.75, 1] },
 		);
-		io.observe(root);
+		io.observe(phone);
 	});
 </script>
 

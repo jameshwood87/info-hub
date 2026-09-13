@@ -17,13 +17,14 @@ const plAgencies = statPlus(__ps.agencies, 'es');
 const plListings = statPlus(__ps.listings, 'es');
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
-const WA = coagentWaLink('PropertyList CoAgent');
+const WA = coagentWaLink();
+// A reminder for 9am Madrid time (07:00 UTC) on launch day, until the number exists.
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Escribir a PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('El número de CoAgent está en https://info.propertylist.es/es/coagent/ desde las 9:00. Antes de escribirle, asegúrate de estar registrado y con tu número de WhatsApp en tu usuario. Los 10 primeros agentes tienen un mes gratis.')}`;
 
-// Every exchange CoAgent handles today, grouped by the moment of the day an agent
-// needs it. The wording of each answer is the verified description of what shipped.
+// Everything CoAgent does today, as the question an agent would actually send.
+// Tap a question to see what comes back. Answers are the verified descriptions.
 const moments = [
 	{
-		key: 'car',
 		label: 'En el coche',
 		asks: [
 			{ q: '¿Dónde es mi próxima visita?', a: 'Tu agenda, empezando por la dirección y el teléfono del cliente, porque lo estás leyendo en el coche.' },
@@ -33,19 +34,17 @@ const moments = [
 		],
 	},
 	{
-		key: 'client',
-		label: 'Con un cliente',
+		label: 'Con un cliente al lado',
 		asks: [
 			{ q: '¿Qué tenemos en Marbella, tres dormitorios, hasta dos millones?', a: 'Cinco propiedades del MLS compartido con precios y enlaces. No hace falta nombrar a un cliente, así que funciona con alguien sentado a tu lado.' },
 			{ q: 'Háblame de PL22234', a: 'Precio, dormitorios, superficie, ubicación y el enlace de esa propiedad, sea tuya o de otra agencia.' },
 			{ q: '¿Cuál es la mejor compra, PL5001, PL5002 o PL5003?', a: 'Las compara con viviendas parecidas en venta en la zona, con el precio por metro cuadrado, para que puedas decirle al cliente cuál tiene buen precio y cuál pide demasiado. Pregúntalo justo después de una búsqueda y compara esos resultados.' },
-			{ photo: true, q: 'La foto de una estancia antigua, con "reformar"', a: 'En plena visita, manda la cocina tal como está y recíbela reformada un minuto después, para enseñarle al comprador lo que podría ser. Cuesta lo mismo que en el CRM, y solo se cobra un render que sale bien.' },
+			{ photo: true, q: 'La foto de una estancia antigua: "reformar"', a: 'En plena visita, manda la cocina tal como está y recíbela reformada un minuto después, para enseñarle al comprador lo que podría ser. Cuesta lo mismo que en el CRM, y solo se cobra un render que sale bien.' },
 			{ q: '¿Cuántos pisos hay en venta en San Pedro?', a: 'El número real en el mercado allí, las mejores opciones y un enlace a la lista completa en tu CRM.' },
 			{ q: '¿Sigue disponible PL22234?', a: 'Si la propiedad es de otra agencia, CoAgent se ofrece a preguntarles por ti. Responde SÍ y la consulta les llega por el MLS, y su respuesta vuelve a ti.' },
 		],
 	},
 	{
-		key: 'after',
 		label: 'Después de la visita',
 		asks: [
 			{ q: 'Añade una nota a Marta: quiere verla otra vez el sábado', a: 'Te lee la nota con tus propias palabras y la guarda en su ficha cuando respondes SÍ.' },
@@ -55,12 +54,11 @@ const moments = [
 		],
 	},
 	{
-		key: 'listings',
-		label: 'Captar inmuebles',
+		label: 'Ganar el anuncio',
 		asks: [
 			{ q: 'Vamos a anunciar una propiedad', a: 'CoAgent te dice qué enviar: las fotos, y después el precio, dónde está y los dormitorios, con tus propias palabras. Sin comandos que aprender.' },
 			{ photo: true, q: 'Fotos de una propiedad nueva', a: 'Mándalas directamente desde la galería y después cuéntale a CoAgent cómo es la propiedad, escribiendo o con una nota de voz. Te pide lo que falte, como el precio, te lee el anuncio y, cuando respondes SÍ, escribe el título, la descripción y las características. Responde PUBLICAR y pasa a revisión, igual que desde el CRM. Nada se publica sin eso.' },
-			{ photo: true, q: 'La foto de un cartel de Se Vende', a: 'CoAgent lee el teléfono del cartel, y el nombre o el precio si aparecen. Responde SÍ y el propietario queda guardado como contacto en tu CRM, con una nota del cartel, listo para que le llames.' },
+			{ photo: true, q: 'La foto de un cartel de Se Vende', a: 'CoAgent lee el teléfono del cartel, y el nombre o el precio si aparecen. Responde SÍ y el propietario queda guardado como contacto en tu CRM, con una nota del cartel y un seguimiento para llamarle.' },
 			{ q: '¿Cuánto vale Nueva Andalucía?', a: 'El precio medio de salida y el rango de lo que hay en el mercado allí. Si no tenemos suficientes anuncios en una zona, te lo dice en vez de inventar una cifra.' },
 			{ q: '¿Cuánto vale PL22234?', a: 'Un valor basado en ventas escrituradas ante notario en ese municipio, con un rango y un enlace a la prueba pública. O describe la vivienda: "un piso de 120 m² en Estepona". Siempre te dice en qué se basa la cifra.' },
 			{ q: 'INFORME', a: 'Después de una valoración, responde INFORME y recibes el Informe de Inteligencia completo de la propiedad, como un enlace que puedes mandar al vendedor. El primero es gratis. Después cuesta créditos, y te dice cuántos y te pregunta antes de gastar nada.' },
@@ -68,25 +66,12 @@ const moments = [
 		],
 	},
 	{
-		key: 'leads',
 		label: 'Leads nuevos',
 		asks: [
 			{ q: '¿Cuáles son mis últimos leads?', a: 'Tus cinco más recientes, con quién consultó, sobre qué propiedad y cuándo: los tuyos, o los de toda la agencia si eres administrador, como en el CRM. Responde RESPONDER para contestar al más reciente por email.' },
 			{ q: 'RESPONDER', a: 'CoAgent escribe un email a tu último lead en su propio idioma, a partir de lo que preguntó. Responde SÍ y sale de tu parte a través del CRM, y su respuesta llega a tu email. O simplemente contesta al aviso de lead nuevo.' },
 		],
 	},
-];
-
-const trust = [
-	{ name: 'Tu voz no se guarda', desc: 'El audio se transcribe y se descarta. Solo queda el texto, en la ficha a la que pertenece, donde puedes leerlo y corregirlo. No hay grabación que filtrar ni que entregar.' },
-	{ name: 'Nada se guarda sin tu permiso', desc: 'CoAgent te muestra lo que quiere cambiar y espera. Ninguna ficha se edita y ninguna consulta sale hacia otra agencia hasta que respondes SÍ. Si no dices nada, no pasa nada.' },
-	{ name: 'Responde con tus datos o no responde', desc: 'Cada respuesta sale de tu CRM y del MLS compartido. Pregúntale algo fuera de eso y te lo dice claramente, en lugar de inventarse un dato que podrías repetirle a un cliente.' },
-];
-
-const soon = [
-	{ name: 'Tu propio WhatsApp, conectado', desc: 'Sigue escribiendo a los clientes desde tu número y que esas conversaciones se archiven solas, en ambos sentidos, sin capturar nunca a quien no es cliente. En diseño ahora mismo.' },
-	{ name: 'Una línea de trabajo', desc: 'Un número de empresa dentro de la app de PropertyList, junto a tu SIM personal, con las llamadas resumidas igual que una nota de voz. En la hoja de ruta.' },
-	{ name: 'La ficha en la pantalla de llamada', desc: 'Hoy puedes pedir la ficha de un cliente cuando quieras. Que aparezca sola al sonar el teléfono necesita trabajo dentro de la app móvil, y es la siguiente pieza que construimos.' },
 ];
 
 const faqs = [
@@ -99,6 +84,7 @@ const faqs = [
 	{ q: '¿Y si CoAgent no reconoce mi número?', a: 'Te responde, en español y en inglés, con un enlace para crear tu cuenta gratis y otro a la página Personal de tu CRM, donde añades tu móvil a tu perfil. Si tu número no es español, ponle delante el prefijo del país, y vuelve a escribirle.' },
 	{ q: '¿Qué se paga con créditos?', a: 'Los mensajes entran en tu plan. Un folleto, el informe de mercado después del primero gratis y una estancia reformada se pagan en créditos de PropertyList, al mismo precio que en el CRM. CoAgent siempre te dice el precio y espera tu SÍ antes de gastar nada, y un folleto o un render que falla nunca se cobra.' },
 	{ q: '¿Qué cuesta?', a: 'Los primeros 10 agentes en escribir a CoAgent consiguen un mes gratis e ilimitado, contando desde su primer mensaje. Todos los agentes tienen 5 mensajes gratis al día, y aprobar con SÍ nunca cuenta. El ilimitado cuesta 50 créditos al mes por agente, pagados con tus créditos de PropertyList, y puedes dejar de renovarlo cuando quieras. Si tienes más de 3 agentes que añadir, habla con nosotros sobre un paquete. El MLS y el núcleo del CRM siguen siendo gratis, y crear tu cuenta no cuesta nada.' },
+	{ q: '¿Qué no está disponible todavía?', a: 'Conectar tu propio número de WhatsApp para que las conversaciones con tus clientes se archiven solas, una línea de trabajo dentro de la app de PropertyList, y que la ficha del cliente aparezca sola en tu pantalla de llamada. Todo lo demás en esta página ya funciona.' },
 ];
 
 const faqLd = {
@@ -127,6 +113,7 @@ const softwareLd = {
 	title={title}
 	description={description}
 	canonical={canonical}
+	ogImage="https://info.propertylist.es/og/og-coagent-es.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
@@ -141,13 +128,11 @@ const softwareLd = {
 
 	<section class="hero">
 		<div class="cx heroGrid">
-			<div class="heroCopy">
+			<div>
 				<div class="eyebrow"><span class="dot"></span> CoAgent &middot; tu CRM en WhatsApp</div>
 				<h1>Deja de pasar notas al CRM.<br /><span>Háblale.</span></h1>
 				<p class="heroLead">
-					<strong>CoAgent vive en el WhatsApp que ya usas.</strong> Sales de una visita, mandas una nota de voz como se la
-					mandarías a un compañero, y el resumen te está esperando: la nota, el nuevo requisito, el seguimiento que prometiste
-					y las propiedades que ahora encajan. Nada se guarda hasta que respondes SÍ.
+					Manda una nota de voz al salir de la visita. Responde SÍ. <strong>El papeleo está hecho, y la tarde es tuya.</strong>
 				</p>
 				<div class="ctaRow">
 					{WA ? (
@@ -157,17 +142,15 @@ const softwareLd = {
 					)}
 					<a class="btnGhost" href="#how">Mira cómo funciona</a>
 				</div>
-				<p class="micro">5 mensajes gratis al día &middot; Nada que instalar &middot; El audio nunca se guarda</p>
+				<p class="micro">5 mensajes gratis al día &middot; Nada que instalar &middot; Tu voz nunca se guarda</p>
 				{WA ? (
-					<p class="member">
-						¿Ya estás en PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade tu número de WhatsApp a tu usuario</a>
-						para que CoAgent sepa que eres tú.
-					</p>
+					<p class="member">¿Ya estás en PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade tu número de WhatsApp a tu usuario</a> para que CoAgent sepa que eres tú.</p>
 				) : (
 					<p class="member">
-						<b>El número de CoAgent estará disponible desde las 9:00 del martes 15 de septiembre.</b> Antes de escribirle, asegúrate
-						de que estás <a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y de que tu
+						<b>El número estará disponible desde las 9:00 del martes 15 de septiembre.</b> Antes de escribirle, asegúrate de que estás
+						<a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y de que tu
 						<a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp está añadido a tu usuario</a>.
+						<a class="calBtn" href={CAL} target="_blank" rel="noopener" style="display:table;margin-top:10px;padding:8px 14px;border-radius:10px;background:#0b1220;color:#fff;text-decoration:none;font-weight:800">Recuérdamelo el martes a las 9:00</a>
 					</p>
 				)}
 			</div>
@@ -187,74 +170,67 @@ const softwareLd = {
 	<section class="band dark">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">La hora que nadie factura</div>
-				<h2>Cada «ya lo escribo luego» es una promesa en riesgo.</h2>
-				<p>
-					Nadie se olvida a propósito. Coges la llamada en el coche, prometes enviar una propiedad, y para cuando llegas al
-					escritorio hay otras nueve cosas esperando. El día va más rápido que el papeleo, y un CRM solo te devuelve algo si
-					está al día.
-				</p>
+				<h2>Tu noche puede acabar de dos maneras.</h2>
+				<p>Nadie se olvida a propósito. El día va más rápido que el papeleo.</p>
 			</div>
 			<div class="versus">
 				<div class="vCol without">
-					<div class="vHead">Esta noche, como siempre</div>
+					<div class="vHead">Sin CoAgent</div>
 					<ol>
-						<li><b>18:40</b><span>Termina la última visita. Tres cosas que prometiste, todas en tu cabeza.</span></li>
-						<li><b>19:15</b><span>Dos llamadas de camino a casa. Una promesa más.</span></li>
+						<li><b>18:40</b><span>Última visita. Tres promesas, todas en tu cabeza.</span></li>
 						<li><b>21:30</b><span>Portátil abierto, escribiendo el día de memoria.</span></li>
 						<li><b>El jueves</b><span>«¿Al final me mandaste esa propiedad?»</span></li>
 					</ol>
 				</div>
 				<div class="vCol with">
-					<div class="vHead">Esta noche, con CoAgent</div>
+					<div class="vHead">Con CoAgent</div>
 					<ol>
 						<li><b>18:41</b><span>Una nota de voz desde el aparcamiento.</span></li>
-						<li><b>18:42</b><span>Lees lo que ha entendido. Respondes SÍ.</span></li>
-						<li><b>18:43</b><span>Nota guardada, requisito actualizado, recordatorio del sábado puesto.</span></li>
+						<li><b>18:42</b><span>Respondes SÍ. Nota, requisito y recordatorio guardados.</span></li>
 						<li><b>21:30</b><span>No estás delante del portátil.</span></li>
 					</ol>
 				</div>
 			</div>
-			<p class="punch">Tu memoria es excelente. Hasta el jueves.</p>
+			<p class="punch">Tu memoria es excelente. <span>Hasta el jueves.</span></p>
 		</div>
 	</section>
 
 	<section class="band soft" id="how">
 		<div class="cx">
-			<div class="head">
+			<div class="head center">
 				<div class="label">Cómo funciona</div>
-				<h2>Tú hablas. CoAgent escribe.</h2>
-				<p>Sin formularios, sin comandos que aprender, y nada cambia a tus espaldas.</p>
+				<h2>Habla. Revisa. Di SÍ.</h2>
 			</div>
 			<div class="grid3">
 				<div class="demo">
 					<span class="num">1</span>
-					<h3>Manda la nota de voz</h3>
-					<p>Justo después de la visita, tal como se lo contarías a un compañero.</p>
+					<h3>Habla</h3>
+					<p>Como se lo dirías a un compañero.</p>
 					<div class="mini">
-						<div class="mb me">"Acabo de ver el piso de Nueva Andalucía con Marta. Ahora acepta tres dormitorios, hasta ochocientos cincuenta, y le he dicho que le mando el de Cerquilla el sábado."</div>
+						<div class="mb me">"A Marta le ha gustado. Ahora acepta tres dormitorios, hasta ochocientos cincuenta. Le he dicho que le mando el de Cerquilla el sábado."</div>
 					</div>
 				</div>
 				<div class="demo">
 					<span class="num">2</span>
-					<h3>Lee lo que ha entendido</h3>
-					<p>El cliente que ha identificado, los cambios que propone, el recordatorio que va a poner y las propiedades que ahora encajan.</p>
+					<h3>Revisa</h3>
+					<p>Mira exactamente lo que ha entendido.</p>
 					<div class="mini">
 						<div class="mb">
 							<b>Marta Ruiz · compradora</b>
 							<span class="kv"><i>Presupuesto</i><em>800.000 € a 850.000 €</em></span>
 							<span class="kv"><i>Dormitorios</i><em>3</em></span>
-							<span class="kv"><i>Recordatorio</i><em>Propiedad de Cerquilla, sábado</em></span>
+							<span class="kv"><i>Recordatorio</i><em>Cerquilla, sábado</em></span>
 						</div>
 					</div>
 				</div>
 				<div class="demo">
 					<span class="num">3</span>
-					<h3>Responde SÍ</h3>
-					<p>Solo entonces se mueve algo. Si no dices nada, no pasa nada.</p>
+					<h3>Di SÍ</h3>
+					<p>Solo entonces cambia algo.</p>
 					<div class="mini">
-						<div class="mb">Responde <b>SÍ</b> para guardarlo. Todavía no se ha escrito nada.</div>
+						<div class="mb">Responde <b>SÍ</b> para guardarlo.</div>
 						<div class="mb me short">SÍ</div>
+						<div class="mb done">Guardado. El sábado ya está en tu calendario.</div>
 					</div>
 				</div>
 			</div>
@@ -263,34 +239,29 @@ const softwareLd = {
 
 	<section class="band" id="ask">
 		<div class="cx">
-			<div class="head">
-				<div class="label">Todo lo demás que le puedes pedir</div>
-				<h2>Todo tu día de trabajo, en un solo chat.</h2>
-				<p>Por voz o escribiendo, con tus propias palabras. Cuando una pregunta se sale de lo que tiene, te lo dice en vez de inventar.</p>
+			<div class="head center">
+				<div class="label">Qué le puedes preguntar</div>
+				<h2>Pregúntale como a un compañero.</h2>
+				<p>Toca un mensaje para ver qué te responde.</p>
 			</div>
-			<div class="mTabs" role="tablist" data-mtabs>
-				{moments.map((m, i) => (
-					<button type="button" class={i === 0 ? 'mTab on' : 'mTab'} role="tab" data-mtab={m.key} aria-selected={i === 0 ? 'true' : 'false'}>
-						{m.label} <small>{m.asks.length}</small>
-					</button>
+			<div class="moments">
+				{moments.map((m) => (
+					<div class="moment">
+						<div class="momentLabel">{m.label}</div>
+						<div class="chips">
+							{m.asks.map((item) => (
+								<details class="chip">
+									<summary>
+										{item.photo && <span class="tag">Foto</span>}
+										{item.photo ? item.q : `"${item.q}"`}
+									</summary>
+									<p>{item.a}</p>
+								</details>
+							))}
+						</div>
+					</div>
 				))}
 			</div>
-			{moments.map((m) => (
-				<div class="mPanel" data-mpanel={m.key}>
-					<h3 class="mTitle">{m.label}</h3>
-					<div class="grid2">
-						{m.asks.map((item) => (
-							<div class="ex">
-								<div class="exQ">
-									{item.photo && <span class="tag">Foto</span>}
-									{item.photo ? item.q : `"${item.q}"`}
-								</div>
-								<div class="exA">{item.a}</div>
-							</div>
-						))}
-					</div>
-				</div>
-			))}
 		</div>
 	</section>
 
@@ -299,17 +270,12 @@ const softwareLd = {
 			<div class="matchBox">
 				<div class="matchCopy">
 					<div class="label">Construido sobre el MLS compartido</div>
-					<h2>No solo recuerdes al cliente. Encuéntrale su próxima vivienda.</h2>
-					<p>
-						Detrás de CoAgent está el MLS que comparten {plAgencies} agencias. Pídele tres dormitorios en Nueva Andalucía y
-						busca en todo ese stock, no solo en el tuyo. Cuando la vivienda adecuada es de otra agencia, se ofrece a
-						preguntarles por ti.
-					</p>
+					<h2>No solo recuerdes al cliente. <span>Encuéntrale su próxima vivienda.</span></h2>
+					<p>Busca en el stock de {plAgencies} agencias, no solo en el tuyo. Si la vivienda adecuada es de otra agencia, se ofrece a preguntarles por ti.</p>
 					<ul class="checks">
-						<li>Busca en el MLS compartido, no solo en tus propias propiedades</li>
-						<li>Responde a «¿cuál es la mejor compra?» comparando el precio por m² con viviendas parecidas cerca</li>
-						<li>Valora a partir de ventas escrituradas ante notario, con enlace a la prueba pública</li>
-						<li>Las consultas a otras agencias pasan por el MLS, dentro de su flujo de trabajo habitual</li>
+						<li>Todo el MLS compartido, no solo tus propiedades</li>
+						<li>La mejor compra, según el precio por m²</li>
+						<li>Valoraciones de ventas escrituradas ante notario, con la prueba</li>
 					</ul>
 				</div>
 				<div class="matchVisual" aria-hidden="true">
@@ -320,17 +286,17 @@ const softwareLd = {
 						</div>
 						<div class="res">
 							<span class="resPh a"></span>
-							<span class="resTxt"><b>PL5001 &middot; Piso</b><i>3 dorm. &middot; 2 baños &middot; Nueva Andalucía</i></span>
+							<span class="resTxt"><b>PL5001 &middot; Piso</b><i>3 dorm. &middot; Nueva Andalucía</i></span>
 							<span class="resP">845.000 €<small class="own">Tu propiedad</small></span>
 						</div>
 						<div class="res">
 							<span class="resPh b"></span>
-							<span class="resTxt"><b>PL5002 &middot; Ático</b><i>3 dorm. &middot; 2 baños &middot; Nueva Andalucía</i></span>
+							<span class="resTxt"><b>PL5002 &middot; Ático</b><i>3 dorm. &middot; Nueva Andalucía</i></span>
 							<span class="resP">830.000 €<small>Otra agencia</small></span>
 						</div>
 						<div class="res">
 							<span class="resPh c"></span>
-							<span class="resTxt"><b>PL5003 &middot; Adosado</b><i>3 dorm. &middot; 3 baños &middot; Aloha</i></span>
+							<span class="resTxt"><b>PL5003 &middot; Adosado</b><i>3 dorm. &middot; Aloha</i></span>
 							<span class="resP">799.000 €<small>Otra agencia</small></span>
 						</div>
 						<div class="resAsk">PL5002 es de otra agencia. Responde <b>SÍ</b> y les pregunto si sigue disponible.</div>
@@ -343,29 +309,30 @@ const softwareLd = {
 	<section class="band">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">Qué se guarda y qué no</div>
-				<h2>Un asistente que escucha tu día tiene que ganarse el sitio.</h2>
-				<p>Son decisiones de diseño, no ajustes que tengas que buscar.</p>
+				<div class="label">Tres promesas</div>
+				<h2>No trabajes para tu CRM. <span>Deja que el CRM trabaje para ti.</span></h2>
 			</div>
 			<div class="grid3">
-				{trust.map((t) => (
-					<div class="tCard">
-						<span class="tIcon" aria-hidden="true">
-							<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.8-4.8 1.4 1.4-6.2 6.2z" /></svg>
-						</span>
-						<h3>{t.name}</h3>
-						<p>{t.desc}</p>
-					</div>
-				))}
-			</div>
-			<div class="grid2 pair">
-				<div class="tCard flat">
-					<h3>Habla el idioma de esta costa</h3>
-					<p>Aquí los clientes cambian de inglés a español a mitad de frase, y los agentes también. CoAgent entiende una nota que cambia de idioma por el camino y responde en el tuyo: español, inglés, alemán, francés, portugués, búlgaro o griego. Los nombres, los presupuestos y las zonas siguen cayendo en el campo correcto.</p>
+				<div class="tCard">
+					<span class="tIcon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z" /></svg>
+					</span>
+					<h3>Tu voz nunca se guarda</h3>
+					<p>Se transcribe y se descarta. Solo queda el texto, en la ficha del cliente.</p>
 				</div>
-				<div class="tCard flat">
-					<h3>Ninguna app nueva que aprender</h3>
-					<p>Vive en WhatsApp, y detrás está la plataforma donde ya trabajan {plAgents} agentes y {plAgencies} agencias, buscando entre {plListings} propiedades activas en cuanto un cliente te dice lo que quiere.</p>
+				<div class="tCard">
+					<span class="tIcon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z" /></svg>
+					</span>
+					<h3>Nada se guarda hasta que dices SÍ</h3>
+					<p>Si no dices nada, no pasa nada. Ninguna ficha se edita, ninguna consulta se envía.</p>
+				</div>
+				<div class="tCard">
+					<span class="tIcon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z" /></svg>
+					</span>
+					<h3>Nunca se inventa una respuesta</h3>
+					<p>Todo sale de tu CRM y del MLS compartido. Si no lo sabe, te lo dice.</p>
 				</div>
 			</div>
 		</div>
@@ -376,59 +343,38 @@ const softwareLd = {
 			<div class="head center">
 				<div class="label">Lo que cuesta</div>
 				<h2>Empieza gratis. Paga solo por el ilimitado.</h2>
-				<p>Sin permanencia. El ilimitado se paga en créditos, del mismo saldo que todo lo demás en PropertyList, y puedes dejar de renovarlo cuando quieras.</p>
 			</div>
 			<div class="plans">
 				<div class="plan">
 					<div class="planWhen">Cada agente</div>
 					<div class="planPrice">5 al día</div>
-					<div class="planDesc">mensajes gratis, cada día. Aprobar con SÍ nunca cuenta.</div>
+					<div class="planDesc">mensajes gratis, cada día. Responder SÍ nunca cuenta.</div>
 				</div>
 				<div class="plan featured">
 					<div class="planBadge">Los primeros 10 agentes</div>
 					<div class="planWhen">Gratis e ilimitado</div>
 					<div class="planPrice">1 mes</div>
-					<div class="planDesc">Los diez primeros agentes que escriban a CoAgent consiguen un mes gratis e ilimitado, contando desde su primer mensaje. A cambio, cuéntanos dónde estorba, y lo cambiamos.</div>
+					<div class="planDesc">desde tu primer mensaje. Cuéntanos dónde estorba, y lo cambiamos.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Escribe a CoAgent ahora</a>
 					) : (
-						<div class="planSoon">El número estará disponible desde las 9:00 del martes 15 de septiembre. Antes de escribirle, asegúrate de que estás <a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y de que tu <a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp está añadido a tu usuario</a>.</div>
+						<div class="planSoon">Disponible desde las <b>9:00 del martes 15 de septiembre</b>. Asegúrate de estar <a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y con tu <a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp añadido a tu usuario</a> antes de esa hora. <a href={CAL} target="_blank" rel="noopener">Recuérdamelo el martes a las 9:00</a></div>
 					)}
 				</div>
 				<div class="plan">
 					<div class="planWhen">Ilimitado</div>
 					<div class="planPrice">50 créditos</div>
-					<div class="planDesc">al mes por agente, se activa desde la página de Facturación o respondiendo SUSCRIBIR. ¿Más de 3 agentes que añadir? Habla con nosotros sobre un paquete.</div>
+					<div class="planDesc">al mes por agente. Sin permanencia, puedes pararlo cuando quieras. ¿Más de 3 agentes? Pregúntanos por un paquete.</div>
 				</div>
 			</div>
-			<p class="fine">Un folleto, el informe de mercado después del primero gratis y una estancia reformada se pagan en créditos al mismo precio que en el CRM. CoAgent te dice el precio y espera tu SÍ antes de nada.</p>
+			<p class="fine">Los folletos, las estancias reformadas y el informe de mercado después del primero gratis cuestan créditos, igual que en el CRM. Siempre pregunta antes.</p>
 		</div>
 	</section>
 
 	<section class="band">
-		<div class="cx">
-			<div class="head">
-				<div class="label">Lo que construimos ahora</div>
-				<h2>Todo lo de arriba funciona hoy. Esto todavía no.</h2>
-				<p>Preferimos decírtelo aquí antes de que lo descubras por tu cuenta.</p>
-			</div>
-			<div class="grid3">
-				{soon.map((s) => (
-					<div class="tCard flat">
-						<span class="soon">Aún no disponible</span>
-						<h3>{s.name}</h3>
-						<p>{s.desc}</p>
-					</div>
-				))}
-			</div>
-		</div>
-	</section>
-
-	<section class="band soft">
 		<div class="cx narrow">
 			<div class="head center">
-				<div class="label">Preguntas</div>
-				<h2>Antes de probarlo.</h2>
+				<h2>Preguntas</h2>
 			</div>
 			<div class="faq">
 				{faqs.map((f) => (
@@ -444,7 +390,7 @@ const softwareLd = {
 	<section class="band dark final">
 		<div class="cx narrow center">
 			<h2>Se acuerda de cada promesa <span>que hiciste.</span></h2>
-			<p>Dale a CoAgent tu próxima visita como nota de voz y mira lo que te devuelve. Crea tu cuenta gratis y empieza a hablar con él, dentro de la <a href="/es/funciones/">plataforma gratuita de PropertyList</a>.</p>
+			<p>Dale tu próxima visita. Siente lo que es cerrar el portátil pronto.</p>
 			<div class="ctaRow center">
 				{WA ? (
 					<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Escribe a CoAgent por WhatsApp</a>
@@ -454,7 +400,7 @@ const softwareLd = {
 			</div>
 			<p class="micro light">
 				{COAGENT_NUMBER ? (
-					<>¿Ya eres miembro? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade tu número de WhatsApp a tu usuario</a> para que CoAgent sepa que eres tú.</>
+					<>¿Ya eres miembro? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade tu número de WhatsApp a tu usuario</a>.</>
 				) : (
 					<>El número estará disponible desde las 9:00 del martes 15 de septiembre. Antes de escribirle, asegúrate de que estás registrado y de que tu <a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp está añadido a tu usuario</a>.</>
 				)}
@@ -467,38 +413,20 @@ const softwareLd = {
 	</div>
 </Layout>
 
-<script>
-	document.querySelectorAll<HTMLElement>('[data-mtabs]').forEach((bar) => {
-		const tabs = Array.from(bar.querySelectorAll<HTMLButtonElement>('[data-mtab]'));
-		const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-mpanel]'));
-		const show = (key: string) => {
-			tabs.forEach((t) => {
-				const on = t.dataset.mtab === key;
-				t.classList.toggle('on', on);
-				t.setAttribute('aria-selected', on ? 'true' : 'false');
-			});
-			panels.forEach((p) => (p.hidden = p.dataset.mpanel !== key));
-		};
-		// Without JavaScript every panel shows, stacked. With it, one at a time.
-		bar.classList.add('ready');
-		tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.mtab || '')));
-		if (tabs[0]) show(tabs[0].dataset.mtab || '');
-	});
-</script>
-
 <style>
 	.cx { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
 	.cx.narrow { width: min(780px, calc(100% - 32px)); }
 	.center { text-align: center; }
 	h1, h2, h3 { letter-spacing: -0.035em; color: #0b1220; }
+	h2 span { color: #00ae9a; }
 
 	.hero { overflow: hidden; padding-block: 56px 72px; background: radial-gradient(900px 520px at 78% 30%, rgba(0, 174, 154, 0.16), transparent 62%), linear-gradient(180deg, #f7fbfa 0%, #fff 100%); }
 	.heroGrid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 56px; align-items: center; }
 	.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(0, 174, 154, 0.1); color: #0a6d61; font-size: 12.5px; font-weight: 800; margin-bottom: 20px; }
 	.dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; box-shadow: 0 0 0 4px rgba(0, 174, 154, 0.16); }
-	h1 { font-size: clamp(40px, 6vw, 70px); line-height: 1; letter-spacing: -0.05em; margin: 0 0 22px; font-weight: 900; }
+	h1 { font-size: clamp(40px, 6vw, 72px); line-height: 1; letter-spacing: -0.05em; margin: 0 0 22px; font-weight: 900; }
 	h1 span { color: #00ae9a; }
-	.heroLead { font-size: 18.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.68); max-width: 590px; margin: 0 0 28px; }
+	.heroLead { font-size: clamp(19px, 2.1vw, 23px); line-height: 1.5; color: rgba(16, 24, 40, 0.66); max-width: 560px; margin: 0 0 28px; }
 	.heroLead strong { color: #0b1220; }
 	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 	.ctaRow.center { justify-content: center; }
@@ -507,82 +435,79 @@ const softwareLd = {
 	.btnPrimary.full { width: 100%; margin-top: 16px; }
 	.btnGhost { display: inline-flex; align-items: center; padding: 14px 20px; border: 1px solid rgba(16, 24, 40, 0.14); border-radius: 13px; font-size: 15px; font-weight: 700; color: #0b1220; background: #fff; text-decoration: none; }
 	.btnGhost:hover { background: #f6f8f8; text-decoration: none; }
-	.micro { margin: 14px 0 0; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
-	.member { margin: 18px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.7); padding: 11px 14px; border-radius: 12px; background: #fff; border: 1px dashed rgba(0, 174, 154, 0.45); max-width: 590px; }
+	.micro { margin: 14px 0 0; font-size: 13.5px; color: rgba(16, 24, 40, 0.52); }
+	.member { margin: 18px 0 0; font-size: 14.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.72); padding: 12px 15px; border-radius: 12px; background: #fff; border: 1px dashed rgba(0, 174, 154, 0.5); max-width: 560px; }
+	.member b { color: #0b1220; }
 	.member a, .planSoon a, .micro a, .final p a { color: #0a6d61; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
 	.strip { border-block: 1px solid rgba(16, 24, 40, 0.08); background: #fff; padding-block: 18px; }
-	.stripInner { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 34px; font-size: 14px; color: rgba(16, 24, 40, 0.55); }
+	.stripInner { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 34px; font-size: 14.5px; color: rgba(16, 24, 40, 0.55); }
 	.stripInner b { color: #0b1220; font-weight: 900; }
 
-	.band { padding-block: 88px; background: #fff; }
+	.band { padding-block: 84px; background: #fff; }
 	.band.soft { background: #f6f8f8; }
 	.band.dark { background: #0b1220; color: #fff; }
 	.band.dark h2 { color: #fff; }
-	.head { max-width: 720px; margin-bottom: 44px; }
+	.dark h2 span { color: #5eead4; }
+	.head { max-width: 760px; margin-bottom: 40px; }
 	.head.center { margin-inline: auto; }
-	.label { color: #0a6d61; text-transform: uppercase; letter-spacing: 0.12em; font-size: 11.5px; font-weight: 900; margin-bottom: 12px; }
+	.label { color: #0a6d61; text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; font-weight: 900; margin-bottom: 12px; }
 	.dark .label { color: #5eead4; }
-	h2 { font-size: clamp(32px, 4.4vw, 50px); line-height: 1.05; margin: 0 0 16px; font-weight: 900; }
-	.head p { color: rgba(16, 24, 40, 0.62); font-size: 17.5px; line-height: 1.6; margin: 0; }
+	h2 { font-size: clamp(32px, 4.6vw, 54px); line-height: 1.05; margin: 0 0 14px; font-weight: 900; }
+	.head p { color: rgba(16, 24, 40, 0.62); font-size: 19px; line-height: 1.55; margin: 0; }
 	.dark .head p { color: rgba(255, 255, 255, 0.66); }
 
-	.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 940px; margin: 0 auto; }
-	.vCol { border-radius: 20px; padding: 26px 26px 20px; }
+	.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 900px; margin: 0 auto; }
+	.vCol { border-radius: 22px; padding: 28px 28px 22px; }
 	.vCol.without { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); }
-	.vCol.with { background: rgba(0, 174, 154, 0.12); border: 1px solid rgba(94, 234, 212, 0.35); }
-	.vHead { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; color: rgba(255, 255, 255, 0.55); }
+	.vCol.with { background: rgba(0, 174, 154, 0.13); border: 1px solid rgba(94, 234, 212, 0.4); }
+	.vHead { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; color: rgba(255, 255, 255, 0.5); }
 	.with .vHead { color: #5eead4; }
-	.vCol ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-	.vCol li { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.5; }
+	.vCol ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+	.vCol li { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: baseline; font-size: 17px; line-height: 1.45; }
 	.vCol li b { font-variant-numeric: tabular-nums; font-weight: 900; color: rgba(255, 255, 255, 0.9); }
 	.without li span { color: rgba(255, 255, 255, 0.55); }
-	.with li span { color: rgba(255, 255, 255, 0.9); }
+	.with li span { color: rgba(255, 255, 255, 0.92); }
 	.without li:last-child span { color: #fca5a5; font-weight: 700; }
 	.with li:last-child span { color: #5eead4; font-weight: 800; }
-	.punch { text-align: center; font-size: clamp(22px, 2.6vw, 30px); font-weight: 900; letter-spacing: -0.03em; margin: 44px 0 0; color: #fff; }
+	.punch { text-align: center; font-size: clamp(26px, 3.4vw, 40px); font-weight: 900; letter-spacing: -0.035em; margin: 48px 0 0; color: #fff; }
+	.punch span { color: #fca5a5; }
 
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 
 	.demo { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 26px; box-shadow: 0 10px 34px -18px rgba(16, 24, 40, 0.18); display: flex; flex-direction: column; }
-	.num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #0b1220; color: #fff; font-size: 13px; font-weight: 900; margin-bottom: 18px; }
-	.demo h3 { font-size: 21px; margin: 0 0 8px; }
-	.demo p { color: rgba(16, 24, 40, 0.62); font-size: 15px; line-height: 1.55; margin: 0; }
-	.mini { margin-top: auto; padding: 12px; padding-top: 12px; background: #efeae2; border-radius: 14px; display: flex; flex-direction: column; gap: 7px; }
-	.demo p + .mini { margin-top: 18px; }
+	.num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #0b1220; color: #fff; font-size: 13px; font-weight: 900; margin-bottom: 16px; }
+	.demo h3 { font-size: 26px; margin: 0 0 4px; }
+	.demo p { color: rgba(16, 24, 40, 0.6); font-size: 16px; line-height: 1.5; margin: 0 0 18px; }
+	.mini { margin-top: auto; padding: 12px; background: #efeae2; border-radius: 14px; display: flex; flex-direction: column; gap: 7px; }
 	.mb { background: #fff; border-radius: 9px; border-top-left-radius: 2px; padding: 9px 11px; font-size: 13.5px; line-height: 1.5; color: #111b21; max-width: 92%; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
 	.mb.me { background: #d9fdd3; align-self: flex-end; border-top-left-radius: 9px; border-top-right-radius: 2px; }
 	.mb.short { padding: 6px 14px; font-weight: 700; }
-	.mb b { display: block; margin-bottom: 4px; }
+	.mb.done { color: #0a6d61; font-weight: 700; }
+	.mb b { font-weight: 800; }
+	.mb > b:first-child:not(:only-child) { display: block; margin-bottom: 4px; }
 	.mb .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 12.5px; padding: 3px 0; border-top: 1px solid rgba(11, 18, 32, 0.06); }
 	.mb .kv i { font-style: normal; color: rgba(17, 27, 33, 0.55); }
 	.mb .kv em { font-style: normal; font-weight: 700; text-align: right; }
-	.mb:not(.me) b:only-child { display: inline; }
 
-	.mTabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
-	.mTabs:not(.ready) { display: none; }
-	.mTab { font: inherit; font-size: 14.5px; font-weight: 800; color: #0b1220; background: #f6f8f8; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
-	.mTab small { font-size: 12px; color: rgba(16, 24, 40, 0.45); margin-left: 4px; font-weight: 800; }
-	.mTab:hover { background: #eef3f2; }
-	.mTab.on { background: #0b1220; border-color: #0b1220; color: #fff; }
-	.mTab.on small { color: rgba(255, 255, 255, 0.6); }
-	.mPanel + .mPanel { margin-top: 34px; }
-	.mPanel[hidden] { display: none; }
-	.mTitle { font-size: 20px; margin: 0 0 14px; }
-	.mTabs.ready ~ .mPanel .mTitle { display: none; }
-	.mTabs.ready ~ .mPanel + .mPanel { margin-top: 0; }
-	.ex { background: #efeae2; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-	.exQ { align-self: flex-end; max-width: 88%; background: #d9fdd3; color: #111b21; border-radius: 12px; border-top-right-radius: 3px; padding: 9px 13px; font-size: 15px; font-weight: 700; line-height: 1.45; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
-	.exA { align-self: flex-start; max-width: 94%; background: #fff; color: rgba(17, 27, 33, 0.82); border-radius: 12px; border-top-left-radius: 3px; padding: 10px 13px; font-size: 14.5px; line-height: 1.55; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.moments { display: grid; gap: 26px; max-width: 980px; margin: 0 auto; }
+	.momentLabel { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(16, 24, 40, 0.45); margin-bottom: 10px; }
+	.chips { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+	.chip { max-width: 100%; }
+	.chip summary { list-style: none; cursor: pointer; background: #d9fdd3; color: #111b21; border-radius: 16px; border-bottom-right-radius: 4px; padding: 10px 15px; font-size: 16px; font-weight: 700; line-height: 1.4; box-shadow: 0 1px 1px rgba(11, 18, 32, 0.1); transition: transform 0.15s, box-shadow 0.15s; }
+	.chip summary::-webkit-details-marker { display: none; }
+	.chip summary:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px rgba(11, 18, 32, 0.25); }
+	.chip[open] { flex-basis: 100%; }
+	.chip[open] summary { display: inline-block; }
+	.chip p { margin: 8px 0 4px; max-width: 680px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 16px; border-top-left-radius: 4px; padding: 12px 15px; font-size: 15.5px; line-height: 1.55; color: rgba(17, 27, 33, 0.82); box-shadow: 0 10px 24px -16px rgba(11, 18, 32, 0.3); }
 	.tag { display: inline-block; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; background: #0a6d61; color: #fff; border-radius: 6px; padding: 2px 6px; margin-right: 7px; vertical-align: 2px; }
 
 	.matchBox { display: grid; grid-template-columns: 1fr 1fr; border-radius: 28px; overflow: hidden; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); box-shadow: 0 20px 60px -30px rgba(16, 24, 40, 0.25); }
 	.matchCopy { padding: 52px; }
 	.matchCopy h2 { font-size: clamp(30px, 3.4vw, 42px); }
-	.matchCopy p { color: rgba(16, 24, 40, 0.64); font-size: 16.5px; line-height: 1.6; margin: 0 0 24px; }
+	.matchCopy p { color: rgba(16, 24, 40, 0.64); font-size: 18px; line-height: 1.55; margin: 0 0 24px; }
 	.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-	.checks li { position: relative; padding-left: 30px; font-size: 15px; line-height: 1.5; color: #0b1220; }
+	.checks li { position: relative; padding-left: 30px; font-size: 16px; font-weight: 700; line-height: 1.5; color: #0b1220; }
 	.checks li::before { content: ''; position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 174, 154, 0.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a6d61' d='M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z'/%3E%3C/svg%3E") center/13px no-repeat; }
 	.matchVisual { background: linear-gradient(160deg, rgba(0, 174, 154, 0.16), rgba(0, 174, 154, 0.05)); padding: 40px; display: flex; align-items: center; justify-content: center; }
 	.resCard { width: min(430px, 100%); background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 24px 60px -24px rgba(11, 18, 32, 0.35); }
@@ -601,24 +526,21 @@ const softwareLd = {
 	.resP small.own { color: #0a6d61; }
 	.resAsk { margin-top: 10px; background: #efeae2; border-radius: 11px; padding: 10px 12px; font-size: 13px; line-height: 1.5; color: #111b21; }
 
-	.tCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 28px; }
-	.band:not(.soft) .tCard { background: #f6f8f8; border-color: transparent; }
-	.tIcon { width: 44px; height: 44px; border-radius: 13px; background: rgba(0, 174, 154, 0.14); color: #0a6d61; display: grid; place-items: center; margin-bottom: 18px; }
-	.tCard h3 { font-size: 19px; margin: 0 0 8px; }
-	.tCard p { color: rgba(16, 24, 40, 0.64); font-size: 15px; line-height: 1.6; margin: 0; }
-	.pair { margin-top: 18px; }
-	.soon { display: inline-block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #8a5a10; background: #fef3dc; border-radius: 999px; padding: 4px 10px; margin-bottom: 14px; }
+	.tCard { background: #f6f8f8; border-radius: 22px; padding: 30px; }
+	.tIcon { width: 48px; height: 48px; border-radius: 14px; background: rgba(0, 174, 154, 0.14); color: #0a6d61; display: grid; place-items: center; margin-bottom: 18px; }
+	.tCard h3 { font-size: 22px; margin: 0 0 8px; }
+	.tCard p { color: rgba(16, 24, 40, 0.64); font-size: 16px; line-height: 1.55; margin: 0; }
 
 	.plans { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 18px; align-items: center; max-width: 1000px; margin: 0 auto; }
-	.plan { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 24px; padding: 30px 26px; text-align: left; }
+	.plan { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 24px; padding: 30px 26px; }
 	.plan.featured { border: 2px solid #00ae9a; padding: 38px 30px; box-shadow: 0 30px 70px -30px rgba(0, 174, 154, 0.5); position: relative; }
 	.planBadge { position: absolute; top: -14px; left: 30px; background: #00ae9a; color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 0.04em; border-radius: 999px; padding: 5px 12px; }
 	.planWhen { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(16, 24, 40, 0.5); }
 	.featured .planWhen { color: #0a6d61; }
-	.planPrice { font-size: 44px; font-weight: 900; letter-spacing: -0.05em; line-height: 1.05; margin: 6px 0 10px; color: #0b1220; }
-	.planDesc { font-size: 15px; line-height: 1.55; color: rgba(16, 24, 40, 0.64); }
-	.planSoon { margin-top: 18px; background: rgba(0, 174, 154, 0.08); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #0b1220; font-weight: 600; }
-	.fine { text-align: center; max-width: 680px; margin: 30px auto 0; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.55); }
+	.planPrice { font-size: 46px; font-weight: 900; letter-spacing: -0.05em; line-height: 1.05; margin: 6px 0 10px; color: #0b1220; }
+	.planDesc { font-size: 16px; line-height: 1.5; color: rgba(16, 24, 40, 0.64); }
+	.planSoon { margin-top: 18px; background: rgba(0, 174, 154, 0.08); border-radius: 12px; padding: 12px 14px; font-size: 14.5px; line-height: 1.5; color: #0b1220; }
+	.fine { text-align: center; max-width: 640px; margin: 30px auto 0; font-size: 14.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.55); }
 
 	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 20px 0; }
 	.faq summary { cursor: pointer; list-style: none; font-weight: 800; font-size: 17px; display: flex; justify-content: space-between; gap: 20px; color: #0b1220; }
@@ -628,12 +550,10 @@ const softwareLd = {
 	.faq p { margin: 12px 0 0; color: rgba(16, 24, 40, 0.66); font-size: 15.5px; line-height: 1.62; }
 
 	.final { background: radial-gradient(700px 360px at 50% 0%, rgba(0, 174, 154, 0.3), transparent 70%), #0b1220; }
-	.final h2 { font-size: clamp(36px, 5vw, 58px); }
-	.final h2 span { color: #5eead4; }
-	.final p { color: rgba(255, 255, 255, 0.7); font-size: 18px; line-height: 1.6; margin: 0 auto 28px; max-width: 600px; }
-	.final p a { color: #5eead4; }
-	.micro.light { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-top: 18px; }
-	.micro.light a { color: #5eead4; }
+	.final h2 { font-size: clamp(36px, 5vw, 60px); }
+	.final p { color: rgba(255, 255, 255, 0.72); font-size: 20px; line-height: 1.55; margin: 0 auto 28px; max-width: 600px; }
+	.micro.light { color: rgba(255, 255, 255, 0.6); font-size: 14.5px; margin-top: 20px; }
+	.micro.light a, .final .micro.light a { color: #5eead4; }
 
 	@media (max-width: 960px) {
 		.heroGrid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
@@ -644,15 +564,12 @@ const softwareLd = {
 	}
 	@media (max-width: 720px) {
 		.hero { padding-block: 36px 56px; }
-		.heroLead { font-size: 17px; }
-		.band { padding-block: 64px; }
-		.versus, .grid2 { grid-template-columns: minmax(0, 1fr); }
+		.band { padding-block: 60px; }
+		.versus { grid-template-columns: minmax(0, 1fr); }
 		.ctaRow:not(.center) { flex-direction: column; align-items: stretch; }
 		.btnPrimary, .btnGhost { justify-content: center; }
 		.matchCopy, .matchVisual { padding: 28px 22px; }
-		.vCol li { grid-template-columns: 72px 1fr; font-size: 15px; }
-		.mTabs { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; }
-		.mTab { flex: none; }
-		.plan.featured { padding: 34px 22px 26px; }
+		.vCol li { grid-template-columns: 76px 1fr; font-size: 16px; }
+		.chip summary { font-size: 15px; }
 	}
 </style>

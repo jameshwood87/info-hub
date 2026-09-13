@@ -9,67 +9,32 @@ const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'es');
 const plAgencies = statPlus(__ps.agencies, 'es');
 const plListings = statPlus(__ps.listings, 'es');
+// The counter lands on the same rounded minimum the page prints, never above it.
+const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 const WA = coagentWaLink();
-
-// A reminder for 9am Madrid time (07:00 UTC) on launch day, so the page has a
-// working next step before the number exists.
 const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Escribir a PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('El número de CoAgent está en https://info.propertylist.es/es/1000-agencias/ desde las 9:00. Envíale las palabras PropertyList CoAgent. Los 10 primeros agentes tienen un mes gratis.')}`;
 
 const reviews = [
-	{
-		quote: 'La plataforma es muy fácil de usar, intuitiva, y está pensada para el día a día real de un agente inmobiliario. Ahorra tiempo, mantiene los procesos ordenados y te ayuda a trabajar a un nivel más profesional.',
-		agency: 'Alain Fiddelers',
-	},
-	{
-		quote: 'Es un MLS, CRM y portal inmobiliario muy bien pensado, todo en uno: ágil, profesional y claramente diseñado pensando en los intereses del agente. Una plataforma fantástica para agentes que valoran la colaboración, la transparencia y proteger su cartera.',
-		agency: 'By Frances Concierge',
-	},
-	{
-		quote: 'La plataforma está bien estructurada, es fiable y mejora continuamente. Añaden funciones con regularidad, y el equipo es proactivo y rápido aplicando mejoras que de verdad ayudan a los agentes. Mi web está conectada por completo a través del feed de PropertyList y todo funciona sin problemas.',
-		agency: 'Nathalie Sergeant',
-	},
-	{
-		quote: 'Es un portal muy útil para trabajar con inmuebles de costa. Ninguna de mis búsquedas se hace sin él.',
-		agency: 'Valeria Kriptova',
-	},
-];
-
-const changes = [
-	{
-		n: '01',
-		t: 'Un anuncio, todas las agencias',
-		d: 'Publicas una vez y tu propiedad es visible para todas las agencias de la red a la vez, salvo que la marques como privada. Sin llamadas, sin presentaciones, sin pedir permiso.',
-	},
-	{
-		n: '02',
-		t: 'Ellos traen al comprador, tú mantienes al cliente',
-		d: 'El agente de Estepona que tiene un comprador buscando justo lo que tú tienes no necesita conocerte. Busca, lo ve y trae al comprador. Tu cliente sigue siendo tuyo, tu referencia sigue en el anuncio y tú mantienes tu parte de los honorarios.',
-	},
-	{
-		n: '03',
-		t: 'Solo funciona a escala',
-		d: 'Con 100 agencias esto es una idea bonita. Con 1.000 es un mercado. Por eso importa el número.',
-	},
+	{ quote: 'Está pensada para el día a día real de un agente inmobiliario. Ahorra tiempo.', agency: 'Alain Fiddelers' },
+	{ quote: 'Una plataforma fantástica para agentes que valoran la colaboración, la transparencia y proteger su cartera.', agency: 'By Frances Concierge' },
+	{ quote: 'Bien estructurada, fiable y mejora continuamente.', agency: 'Nathalie Sergeant' },
+	{ quote: 'Ninguna de mis búsquedas se hace sin él.', agency: 'Valeria Kriptova' },
 ];
 
 const faqs = [
 	{
 		q: '¿Cuánto cuesta CoAgent?',
-		a: 'Los primeros 10 agentes que escriban a CoAgent consiguen un mes gratis e ilimitado, contando desde su primer mensaje. Todos los agentes tienen 5 mensajes gratis al día, y aprobar con SÍ nunca cuenta. El ilimitado cuesta 50 créditos al mes por agente, se paga con tus créditos de PropertyList, y puedes dejar de renovarlo cuando quieras. Si tienes más de 3 agentes que añadir, habla con nosotros sobre un paquete.',
+		a: 'Los primeros 10 agentes que le escriban consiguen un mes gratis e ilimitado, desde su primer mensaje. Todos los agentes tienen 5 mensajes gratis al día, y responder SÍ nunca cuenta. El ilimitado cuesta 50 créditos al mes por agente. ¿Más de 3 agentes? Habla con nosotros sobre un paquete.',
 	},
 	{
 		q: '¿Cambia mi CRM por su cuenta?',
-		a: 'No. CoAgent propone y espera. Te enseña la nota que ha escrito, el requisito que quiere actualizar y el seguimiento que quiere programar, y no se guarda nada hasta que respondes que sí.',
+		a: 'Nunca. Te enseña lo que quiere guardar y espera. Nada cambia hasta que respondes SÍ.',
 	},
 	{
-		q: '¿Qué pasa con mis notas de voz?',
-		a: 'El audio se transcribe y nunca se guarda. La nota que escribe sí queda en la ficha del cliente en tu CRM, que es justo para lo que sirve.',
-	},
-	{
-		q: '¿Cómo sabe quién soy?',
-		a: 'Por tu número de WhatsApp. Tiene que estar en tu usuario del CRM, por eso importa el paso 1. Si escribes desde un número que no reconoce, te responde igual, solo que todavía no sabrá tu nombre, y te dirá cómo arreglarlo.',
+		q: '¿Cómo sabe que soy yo?',
+		a: 'Por tu número de WhatsApp, así que tiene que estar en tu usuario del CRM. Si escribes desde un número que no conoce, te responde igual, y te dice cómo añadirlo.',
 	},
 ];
 
@@ -86,13 +51,15 @@ const breadcrumbLd = {
 		{ '@type': 'ListItem', position: 2, name: '1.000 agencias', item: 'https://info.propertylist.es/es/1000-agencias/' },
 	],
 };
+const confetti = Array.from({ length: 28 }, (_, i) => i);
 ---
 
 <Layout
 	lang="es"
-	title="1.000 agencias comparten propiedades en PropertyList | PropertyList"
-	description="PropertyList ha superado las 1.000 agencias registradas. Mira lo que significa para tu próximo anuncio, y conoce a CoAgent, tu CRM en WhatsApp. Los primeros 10 agentes que le escriban consiguen un mes gratis."
+	title="Gracias: 1.000 agencias en PropertyList | PropertyList"
+	description="PropertyList ha superado las 1.000 agencias registradas. Gracias por ser parte de esto. Nuestro regalo de agradecimiento es CoAgent, tu CRM en WhatsApp, y los primeros 10 agentes que le escriban consiguen un mes gratis."
 	canonical="https://info.propertylist.es/es/1000-agencias/"
+	ogImage="https://info.propertylist.es/og/og-1000-agencias.jpg"
 	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/1000-agencies/' },
@@ -104,118 +71,84 @@ const breadcrumbLd = {
 	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
 
 	<section class="hero">
-		<div class="cx heroGrid">
-			<div>
-				<div class="eyebrow"><span class="dot"></span> 1.000 agencias</div>
-				<h1>Tu próximo anuncio llega a <span>{plAgencies} agencias.</span></h1>
-				<p class="heroLead">
-					<strong>{plAgents} agentes por toda España</strong>, compartiendo propiedades entre ellos en vez de guardárselas.
-					Publicar es gratis, sin contrato, sin comisiones. Y para celebrarlo, CoAgent: tu CRM en WhatsApp, con un mes gratis
-					para los primeros 10 agentes que le escriban.
-				</p>
-				<div class="ctaRow">
-					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
-					<a class="btnGhost" href="#first10">Resérvate un puesto en CoAgent</a>
-				</div>
-				<p class="micro">Sin tarjeta &middot; Sin contrato &middot; 0 € por publicar, siempre</p>
-			</div>
-			<div class="statCard" aria-label="PropertyList en cifras">
-				<div class="statBig">
-					<b>{plAgencies}</b>
-					<span>agencias registradas</span>
-				</div>
-				<div class="statRow">
-					<div><b>{plAgents}</b><span>agentes</span></div>
-					<div><b>{plListings}</b><span>propiedades activas</span></div>
-				</div>
-				<div class="statNote">Eran 960+ agencias a mediados de agosto</div>
+		<div class="confetti" aria-hidden="true">
+			{confetti.map((i) => <i class={`c c${i % 7}`} style={`left:${(i * 37) % 100}%;animation-delay:${((i * 0.43) % 6).toFixed(2)}s;animation-duration:${(6 + ((i * 1.7) % 5)).toFixed(1)}s`}></i>)}
+		</div>
+		<div class="cx narrow center heroInner">
+			<div class="eyebrow">Una celebración, y un gracias</div>
+			<div class="count" aria-hidden="true"><span data-count data-to={agencyTarget}>{agencyTarget.toLocaleString('de-DE')}</span><em>+</em></div>
+			<div class="countLabel">agencias</div>
+			<h1>Gracias, <span>comunidad PropertyList.</span></h1>
+			<p class="lead">
+				Cada anuncio que compartiste, cada comprador que llevaste a la propiedad de otra agencia, cada agente al que le
+				hablaste de nosotros. Hemos llegado juntos a {plAgencies} agencias.
+			</p>
+			<div class="ctaRow center">
+				<a class="btnPrimary" href="#gift">Abre tu regalo</a>
+				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">¿Aún no eres miembro? Únete gratis</a>
 			</div>
 		</div>
 	</section>
 
-	<section class="band soft">
+	<section class="band">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">Qué cambia con 1.000</div>
-				<h2>Nada cambia en cómo publicas. Todo cambia en quién lo ve.</h2>
+				<h2>Un anuncio. <span>{plAgencies} agencias</span> que pueden venderlo.</h2>
+				<p>Con 100 agencias era una idea. Con 1.000 es un mercado, y tú formas parte de él.</p>
 			</div>
-			<div class="grid3">
-				{changes.map((c) => (
-					<div class="card">
-						<span class="cardN">{c.n}</span>
-						<h3>{c.t}</h3>
-						<p>{c.d}</p>
-					</div>
-				))}
+			<div class="stats">
+				<div class="stat"><b>{plAgencies}</b><span>agencias compartiendo en vez de guardar</span></div>
+				<div class="stat"><b>{plAgents}</b><span>agentes que pueden traerte un comprador</span></div>
+				<div class="stat"><b>{plListings}</b><span>propiedades activas, a una búsqueda de distancia</span></div>
 			</div>
 		</div>
 	</section>
 
-	<section class="band dark" id="coagent">
+	<section class="band dark" id="gift">
 		<div class="cx coGrid">
 			<div>
-				<div class="label">Y lo siguiente que construimos</div>
-				<h2>Tu CRM, <span>en WhatsApp.</span></h2>
-				<div class="honest">
-					<b>El problema, sin rodeos</b>
-					<p>El CRM es donde se registra el trabajo. WhatsApp es donde el trabajo pasa de verdad. Coges la llamada en el coche, prometes mandar el anuncio, y cuando llegas a una mesa hay otras nueve cosas. La nota nunca se escribe. Nadie está siendo vago. Es que el día va más rápido que el papeleo.</p>
-				</div>
-				<p class="coLead">
-					Así que no construimos otra pantalla en la que entrar. Mándale a CoAgent una nota de voz al salir de una visita y
-					escribe la nota, actualiza el requisito, programa el seguimiento y te dice qué propiedades encajan ahora. Pídele el
-					teléfono de un cliente y te lo manda. Pídele que te prepare antes de una llamada y te cuenta en qué punto está todo.
+				<div class="label">Nuestro agradecimiento</div>
+				<h2>CoAgent. <span>Recupera tus tardes.</span></h2>
+				<p class="picture">
+					Imagínatelo. Sales de la visita, pulsas grabar y lo cuentas. La nota queda escrita. El seguimiento,
+					programado. Las propiedades que encajan, esperando. <b>Respondes SÍ, y ya está.</b>
 				</p>
-				<ul class="ticks">
-					<li>Nada cambia en tu CRM hasta que respondes SÍ</li>
-					<li>El audio se transcribe y nunca se guarda</li>
-					<li>5 mensajes gratis al día para cada agente</li>
+				<ul class="feel">
+					<li><b>Se acabó escribir el día por la noche</b></li>
+					<li><b>Ninguna promesa a un cliente olvidada</b></li>
+					<li><b>Respuestas en el coche, sin portátil</b></li>
 				</ul>
+				<p class="small light">Vive en el WhatsApp que ya usas. Nada se guarda hasta que dices SÍ, y tu voz nunca se guarda.</p>
 				<a class="btnLight" href="/es/coagent/">Descubre todo lo que hace CoAgent</a>
 			</div>
 			<CoagentPhone lang="es" />
 		</div>
 	</section>
 
-	<section class="band" id="first10">
+	<section class="band soft" id="first10">
 		<div class="cx">
 			<div class="head center">
 				<div class="label">Los primeros 10 agentes</div>
-				<h2>Un mes de CoAgent, gratis e ilimitado.</h2>
-				<p>
-					Contando desde tu primer mensaje. Y te llevas lo que más importa: estar dentro. Cuéntanos dónde estorba, y lo
-					cambiamos. Lo que reciba el resto de agentes será lo que vosotros diez hayáis hecho de ello.
-				</p>
+				<h2>Un mes gratis. <span>Sé uno de los 10.</span></h2>
+				<p>Gratis e ilimitado desde tu primer mensaje, y ayudas a decidir lo que recibirá el resto de agentes.</p>
 			</div>
 
 			<div class="steps">
 				<div class="step">
-					<div class="stepTop">
-						<span class="stepNo">1</span>
-						<div>
-							<div class="stepWhen">Hoy</div>
-							<h3>Añade tu número de WhatsApp a tu usuario</h3>
-						</div>
-					</div>
-					<p>CoAgent sabe quién eres por tu número. En el CRM, ve a:</p>
+					<div class="stepWhen"><span>1</span> Hoy</div>
+					<h3>Prepárate</h3>
+					<p>Regístrate y añade tu número de WhatsApp a tu usuario en el CRM.</p>
 					<div class="path" aria-label="Personal, luego tu nombre, luego Editar, luego Teléfono">
 						<span>Personal</span><i>&rsaquo;</i><span>Tu nombre</span><i>&rsaquo;</i><span>Editar</span><i>&rsaquo;</i><span class="on">Teléfono</span>
 					</div>
-					<p class="small">¿Todavía no estás en PropertyList? <a href={SIGNUP} target="_blank" rel="noopener">Regístrate gratis</a> primero. Ponle el prefijo del país delante si tu número no es español. Si no gestionas la cuenta de tu agencia, pídele a quien la lleve que lo añada.</p>
-					<a class="btnPrimary full" href={CRM_STAFF_URL} target="_blank" rel="noopener">Abrir Personal en tu CRM</a>
+					<a class="btnPrimary full" href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade mi número de WhatsApp</a>
+					<p class="small center">¿Aún no eres miembro? <a href={SIGNUP} target="_blank" rel="noopener">Únete gratis primero</a></p>
 				</div>
 
 				<div class="step">
-					<div class="stepTop">
-						<span class="stepNo">2</span>
-						<div>
-							<div class="stepWhen">Martes 15 de septiembre, 9:00</div>
-							<h3>Escribe a CoAgent por WhatsApp</h3>
-						</div>
-					</div>
-					<p>Mándale estas dos palabras. Los primeros 10 agentes consiguen el mes, y te respondemos en cualquier caso.</p>
-					<div class="waPreview">
-						<span class="waBubble">PropertyList CoAgent</span>
-					</div>
+					<div class="stepWhen"><span>2</span> Martes 15 de septiembre, 9:00</div>
+					<h3>Envía dos palabras</h3>
+					<div class="waPreview"><span class="waBubble">PropertyList CoAgent</span></div>
 					{WA ? (
 						<>
 							<p class="small center">El número: <b>{COAGENT_NUMBER}</b></p>
@@ -223,8 +156,8 @@ const breadcrumbLd = {
 						</>
 					) : (
 						<>
-							<p class="small">El número estará disponible en esta página desde las 9:00 del martes, así que todos empezamos a la vez. Antes de escribirle, asegúrate de que estás <a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y de que tu número de WhatsApp está añadido a tu usuario.</p>
-							<a class="btnGhost full" href={CAL} target="_blank" rel="noopener">Añade las 9:00 del martes a tu calendario</a>
+							<p>El número estará disponible en esta página desde las 9:00 del martes, así que todos empezamos a la vez.</p>
+							<a class="btnGhost full" href={CAL} target="_blank" rel="noopener">Recuérdamelo el martes a las 9:00</a>
 						</>
 					)}
 				</div>
@@ -232,32 +165,44 @@ const breadcrumbLd = {
 		</div>
 	</section>
 
-	{reviews.length > 0 && (
-		<section class="band soft">
-			<div class="cx">
-				<div class="head center">
-					<div class="label">En sus palabras</div>
-					<h2>Lo que dicen las agencias</h2>
+	<section class="band">
+		<div class="cx">
+			<div class="join">
+				<div>
+					<div class="label">¿Todavía no eres una de las 1.000?</div>
+					<h2>Únete. <span>Es gratis.</span></h2>
+					<p>
+						Tu próximo anuncio delante de {plAgencies} agencias el mismo día. Sin comisiones por publicar, sin contrato, sin
+						tarjeta. Y CoAgent para quitarte el papeleo de encima, con 5 mensajes gratis al día.
+					</p>
 				</div>
-				<div class="grid2">
-					{reviews.map((r) => (
-						<figure class="quote">
-							<span class="qMark" aria-hidden="true">&ldquo;</span>
-							<blockquote>{r.quote}</blockquote>
-							<figcaption>{r.agency}</figcaption>
-						</figure>
-					))}
+				<div class="joinCta">
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Únete gratis</a>
+					<span>0 € por publicar, siempre</span>
 				</div>
 			</div>
-		</section>
-	)}
+		</div>
+	</section>
+
+	<section class="band soft">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">En sus palabras</div>
+				<h2>Por qué las agencias comparten con nosotros</h2>
+			</div>
+			<div class="quotes">
+				{reviews.map((r) => (
+					<figure class="quote">
+						<blockquote>&ldquo;{r.quote}&rdquo;</blockquote>
+						<figcaption>{r.agency}</figcaption>
+					</figure>
+				))}
+			</div>
+		</div>
+	</section>
 
 	<section class="band">
 		<div class="cx narrow">
-			<div class="head center">
-				<div class="label">Preguntas</div>
-				<h2>Antes de escribirle.</h2>
-			</div>
 			<div class="faq">
 				{faqs.map((f) => (
 					<details>
@@ -271,13 +216,11 @@ const breadcrumbLd = {
 
 	<section class="band dark final">
 		<div class="cx narrow center">
-			<h2>Publicar gratis. <span>Compartir gratis.</span></h2>
-			<p>
-				Publicar en PropertyList es gratis y siempre lo ha sido. Sin comisiones por anuncio, sin contrato, sin coste de alta.
-				Crea una cuenta, sube tus propiedades, y tu próxima propiedad llega a {plAgencies} agencias el mismo día.
-			</p>
+			<h2>Gracias por <span>ser parte de esto.</span></h2>
+			<p>De parte de todo el equipo de PropertyList. A por las próximas 1.000.</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+				<a class="btnPrimary" href="#first10">Reclama uno de los 10 meses gratis</a>
+				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Únete gratis</a>
 			</div>
 		</div>
 	</section>
@@ -287,123 +230,143 @@ const breadcrumbLd = {
 	</div>
 </Layout>
 
+<script>
+	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+		const to = parseInt(el.dataset.to || '0', 10);
+		if (!to || reduce) return;
+		const start = performance.now();
+		const dur = 1800;
+		const tick = (now: number) => {
+			const t = Math.min(1, (now - start) / dur);
+			const eased = 1 - Math.pow(1 - t, 3);
+			el.textContent = Math.round(to * eased).toLocaleString('de-DE');
+			if (t < 1) requestAnimationFrame(tick);
+		};
+		el.textContent = '0';
+		requestAnimationFrame(tick);
+	});
+</script>
+
 <style>
 	.cx { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
-	.cx.narrow { width: min(780px, calc(100% - 32px)); }
+	.cx.narrow { width: min(820px, calc(100% - 32px)); }
 	.center { text-align: center; }
 	h1, h2, h3 { letter-spacing: -0.035em; color: #0b1220; }
+	h2 span { color: #00ae9a; }
 
-	.hero { overflow: hidden; padding-block: 64px 80px; background: radial-gradient(900px 520px at 80% 30%, rgba(0, 174, 154, 0.16), transparent 62%), linear-gradient(180deg, #f7fbfa 0%, #fff 100%); }
-	.heroGrid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 56px; align-items: center; }
-	.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(0, 174, 154, 0.1); color: #0a6d61; font-size: 12.5px; font-weight: 800; margin-bottom: 20px; }
-	.dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; box-shadow: 0 0 0 4px rgba(0, 174, 154, 0.16); }
-	h1 { font-size: clamp(38px, 5.6vw, 66px); line-height: 1.02; letter-spacing: -0.05em; margin: 0 0 22px; font-weight: 900; }
-	h1 span { color: #00ae9a; }
-	.heroLead { font-size: 18.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.68); max-width: 590px; margin: 0 0 28px; }
-	.heroLead strong { color: #0b1220; }
+	.hero { position: relative; overflow: hidden; padding-block: 72px 88px; background: radial-gradient(800px 480px at 50% 18%, rgba(0, 174, 154, 0.35), transparent 70%), #0b1220; color: #fff; }
+	.heroInner { position: relative; z-index: 1; }
+	.eyebrow { display: inline-block; padding: 7px 14px; border-radius: 999px; background: rgba(94, 234, 212, 0.12); border: 1px solid rgba(94, 234, 212, 0.3); color: #5eead4; font-size: 13px; font-weight: 800; margin-bottom: 18px; }
+	.count { font-size: clamp(88px, 17vw, 190px); font-weight: 900; letter-spacing: -0.07em; line-height: 0.95; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 20px 60px rgba(0, 174, 154, 0.45); }
+	.count em { font-style: normal; color: #5eead4; }
+	.countLabel { font-size: clamp(18px, 2.4vw, 24px); font-weight: 800; color: #5eead4; letter-spacing: 0.02em; margin: 4px 0 26px; }
+	h1 { font-size: clamp(34px, 5vw, 58px); line-height: 1.04; letter-spacing: -0.045em; margin: 0 0 18px; font-weight: 900; color: #fff; }
+	h1 span { color: #5eead4; display: block; }
+	.lead { font-size: clamp(17px, 2vw, 20px); line-height: 1.6; color: rgba(255, 255, 255, 0.78); max-width: 640px; margin: 0 auto 30px; }
+
+	.confetti { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+	.c { position: absolute; top: -20px; width: 9px; height: 14px; border-radius: 2px; opacity: 0.85; animation: fall linear infinite; }
+	.c0 { background: #00ae9a; } .c1 { background: #5eead4; } .c2 { background: #fbbf24; } .c3 { background: #f472b6; }
+	.c4 { background: #ffffff; width: 7px; height: 7px; border-radius: 50%; } .c5 { background: #60a5fa; } .c6 { background: #34d399; height: 6px; }
+	@keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); } 100% { transform: translateY(760px) rotate(540deg); } }
+
 	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 	.ctaRow.center { justify-content: center; }
-	.btnPrimary, .btnGhost, .btnLight, .btnWa { display: inline-flex; align-items: center; justify-content: center; text-align: center; padding: 15px 24px; border-radius: 13px; font-size: 16px; font-weight: 800; text-decoration: none; transition: background 0.2s, transform 0.2s; }
+	.btnPrimary, .btnGhost, .btnGhostDark, .btnLight, .btnWa { display: inline-flex; align-items: center; justify-content: center; text-align: center; padding: 15px 24px; border-radius: 13px; font-size: 16px; font-weight: 800; text-decoration: none; transition: background 0.2s, transform 0.2s; }
 	.btnPrimary { background: #00ae9a; color: #fff; box-shadow: 0 12px 28px -12px rgba(0, 174, 154, 0.7); }
 	.btnPrimary:hover { background: #008a7a; transform: translateY(-2px); color: #fff; text-decoration: none; }
-	.btnGhost { border: 1px solid rgba(16, 24, 40, 0.14); color: #0b1220; background: #fff; font-weight: 700; }
+	.btnGhost { border: 1px solid rgba(16, 24, 40, 0.14); color: #0b1220; background: #fff; }
 	.btnGhost:hover { background: #f6f8f8; text-decoration: none; }
-	.btnLight { background: #fff; color: #0b1220; margin-top: 26px; }
+	.btnGhostDark { border: 1px solid rgba(255, 255, 255, 0.28); color: #fff; background: transparent; font-weight: 700; }
+	.btnGhostDark:hover { background: rgba(255, 255, 255, 0.08); color: #fff; text-decoration: none; }
+	.btnLight { background: #fff; color: #0b1220; margin-top: 24px; }
 	.btnLight:hover { background: #e7fbf7; text-decoration: none; }
 	.btnWa { background: #25d366; color: #0b1220; }
-	.btnWa:hover { background: #1fbe5b; text-decoration: none; }
 	.full { width: 100%; margin-top: 18px; }
-	.micro { margin: 14px 0 0; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
 
-	.statCard { background: #0b1220; color: #fff; border-radius: 28px; padding: 34px 32px 28px; box-shadow: 0 40px 90px -40px rgba(11, 18, 32, 0.6); position: relative; overflow: hidden; }
-	.statCard::before { content: ''; position: absolute; inset: -40% -30% auto auto; width: 320px; height: 320px; background: radial-gradient(circle, rgba(0, 174, 154, 0.45), transparent 65%); }
-	.statBig { position: relative; }
-	.statBig b { display: block; font-size: clamp(64px, 8vw, 96px); font-weight: 900; letter-spacing: -0.06em; line-height: 1; color: #5eead4; }
-	.statBig span { display: block; font-size: 16px; font-weight: 700; color: rgba(255, 255, 255, 0.75); margin-top: 6px; }
-	.statRow { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.12); }
-	.statRow b { display: block; font-size: 30px; font-weight: 900; letter-spacing: -0.04em; }
-	.statRow span { display: block; font-size: 13px; color: rgba(255, 255, 255, 0.6); }
-	.statNote { position: relative; margin-top: 20px; font-size: 13px; font-weight: 700; color: #5eead4; background: rgba(94, 234, 212, 0.1); border-radius: 10px; padding: 8px 12px; display: inline-block; }
-
-	.band { padding-block: 88px; background: #fff; }
+	.band { padding-block: 84px; background: #fff; }
 	.band.soft { background: #f6f8f8; }
 	.band.dark { background: #0b1220; color: #fff; }
 	.band.dark h2 { color: #fff; }
-	.head { max-width: 720px; margin-bottom: 44px; }
-	.head.center { margin-inline: auto; }
-	.label { color: #0a6d61; text-transform: uppercase; letter-spacing: 0.12em; font-size: 11.5px; font-weight: 900; margin-bottom: 12px; }
-	.dark .label { color: #5eead4; }
-	h2 { font-size: clamp(32px, 4.4vw, 50px); line-height: 1.05; margin: 0 0 16px; font-weight: 900; }
-	h2 span { color: #00ae9a; }
 	.dark h2 span { color: #5eead4; }
-	.head p { color: rgba(16, 24, 40, 0.62); font-size: 17.5px; line-height: 1.6; margin: 0; }
+	.head { max-width: 760px; margin-bottom: 40px; }
+	.head.center { margin-inline: auto; }
+	.label { color: #0a6d61; text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; font-weight: 900; margin-bottom: 12px; }
+	.dark .label { color: #5eead4; }
+	h2 { font-size: clamp(32px, 4.6vw, 54px); line-height: 1.05; margin: 0 0 14px; font-weight: 900; }
+	.head p { color: rgba(16, 24, 40, 0.62); font-size: 19px; line-height: 1.55; margin: 0; }
 
-	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-	.card { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 28px; box-shadow: 0 10px 34px -18px rgba(16, 24, 40, 0.18); }
-	.cardN { display: block; font-size: 13px; font-weight: 900; color: #00ae9a; letter-spacing: 0.04em; margin-bottom: 14px; }
-	.card h3 { font-size: 20px; margin: 0 0 10px; }
-	.card p { color: rgba(16, 24, 40, 0.64); font-size: 15.5px; line-height: 1.6; margin: 0; }
+	.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+	.stat { background: #f6f8f8; border-radius: 24px; padding: 30px 26px; text-align: center; }
+	.stat b { display: block; font-size: clamp(42px, 5vw, 60px); font-weight: 900; letter-spacing: -0.05em; color: #00ae9a; line-height: 1; }
+	.stat span { display: block; margin-top: 10px; font-size: 16px; font-weight: 700; color: #0b1220; }
 
 	.coGrid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 56px; align-items: center; }
-	.honest { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-left: 4px solid #00ae9a; border-radius: 16px; padding: 18px 22px; margin: 10px 0 22px; }
-	.honest b { display: block; font-size: 14px; font-weight: 900; color: #5eead4; margin-bottom: 6px; }
-	.honest p { margin: 0; font-size: 15.5px; line-height: 1.62; color: rgba(255, 255, 255, 0.72); }
-	.coLead { font-size: 17px; line-height: 1.62; color: rgba(255, 255, 255, 0.86); margin: 0 0 20px; }
-	.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-	.ticks li { position: relative; padding-left: 30px; font-size: 15.5px; font-weight: 700; color: #fff; }
-	.ticks li::before { content: ''; position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; background: rgba(94, 234, 212, 0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%235eead4' d='M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z'/%3E%3C/svg%3E") center/13px no-repeat; }
+	.picture { font-size: 20px; line-height: 1.6; color: rgba(255, 255, 255, 0.8); margin: 6px 0 24px; }
+	.picture b { color: #fff; }
+	.feel { list-style: none; margin: 0 0 22px; padding: 0; display: grid; gap: 12px; }
+	.feel li { position: relative; padding-left: 34px; font-size: 18px; }
+	.feel li::before { content: ''; position: absolute; left: 0; top: 2px; width: 22px; height: 22px; border-radius: 50%; background: rgba(94, 234, 212, 0.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%235eead4' d='M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z'/%3E%3C/svg%3E") center/14px no-repeat; }
+	.small { font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.58); margin: 12px 0 0; }
+	.small.light { color: rgba(255, 255, 255, 0.55); }
+	.small a { color: #0a6d61; font-weight: 800; }
 	.coGrid :global(.cphTab) { background: rgba(255, 255, 255, 0.08); color: #5eead4; border-color: rgba(94, 234, 212, 0.35); }
 	.coGrid :global(.cphTab.on) { background: #5eead4; color: #0b1220; border-color: #5eead4; }
 
-	.steps { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 960px; margin: 0 auto; }
-	.step { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 26px; padding: 30px; box-shadow: 0 24px 60px -34px rgba(16, 24, 40, 0.3); display: flex; flex-direction: column; }
-	.stepTop { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
-	.stepNo { flex: none; width: 44px; height: 44px; border-radius: 14px; background: #0b1220; color: #fff; display: grid; place-items: center; font-weight: 900; font-size: 18px; }
-	.stepWhen { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0a6d61; margin: 2px 0 4px; }
-	.step h3 { font-size: 21px; line-height: 1.2; margin: 0; }
-	.step p { font-size: 15.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); margin: 0 0 12px; }
-	.step p.small { font-size: 14px; color: rgba(16, 24, 40, 0.58); margin: 12px 0 0; }
-	.step p.small b { color: #0b1220; font-size: 17px; }
+	.steps { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 900px; margin: 0 auto; }
+	.step { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 26px; padding: 30px; box-shadow: 0 24px 60px -34px rgba(16, 24, 40, 0.3); display: flex; flex-direction: column; }
+	.stepWhen { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #0a6d61; }
+	.stepWhen span { width: 30px; height: 30px; border-radius: 10px; background: #0b1220; color: #fff; display: grid; place-items: center; font-size: 14px; letter-spacing: 0; }
+	.step h3 { font-size: 28px; margin: 14px 0 8px; }
+	.step p { font-size: 16.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.7); margin: 0 0 16px; }
 	.step .full { margin-top: auto; }
-	.step p.small + .full, .step .waPreview + .full { margin-top: 18px; }
+	.step .path + .full { margin-top: 18px; }
+	.step .small.center { margin-top: 14px; }
 	.path { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; background: #f6f8f8; border-radius: 14px; padding: 14px; }
 	.path span { background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 9px; padding: 6px 11px; font-size: 14px; font-weight: 800; color: #0b1220; }
 	.path span.on { background: #00ae9a; border-color: #00ae9a; color: #fff; }
 	.path i { font-style: normal; font-size: 18px; color: rgba(16, 24, 40, 0.35); }
-	.waPreview { background: #efeae2; border-radius: 14px; padding: 18px 14px; display: flex; justify-content: flex-end; }
-	.waBubble { background: #d9fdd3; border-radius: 10px; border-top-right-radius: 2px; padding: 9px 14px; font-size: 16px; font-weight: 700; color: #111b21; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.13); }
-	.step::after { content: ''; display: block; height: 18px; flex: none; order: 9; }
+	.waPreview { background: #efeae2; border-radius: 14px; padding: 22px 14px; display: flex; justify-content: center; margin: 4px 0 16px; }
+	.waBubble { background: #d9fdd3; border-radius: 12px; border-top-right-radius: 2px; padding: 11px 18px; font-size: 20px; font-weight: 800; color: #111b21; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.13); }
 
-	.quote { margin: 0; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 28px 28px 24px; position: relative; }
-	.qMark { position: absolute; top: 6px; right: 22px; font-size: 80px; line-height: 1; font-weight: 900; color: rgba(0, 174, 154, 0.2); font-family: Georgia, serif; }
-	.quote blockquote { margin: 0 0 16px; font-size: 16px; line-height: 1.62; color: rgba(16, 24, 40, 0.82); position: relative; }
+	.join { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: center; background: linear-gradient(135deg, rgba(0, 174, 154, 0.14), rgba(0, 174, 154, 0.04)); border: 1px solid rgba(0, 174, 154, 0.3); border-radius: 30px; padding: 48px; }
+	.join p { font-size: 18px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); margin: 0; max-width: 620px; }
+	.joinCta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+	.joinCta .btnPrimary { padding: 18px 40px; font-size: 18px; }
+	.joinCta span { font-size: 13px; font-weight: 700; color: rgba(16, 24, 40, 0.55); }
+
+	.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 960px; margin: 0 auto; }
+	.quote { margin: 0; background: #fff; border-radius: 22px; padding: 28px; border: 1px solid rgba(16, 24, 40, 0.06); }
+	.quote blockquote { margin: 0 0 14px; font-size: 20px; line-height: 1.45; font-weight: 700; color: #0b1220; letter-spacing: -0.01em; }
 	.quote figcaption { font-size: 14px; font-weight: 900; color: #0a6d61; }
 
 	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 20px 0; }
-	.faq summary { cursor: pointer; list-style: none; font-weight: 800; font-size: 17px; display: flex; justify-content: space-between; gap: 20px; color: #0b1220; }
+	.faq summary { cursor: pointer; list-style: none; font-weight: 800; font-size: 18px; display: flex; justify-content: space-between; gap: 20px; color: #0b1220; }
 	.faq summary::-webkit-details-marker { display: none; }
 	.faq summary::after { content: '+'; font-size: 22px; line-height: 1; color: #0a6d61; }
 	.faq details[open] summary::after { content: '-'; }
-	.faq p { margin: 12px 0 0; color: rgba(16, 24, 40, 0.66); font-size: 15.5px; line-height: 1.62; }
+	.faq p { margin: 12px 0 0; color: rgba(16, 24, 40, 0.66); font-size: 16px; line-height: 1.6; }
 
 	.final { background: radial-gradient(700px 360px at 50% 0%, rgba(0, 174, 154, 0.3), transparent 70%), #0b1220; }
-	.final h2 { font-size: clamp(36px, 5vw, 58px); }
-	.final p { color: rgba(255, 255, 255, 0.7); font-size: 18px; line-height: 1.6; margin: 0 auto 28px; max-width: 600px; }
+	.final h2 { font-size: clamp(36px, 5vw, 60px); }
+	.final p { color: rgba(255, 255, 255, 0.72); font-size: 20px; margin: 0 auto 28px; }
 
 	@media (max-width: 960px) {
-		.heroGrid, .coGrid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
-		.statCard { max-width: 460px; }
-		.grid3 { grid-template-columns: minmax(0, 1fr); }
+		.coGrid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
 		.steps { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
+		.join { grid-template-columns: minmax(0, 1fr); padding: 34px 26px; }
+		.joinCta { align-items: stretch; }
 	}
 	@media (max-width: 720px) {
-		.hero { padding-block: 36px 56px; }
-		.heroLead { font-size: 17px; }
-		.band { padding-block: 64px; }
-		.grid2 { grid-template-columns: minmax(0, 1fr); }
-		.ctaRow:not(.center) { flex-direction: column; align-items: stretch; }
+		.hero { padding-block: 48px 64px; }
+		.band { padding-block: 60px; }
+		.stats, .quotes { grid-template-columns: minmax(0, 1fr); }
+		.ctaRow { flex-direction: column; align-items: stretch; }
 		.step { padding: 24px 20px; }
-		.statCard { padding: 28px 24px 24px; }
+		.picture { font-size: 18px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.c { animation: none; display: none; }
 	}
 </style>
