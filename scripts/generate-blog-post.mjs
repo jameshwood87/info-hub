@@ -217,7 +217,6 @@ console.log(`ES draft created: id=${es.data?.id} path=/es/blog/${slug}`);
 const IMAGE_RULES = [
   [/itp|\btax|impuesto|plusvalia|notary|valuation|per m2|market report/i, [
     ['/blog-img/property-data-laptop-charts.jpg', 'Property price data and charts on a laptop'],
-    ['/blog-img/itp-tax-euros.jpg', 'Taxes and paperwork for Spanish property buyers'],
     ['/blog-img/eu-regulation-flags.jpg', 'EU and Spanish regulation affecting property buyers'],
     ['/blog-img/law-scales-decision.jpg', 'Legal scales representing Spanish property tax rules'],
     ['/blog-img/court-fine-signing.jpg', 'A judge signs documents beside a gavel'],
