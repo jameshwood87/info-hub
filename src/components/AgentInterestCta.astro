@@ -2,6 +2,7 @@
 // Soft capture for agents who are evaluating but not ready to create an account.
 // These are AGENT prospects, so they route to the agent/developer CRM tagged
 // 'agent-interested' - never the consumer audience (see src/pages/api/subscribe.ts).
+// Submitting sends the summary email the copy promises (src/lib/agentSummary.mjs).
 interface Props {
 	lang?: 'en' | 'es';
 	page?: string;
@@ -49,6 +50,7 @@ const t =
 			aria-label={t.ph}
 			autocomplete="email"
 		/>
+		<input class="aiCtaHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
 		<button class="aiCtaBtn" type="submit">{t.btn}</button>
 	</form>
 	<p class="aiCtaNote">{t.note}</p>
@@ -63,6 +65,7 @@ const t =
 		const strings = box.querySelector('[data-ok]');
 		if (!form || !msg || !strings) return;
 		const input = form.querySelector('input[type=email]');
+		const hp = form.querySelector('input[name=website]');
 		const btn = form.querySelector('button');
 
 		form.addEventListener('submit', async (e) => {
@@ -86,6 +89,9 @@ const t =
 						tag: box.dataset.tag || 'agent-interested',
 						lang: box.dataset.lang || 'en',
 						page: box.dataset.page || location.pathname,
+						// this box promises the summary email, so ask the endpoint to send it
+						summary: true,
+						website: hp ? hp.value : '',
 					}),
 				});
 				const data = await res.json().catch(() => ({}));
@@ -137,6 +143,7 @@ const t =
 		display: flex;
 		gap: 8px;
 		flex-wrap: wrap;
+		position: relative;
 	}
 	.aiCtaInput {
 		flex: 1 1 240px;
@@ -152,6 +159,8 @@ const t =
 		outline: 2px solid rgba(0, 174, 154, 0.5);
 		outline-offset: 1px;
 	}
+	/* honeypot: off-screen, not display:none, which some bots skip */
+	.aiCtaHp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 	.aiCtaBtn {
 		flex: 0 0 auto;
 		padding: 11px 22px;

@@ -6,7 +6,8 @@
 //  - never while the cookie banner is still unanswered (we already had a double-popup bug).
 //  - never on blog posts or docs - those pages capture inline instead.
 // Agent prospects, so it routes to the agent CRM tagged 'agent-interested', same as the
-// inline AgentInterestCta.
+// inline AgentInterestCta. Submitting sends the summary email the copy promises
+// (src/lib/agentSummary.mjs).
 interface Props {
 	lang?: 'en' | 'es';
 }
@@ -62,6 +63,7 @@ const t =
 				aria-label={t.ph}
 				autocomplete="email"
 			/>
+			<input class="xiHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
 			<button class="xiBtn" type="submit">{t.btn}</button>
 		</form>
 		<p class="xiNote">{t.note}</p>
@@ -138,6 +140,7 @@ const t =
 		form.addEventListener('submit', async (e) => {
 			e.preventDefault();
 			const input = form.querySelector('input[type=email]');
+			const hp = form.querySelector('input[name=website]');
 			const btn = form.querySelector('button');
 			const email = String(input.value || '').trim();
 			if (!email || !email.includes('@')) {
@@ -157,6 +160,9 @@ const t =
 						tag: 'agent-interested',
 						lang: box.dataset.lang || 'en',
 						page: location.pathname,
+						// this popup promises the summary email, so ask the endpoint to send it
+						summary: true,
+						website: hp ? hp.value : '',
 					}),
 				});
 				const data = await res.json().catch(() => ({}));
@@ -200,12 +206,14 @@ const t =
 	.xiX:hover { color: #101828; }
 	.xiTitle { margin: 0 0 8px; font-size: 21px; font-weight: 800; color: #101828; }
 	.xiBody { margin: 0 0 16px; font-size: 14.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.7); }
-	.xiForm { display: flex; gap: 8px; flex-wrap: wrap; }
+	.xiForm { display: flex; gap: 8px; flex-wrap: wrap; position: relative; }
 	.xiInput {
 		flex: 1 1 200px; min-width: 0; padding: 11px 14px; font-size: 15px;
 		border: 1px solid rgba(16, 24, 40, 0.2); border-radius: 10px; color: #101828;
 	}
 	.xiInput:focus { outline: 2px solid rgba(0, 174, 154, 0.5); outline-offset: 1px; }
+	/* honeypot: off-screen, not display:none, which some bots skip */
+	.xiHp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 	.xiBtn {
 		flex: 0 0 auto; padding: 11px 20px; font-size: 15px; font-weight: 800; color: #fff;
 		background: #00ae9a; border: 0; border-radius: 10px; cursor: pointer;
