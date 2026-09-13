@@ -274,13 +274,32 @@ const hayImg = `${slug} ${post.title}`.toLowerCase();
 let candidates = null;
 for (const [re, arr] of IMAGE_RULES) { if (re.test(hayImg)) { candidates = arr; break; } }
 if (!candidates) candidates = FALLBACK_IMAGES;
-const recent = recentImages();
-const chosenImg =
-  candidates.find((c) => !recent.includes(c[0])) ||
-  FALLBACK_IMAGES.find((c) => !recent.includes(c[0])) ||
-  candidates[0];
-pushRecent(chosenImg[0]);
-await setFeaturedImage(en.data?.id, chosenImg[0], chosenImg[1]);
-await setFeaturedImage(es.data?.id, chosenImg[0], chosenImg[1]);
+// Never reuse a featured image. An image is TAKEN if any article already uses
+// it, drafts included, so a draft published later cannot collide either. The
+// old rule only skipped the last 10 picks and then fell back to candidates[0],
+// which is how 16 images ended up on two or more different articles (found
+// 13-09-26). Variants of one file (host prefix, ?v=2) count as the same file.
+const normImg = (u) => {
+  let s = String(u || '');
+  const h = s.indexOf('.propertylist.es');
+  if (h >= 0) s = s.slice(h + '.propertylist.es'.length);
+  return s.split('?')[0];
+};
+let takenImgs = null;
+try {
+  const metaItems = JSON.parse(fs.readFileSync('/opt/info-hub/var/admin/kb-meta.json', 'utf8')).items || {};
+  takenImgs = new Set(Object.values(metaItems).map((m) => m && m.featuredImageUrl).filter(Boolean).map(normImg));
+} catch (e) {
+  console.log('featured image: could not read kb-meta, so assigning none rather than risk a duplicate:', e.message);
+}
+const isFreeImg = (c) => Boolean(takenImgs) && !takenImgs.has(normImg(c[0]));
+const chosenImg = candidates.find(isFreeImg) || FALLBACK_IMAGES.find(isFreeImg) || null;
+if (chosenImg) {
+  pushRecent(chosenImg[0]);
+  await setFeaturedImage(en.data?.id, chosenImg[0], chosenImg[1]);
+  await setFeaturedImage(es.data?.id, chosenImg[0], chosenImg[1]);
+} else {
+  console.log('WARNING featured image: every image for this topic is already used on another article, so none was assigned and the post shows the default hero. Add a new image to public/blog-img/ and to IMAGE_RULES.');
+}
 
 console.log(PUBLISH ? '\nDONE - both pages PUBLISHED.' : '\nDONE - both drafts are status=draft; review and publish in the admin.');
