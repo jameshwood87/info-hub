@@ -1,40 +1,39 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AgentInterestCta from '../components/AgentInterestCta.astro';
-import CoagentPhone from '../components/CoagentPhone.astro';
-import { getPortalStats, statPlus } from '../lib/portalStats';
-import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../data/coagent';
+import Layout from '../../layouts/Layout.astro';
+import CoagentPhone from '../../components/CoagentPhone.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../../data/coagent';
 
 const __ps = await getPortalStats();
-const plAgents = statPlus(__ps.agents, 'en');
-const plAgencies = statPlus(__ps.agencies, 'en');
-const plListings = statPlus(__ps.listings, 'en');
+const plAgents = statPlus(__ps.agents, 'fr');
+const plAgencies = statPlus(__ps.agencies, 'fr');
+const plListings = statPlus(__ps.listings, 'fr');
 // The counter lands on the same rounded minimum the page prints, never above it.
 const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
-const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=fr';
 const WA = coagentWaLink();
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/1000-agencies/ from 9am. Send it the words PropertyList CoAgent. The first 10 agents get a month free.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Écrire à PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Le numéro de CoAgent est sur https://info.propertylist.es/fr/1000-agences/ à partir de 9 h. Envoyez-lui les mots PropertyList CoAgent. Les 10 premiers agents ont un mois gratuit.')}`;
 
 const reviews = [
-	{ quote: 'Designed with the daily reality of real estate agents in mind. It saves time.', agency: 'Alain Fiddelers' },
-	{ quote: 'A fantastic platform for agents who value collaboration, transparency, and protecting their stock.', agency: 'By Frances Concierge' },
-	{ quote: 'Well structured, reliable, and continuously improving.', agency: 'Nathalie Sergeant' },
-	{ quote: 'None of my searches go without it.', agency: 'Valeria Kriptova' },
+	{ quote: 'Conçue en pensant à la réalité quotidienne des agents immobiliers. Elle fait gagner du temps.', agency: 'Alain Fiddelers' },
+	{ quote: 'Une plateforme fantastique pour les agents qui apprécient la collaboration, la transparence et la protection de leur portefeuille.', agency: 'By Frances Concierge' },
+	{ quote: 'Bien structurée, fiable, et en amélioration continue.', agency: 'Nathalie Sergeant' },
+	{ quote: 'Aucune de mes recherches ne se fait sans elle.', agency: 'Valeria Kriptova' },
 ];
 
 const faqs = [
 	{
-		q: 'What does CoAgent cost?',
-		a: 'The first 10 agents to message it get a month free and unlimited, from their first message. Every agent gets 5 free messages a day, and replying YES never counts. Unlimited is 50 credits a month per agent. More than 3 agents? Talk to us about a package.',
+		q: 'Combien coûte CoAgent ?',
+		a: 'Les 10 premiers agents qui écrivent à CoAgent reçoivent un mois gratuit et illimité, dès leur premier message. Chaque agent a 5 messages gratuits par jour, et répondre YES ne compte jamais. L’illimité coûte 50 crédits par mois et par agent. Plus de 3 agents ? Parlez-nous d’un forfait.',
 	},
 	{
-		q: 'Will it change my CRM on its own?',
-		a: 'Never. It shows you what it wants to save and waits. Nothing changes until you reply YES.',
+		q: 'Modifie-t-il mon CRM tout seul ?',
+		a: 'Jamais. Il vous montre ce qu’il veut enregistrer et attend. Rien ne change tant que vous n’avez pas répondu YES.',
 	},
 	{
-		q: 'How does it know it is me?',
-		a: 'By your WhatsApp number, so it has to be on your user in the CRM. Message from a number it does not know and it will still answer, and tell you how to add it.',
+		q: 'Comment sait-il que c’est moi ?',
+		a: 'Grâce à votre numéro WhatsApp, qui doit donc figurer sur votre profil dans le CRM. Si vous écrivez depuis un numéro qu’il ne connaît pas, il vous répond quand même, et vous explique comment l’ajouter.',
 	},
 ];
 
@@ -47,19 +46,19 @@ const breadcrumbLd = {
 	'@context': 'https://schema.org',
 	'@type': 'BreadcrumbList',
 	itemListElement: [
-		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
-		{ '@type': 'ListItem', position: 2, name: '1,000 agencies', item: 'https://info.propertylist.es/1000-agencies/' },
+		{ '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: '1 000 agences', item: 'https://info.propertylist.es/fr/1000-agences/' },
 	],
 };
 const confetti = Array.from({ length: 28 }, (_, i) => i);
 ---
 
 <Layout
-	lang="en"
-	title="Thank you: 1,000 agencies on PropertyList | PropertyList"
-	description="PropertyList passed 1,000 registered agencies. Thank you for being part of it. Our thank-you gift is CoAgent, your CRM on WhatsApp, and the first 10 agents to message it get a month free."
-	canonical="https://info.propertylist.es/1000-agencies/"
-	ogImage="https://info.propertylist.es/og/og-1000-agencies.jpg"
+	lang="fr"
+	title="Merci : 1 000 agences sur PropertyList | PropertyList"
+	description="PropertyList compte plus de 1 000 agences enregistrées. Merci d’en faire partie. Notre cadeau : CoAgent, votre CRM sur WhatsApp, un mois gratuit pour les 10 premiers agents."
+	canonical="https://info.propertylist.es/fr/1000-agences/"
+	ogImage="https://info.propertylist.es/og/og-1000-agencies-fr.jpg"
 	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/1000-agencies/' },
@@ -79,17 +78,17 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			{confetti.map((i) => <i class={`c c${i % 7}`} style={`left:${(i * 37) % 100}%;animation-delay:${((i * 0.43) % 6).toFixed(2)}s;animation-duration:${(6 + ((i * 1.7) % 5)).toFixed(1)}s`}></i>)}
 		</div>
 		<div class="cx narrow center heroInner">
-			<div class="eyebrow">A celebration, and a thank you</div>
-			<div class="count" aria-hidden="true"><span data-count data-to={agencyTarget}>{agencyTarget.toLocaleString('en-GB')}</span><em>+</em></div>
-			<div class="countLabel">agencies</div>
-			<h1>Thank you, <span>PropertyList community.</span></h1>
+			<div class="eyebrow">Une célébration, et un merci</div>
+			<div class="count" aria-hidden="true"><span data-count data-to={agencyTarget}>{agencyTarget.toLocaleString('fr-FR')}</span><em>+</em></div>
+			<div class="countLabel">agences</div>
+			<h1>Merci, <span>communauté PropertyList.</span></h1>
 			<p class="lead">
-				Every listing you shared, every buyer you brought to another agency's home, every agent you told about us. We reached
-				{plAgencies} agencies together.
+				Chaque annonce que vous avez partagée, chaque acheteur que vous avez amené chez une autre agence, chaque agent à
+				qui vous avez parlé de nous. Nous avons atteint {plAgencies} agences ensemble.
 			</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#gift">Open your thank-you gift</a>
-				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Not a member yet? Join free</a>
+				<a class="btnPrimary" href="#gift">Ouvrez votre cadeau de remerciement</a>
+				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Pas encore membre ? Inscrivez-vous gratuitement</a>
 			</div>
 		</div>
 	</section>
@@ -97,13 +96,13 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	<section class="band">
 		<div class="cx">
 			<div class="head center">
-				<h2>One listing. <span>{plAgencies} agencies</span> who can sell it.</h2>
-				<p>At 100 agencies it was an idea. At 1,000 it is a market, and you are in it.</p>
+				<h2>Une annonce. <span>{plAgencies} agences</span> qui peuvent la vendre.</h2>
+				<p>À 100 agences, c’était une idée. À 1 000, c’est un marché, et vous en faites partie.</p>
 			</div>
 			<div class="stats">
-				<div class="stat"><b>{plAgencies}</b><span>agencies sharing instead of guarding</span></div>
-				<div class="stat"><b>{plAgents}</b><span>agents who could bring your buyer</span></div>
-				<div class="stat"><b>{plListings}</b><span>live listings, one search away</span></div>
+				<div class="stat"><b>{plAgencies}</b><span>agences qui partagent au lieu de garder</span></div>
+				<div class="stat"><b>{plAgents}</b><span>agents qui pourraient vous apporter un acheteur</span></div>
+				<div class="stat"><b>{plListings}</b><span>annonces actives, à une recherche de distance</span></div>
 			</div>
 		</div>
 	</section>
@@ -111,57 +110,57 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	<section class="band dark" id="gift">
 		<div class="cx coGrid">
 			<div>
-				<div class="label">Our thank you</div>
-				<h2>CoAgent. <span>Your evenings back.</span></h2>
+				<div class="label">Notre remerciement</div>
+				<h2>CoAgent. <span>Récupérez vos soirées.</span></h2>
 				<p class="picture">
-					Picture it. You walk out of the viewing, press record and talk it through. The note is written. The follow-up is
-					set. The listings that match are waiting. <b>You reply YES, and you are done.</b>
+					Imaginez la scène. Vous sortez de la visite, vous appuyez sur enregistrer et vous racontez tout. La note est
+					rédigée. Le suivi est programmé. Les annonces qui correspondent attendent. <b>Vous répondez YES, et c’est terminé.</b>
 				</p>
 				<ul class="feel">
-					<li><b>No more writing up the day at night</b></li>
-					<li><b>No promise to a client forgotten</b></li>
-					<li><b>Answers in the car, without a laptop</b></li>
+					<li><b>Fini d’écrire la journée le soir</b></li>
+					<li><b>Plus aucune promesse à un client oubliée</b></li>
+					<li><b>Des réponses dans la voiture, sans ordinateur portable</b></li>
 				</ul>
-				<p class="small light">It lives in the WhatsApp you already use. Nothing is saved until you say YES, and your voice is never kept.</p>
-				<a class="btnLight" href="/coagent/">See everything CoAgent does</a>
+				<p class="small light">Il vit dans le WhatsApp que vous utilisez déjà. Rien n’est enregistré tant que vous ne dites pas YES, et votre voix n’est jamais conservée.</p>
+				<a class="btnLight" href="/fr/coagent/">Découvrez tout ce que fait CoAgent</a>
 			</div>
-			<CoagentPhone lang="en" />
+			<CoagentPhone lang="fr" />
 		</div>
 	</section>
 
 	<section class="band soft" id="first10">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">The first 10 agents</div>
-				<h2>A month free. <span>Be one of the 10.</span></h2>
-				<p>Free and unlimited from your first message, and you help shape what every other agent gets.</p>
+				<div class="label">Les 10 premiers agents</div>
+				<h2>Un mois gratuit. <span>Soyez l’un des 10.</span></h2>
+				<p>Gratuit et illimité dès votre premier message, et vous aidez à façonner ce que recevront tous les autres agents.</p>
 			</div>
 
 			<div class="steps">
 				<div class="step">
-					<div class="stepWhen"><span>1</span> Today</div>
-					<h3>Be ready</h3>
-					<p>Be signed up, with your WhatsApp number on your user in the CRM.</p>
-					<div class="path" aria-label="Staff, then your name, then Edit, then Phone">
-						<span>Staff</span><i>&rsaquo;</i><span>Your name</span><i>&rsaquo;</i><span>Edit</span><i>&rsaquo;</i><span class="on">Phone</span>
+					<div class="stepWhen"><span>1</span> Aujourd’hui</div>
+					<h3>Soyez prêt</h3>
+					<p>Inscrivez-vous, et ajoutez votre numéro WhatsApp à votre utilisateur.</p>
+					<div class="path" aria-label="Staff, puis votre nom, puis Edit, puis Phone">
+						<span>Staff</span><i>&rsaquo;</i><span>Votre nom</span><i>&rsaquo;</i><span>Edit</span><i>&rsaquo;</i><span class="on">Phone</span>
 					</div>
-					<a class="btnPrimary full" href={CRM_STAFF_URL} target="_blank" rel="noopener">Add my WhatsApp number</a>
-					<p class="small center">Not a member yet? <a href={SIGNUP} target="_blank" rel="noopener">Join free first</a></p>
+					<a class="btnPrimary full" href={CRM_STAFF_URL} target="_blank" rel="noopener">Ajoutez mon numéro WhatsApp</a>
+					<p class="small center">Pas encore membre ? <a href={SIGNUP} target="_blank" rel="noopener">Inscrivez-vous gratuitement d’abord</a></p>
 				</div>
 
 				<div class="step">
-					<div class="stepWhen"><span>2</span> Tuesday 15 September, 9am</div>
-					<h3>Send two words</h3>
+					<div class="stepWhen"><span>2</span> Mardi 15 septembre, à partir de 9 h</div>
+					<h3>Envoyez deux mots</h3>
 					<div class="waPreview"><span class="waBubble">PropertyList CoAgent</span></div>
 					{WA ? (
 						<>
-							<p class="small center">The number: <b>{COAGENT_NUMBER}</b></p>
-							<a class="btnWa full" href={WA} target="_blank" rel="noopener">Message CoAgent on WhatsApp</a>
+							<p class="small center">Le numéro : <b>{COAGENT_NUMBER}</b></p>
+							<a class="btnWa full" href={WA} target="_blank" rel="noopener">Écrivez à CoAgent sur WhatsApp</a>
 						</>
 					) : (
 						<>
-							<p>The number is available on this page from 9am on Tuesday, so everyone starts together.</p>
-							<a class="btnGhost full" href={CAL} target="_blank" rel="noopener">Remind me at 9am Tuesday</a>
+							<p>Le numéro sera disponible sur cette page mardi 15 septembre, à partir de 9 h, pour que tout le monde commence ensemble.</p>
+							<a class="btnGhost full" href={CAL} target="_blank" rel="noopener">Me le rappeler mardi à 9 h</a>
 						</>
 					)}
 				</div>
@@ -173,16 +172,16 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 		<div class="cx">
 			<div class="join">
 				<div>
-					<div class="label">Not one of the 1,000 yet?</div>
-					<h2>Join them. <span>It is free.</span></h2>
+					<div class="label">Vous ne faites pas encore partie des 1 000 ?</div>
+					<h2>Rejoignez-les. <span>C’est gratuit.</span></h2>
 					<p>
-						Your next listing in front of {plAgencies} agencies the same day. No listing fees, no contract, no card. And CoAgent to
-						take the admin off your hands, with 5 free messages a day.
+						Votre prochaine annonce devant {plAgencies} agences le jour même. Aucun frais de publication, aucun contrat,
+						aucune carte. Et CoAgent pour vous décharger de l’administratif, avec 5 messages gratuits par jour.
 					</p>
 				</div>
 				<div class="joinCta">
-					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Join free</a>
-					<span>&euro;0 to list, always</span>
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Inscrivez-vous gratuitement</a>
+					<span>0 &euro; pour publier, toujours</span>
 				</div>
 			</div>
 		</div>
@@ -191,8 +190,8 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	<section class="band soft">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">In their words</div>
-				<h2>Why agencies share with us</h2>
+				<div class="label">Dans leurs mots</div>
+				<h2>Pourquoi les agences partagent avec nous</h2>
 			</div>
 			<div class="quotes">
 				{reviews.map((r) => (
@@ -220,18 +219,14 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 
 	<section class="band dark final">
 		<div class="cx narrow center">
-			<h2>Thank you for being <span>part of it.</span></h2>
-			<p>From everyone at PropertyList. Here is to the next 1,000.</p>
+			<h2>Merci de <span>faire partie de tout cela.</span></h2>
+			<p>De la part de toute l’équipe PropertyList. Aux 1 000 prochaines.</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#first10">Claim one of the 10 free months</a>
-				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Join free</a>
+				<a class="btnPrimary" href="#first10">Réclamez l’un des 10 mois gratuits</a>
+				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Inscrivez-vous gratuitement</a>
 			</div>
 		</div>
 	</section>
-
-	<div class="cx">
-		<AgentInterestCta lang="en" />
-	</div>
 </Layout>
 
 <script>
@@ -244,7 +239,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 		const tick = (now: number) => {
 			const t = Math.min(1, (now - start) / dur);
 			const eased = 1 - Math.pow(1 - t, 3);
-			el.textContent = Math.round(to * eased).toLocaleString('en-GB');
+			el.textContent = Math.round(to * eased).toLocaleString('fr-FR');
 			if (t < 1) requestAnimationFrame(tick);
 		};
 		el.textContent = '0';

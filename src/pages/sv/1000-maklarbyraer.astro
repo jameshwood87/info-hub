@@ -1,40 +1,39 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AgentInterestCta from '../components/AgentInterestCta.astro';
-import CoagentPhone from '../components/CoagentPhone.astro';
-import { getPortalStats, statPlus } from '../lib/portalStats';
-import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../data/coagent';
+import Layout from '../../layouts/Layout.astro';
+import CoagentPhone from '../../components/CoagentPhone.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../../data/coagent';
 
 const __ps = await getPortalStats();
-const plAgents = statPlus(__ps.agents, 'en');
-const plAgencies = statPlus(__ps.agencies, 'en');
-const plListings = statPlus(__ps.listings, 'en');
+const plAgents = statPlus(__ps.agents, 'sv');
+const plAgencies = statPlus(__ps.agencies, 'sv');
+const plListings = statPlus(__ps.listings, 'sv');
 // The counter lands on the same rounded minimum the page prints, never above it.
 const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 const WA = coagentWaLink();
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/1000-agencies/ from 9am. Send it the words PropertyList CoAgent. The first 10 agents get a month free.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgent-numret finns på https://info.propertylist.es/sv/1000-maklarbyraer/ från kl. 9. Skicka orden PropertyList CoAgent. De första 10 agenterna får en månad gratis.')}`;
 
 const reviews = [
-	{ quote: 'Designed with the daily reality of real estate agents in mind. It saves time.', agency: 'Alain Fiddelers' },
-	{ quote: 'A fantastic platform for agents who value collaboration, transparency, and protecting their stock.', agency: 'By Frances Concierge' },
-	{ quote: 'Well structured, reliable, and continuously improving.', agency: 'Nathalie Sergeant' },
-	{ quote: 'None of my searches go without it.', agency: 'Valeria Kriptova' },
+	{ quote: 'Utformad utifrån mäklares verkliga vardag. Den sparar tid.', agency: 'Alain Fiddelers' },
+	{ quote: 'En fantastisk plattform för mäklare som värdesätter samarbete, transparens och att skydda sitt bestånd.', agency: 'By Frances Concierge' },
+	{ quote: 'Välstrukturerad, pålitlig och blir ständigt bättre.', agency: 'Nathalie Sergeant' },
+	{ quote: 'Ingen av mina sökningar sker utan den.', agency: 'Valeria Kriptova' },
 ];
 
 const faqs = [
 	{
-		q: 'What does CoAgent cost?',
-		a: 'The first 10 agents to message it get a month free and unlimited, from their first message. Every agent gets 5 free messages a day, and replying YES never counts. Unlimited is 50 credits a month per agent. More than 3 agents? Talk to us about a package.',
+		q: 'Vad kostar CoAgent?',
+		a: 'De första 10 agenterna som skriver till den får en månad gratis och obegränsat, räknat från sitt första meddelande. Alla agenter får 5 gratis meddelanden om dagen, och att svara YES räknas aldrig. Obegränsat kostar 50 krediter i månaden per agent. Fler än 3 agenter? Prata med oss om ett paket.',
 	},
 	{
-		q: 'Will it change my CRM on its own?',
-		a: 'Never. It shows you what it wants to save and waits. Nothing changes until you reply YES.',
+		q: 'Ändrar den mitt CRM på egen hand?',
+		a: 'Aldrig. Den visar dig vad den vill spara och väntar. Inget ändras förrän du svarar YES.',
 	},
 	{
-		q: 'How does it know it is me?',
-		a: 'By your WhatsApp number, so it has to be on your user in the CRM. Message from a number it does not know and it will still answer, and tell you how to add it.',
+		q: 'Hur vet den att det är jag?',
+		a: 'Genom ditt WhatsApp-nummer, så det måste ligga på din användare i CRM:et. Skriver du från ett nummer den inte känner igen svarar den ändå, och berättar hur du lägger till det.',
 	},
 ];
 
@@ -47,19 +46,19 @@ const breadcrumbLd = {
 	'@context': 'https://schema.org',
 	'@type': 'BreadcrumbList',
 	itemListElement: [
-		{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://info.propertylist.es/' },
-		{ '@type': 'ListItem', position: 2, name: '1,000 agencies', item: 'https://info.propertylist.es/1000-agencies/' },
+		{ '@type': 'ListItem', position: 1, name: 'Hem', item: 'https://info.propertylist.es/' },
+		{ '@type': 'ListItem', position: 2, name: '1 000 mäklarbyråer', item: 'https://info.propertylist.es/sv/1000-maklarbyraer/' },
 	],
 };
 const confetti = Array.from({ length: 28 }, (_, i) => i);
 ---
 
 <Layout
-	lang="en"
-	title="Thank you: 1,000 agencies on PropertyList | PropertyList"
-	description="PropertyList passed 1,000 registered agencies. Thank you for being part of it. Our thank-you gift is CoAgent, your CRM on WhatsApp, and the first 10 agents to message it get a month free."
-	canonical="https://info.propertylist.es/1000-agencies/"
-	ogImage="https://info.propertylist.es/og/og-1000-agencies.jpg"
+	lang="sv"
+	title="Tack: 1 000 mäklarbyråer på PropertyList | PropertyList"
+	description="PropertyList passerade 1 000 registrerade mäklarbyråer. Tack för att du är en del av det. Vår tackgåva är CoAgent, ditt CRM i WhatsApp, och de första 10 agenterna som skriver till den får en månad gratis."
+	canonical="https://info.propertylist.es/sv/1000-maklarbyraer/"
+	ogImage="https://info.propertylist.es/og/og-1000-agencies-sv.jpg"
 	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/1000-agencies/' },
@@ -79,17 +78,17 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			{confetti.map((i) => <i class={`c c${i % 7}`} style={`left:${(i * 37) % 100}%;animation-delay:${((i * 0.43) % 6).toFixed(2)}s;animation-duration:${(6 + ((i * 1.7) % 5)).toFixed(1)}s`}></i>)}
 		</div>
 		<div class="cx narrow center heroInner">
-			<div class="eyebrow">A celebration, and a thank you</div>
-			<div class="count" aria-hidden="true"><span data-count data-to={agencyTarget}>{agencyTarget.toLocaleString('en-GB')}</span><em>+</em></div>
-			<div class="countLabel">agencies</div>
-			<h1>Thank you, <span>PropertyList community.</span></h1>
+			<div class="eyebrow">Ett firande, och ett tack</div>
+			<div class="count" aria-hidden="true"><span data-count data-to={agencyTarget}>{agencyTarget.toLocaleString('sv-SE')}</span><em>+</em></div>
+			<div class="countLabel">mäklarbyråer</div>
+			<h1>Tack, <span>PropertyList-gemenskapen.</span></h1>
 			<p class="lead">
-				Every listing you shared, every buyer you brought to another agency's home, every agent you told about us. We reached
-				{plAgencies} agencies together.
+				Varje objekt du delade, varje köpare du tog med till en annan mäklarbyrås bostad, varje mäklare du berättade om oss för. Tillsammans nådde vi
+				{plAgencies} mäklarbyråer.
 			</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#gift">Open your thank-you gift</a>
-				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Not a member yet? Join free</a>
+				<a class="btnPrimary" href="#gift">Öppna din tackgåva</a>
+				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Inte medlem än? Gå med gratis</a>
 			</div>
 		</div>
 	</section>
@@ -97,13 +96,13 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	<section class="band">
 		<div class="cx">
 			<div class="head center">
-				<h2>One listing. <span>{plAgencies} agencies</span> who can sell it.</h2>
-				<p>At 100 agencies it was an idea. At 1,000 it is a market, and you are in it.</p>
+				<h2>Ett objekt. <span>{plAgencies} mäklarbyråer</span> som kan sälja det.</h2>
+				<p>Vid 100 mäklarbyråer var det en idé. Vid 1 000 är det en marknad, och du är en del av den.</p>
 			</div>
 			<div class="stats">
-				<div class="stat"><b>{plAgencies}</b><span>agencies sharing instead of guarding</span></div>
-				<div class="stat"><b>{plAgents}</b><span>agents who could bring your buyer</span></div>
-				<div class="stat"><b>{plListings}</b><span>live listings, one search away</span></div>
+				<div class="stat"><b>{plAgencies}</b><span>mäklarbyråer som delar i stället för att skydda</span></div>
+				<div class="stat"><b>{plAgents}</b><span>mäklare som kan ta med din köpare</span></div>
+				<div class="stat"><b>{plListings}</b><span>aktiva objekt, en sökning bort</span></div>
 			</div>
 		</div>
 	</section>
@@ -111,57 +110,57 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	<section class="band dark" id="gift">
 		<div class="cx coGrid">
 			<div>
-				<div class="label">Our thank you</div>
-				<h2>CoAgent. <span>Your evenings back.</span></h2>
+				<div class="label">Vårt tack</div>
+				<h2>CoAgent. <span>Dina kvällar tillbaka.</span></h2>
 				<p class="picture">
-					Picture it. You walk out of the viewing, press record and talk it through. The note is written. The follow-up is
-					set. The listings that match are waiting. <b>You reply YES, and you are done.</b>
+					Föreställ dig det. Du går ut från visningen, börjar spela in och berättar hur det gick. Anteckningen är skriven. Uppföljningen är
+					bokad. Objekten som matchar väntar. <b>Du svarar YES, och du är klar.</b>
 				</p>
 				<ul class="feel">
-					<li><b>No more writing up the day at night</b></li>
-					<li><b>No promise to a client forgotten</b></li>
-					<li><b>Answers in the car, without a laptop</b></li>
+					<li><b>Slipp skriva ihop dagen på kvällen</b></li>
+					<li><b>Inget kundlöfte glöms bort</b></li>
+					<li><b>Svar i bilen, utan dator</b></li>
 				</ul>
-				<p class="small light">It lives in the WhatsApp you already use. Nothing is saved until you say YES, and your voice is never kept.</p>
-				<a class="btnLight" href="/coagent/">See everything CoAgent does</a>
+				<p class="small light">Den finns i WhatsApp du redan använder. Inget sparas förrän du säger YES, och din röst sparas aldrig. CoAgent svarar på engelska, spanska, tyska, franska, portugisiska, bulgariska och grekiska.</p>
+				<a class="btnLight" href="/sv/coagent/">Se allt CoAgent gör</a>
 			</div>
-			<CoagentPhone lang="en" />
+			<CoagentPhone lang="sv" />
 		</div>
 	</section>
 
 	<section class="band soft" id="first10">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">The first 10 agents</div>
-				<h2>A month free. <span>Be one of the 10.</span></h2>
-				<p>Free and unlimited from your first message, and you help shape what every other agent gets.</p>
+				<div class="label">De första 10 agenterna</div>
+				<h2>En månad gratis. <span>Bli en av de 10.</span></h2>
+				<p>Gratis och obegränsat från ditt första meddelande, och du är med och formar vad alla andra agenter får.</p>
 			</div>
 
 			<div class="steps">
 				<div class="step">
-					<div class="stepWhen"><span>1</span> Today</div>
-					<h3>Be ready</h3>
-					<p>Be signed up, with your WhatsApp number on your user in the CRM.</p>
-					<div class="path" aria-label="Staff, then your name, then Edit, then Phone">
-						<span>Staff</span><i>&rsaquo;</i><span>Your name</span><i>&rsaquo;</i><span>Edit</span><i>&rsaquo;</i><span class="on">Phone</span>
+					<div class="stepWhen"><span>1</span> Idag</div>
+					<h3>Var redo</h3>
+					<p>Se till att du är registrerad och att ditt WhatsApp-nummer är tillagt på din användare.</p>
+					<div class="path" aria-label="Staff, sedan ditt namn, sedan Edit, sedan Phone">
+						<span>Staff</span><i>&rsaquo;</i><span>Ditt namn</span><i>&rsaquo;</i><span>Edit</span><i>&rsaquo;</i><span class="on">Phone</span>
 					</div>
-					<a class="btnPrimary full" href={CRM_STAFF_URL} target="_blank" rel="noopener">Add my WhatsApp number</a>
-					<p class="small center">Not a member yet? <a href={SIGNUP} target="_blank" rel="noopener">Join free first</a></p>
+					<a class="btnPrimary full" href={CRM_STAFF_URL} target="_blank" rel="noopener">Lägg till ditt WhatsApp-nummer på din användare</a>
+					<p class="small center">Inte medlem än? <a href={SIGNUP} target="_blank" rel="noopener">Gå med gratis först</a></p>
 				</div>
 
 				<div class="step">
-					<div class="stepWhen"><span>2</span> Tuesday 15 September, 9am</div>
-					<h3>Send two words</h3>
+					<div class="stepWhen"><span>2</span> Tisdag 15 september, kl. 9</div>
+					<h3>Skicka två ord</h3>
 					<div class="waPreview"><span class="waBubble">PropertyList CoAgent</span></div>
 					{WA ? (
 						<>
-							<p class="small center">The number: <b>{COAGENT_NUMBER}</b></p>
-							<a class="btnWa full" href={WA} target="_blank" rel="noopener">Message CoAgent on WhatsApp</a>
+							<p class="small center">Numret: <b>{COAGENT_NUMBER}</b></p>
+							<a class="btnWa full" href={WA} target="_blank" rel="noopener">Skriv till CoAgent i WhatsApp</a>
 						</>
 					) : (
 						<>
-							<p>The number is available on this page from 9am on Tuesday, so everyone starts together.</p>
-							<a class="btnGhost full" href={CAL} target="_blank" rel="noopener">Remind me at 9am Tuesday</a>
+							<p>Numret finns på den här sidan från kl. 9 på tisdag, så att alla börjar samtidigt.</p>
+							<a class="btnGhost full" href={CAL} target="_blank" rel="noopener">Påminn mig kl. 9 på tisdag</a>
 						</>
 					)}
 				</div>
@@ -173,16 +172,16 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 		<div class="cx">
 			<div class="join">
 				<div>
-					<div class="label">Not one of the 1,000 yet?</div>
-					<h2>Join them. <span>It is free.</span></h2>
+					<div class="label">Inte en av de 1 000 än?</div>
+					<h2>Gå med dem. <span>Det är gratis.</span></h2>
 					<p>
-						Your next listing in front of {plAgencies} agencies the same day. No listing fees, no contract, no card. And CoAgent to
-						take the admin off your hands, with 5 free messages a day.
+						Ditt nästa objekt framför {plAgencies} mäklarbyråer samma dag. Inga avgifter för att lägga upp, inget kontrakt, inget kort. Och CoAgent som
+						tar hand om pappersarbetet åt dig, med 5 gratis meddelanden om dagen.
 					</p>
 				</div>
 				<div class="joinCta">
-					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Join free</a>
-					<span>&euro;0 to list, always</span>
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Gå med gratis</a>
+					<span>0 € att lägga upp, alltid</span>
 				</div>
 			</div>
 		</div>
@@ -191,8 +190,8 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	<section class="band soft">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">In their words</div>
-				<h2>Why agencies share with us</h2>
+				<div class="label">I deras egna ord</div>
+				<h2>Varför mäklarbyråer delar med oss</h2>
 			</div>
 			<div class="quotes">
 				{reviews.map((r) => (
@@ -220,18 +219,14 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 
 	<section class="band dark final">
 		<div class="cx narrow center">
-			<h2>Thank you for being <span>part of it.</span></h2>
-			<p>From everyone at PropertyList. Here is to the next 1,000.</p>
+			<h2>Tack för att du är <span>en del av det.</span></h2>
+			<p>Från alla på PropertyList. Skål för nästa 1 000.</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#first10">Claim one of the 10 free months</a>
-				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Join free</a>
+				<a class="btnPrimary" href="#first10">Ta en av de 10 gratis månaderna</a>
+				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Gå med gratis</a>
 			</div>
 		</div>
 	</section>
-
-	<div class="cx">
-		<AgentInterestCta lang="en" />
-	</div>
 </Layout>
 
 <script>
@@ -244,7 +239,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 		const tick = (now: number) => {
 			const t = Math.min(1, (now - start) / dur);
 			const eased = 1 - Math.pow(1 - t, 3);
-			el.textContent = Math.round(to * eased).toLocaleString('en-GB');
+			el.textContent = Math.round(to * eased).toLocaleString('sv-SE');
 			if (t < 1) requestAnimationFrame(tick);
 		};
 		el.textContent = '0';

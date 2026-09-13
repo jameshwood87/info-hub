@@ -1,90 +1,89 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AgentInterestCta from '../components/AgentInterestCta.astro';
-import CoagentPhone from '../components/CoagentPhone.astro';
-import { getPortalStats, statPlus } from '../lib/portalStats';
-import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../data/coagent';
+import Layout from '../../layouts/Layout.astro';
+import CoagentPhone from '../../components/CoagentPhone.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../../data/coagent';
 
 const origin = 'https://info.propertylist.es';
-const canonical = `${origin}/coagent/`;
-const title = 'PropertyList CoAgent - the CRM you talk to on WhatsApp | PropertyList';
+const canonical = `${origin}/sv/coagent/`;
+const title = 'PropertyList CoAgent - ditt CRM i WhatsApp | PropertyList';
 const description =
-	'CoAgent is your CRM on WhatsApp. Send a voice note after a viewing and it writes the update for you to approve. Your voice is never kept, and nothing is saved until you reply YES.';
+	'CoAgent är ditt CRM i WhatsApp. Skicka ett röstmeddelande efter visningen, så står uppdateringen klar för ditt godkännande. Din röst sparas aldrig, och inget sparas förrän du svarar YES.';
 
 const __ps = await getPortalStats();
-const plAgents = statPlus(__ps.agents, 'en');
-const plAgencies = statPlus(__ps.agencies, 'en');
-const plListings = statPlus(__ps.listings, 'en');
+const plAgents = statPlus(__ps.agents, 'sv');
+const plAgencies = statPlus(__ps.agencies, 'sv');
+const plListings = statPlus(__ps.listings, 'sv');
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 const WA = coagentWaLink();
 // A reminder for 9am Madrid time (07:00 UTC) on launch day, until the number exists.
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/coagent/ from 9am. Before you message it, be signed up with your WhatsApp number on your user. The first 10 agents get a month free.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgents nummer finns på https://info.propertylist.es/sv/coagent/ från kl. 9. Innan du skriver till den, se till att du är registrerad och har ditt WhatsApp-nummer på din användare. De första 10 agenterna får en månad gratis.')}`;
 
 // Everything CoAgent does today, as the question an agent would actually send.
 // Tap a question to see what comes back. Answers are the verified descriptions.
 const moments = [
 	{
-		label: 'In the car',
+		label: 'I bilen',
 		asks: [
-			{ q: 'Where is my next viewing?', a: 'Your diary, leading with the address and the client’s phone number, because you are reading it in the car.' },
-			{ q: 'What have I got tomorrow?', a: 'The whole day, in order, with the property and who you are meeting.' },
-			{ q: 'What is Marta Ruiz’s number?', a: 'Her phone and email first, so your thumb is already on the call button.' },
-			{ q: 'Brief me on the Bergs', a: 'Where they are up to, what they are looking for, and the last thing that happened, before you dial.' },
+			{ q: 'Var är min nästa visning?', a: 'Din kalender, med adressen och kundens telefonnummer först, eftersom du läser det i bilen.' },
+			{ q: 'Vad har jag imorgon?', a: 'Hela dagen, i ordning, med objektet och vem du ska träffa.' },
+			{ q: 'Vilket nummer har Marta Ruiz?', a: 'Hennes telefon och mejl först, så att tummen redan ligger på samtalsknappen.' },
+			{ q: 'Sammanfatta the Bergs för mig', a: 'Var de ligger i processen, vad de letar efter och det senaste som hänt, innan du ringer.' },
 		],
 	},
 	{
-		label: 'With a client beside you',
+		label: 'Med en kund bredvid dig',
 		asks: [
-			{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
-			{ q: 'Tell me about PL22234', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
-			{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
-			{ photo: true, q: 'A photo of a tired room: "renovate"', a: 'Mid-viewing, send the kitchen as it is and get it back renovated a minute later, to show your buyer what it could be. It costs the same credits as in the CRM, and only a render that comes out well is charged.' },
-			{ q: 'How many apartments are for sale in San Pedro?', a: 'The real number on the market there, the best matches, and a link to the full list in your CRM.' },
-			{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
+			{ q: 'Vad har vi i Marbella, tre sovrum, upp till två miljoner?', a: 'Fem objekt från det delade MLS-systemet med priser och länkar. Ingen kund behöver anges, så det fungerar även med någon som sitter bredvid dig.' },
+			{ q: 'Berätta om PL22234', a: 'Pris, sovrum, storlek, läge och länken till just det objektet, oavsett om det är ditt eller en annan byrås.' },
+			{ q: 'Vilket har bäst värde, PL5001, PL5002 eller PL5003?', a: 'Den rangordnar dem mot jämförbara bostäder till salu i närheten, med pris per kvadratmeter, så att du kan säga till en kund vilket som är attraktivt prissatt och vilket som begär för mycket. Fråga direkt efter en sökning, så jämför den de resultaten.' },
+			{ photo: true, q: 'Ett foto av ett slitet rum: "renovera"', a: 'Mitt i visningen, skicka köket som det är och få tillbaka det renoverat en minut senare, för att visa köparen vad det skulle kunna bli. Det kostar samma antal krediter som i CRM:et, och bara en rendering som blir bra debiteras.' },
+			{ q: 'Hur många lägenheter är till salu i San Pedro?', a: 'Det verkliga antalet på marknaden där, de bästa träffarna och en länk till hela listan i ditt CRM.' },
+			{ q: 'Är PL22234 fortfarande tillgänglig?', a: 'Om objektet tillhör en annan byrå erbjuder sig CoAgent att fråga dem åt dig. Svara YES, så går förfrågan till dem via MLS-systemet, och deras svar kommer tillbaka till dig.' },
 		],
 	},
 	{
-		label: 'After the viewing',
+		label: 'Efter visningen',
 		asks: [
-			{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
-			{ q: 'Marta has made an offer', a: 'CoAgent moves her card to the right stage on your pipeline when you reply YES, the same as dragging it in the CRM. Marking a client won or lost stays in the CRM, where it asks for the details.' },
-			{ q: 'Add Maria Lopez 6XX XXX XXX maria@example.com', a: 'Or share her contact card straight from your phone. CoAgent reads the name, number and email back and adds her to your CRM when you reply YES. If she is already there, it links her record instead of making a duplicate.' },
-			{ photo: true, q: 'A photo of a client’s ID', a: 'Only the name, surnames and date of birth are read, and added as a new contact when you reply YES. The document number is never kept, and neither is the photo.' },
+			{ q: 'Lägg till en anteckning hos Marta: hon vill se den igen på lördag', a: 'Den läser upp anteckningen med dina egna ord och sparar den i hennes fil när du svarar YES.' },
+			{ q: 'Marta har lagt ett bud', a: 'CoAgent flyttar hennes kort till rätt steg i din pipeline när du svarar YES, precis som att dra det i CRM:et. Att markera en kund som vunnen eller förlorad görs fortfarande i CRM:et, där den frågar efter detaljerna.' },
+			{ q: 'Lägg till Maria Lopez 6XX XXX XXX maria@example.com', a: 'Eller dela hennes kontaktkort direkt från telefonen. CoAgent läser upp namnet, numret och mejlen och lägger till henne i ditt CRM när du svarar YES. Finns hon redan där länkas hennes post istället för att skapa en dubblett.' },
+			{ photo: true, q: 'Ett foto av en kunds legitimation', a: 'Bara namn, efternamn och födelsedatum läses av, och läggs till som ny kontakt när du svarar YES. Dokumentnumret sparas aldrig, och inte heller fotot.' },
 		],
 	},
 	{
-		label: 'Winning the listing',
+		label: 'Vinna objektet',
 		asks: [
-			{ q: 'Let’s list a property', a: 'CoAgent tells you what to send: the photos, then the price, where it is and the bedrooms, in your own words. No commands to learn.' },
-			{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, then tell CoAgent about the property, typed or as a voice note. It asks for anything missing, like the price, reads the listing back, and on YES writes the title, description and features. Reply PUBLISH and it goes to review, as it would from the CRM. Nothing goes live without that.' },
-			{ photo: true, q: 'A photo of a Se Vende sign', a: 'CoAgent reads the phone number off the sign, with any name or price on it. Reply YES and the owner is saved as a contact in your CRM with a note of the sign and a follow-up to call them.' },
-			{ q: 'What is Nueva Andalucía worth?', a: 'The middle asking price and the range across what is actually on the market there. If we do not hold enough stock in an area, it says so rather than guessing.' },
-			{ q: 'What is PL22234 worth?', a: 'A value from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
-			{ q: 'REPORT', a: 'After a valuation, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
-			{ q: 'BROCHURE PL22234', a: 'A brochure of the listing with your own branding: a page your client can open, with today’s price and a way to enquire, plus the PDF. It tells you the price in credits first, and a brochure you already made is sent again for free.' },
+			{ q: 'Vi lägger in ett objekt', a: 'CoAgent säger vad du ska skicka: fotona, sedan priset, var det ligger och antal sovrum, med dina egna ord. Inga kommandon att lära sig.' },
+			{ photo: true, q: 'Foton av ett nytt objekt', a: 'Skicka dem direkt från kamerarullen, berätta sedan om objektet för CoAgent, skrivet eller som röstanteckning. Den frågar efter det som saknas, som priset, läser upp objektet, och skriver rubrik, beskrivning och egenskaper när du svarar YES. Svara PUBLISH, så går det till granskning, precis som från CRM:et. Inget publiceras utan det.' },
+			{ photo: true, q: 'Ett foto av en Se Vende-skylt', a: 'CoAgent läser av telefonnumret på skylten, plus namn eller pris om det står med. Svara YES, så sparas ägaren som kontakt i ditt CRM med en anteckning om skylten och en påminnelse om att ringa.' },
+			{ q: 'Vad är Nueva Andalucía värt?', a: 'Medianpriset och intervallet för det som faktiskt finns till salu där. Om vi inte har tillräckligt med objekt i ett område säger den det istället för att gissa.' },
+			{ q: 'Vad är PL22234 värt?', a: 'Ett värde från notariebekräftade försäljningar i den staden, med ett intervall och en länk till det offentliga underlaget. Eller beskriv bostaden istället: "en lägenhet på 120 m² i Estepona". Den säger alltid vad siffran bygger på.' },
+			{ q: 'REPORT', a: 'Efter en värdering, svara REPORT för den fullständiga Property Intelligence Report, som en länk du kan skicka till säljaren. Din första är gratis. Efter det kostar det krediter, och den säger hur många och frågar innan den spenderar något.' },
+			{ q: 'BROCHURE PL22234', a: 'En broschyr för objektet med din egen varumärkesprofil: en sida din kund kan öppna, med dagens pris och ett sätt att höra av sig, plus PDF:en. Den säger priset i krediter först, och en broschyr du redan gjort skickas igen gratis.' },
 		],
 	},
 	{
-		label: 'New leads',
+		label: 'Nya leads',
 		asks: [
-			{ q: 'What are my latest leads?', a: 'Your five newest, with who enquired, about which listing and when: your own, or the whole agency’s if you are an admin, as in the CRM. Reply REPLY to answer the newest by email.' },
-			{ q: 'REPLY', a: 'CoAgent writes an email to your latest lead in their own language, from what they asked. Reply YES and it goes out from you through the CRM, and their answer comes back to your email. Or just answer the new-lead alert.' },
+			{ q: 'Vilka är mina senaste leads?', a: 'Dina fem senaste, med vem som hörde av sig, om vilket objekt och när: dina egna, eller hela byråns om du är admin, precis som i CRM:et. Svara REPLY för att besvara den senaste via mejl.' },
+			{ q: 'REPLY', a: 'CoAgent skriver ett mejl till din senaste lead på deras eget språk, utifrån vad de frågade. Svara YES, så skickas det från dig via CRM:et, och deras svar kommer till din mejl. Eller svara direkt på aviseringen om ny lead.' },
 		],
 	},
 ];
 
 const faqs = [
-	{ q: 'What do I have to install?', a: 'Nothing. CoAgent works in WhatsApp, which you already use all day. Save the PropertyList number, make sure your mobile is on your CRM profile so it knows you are an agent rather than a client, and send it a voice note.' },
-	{ q: 'Will it change my CRM automatically?', a: 'No. CoAgent proposes and waits. It shows you the client it matched and the changes it wants to make, field by field, and nothing is written until you reply YES. If it mishears, it costs you one word, not a wrong budget sitting quietly in a shared record.' },
-	{ q: 'Are my voice notes recorded?', a: 'No. The audio is transcribed and discarded. The transcript is kept on the client record, where you can read exactly what the CRM was told.' },
-	{ q: 'Does it work in Spanish?', a: 'Yes, and in German, French, Portuguese, Bulgarian and Greek. It replies in your own language and it copes with a note that switches language halfway through, which on this coast is most of them.' },
-	{ q: 'Do I need to name a client every time?', a: 'No. Naming a client turns a voice note into CRM updates. Without one you can still ask for properties, your diary, a listing by reference or what an area is worth, which is what you want when a walk-in is standing next to you.' },
-	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
-	{ q: 'What if CoAgent does not know my number?', a: 'It replies, in Spanish and English, with a link to create your free account and a link to the Staff page of your CRM, where you add your mobile to your profile. Put the country code in front if your number is not Spanish, then write to it again.' },
-	{ q: 'What costs credits?', a: 'Messages are covered by your plan. A brochure, the market report after your first free one, and a renovated room are paid in PropertyList credits, at the same price as in the CRM. CoAgent always tells you the price and waits for your YES before it spends anything, and a brochure or render that fails is never charged.' },
-	{ q: 'What does it cost?', a: 'The first 10 agents to message CoAgent get a month free and unlimited, counted from their first message. Every agent gets 5 free messages a day, and approving with YES never counts toward them. Unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. If you have more than 3 agents to add, talk to us about a package. The MLS and the CRM core stay free, and creating your account costs nothing.' },
-	{ q: 'What is not live yet?', a: 'Connecting your own WhatsApp number so client chats file themselves, a dedicated work line inside the PropertyList app, and the client brief appearing by itself on your caller screen. Everything else on this page works today.' },
+	{ q: 'Vad behöver jag installera?', a: 'Inget. CoAgent fungerar i WhatsApp, som du redan använder hela dagen. Spara PropertyLists nummer, se till att din mobil finns på din CRM-profil så att den vet att du är agent och inte kund, och skicka den en röstanteckning.' },
+	{ q: 'Ändrar den mitt CRM automatiskt?', a: 'Nej. CoAgent föreslår och väntar. Den visar dig kunden den har matchat och ändringarna den vill göra, fält för fält, och inget skrivs förrän du svarar YES. Hör den fel kostar det dig ett ord, inte en felaktig budget som ligger tyst i en delad post.' },
+	{ q: 'Spelas mina röstanteckningar in?', a: 'Nej. Ljudet transkriberas och kastas sedan. Transkriptionen sparas på kundens post, där du kan läsa exakt vad CRM:et fick veta.' },
+	{ q: 'Fungerar det på svenska?', a: 'Nej. CoAgent svarar på engelska, spanska, tyska, franska, portugisiska, bulgariska och grekiska, inte på svenska. Skriv till den på engelska (eller något av de andra språken). Den hanterar en röstanteckning som byter språk mitt i, vilket på den här kusten är de flesta.' },
+	{ q: 'Måste jag namnge en kund varje gång?', a: 'Nej. Att namnge en kund gör om röstanteckningen till CRM-uppdateringar. Utan namn kan du fortfarande fråga om objekt, din kalender, ett objekt via referens eller vad ett område är värt, vilket är precis vad du vill ha när en kund som bara dykt upp står bredvid dig.' },
+	{ q: 'Kan den prata med andra byråer åt mig?', a: 'Ja. Fråga om ett objekt från en annan byrå fortfarande är tillgängligt, så erbjuder sig CoAgent att skicka förfrågan. Svara YES, så går den via MLS-systemet på samma sätt som en förfrågan skickad från CRM-skärmen, så den hamnar i deras vanliga flöde.' },
+	{ q: 'Vad händer om CoAgent inte känner igen mitt nummer?', a: 'Den svarar, på spanska och engelska, med en länk för att skapa ditt gratiskonto och en länk till Staff-sidan i ditt CRM, där du lägger till din mobil på din profil. Sätt landskoden framför om ditt nummer inte är spanskt, och skriv till den igen.' },
+	{ q: 'Vad kostar krediter?', a: 'Meddelanden ingår i din plan. En broschyr, marknadsrapporten efter din första gratis, och ett renoverat rum betalas med PropertyList-krediter, till samma pris som i CRM:et. CoAgent säger alltid priset och väntar på ditt YES innan den spenderar något, och en broschyr eller rendering som misslyckas debiteras aldrig.' },
+	{ q: 'Vad kostar det?', a: 'De första 10 agenterna som skriver till CoAgent får en månad gratis och obegränsat, räknat från sitt första meddelande. Alla agenter får 5 gratis meddelanden om dagen, och att svara YES räknas aldrig. Obegränsat kostar 50 krediter i månaden per agent, betalt med dina PropertyList-krediter, och du kan stoppa förnyelsen när du vill. Fler än 3 agenter? Prata med oss om ett paket. MLS-systemet och CRM-kärnan förblir gratis, och det kostar inget att skapa ditt konto.' },
+	{ q: 'Vad är inte lanserat än?', a: 'Att koppla ditt eget WhatsApp-nummer så att kundchattar arkiverar sig själva, en egen arbetslinje inuti PropertyList-appen, och att kundöversikten dyker upp av sig själv på din samtalsskärm. Allt annat på den här sidan fungerar redan idag.' },
 ];
 
 const faqLd = {
@@ -94,8 +93,8 @@ const faqLd = {
 const breadcrumbLd = {
 	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
 	itemListElement: [
-		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
-		{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+		{ '@type': 'ListItem', position: 1, name: 'Hem', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funktioner', item: `${origin}/features/` },
 		{ '@type': 'ListItem', position: 3, name: 'CoAgent', item: canonical },
 	],
 };
@@ -103,27 +102,27 @@ const softwareLd = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
 	name: 'PropertyList CoAgent',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
-	description: 'An assistant for estate agents that works over WhatsApp: voice notes become CRM updates the agent approves, and questions about clients, listings, the diary and area prices are answered from the agency CRM and the shared MLS. Audio is never stored.',
+	description: 'En assistent för mäklare som fungerar via WhatsApp: röstanteckningar blir CRM-uppdateringar som agenten godkänner, och frågor om kunder, objekt, kalendern och områdespriser besvaras från byråns CRM och det delade MLS-systemet. Ljudet sparas aldrig.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
 ---
 
 <Layout
-	lang="en"
+	lang="sv"
 	title={title}
 	description={description}
 	canonical={canonical}
-	ogImage="https://info.propertylist.es/og/og-coagent.jpg"
+	ogImage="https://info.propertylist.es/og/og-coagent-sv.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
-		{ hreflang: 'en', href: canonical },
-		{ hreflang: 'es', href: `${origin}/es/coagent/` },
-		{ hreflang: 'de', href: `${origin}/de/coagent/` },
-		{ hreflang: 'fr', href: `${origin}/fr/coagent/` },
-		{ hreflang: 'sv', href: `${origin}/sv/coagent/` },
-		{ hreflang: 'ru', href: `${origin}/ru/coagent/` },
-		{ hreflang: 'x-default', href: canonical },
+		{ hreflang: 'en', href: 'https://info.propertylist.es/coagent/' },
+		{ hreflang: 'es', href: 'https://info.propertylist.es/es/coagent/' },
+		{ hreflang: 'de', href: 'https://info.propertylist.es/de/coagent/' },
+		{ hreflang: 'fr', href: 'https://info.propertylist.es/fr/coagent/' },
+		{ hreflang: 'sv', href: 'https://info.propertylist.es/sv/coagent/' },
+		{ hreflang: 'ru', href: 'https://info.propertylist.es/ru/coagent/' },
+		{ hreflang: 'x-default', href: 'https://info.propertylist.es/coagent/' },
 	]}
 >
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
@@ -133,108 +132,108 @@ const softwareLd = {
 	<section class="hero">
 		<div class="cx heroGrid">
 			<div>
-				<div class="eyebrow"><span class="dot"></span> CoAgent &middot; your CRM on WhatsApp</div>
-				<h1>Stop typing up your CRM.<br /><span>Just talk to it.</span></h1>
+				<div class="eyebrow"><span class="dot"></span> CoAgent &middot; ditt CRM i WhatsApp</div>
+				<h1>Sluta skriva in i CRM:et.<br /><span>Prata med det istället.</span></h1>
 				<p class="heroLead">
-					Send a voice note after the viewing. Reply YES. <strong>The admin is done, and your evening is yours.</strong>
+					Skicka en röstanteckning efter visningen. Svara YES. <strong>Pappersarbetet är klart, och kvällen är din.</strong>
 				</p>
 				<div class="ctaRow">
 					{WA ? (
-						<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Message CoAgent on WhatsApp</a>
+						<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Skriv till CoAgent i WhatsApp</a>
 					) : (
-						<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+						<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Skapa ditt gratiskonto</a>
 					)}
-					<a class="btnGhost" href="#how">See how it works</a>
+					<a class="btnGhost" href="#how">Se hur det fungerar</a>
 				</div>
-				<p class="micro">5 free messages a day &middot; Nothing to install &middot; Your voice is never kept</p>
+				<p class="micro">5 gratis meddelanden om dagen &middot; Inget att installera &middot; Din röst sparas aldrig &middot; CoAgent svarar på engelska, spanska, tyska, franska, portugisiska, bulgariska och grekiska</p>
 				{WA ? (
-					<p class="member">Already on PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a> so CoAgent knows it is you.</p>
+					<p class="member">Redan på PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Lägg till ditt WhatsApp-nummer på din användare</a> så att CoAgent vet att det är du.</p>
 				) : (
 					<p class="member">
-						<b>The number is available from 9am on Tuesday 15 September.</b> Before you message it, make sure you are
-						<a href={SIGNUP} target="_blank" rel="noopener">signed up</a> and your
-						<a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number is added to your user</a>.
-						<a class="calBtn" href={CAL} target="_blank" rel="noopener" style="display:table;margin-top:10px;padding:8px 14px;border-radius:10px;background:#0b1220;color:#fff;text-decoration:none;font-weight:800">Remind me at 9am Tuesday</a>
+						<b>Numret är tillgängligt från kl. 9 tisdag 15 september.</b> Innan du skriver till den, se till att du är
+						<a href={SIGNUP} target="_blank" rel="noopener">registrerad</a> och att ditt
+						<a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp-nummer är tillagt på din användare</a>.
+						<a class="calBtn" href={CAL} target="_blank" rel="noopener" style="display:table;margin-top:10px;padding:8px 14px;border-radius:10px;background:#0b1220;color:#fff;text-decoration:none;font-weight:800">Påminn mig kl. 9 på tisdag</a>
 					</p>
 				)}
 			</div>
-			<CoagentPhone lang="en" />
+			<CoagentPhone lang="sv" />
 		</div>
 	</section>
 
 	<div class="strip">
 		<div class="cx stripInner">
-			<span>Behind it: <b>{plAgencies}</b> agencies</span>
-			<span><b>{plAgents}</b> agents</span>
-			<span><b>{plListings}</b> live listings</span>
-			<span>Replies in <b>7</b> languages</span>
+			<span>Bakom det: <b>{plAgencies}</b> byråer</span>
+			<span><b>{plAgents}</b> agenter</span>
+			<span><b>{plListings}</b> aktiva objekt</span>
+			<span>Svarar på <b>7</b> språk</span>
 		</div>
 	</div>
 
 	<section class="band dark">
 		<div class="cx">
 			<div class="head center">
-				<h2>Two ways tonight can go.</h2>
-				<p>Nobody forgets on purpose. The day just moves faster than the admin.</p>
+				<h2>Kvällen kan sluta på två sätt.</h2>
+				<p>Ingen glömmer med flit. Dagen går bara fortare än pappersarbetet.</p>
 			</div>
 			<div class="versus">
 				<div class="vCol without">
-					<div class="vHead">Without CoAgent</div>
+					<div class="vHead">Utan CoAgent</div>
 					<ol>
-						<li><b>18:40</b><span>Last viewing. Three promises, all in your head.</span></li>
-						<li><b>21:30</b><span>Laptop open, typing up the day from memory.</span></li>
-						<li><b>Thursday</b><span>“Did you ever send me that listing?”</span></li>
+						<li><b>18:40</b><span>Sista visningen. Tre löften, alla i huvudet.</span></li>
+						<li><b>21:30</b><span>Datorn öppen, skriver av dagen ur minnet.</span></li>
+						<li><b>På torsdag</b><span>”Skickade du någonsin det där objektet till mig?”</span></li>
 					</ol>
 				</div>
 				<div class="vCol with">
-					<div class="vHead">With CoAgent</div>
+					<div class="vHead">Med CoAgent</div>
 					<ol>
-						<li><b>18:41</b><span>A voice note from the car park.</span></li>
-						<li><b>18:42</b><span>You reply YES. Note, requirement and reminder saved.</span></li>
-						<li><b>21:30</b><span>You are not at the laptop.</span></li>
+						<li><b>18:41</b><span>En röstanteckning från parkeringen.</span></li>
+						<li><b>18:42</b><span>Du svarar YES. Anteckning, önskemål och påminnelse sparade.</span></li>
+						<li><b>21:30</b><span>Du är inte vid datorn.</span></li>
 					</ol>
 				</div>
 			</div>
-			<p class="punch">Your memory is excellent. <span>Until Thursday.</span></p>
+			<p class="punch">Ditt minne är utmärkt. <span>Fram till torsdag.</span></p>
 		</div>
 	</section>
 
 	<section class="band soft" id="how">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">How it works</div>
-				<h2>Talk. Check. Say YES.</h2>
+				<div class="label">Så fungerar det</div>
+				<h2>Prata. Kolla. Säg YES.</h2>
 			</div>
 			<div class="grid3">
 				<div class="demo">
 					<span class="num">1</span>
-					<h3>Talk</h3>
-					<p>Like you would to a colleague.</p>
+					<h3>Prata</h3>
+					<p>Precis som du skulle prata med en kollega.</p>
 					<div class="mini">
-						<div class="mb me">“Marta liked it. Open to three beds now, up to eight fifty. I said I’d send her the Cerquilla one Saturday.”</div>
+						<div class="mb me">”Marta gillade den. Nu öppen för tre sovrum, upp till åttahundrafemtio. Jag sa att jag skulle skicka henne den i Cerquilla på lördag.”</div>
 					</div>
 				</div>
 				<div class="demo">
 					<span class="num">2</span>
-					<h3>Check</h3>
-					<p>See exactly what it heard.</p>
+					<h3>Kolla</h3>
+					<p>Se exakt vad den uppfattade.</p>
 					<div class="mini">
 						<div class="mb">
-							<b>Marta Ruiz · buyer</b>
-							<span class="kv"><i>Budget</i><em>€800k to €850k</em></span>
-							<span class="kv"><i>Bedrooms</i><em>3</em></span>
-							<span class="kv"><i>Reminder</i><em>Cerquilla, Saturday</em></span>
+							<b>Marta Ruiz · köpare</b>
+							<span class="kv"><i>Budget</i><em>800 000 € till 850 000 €</em></span>
+							<span class="kv"><i>Sovrum</i><em>3</em></span>
+							<span class="kv"><i>Påminnelse</i><em>Cerquilla, lördag</em></span>
 						</div>
 					</div>
 				</div>
 				<div class="demo">
 					<span class="num">3</span>
-					<h3>Say YES</h3>
-					<p>Only then does anything change.</p>
+					<h3>Säg YES</h3>
+					<p>Först då ändras något.</p>
 					<div class="mini">
-						<div class="mb">Reply <b>YES</b> to save it.</div>
+						<div class="mb">Svara <b>YES</b> för att spara det.</div>
 						<div class="mb me short">YES</div>
-						<div class="mb done">Saved. Saturday is in your calendar.</div>
+						<div class="mb done">Sparat. Lördagen finns i din kalender.</div>
 					</div>
 				</div>
 			</div>
@@ -244,9 +243,9 @@ const softwareLd = {
 	<section class="band" id="ask">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">What you can ask</div>
-				<h2>Ask it like you would ask a colleague.</h2>
-				<p>Tap any message to see what comes back.</p>
+				<div class="label">Vad du kan fråga</div>
+				<h2>Fråga den som du skulle fråga en kollega.</h2>
+				<p>Tryck på ett meddelande för att se vad du får tillbaka.</p>
 			</div>
 			<div class="moments">
 				{moments.map((m) => (
@@ -256,8 +255,8 @@ const softwareLd = {
 							{m.asks.map((item) => (
 								<details class="chip">
 									<summary>
-										{item.photo && <span class="tag">Photo</span>}
-										{item.photo ? item.q : `“${item.q}”`}
+										{item.photo && <span class="tag">Foto</span>}
+										{item.photo ? item.q : `”${item.q}”`}
 									</summary>
 									<p>{item.a}</p>
 								</details>
@@ -273,37 +272,37 @@ const softwareLd = {
 		<div class="cx">
 			<div class="matchBox">
 				<div class="matchCopy">
-					<div class="label">Built on the shared MLS</div>
-					<h2>Don’t just remember the client. <span>Find their next home.</span></h2>
-					<p>It searches the stock of {plAgencies} agencies, not only yours. If the right home is another agency’s, it asks them for you.</p>
+					<div class="label">Byggt på det delade MLS-systemet</div>
+					<h2>Kom inte bara ihåg kunden. <span>Hitta deras nästa bostad.</span></h2>
+					<p>Den söker i utbudet från {plAgencies} byråer, inte bara ditt eget. Om rätt bostad tillhör en annan byrå frågar den dem åt dig.</p>
 					<ul class="checks">
-						<li>The whole shared MLS, not just your listings</li>
-						<li>Best value ranked on price per m²</li>
-						<li>Values from notary-recorded sales, with the proof</li>
+						<li>Hela det delade MLS-systemet, inte bara dina objekt</li>
+						<li>Bästa värde rangordnat efter pris per m²</li>
+						<li>Värderingar från notariebekräftade försäljningar, med bevis</li>
 					</ul>
 				</div>
 				<div class="matchVisual" aria-hidden="true">
 					<div class="resCard">
 						<div class="resHead">
-							<span>From the shared MLS</span>
-							<em>3 beds &middot; Nueva Andalucía &middot; up to €850k</em>
+							<span>Från det delade MLS-systemet</span>
+							<em>3 sovrum &middot; Nueva Andalucía &middot; upp till 850 000 €</em>
 						</div>
 						<div class="res">
 							<span class="resPh a"></span>
-							<span class="resTxt"><b>PL5001 &middot; Apartment</b><i>3 beds &middot; Nueva Andalucía</i></span>
-							<span class="resP">€845,000<small class="own">Your listing</small></span>
+							<span class="resTxt"><b>PL5001 &middot; Lägenhet</b><i>3 sovrum &middot; Nueva Andalucía</i></span>
+							<span class="resP">845 000 €<small class="own">Ditt objekt</small></span>
 						</div>
 						<div class="res">
 							<span class="resPh b"></span>
-							<span class="resTxt"><b>PL5002 &middot; Penthouse</b><i>3 beds &middot; Nueva Andalucía</i></span>
-							<span class="resP">€830,000<small>Another agency</small></span>
+							<span class="resTxt"><b>PL5002 &middot; Takvåning</b><i>3 sovrum &middot; Nueva Andalucía</i></span>
+							<span class="resP">830 000 €<small>Annan byrå</small></span>
 						</div>
 						<div class="res">
 							<span class="resPh c"></span>
-							<span class="resTxt"><b>PL5003 &middot; Townhouse</b><i>3 beds &middot; Aloha</i></span>
-							<span class="resP">€799,000<small>Another agency</small></span>
+							<span class="resTxt"><b>PL5003 &middot; Radhus</b><i>3 sovrum &middot; Aloha</i></span>
+							<span class="resP">799 000 €<small>Annan byrå</small></span>
 						</div>
-						<div class="resAsk">PL5002 belongs to another agency. Reply <b>YES</b> and I will ask if it is still available.</div>
+						<div class="resAsk">PL5002 tillhör en annan byrå. Svara <b>YES</b>, så frågar jag om den fortfarande är tillgänglig.</div>
 					</div>
 				</div>
 			</div>
@@ -313,30 +312,30 @@ const softwareLd = {
 	<section class="band">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">Three promises</div>
-				<h2>Don’t work for your CRM. <span>Let the CRM work for you.</span></h2>
+				<div class="label">Tre löften</div>
+				<h2>Jobba inte åt ditt CRM. <span>Låt CRM:et jobba åt dig.</span></h2>
 			</div>
 			<div class="grid3">
 				<div class="tCard">
 					<span class="tIcon" aria-hidden="true">
 						<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z" /></svg>
 					</span>
-					<h3>Your voice is never kept</h3>
-					<p>Transcribed, then thrown away. Only the text stays, on the client record.</p>
+					<h3>Din röst sparas aldrig</h3>
+					<p>Transkriberas, och kastas sedan. Bara texten blir kvar, på kundens post.</p>
 				</div>
 				<div class="tCard">
 					<span class="tIcon" aria-hidden="true">
 						<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z" /></svg>
 					</span>
-					<h3>Nothing saved until YES</h3>
-					<p>Say nothing and nothing happens. No record edited, no enquiry sent.</p>
+					<h3>Inget sparas förrän YES</h3>
+					<p>Säger du inget händer inget. Ingen post ändras, ingen förfrågan skickas.</p>
 				</div>
 				<div class="tCard">
 					<span class="tIcon" aria-hidden="true">
 						<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z" /></svg>
 					</span>
-					<h3>No made-up answers</h3>
-					<p>Everything comes from your CRM and the shared MLS. If it does not know, it says so.</p>
+					<h3>Inga hittepå-svar</h3>
+					<p>Allt kommer från ditt CRM och det delade MLS-systemet. Vet den inte, säger den det.</p>
 				</div>
 			</div>
 		</div>
@@ -345,40 +344,40 @@ const softwareLd = {
 	<section class="band soft" id="pricing">
 		<div class="cx">
 			<div class="head center">
-				<div class="label">What it costs</div>
-				<h2>Start free. Pay only for unlimited.</h2>
+				<div class="label">Vad det kostar</div>
+				<h2>Börja gratis. Betala bara för obegränsat.</h2>
 			</div>
 			<div class="plans">
 				<div class="plan">
-					<div class="planWhen">Every agent</div>
-					<div class="planPrice">5 a day</div>
-					<div class="planDesc">free messages, every day. Replying YES never counts.</div>
+					<div class="planWhen">Varje agent</div>
+					<div class="planPrice">5 om dagen</div>
+					<div class="planDesc">gratis meddelanden, varje dag. Att svara YES räknas aldrig.</div>
 				</div>
 				<div class="plan featured">
-					<div class="planBadge">The first 10 agents</div>
-					<div class="planWhen">Free and unlimited</div>
-					<div class="planPrice">1 month</div>
-					<div class="planDesc">from your first message. Tell us where it gets in the way, and it changes.</div>
+					<div class="planBadge">De första 10 agenterna</div>
+					<div class="planWhen">Gratis och obegränsat</div>
+					<div class="planPrice">1 månad</div>
+					<div class="planDesc">från ditt första meddelande. Säg till oss var den är i vägen, så ändrar vi det.</div>
 					{WA ? (
-						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Message CoAgent now</a>
+						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Skriv till CoAgent nu</a>
 					) : (
-						<div class="planSoon">Available from <b>9am, Tuesday 15 September</b>. Be <a href={SIGNUP} target="_blank" rel="noopener">signed up</a> with your <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number on your user</a> first. <a href={CAL} target="_blank" rel="noopener">Remind me at 9am Tuesday</a></div>
+						<div class="planSoon">Tillgängligt från <b>kl. 9, tisdag 15 september</b>. Se till att du är <a href={SIGNUP} target="_blank" rel="noopener">registrerad</a> med ditt <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp-nummer på din användare</a> innan dess. <a href={CAL} target="_blank" rel="noopener">Påminn mig kl. 9 på tisdag</a></div>
 					)}
 				</div>
 				<div class="plan">
-					<div class="planWhen">Unlimited</div>
-					<div class="planPrice">50 credits</div>
-					<div class="planDesc">a month per agent. No contract, stop any time. More than 3 agents? Ask about a package.</div>
+					<div class="planWhen">Obegränsat</div>
+					<div class="planPrice">50 krediter</div>
+					<div class="planDesc">i månaden per agent. Ingen bindningstid, stoppa när du vill. Fler än 3 agenter? Prata med oss om ett paket.</div>
 				</div>
 			</div>
-			<p class="fine">Brochures, renovated rooms and the market report after your first free one cost credits, as in the CRM. It always asks first.</p>
+			<p class="fine">Broschyrer, renoverade rum och marknadsrapporten efter din första gratis kostar krediter, precis som i CRM:et. Den frågar alltid först.</p>
 		</div>
 	</section>
 
 	<section class="band">
 		<div class="cx narrow">
 			<div class="head center">
-				<h2>Questions</h2>
+				<h2>Frågor</h2>
 			</div>
 			<div class="faq">
 				{faqs.map((f) => (
@@ -393,28 +392,24 @@ const softwareLd = {
 
 	<section class="band dark final">
 		<div class="cx narrow center">
-			<h2>It remembers every promise <span>you made.</span></h2>
-			<p>Give it your next viewing. Feel what it is like to close the laptop early.</p>
+			<h2>Den kommer ihåg varje löfte <span>du gav.</span></h2>
+			<p>Ge den din nästa visning. Känn hur det är att stänga datorn tidigt.</p>
 			<div class="ctaRow center">
 				{WA ? (
-					<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Message CoAgent on WhatsApp</a>
+					<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Skriv till CoAgent i WhatsApp</a>
 				) : (
-					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Skapa ditt gratiskonto</a>
 				)}
 			</div>
 			<p class="micro light">
 				{COAGENT_NUMBER ? (
-					<>Already a member? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a>.</>
+					<>Redan medlem? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Lägg till ditt WhatsApp-nummer på din användare</a>.</>
 				) : (
-					<>The number is available from 9am on Tuesday 15 September. Before you message it, make sure you are signed up and your <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number is added to your user</a>.</>
+					<>Numret är tillgängligt från kl. 9 tisdag 15 september. Innan du skriver till den, se till att du är registrerad och att ditt <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp-nummer är tillagt på din användare</a>.</>
 				)}
 			</p>
 		</div>
 	</section>
-
-	<div class="cx">
-		<AgentInterestCta lang="en" page="/coagent/" />
-	</div>
 </Layout>
 
 <style>

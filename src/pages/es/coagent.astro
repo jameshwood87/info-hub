@@ -7,9 +7,9 @@ import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../../data/coagent
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/coagent/`;
-const title = 'PropertyList CoAgent - el CRM con el que hablas por WhatsApp | PropertyList';
+const title = 'PropertyList CoAgent - tu CRM en WhatsApp | PropertyList';
 const description =
-	'Manda una nota de voz al salir de una visita y CoAgent te prepara las actualizaciones del CRM para que las apruebes. Pídele propiedades, la ficha de un cliente, tu próxima visita o cuánto vale una vivienda, o mándale fotos para empezar un anuncio, en el WhatsApp que ya usas. El audio nunca se guarda y nada se guarda hasta que respondes SÍ.';
+	'CoAgent es tu CRM en WhatsApp. Manda una nota de voz al salir de una visita y te prepara la actualización para que la apruebes. Tu voz no se conserva y nada se guarda hasta que respondes SÍ.';
 
 const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'es');
@@ -117,8 +117,12 @@ const softwareLd = {
 	hideSearch
 	fullBleed
 	hreflangs={[
-		{ hreflang: 'es', href: canonical },
 		{ hreflang: 'en', href: `${origin}/coagent/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'de', href: `${origin}/de/coagent/` },
+		{ hreflang: 'fr', href: `${origin}/fr/coagent/` },
+		{ hreflang: 'sv', href: `${origin}/sv/coagent/` },
+		{ hreflang: 'ru', href: `${origin}/ru/coagent/` },
 		{ hreflang: 'x-default', href: `${origin}/coagent/` },
 	]}
 >

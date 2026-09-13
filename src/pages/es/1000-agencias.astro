@@ -57,13 +57,17 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 <Layout
 	lang="es"
 	title="Gracias: 1.000 agencias en PropertyList | PropertyList"
-	description="PropertyList ha superado las 1.000 agencias registradas. Gracias por ser parte de esto. Nuestro regalo de agradecimiento es CoAgent, tu CRM en WhatsApp, y los primeros 10 agentes que le escriban consiguen un mes gratis."
+	description="PropertyList ha superado las 1.000 agencias registradas. Gracias por ser parte de esto. Nuestro regalo es CoAgent, tu CRM en WhatsApp, y los primeros 10 agentes que le escriban consiguen un mes gratis."
 	canonical="https://info.propertylist.es/es/1000-agencias/"
 	ogImage="https://info.propertylist.es/og/og-1000-agencias.jpg"
 	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/1000-agencies/' },
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/1000-agencias/' },
+		{ hreflang: 'de', href: 'https://info.propertylist.es/de/1000-agenturen/' },
+		{ hreflang: 'fr', href: 'https://info.propertylist.es/fr/1000-agences/' },
+		{ hreflang: 'sv', href: 'https://info.propertylist.es/sv/1000-maklarbyraer/' },
+		{ hreflang: 'ru', href: 'https://info.propertylist.es/ru/1000-agentstv/' },
 		{ hreflang: 'x-default', href: 'https://info.propertylist.es/1000-agencies/' },
 	]}
 >
@@ -265,7 +269,8 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 	h1 span { color: #5eead4; display: block; }
 	.lead { font-size: clamp(17px, 2vw, 20px); line-height: 1.6; color: rgba(255, 255, 255, 0.78); max-width: 640px; margin: 0 auto 30px; }
 
-	.confetti { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+	/* The confetti fades out behind the centred copy, so a falling piece never sits on a word. */
+	.confetti { position: absolute; inset: 0; pointer-events: none; z-index: 0; -webkit-mask-image: radial-gradient(ellipse 50% 40% at 50% 66%, transparent 62%, #000 100%); mask-image: radial-gradient(ellipse 50% 40% at 50% 66%, transparent 62%, #000 100%); }
 	.c { position: absolute; top: -20px; width: 9px; height: 14px; border-radius: 2px; opacity: 0.85; animation: fall linear infinite; }
 	.c0 { background: #00ae9a; } .c1 { background: #5eead4; } .c2 { background: #fbbf24; } .c3 { background: #f472b6; }
 	.c4 { background: #ffffff; width: 7px; height: 7px; border-radius: 50%; } .c5 { background: #60a5fa; } .c6 { background: #34d399; height: 6px; }

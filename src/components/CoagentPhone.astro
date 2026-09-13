@@ -2,11 +2,15 @@
 // An animated WhatsApp phone that plays real CoAgent exchanges, one scene at a
 // time. Every exchange is taken from what /coagent/ says CoAgent does today.
 // Without JavaScript, or with reduced motion, the first scene shows complete.
+//
+// CoAgent replies in English, Spanish, German, French, Portuguese, Bulgarian and
+// Greek. Swedish and Russian are not among them, so those pages show the English
+// conversation with the phone's own labels and the scene tabs translated, rather
+// than a Swedish or Russian chat CoAgent would not actually produce.
 interface Props {
-	lang?: 'en' | 'es';
+	lang?: 'en' | 'es' | 'de' | 'fr' | 'sv' | 'ru';
 }
 const { lang = 'en' } = Astro.props;
-const es = lang === 'es';
 
 type Row = [string, string];
 type Msg = {
@@ -19,142 +23,287 @@ type Msg = {
 };
 type Scene = { label: string; msgs: Msg[] };
 
-const yes = es ? 'SÍ' : 'YES';
+const UI: Record<string, { typing: string; online: string; today: string; message: string; aria: string }> = {
+	en: { typing: 'typing...', online: 'online', today: 'Today', message: 'Message', aria: 'Example conversations with CoAgent' },
+	es: { typing: 'escribiendo...', online: 'en línea', today: 'Hoy', message: 'Mensaje', aria: 'Conversaciones de ejemplo con CoAgent' },
+	de: { typing: 'schreibt...', online: 'online', today: 'Heute', message: 'Nachricht', aria: 'Beispielgespräche mit CoAgent' },
+	fr: { typing: "en train d'écrire...", online: 'en ligne', today: "Aujourd'hui", message: 'Message', aria: 'Exemples de conversations avec CoAgent' },
+	sv: { typing: 'skriver...', online: 'online', today: 'Idag', message: 'Meddelande', aria: 'Exempel på samtal med CoAgent' },
+	ru: { typing: 'печатает...', online: 'в сети', today: 'Сегодня', message: 'Сообщение', aria: 'Примеры разговоров с CoAgent' },
+};
+const ui = UI[lang] || UI.en;
 
-const scenes: Scene[] = es
-	? [
-			{
-				label: 'Después de la visita',
-				msgs: [
-					{ me: true, voice: '0:24', time: '18:41' },
-					{
-						card: {
-							title: 'Marta Ruiz · compradora',
-							rows: [
-								['Presupuesto', '<s>800.000 €</s> <b>850.000 €</b>'],
-								['Zonas', '+ Nueva Andalucía'],
-								['Dormitorios', '3'],
-								['Recordatorio', 'Enviarle el de Cerquilla, sábado'],
-							],
-							foot: '3 anuncios encajan ahora con ella',
-						},
-						time: '18:41',
+// The approval word CoAgent is confirmed to use: SÍ in Spanish, YES everywhere else.
+const YES = 'YES';
+const SI = 'SÍ';
+
+const SCENES: Record<string, Scene[]> = {
+	en: [
+		{
+			label: 'After the viewing',
+			msgs: [
+				{ me: true, voice: '0:24', time: '18:41' },
+				{
+					card: {
+						title: 'Marta Ruiz · buyer',
+						rows: [
+							['Looking for', '3-bed apartment'],
+							['Area', 'Nueva Andalucía'],
+							['Budget', '<s>€800k</s> <b>€850k</b>'],
+							['Must have', 'Terrace, sea view'],
+							['Reminder', 'Cerquilla listing, Saturday'],
+						],
+						foot: '8 properties match these specs',
 					},
-					{ text: `Responde <b>${yes}</b> para guardarlo. Todavía no se ha escrito nada.`, time: '18:41' },
-					{ me: true, text: yes, time: '18:42' },
-					{ text: 'Guardado. La nota está en la ficha de Marta y el sábado, en tu calendario.', time: '18:42' },
-				],
-			},
-			{
-				label: 'Pasando por un cartel',
-				msgs: [
-					{ me: true, sign: true, time: '11:05' },
-					{ text: `Del cartel: <b>6XX XXX XXX</b>. ¿Guardo al propietario como contacto, con una nota del cartel y un seguimiento para llamarle? Responde <b>${yes}</b>.`, time: '11:05' },
-					{ me: true, text: yes, time: '11:06' },
-					{ text: 'Guardado en tu CRM, con un seguimiento para llamar al propietario.', time: '11:06' },
-				],
-			},
-			{
-				label: 'En el coche',
-				msgs: [
-					{ me: true, text: '¿Dónde es mi próxima visita?', time: '09:52' },
-					{
-						card: {
-							title: '11:30 · Nueva Andalucía',
-							rows: [
-								['Cliente', 'Tom Berg'],
-								['Teléfono', '6XX XXX XXX'],
-								['Inmueble', 'PL5002'],
-							],
-						},
-						time: '09:52',
+					time: '18:41',
+				},
+				{ text: `Save her file and write her a message with the 8 properties? Reply <b>${YES}</b>. Nothing happens until you do.`, time: '18:41' },
+				{ me: true, text: YES, time: '18:42' },
+				{ text: "Saved, and Saturday's reminder is in your calendar. Here is a message for Marta, ready to send:", time: '18:42' },
+				{ text: '<i>Hi Marta, thanks for today. Here are 8 homes in Nueva Andalucía with a terrace and sea view, up to €850k:</i><br /><b>propertylist.es/...</b>', time: '18:42' },
+			],
+		},
+		{
+			label: 'Walking past a sign',
+			msgs: [
+				{ me: true, sign: true, time: '11:05' },
+				{ text: `From the sign: <b>6XX XXX XXX</b>. Save the owner as a contact, with a note of the sign and a follow-up to call them? Reply <b>${YES}</b>.`, time: '11:05' },
+				{ me: true, text: YES, time: '11:06' },
+				{ text: 'Saved to your CRM, with a follow-up to call the owner.', time: '11:06' },
+			],
+		},
+		{
+			label: 'In the car',
+			msgs: [
+				{ me: true, text: 'Where is my next viewing?', time: '09:52' },
+				{
+					card: {
+						title: '11:30 · Nueva Andalucía',
+						rows: [
+							['Client', 'Tom Berg'],
+							['Phone', '6XX XXX XXX'],
+							['Property', 'PL5002'],
+						],
 					},
-					{ me: true, text: 'Ponme al día con los Berg', time: '09:53' },
-					{ text: '<b>Segunda visita hoy.</b> Buscan 4 dormitorios con vistas al mar, hasta 1,5 M €. Lo último: pidieron el plano de PL5002.', time: '09:53' },
-				],
-			},
-			{
-				label: 'Un inmueble de otra agencia',
-				msgs: [
-					{ me: true, text: '¿Sigue disponible PL22234?', time: '16:20' },
-					{ text: `PL22234 es de otra agencia. ¿Les pregunto? Responde <b>${yes}</b> y la consulta va por el MLS.`, time: '16:20' },
-					{ me: true, text: yes, time: '16:21' },
-					{ text: 'Enviada. Su respuesta te llegará a ti.', time: '16:21' },
-				],
-			},
-		]
-	: [
-			{
-				label: 'After the viewing',
-				msgs: [
-					{ me: true, voice: '0:24', time: '18:41' },
-					{
-						card: {
-							title: 'Marta Ruiz · buyer',
-							rows: [
-								['Budget', '<s>€800k</s> <b>€850k</b>'],
-								['Areas', '+ Nueva Andalucía'],
-								['Bedrooms', '3'],
-								['Reminder', 'Send the Cerquilla listing, Saturday'],
-							],
-							foot: '3 listings now match her',
-						},
-						time: '18:41',
+					time: '09:52',
+				},
+				{ me: true, text: 'Brief me on the Bergs', time: '09:53' },
+				{ text: '<b>Second viewing today.</b> Looking for 4 beds with a sea view, up to €1.5m. Last thing: they asked for the floor plan of PL5002.', time: '09:53' },
+			],
+		},
+		{
+			label: "Another agency's listing",
+			msgs: [
+				{ me: true, text: 'Is PL22234 still available?', time: '16:20' },
+				{ text: `PL22234 belongs to another agency. Want me to ask them? Reply <b>${YES}</b> and the enquiry goes through the MLS.`, time: '16:20' },
+				{ me: true, text: YES, time: '16:21' },
+				{ text: 'Sent. Their answer comes back to you.', time: '16:21' },
+			],
+		},
+	],
+	es: [
+		{
+			label: 'Después de la visita',
+			msgs: [
+				{ me: true, voice: '0:24', time: '18:41' },
+				{
+					card: {
+						title: 'Marta Ruiz · compradora',
+						rows: [
+							['Busca', 'Piso de 3 dormitorios'],
+							['Zona', 'Nueva Andalucía'],
+							['Presupuesto', '<s>800.000 €</s> <b>850.000 €</b>'],
+							['Imprescindible', 'Terraza, vistas al mar'],
+							['Recordatorio', 'Cerquilla, sábado'],
+						],
+						foot: '8 inmuebles encajan con lo que busca',
 					},
-					{ text: `Reply <b>${yes}</b> to save it. Nothing is written yet.`, time: '18:41' },
-					{ me: true, text: yes, time: '18:42' },
-					{ text: "Saved. The note is on Marta's timeline and Saturday is in your calendar.", time: '18:42' },
-				],
-			},
-			{
-				label: 'Walking past a sign',
-				msgs: [
-					{ me: true, sign: true, time: '11:05' },
-					{ text: `From the sign: <b>6XX XXX XXX</b>. Save the owner as a contact, with a note of the sign and a follow-up to call them? Reply <b>${yes}</b>.`, time: '11:05' },
-					{ me: true, text: yes, time: '11:06' },
-					{ text: 'Saved to your CRM, with a follow-up to call the owner.', time: '11:06' },
-				],
-			},
-			{
-				label: 'In the car',
-				msgs: [
-					{ me: true, text: 'Where is my next viewing?', time: '09:52' },
-					{
-						card: {
-							title: '11:30 · Nueva Andalucía',
-							rows: [
-								['Client', 'Tom Berg'],
-								['Phone', '6XX XXX XXX'],
-								['Property', 'PL5002'],
-							],
-						},
-						time: '09:52',
+					time: '18:41',
+				},
+				{ text: `¿Guardo su ficha y te preparo un mensaje para ella con los 8 inmuebles? Responde <b>${SI}</b>. No pasa nada hasta que respondas.`, time: '18:41' },
+				{ me: true, text: SI, time: '18:42' },
+				{ text: 'Guardado, y el recordatorio del sábado está en tu calendario. Este es el mensaje para Marta, listo para enviar:', time: '18:42' },
+				{ text: '<i>Hola Marta, gracias por lo de hoy. Aquí tienes 8 viviendas en Nueva Andalucía con terraza y vistas al mar, hasta 850.000 €:</i><br /><b>propertylist.es/...</b>', time: '18:42' },
+			],
+		},
+		{
+			label: 'Pasando por un cartel',
+			msgs: [
+				{ me: true, sign: true, time: '11:05' },
+				{ text: `Del cartel: <b>6XX XXX XXX</b>. ¿Guardo al propietario como contacto, con una nota del cartel y un seguimiento para llamarle? Responde <b>${SI}</b>.`, time: '11:05' },
+				{ me: true, text: SI, time: '11:06' },
+				{ text: 'Guardado en tu CRM, con un seguimiento para llamar al propietario.', time: '11:06' },
+			],
+		},
+		{
+			label: 'En el coche',
+			msgs: [
+				{ me: true, text: '¿Dónde es mi próxima visita?', time: '09:52' },
+				{
+					card: {
+						title: '11:30 · Nueva Andalucía',
+						rows: [
+							['Cliente', 'Tom Berg'],
+							['Teléfono', '6XX XXX XXX'],
+							['Inmueble', 'PL5002'],
+						],
 					},
-					{ me: true, text: 'Brief me on the Bergs', time: '09:53' },
-					{ text: '<b>Second viewing today.</b> Looking for 4 beds with a sea view, up to €1.5m. Last thing: they asked for the floor plan of PL5002.', time: '09:53' },
-				],
-			},
-			{
-				label: "Another agency's listing",
-				msgs: [
-					{ me: true, text: 'Is PL22234 still available?', time: '16:20' },
-					{ text: `PL22234 belongs to another agency. Want me to ask them? Reply <b>${yes}</b> and the enquiry goes through the MLS.`, time: '16:20' },
-					{ me: true, text: yes, time: '16:21' },
-					{ text: 'Sent. Their answer comes back to you.', time: '16:21' },
-				],
-			},
-		];
+					time: '09:52',
+				},
+				{ me: true, text: 'Ponme al día con los Berg', time: '09:53' },
+				{ text: '<b>Segunda visita hoy.</b> Buscan 4 dormitorios con vistas al mar, hasta 1,5 M €. Lo último: pidieron el plano de PL5002.', time: '09:53' },
+			],
+		},
+		{
+			label: 'Un inmueble de otra agencia',
+			msgs: [
+				{ me: true, text: '¿Sigue disponible PL22234?', time: '16:20' },
+				{ text: `PL22234 es de otra agencia. ¿Les pregunto? Responde <b>${SI}</b> y la consulta va por el MLS.`, time: '16:20' },
+				{ me: true, text: SI, time: '16:21' },
+				{ text: 'Enviada. Su respuesta te llegará a ti.', time: '16:21' },
+			],
+		},
+	],
+	de: [
+		{
+			label: 'Nach der Besichtigung',
+			msgs: [
+				{ me: true, voice: '0:24', time: '18:41' },
+				{
+					card: {
+						title: 'Marta Ruiz · Käuferin',
+						rows: [
+							['Sucht', 'Wohnung, 3 Schlafzimmer'],
+							['Gebiet', 'Nueva Andalucía'],
+							['Budget', '<s>800.000 €</s> <b>850.000 €</b>'],
+							['Muss haben', 'Terrasse, Meerblick'],
+							['Erinnerung', 'Cerquilla, Samstag'],
+						],
+						foot: '8 Objekte passen zu diesen Kriterien',
+					},
+					time: '18:41',
+				},
+				{ text: `Soll ich ihre Daten speichern und eine Nachricht mit den 8 Objekten für sie vorbereiten? Antworten Sie mit <b>${YES}</b>. Vorher passiert nichts.`, time: '18:41' },
+				{ me: true, text: YES, time: '18:42' },
+				{ text: 'Gespeichert, und die Erinnerung für Samstag steht in Ihrem Kalender. Hier ist die Nachricht für Marta, bereit zum Senden:', time: '18:42' },
+				{ text: '<i>Hallo Marta, danke für heute. Hier sind 8 Objekte in Nueva Andalucía mit Terrasse und Meerblick, bis 850.000 €:</i><br /><b>propertylist.es/...</b>', time: '18:42' },
+			],
+		},
+		{
+			label: 'An einem Verkaufsschild',
+			msgs: [
+				{ me: true, sign: true, time: '11:05' },
+				{ text: `Vom Schild: <b>6XX XXX XXX</b>. Den Eigentümer als Kontakt speichern, mit einer Notiz zum Schild und einer Wiedervorlage für den Anruf? Antworten Sie mit <b>${YES}</b>.`, time: '11:05' },
+				{ me: true, text: YES, time: '11:06' },
+				{ text: 'In Ihrem CRM gespeichert, mit einer Wiedervorlage, den Eigentümer anzurufen.', time: '11:06' },
+			],
+		},
+		{
+			label: 'Im Auto',
+			msgs: [
+				{ me: true, text: 'Wo ist meine nächste Besichtigung?', time: '09:52' },
+				{
+					card: {
+						title: '11:30 · Nueva Andalucía',
+						rows: [
+							['Kunde', 'Tom Berg'],
+							['Telefon', '6XX XXX XXX'],
+							['Objekt', 'PL5002'],
+						],
+					},
+					time: '09:52',
+				},
+				{ me: true, text: 'Was gibt es Neues bei den Bergs?', time: '09:53' },
+				{ text: '<b>Heute die zweite Besichtigung.</b> Gesucht: 4 Schlafzimmer mit Meerblick, bis 1,5 Mio. €. Zuletzt: Grundriss von PL5002 angefragt.', time: '09:53' },
+			],
+		},
+		{
+			label: 'Objekt einer anderen Agentur',
+			msgs: [
+				{ me: true, text: 'Ist PL22234 noch verfügbar?', time: '16:20' },
+				{ text: `PL22234 gehört einer anderen Agentur. Soll ich dort nachfragen? Antworten Sie mit <b>${YES}</b>, und die Anfrage geht über das MLS.`, time: '16:20' },
+				{ me: true, text: YES, time: '16:21' },
+				{ text: 'Gesendet. Die Antwort kommt direkt zu Ihnen.', time: '16:21' },
+			],
+		},
+	],
+	fr: [
+		{
+			label: 'Après la visite',
+			msgs: [
+				{ me: true, voice: '0:24', time: '18:41' },
+				{
+					card: {
+						title: 'Marta Ruiz · acheteuse',
+						rows: [
+							['Recherche', 'Appartement 3 chambres'],
+							['Zone', 'Nueva Andalucía'],
+							['Budget', '<s>800 000 €</s> <b>850 000 €</b>'],
+							['Indispensable', 'Terrasse, vue mer'],
+							['Rappel', 'Cerquilla, samedi'],
+						],
+						foot: '8 biens correspondent à ces critères',
+					},
+					time: '18:41',
+				},
+				{ text: `J'enregistre sa fiche et je vous prépare un message pour elle avec les 8 biens ? Répondez <b>${YES}</b>. Rien ne se passe avant.`, time: '18:41' },
+				{ me: true, text: YES, time: '18:42' },
+				{ text: 'Enregistré, et le rappel de samedi est dans votre agenda. Voici le message pour Marta, prêt à envoyer :', time: '18:42' },
+				{ text: "<i>Bonjour Marta, merci pour aujourd'hui. Voici 8 biens à Nueva Andalucía avec terrasse et vue mer, jusqu'à 850 000 € :</i><br /><b>propertylist.es/...</b>", time: '18:42' },
+			],
+		},
+		{
+			label: 'Devant un panneau',
+			msgs: [
+				{ me: true, sign: true, time: '11:05' },
+				{ text: `Sur le panneau : <b>6XX XXX XXX</b>. J'enregistre le propriétaire comme contact, avec une note du panneau et un rappel pour l'appeler ? Répondez <b>${YES}</b>.`, time: '11:05' },
+				{ me: true, text: YES, time: '11:06' },
+				{ text: 'Enregistré dans votre CRM, avec un rappel pour appeler le propriétaire.', time: '11:06' },
+			],
+		},
+		{
+			label: 'En voiture',
+			msgs: [
+				{ me: true, text: 'Où est ma prochaine visite ?', time: '09:52' },
+				{
+					card: {
+						title: '11:30 · Nueva Andalucía',
+						rows: [
+							['Client', 'Tom Berg'],
+							['Téléphone', '6XX XXX XXX'],
+							['Bien', 'PL5002'],
+						],
+					},
+					time: '09:52',
+				},
+				{ me: true, text: 'Le point sur les Berg', time: '09:53' },
+				{ text: "<b>Deuxième visite aujourd'hui.</b> Ils cherchent 4 chambres avec vue mer, jusqu'à 1,5 M€. Dernier échange : ils ont demandé le plan de PL5002.", time: '09:53' },
+			],
+		},
+		{
+			label: "Le bien d'une autre agence",
+			msgs: [
+				{ me: true, text: 'PL22234 est-il toujours disponible ?', time: '16:20' },
+				{ text: `PL22234 appartient à une autre agence. Je leur demande ? Répondez <b>${YES}</b> et la demande passe par le MLS.`, time: '16:20' },
+				{ me: true, text: YES, time: '16:21' },
+				{ text: 'Envoyée. Leur réponse vous revient directement.', time: '16:21' },
+			],
+		},
+	],
+};
+
+const TAB_LABELS: Record<string, string[]> = {
+	sv: ['Efter visningen', 'Vid en säljskylt', 'I bilen', 'En annan byrås objekt'],
+	ru: ['После показа', 'Табличка «Продаётся»', 'В машине', 'Объект другого агентства'],
+};
+
+const base = SCENES[lang] || SCENES.en;
+const scenes: Scene[] = TAB_LABELS[lang] ? base.map((s, i) => ({ ...s, label: TAB_LABELS[lang][i] })) : base;
 
 const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 11, 7, 14, 10];
 ---
 
-<div
-	class="cph"
-	data-cph
-	data-typing={es ? 'escribiendo...' : 'typing...'}
-	data-online={es ? 'en línea' : 'online'}
-	aria-label={es ? 'Conversaciones de ejemplo con CoAgent' : 'Example conversations with CoAgent'}
->
+<div class="cph" data-cph data-typing={ui.typing} data-online={ui.online} aria-label={ui.aria}>
 	<div class="cphTabs" role="tablist">
 		{scenes.map((s, i) => (
 			<button type="button" class={i === 0 ? 'cphTab on' : 'cphTab'} data-cph-tab={i} role="tab" id={`cph-${lang}-tab-${i}`} aria-controls={`cph-${lang}-scene-${i}`} aria-selected={i === 0 ? 'true' : 'false'}>
@@ -171,12 +320,12 @@ const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 
 				<span class="cphAv">PL</span>
 				<span class="cphWho">
 					<b>PropertyList CoAgent</b>
-					<i data-cph-status>{es ? 'en línea' : 'online'}</i>
+					<i data-cph-status>{ui.online}</i>
 				</span>
 			</div>
 
 			<div class="cphChat">
-				<div class="cphDay">{es ? 'Hoy' : 'Today'}</div>
+				<div class="cphDay">{ui.today}</div>
 				{scenes.map((s, si) => (
 					<div class="cphScene" data-cph-scene={si} hidden={si !== 0} role="tabpanel" id={`cph-${lang}-scene-${si}`} aria-labelledby={`cph-${lang}-tab-${si}`}>
 						{s.msgs.map((m) => (
@@ -230,7 +379,7 @@ const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 
 			</div>
 
 			<div class="cphBar" aria-hidden="true">
-				<span class="cphInput">{es ? 'Mensaje' : 'Message'}</span>
+				<span class="cphInput">{ui.message}</span>
 				<span class="cphMic">
 					<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z" /></svg>
 				</span>
