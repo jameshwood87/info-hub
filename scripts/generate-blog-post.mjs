@@ -216,6 +216,7 @@ console.log(`ES draft created: id=${es.data?.id} path=/es/blog/${slug}`);
 // the last N posts (tracked in blog-image-state.json).
 const IMAGE_RULES = [
   [/itp|\btax|impuesto|plusvalia|notary|valuation|per m2|market report/i, [
+    ['/blog-img/property-data-laptop-charts.jpg', 'Property price data and charts on a laptop'],
     ['/blog-img/itp-tax-euros.jpg', 'Taxes and paperwork for Spanish property buyers'],
     ['/blog-img/eu-regulation-flags.jpg', 'EU and Spanish regulation affecting property buyers'],
     ['/blog-img/law-scales-decision.jpg', 'Legal scales representing Spanish property tax rules'],
@@ -240,6 +241,7 @@ const IMAGE_RULES = [
     ['/blog-img/passports-residency.jpg', 'Passports and Spanish residency paperwork'],
     ['/blog-img/rental-contract.jpg', 'Property paperwork in Spain'],
   ]],
+  [/swimming pool|piscina/i, [['/blog-img/modern-house-swimming-pool.jpg', 'A modern home with a private swimming pool']]],
   [/marbella/i, [['/area-images/marbella.jpg', 'Marbella, Costa del Sol']]],
   [/estepona/i, [['/area-images/estepona.jpg', 'Estepona, Costa del Sol']]],
   [/fuengirola/i, [['/area-images/fuengirola.jpg', 'Fuengirola, Costa del Sol']]],
