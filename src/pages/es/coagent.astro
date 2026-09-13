@@ -1,67 +1,104 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import AgentInterestCta from '../../components/AgentInterestCta.astro';
+import CoagentPhone from '../../components/CoagentPhone.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../../data/coagent';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/coagent/`;
 const title = 'PropertyList CoAgent - el CRM con el que hablas por WhatsApp | PropertyList';
 const description =
-	'Manda una nota de voz al salir de una visita y CoAgent te prepara las actualizaciones del CRM para que las apruebes. Pidele propiedades, la ficha de un cliente, tu proxima visita o cuanto vale una vivienda, o mandale fotos para empezar un anuncio, en el WhatsApp que ya usas. El audio nunca se guarda y nada se graba hasta que respondes SI.';
+	'Manda una nota de voz al salir de una visita y CoAgent te prepara las actualizaciones del CRM para que las apruebes. Pídele propiedades, la ficha de un cliente, tu próxima visita o cuánto vale una vivienda, o mándale fotos para empezar un anuncio, en el WhatsApp que ya usas. El audio nunca se guarda y nada se guarda hasta que respondes SÍ.';
 
-const asks = [
-	{ q: 'Que tenemos en Marbella, tres dormitorios, hasta dos millones?', a: 'Cinco propiedades del MLS compartido con precios y enlaces. No hace falta nombrar a un cliente, asi que funciona con alguien sentado a tu lado.' },
-	{ q: 'Donde es mi proxima visita?', a: 'Tu agenda, empezando por la direccion y el telefono del cliente, porque lo estas leyendo en el coche.' },
-	{ q: 'Que tengo manana?', a: 'El dia entero, en orden, con la propiedad y con quien has quedado.' },
-	{ q: 'Hablame de PL22234', a: 'Precio, dormitorios, superficie, ubicacion y el enlace de esa propiedad, sea tuya o de otra agencia.' },
-	{ q: 'Cual es el telefono de Marta Ruiz?', a: 'Su telefono y su email primero, para que puedas llamar directamente.' },
-	{ q: 'Ponme al dia con los Berg', a: 'En que punto estan, que buscan y lo ultimo que paso, antes de marcar.' },
-	{ q: 'Cuanto vale Nueva Andalucia?', a: 'El precio medio de salida y el rango de lo que hay en el mercado alli. Si no tenemos suficientes anuncios en una zona, te lo dice en vez de inventar una cifra.' },
-	{ q: 'Anade una nota a Marta: quiere verla otra vez el sabado', a: 'Te lee la nota con tus propias palabras y la guarda en su ficha cuando respondes SI.' },
-	{ q: 'Sigue disponible PL22234?', a: 'Si la propiedad es de otra agencia, CoAgent se ofrece a preguntarles por ti. Responde SI y la consulta les llega por el MLS, y su respuesta vuelve a ti.' },
-	{ q: 'Anade a Maria Lopez 6XX XXX XXX maria@example.com', a: 'O comparte su tarjeta de contacto desde el movil. CoAgent te lee el nombre, el telefono y el email y la anade a tu CRM cuando respondes SI. Si ya esta, te enlaza su ficha en vez de crear un duplicado.' },
-	{ photo: true, q: 'Fotos de una propiedad nueva', a: 'Mándalas directamente desde la galería y después cuéntale a CoAgent cómo es la propiedad, escribiendo o con una nota de voz. Te pide lo que falte, como el precio, te lee el anuncio y, cuando respondes SÍ, escribe el título, la descripción y las características. Responde PUBLICAR y pasa a revisión, igual que desde el CRM. Nada se publica sin eso.' },
-	{ photo: true, q: 'La foto de un cartel de Se Vende', a: 'CoAgent lee el telefono del cartel, y el nombre o el precio si aparecen. Responde SI y el propietario queda guardado como contacto en tu CRM, con una nota del cartel, listo para que le llames.' },
-	{ photo: true, q: 'La foto del DNI de un cliente', a: 'Solo se leen el nombre, los apellidos y la fecha de nacimiento, y se anade como contacto nuevo cuando respondes SI. El numero del documento nunca se guarda, y la foto tampoco.' },
-	{ q: 'Cual es la mejor compra, PL5001, PL5002 o PL5003?', a: 'Las compara con viviendas parecidas en venta en la zona, con el precio por metro cuadrado, para que puedas decirle al cliente cual tiene buen precio y cual pide demasiado. Preguntalo justo despues de una busqueda y compara esos resultados.' },
-	{ q: 'Cuanto vale PL22234?', a: 'Un valor basado en ventas escrituradas ante notario en ese municipio, con un rango y un enlace a la prueba publica. O describe la vivienda: “un piso de 120 m² en Estepona”. Siempre te dice en que se basa la cifra.' },
-	{ q: 'INFORME', a: 'Despues de una valoracion, responde INFORME y recibes el Informe de Inteligencia completo de la propiedad, como un enlace que puedes mandar al vendedor. El primero es gratis. Despues cuesta creditos, y te dice cuantos y te pregunta antes de gastar nada.' },
-	{ q: '¿Cuántos pisos hay en venta en San Pedro?', a: 'El número real en el mercado allí, las mejores opciones y un enlace a la lista completa en tu CRM.' },
-	{ q: 'FOLLETO PL22234', a: 'Un folleto de la propiedad con tu propia marca: una página que tu cliente puede abrir, con el precio de hoy y un formulario para consultar, y el PDF. Antes te dice el precio en créditos, y un folleto que ya hiciste se vuelve a enviar gratis.' },
-	{ photo: true, q: 'La foto de una estancia antigua, con "reformar"', a: 'En plena visita, manda la cocina tal como está y recíbela reformada un minuto después, para enseñarle al comprador lo que podría ser. Cuesta lo mismo que en el CRM, y solo se cobra un render que sale bien.' },
-	{ q: 'Marta ha hecho una oferta', a: 'CoAgent mueve su tarjeta a la etapa correcta de tu pipeline cuando respondes SÍ, igual que arrastrarla en el CRM. Marcar un cliente como ganado o perdido se queda en el CRM, donde te pide los detalles.' },
-	{ q: '¿Cuáles son mis últimos leads?', a: 'Tus cinco más recientes: quién consultó, por qué propiedad y cuándo. Los tuyos, o los de toda la agencia si eres administrador, como en el CRM. Responde RESPONDER para contestar al más reciente por email.' },
-	{ q: 'RESPONDER', a: 'CoAgent escribe un email a tu último lead en su propio idioma, a partir de lo que preguntó. Responde SÍ y sale de tu parte a través del CRM, y su respuesta llega a tu email. O simplemente contesta al aviso de lead nuevo.' },
-	{ q: 'Vamos a anunciar una propiedad', a: 'CoAgent te dice qué enviar: las fotos, y después el precio, dónde está y los dormitorios, con tus propias palabras. Sin comandos que aprender.' },
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plListings = statPlus(__ps.listings, 'es');
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
+const WA = coagentWaLink('PropertyList CoAgent');
+
+// Every exchange CoAgent handles today, grouped by the moment of the day an agent
+// needs it. The wording of each answer is the verified description of what shipped.
+const moments = [
+	{
+		key: 'car',
+		label: 'En el coche',
+		asks: [
+			{ q: '¿Dónde es mi próxima visita?', a: 'Tu agenda, empezando por la dirección y el teléfono del cliente, porque lo estás leyendo en el coche.' },
+			{ q: '¿Qué tengo mañana?', a: 'El día entero, en orden, con la propiedad y con quién has quedado.' },
+			{ q: '¿Cuál es el teléfono de Marta Ruiz?', a: 'Su teléfono y su email primero, para que puedas llamar directamente.' },
+			{ q: 'Ponme al día con los Berg', a: 'En qué punto están, qué buscan y lo último que pasó, antes de marcar.' },
+		],
+	},
+	{
+		key: 'client',
+		label: 'Con un cliente',
+		asks: [
+			{ q: '¿Qué tenemos en Marbella, tres dormitorios, hasta dos millones?', a: 'Cinco propiedades del MLS compartido con precios y enlaces. No hace falta nombrar a un cliente, así que funciona con alguien sentado a tu lado.' },
+			{ q: 'Háblame de PL22234', a: 'Precio, dormitorios, superficie, ubicación y el enlace de esa propiedad, sea tuya o de otra agencia.' },
+			{ q: '¿Cuál es la mejor compra, PL5001, PL5002 o PL5003?', a: 'Las compara con viviendas parecidas en venta en la zona, con el precio por metro cuadrado, para que puedas decirle al cliente cuál tiene buen precio y cuál pide demasiado. Pregúntalo justo después de una búsqueda y compara esos resultados.' },
+			{ photo: true, q: 'La foto de una estancia antigua, con "reformar"', a: 'En plena visita, manda la cocina tal como está y recíbela reformada un minuto después, para enseñarle al comprador lo que podría ser. Cuesta lo mismo que en el CRM, y solo se cobra un render que sale bien.' },
+			{ q: '¿Cuántos pisos hay en venta en San Pedro?', a: 'El número real en el mercado allí, las mejores opciones y un enlace a la lista completa en tu CRM.' },
+			{ q: '¿Sigue disponible PL22234?', a: 'Si la propiedad es de otra agencia, CoAgent se ofrece a preguntarles por ti. Responde SÍ y la consulta les llega por el MLS, y su respuesta vuelve a ti.' },
+		],
+	},
+	{
+		key: 'after',
+		label: 'Después de la visita',
+		asks: [
+			{ q: 'Añade una nota a Marta: quiere verla otra vez el sábado', a: 'Te lee la nota con tus propias palabras y la guarda en su ficha cuando respondes SÍ.' },
+			{ q: 'Marta ha hecho una oferta', a: 'CoAgent mueve su tarjeta a la etapa correcta de tu pipeline cuando respondes SÍ, igual que arrastrarla en el CRM. Marcar un cliente como ganado o perdido se queda en el CRM, donde te pide los detalles.' },
+			{ q: 'Añade a Maria Lopez 6XX XXX XXX maria@example.com', a: 'O comparte su tarjeta de contacto desde el móvil. CoAgent te lee el nombre, el teléfono y el email y la añade a tu CRM cuando respondes SÍ. Si ya está, te enlaza su ficha en vez de crear un duplicado.' },
+			{ photo: true, q: 'La foto del DNI de un cliente', a: 'Solo se leen el nombre, los apellidos y la fecha de nacimiento, y se añade como contacto nuevo cuando respondes SÍ. El número del documento nunca se guarda, y la foto tampoco.' },
+		],
+	},
+	{
+		key: 'listings',
+		label: 'Captar inmuebles',
+		asks: [
+			{ q: 'Vamos a anunciar una propiedad', a: 'CoAgent te dice qué enviar: las fotos, y después el precio, dónde está y los dormitorios, con tus propias palabras. Sin comandos que aprender.' },
+			{ photo: true, q: 'Fotos de una propiedad nueva', a: 'Mándalas directamente desde la galería y después cuéntale a CoAgent cómo es la propiedad, escribiendo o con una nota de voz. Te pide lo que falte, como el precio, te lee el anuncio y, cuando respondes SÍ, escribe el título, la descripción y las características. Responde PUBLICAR y pasa a revisión, igual que desde el CRM. Nada se publica sin eso.' },
+			{ photo: true, q: 'La foto de un cartel de Se Vende', a: 'CoAgent lee el teléfono del cartel, y el nombre o el precio si aparecen. Responde SÍ y el propietario queda guardado como contacto en tu CRM, con una nota del cartel, listo para que le llames.' },
+			{ q: '¿Cuánto vale Nueva Andalucía?', a: 'El precio medio de salida y el rango de lo que hay en el mercado allí. Si no tenemos suficientes anuncios en una zona, te lo dice en vez de inventar una cifra.' },
+			{ q: '¿Cuánto vale PL22234?', a: 'Un valor basado en ventas escrituradas ante notario en ese municipio, con un rango y un enlace a la prueba pública. O describe la vivienda: "un piso de 120 m² en Estepona". Siempre te dice en qué se basa la cifra.' },
+			{ q: 'INFORME', a: 'Después de una valoración, responde INFORME y recibes el Informe de Inteligencia completo de la propiedad, como un enlace que puedes mandar al vendedor. El primero es gratis. Después cuesta créditos, y te dice cuántos y te pregunta antes de gastar nada.' },
+			{ q: 'FOLLETO PL22234', a: 'Un folleto de la propiedad con tu propia marca: una página que tu cliente puede abrir, con el precio de hoy y un formulario para consultar, y el PDF. Antes te dice el precio en créditos, y un folleto que ya hiciste se vuelve a enviar gratis.' },
+		],
+	},
+	{
+		key: 'leads',
+		label: 'Leads nuevos',
+		asks: [
+			{ q: '¿Cuáles son mis últimos leads?', a: 'Tus cinco más recientes, con quién consultó, sobre qué propiedad y cuándo: los tuyos, o los de toda la agencia si eres administrador, como en el CRM. Responde RESPONDER para contestar al más reciente por email.' },
+			{ q: 'RESPONDER', a: 'CoAgent escribe un email a tu último lead en su propio idioma, a partir de lo que preguntó. Responde SÍ y sale de tu parte a través del CRM, y su respuesta llega a tu email. O simplemente contesta al aviso de lead nuevo.' },
+		],
+	},
 ];
 
 const trust = [
-	{ name: 'Tu voz no se guarda', desc: 'El audio se transcribe y se descarta. Solo queda el texto, en la ficha a la que pertenece, donde puedes leerlo y corregirlo. No hay grabacion que filtrar ni que entregar.' },
-	{ name: 'Nada se guarda sin tu permiso', desc: 'CoAgent te muestra lo que quiere cambiar y espera. Ninguna ficha se edita y ninguna consulta sale hacia otra agencia hasta que respondes SI. Si no dices nada, no pasa nada.' },
-	{ name: 'Responde con tus datos o no responde', desc: 'Cada respuesta sale de tu CRM y del MLS compartido. Preguntale algo fuera de eso y te lo dice claramente, en lugar de inventarse un dato que podrias repetirle a un cliente.' },
+	{ name: 'Tu voz no se guarda', desc: 'El audio se transcribe y se descarta. Solo queda el texto, en la ficha a la que pertenece, donde puedes leerlo y corregirlo. No hay grabación que filtrar ni que entregar.' },
+	{ name: 'Nada se guarda sin tu permiso', desc: 'CoAgent te muestra lo que quiere cambiar y espera. Ninguna ficha se edita y ninguna consulta sale hacia otra agencia hasta que respondes SÍ. Si no dices nada, no pasa nada.' },
+	{ name: 'Responde con tus datos o no responde', desc: 'Cada respuesta sale de tu CRM y del MLS compartido. Pregúntale algo fuera de eso y te lo dice claramente, en lugar de inventarse un dato que podrías repetirle a un cliente.' },
 ];
 
 const soon = [
-	{ name: 'Tu propio WhatsApp, conectado', desc: 'Seguir escribiendo a los clientes desde tu numero y que esas conversaciones se archiven solas, en ambos sentidos, sin capturar nunca a quien no es cliente. En diseno.' },
-	{ name: 'Una linea de trabajo', desc: 'Un numero de empresa dentro de la app de PropertyList, junto a tu SIM personal, con las llamadas resumidas igual que una nota de voz. En la hoja de ruta.' },
-	{ name: 'La ficha en la pantalla de llamada', desc: 'Hoy puedes pedir la ficha de un cliente cuando quieras. Que aparezca sola al sonar el telefono necesita trabajo dentro de la app movil, y es la siguiente pieza.' },
-];
-
-const plans = [
-	{ name: 'Septiembre: gratis para todos', desc: 'Todos los agentes, todos los mensajes, sin limite, mientras lanzamos.' },
-	{ name: 'Los 10 primeros agentes: gratis hasta el 1 de enero', desc: 'Los diez primeros agentes que escriban a CoAgent lo mantienen gratis e ilimitado tres meses más, hasta el 1 de enero.' },
-	{ name: 'Desde octubre: 5 al dia gratis, o ilimitado', desc: 'Cada agente tiene 5 mensajes gratis al dia, y aprobar con SI nunca cuenta. Para mas, CoAgent ilimitado cuesta 50 creditos al mes por agente, y se activa desde la pagina de Facturacion o respondiendo SUSCRIBIR.' },
+	{ name: 'Tu propio WhatsApp, conectado', desc: 'Sigue escribiendo a los clientes desde tu número y que esas conversaciones se archiven solas, en ambos sentidos, sin capturar nunca a quien no es cliente. En diseño ahora mismo.' },
+	{ name: 'Una línea de trabajo', desc: 'Un número de empresa dentro de la app de PropertyList, junto a tu SIM personal, con las llamadas resumidas igual que una nota de voz. En la hoja de ruta.' },
+	{ name: 'La ficha en la pantalla de llamada', desc: 'Hoy puedes pedir la ficha de un cliente cuando quieras. Que aparezca sola al sonar el teléfono necesita trabajo dentro de la app móvil, y es la siguiente pieza que construimos.' },
 ];
 
 const faqs = [
-	{ q: 'Que tengo que instalar?', a: 'Nada. CoAgent funciona en WhatsApp, que ya usas todo el dia. Guarda el numero de PropertyList, asegurate de que tu movil esta en tu perfil del CRM para que sepa que eres agente y no cliente, y mandale una nota de voz.' },
-	{ q: 'Va a cambiar mi CRM automaticamente?', a: 'No. CoAgent propone y espera. Te ensena el cliente que ha identificado y los cambios que quiere hacer, campo por campo, y no escribe nada hasta que respondes SI. Si entiende mal algo, te cuesta una palabra, no un presupuesto equivocado guardado en una ficha compartida.' },
-	{ q: 'Se graban mis notas de voz?', a: 'No. El audio se transcribe y se descarta. La transcripcion se guarda en la ficha del cliente, donde puedes leer exactamente lo que se le dijo al CRM.' },
-	{ q: 'Funciona en espanol?', a: 'Si, y en aleman, frances, portugues, bulgaro y griego. Responde en tu idioma y entiende una nota que cambia de idioma a mitad de frase, que en esta costa son casi todas.' },
-	{ q: 'Tengo que nombrar a un cliente siempre?', a: 'No. Nombrar a un cliente convierte la nota de voz en actualizaciones del CRM. Sin nombrarlo puedes pedir propiedades, tu agenda, una referencia concreta o cuanto vale una zona, que es justo lo que necesitas con alguien esperando a tu lado.' },
-	{ q: 'Puede hablar con otras agencias por mi?', a: 'Si. Preguntale si una propiedad de otra agencia sigue disponible y CoAgent se ofrece a enviar la consulta. Responde SI y sale por el MLS igual que una enviada desde el CRM, asi que les llega por su via de siempre.' },
-	{ q: 'Y si CoAgent no reconoce mi numero?', a: 'Te responde, en espanol y en ingles, con un enlace para crear tu cuenta gratis y otro a la pagina Personal de tu CRM, donde anades tu movil a tu perfil. Si tu numero no es espanol, ponle delante el prefijo del pais, y vuelve a escribirle.' },
-	{ q: '¿Qué se paga con créditos?', a: 'Los mensajes entran en tu plan. Un folleto, el informe de mercado después del primero gratis y una estancia reformada se pagan con créditos de PropertyList, al mismo precio que en el CRM. CoAgent siempre te dice el precio y espera tu SÍ antes de gastar nada, y un folleto o un render que falla nunca se cobra.' },
-	{ q: 'Cuanto cuesta?', a: 'CoAgent es gratis para todos en septiembre. Los 10 primeros agentes que le escriban lo mantienen gratis e ilimitado hasta el 1 de enero. Desde octubre cada agente tiene 5 mensajes gratis al día, y aprobar con SÍ nunca cuenta; el ilimitado cuesta 50 créditos al mes por agente, se paga con tus créditos de PropertyList y puedes dejar de renovarlo cuando quieras. El MLS y el núcleo del CRM siguen siendo gratis, y crear tu cuenta no cuesta nada.' },
+	{ q: '¿Qué tengo que instalar?', a: 'Nada. CoAgent funciona en WhatsApp, que ya usas todo el día. Guarda el número de PropertyList, asegúrate de que tu móvil está en tu perfil del CRM para que sepa que eres agente y no cliente, y mándale una nota de voz.' },
+	{ q: '¿Va a cambiar mi CRM automáticamente?', a: 'No. CoAgent propone y espera. Te enseña el cliente que ha identificado y los cambios que quiere hacer, campo por campo, y no escribe nada hasta que respondes SÍ. Si entiende mal algo, te cuesta una palabra, no un presupuesto equivocado guardado en una ficha compartida.' },
+	{ q: '¿Se graban mis notas de voz?', a: 'No. El audio se transcribe y se descarta. La transcripción se guarda en la ficha del cliente, donde puedes leer exactamente lo que se le dijo al CRM.' },
+	{ q: '¿Funciona en español?', a: 'Sí, y en alemán, francés, portugués, búlgaro y griego. Responde en tu idioma y entiende una nota que cambia de idioma a mitad de frase, que en esta costa son casi todas.' },
+	{ q: '¿Tengo que nombrar a un cliente siempre?', a: 'No. Nombrar a un cliente convierte la nota de voz en actualizaciones del CRM. Sin nombrarlo puedes pedir propiedades, tu agenda, una referencia concreta o cuánto vale una zona, que es justo lo que necesitas con alguien esperando a tu lado.' },
+	{ q: '¿Puede hablar con otras agencias por mí?', a: 'Sí. Pregúntale si una propiedad de otra agencia sigue disponible y CoAgent se ofrece a enviar la consulta. Responde SÍ y sale por el MLS igual que una enviada desde el CRM, así que les llega por su vía de siempre.' },
+	{ q: '¿Y si CoAgent no reconoce mi número?', a: 'Te responde, en español y en inglés, con un enlace para crear tu cuenta gratis y otro a la página Personal de tu CRM, donde añades tu móvil a tu perfil. Si tu número no es español, ponle delante el prefijo del país, y vuelve a escribirle.' },
+	{ q: '¿Qué se paga con créditos?', a: 'Los mensajes entran en tu plan. Un folleto, el informe de mercado después del primero gratis y una estancia reformada se pagan en créditos de PropertyList, al mismo precio que en el CRM. CoAgent siempre te dice el precio y espera tu SÍ antes de gastar nada, y un folleto o un render que falla nunca se cobra.' },
+	{ q: '¿Qué cuesta?', a: 'Los primeros 10 agentes en escribir a CoAgent consiguen un mes gratis e ilimitado, contando desde su primer mensaje. Todos los agentes tienen 5 mensajes gratis al día, y aprobar con SÍ nunca cuenta. El ilimitado cuesta 50 créditos al mes por agente, pagados con tus créditos de PropertyList, y puedes dejar de renovarlo cuando quieras. Si tienes más de 3 agentes que añadir, habla con nosotros sobre un paquete. El MLS y el núcleo del CRM siguen siendo gratis, y crear tu cuenta no cuesta nada.' },
 ];
 
 const faqLd = {
@@ -72,7 +109,7 @@ const breadcrumbLd = {
 	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
 	itemListElement: [
 		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
-		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/features/` },
+		{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
 		{ '@type': 'ListItem', position: 3, name: 'CoAgent', item: canonical },
 	],
 };
@@ -80,11 +117,9 @@ const softwareLd = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
 	name: 'PropertyList CoAgent',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
-	description: 'Un asistente para agentes inmobiliarios que funciona por WhatsApp: las notas de voz se convierten en actualizaciones del CRM que el agente aprueba, y las preguntas sobre clientes, propiedades, agenda y precios de zona se responden desde el CRM de la agencia y el MLS compartido. El audio nunca se guarda.',
+	description: 'Un asistente para agentes inmobiliarios que funciona por WhatsApp: las notas de voz se convierten en actualizaciones del CRM que el agente aprueba, y las preguntas sobre clientes, propiedades, la agenda y los precios de zona se responden desde el CRM de la agencia y el MLS compartido. El audio nunca se guarda.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-
-const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 ---
 
 <Layout
@@ -93,6 +128,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	description={description}
 	canonical={canonical}
 	hideSearch
+	fullBleed
 	hreflangs={[
 		{ hreflang: 'es', href: canonical },
 		{ hreflang: 'en', href: `${origin}/coagent/` },
@@ -104,339 +140,519 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
 
 	<section class="hero">
-		<div class="heroInner heroGrid">
-			<div>
-				<div class="kicker">CoAgent</div>
-				<h1>Habla con tu CRM como hablas con un companero.</h1>
-				<p class="heroSub">Sales de la visita. Mandas una nota de voz. El resumen te espera para que lo apruebes.</p>
-				<div class="whatIs">
-					<div class="whatIsTitle">Como va</div>
+		<div class="cx heroGrid">
+			<div class="heroCopy">
+				<div class="eyebrow"><span class="dot"></span> CoAgent &middot; tu CRM en WhatsApp</div>
+				<h1>Deja de pasar notas al CRM.<br /><span>Háblale.</span></h1>
+				<p class="heroLead">
+					<strong>CoAgent vive en el WhatsApp que ya usas.</strong> Sales de una visita, mandas una nota de voz como se la
+					mandarías a un compañero, y el resumen te está esperando: la nota, el nuevo requisito, el seguimiento que prometiste
+					y las propiedades que ahora encajan. Nada se guarda hasta que respondes SÍ.
+				</p>
+				<div class="ctaRow">
+					{WA ? (
+						<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Escribe a CoAgent por WhatsApp</a>
+					) : (
+						<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+					)}
+					<a class="btnGhost" href="#how">Mira cómo funciona</a>
+				</div>
+				<p class="micro">5 mensajes gratis al día &middot; Nada que instalar &middot; El audio nunca se guarda</p>
+				{WA ? (
+					<p class="member">
+						¿Ya estás en PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade tu número de WhatsApp a tu usuario</a>
+						para que CoAgent sepa que eres tú.
+					</p>
+				) : (
+					<p class="member">
+						<b>El número de CoAgent estará disponible desde las 9:00 del martes 15 de septiembre.</b> Antes de escribirle, asegúrate
+						de que estás <a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y de que tu
+						<a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp está añadido a tu usuario</a>.
+					</p>
+				)}
+			</div>
+			<CoagentPhone lang="es" />
+		</div>
+	</section>
+
+	<div class="strip">
+		<div class="cx stripInner">
+			<span>Detrás: <b>{plAgencies}</b> agencias</span>
+			<span><b>{plAgents}</b> agentes</span>
+			<span><b>{plListings}</b> propiedades activas</span>
+			<span>Responde en <b>7</b> idiomas</span>
+		</div>
+	</div>
+
+	<section class="band dark">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">La hora que nadie factura</div>
+				<h2>Cada «ya lo escribo luego» es una promesa en riesgo.</h2>
+				<p>
+					Nadie se olvida a propósito. Coges la llamada en el coche, prometes enviar una propiedad, y para cuando llegas al
+					escritorio hay otras nueve cosas esperando. El día va más rápido que el papeleo, y un CRM solo te devuelve algo si
+					está al día.
+				</p>
+			</div>
+			<div class="versus">
+				<div class="vCol without">
+					<div class="vHead">Esta noche, como siempre</div>
 					<ol>
-						<li>Terminas una llamada o una visita y mandas una nota de voz, en el WhatsApp que ya usas.</li>
-						<li>CoAgent deduce que ha cambiado y te lo ensena antes de tocar nada.</li>
-						<li>Respondes SI. La busqueda, la nota y los recordatorios quedan en el CRM.</li>
-						<li>Y ya que estas, pidele propiedades, un telefono o tu proxima cita.</li>
+						<li><b>18:40</b><span>Termina la última visita. Tres cosas que prometiste, todas en tu cabeza.</span></li>
+						<li><b>19:15</b><span>Dos llamadas de camino a casa. Una promesa más.</span></li>
+						<li><b>21:30</b><span>Portátil abierto, escribiendo el día de memoria.</span></li>
+						<li><b>El jueves</b><span>«¿Al final me mandaste esa propiedad?»</span></li>
 					</ol>
 				</div>
-				<p class="lead">
-					El papeleo que se come tus tardes se escribe solo. Lo que prometiste el martes pasado se convierte en un recordatorio. Y
-					cuando tienes a un cliente al lado preguntando que hay en Marbella por dos millones, lo preguntas en voz alta y la
-					respuesta vuelve al mismo chat.
-				</p>
-				<div class="winRow" aria-label="What CoAgent gives back">
-					<div class="win"><b>Recuperas las tardes</b><span>El resumen despues de la visita se hace solo.</span></div>
-					<div class="win"><b>Promesas cumplidas</b><span>Lo que dijiste que harias se convierte en recordatorio.</span></div>
-					<div class="win"><b>Respuestas en el coche</b><span>Agenda, propiedades y telefonos sin abrir el portatil.</span></div>
+				<div class="vCol with">
+					<div class="vHead">Esta noche, con CoAgent</div>
+					<ol>
+						<li><b>18:41</b><span>Una nota de voz desde el aparcamiento.</span></li>
+						<li><b>18:42</b><span>Lees lo que ha entendido. Respondes SÍ.</span></li>
+						<li><b>18:43</b><span>Nota guardada, requisito actualizado, recordatorio del sábado puesto.</span></li>
+						<li><b>21:30</b><span>No estás delante del portátil.</span></li>
+					</ol>
 				</div>
-				<div class="ctaRow">
-					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
-					<a class="btnSecondary" href="#ask">Mira que le puedes pedir</a>
-				</div>
-				<div class="note">Ya funciona para los agentes de PropertyList. Nada que instalar.</div>
 			</div>
+			<p class="punch">Tu memoria es excelente. Hasta el jueves.</p>
+		</div>
+	</section>
 
-			<div class="bfWrap" aria-hidden="true">
-				<div class="bfTag">Despues de la visita</div>
-				<div class="bfCard">
-					<div class="bfHead">
-						<span class="bfAvatar">MR</span>
-						<span>
-							<b>Marta Ruiz</b>
-							<i>Compradora &middot; identificada en tu nota</i>
+	<section class="band soft" id="how">
+		<div class="cx">
+			<div class="head">
+				<div class="label">Cómo funciona</div>
+				<h2>Tú hablas. CoAgent escribe.</h2>
+				<p>Sin formularios, sin comandos que aprender, y nada cambia a tus espaldas.</p>
+			</div>
+			<div class="grid3">
+				<div class="demo">
+					<span class="num">1</span>
+					<h3>Manda la nota de voz</h3>
+					<p>Justo después de la visita, tal como se lo contarías a un compañero.</p>
+					<div class="mini">
+						<div class="mb me">"Acabo de ver el piso de Nueva Andalucía con Marta. Ahora acepta tres dormitorios, hasta ochocientos cincuenta, y le he dicho que le mando el de Cerquilla el sábado."</div>
+					</div>
+				</div>
+				<div class="demo">
+					<span class="num">2</span>
+					<h3>Lee lo que ha entendido</h3>
+					<p>El cliente que ha identificado, los cambios que propone, el recordatorio que va a poner y las propiedades que ahora encajan.</p>
+					<div class="mini">
+						<div class="mb">
+							<b>Marta Ruiz · compradora</b>
+							<span class="kv"><i>Presupuesto</i><em>800.000 € a 850.000 €</em></span>
+							<span class="kv"><i>Dormitorios</i><em>3</em></span>
+							<span class="kv"><i>Recordatorio</i><em>Propiedad de Cerquilla, sábado</em></span>
+						</div>
+					</div>
+				</div>
+				<div class="demo">
+					<span class="num">3</span>
+					<h3>Responde SÍ</h3>
+					<p>Solo entonces se mueve algo. Si no dices nada, no pasa nada.</p>
+					<div class="mini">
+						<div class="mb">Responde <b>SÍ</b> para guardarlo. Todavía no se ha escrito nada.</div>
+						<div class="mb me short">SÍ</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="ask">
+		<div class="cx">
+			<div class="head">
+				<div class="label">Todo lo demás que le puedes pedir</div>
+				<h2>Todo tu día de trabajo, en un solo chat.</h2>
+				<p>Por voz o escribiendo, con tus propias palabras. Cuando una pregunta se sale de lo que tiene, te lo dice en vez de inventar.</p>
+			</div>
+			<div class="mTabs" role="tablist" data-mtabs>
+				{moments.map((m, i) => (
+					<button type="button" class={i === 0 ? 'mTab on' : 'mTab'} role="tab" data-mtab={m.key} aria-selected={i === 0 ? 'true' : 'false'}>
+						{m.label} <small>{m.asks.length}</small>
+					</button>
+				))}
+			</div>
+			{moments.map((m) => (
+				<div class="mPanel" data-mpanel={m.key}>
+					<h3 class="mTitle">{m.label}</h3>
+					<div class="grid2">
+						{m.asks.map((item) => (
+							<div class="ex">
+								<div class="exQ">
+									{item.photo && <span class="tag">Foto</span>}
+									{item.photo ? item.q : `"${item.q}"`}
+								</div>
+								<div class="exA">{item.a}</div>
+							</div>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="band soft" id="matching">
+		<div class="cx">
+			<div class="matchBox">
+				<div class="matchCopy">
+					<div class="label">Construido sobre el MLS compartido</div>
+					<h2>No solo recuerdes al cliente. Encuéntrale su próxima vivienda.</h2>
+					<p>
+						Detrás de CoAgent está el MLS que comparten {plAgencies} agencias. Pídele tres dormitorios en Nueva Andalucía y
+						busca en todo ese stock, no solo en el tuyo. Cuando la vivienda adecuada es de otra agencia, se ofrece a
+						preguntarles por ti.
+					</p>
+					<ul class="checks">
+						<li>Busca en el MLS compartido, no solo en tus propias propiedades</li>
+						<li>Responde a «¿cuál es la mejor compra?» comparando el precio por m² con viviendas parecidas cerca</li>
+						<li>Valora a partir de ventas escrituradas ante notario, con enlace a la prueba pública</li>
+						<li>Las consultas a otras agencias pasan por el MLS, dentro de su flujo de trabajo habitual</li>
+					</ul>
+				</div>
+				<div class="matchVisual" aria-hidden="true">
+					<div class="resCard">
+						<div class="resHead">
+							<span>Del MLS compartido</span>
+							<em>3 dormitorios &middot; Nueva Andalucía &middot; hasta 850.000 €</em>
+						</div>
+						<div class="res">
+							<span class="resPh a"></span>
+							<span class="resTxt"><b>PL5001 &middot; Piso</b><i>3 dorm. &middot; 2 baños &middot; Nueva Andalucía</i></span>
+							<span class="resP">845.000 €<small class="own">Tu propiedad</small></span>
+						</div>
+						<div class="res">
+							<span class="resPh b"></span>
+							<span class="resTxt"><b>PL5002 &middot; Ático</b><i>3 dorm. &middot; 2 baños &middot; Nueva Andalucía</i></span>
+							<span class="resP">830.000 €<small>Otra agencia</small></span>
+						</div>
+						<div class="res">
+							<span class="resPh c"></span>
+							<span class="resTxt"><b>PL5003 &middot; Adosado</b><i>3 dorm. &middot; 3 baños &middot; Aloha</i></span>
+							<span class="resP">799.000 €<small>Otra agencia</small></span>
+						</div>
+						<div class="resAsk">PL5002 es de otra agencia. Responde <b>SÍ</b> y les pregunto si sigue disponible.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">Qué se guarda y qué no</div>
+				<h2>Un asistente que escucha tu día tiene que ganarse el sitio.</h2>
+				<p>Son decisiones de diseño, no ajustes que tengas que buscar.</p>
+			</div>
+			<div class="grid3">
+				{trust.map((t) => (
+					<div class="tCard">
+						<span class="tIcon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.8-4.8 1.4 1.4-6.2 6.2z" /></svg>
 						</span>
-						<span class="bfRing"></span>
-					</div>
-					<div class="bfReq">Presupuesto 800.000 &euro; &rarr; <b>850.000 &euro;</b> &middot; + Nueva Andaluc&iacute;a &middot; 3 dorm.</div>
-					<div class="bfMeta">Recordatorio: enviar la propiedad de Cerquilla &middot; sabado</div>
-					<div class="bfWarn">Responde SI para guardarlo todo. Todavia no se ha escrito nada.</div>
-					<div class="bfFoot">Se transcribe y el audio se descarta</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="section" id="how">
-		<div class="sectionHead">
-			<h2>Lo que nadie hace: escribirlo</h2>
-			<p>Todos sabemos que un CRM solo te devuelve algo si esta al dia, y todos sabemos lo que pasa de verdad entre visita y visita. CoAgent recoge la nota donde ya estas, en el formato que ya usas, y escribe el por ti.</p>
-		</div>
-		<div class="grid3 steps">
-			<div class="card step">
-				<div class="stepTime">Paso 1</div>
-				<h3>Manda la nota de voz</h3>
-				<p>"Acabo de ver el piso de Nueva Andaluc&iacute;a con Marta. Ahora acepta tres dormitorios, hasta ochocientos cincuenta, y le he dicho que le mando el de Cerquilla el sabado."</p>
-			</div>
-			<div class="card step">
-				<div class="stepTime">Paso 2</div>
-				<h3>Lee lo que ha entendido</h3>
-				<p>Te devuelve el cliente que ha identificado, los cambios que propone en su busqueda, el recordatorio del sabado y las propiedades que ahora le encajan.</p>
-			</div>
-			<div class="card step">
-				<div class="stepTime">Paso 3</div>
-				<h3>Responde SI</h3>
-				<p>Solo entonces se mueve algo. La busqueda se actualiza, la nota queda en su historial y el sabado esta en tu calendario. Si no dices nada, no pasa nada.</p>
-			</div>
-		</div>
-	</section>
-
-	<section class="section" id="ask">
-		<div class="sectionHead">
-			<h2>Todo lo demas que le puedes pedir</h2>
-			<p>Por voz o escribiendo, con tus palabras. CoAgent deduce que querias decir en vez de obligarte a aprender comandos, y cuando algo se sale de lo que tiene, te lo dice.</p>
-		</div>
-		<div class="grid2">
-			{
-				asks.map((item) => (
-					<div class="card">
-						{item.photo && <div class="stepTime">Manda una foto</div>}
-						<h3>{item.photo ? item.q : `“${item.q}”`}</h3>
-						<p>{item.a}</p>
-					</div>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Tu privacidad: que se guarda y que no</h2>
-			<p>Un asistente que escucha tus conversaciones tiene que ganarse el sitio. Esto son decisiones de diseno, no ajustes que tengas que buscar.</p>
-		</div>
-		<div class="grid3">
-			{
-				trust.map((t) => (
-					<div class="card accent">
 						<h3>{t.name}</h3>
 						<p>{t.desc}</p>
 					</div>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="grid2">
-			<div class="card accent">
-				<h2>Habla el idioma de esta costa</h2>
-				<p>
-					Aqui los clientes cambian de ingles a espanol a mitad de frase, y los agentes tambien. CoAgent entiende una nota que
-					cambia de idioma por el camino y responde en el tuyo: espanol, ingles, aleman, frances, portugues, bulgaro o griego.
-					Los nombres, los presupuestos y las zonas siguen cayendo en el campo correcto.
-				</p>
+				))}
 			</div>
-			<div class="card">
-				<h2>Ninguna app nueva que aprender</h2>
-				<p>
-					CoAgent no es otra app que adoptar. Vive en WhatsApp, y detras esta la plataforma donde ya trabajan mas de 1.300 agentes
-					y mas de 970 agencias, buscando entre mas de 4.400 propiedades compartidas en cuanto un cliente te dice lo que quiere.
-				</p>
+			<div class="grid2 pair">
+				<div class="tCard flat">
+					<h3>Habla el idioma de esta costa</h3>
+					<p>Aquí los clientes cambian de inglés a español a mitad de frase, y los agentes también. CoAgent entiende una nota que cambia de idioma por el camino y responde en el tuyo: español, inglés, alemán, francés, portugués, búlgaro o griego. Los nombres, los presupuestos y las zonas siguen cayendo en el campo correcto.</p>
+				</div>
+				<div class="tCard flat">
+					<h3>Ninguna app nueva que aprender</h3>
+					<p>Vive en WhatsApp, y detrás está la plataforma donde ya trabajan {plAgents} agentes y {plAgencies} agencias, buscando entre {plListings} propiedades activas en cuanto un cliente te dice lo que quiere.</p>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="section" id="precios">
-		<div class="sectionHead">
-			<h2>Cuanto cuesta</h2>
-			<p>Sin permanencia. El ilimitado se paga en creditos, del mismo saldo que todo lo demas en PropertyList, y puedes dejar de renovarlo cuando quieras.</p>
-		</div>
-		<div class="grid3">
-			{
-				plans.map((p) => (
-					<div class="card">
-						<h3>{p.name}</h3>
-						<p>{p.desc}</p>
-					</div>
-				))
-			}
+	<section class="band soft" id="pricing">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">Lo que cuesta</div>
+				<h2>Empieza gratis. Paga solo por el ilimitado.</h2>
+				<p>Sin permanencia. El ilimitado se paga en créditos, del mismo saldo que todo lo demás en PropertyList, y puedes dejar de renovarlo cuando quieras.</p>
+			</div>
+			<div class="plans">
+				<div class="plan">
+					<div class="planWhen">Cada agente</div>
+					<div class="planPrice">5 al día</div>
+					<div class="planDesc">mensajes gratis, cada día. Aprobar con SÍ nunca cuenta.</div>
+				</div>
+				<div class="plan featured">
+					<div class="planBadge">Los primeros 10 agentes</div>
+					<div class="planWhen">Gratis e ilimitado</div>
+					<div class="planPrice">1 mes</div>
+					<div class="planDesc">Los diez primeros agentes que escriban a CoAgent consiguen un mes gratis e ilimitado, contando desde su primer mensaje. A cambio, cuéntanos dónde estorba, y lo cambiamos.</div>
+					{WA ? (
+						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Escribe a CoAgent ahora</a>
+					) : (
+						<div class="planSoon">El número estará disponible desde las 9:00 del martes 15 de septiembre. Antes de escribirle, asegúrate de que estás <a href={SIGNUP} target="_blank" rel="noopener">registrado</a> y de que tu <a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp está añadido a tu usuario</a>.</div>
+					)}
+				</div>
+				<div class="plan">
+					<div class="planWhen">Ilimitado</div>
+					<div class="planPrice">50 créditos</div>
+					<div class="planDesc">al mes por agente, se activa desde la página de Facturación o respondiendo SUSCRIBIR. ¿Más de 3 agentes que añadir? Habla con nosotros sobre un paquete.</div>
+				</div>
+			</div>
+			<p class="fine">Un folleto, el informe de mercado después del primero gratis y una estancia reformada se pagan en créditos al mismo precio que en el CRM. CoAgent te dice el precio y espera tu SÍ antes de nada.</p>
 		</div>
 	</section>
 
-	<section class="section" id="next">
-		<div class="sectionHead">
-			<h2>Lo que estamos construyendo ahora</h2>
-			<p>Todo lo de arriba funciona hoy. Esto todavia no, y preferimos decirlo aqui a que lo descubras despues.</p>
-		</div>
-		<div class="grid3">
-			{
-				soon.map((s) => (
-					<div class="card">
+	<section class="band">
+		<div class="cx">
+			<div class="head">
+				<div class="label">Lo que construimos ahora</div>
+				<h2>Todo lo de arriba funciona hoy. Esto todavía no.</h2>
+				<p>Preferimos decírtelo aquí antes de que lo descubras por tu cuenta.</p>
+			</div>
+			<div class="grid3">
+				{soon.map((s) => (
+					<div class="tCard flat">
+						<span class="soon">Aún no disponible</span>
 						<h3>{s.name}</h3>
 						<p>{s.desc}</p>
 					</div>
-				))
-			}
+				))}
+			</div>
 		</div>
 	</section>
 
-	<section class="section">
-		<div class="sectionHead"><h2>Preguntas, resueltas</h2></div>
-		<div class="faq">
-			{
-				faqs.map((f) => (
+	<section class="band soft">
+		<div class="cx narrow">
+			<div class="head center">
+				<div class="label">Preguntas</div>
+				<h2>Antes de probarlo.</h2>
+			</div>
+			<div class="faq">
+				{faqs.map((f) => (
 					<details>
 						<summary>{f.q}</summary>
 						<p>{f.a}</p>
 					</details>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="cta">
-		<div class="ctaInner">
-			<h2>Se acuerda de cada promesa que hiciste.</h2>
-			<p>Tu memoria es excelente. Hasta el jueves. Cada agente lleva cincuenta promesas abiertas en la cabeza, y la que se escapa siempre es la que importaba. Crea tu cuenta gratis y empieza a hablar con el, dentro de la <a href="/es/features/">plataforma gratuita de PropertyList</a>.</p>
-			<div class="ctaRow">
-				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+				))}
 			</div>
 		</div>
 	</section>
 
-	<style>
-		:global(:root) {
-			--pl-accent: #00ae9a;
-			--pl-accent-rgb: 0, 174, 154;
-			--pl-ink: #0a6d61;
-		}
-		h1, h2, h3 { letter-spacing: -0.03em; }
-		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
-			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
-		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
-		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
-		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
-		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
-		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
-		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
-		.whatIs { border: 1px solid rgba(0,174,154,0.28); background: rgba(0,174,154,0.06); border-radius: 14px; padding: 14px 16px; margin: 0 0 16px; }
-		.whatIsTitle { font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(11,18,32,.55); margin-bottom: 8px; }
-		.whatIs ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-		.whatIs li { color: rgba(16,24,40,.82); line-height: 1.5; font-size: 15.5px; }
-		.heroSub { margin: -4px 0 12px; font-size: 17px; font-weight: 700; color: rgba(11,18,32,.6); letter-spacing: -.01em; }
-		.winRow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
-		.win { background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 12px; padding: 10px 12px; }
-		.win b { display: block; font-size: 13px; color: var(--pl-ink); }
-		.win span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.65); line-height: 1.45; margin-top: 2px; }
-		@media (max-width: 560px) { .winRow { grid-template-columns: minmax(0, 1fr); } }
-		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
-		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
-		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
-		.btnPrimary:hover { background: #086055; }
-		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
-		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+	<section class="band dark final">
+		<div class="cx narrow center">
+			<h2>Se acuerda de cada promesa <span>que hiciste.</span></h2>
+			<p>Dale a CoAgent tu próxima visita como nota de voz y mira lo que te devuelve. Crea tu cuenta gratis y empieza a hablar con él, dentro de la <a href="/es/funciones/">plataforma gratuita de PropertyList</a>.</p>
+			<div class="ctaRow center">
+				{WA ? (
+					<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Escribe a CoAgent por WhatsApp</a>
+				) : (
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
+				)}
+			</div>
+			<p class="micro light">
+				{COAGENT_NUMBER ? (
+					<>¿Ya eres miembro? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Añade tu número de WhatsApp a tu usuario</a> para que CoAgent sepa que eres tú.</>
+				) : (
+					<>El número estará disponible desde las 9:00 del martes 15 de septiembre. Antes de escribirle, asegúrate de que estás registrado y de que tu <a href={CRM_STAFF_URL} target="_blank" rel="noopener">número de WhatsApp está añadido a tu usuario</a>.</>
+				)}
+			</p>
+		</div>
+	</section>
 
-		.bfWrap { position: relative; padding: 18px 6px 6px; }
-		.bfTag { position: absolute; top: 0; left: 18px; z-index: 2; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
-		.bfCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 16px 14px; box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
-		.bfHead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; position: relative; }
-		.bfAvatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(var(--pl-accent-rgb), 0.14); color: var(--pl-ink); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; flex: none; }
-		.bfHead b { display: block; font-size: 15.5px; color: #101828; }
-		.bfHead i { display: block; font-style: normal; font-size: 12px; color: rgba(16, 24, 40, 0.55); }
-		.bfRing { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.18); }
-		.bfReq { font-size: 13.5px; font-weight: 700; color: #101828; margin-bottom: 4px; line-height: 1.5; }
-		.bfMeta { font-size: 12px; color: rgba(16, 24, 40, 0.55); margin-bottom: 10px; }
-		.bfWarn { background: #fef6e7; border: 1px solid #f5d9a8; color: #8a5a10; border-radius: 10px; padding: 9px 11px; font-size: 12.5px; font-weight: 700; line-height: 1.45; margin-bottom: 10px; }
-		.bfFoot { font-size: 11.5px; color: rgba(16, 24, 40, 0.5); text-align: center; border-top: 1px solid rgba(16, 24, 40, 0.07); padding-top: 9px; }
-
-		.way { display: flex; flex-direction: column; }
-		.wayNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
-		.wayFor { font-size: 12.5px; font-weight: 700; color: var(--pl-ink); margin-top: 10px; }
-		.way p { margin-top: 10px; }
-		.gBox { background: #f7f9f9; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 12px; padding: 10px; margin-top: 4px; }
-		.waRow { display: flex; align-items: center; gap: 8px; border-radius: 10px; padding: 8px 10px; font-size: 12px; }
-		.waRow.me { background: #dcf8c6; justify-content: flex-end; margin-bottom: 6px; }
-		.waMic { color: var(--pl-ink); font-size: 10px; }
-		.waBars { display: inline-flex; align-items: center; gap: 2px; }
-		.waBars i { width: 3px; border-radius: 2px; background: rgba(16, 24, 40, 0.45); display: inline-block; }
-		.waBars i:nth-child(odd) { height: 12px; }
-		.waBars i:nth-child(even) { height: 7px; }
-		.waBars i:nth-child(3), .waBars i:nth-child(6) { height: 15px; }
-		.waTime { font-size: 11px; color: rgba(16, 24, 40, 0.55); }
-		.waRow.bot { background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); display: block; }
-		.waRow.bot b { display: block; font-size: 12.5px; color: var(--pl-ink); }
-		.waRow.bot i { display: block; font-style: normal; font-size: 11.5px; color: rgba(16, 24, 40, 0.6); margin-top: 2px; }
-		.syncRow { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 8px; border-radius: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.07); margin-bottom: 5px; color: rgba(16, 24, 40, 0.8); }
-		.syncRow:last-child { margin-bottom: 0; }
-		.syncDot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-		.syncRow.ok .syncDot { background: #16a34a; }
-		.syncRow.no { color: rgba(16, 24, 40, 0.45); }
-		.syncRow.no .syncDot { background: rgba(16, 24, 40, 0.25); }
-		.simRow { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 8px; padding: 7px 9px; margin-bottom: 5px; font-size: 12px; }
-		.simRow:last-child { margin-bottom: 0; }
-		.simRow.work { border-color: rgba(var(--pl-accent-rgb), 0.35); }
-		.simTag { display: inline-block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(16, 24, 40, 0.5); margin-right: 8px; }
-		.simRow.work .simTag { color: var(--pl-ink); }
-		.simNum { font-weight: 800; color: #101828; }
-		.simRow i { display: block; font-style: normal; font-size: 11px; color: rgba(16, 24, 40, 0.55); margin-top: 1px; }
-
-		.featRow { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
-		.featRow.rev { grid-template-columns: 0.85fr 1.15fr; }
-		.featRow.rev .card { order: 2; }
-		.featRow.rev .gCard { order: 1; }
-		.featRow .card p + p { margin-top: 10px; }
-		.gCard { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
-		.gLabel { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pl-ink); }
-		.gMini { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 12px; box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08); }
-		.gMini b { display: block; font-size: 14px; color: #101828; }
-		.gMini span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.6); margin: 2px 0 6px; }
-		.gMini em { display: block; font-style: normal; font-size: 12px; font-weight: 700; background: #fef6e7; border: 1px solid #f5d9a8; color: #8a5a10; border-radius: 8px; padding: 6px 8px; }
-		.gDiff { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 6px 10px; font-size: 12.5px; }
-		.gDiff > div { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(16, 24, 40, 0.06); }
-		.gDiff > div:last-child { border-bottom: 0; }
-		.gDiff span:first-child { color: rgba(16, 24, 40, 0.55); }
-		.gDiff s { color: rgba(16, 24, 40, 0.4); }
-		.gDiff b { color: var(--pl-ink); }
-		.gBtns { justify-content: flex-end !important; gap: 8px !important; }
-		.gBtns span { border: 1px solid rgba(16, 24, 40, 0.15); border-radius: 8px; padding: 4px 12px; font-weight: 800; font-size: 12px; color: rgba(16, 24, 40, 0.7); }
-		.gBtns span.ok { background: var(--pl-ink); border-color: var(--pl-ink); color: #fff; }
-		.gMatch { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 10px; padding: 9px 11px; font-size: 12.5px; }
-		.gMatch b { color: #101828; }
-		.gMatch span { color: rgba(16, 24, 40, 0.6); }
-		.gMatch em { font-style: normal; font-weight: 900; font-size: 12px; color: #fff; background: var(--pl-ink); border-radius: 8px; padding: 4px 12px; }
-		.gPipe { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
-		.gPipe span { text-align: center; font-size: 11.5px; padding: 6px 4px; border-radius: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); color: rgba(16, 24, 40, 0.5); }
-		.gPipe span.on { background: rgba(var(--pl-accent-rgb), 0.12); border-color: rgba(var(--pl-accent-rgb), 0.35); color: var(--pl-ink); font-weight: 800; }
-		.gAlert { font-size: 12px; font-weight: 700; color: var(--pl-ink); background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); border-radius: 10px; padding: 8px 10px; }
-
-		.section { margin: 0 0 14px; }
-		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
-		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
-		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
-		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
-		.card h2 { margin: 0 0 10px; }
-		.card h3 { margin: 0 0 8px; font-size: 16px; }
-		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
-		.step { position: relative; }
-		.stepTime { display: inline-flex; align-items: center; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 4px 12px; font-weight: 900; font-size: 12px; margin-bottom: 10px; }
-		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
-		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
-		.ctaInner h2 { margin: 0; line-height: 1.15; }
-		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
-		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
-		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
-		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
-		.faq summary::-webkit-details-marker { display: none; }
-		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
-		.faq details[open] summary::after { content: '-'; }
-		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
-		@media (max-width: 900px) {
-			.heroGrid { grid-template-columns: minmax(0, 1fr); }
-			.grid2, .grid3 { grid-template-columns: minmax(0, 1fr); }
-			.grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-			.featRow, .featRow.rev { grid-template-columns: minmax(0, 1fr); }
-			.featRow.rev .card { order: 1; }
-			.featRow.rev .gCard { order: 2; }
-		}
-
-		@media (max-width: 430px) {
-			.grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
-		}
-		@media (max-width: 560px) {
-			.grid3 { grid-template-columns: minmax(0, 1fr); }
-		}
-	</style>
-	<AgentInterestCta lang="es" page="/es/coagent/" />
+	<div class="cx">
+		<AgentInterestCta lang="es" page="/es/coagent/" />
+	</div>
 </Layout>
 
+<script>
+	document.querySelectorAll<HTMLElement>('[data-mtabs]').forEach((bar) => {
+		const tabs = Array.from(bar.querySelectorAll<HTMLButtonElement>('[data-mtab]'));
+		const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-mpanel]'));
+		const show = (key: string) => {
+			tabs.forEach((t) => {
+				const on = t.dataset.mtab === key;
+				t.classList.toggle('on', on);
+				t.setAttribute('aria-selected', on ? 'true' : 'false');
+			});
+			panels.forEach((p) => (p.hidden = p.dataset.mpanel !== key));
+		};
+		// Without JavaScript every panel shows, stacked. With it, one at a time.
+		bar.classList.add('ready');
+		tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.mtab || '')));
+		if (tabs[0]) show(tabs[0].dataset.mtab || '');
+	});
+</script>
 
+<style>
+	.cx { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
+	.cx.narrow { width: min(780px, calc(100% - 32px)); }
+	.center { text-align: center; }
+	h1, h2, h3 { letter-spacing: -0.035em; color: #0b1220; }
+
+	.hero { overflow: hidden; padding-block: 56px 72px; background: radial-gradient(900px 520px at 78% 30%, rgba(0, 174, 154, 0.16), transparent 62%), linear-gradient(180deg, #f7fbfa 0%, #fff 100%); }
+	.heroGrid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 56px; align-items: center; }
+	.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(0, 174, 154, 0.1); color: #0a6d61; font-size: 12.5px; font-weight: 800; margin-bottom: 20px; }
+	.dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; box-shadow: 0 0 0 4px rgba(0, 174, 154, 0.16); }
+	h1 { font-size: clamp(40px, 6vw, 70px); line-height: 1; letter-spacing: -0.05em; margin: 0 0 22px; font-weight: 900; }
+	h1 span { color: #00ae9a; }
+	.heroLead { font-size: 18.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.68); max-width: 590px; margin: 0 0 28px; }
+	.heroLead strong { color: #0b1220; }
+	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+	.ctaRow.center { justify-content: center; }
+	.btnPrimary { display: inline-flex; align-items: center; justify-content: center; background: #00ae9a; color: #fff; padding: 15px 24px; border-radius: 13px; font-size: 16px; font-weight: 800; text-decoration: none; box-shadow: 0 12px 28px -12px rgba(0, 174, 154, 0.7); transition: background 0.2s, transform 0.2s; }
+	.btnPrimary:hover { background: #008a7a; transform: translateY(-2px); text-decoration: none; color: #fff; }
+	.btnPrimary.full { width: 100%; margin-top: 16px; }
+	.btnGhost { display: inline-flex; align-items: center; padding: 14px 20px; border: 1px solid rgba(16, 24, 40, 0.14); border-radius: 13px; font-size: 15px; font-weight: 700; color: #0b1220; background: #fff; text-decoration: none; }
+	.btnGhost:hover { background: #f6f8f8; text-decoration: none; }
+	.micro { margin: 14px 0 0; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
+	.member { margin: 18px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.7); padding: 11px 14px; border-radius: 12px; background: #fff; border: 1px dashed rgba(0, 174, 154, 0.45); max-width: 590px; }
+	.member a, .planSoon a, .micro a, .final p a { color: #0a6d61; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+	.strip { border-block: 1px solid rgba(16, 24, 40, 0.08); background: #fff; padding-block: 18px; }
+	.stripInner { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 34px; font-size: 14px; color: rgba(16, 24, 40, 0.55); }
+	.stripInner b { color: #0b1220; font-weight: 900; }
+
+	.band { padding-block: 88px; background: #fff; }
+	.band.soft { background: #f6f8f8; }
+	.band.dark { background: #0b1220; color: #fff; }
+	.band.dark h2 { color: #fff; }
+	.head { max-width: 720px; margin-bottom: 44px; }
+	.head.center { margin-inline: auto; }
+	.label { color: #0a6d61; text-transform: uppercase; letter-spacing: 0.12em; font-size: 11.5px; font-weight: 900; margin-bottom: 12px; }
+	.dark .label { color: #5eead4; }
+	h2 { font-size: clamp(32px, 4.4vw, 50px); line-height: 1.05; margin: 0 0 16px; font-weight: 900; }
+	.head p { color: rgba(16, 24, 40, 0.62); font-size: 17.5px; line-height: 1.6; margin: 0; }
+	.dark .head p { color: rgba(255, 255, 255, 0.66); }
+
+	.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 940px; margin: 0 auto; }
+	.vCol { border-radius: 20px; padding: 26px 26px 20px; }
+	.vCol.without { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); }
+	.vCol.with { background: rgba(0, 174, 154, 0.12); border: 1px solid rgba(94, 234, 212, 0.35); }
+	.vHead { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; color: rgba(255, 255, 255, 0.55); }
+	.with .vHead { color: #5eead4; }
+	.vCol ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+	.vCol li { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.5; }
+	.vCol li b { font-variant-numeric: tabular-nums; font-weight: 900; color: rgba(255, 255, 255, 0.9); }
+	.without li span { color: rgba(255, 255, 255, 0.55); }
+	.with li span { color: rgba(255, 255, 255, 0.9); }
+	.without li:last-child span { color: #fca5a5; font-weight: 700; }
+	.with li:last-child span { color: #5eead4; font-weight: 800; }
+	.punch { text-align: center; font-size: clamp(22px, 2.6vw, 30px); font-weight: 900; letter-spacing: -0.03em; margin: 44px 0 0; color: #fff; }
+
+	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+	.demo { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 26px; box-shadow: 0 10px 34px -18px rgba(16, 24, 40, 0.18); display: flex; flex-direction: column; }
+	.num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #0b1220; color: #fff; font-size: 13px; font-weight: 900; margin-bottom: 18px; }
+	.demo h3 { font-size: 21px; margin: 0 0 8px; }
+	.demo p { color: rgba(16, 24, 40, 0.62); font-size: 15px; line-height: 1.55; margin: 0; }
+	.mini { margin-top: auto; padding: 12px; padding-top: 12px; background: #efeae2; border-radius: 14px; display: flex; flex-direction: column; gap: 7px; }
+	.demo p + .mini { margin-top: 18px; }
+	.mb { background: #fff; border-radius: 9px; border-top-left-radius: 2px; padding: 9px 11px; font-size: 13.5px; line-height: 1.5; color: #111b21; max-width: 92%; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.mb.me { background: #d9fdd3; align-self: flex-end; border-top-left-radius: 9px; border-top-right-radius: 2px; }
+	.mb.short { padding: 6px 14px; font-weight: 700; }
+	.mb b { display: block; margin-bottom: 4px; }
+	.mb .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 12.5px; padding: 3px 0; border-top: 1px solid rgba(11, 18, 32, 0.06); }
+	.mb .kv i { font-style: normal; color: rgba(17, 27, 33, 0.55); }
+	.mb .kv em { font-style: normal; font-weight: 700; text-align: right; }
+	.mb:not(.me) b:only-child { display: inline; }
+
+	.mTabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+	.mTabs:not(.ready) { display: none; }
+	.mTab { font: inherit; font-size: 14.5px; font-weight: 800; color: #0b1220; background: #f6f8f8; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+	.mTab small { font-size: 12px; color: rgba(16, 24, 40, 0.45); margin-left: 4px; font-weight: 800; }
+	.mTab:hover { background: #eef3f2; }
+	.mTab.on { background: #0b1220; border-color: #0b1220; color: #fff; }
+	.mTab.on small { color: rgba(255, 255, 255, 0.6); }
+	.mPanel + .mPanel { margin-top: 34px; }
+	.mPanel[hidden] { display: none; }
+	.mTitle { font-size: 20px; margin: 0 0 14px; }
+	.mTabs.ready ~ .mPanel .mTitle { display: none; }
+	.mTabs.ready ~ .mPanel + .mPanel { margin-top: 0; }
+	.ex { background: #efeae2; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+	.exQ { align-self: flex-end; max-width: 88%; background: #d9fdd3; color: #111b21; border-radius: 12px; border-top-right-radius: 3px; padding: 9px 13px; font-size: 15px; font-weight: 700; line-height: 1.45; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.exA { align-self: flex-start; max-width: 94%; background: #fff; color: rgba(17, 27, 33, 0.82); border-radius: 12px; border-top-left-radius: 3px; padding: 10px 13px; font-size: 14.5px; line-height: 1.55; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.tag { display: inline-block; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; background: #0a6d61; color: #fff; border-radius: 6px; padding: 2px 6px; margin-right: 7px; vertical-align: 2px; }
+
+	.matchBox { display: grid; grid-template-columns: 1fr 1fr; border-radius: 28px; overflow: hidden; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); box-shadow: 0 20px 60px -30px rgba(16, 24, 40, 0.25); }
+	.matchCopy { padding: 52px; }
+	.matchCopy h2 { font-size: clamp(30px, 3.4vw, 42px); }
+	.matchCopy p { color: rgba(16, 24, 40, 0.64); font-size: 16.5px; line-height: 1.6; margin: 0 0 24px; }
+	.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+	.checks li { position: relative; padding-left: 30px; font-size: 15px; line-height: 1.5; color: #0b1220; }
+	.checks li::before { content: ''; position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 174, 154, 0.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a6d61' d='M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z'/%3E%3C/svg%3E") center/13px no-repeat; }
+	.matchVisual { background: linear-gradient(160deg, rgba(0, 174, 154, 0.16), rgba(0, 174, 154, 0.05)); padding: 40px; display: flex; align-items: center; justify-content: center; }
+	.resCard { width: min(430px, 100%); background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 24px 60px -24px rgba(11, 18, 32, 0.35); }
+	.resHead { margin-bottom: 12px; }
+	.resHead span { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0a6d61; }
+	.resHead em { display: block; font-style: normal; font-size: 15px; font-weight: 800; color: #0b1220; margin-top: 2px; }
+	.res { display: grid; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 11px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(16, 24, 40, 0.07); }
+	.resPh { width: 54px; height: 44px; border-radius: 9px; }
+	.resPh.a { background: linear-gradient(135deg, #8fd3c7, #3a8f86); }
+	.resPh.b { background: linear-gradient(135deg, #f3d9a4, #c48b4a); }
+	.resPh.c { background: linear-gradient(135deg, #b9c7e8, #5b6fa3); }
+	.resTxt b { display: block; font-size: 13.5px; color: #0b1220; }
+	.resTxt i { display: block; font-style: normal; font-size: 12px; color: rgba(16, 24, 40, 0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.resP { text-align: right; font-size: 13.5px; font-weight: 900; color: #0b1220; }
+	.resP small { display: block; font-size: 10.5px; font-weight: 800; color: rgba(16, 24, 40, 0.5); margin-top: 2px; }
+	.resP small.own { color: #0a6d61; }
+	.resAsk { margin-top: 10px; background: #efeae2; border-radius: 11px; padding: 10px 12px; font-size: 13px; line-height: 1.5; color: #111b21; }
+
+	.tCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 28px; }
+	.band:not(.soft) .tCard { background: #f6f8f8; border-color: transparent; }
+	.tIcon { width: 44px; height: 44px; border-radius: 13px; background: rgba(0, 174, 154, 0.14); color: #0a6d61; display: grid; place-items: center; margin-bottom: 18px; }
+	.tCard h3 { font-size: 19px; margin: 0 0 8px; }
+	.tCard p { color: rgba(16, 24, 40, 0.64); font-size: 15px; line-height: 1.6; margin: 0; }
+	.pair { margin-top: 18px; }
+	.soon { display: inline-block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #8a5a10; background: #fef3dc; border-radius: 999px; padding: 4px 10px; margin-bottom: 14px; }
+
+	.plans { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 18px; align-items: center; max-width: 1000px; margin: 0 auto; }
+	.plan { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 24px; padding: 30px 26px; text-align: left; }
+	.plan.featured { border: 2px solid #00ae9a; padding: 38px 30px; box-shadow: 0 30px 70px -30px rgba(0, 174, 154, 0.5); position: relative; }
+	.planBadge { position: absolute; top: -14px; left: 30px; background: #00ae9a; color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 0.04em; border-radius: 999px; padding: 5px 12px; }
+	.planWhen { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(16, 24, 40, 0.5); }
+	.featured .planWhen { color: #0a6d61; }
+	.planPrice { font-size: 44px; font-weight: 900; letter-spacing: -0.05em; line-height: 1.05; margin: 6px 0 10px; color: #0b1220; }
+	.planDesc { font-size: 15px; line-height: 1.55; color: rgba(16, 24, 40, 0.64); }
+	.planSoon { margin-top: 18px; background: rgba(0, 174, 154, 0.08); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #0b1220; font-weight: 600; }
+	.fine { text-align: center; max-width: 680px; margin: 30px auto 0; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.55); }
+
+	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 20px 0; }
+	.faq summary { cursor: pointer; list-style: none; font-weight: 800; font-size: 17px; display: flex; justify-content: space-between; gap: 20px; color: #0b1220; }
+	.faq summary::-webkit-details-marker { display: none; }
+	.faq summary::after { content: '+'; font-size: 22px; line-height: 1; color: #0a6d61; }
+	.faq details[open] summary::after { content: '-'; }
+	.faq p { margin: 12px 0 0; color: rgba(16, 24, 40, 0.66); font-size: 15.5px; line-height: 1.62; }
+
+	.final { background: radial-gradient(700px 360px at 50% 0%, rgba(0, 174, 154, 0.3), transparent 70%), #0b1220; }
+	.final h2 { font-size: clamp(36px, 5vw, 58px); }
+	.final h2 span { color: #5eead4; }
+	.final p { color: rgba(255, 255, 255, 0.7); font-size: 18px; line-height: 1.6; margin: 0 auto 28px; max-width: 600px; }
+	.final p a { color: #5eead4; }
+	.micro.light { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-top: 18px; }
+	.micro.light a { color: #5eead4; }
+
+	@media (max-width: 960px) {
+		.heroGrid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+		.grid3 { grid-template-columns: minmax(0, 1fr); }
+		.matchBox { grid-template-columns: minmax(0, 1fr); }
+		.plans { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
+		.plan.featured { order: -1; }
+	}
+	@media (max-width: 720px) {
+		.hero { padding-block: 36px 56px; }
+		.heroLead { font-size: 17px; }
+		.band { padding-block: 64px; }
+		.versus, .grid2 { grid-template-columns: minmax(0, 1fr); }
+		.ctaRow:not(.center) { flex-direction: column; align-items: stretch; }
+		.btnPrimary, .btnGhost { justify-content: center; }
+		.matchCopy, .matchVisual { padding: 28px 22px; }
+		.vCol li { grid-template-columns: 72px 1fr; font-size: 15px; }
+		.mTabs { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; }
+		.mTab { flex: none; }
+		.plan.featured { padding: 34px 22px 26px; }
+	}
+</style>

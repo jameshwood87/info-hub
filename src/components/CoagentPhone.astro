@@ -1,0 +1,412 @@
+---
+// An animated WhatsApp phone that plays real CoAgent exchanges, one scene at a
+// time. Every exchange is taken from what /coagent/ says CoAgent does today.
+// Without JavaScript, or with reduced motion, the first scene shows complete.
+interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+const es = lang === 'es';
+
+type Row = [string, string];
+type Msg = {
+	me?: boolean;
+	voice?: string;
+	sign?: boolean;
+	text?: string;
+	card?: { title: string; rows: Row[]; foot?: string };
+	time: string;
+};
+type Scene = { label: string; msgs: Msg[] };
+
+const yes = es ? 'SÍ' : 'YES';
+
+const scenes: Scene[] = es
+	? [
+			{
+				label: 'Después de la visita',
+				msgs: [
+					{ me: true, voice: '0:24', time: '18:41' },
+					{
+						card: {
+							title: 'Marta Ruiz · compradora',
+							rows: [
+								['Presupuesto', '<s>800.000 €</s> <b>850.000 €</b>'],
+								['Zonas', '+ Nueva Andalucía'],
+								['Dormitorios', '3'],
+								['Recordatorio', 'Enviarle el de Cerquilla, sábado'],
+							],
+							foot: '3 anuncios encajan ahora con ella',
+						},
+						time: '18:41',
+					},
+					{ text: `Responde <b>${yes}</b> para guardarlo. Todavía no se ha escrito nada.`, time: '18:41' },
+					{ me: true, text: yes, time: '18:42' },
+					{ text: 'Guardado. La nota está en la ficha de Marta y el sábado, en tu calendario.', time: '18:42' },
+				],
+			},
+			{
+				label: 'Pasando por un cartel',
+				msgs: [
+					{ me: true, sign: true, time: '11:05' },
+					{ text: `Del cartel: <b>6XX XXX XXX</b>. ¿Guardo al propietario como contacto, con una nota del cartel? Responde <b>${yes}</b>.`, time: '11:05' },
+					{ me: true, text: yes, time: '11:06' },
+					{ text: 'Guardado en tu CRM, listo para que le llames.', time: '11:06' },
+				],
+			},
+			{
+				label: 'En el coche',
+				msgs: [
+					{ me: true, text: '¿Dónde es mi próxima visita?', time: '09:52' },
+					{
+						card: {
+							title: '11:30 · Nueva Andalucía',
+							rows: [
+								['Cliente', 'Tom Berg'],
+								['Teléfono', '6XX XXX XXX'],
+								['Inmueble', 'PL5002'],
+							],
+						},
+						time: '09:52',
+					},
+					{ me: true, text: 'Ponme al día con los Berg', time: '09:53' },
+					{ text: '<b>Segunda visita hoy.</b> Buscan 4 dormitorios con vistas al mar, hasta 1,5 M €. Lo último: pidieron el plano de PL5002.', time: '09:53' },
+				],
+			},
+			{
+				label: 'Un inmueble de otra agencia',
+				msgs: [
+					{ me: true, text: '¿Sigue disponible PL22234?', time: '16:20' },
+					{ text: `PL22234 es de otra agencia. ¿Les pregunto? Responde <b>${yes}</b> y la consulta va por el MLS.`, time: '16:20' },
+					{ me: true, text: yes, time: '16:21' },
+					{ text: 'Enviada. Su respuesta te llegará a ti.', time: '16:21' },
+				],
+			},
+		]
+	: [
+			{
+				label: 'After the viewing',
+				msgs: [
+					{ me: true, voice: '0:24', time: '18:41' },
+					{
+						card: {
+							title: 'Marta Ruiz · buyer',
+							rows: [
+								['Budget', '<s>€800k</s> <b>€850k</b>'],
+								['Areas', '+ Nueva Andalucía'],
+								['Bedrooms', '3'],
+								['Reminder', 'Send the Cerquilla listing, Saturday'],
+							],
+							foot: '3 listings now match her',
+						},
+						time: '18:41',
+					},
+					{ text: `Reply <b>${yes}</b> to save it. Nothing is written yet.`, time: '18:41' },
+					{ me: true, text: yes, time: '18:42' },
+					{ text: "Saved. The note is on Marta's timeline and Saturday is in your calendar.", time: '18:42' },
+				],
+			},
+			{
+				label: 'Walking past a sign',
+				msgs: [
+					{ me: true, sign: true, time: '11:05' },
+					{ text: `From the sign: <b>6XX XXX XXX</b>. Save the owner as a contact, with a note of the sign? Reply <b>${yes}</b>.`, time: '11:05' },
+					{ me: true, text: yes, time: '11:06' },
+					{ text: 'Saved to your CRM, ready for you to call.', time: '11:06' },
+				],
+			},
+			{
+				label: 'In the car',
+				msgs: [
+					{ me: true, text: 'Where is my next viewing?', time: '09:52' },
+					{
+						card: {
+							title: '11:30 · Nueva Andalucía',
+							rows: [
+								['Client', 'Tom Berg'],
+								['Phone', '6XX XXX XXX'],
+								['Property', 'PL5002'],
+							],
+						},
+						time: '09:52',
+					},
+					{ me: true, text: 'Brief me on the Bergs', time: '09:53' },
+					{ text: '<b>Second viewing today.</b> Looking for 4 beds with a sea view, up to €1.5m. Last thing: they asked for the floor plan of PL5002.', time: '09:53' },
+				],
+			},
+			{
+				label: "Another agency's listing",
+				msgs: [
+					{ me: true, text: 'Is PL22234 still available?', time: '16:20' },
+					{ text: `PL22234 belongs to another agency. Want me to ask them? Reply <b>${yes}</b> and the enquiry goes through the MLS.`, time: '16:20' },
+					{ me: true, text: yes, time: '16:21' },
+					{ text: 'Sent. Their answer comes back to you.', time: '16:21' },
+				],
+			},
+		];
+
+const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 11, 7, 14, 10];
+---
+
+<div
+	class="cph"
+	data-cph
+	data-typing={es ? 'escribiendo...' : 'typing...'}
+	data-online={es ? 'en línea' : 'online'}
+	aria-label={es ? 'Conversaciones de ejemplo con CoAgent' : 'Example conversations with CoAgent'}
+>
+	<div class="cphTabs" role="tablist">
+		{scenes.map((s, i) => (
+			<button type="button" class={i === 0 ? 'cphTab on' : 'cphTab'} data-cph-tab={i} role="tab" id={`cph-${lang}-tab-${i}`} aria-controls={`cph-${lang}-scene-${i}`} aria-selected={i === 0 ? 'true' : 'false'}>
+				{s.label}
+			</button>
+		))}
+	</div>
+
+	<div class="cphGlow" aria-hidden="true"></div>
+	<div class="cphPhone">
+		<div class="cphScreen">
+			<div class="cphTop" aria-hidden="true">
+				<span class="cphBack">&#8249;</span>
+				<span class="cphAv">PL</span>
+				<span class="cphWho">
+					<b>PropertyList CoAgent</b>
+					<i data-cph-status>{es ? 'en línea' : 'online'}</i>
+				</span>
+			</div>
+
+			<div class="cphChat">
+				<div class="cphDay">{es ? 'Hoy' : 'Today'}</div>
+				{scenes.map((s, si) => (
+					<div class="cphScene" data-cph-scene={si} hidden={si !== 0} role="tabpanel" id={`cph-${lang}-scene-${si}`} aria-labelledby={`cph-${lang}-tab-${si}`}>
+						{s.msgs.map((m) => (
+							<div class={`cphMsg ${m.me ? 'me' : 'bot'} on`}>
+								<div class={`cphBub${m.sign ? ' photo' : ''}${m.card ? ' wide' : ''}`}>
+									{m.voice && (
+										<span class="cphVoice">
+											<span class="cphPlay">
+												<svg viewBox="0 0 12 12" width="11" height="11"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor" /></svg>
+											</span>
+											<span class="cphWave">
+												<span class="cphBars">{bars.map((h) => <i style={`height:${h}px`}></i>)}</span>
+												<span class="cphBars top">{bars.map((h) => <i style={`height:${h}px`}></i>)}</span>
+											</span>
+											<span class="cphDur">{m.voice}</span>
+										</span>
+									)}
+									{m.sign && (
+										<span class="cphSign">
+											<span class="cphBoard">
+												<b>SE VENDE</b>
+												<em>6XX XXX XXX</em>
+											</span>
+										</span>
+									)}
+									{m.card && (
+										<span class="cphCard">
+											<b class="cphCardT">{m.card.title}</b>
+											{m.card.rows.map(([k, v]) => (
+												<span class="cphRow">
+													<span>{k}</span>
+													<span set:html={v} />
+												</span>
+											))}
+											{m.card.foot && <span class="cphFoot">{m.card.foot}</span>}
+										</span>
+									)}
+									{m.text && <span class="cphText" set:html={m.text} />}
+									<span class="cphTime">
+										{m.time}
+										{m.me && <span class="cphTicks">&#10003;&#10003;</span>}
+									</span>
+								</div>
+							</div>
+						))}
+					</div>
+				))}
+				<div class="cphMsg bot cphTyping" aria-hidden="true">
+					<div class="cphBub"><span class="cphDots"><i></i><i></i><i></i></span></div>
+				</div>
+			</div>
+
+			<div class="cphBar" aria-hidden="true">
+				<span class="cphInput">{es ? 'Mensaje' : 'Message'}</span>
+				<span class="cphMic">
+					<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z" /></svg>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	document.querySelectorAll<HTMLElement>('[data-cph]').forEach((root) => {
+		const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-cph-tab]'));
+		const scenes = Array.from(root.querySelectorAll<HTMLElement>('[data-cph-scene]'));
+		const typing = root.querySelector<HTMLElement>('.cphTyping');
+		const status = root.querySelector<HTMLElement>('[data-cph-status]');
+		const online = root.dataset.online || 'online';
+		const typingLabel = root.dataset.typing || 'typing...';
+		let visible = false;
+		let started = false;
+		let run = 0;
+
+		const select = (i: number) => {
+			tabs.forEach((t, j) => {
+				t.classList.toggle('on', i === j);
+				t.setAttribute('aria-selected', i === j ? 'true' : 'false');
+			});
+			scenes.forEach((s, j) => (s.hidden = i !== j));
+		};
+
+		if (reduce) {
+			tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));
+			return;
+		}
+
+		// Waits only count down while the phone is on screen and the tab is visible,
+		// so a visitor who scrolls back up finds the conversation where they left it.
+		const wait = (ms: number, id: number) =>
+			new Promise<boolean>((resolve) => {
+				let left = ms;
+				const tick = () => {
+					if (id !== run) return resolve(false);
+					if (visible && !document.hidden) left -= 100;
+					if (left <= 0) resolve(true);
+					else setTimeout(tick, 100);
+				};
+				setTimeout(tick, 100);
+			});
+
+		const play = async (i: number) => {
+			const id = ++run;
+			select(i);
+			const msgs = Array.from(scenes[i].querySelectorAll<HTMLElement>('.cphMsg'));
+			msgs.forEach((m) => m.classList.remove('on', 'playing'));
+			if (!(await wait(500, id))) return;
+
+			for (const m of msgs) {
+				const bot = m.classList.contains('bot');
+				if (bot && typing) {
+					typing.classList.add('on');
+					if (status) status.textContent = typingLabel;
+					if (!(await wait(m.querySelector('.cphCard') ? 1500 : 1100, id))) return;
+					typing.classList.remove('on');
+					if (status) status.textContent = online;
+				}
+				m.classList.add('on');
+				if (m.querySelector('.cphVoice')) m.classList.add('playing');
+				const hold = m.querySelector('.cphVoice') ? 2600 : m.querySelector('.cphCard') ? 2600 : bot ? 1900 : 900;
+				if (!(await wait(hold, id))) return;
+			}
+			if (!(await wait(3600, id))) return;
+			play((i + 1) % scenes.length);
+		};
+
+		tabs.forEach((t, i) =>
+			t.addEventListener('click', () => {
+				if (typing) typing.classList.remove('on');
+				if (status) status.textContent = online;
+				play(i);
+			}),
+		);
+
+		const io = new IntersectionObserver(
+			(entries) => {
+				visible = entries.some((e) => e.isIntersecting);
+				if (visible && !started) {
+					started = true;
+					play(0);
+				}
+			},
+			{ threshold: 0.25 },
+		);
+		io.observe(root);
+	});
+</script>
+
+<style>
+	.cph { position: relative; width: 100%; max-width: 360px; margin: 0 auto; }
+	.cphTabs { position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 0 16px; }
+	.cphTab { font: inherit; font-size: 12px; font-weight: 800; color: #0a6d61; background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 174, 154, 0.3); border-radius: 999px; padding: 6px 11px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+	.cphTab:hover { background: rgba(0, 174, 154, 0.1); }
+	.cphTab.on { background: #0a6d61; border-color: #0a6d61; color: #fff; }
+	.cphGlow { position: absolute; inset: 14% -18% 0; background: radial-gradient(circle, rgba(0, 174, 154, 0.28), transparent 64%); filter: blur(24px); z-index: 0; }
+
+	.cphPhone { position: relative; z-index: 1; width: 320px; max-width: 100%; margin: 0 auto; background: #0b1220; border-radius: 44px; padding: 10px; box-shadow: 0 40px 90px -30px rgba(11, 18, 32, 0.55), inset 0 0 0 2px #1f2937; }
+	.cphScreen { position: relative; height: 600px; border-radius: 35px; overflow: hidden; display: flex; flex-direction: column; background-color: #efeae2; background-image: radial-gradient(rgba(11, 18, 32, 0.045) 1px, transparent 1px); background-size: 14px 14px; }
+
+	.cphTop { display: flex; align-items: center; gap: 9px; background: #075e54; color: #fff; padding: 30px 14px 11px; flex: none; }
+	.cphBack { font-size: 26px; line-height: 1; opacity: 0.9; margin-right: -2px; }
+	.cphAv { width: 36px; height: 36px; border-radius: 50%; background: #00ae9a; display: grid; place-items: center; font-weight: 900; font-size: 13px; flex: none; }
+	.cphWho b { display: block; font-size: 14px; font-weight: 700; line-height: 1.2; }
+	.cphWho i { display: block; font-style: normal; font-size: 11.5px; opacity: 0.82; }
+
+	.cphChat { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 10px 10px 8px; }
+	.cphDay { align-self: center; background: #fff; color: rgba(11, 18, 32, 0.55); font-size: 10.5px; font-weight: 700; border-radius: 7px; padding: 3px 9px; margin-bottom: 4px; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.1); }
+	.cphScene { display: flex; flex-direction: column; gap: 6px; }
+	.cphScene[hidden] { display: none; }
+
+	.cphMsg { display: none; }
+	.cphMsg.on { display: flex; animation: cphIn 0.34s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+	.cphMsg.me { justify-content: flex-end; }
+	@keyframes cphIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+	.cphBub { position: relative; max-width: 84%; background: #fff; color: #111b21; border-radius: 9px; border-top-left-radius: 2px; padding: 6px 8px 5px; font-size: 13px; line-height: 1.42; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.13); }
+	.me .cphBub { background: #d9fdd3; border-top-left-radius: 9px; border-top-right-radius: 2px; }
+	.cphBub.wide { width: 84%; }
+	.cphBub.photo { padding: 3px 3px 5px; }
+	.cphText :global(b) { font-weight: 700; }
+	.cphTime { display: block; text-align: right; font-size: 10px; color: rgba(17, 27, 33, 0.5); margin-top: 1px; line-height: 1.2; }
+	.cphTicks { color: #53bdeb; margin-left: 3px; letter-spacing: -3px; font-size: 10px; }
+
+	.cphVoice { display: flex; align-items: center; gap: 8px; padding: 3px 2px 0; }
+	.cphPlay { width: 30px; height: 30px; border-radius: 50%; background: #00a884; color: #fff; display: grid; place-items: center; flex: none; padding-left: 2px; }
+	.cphWave { position: relative; width: 118px; height: 20px; flex: none; }
+	.cphBars { position: absolute; inset: 0; display: flex; align-items: center; gap: 2px; width: 118px; }
+	.cphBars i { display: block; width: 3.4px; border-radius: 2px; background: rgba(17, 27, 33, 0.28); flex: none; }
+	.cphBars.top { width: 0; overflow: hidden; }
+	.cphBars.top i { background: #00a884; }
+	.playing .cphBars.top { animation: cphPlayed 2.4s linear forwards; }
+	@keyframes cphPlayed { to { width: 118px; } }
+	.cphDur { font-size: 11px; color: rgba(17, 27, 33, 0.55); }
+
+	.cphSign { display: block; width: 190px; height: 128px; border-radius: 7px; overflow: hidden; position: relative; background: linear-gradient(160deg, #e9dcc6 0%, #d8c4a4 55%, #b99c78 100%); }
+	.cphSign::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: linear-gradient(180deg, #9c8a73, #7d6c58); }
+	.cphBoard { position: absolute; left: 50%; top: 16px; transform: translateX(-50%) rotate(-3deg); width: 136px; background: #fff; border-radius: 3px; box-shadow: 0 6px 14px rgba(11, 18, 32, 0.28); overflow: hidden; text-align: center; }
+	.cphBoard b { display: block; background: #d92d20; color: #fff; font-size: 17px; font-weight: 900; letter-spacing: 0.04em; padding: 5px 0 4px; }
+	.cphBoard em { display: block; font-style: normal; font-size: 15px; font-weight: 900; color: #111b21; padding: 9px 0 10px; letter-spacing: 0.02em; }
+
+	.cphCard { display: block; background: #f5f7f6; border: 1px solid rgba(11, 18, 32, 0.08); border-radius: 8px; padding: 8px 9px; margin-bottom: 2px; }
+	.cphCardT { display: block; font-size: 12.5px; font-weight: 800; margin-bottom: 4px; color: #111b21; }
+	.cphRow { display: flex; justify-content: space-between; gap: 10px; font-size: 11.5px; padding: 2.5px 0; border-top: 1px solid rgba(11, 18, 32, 0.06); }
+	.cphRow span:first-child { color: rgba(17, 27, 33, 0.55); flex: none; }
+	.cphRow span:last-child { text-align: right; color: #111b21; }
+	.cphRow :global(s) { color: rgba(17, 27, 33, 0.4); }
+	.cphRow :global(b) { color: #0a6d61; }
+	.cphFoot { display: block; margin-top: 6px; background: rgba(0, 174, 154, 0.13); color: #0a6d61; border-radius: 6px; padding: 5px 7px; font-size: 11.5px; font-weight: 800; text-align: center; }
+
+	.cphTyping { display: none; }
+	.cphTyping.on { display: flex; }
+	.cphDots { display: inline-flex; gap: 4px; padding: 5px 4px; }
+	.cphDots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(17, 27, 33, 0.35); animation: cphDot 1.1s infinite ease-in-out; }
+	.cphDots i:nth-child(2) { animation-delay: 0.15s; }
+	.cphDots i:nth-child(3) { animation-delay: 0.3s; }
+	@keyframes cphDot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.45; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+	.cphBar { flex: none; display: flex; align-items: center; gap: 7px; padding: 7px 8px 14px; }
+	.cphInput { flex: 1; background: #fff; border-radius: 999px; padding: 9px 14px; font-size: 13px; color: rgba(17, 27, 33, 0.4); box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.1); }
+	.cphMic { width: 40px; height: 40px; border-radius: 50%; background: #00a884; color: #fff; display: grid; place-items: center; flex: none; }
+
+	@media (max-width: 420px) {
+		.cphScreen { height: 560px; }
+		.cphTab { font-size: 11.5px; padding: 5px 9px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.cphMsg.on { animation: none; }
+		.cphBars.top { width: 118px; }
+		.cphDots i { animation: none; }
+	}
+</style>

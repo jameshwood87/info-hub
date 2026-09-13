@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AgentInterestCta from '../components/AgentInterestCta.astro';
+import CoagentPhone from '../components/CoagentPhone.astro';
+import { getPortalStats, statPlus } from '../lib/portalStats';
+import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../data/coagent';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/coagent/`;
@@ -8,30 +11,70 @@ const title = 'PropertyList CoAgent - the CRM you talk to on WhatsApp | Property
 const description =
 	'Send a voice note after a viewing and CoAgent writes up the CRM for you to approve. Ask it for properties, a client brief, your next viewing or what a home is worth, or send photos to start a listing, in the WhatsApp you already use. Audio is never stored and nothing is saved until you reply YES.';
 
-const asks = [
-	{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
-	{ q: 'Where is my next viewing?', a: 'Your diary, leading with the address and the client’s phone number, because you are reading it in the car.' },
-	{ q: 'What have I got tomorrow?', a: 'The whole day, in order, with the property and who you are meeting.' },
-	{ q: 'Tell me about PL22234', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
-	{ q: 'What is Marta Ruiz’s number?', a: 'Her phone and email first, so your thumb is already on the call button.' },
-	{ q: 'Brief me on the Bergs', a: 'Where they are up to, what they are looking for, and the last thing that happened, before you dial.' },
-	{ q: 'What is Nueva Andalucía worth?', a: 'The middle asking price and the range across what is actually on the market there. If we do not hold enough stock in an area, it says so rather than guessing.' },
-	{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
-	{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
-	{ q: 'Add Maria Lopez 6XX XXX XXX maria@example.com', a: 'Or share her contact card straight from your phone. CoAgent reads the name, number and email back and adds her to your CRM when you reply YES. If she is already there, it links her record instead of making a duplicate.' },
-	{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, then tell CoAgent about the property, typed or as a voice note. It asks for anything missing, like the price, reads the listing back, and on YES writes the title, description and features. Reply PUBLISH and it goes to review, as it would from the CRM. Nothing goes live without that.' },
-	{ photo: true, q: 'A photo of a Se Vende sign', a: 'CoAgent reads the phone number off the sign, with any name or price on it. Reply YES and the owner is saved as a contact in your CRM with a note of the sign, ready for you to call.' },
-	{ photo: true, q: 'A photo of a client’s ID', a: 'Only the name, surnames and date of birth are read, and added as a new contact when you reply YES. The document number is never kept, and neither is the photo.' },
-	{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
-	{ q: 'What is PL22234 worth?', a: 'A value from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
-	{ q: 'REPORT', a: 'After a valuation, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
-	{ q: 'How many apartments are for sale in San Pedro?', a: 'The real number on the market there, the best matches, and a link to the full list in your CRM.' },
-	{ q: 'BROCHURE PL22234', a: 'A brochure of the listing with your own branding: a page your client can open, with today’s price and a way to enquire, plus the PDF. It tells you the price in credits first, and a brochure you already made is sent again for free.' },
-	{ photo: true, q: 'A photo of a tired room, with "renovate"', a: 'Mid-viewing, send the kitchen as it is and get it back renovated a minute later, to show your buyer what it could be. It costs the same credits as in the CRM, and only a render that comes out well is charged.' },
-	{ q: 'Marta has made an offer', a: 'CoAgent moves her card to the right stage on your pipeline when you reply YES, the same as dragging it in the CRM. Marking a client won or lost stays in the CRM, where it asks for the details.' },
-	{ q: 'What are my latest leads?', a: 'Your five newest, with who enquired, about which listing and when: your own, or the whole agency’s if you are an admin, as in the CRM. Reply REPLY to answer the newest by email.' },
-	{ q: 'REPLY', a: 'CoAgent writes an email to your latest lead in their own language, from what they asked. Reply YES and it goes out from you through the CRM, and their answer comes back to your email. Or just answer the new-lead alert.' },
-	{ q: 'Let’s list a property', a: 'CoAgent tells you what to send: the photos, then the price, where it is and the bedrooms, in your own words. No commands to learn.' },
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plListings = statPlus(__ps.listings, 'en');
+
+const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
+const WA = coagentWaLink();
+
+// Every exchange CoAgent handles today, grouped by the moment of the day an agent
+// needs it. The wording of each answer is the verified description of what shipped.
+const moments = [
+	{
+		key: 'car',
+		label: 'In the car',
+		asks: [
+			{ q: 'Where is my next viewing?', a: 'Your diary, leading with the address and the client’s phone number, because you are reading it in the car.' },
+			{ q: 'What have I got tomorrow?', a: 'The whole day, in order, with the property and who you are meeting.' },
+			{ q: 'What is Marta Ruiz’s number?', a: 'Her phone and email first, so your thumb is already on the call button.' },
+			{ q: 'Brief me on the Bergs', a: 'Where they are up to, what they are looking for, and the last thing that happened, before you dial.' },
+		],
+	},
+	{
+		key: 'client',
+		label: 'With a client',
+		asks: [
+			{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
+			{ q: 'Tell me about PL22234', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
+			{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
+			{ photo: true, q: 'A photo of a tired room, with "renovate"', a: 'Mid-viewing, send the kitchen as it is and get it back renovated a minute later, to show your buyer what it could be. It costs the same credits as in the CRM, and only a render that comes out well is charged.' },
+			{ q: 'How many apartments are for sale in San Pedro?', a: 'The real number on the market there, the best matches, and a link to the full list in your CRM.' },
+			{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
+		],
+	},
+	{
+		key: 'after',
+		label: 'After the viewing',
+		asks: [
+			{ q: 'Add a note to Marta: she wants to see it again Saturday', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
+			{ q: 'Marta has made an offer', a: 'CoAgent moves her card to the right stage on your pipeline when you reply YES, the same as dragging it in the CRM. Marking a client won or lost stays in the CRM, where it asks for the details.' },
+			{ q: 'Add Maria Lopez 6XX XXX XXX maria@example.com', a: 'Or share her contact card straight from your phone. CoAgent reads the name, number and email back and adds her to your CRM when you reply YES. If she is already there, it links her record instead of making a duplicate.' },
+			{ photo: true, q: 'A photo of a client’s ID', a: 'Only the name, surnames and date of birth are read, and added as a new contact when you reply YES. The document number is never kept, and neither is the photo.' },
+		],
+	},
+	{
+		key: 'listings',
+		label: 'Winning listings',
+		asks: [
+			{ q: 'Let’s list a property', a: 'CoAgent tells you what to send: the photos, then the price, where it is and the bedrooms, in your own words. No commands to learn.' },
+			{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, then tell CoAgent about the property, typed or as a voice note. It asks for anything missing, like the price, reads the listing back, and on YES writes the title, description and features. Reply PUBLISH and it goes to review, as it would from the CRM. Nothing goes live without that.' },
+			{ photo: true, q: 'A photo of a Se Vende sign', a: 'CoAgent reads the phone number off the sign, with any name or price on it. Reply YES and the owner is saved as a contact in your CRM with a note of the sign, ready for you to call.' },
+			{ q: 'What is Nueva Andalucía worth?', a: 'The middle asking price and the range across what is actually on the market there. If we do not hold enough stock in an area, it says so rather than guessing.' },
+			{ q: 'What is PL22234 worth?', a: 'A value from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
+			{ q: 'REPORT', a: 'After a valuation, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
+			{ q: 'BROCHURE PL22234', a: 'A brochure of the listing with your own branding: a page your client can open, with today’s price and a way to enquire, plus the PDF. It tells you the price in credits first, and a brochure you already made is sent again for free.' },
+		],
+	},
+	{
+		key: 'leads',
+		label: 'New leads',
+		asks: [
+			{ q: 'What are my latest leads?', a: 'Your five newest, with who enquired, about which listing and when: your own, or the whole agency’s if you are an admin, as in the CRM. Reply REPLY to answer the newest by email.' },
+			{ q: 'REPLY', a: 'CoAgent writes an email to your latest lead in their own language, from what they asked. Reply YES and it goes out from you through the CRM, and their answer comes back to your email. Or just answer the new-lead alert.' },
+		],
+	},
 ];
 
 const trust = [
@@ -46,12 +89,6 @@ const soon = [
 	{ name: 'The brief on your caller screen', desc: 'Today you can ask for a client brief any time. Having it appear by itself as the phone rings needs work inside the mobile app, and that is the next piece we build.' },
 ];
 
-const plans = [
-	{ name: 'September: free for everyone', desc: 'Every agent, every message, no limit, while we launch.' },
-	{ name: 'The first 10 agents: free until 1 January', desc: 'The first ten agents to message CoAgent keep it free and unlimited for three more months, until 1 January.' },
-	{ name: 'From October: 5 a day free, or unlimited', desc: 'Every agent gets 5 free messages a day, and approving with YES never counts. For more, unlimited CoAgent is 50 credits a month per agent, turned on from the Billing page or by replying SUBSCRIBE.' },
-];
-
 const faqs = [
 	{ q: 'What do I have to install?', a: 'Nothing. CoAgent works in WhatsApp, which you already use all day. Save the PropertyList number, make sure your mobile is on your CRM profile so it knows you are an agent rather than a client, and send it a voice note.' },
 	{ q: 'Will it change my CRM automatically?', a: 'No. CoAgent proposes and waits. It shows you the client it matched and the changes it wants to make, field by field, and nothing is written until you reply YES. If it mishears, it costs you one word, not a wrong budget sitting quietly in a shared record.' },
@@ -61,7 +98,7 @@ const faqs = [
 	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
 	{ q: 'What if CoAgent does not know my number?', a: 'It replies, in Spanish and English, with a link to create your free account and a link to the Staff page of your CRM, where you add your mobile to your profile. Put the country code in front if your number is not Spanish, then write to it again.' },
 	{ q: 'What costs credits?', a: 'Messages are covered by your plan. A brochure, the market report after your first free one, and a renovated room are paid in PropertyList credits, at the same price as in the CRM. CoAgent always tells you the price and waits for your YES before it spends anything, and a brochure or render that fails is never charged.' },
-	{ q: 'What does it cost?', a: 'CoAgent is free for everyone in September. The first 10 agents to message it keep it free and unlimited until 1 January. From October every agent gets 5 free messages a day, and approving with YES never counts toward them; unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. The MLS and the CRM core stay free, and creating your account costs nothing.' },
+	{ q: 'What does it cost?', a: 'The first 10 agents to message CoAgent get a month free and unlimited, counted from their first message. Every agent gets 5 free messages a day, and approving with YES never counts toward them. Unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. If you have more than 3 agents to add, talk to us about a package. The MLS and the CRM core stay free, and creating your account costs nothing.' },
 ];
 
 const faqLd = {
@@ -83,8 +120,6 @@ const softwareLd = {
 	description: 'An assistant for estate agents that works over WhatsApp: voice notes become CRM updates the agent approves, and questions about clients, listings, the diary and area prices are answered from the agency CRM and the shared MLS. Audio is never stored.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
-
-const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 ---
 
 <Layout
@@ -93,6 +128,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 	description={description}
 	canonical={canonical}
 	hideSearch
+	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: canonical },
 		{ hreflang: 'es', href: `${origin}/es/coagent/` },
@@ -104,338 +140,517 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareLd)} />
 
 	<section class="hero">
-		<div class="heroInner heroGrid">
-			<div>
-				<div class="kicker">CoAgent</div>
-				<h1>Talk to your CRM the way you talk to a colleague.</h1>
-				<p class="heroSub">Walk out of the viewing. Send a voice note. The write-up is waiting for you to approve.</p>
-				<div class="whatIs">
-					<div class="whatIsTitle">How it goes</div>
+		<div class="cx heroGrid">
+			<div class="heroCopy">
+				<div class="eyebrow"><span class="dot"></span> CoAgent &middot; your CRM on WhatsApp</div>
+				<h1>Stop typing up your CRM.<br /><span>Just talk to it.</span></h1>
+				<p class="heroLead">
+					<strong>CoAgent lives in the WhatsApp you already use.</strong> Walk out of a viewing, send a voice note the way you
+					would to a colleague, and the write-up is waiting for you: the note, the new requirement, the follow-up you promised
+					and the listings that now match. Nothing is saved until you reply YES.
+				</p>
+				<div class="ctaRow">
+					{WA ? (
+						<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Message CoAgent on WhatsApp</a>
+					) : (
+						<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+					)}
+					<a class="btnGhost" href="#how">See how it works</a>
+				</div>
+				<p class="micro">5 free messages a day &middot; Nothing to install &middot; Audio never stored</p>
+				{WA ? (
+					<p class="member">
+						Already on PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a>
+						so CoAgent knows it is you.
+					</p>
+				) : (
+					<p class="member">
+						<b>The CoAgent number is available from 9am on Tuesday 15 September.</b> Before you message it, make sure you are
+						<a href={SIGNUP} target="_blank" rel="noopener">signed up</a> and your
+						<a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number is added to your user</a>.
+					</p>
+				)}
+			</div>
+			<CoagentPhone lang="en" />
+		</div>
+	</section>
+
+	<div class="strip">
+		<div class="cx stripInner">
+			<span>Behind it: <b>{plAgencies}</b> agencies</span>
+			<span><b>{plAgents}</b> agents</span>
+			<span><b>{plListings}</b> live listings</span>
+			<span>Replies in <b>7</b> languages</span>
+		</div>
+	</div>
+
+	<section class="band dark">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">The hour nobody bills for</div>
+				<h2>Every “I will write it up later” is a promise at risk.</h2>
+				<p>
+					Nobody forgets on purpose. You take the call in the car, promise to send a listing, and by the time you reach a desk
+					there are nine other things. The day moves faster than the admin, and a CRM only pays you back if it is current.
+				</p>
+			</div>
+			<div class="versus">
+				<div class="vCol without">
+					<div class="vHead">Tonight, the usual way</div>
 					<ol>
-						<li>You finish a call or a viewing and send a voice note, in the WhatsApp you already use.</li>
-						<li>CoAgent works out what changed, and shows you before it touches anything.</li>
-						<li>You reply YES. The requirement, the note and the reminders are in the CRM.</li>
-						<li>While you are there, ask it for properties, a phone number or your next appointment.</li>
+						<li><b>18:40</b><span>Last viewing ends. Three things you promised, all in your head.</span></li>
+						<li><b>19:15</b><span>Two calls on the drive home. One more promise.</span></li>
+						<li><b>21:30</b><span>Laptop open, writing up the day from memory.</span></li>
+						<li><b>Thursday</b><span>“Did you ever send me that listing?”</span></li>
 					</ol>
 				</div>
-				<p class="lead">
-					The admin that eats your evenings writes itself. The promise you made last Tuesday becomes a reminder. And when a
-					client is standing next to you asking what is available in Marbella at two million, you ask out loud and the
-					answer comes back into the thread.
-				</p>
-				<div class="winRow" aria-label="What CoAgent gives back">
-					<div class="win"><b>Evenings back</b><span>The after-viewing write-up does itself.</span></div>
-					<div class="win"><b>Promises kept</b><span>What you said you would do becomes a reminder.</span></div>
-					<div class="win"><b>Answers in the car</b><span>Diary, listings and numbers without opening a laptop.</span></div>
+				<div class="vCol with">
+					<div class="vHead">Tonight, with CoAgent</div>
+					<ol>
+						<li><b>18:41</b><span>A voice note from the car park.</span></li>
+						<li><b>18:42</b><span>Read what it heard. Reply YES.</span></li>
+						<li><b>18:43</b><span>Note filed, requirement updated, Saturday reminder set.</span></li>
+						<li><b>21:30</b><span>You are not at the laptop.</span></li>
+					</ol>
 				</div>
-				<div class="ctaRow">
-					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
-					<a class="btnSecondary" href="#ask">See what you can ask it</a>
-				</div>
-				<div class="note">Live for PropertyList agents. Nothing to install.</div>
 			</div>
+			<p class="punch">Your memory is excellent. Until Thursday.</p>
+		</div>
+	</section>
 
-			<div class="bfWrap" aria-hidden="true">
-				<div class="bfTag">After the viewing</div>
-				<div class="bfCard">
-					<div class="bfHead">
-						<span class="bfAvatar">MR</span>
-						<span>
-							<b>Marta Ruiz</b>
-							<i>Buyer &middot; matched from your note</i>
+	<section class="band soft" id="how">
+		<div class="cx">
+			<div class="head">
+				<div class="label">How it works</div>
+				<h2>You talk. CoAgent does the typing.</h2>
+				<p>No forms, no commands to learn, and nothing changes behind your back.</p>
+			</div>
+			<div class="grid3">
+				<div class="demo">
+					<span class="num">1</span>
+					<h3>Send the voice note</h3>
+					<p>Straight after the viewing, exactly as you would tell a colleague.</p>
+					<div class="mini">
+						<div class="mb me">“Just saw the Nueva Andalucía apartment with Marta. She is open to three beds now, up to eight fifty, and I said I would send her the Cerquilla one on Saturday.”</div>
+					</div>
+				</div>
+				<div class="demo">
+					<span class="num">2</span>
+					<h3>Read what it heard</h3>
+					<p>The client it matched, the changes it proposes, the reminder it will set and the listings that now match.</p>
+					<div class="mini">
+						<div class="mb">
+							<b>Marta Ruiz · buyer</b>
+							<span class="kv"><i>Budget</i><em>€800k to €850k</em></span>
+							<span class="kv"><i>Bedrooms</i><em>3</em></span>
+							<span class="kv"><i>Reminder</i><em>Cerquilla listing, Saturday</em></span>
+						</div>
+					</div>
+				</div>
+				<div class="demo">
+					<span class="num">3</span>
+					<h3>Reply YES</h3>
+					<p>Only then does anything move. Say nothing and nothing happens.</p>
+					<div class="mini">
+						<div class="mb">Reply <b>YES</b> to save it. Nothing is written yet.</div>
+						<div class="mb me short">YES</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="ask">
+		<div class="cx">
+			<div class="head">
+				<div class="label">Everything else you can ask it</div>
+				<h2>Your whole working day, in one chat.</h2>
+				<p>By voice or by typing, in your own words. When a question is outside what it holds, it tells you so instead of guessing.</p>
+			</div>
+			<div class="mTabs" role="tablist" data-mtabs>
+				{moments.map((m, i) => (
+					<button type="button" class={i === 0 ? 'mTab on' : 'mTab'} role="tab" data-mtab={m.key} aria-selected={i === 0 ? 'true' : 'false'}>
+						{m.label} <small>{m.asks.length}</small>
+					</button>
+				))}
+			</div>
+			{moments.map((m) => (
+				<div class="mPanel" data-mpanel={m.key}>
+					<h3 class="mTitle">{m.label}</h3>
+					<div class="grid2">
+						{m.asks.map((item) => (
+							<div class="ex">
+								<div class="exQ">
+									{item.photo && <span class="tag">Photo</span>}
+									{item.photo ? item.q : `“${item.q}”`}
+								</div>
+								<div class="exA">{item.a}</div>
+							</div>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="band soft" id="matching">
+		<div class="cx">
+			<div class="matchBox">
+				<div class="matchCopy">
+					<div class="label">Built on the shared MLS</div>
+					<h2>Don’t just remember the client. Find their next home.</h2>
+					<p>
+						Behind CoAgent sits the MLS that {plAgencies} agencies share. Ask for three beds in Nueva Andalucía and it searches
+						all of that stock, not only yours. When the right home belongs to another agency, it offers to ask them for you.
+					</p>
+					<ul class="checks">
+						<li>Searches the shared MLS, not only your own listings</li>
+						<li>Ranks “which is the best value?” on price per m² against comparable homes nearby</li>
+						<li>Values from notary-recorded sales, with a link to the public proof</li>
+						<li>Enquiries to other agencies go through the MLS, into their normal workflow</li>
+					</ul>
+				</div>
+				<div class="matchVisual" aria-hidden="true">
+					<div class="resCard">
+						<div class="resHead">
+							<span>From the shared MLS</span>
+							<em>3 beds &middot; Nueva Andalucía &middot; up to €850k</em>
+						</div>
+						<div class="res">
+							<span class="resPh a"></span>
+							<span class="resTxt"><b>PL5001 &middot; Apartment</b><i>3 beds &middot; 2 baths &middot; Nueva Andalucía</i></span>
+							<span class="resP">€845,000<small class="own">Your listing</small></span>
+						</div>
+						<div class="res">
+							<span class="resPh b"></span>
+							<span class="resTxt"><b>PL5002 &middot; Penthouse</b><i>3 beds &middot; 2 baths &middot; Nueva Andalucía</i></span>
+							<span class="resP">€830,000<small>Another agency</small></span>
+						</div>
+						<div class="res">
+							<span class="resPh c"></span>
+							<span class="resTxt"><b>PL5003 &middot; Townhouse</b><i>3 beds &middot; 3 baths &middot; Aloha</i></span>
+							<span class="resP">€799,000<small>Another agency</small></span>
+						</div>
+						<div class="resAsk">PL5002 belongs to another agency. Reply <b>YES</b> and I will ask if it is still available.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">What is kept and what is not</div>
+				<h2>An assistant that hears your day has to earn its place.</h2>
+				<p>These are design decisions, not settings you have to find.</p>
+			</div>
+			<div class="grid3">
+				{trust.map((t) => (
+					<div class="tCard">
+						<span class="tIcon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.8-4.8 1.4 1.4-6.2 6.2z" /></svg>
 						</span>
-						<span class="bfRing"></span>
-					</div>
-					<div class="bfReq">Budget &euro;800k &rarr; <b>&euro;850k</b> &middot; + Nueva Andaluc&iacute;a &middot; 3 beds</div>
-					<div class="bfMeta">Reminder: send the Cerquilla listing &middot; Saturday</div>
-					<div class="bfWarn">Reply YES to save it all. Nothing is written yet.</div>
-					<div class="bfFoot">Transcribed, then the audio is discarded</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="section" id="how">
-		<div class="sectionHead">
-			<h2>The bit nobody does: writing it up</h2>
-			<p>Everyone knows a CRM only pays you back if it is current, and everyone knows what actually happens between viewings. CoAgent takes the note where you already are, in the format you already use, and does the typing.</p>
-		</div>
-		<div class="grid3 steps">
-			<div class="card step">
-				<div class="stepTime">Step 1</div>
-				<h3>Send the voice note</h3>
-				<p>"Just saw the Nueva Andaluc&iacute;a apartment with Marta. She is open to three beds now, up to eight fifty, and I said I would send her the Cerquilla one on Saturday."</p>
-			</div>
-			<div class="card step">
-				<div class="stepTime">Step 2</div>
-				<h3>Read what it heard</h3>
-				<p>Back comes the client it matched, the changes it proposes to her requirements, the reminder it will set for Saturday, and the listings that now match her.</p>
-			</div>
-			<div class="card step">
-				<div class="stepTime">Step 3</div>
-				<h3>Reply YES</h3>
-				<p>Only then does anything move. The requirement is updated, the note lands on her timeline, Saturday is on your calendar. Say nothing and nothing happens.</p>
-			</div>
-		</div>
-	</section>
-
-	<section class="section" id="ask">
-		<div class="sectionHead">
-			<h2>Everything else you can ask it</h2>
-			<p>By voice or by typing, in your own words. CoAgent works out what you meant rather than making you learn commands, and when a question is outside what it holds it tells you so.</p>
-		</div>
-		<div class="grid2">
-			{
-				asks.map((item) => (
-					<div class="card">
-						{item.photo && <div class="stepTime">Send a photo</div>}
-						<h3>{item.photo ? item.q : `“${item.q}”`}</h3>
-						<p>{item.a}</p>
-					</div>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Your privacy: what is kept and what is not</h2>
-			<p>An assistant that hears your conversations has to earn its place. These are design decisions, not settings you have to find.</p>
-		</div>
-		<div class="grid3">
-			{
-				trust.map((t) => (
-					<div class="card accent">
 						<h3>{t.name}</h3>
 						<p>{t.desc}</p>
 					</div>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="grid2">
-			<div class="card accent">
-				<h2>It speaks this coast</h2>
-				<p>
-					Clients here switch between English and Spanish mid-sentence, and so do agents. CoAgent understands a note that
-					changes language halfway through, and replies in yours: English, Spanish, German, French, Portuguese, Bulgarian or
-					Greek. The names, the budgets and the areas still land in the right fields.
-				</p>
+				))}
 			</div>
-			<div class="card">
-				<h2>No new app to learn</h2>
-				<p>
-					CoAgent is not another app to adopt. It lives in WhatsApp, and behind it sits the platform where 1,300+ agents and
-					970+ agencies already work, matching against 4,400+ shared listings the moment a client tells you what they want.
-				</p>
+			<div class="grid2 pair">
+				<div class="tCard flat">
+					<h3>It speaks this coast</h3>
+					<p>Clients here switch between English and Spanish mid-sentence, and so do agents. CoAgent understands a note that changes language halfway through and replies in yours: English, Spanish, German, French, Portuguese, Bulgarian or Greek. The names, the budgets and the areas still land in the right fields.</p>
+				</div>
+				<div class="tCard flat">
+					<h3>No new app to learn</h3>
+					<p>It lives in WhatsApp, and behind it sits the platform where {plAgents} agents and {plAgencies} agencies already work, matching against {plListings} live listings the moment a client tells you what they want.</p>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="section" id="pricing">
-		<div class="sectionHead">
-			<h2>What it costs</h2>
-			<p>No contract. Unlimited is paid in credits, from the same wallet as everything else on PropertyList, and you can stop it renewing any time.</p>
-		</div>
-		<div class="grid3">
-			{
-				plans.map((p) => (
-					<div class="card">
-						<h3>{p.name}</h3>
-						<p>{p.desc}</p>
-					</div>
-				))
-			}
+	<section class="band soft" id="pricing">
+		<div class="cx">
+			<div class="head center">
+				<div class="label">What it costs</div>
+				<h2>Start free. Pay only for unlimited.</h2>
+				<p>No contract. Unlimited is paid in credits from the same wallet as everything else on PropertyList, and you can stop it renewing any time.</p>
+			</div>
+			<div class="plans">
+				<div class="plan">
+					<div class="planWhen">Every agent</div>
+					<div class="planPrice">5 a day</div>
+					<div class="planDesc">free messages, every day. Approving with YES never counts toward them.</div>
+				</div>
+				<div class="plan featured">
+					<div class="planBadge">The first 10 agents</div>
+					<div class="planWhen">Free and unlimited</div>
+					<div class="planPrice">1 month</div>
+					<div class="planDesc">The first ten agents to message CoAgent get a month free and unlimited, counted from their first message. In return, tell us where it gets in the way, and it changes.</div>
+					{WA ? (
+						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Message CoAgent now</a>
+					) : (
+						<div class="planSoon">The number is available from 9am on Tuesday 15 September. Before you message it, make sure you are <a href={SIGNUP} target="_blank" rel="noopener">signed up</a> and your <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number is added to your user</a>.</div>
+					)}
+				</div>
+				<div class="plan">
+					<div class="planWhen">Unlimited</div>
+					<div class="planPrice">50 credits</div>
+					<div class="planDesc">a month per agent, turned on from the Billing page or by replying SUBSCRIBE. More than 3 agents to add? Talk to us about a package.</div>
+				</div>
+			</div>
+			<p class="fine">A brochure, the market report after your first free one, and a renovated room are paid in credits at the same price as in the CRM. CoAgent tells you the price and waits for your YES first.</p>
 		</div>
 	</section>
 
-	<section class="section" id="next">
-		<div class="sectionHead">
-			<h2>What we are building next</h2>
-			<p>Everything above works today. These do not yet, and we would rather say so here than let you find out later.</p>
-		</div>
-		<div class="grid3">
-			{
-				soon.map((s) => (
-					<div class="card">
+	<section class="band">
+		<div class="cx">
+			<div class="head">
+				<div class="label">What we are building next</div>
+				<h2>Everything above works today. These do not, yet.</h2>
+				<p>We would rather say so here than let you find out later.</p>
+			</div>
+			<div class="grid3">
+				{soon.map((s) => (
+					<div class="tCard flat">
+						<span class="soon">Not live yet</span>
 						<h3>{s.name}</h3>
 						<p>{s.desc}</p>
 					</div>
-				))
-			}
+				))}
+			</div>
 		</div>
 	</section>
 
-	<section class="section">
-		<div class="sectionHead"><h2>Questions, answered</h2></div>
-		<div class="faq">
-			{
-				faqs.map((f) => (
+	<section class="band soft">
+		<div class="cx narrow">
+			<div class="head center">
+				<div class="label">Questions</div>
+				<h2>Before you try it.</h2>
+			</div>
+			<div class="faq">
+				{faqs.map((f) => (
 					<details>
 						<summary>{f.q}</summary>
 						<p>{f.a}</p>
 					</details>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="cta">
-		<div class="ctaInner">
-			<h2>It remembers every promise you made.</h2>
-			<p>Your memory is excellent. Until Thursday. Every agent carries fifty open promises, and the one that slips is always the one that mattered. Create your free account and start talking to it, inside the free <a href="/features/">PropertyList platform</a>.</p>
-			<div class="ctaRow">
-				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+				))}
 			</div>
 		</div>
 	</section>
 
-	<style>
-		:global(:root) {
-			--pl-accent: #00ae9a;
-			--pl-accent-rgb: 0, 174, 154;
-			--pl-ink: #0a6d61;
-		}
-		h1, h2, h3 { letter-spacing: -0.03em; }
-		.hero { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(16, 24, 40, 0.08);
-			background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
-		.heroInner { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
-		.heroGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
-		.kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(var(--pl-accent-rgb), 0.12); border: 1px solid rgba(var(--pl-accent-rgb), 0.22); color: var(--pl-ink); font-weight: 900; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
-		h1 { margin: 14px 0 12px; line-height: 1.06; font-size: clamp(28px, 4.4vw, 42px); }
-		.lead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.75); max-width: 60ch; line-height: 1.62; }
-		.note { color: rgba(16, 24, 40, 0.6); font-weight: 700; font-size: 12.5px; margin-top: 12px; }
-		.whatIs { border: 1px solid rgba(0,174,154,0.28); background: rgba(0,174,154,0.06); border-radius: 14px; padding: 14px 16px; margin: 0 0 16px; }
-		.whatIsTitle { font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: rgba(11,18,32,.55); margin-bottom: 8px; }
-		.whatIs ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-		.whatIs li { color: rgba(16,24,40,.82); line-height: 1.5; font-size: 15.5px; }
-		.heroSub { margin: -4px 0 12px; font-size: 17px; font-weight: 700; color: rgba(11,18,32,.6); letter-spacing: -.01em; }
-		.winRow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
-		.win { background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 12px; padding: 10px 12px; }
-		.win b { display: block; font-size: 13px; color: var(--pl-ink); }
-		.win span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.65); line-height: 1.45; margin-top: 2px; }
-		@media (max-width: 560px) { .winRow { grid-template-columns: minmax(0, 1fr); } }
-		.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; }
-		.btnPrimary, .btnSecondary { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; border-radius: 14px; text-decoration: none; font-weight: 900; font-size: 15px; }
-		.btnPrimary { background: var(--pl-ink); color: #fff; border: 1px solid var(--pl-ink); }
-		.btnPrimary:hover { background: #086055; }
-		.btnSecondary { background: rgba(16, 24, 40, 0.05); border: 1px solid rgba(16, 24, 40, 0.12); color: var(--pl-ink); }
-		.btnSecondary:hover { background: rgba(16, 24, 40, 0.08); }
+	<section class="band dark final">
+		<div class="cx narrow center">
+			<h2>It remembers every promise <span>you made.</span></h2>
+			<p>Give CoAgent your next viewing as a voice note and see what it hands back. Create your free account and start talking to it, inside the free <a href="/features/">PropertyList platform</a>.</p>
+			<div class="ctaRow center">
+				{WA ? (
+					<a class="btnPrimary" href={WA} target="_blank" rel="noopener">Message CoAgent on WhatsApp</a>
+				) : (
+					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free account</a>
+				)}
+			</div>
+			<p class="micro light">
+				{COAGENT_NUMBER ? (
+					<>Already a member? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a> so CoAgent knows it is you.</>
+				) : (
+					<>The number is available from 9am on Tuesday 15 September. Before you message it, make sure you are signed up and your <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number is added to your user</a>.</>
+				)}
+			</p>
+		</div>
+	</section>
 
-		.bfWrap { position: relative; padding: 18px 6px 6px; }
-		.bfTag { position: absolute; top: 0; left: 18px; z-index: 2; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
-		.bfCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 16px 14px; box-shadow: 0 14px 36px rgba(16, 24, 40, 0.12); }
-		.bfHead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; position: relative; }
-		.bfAvatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(var(--pl-accent-rgb), 0.14); color: var(--pl-ink); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; flex: none; }
-		.bfHead b { display: block; font-size: 15.5px; color: #101828; }
-		.bfHead i { display: block; font-style: normal; font-size: 12px; color: rgba(16, 24, 40, 0.55); }
-		.bfRing { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.18); }
-		.bfReq { font-size: 13.5px; font-weight: 700; color: #101828; margin-bottom: 4px; line-height: 1.5; }
-		.bfMeta { font-size: 12px; color: rgba(16, 24, 40, 0.55); margin-bottom: 10px; }
-		.bfWarn { background: #fef6e7; border: 1px solid #f5d9a8; color: #8a5a10; border-radius: 10px; padding: 9px 11px; font-size: 12.5px; font-weight: 700; line-height: 1.45; margin-bottom: 10px; }
-		.bfFoot { font-size: 11.5px; color: rgba(16, 24, 40, 0.5); text-align: center; border-top: 1px solid rgba(16, 24, 40, 0.07); padding-top: 9px; }
-
-		.way { display: flex; flex-direction: column; }
-		.wayNum { width: 30px; height: 30px; border-radius: 50%; background: var(--pl-ink); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; margin-bottom: 10px; }
-		.wayFor { font-size: 12.5px; font-weight: 700; color: var(--pl-ink); margin-top: 10px; }
-		.way p { margin-top: 10px; }
-		.gBox { background: #f7f9f9; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 12px; padding: 10px; margin-top: 4px; }
-		.waRow { display: flex; align-items: center; gap: 8px; border-radius: 10px; padding: 8px 10px; font-size: 12px; }
-		.waRow.me { background: #dcf8c6; justify-content: flex-end; margin-bottom: 6px; }
-		.waMic { color: var(--pl-ink); font-size: 10px; }
-		.waBars { display: inline-flex; align-items: center; gap: 2px; }
-		.waBars i { width: 3px; border-radius: 2px; background: rgba(16, 24, 40, 0.45); display: inline-block; }
-		.waBars i:nth-child(odd) { height: 12px; }
-		.waBars i:nth-child(even) { height: 7px; }
-		.waBars i:nth-child(3), .waBars i:nth-child(6) { height: 15px; }
-		.waTime { font-size: 11px; color: rgba(16, 24, 40, 0.55); }
-		.waRow.bot { background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); display: block; }
-		.waRow.bot b { display: block; font-size: 12.5px; color: var(--pl-ink); }
-		.waRow.bot i { display: block; font-style: normal; font-size: 11.5px; color: rgba(16, 24, 40, 0.6); margin-top: 2px; }
-		.syncRow { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 8px; border-radius: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.07); margin-bottom: 5px; color: rgba(16, 24, 40, 0.8); }
-		.syncRow:last-child { margin-bottom: 0; }
-		.syncDot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-		.syncRow.ok .syncDot { background: #16a34a; }
-		.syncRow.no { color: rgba(16, 24, 40, 0.45); }
-		.syncRow.no .syncDot { background: rgba(16, 24, 40, 0.25); }
-		.simRow { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 8px; padding: 7px 9px; margin-bottom: 5px; font-size: 12px; }
-		.simRow:last-child { margin-bottom: 0; }
-		.simRow.work { border-color: rgba(var(--pl-accent-rgb), 0.35); }
-		.simTag { display: inline-block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(16, 24, 40, 0.5); margin-right: 8px; }
-		.simRow.work .simTag { color: var(--pl-ink); }
-		.simNum { font-weight: 800; color: #101828; }
-		.simRow i { display: block; font-style: normal; font-size: 11px; color: rgba(16, 24, 40, 0.55); margin-top: 1px; }
-
-		.featRow { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
-		.featRow.rev { grid-template-columns: 0.85fr 1.15fr; }
-		.featRow.rev .card { order: 2; }
-		.featRow.rev .gCard { order: 1; }
-		.featRow .card p + p { margin-top: 10px; }
-		.gCard { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(var(--pl-accent-rgb), 0.25); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
-		.gLabel { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pl-ink); }
-		.gMini { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 12px; box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08); }
-		.gMini b { display: block; font-size: 14px; color: #101828; }
-		.gMini span { display: block; font-size: 12px; color: rgba(16, 24, 40, 0.6); margin: 2px 0 6px; }
-		.gMini em { display: block; font-style: normal; font-size: 12px; font-weight: 700; background: #fef6e7; border: 1px solid #f5d9a8; color: #8a5a10; border-radius: 8px; padding: 6px 8px; }
-		.gDiff { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; padding: 6px 10px; font-size: 12.5px; }
-		.gDiff > div { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(16, 24, 40, 0.06); }
-		.gDiff > div:last-child { border-bottom: 0; }
-		.gDiff span:first-child { color: rgba(16, 24, 40, 0.55); }
-		.gDiff s { color: rgba(16, 24, 40, 0.4); }
-		.gDiff b { color: var(--pl-ink); }
-		.gBtns { justify-content: flex-end !important; gap: 8px !important; }
-		.gBtns span { border: 1px solid rgba(16, 24, 40, 0.15); border-radius: 8px; padding: 4px 12px; font-weight: 800; font-size: 12px; color: rgba(16, 24, 40, 0.7); }
-		.gBtns span.ok { background: var(--pl-ink); border-color: var(--pl-ink); color: #fff; }
-		.gMatch { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 10px; padding: 9px 11px; font-size: 12.5px; }
-		.gMatch b { color: #101828; }
-		.gMatch span { color: rgba(16, 24, 40, 0.6); }
-		.gMatch em { font-style: normal; font-weight: 900; font-size: 12px; color: #fff; background: var(--pl-ink); border-radius: 8px; padding: 4px 12px; }
-		.gPipe { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
-		.gPipe span { text-align: center; font-size: 11.5px; padding: 6px 4px; border-radius: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); color: rgba(16, 24, 40, 0.5); }
-		.gPipe span.on { background: rgba(var(--pl-accent-rgb), 0.12); border-color: rgba(var(--pl-accent-rgb), 0.35); color: var(--pl-ink); font-weight: 800; }
-		.gAlert { font-size: 12px; font-weight: 700; color: var(--pl-ink); background: #fff; border: 1px solid rgba(var(--pl-accent-rgb), 0.3); border-radius: 10px; padding: 8px 10px; }
-
-		.section { margin: 0 0 14px; }
-		.sectionHead { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
-		.sectionHead p { margin: 8px 0 0; color: rgba(16, 24, 40, 0.72); line-height: 1.6; max-width: 90ch; }
-		.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-		.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-		.card { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 18px; padding: 16px; }
-		.card.accent { border-color: rgba(var(--pl-accent-rgb), 0.25); background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)), rgba(255, 255, 255, 0.86); }
-		.card h2 { margin: 0 0 10px; }
-		.card h3 { margin: 0 0 8px; font-size: 16px; }
-		.card p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; }
-		.step { position: relative; }
-		.stepTime { display: inline-flex; align-items: center; background: var(--pl-ink); color: #fff; border-radius: 999px; padding: 4px 12px; font-weight: 900; font-size: 12px; margin-bottom: 10px; }
-		.cta { border-radius: 22px; padding: 16px; margin: 0 0 14px; border: 1px solid rgba(var(--pl-accent-rgb), 0.22); background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0)); }
-		.ctaInner { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 18px; }
-		.ctaInner h2 { margin: 0; line-height: 1.15; }
-		.ctaInner p { margin: 8px 0 14px; color: rgba(16, 24, 40, 0.75); line-height: 1.6; max-width: 82ch; }
-		.ctaInner p a { color: var(--pl-ink); font-weight: 700; }
-		.faq details { background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; }
-		.faq summary { cursor: pointer; font-weight: 850; color: rgba(16, 24, 40, 0.9); list-style: none; }
-		.faq summary::-webkit-details-marker { display: none; }
-		.faq summary::after { content: '+'; float: right; color: var(--pl-ink); font-weight: 900; }
-		.faq details[open] summary::after { content: '-'; }
-		.faq p { margin: 10px 0 0; color: rgba(16, 24, 40, 0.75); line-height: 1.6; }
-		@media (max-width: 900px) {
-			.heroGrid { grid-template-columns: minmax(0, 1fr); }
-			.grid2, .grid3 { grid-template-columns: minmax(0, 1fr); }
-			.grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-			.featRow, .featRow.rev { grid-template-columns: minmax(0, 1fr); }
-			.featRow.rev .card { order: 1; }
-			.featRow.rev .gCard { order: 2; }
-		}
-
-		@media (max-width: 430px) {
-			.grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
-		}
-		@media (max-width: 560px) {
-			.grid3 { grid-template-columns: minmax(0, 1fr); }
-		}
-	</style>
-	<AgentInterestCta lang="en" page="/coagent/" />
+	<div class="cx">
+		<AgentInterestCta lang="en" page="/coagent/" />
+	</div>
 </Layout>
 
+<script>
+	document.querySelectorAll<HTMLElement>('[data-mtabs]').forEach((bar) => {
+		const tabs = Array.from(bar.querySelectorAll<HTMLButtonElement>('[data-mtab]'));
+		const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-mpanel]'));
+		const show = (key: string) => {
+			tabs.forEach((t) => {
+				const on = t.dataset.mtab === key;
+				t.classList.toggle('on', on);
+				t.setAttribute('aria-selected', on ? 'true' : 'false');
+			});
+			panels.forEach((p) => (p.hidden = p.dataset.mpanel !== key));
+		};
+		// Without JavaScript every panel shows, stacked. With it, one at a time.
+		bar.classList.add('ready');
+		tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.mtab || '')));
+		if (tabs[0]) show(tabs[0].dataset.mtab || '');
+	});
+</script>
+
+<style>
+	.cx { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
+	.cx.narrow { width: min(780px, calc(100% - 32px)); }
+	.center { text-align: center; }
+	h1, h2, h3 { letter-spacing: -0.035em; color: #0b1220; }
+
+	.hero { overflow: hidden; padding-block: 56px 72px; background: radial-gradient(900px 520px at 78% 30%, rgba(0, 174, 154, 0.16), transparent 62%), linear-gradient(180deg, #f7fbfa 0%, #fff 100%); }
+	.heroGrid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 56px; align-items: center; }
+	.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(0, 174, 154, 0.1); color: #0a6d61; font-size: 12.5px; font-weight: 800; margin-bottom: 20px; }
+	.dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; box-shadow: 0 0 0 4px rgba(0, 174, 154, 0.16); }
+	h1 { font-size: clamp(40px, 6vw, 70px); line-height: 1; letter-spacing: -0.05em; margin: 0 0 22px; font-weight: 900; }
+	h1 span { color: #00ae9a; }
+	.heroLead { font-size: 18.5px; line-height: 1.6; color: rgba(16, 24, 40, 0.68); max-width: 590px; margin: 0 0 28px; }
+	.heroLead strong { color: #0b1220; }
+	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+	.ctaRow.center { justify-content: center; }
+	.btnPrimary { display: inline-flex; align-items: center; justify-content: center; background: #00ae9a; color: #fff; padding: 15px 24px; border-radius: 13px; font-size: 16px; font-weight: 800; text-decoration: none; box-shadow: 0 12px 28px -12px rgba(0, 174, 154, 0.7); transition: background 0.2s, transform 0.2s; }
+	.btnPrimary:hover { background: #008a7a; transform: translateY(-2px); text-decoration: none; color: #fff; }
+	.btnPrimary.full { width: 100%; margin-top: 16px; }
+	.btnGhost { display: inline-flex; align-items: center; padding: 14px 20px; border: 1px solid rgba(16, 24, 40, 0.14); border-radius: 13px; font-size: 15px; font-weight: 700; color: #0b1220; background: #fff; text-decoration: none; }
+	.btnGhost:hover { background: #f6f8f8; text-decoration: none; }
+	.micro { margin: 14px 0 0; font-size: 13px; color: rgba(16, 24, 40, 0.5); }
+	.member { margin: 18px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.7); padding: 11px 14px; border-radius: 12px; background: #fff; border: 1px dashed rgba(0, 174, 154, 0.45); max-width: 590px; }
+	.member a, .planSoon a, .micro a, .final p a { color: #0a6d61; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+	.strip { border-block: 1px solid rgba(16, 24, 40, 0.08); background: #fff; padding-block: 18px; }
+	.stripInner { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 34px; font-size: 14px; color: rgba(16, 24, 40, 0.55); }
+	.stripInner b { color: #0b1220; font-weight: 900; }
+
+	.band { padding-block: 88px; background: #fff; }
+	.band.soft { background: #f6f8f8; }
+	.band.dark { background: #0b1220; color: #fff; }
+	.band.dark h2 { color: #fff; }
+	.head { max-width: 720px; margin-bottom: 44px; }
+	.head.center { margin-inline: auto; }
+	.label { color: #0a6d61; text-transform: uppercase; letter-spacing: 0.12em; font-size: 11.5px; font-weight: 900; margin-bottom: 12px; }
+	.dark .label { color: #5eead4; }
+	h2 { font-size: clamp(32px, 4.4vw, 50px); line-height: 1.05; margin: 0 0 16px; font-weight: 900; }
+	.head p { color: rgba(16, 24, 40, 0.62); font-size: 17.5px; line-height: 1.6; margin: 0; }
+	.dark .head p { color: rgba(255, 255, 255, 0.66); }
+
+	.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 940px; margin: 0 auto; }
+	.vCol { border-radius: 20px; padding: 26px 26px 20px; }
+	.vCol.without { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); }
+	.vCol.with { background: rgba(0, 174, 154, 0.12); border: 1px solid rgba(94, 234, 212, 0.35); }
+	.vHead { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; color: rgba(255, 255, 255, 0.55); }
+	.with .vHead { color: #5eead4; }
+	.vCol ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+	.vCol li { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.5; }
+	.vCol li b { font-variant-numeric: tabular-nums; font-weight: 900; color: rgba(255, 255, 255, 0.9); }
+	.without li span { color: rgba(255, 255, 255, 0.55); }
+	.with li span { color: rgba(255, 255, 255, 0.9); }
+	.without li:last-child span { color: #fca5a5; font-weight: 700; }
+	.with li:last-child span { color: #5eead4; font-weight: 800; }
+	.punch { text-align: center; font-size: clamp(22px, 2.6vw, 30px); font-weight: 900; letter-spacing: -0.03em; margin: 44px 0 0; color: #fff; }
+
+	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+	.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+	.demo { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 26px; box-shadow: 0 10px 34px -18px rgba(16, 24, 40, 0.18); display: flex; flex-direction: column; }
+	.num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #0b1220; color: #fff; font-size: 13px; font-weight: 900; margin-bottom: 18px; }
+	.demo h3 { font-size: 21px; margin: 0 0 8px; }
+	.demo p { color: rgba(16, 24, 40, 0.62); font-size: 15px; line-height: 1.55; margin: 0; }
+	.mini { margin-top: auto; padding: 12px; padding-top: 12px; background: #efeae2; border-radius: 14px; display: flex; flex-direction: column; gap: 7px; }
+	.demo p + .mini { margin-top: 18px; }
+	.mb { background: #fff; border-radius: 9px; border-top-left-radius: 2px; padding: 9px 11px; font-size: 13.5px; line-height: 1.5; color: #111b21; max-width: 92%; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.mb.me { background: #d9fdd3; align-self: flex-end; border-top-left-radius: 9px; border-top-right-radius: 2px; }
+	.mb.short { padding: 6px 14px; font-weight: 700; }
+	.mb b { display: block; margin-bottom: 4px; }
+	.mb .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 12.5px; padding: 3px 0; border-top: 1px solid rgba(11, 18, 32, 0.06); }
+	.mb .kv i { font-style: normal; color: rgba(17, 27, 33, 0.55); }
+	.mb .kv em { font-style: normal; font-weight: 700; text-align: right; }
+	.mb:not(.me) b:only-child { display: inline; }
+
+	.mTabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+	.mTabs:not(.ready) { display: none; }
+	.mTab { font: inherit; font-size: 14.5px; font-weight: 800; color: #0b1220; background: #f6f8f8; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+	.mTab small { font-size: 12px; color: rgba(16, 24, 40, 0.45); margin-left: 4px; font-weight: 800; }
+	.mTab:hover { background: #eef3f2; }
+	.mTab.on { background: #0b1220; border-color: #0b1220; color: #fff; }
+	.mTab.on small { color: rgba(255, 255, 255, 0.6); }
+	.mPanel + .mPanel { margin-top: 34px; }
+	.mPanel[hidden] { display: none; }
+	.mTitle { font-size: 20px; margin: 0 0 14px; }
+	.mTabs.ready ~ .mPanel .mTitle { display: none; }
+	.mTabs.ready ~ .mPanel + .mPanel { margin-top: 0; }
+	.ex { background: #efeae2; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+	.exQ { align-self: flex-end; max-width: 88%; background: #d9fdd3; color: #111b21; border-radius: 12px; border-top-right-radius: 3px; padding: 9px 13px; font-size: 15px; font-weight: 700; line-height: 1.45; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.exA { align-self: flex-start; max-width: 94%; background: #fff; color: rgba(17, 27, 33, 0.82); border-radius: 12px; border-top-left-radius: 3px; padding: 10px 13px; font-size: 14.5px; line-height: 1.55; box-shadow: 0 1px 0.5px rgba(11, 18, 32, 0.12); }
+	.tag { display: inline-block; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; background: #0a6d61; color: #fff; border-radius: 6px; padding: 2px 6px; margin-right: 7px; vertical-align: 2px; }
+
+	.matchBox { display: grid; grid-template-columns: 1fr 1fr; border-radius: 28px; overflow: hidden; background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); box-shadow: 0 20px 60px -30px rgba(16, 24, 40, 0.25); }
+	.matchCopy { padding: 52px; }
+	.matchCopy h2 { font-size: clamp(30px, 3.4vw, 42px); }
+	.matchCopy p { color: rgba(16, 24, 40, 0.64); font-size: 16.5px; line-height: 1.6; margin: 0 0 24px; }
+	.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+	.checks li { position: relative; padding-left: 30px; font-size: 15px; line-height: 1.5; color: #0b1220; }
+	.checks li::before { content: ''; position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 174, 154, 0.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a6d61' d='M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L21 7.5l-1.4-1.4z'/%3E%3C/svg%3E") center/13px no-repeat; }
+	.matchVisual { background: linear-gradient(160deg, rgba(0, 174, 154, 0.16), rgba(0, 174, 154, 0.05)); padding: 40px; display: flex; align-items: center; justify-content: center; }
+	.resCard { width: min(430px, 100%); background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 24px 60px -24px rgba(11, 18, 32, 0.35); }
+	.resHead { margin-bottom: 12px; }
+	.resHead span { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0a6d61; }
+	.resHead em { display: block; font-style: normal; font-size: 15px; font-weight: 800; color: #0b1220; margin-top: 2px; }
+	.res { display: grid; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 11px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(16, 24, 40, 0.07); }
+	.resPh { width: 54px; height: 44px; border-radius: 9px; }
+	.resPh.a { background: linear-gradient(135deg, #8fd3c7, #3a8f86); }
+	.resPh.b { background: linear-gradient(135deg, #f3d9a4, #c48b4a); }
+	.resPh.c { background: linear-gradient(135deg, #b9c7e8, #5b6fa3); }
+	.resTxt b { display: block; font-size: 13.5px; color: #0b1220; }
+	.resTxt i { display: block; font-style: normal; font-size: 12px; color: rgba(16, 24, 40, 0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.resP { text-align: right; font-size: 13.5px; font-weight: 900; color: #0b1220; }
+	.resP small { display: block; font-size: 10.5px; font-weight: 800; color: rgba(16, 24, 40, 0.5); margin-top: 2px; }
+	.resP small.own { color: #0a6d61; }
+	.resAsk { margin-top: 10px; background: #efeae2; border-radius: 11px; padding: 10px 12px; font-size: 13px; line-height: 1.5; color: #111b21; }
+
+	.tCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 22px; padding: 28px; }
+	.band:not(.soft) .tCard { background: #f6f8f8; border-color: transparent; }
+	.tIcon { width: 44px; height: 44px; border-radius: 13px; background: rgba(0, 174, 154, 0.14); color: #0a6d61; display: grid; place-items: center; margin-bottom: 18px; }
+	.tCard h3 { font-size: 19px; margin: 0 0 8px; }
+	.tCard p { color: rgba(16, 24, 40, 0.64); font-size: 15px; line-height: 1.6; margin: 0; }
+	.pair { margin-top: 18px; }
+	.soon { display: inline-block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #8a5a10; background: #fef3dc; border-radius: 999px; padding: 4px 10px; margin-bottom: 14px; }
+
+	.plans { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 18px; align-items: center; max-width: 1000px; margin: 0 auto; }
+	.plan { background: #fff; border: 1px solid rgba(16, 24, 40, 0.08); border-radius: 24px; padding: 30px 26px; text-align: left; }
+	.plan.featured { border: 2px solid #00ae9a; padding: 38px 30px; box-shadow: 0 30px 70px -30px rgba(0, 174, 154, 0.5); position: relative; }
+	.planBadge { position: absolute; top: -14px; left: 30px; background: #00ae9a; color: #fff; font-size: 12px; font-weight: 900; letter-spacing: 0.04em; border-radius: 999px; padding: 5px 12px; }
+	.planWhen { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(16, 24, 40, 0.5); }
+	.featured .planWhen { color: #0a6d61; }
+	.planPrice { font-size: 44px; font-weight: 900; letter-spacing: -0.05em; line-height: 1.05; margin: 6px 0 10px; color: #0b1220; }
+	.planDesc { font-size: 15px; line-height: 1.55; color: rgba(16, 24, 40, 0.64); }
+	.planSoon { margin-top: 18px; background: rgba(0, 174, 154, 0.08); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #0b1220; font-weight: 600; }
+	.fine { text-align: center; max-width: 680px; margin: 30px auto 0; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.55); }
+
+	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); padding: 20px 0; }
+	.faq summary { cursor: pointer; list-style: none; font-weight: 800; font-size: 17px; display: flex; justify-content: space-between; gap: 20px; color: #0b1220; }
+	.faq summary::-webkit-details-marker { display: none; }
+	.faq summary::after { content: '+'; font-size: 22px; line-height: 1; color: #0a6d61; }
+	.faq details[open] summary::after { content: '-'; }
+	.faq p { margin: 12px 0 0; color: rgba(16, 24, 40, 0.66); font-size: 15.5px; line-height: 1.62; }
+
+	.final { background: radial-gradient(700px 360px at 50% 0%, rgba(0, 174, 154, 0.3), transparent 70%), #0b1220; }
+	.final h2 { font-size: clamp(36px, 5vw, 58px); }
+	.final h2 span { color: #5eead4; }
+	.final p { color: rgba(255, 255, 255, 0.7); font-size: 18px; line-height: 1.6; margin: 0 auto 28px; max-width: 600px; }
+	.final p a { color: #5eead4; }
+	.micro.light { color: rgba(255, 255, 255, 0.6); font-size: 14px; margin-top: 18px; }
+	.micro.light a { color: #5eead4; }
+
+	@media (max-width: 960px) {
+		.heroGrid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+		.grid3 { grid-template-columns: minmax(0, 1fr); }
+		.matchBox { grid-template-columns: minmax(0, 1fr); }
+		.plans { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
+		.plan.featured { order: -1; }
+	}
+	@media (max-width: 720px) {
+		.hero { padding-block: 36px 56px; }
+		.heroLead { font-size: 17px; }
+		.band { padding-block: 64px; }
+		.versus, .grid2 { grid-template-columns: minmax(0, 1fr); }
+		.ctaRow:not(.center) { flex-direction: column; align-items: stretch; }
+		.btnPrimary, .btnGhost { justify-content: center; }
+		.matchCopy, .matchVisual { padding: 28px 22px; }
+		.vCol li { grid-template-columns: 72px 1fr; font-size: 15px; }
+		.mTabs { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; }
+		.mTab { flex: none; }
+		.plan.featured { padding: 34px 22px 26px; }
+	}
+</style>
