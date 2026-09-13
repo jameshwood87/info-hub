@@ -214,6 +214,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		// Blog redirects - duplicate/filler posts → canonical versions
 		const blogRedirects: Array<{ from: string; to: string }> = [
 			{ from: '/blog/rdl-8-2026-rent-cap-extension-explained/', to: '/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/' },
+			// An ES page that carried the ENGLISH slug and duplicated the properly
+			// slugged Spanish version. Retired 09-09-26; the Spanish-slugged page is
+			// longer and earns more, so it keeps the topic.
+			{ from: '/es/blog/a-new-five-star-gem-for-marbella/', to: '/es/informacion-general/una-nueva-joya-de-cinco-estrellas-para-marbella/' },
 		];
 		for (const r of blogRedirects) {
 			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
