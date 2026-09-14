@@ -92,6 +92,13 @@
 	// ---- intro flight, cancellable ----
 	var introRunning = false, introDone = false, introAborted = false;
 	var userPicked = false;      // the visitor has chosen a place, so do not overwrite it
+	// One selected place at a time, municipality or town dot: highlighted on the map and shown in the panel.
+	var selected = null;         // { source: 'munis' | 'cities', id: number }
+	function selectFeature(source, id) {
+		if (selected && map.getSource(selected.source)) map.setFeatureState(selected, { sel: false });
+		selected = (id === null || id === undefined) ? null : { source: source, id: id };
+		if (selected && map.getSource(source)) map.setFeatureState(selected, { sel: true });
+	}
 	function cancelIntro() {
 		if (!introRunning) return;   // a gesture that cancelled nothing must not poison the landing
 		introRunning = false; introDone = true; introAborted = true;
@@ -297,13 +304,18 @@
 				if (hov !== null) map.setFeatureState({ source: 'munis', id: hov }, { hover: false });
 				hov = null;
 			});
-			map.on('click', 'muni-3d', function (e) { userPicked = true; clearSel(); showMuni(e.features[0].properties.mls); });
+			map.on('click', 'muni-3d', function (e) {
+				userPicked = true;
+				clearSel();
+				selectFeature('munis', e.features[0].id);
+				showMuni(e.features[0].properties.mls);
+			});
 			armIntro();
 		}).catch(function () { armIntro(); });
 
 		// every other listing location, as circles that scale with count
 		fetch('/map/cities.json').then(function (r) { return r.json(); }).then(function (cj) {
-			map.addSource('cities', { type: 'geojson', data: cj });
+			map.addSource('cities', { type: 'geojson', data: cj, generateId: true });
 			map.addLayer({
 				id: 'city-dots', type: 'circle', source: 'cities',
 				filter: ['!=', ['get', 'inside'], true],
@@ -312,9 +324,10 @@
 						3, ['interpolate', ['linear'], ['get', 'n'], 1, 4, 100, 9, 1200, 15],
 						9, ['interpolate', ['linear'], ['get', 'n'], 1, 6.5, 100, 15, 1200, 32]],
 					'circle-color': DOTCOLOR,
-					'circle-opacity': 0.85,
-					'circle-stroke-width': 1.1,
-					'circle-stroke-color': '#eafff9'
+					'circle-opacity': ['case', ['boolean', ['feature-state', 'sel'], false], 1, 0.85],
+					// the selected town gets the same white outline as a selected municipality
+					'circle-stroke-width': ['case', ['boolean', ['feature-state', 'sel'], false], 3.4, 1.1],
+					'circle-stroke-color': ['case', ['boolean', ['feature-state', 'sel'], false], '#ffffff', '#eafff9']
 				}
 			});
 			map.addLayer({
@@ -365,6 +378,7 @@
 				var best = e.features.slice().sort(function (a, b) {
 					return (Number(b.properties.n) || 0) - (Number(a.properties.n) || 0);
 				})[0];
+				selectFeature('cities', best.id);
 				showCity(best.properties);
 			});
 			map.on('mouseenter', 'city-hit', function () { map.getCanvas().style.cursor = 'pointer'; });
@@ -402,7 +416,7 @@
 	function landIntro(withPulse) {
 		if (userPicked) return;          // they already clicked something of their own
 		showMuni(LANDING.name);
-		if (LANDING.id !== null) map.setFeatureState({ source: 'munis', id: LANDING.id }, { sel: true });
+		if (LANDING.id !== null) selectFeature('munis', LANDING.id);
 		if (withPulse && !introAborted) pulseOthers();
 	}
 
