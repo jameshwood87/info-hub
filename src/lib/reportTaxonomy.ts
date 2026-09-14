@@ -35,6 +35,8 @@ export const REPORT_CATEGORIES: ReportCategory[] = [
 	  hint: 'Owes money to a member or a supplier' },
 	{ id: 'misrepresentation', label: 'Misrepresented the service', kind: 'integrity',
 	  hint: 'Claimed credentials, cover or capability they do not have' },
+	{ id: 'no-paperwork', label: 'No invoice or contract', kind: 'integrity',
+	  hint: 'Took payment without issuing an invoice, receipt or written terms. Note the amount and whether it was cash' },
 	{ id: 'unlicensed', label: 'Unlicensed or uninsured', kind: 'integrity',
 	  hint: 'Trading without a licence or insurance the work requires' },
 	{ id: 'data-misuse', label: 'Misused contacts or data', kind: 'integrity',

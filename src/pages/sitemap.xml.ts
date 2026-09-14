@@ -190,6 +190,8 @@ export async function GET() {
     '/es/baja/', // noindex: unsubscribe confirmation, reached only from an email
     '/docs/property-services/',
     '/es/docs/property-services/',
+    '/docs/legal/',
+    '/es/docs/legal/',
   ]);
 
   const derivedStaticPaths = Object.keys(import.meta.glob('./**/*.astro'))

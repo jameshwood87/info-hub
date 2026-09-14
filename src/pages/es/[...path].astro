@@ -697,7 +697,7 @@ const mlsManualBackfillEsForPath = (path: string) => {
 		path,
 		title: def.title,
 		description: def.description,
-		body: String(def.body || '').replaceAll('/es/docs/propertylist-mls-manual-de-usuario/', '/es/docs/mls-manual-de-usuario/'),
+		body: String(def.body || ''),
 		seo_title: `${def.title} • Manual de usuario MLS`,
 		seo_description: def.description,
 	};
