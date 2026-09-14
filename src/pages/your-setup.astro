@@ -60,7 +60,7 @@ const allTasks: Task[] = [
 	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15, fix: 'addon:nur' },
 	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
 	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
-	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 0, fix: 'soon:CoAgent' },
+	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 15, fix: 'free' },
 	{ id: 'signatures', label: 'Chasing one signature for a week', hours: 1, after: 0, fix: 'soon:Instant Documents' },
 	{ id: 'brochures', label: 'Making brochures in Canva at midnight', hours: 1, after: 0, fix: 'soon:Instant Brochure' },
 ];
@@ -74,6 +74,7 @@ const freeTools = [
 	{ name: 'Branded microsite' },
 	{ name: 'Mobile app', href: '/mobile-app/' },
 	{ name: 'AI Property Search', href: '/ai-property-search/', note: 'Free in beta.' },
+	{ name: 'CoAgent on WhatsApp', href: '/coagent/', note: '20 free messages a month. Unlimited is 50 credits a month per agent.' },
 ];
 
 // facts, not switches: these are not subscriptions and never join the monthly
@@ -162,7 +163,6 @@ const paidTools: Paid[] = [
 // not built: no price, no switch, no counting
 const soonTools = [
 	{ name: 'Connected inbox', href: '/connected-inbox/' },
-	{ name: 'CoAgent', href: '/coagent/' },
 	{ name: 'Instant Documents', href: '/instant-documents/' },
 	{ name: 'Instant Brochure', href: '/instant-brochure/' },
 	{ name: 'Instant Video and Images', href: '/instant-video/' },

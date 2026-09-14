@@ -60,7 +60,7 @@ const allTasks: Task[] = [
 	{ id: 'followup', label: 'Acordarme de a quién prometí llamar', hours: 3, after: 15, fix: 'addon:nur' },
 	{ id: 'website', label: 'Suplicarle cambios al de la web', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
 	{ id: 'tenants', label: 'Alquileres viviendo en un Excel', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
-	{ id: 'callnotes', label: 'Pasar a limpio llamadas que ya dije en voz alta', hours: 2, after: 0, fix: 'soon:CoAgent' },
+	{ id: 'callnotes', label: 'Pasar a limpio llamadas que ya dije en voz alta', hours: 2, after: 15, fix: 'free' },
 	{ id: 'signatures', label: 'Perseguir una firma durante una semana', hours: 1, after: 0, fix: 'soon:Documentos Instantáneos' },
 	{ id: 'brochures', label: 'Hacer folletos en Canva a medianoche', hours: 1, after: 0, fix: 'soon:Folleto Instantáneo' },
 ];
@@ -74,6 +74,7 @@ const freeTools = [
 	{ name: 'Microsite de marca' },
 	{ name: 'App móvil', href: '/es/app-movil/' },
 	{ name: 'Búsqueda de propiedades con IA', href: '/es/busqueda-ia/', note: 'Gratis en beta.' },
+	{ name: 'CoAgent en WhatsApp', href: '/es/coagent/', note: '20 mensajes gratis al mes. El ilimitado cuesta 50 créditos al mes por agente.' },
 ];
 
 // facts, not switches: these are not subscriptions and never join the monthly
@@ -160,7 +161,6 @@ const paidTools: Paid[] = [
 // not built: no price, no switch, no counting
 const soonTools = [
 	{ name: 'Bandeja de correo conectada', href: '/es/bandeja-conectada/' },
-	{ name: 'CoAgent', href: '/es/coagent/' },
 	{ name: 'Documentos Instantáneos', href: '/es/documentos-instantaneos/' },
 	{ name: 'Folleto Instantáneo', href: '/es/folleto-instantaneo/' },
 	{ name: 'Vídeo e Imágenes Instantáneos', href: '/es/video-instantaneo/' },
