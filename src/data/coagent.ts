@@ -4,7 +4,7 @@
 // real WhatsApp button on the next deploy. Leave it empty until then.
 export const COAGENT_NUMBER = '';
 
-export function coagentWaLink(text = 'PropertyList CoAgent'): string {
+export function coagentWaLink(text = 'Hi'): string {
 	const digits = COAGENT_NUMBER.replace(/[^0-9]/g, '');
 	return digits ? `https://wa.me/${digits}?text=${encodeURIComponent(text)}` : '';
 }

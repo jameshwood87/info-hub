@@ -61,6 +61,8 @@ const PAIRS: Array<[string, string[]]> = [
 	['/pipelines/', ['/pipelines/', '/es/pipelines/']],
 	['/rentals/', ['/rentals/', '/es/alquileres/']],
 	['/pricing/', ['/pricing/', '/es/precios/']],
+	['/coagent/', ['/coagent/', '/es/coagent/', '/de/coagent/', '/fr/coagent/', '/sv/coagent/', '/ru/coagent/']],
+	['/1000-agencies/', ['/1000-agencies/', '/es/1000-agencias/', '/de/1000-agenturen/', '/fr/1000-agences/', '/sv/1000-maklarbyraer/', '/ru/1000-agentstv/']],
 ];
 
 const canon = (p: string) => {
@@ -99,6 +101,14 @@ export const GET: APIRoute = async ({ request }) => {
 			'coast-portal-click': ev['coast-portal-click'] || 0,
 			'launch-signup-click': ev['launch-signup-click'] || 0,
 			'signup-click': ev['signup-click'] || 0,
+			'whatsapp-click': ev['whatsapp-click'] || 0,
+			'crm-staff-click': ev['crm-staff-click'] || 0,
+			'calendar-click': ev['calendar-click'] || 0,
+			'agent-interested': ev['agent-interested'] || 0,
+			'see-coagent-click': ev['see-coagent-click'] || 0,
+			'claim-first10-click': ev['claim-first10-click'] || 0,
+			'coagent-phone-tab': ev['coagent-phone-tab'] || 0,
+			'coagent-faq-click': ev['coagent-faq-click'] || 0,
 		};
 
 		// ---- last-7-days traffic, with a bot / non-prospect country filter ----

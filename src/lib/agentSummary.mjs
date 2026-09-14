@@ -42,7 +42,7 @@ const COPY = {
 			'Leads from other agents and from your microsite, free for good. Leads from the portal, free for now.',
 			'Starter allowances: your first 5 buyer leads, first 5 private listings, first 3 Property Intelligence Reports, and 25 photos per listing.',
 			'Verifying your agency, any time, which adds 20 credits to your balance.',
-			'CoAgent, your CRM on WhatsApp: 5 free messages a day for every agent.',
+			'CoAgent, your CRM on WhatsApp: 20 free messages a month for every agent.',
 		],
 		creditsTitle: 'What costs credits',
 		creditsIntro: 'You only pay for what you choose. 1 credit is about €1: packs run from 20 credits for €20 to 1,000 credits for €800.',
@@ -107,7 +107,7 @@ const COPY = {
 			'Los leads de otros agentes y de tu microsite, gratis siempre. Los leads del portal, gratis por ahora.',
 			'Para empezar: tus 5 primeros leads de compradores, tus 5 primeros anuncios privados, tus 3 primeros Property Intelligence Reports y 25 fotos por anuncio.',
 			'Verificar tu agencia, cuando quieras, que añade 20 créditos a tu saldo.',
-			'CoAgent, tu CRM en WhatsApp: 5 mensajes gratis al día para cada agente.',
+			'CoAgent, tu CRM en WhatsApp: 20 mensajes gratis al mes para cada agente.',
 		],
 		creditsTitle: 'Qué cuesta créditos',
 		creditsIntro: 'Solo pagas lo que eliges. 1 crédito equivale a 1 € aproximadamente: los paquetes van de 20 créditos por 20 € a 1.000 créditos por 800 €.',
@@ -173,7 +173,11 @@ const button = (href, label, bg = '#00ae9a', color = '#ffffff') =>
 export function buildAgentSummary({ lang = 'en', stats, coagentNumber = '', unsubUrl = '', hasReplyTo = false }) {
 	const c = COPY[lang === 'es' ? 'es' : 'en'];
 	const wa = waLink(coagentNumber);
-	const url = (p) => `${SITE}${p}`;
+	const url = (p) => {
+		// utm tags so a click from this email is attributable (Mandrill click tracking is off).
+		const [path, hash] = String(p).split('#');
+		return `${SITE}${path}${path.includes('?') ? '&' : '?'}utm_source=email&utm_medium=summary&utm_campaign=agent-summary${hash ? `#${hash}` : ''}`;
+	};
 
 	const checkRows = c.free
 		.map(

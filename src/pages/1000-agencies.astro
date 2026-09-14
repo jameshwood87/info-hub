@@ -13,8 +13,8 @@ const plListings = statPlus(__ps.listings, 'en');
 const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
-const WA = coagentWaLink();
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/1000-agencies/ from 9am. Send it the words PropertyList CoAgent. The first 10 agents get a month free.')}`;
+const WA = coagentWaLink('Hi');
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/1000-agencies/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch from 9am. Just say hi. The first 10 agents get a month free.')}`;
 
 const reviews = [
 	{ quote: 'Designed with the daily reality of real estate agents in mind. It saves time.', agency: 'Alain Fiddelers' },
@@ -26,7 +26,7 @@ const reviews = [
 const faqs = [
 	{
 		q: 'What does CoAgent cost?',
-		a: 'The first 10 agents to message it get a month free and unlimited, from their first message. Every agent gets 5 free messages a day, and replying YES never counts. Unlimited is 50 credits a month per agent. More than 3 agents? Talk to us about a package.',
+		a: 'The first 10 agents to message it get a month free and unlimited, from their first message. Every agent gets 20 free messages a month, and replying YES never counts. Unlimited is 50 credits a month per agent. More than 3 agents? Talk to us about a package.',
 	},
 	{
 		q: 'Will it change my CRM on its own?',
@@ -123,7 +123,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<li><b>Answers in the car, without a laptop</b></li>
 				</ul>
 				<p class="small light">It lives in the WhatsApp you already use. Nothing is saved until you say YES, and your voice is never kept.</p>
-				<a class="btnLight" href="/coagent/">See everything CoAgent does</a>
+				<a class="btnLight" href="/coagent/" data-track="see-coagent-click">See everything CoAgent does</a>
 			</div>
 			<CoagentPhone lang="en" />
 		</div>
@@ -151,8 +151,9 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 
 				<div class="step">
 					<div class="stepWhen"><span>2</span> Tuesday 15 September, 9am</div>
-					<h3>Send two words</h3>
-					<div class="waPreview"><span class="waBubble">PropertyList CoAgent</span></div>
+					<h3>Just say hi</h3>
+					<div class="waPreview"><span class="waBubble">Hi</span></div>
+					<p class="small center">CoAgent replies and shows you what it can do.</p>
 					{WA ? (
 						<>
 							<p class="small center">The number: <b>{COAGENT_NUMBER}</b></p>
@@ -177,7 +178,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<h2>Join them. <span>It is free.</span></h2>
 					<p>
 						Your next listing in front of {plAgencies} agencies the same day. No listing fees, no contract, no card. And CoAgent to
-						take the admin off your hands, with 5 free messages a day.
+						take the admin off your hands, with 20 free messages a month.
 					</p>
 				</div>
 				<div class="joinCta">
@@ -210,7 +211,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			<div class="faq">
 				{faqs.map((f) => (
 					<details>
-						<summary>{f.q}</summary>
+						<summary data-track="coagent-faq-click" data-track-label={f.q}>{f.q}</summary>
 						<p>{f.a}</p>
 					</details>
 				))}
@@ -223,7 +224,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			<h2>Thank you for being <span>part of it.</span></h2>
 			<p>From everyone at PropertyList. Here is to the next 1,000.</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#first10">Claim one of the 10 free months</a>
+				<a class="btnPrimary" href="#first10" data-track="claim-first10-click">Claim one of the 10 free months</a>
 				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Join free</a>
 			</div>
 		</div>

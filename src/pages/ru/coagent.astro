@@ -16,9 +16,9 @@ const plAgencies = statPlus(__ps.agencies, 'ru');
 const plListings = statPlus(__ps.listings, 'ru');
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
-const WA = coagentWaLink();
+const WA = coagentWaLink('Здравствуйте');
 // A reminder for 9am Madrid time (07:00 UTC) on launch day, until the number exists.
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Написать PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Номер CoAgent появится на https://info.propertylist.es/ru/coagent/ с 9:00. Прежде чем писать ему, убедитесь, что вы зарегистрированы и ваш номер WhatsApp указан в профиле. Первые 10 агентов получают месяц бесплатно.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Написать PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Номер CoAgent появится на https://info.propertylist.es/ru/coagent/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch с 9:00. Прежде чем писать ему, убедитесь, что вы зарегистрированы и ваш номер WhatsApp указан в профиле. Первые 10 агентов получают месяц бесплатно.')}`;
 
 // Everything CoAgent does today, as the question an agent would actually send.
 // Tap a question to see what comes back. Answers are the verified descriptions.
@@ -82,7 +82,7 @@ const faqs = [
 	{ q: 'Может ли он общаться с другими агентствами за меня?', a: 'Да. Спросите, доступен ли ещё объект другого агентства, и CoAgent предложит отправить запрос. Ответьте YES, и он уйдёт через MLS так же, как если бы был отправлен с экрана CRM, поэтому попадёт в их обычный рабочий процесс.' },
 	{ q: 'Что если CoAgent не узнаёт мой номер?', a: 'Он ответит, на испанском и английском, со ссылкой на создание бесплатного аккаунта и ссылкой на страницу Staff вашего CRM, где вы добавляете мобильный в профиль. Если ваш номер не испанский, добавьте код страны впереди и напишите ещё раз.' },
 	{ q: 'Что оплачивается кредитами?', a: 'Сообщения входят в ваш тариф. Брошюра, отчёт о рынке после первого бесплатного и отремонтированная комната оплачиваются кредитами PropertyList, по той же цене, что и в CRM. CoAgent всегда называет цену и ждёт вашего YES, прежде чем что-то списать, а брошюра или рендер, которые не получились, никогда не оплачиваются.' },
-	{ q: 'Сколько это стоит?', a: 'Первые 10 агентов, которые напишут CoAgent, получают месяц бесплатно и без ограничений, отсчёт идёт с первого сообщения. У каждого агента есть 5 бесплатных сообщений в день, и ответ YES никогда не учитывается. Безлимит стоит 50 кредитов в месяц на агента. Если вам нужно подключить больше 3 агентов, обратитесь к нам насчёт пакета. MLS и базовый CRM остаются бесплатными, и создание аккаунта ничего не стоит.' },
+	{ q: 'Сколько это стоит?', a: 'Первые 10 агентов, которые напишут CoAgent, получают месяц бесплатно и без ограничений, отсчёт идёт с первого сообщения. У каждого агента есть 20 бесплатных сообщений в месяц, и ответ YES никогда не учитывается. Безлимит стоит 50 кредитов в месяц на агента. Если вам нужно подключить больше 3 агентов, обратитесь к нам насчёт пакета. MLS и базовый CRM остаются бесплатными, и создание аккаунта ничего не стоит.' },
 	{ q: 'Чего пока нет?', a: 'Подключения собственного номера WhatsApp, чтобы переписки с клиентами сохранялись сами, отдельной рабочей линии внутри приложения PropertyList и появления справки по клиенту на экране входящего звонка без вашего участия. Всё остальное на этой странице уже работает.' },
 ];
 
@@ -112,7 +112,7 @@ const softwareLd = {
 	title={title}
 	description={description}
 	canonical={canonical}
-	ogImage="https://info.propertylist.es/og/og-coagent-ru.jpg"
+	ogImage="https://info.propertylist.es/og/og-coagent-v2-ru.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
@@ -145,7 +145,7 @@ const softwareLd = {
 					)}
 					<a class="btnGhost" href="#how">Посмотреть, как это работает</a>
 				</div>
-				<p class="micro">5 бесплатных сообщений в день &middot; Ничего не нужно устанавливать &middot; Ваш голос никогда не сохраняется &middot; Отвечает на английском, испанском, немецком, французском, португальском, болгарском и греческом</p>
+				<p class="micro">20 бесплатных сообщений в месяц &middot; Ничего не нужно устанавливать &middot; Ваш голос никогда не сохраняется &middot; Отвечает на английском, испанском, немецком, французском, португальском, болгарском и греческом</p>
 				{WA ? (
 					<p class="member">Уже зарегистрированы в PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Добавьте свой номер WhatsApp в профиль</a>, чтобы CoAgent знал, что это вы.</p>
 				) : (
@@ -350,7 +350,7 @@ const softwareLd = {
 			<div class="plans">
 				<div class="plan">
 					<div class="planWhen">Каждый агент</div>
-					<div class="planPrice">5 в день</div>
+					<div class="planPrice">20 в месяц</div>
 					<div class="planDesc">бесплатных сообщений. Ответ YES никогда не учитывается.</div>
 				</div>
 				<div class="plan featured">
@@ -382,7 +382,7 @@ const softwareLd = {
 			<div class="faq">
 				{faqs.map((f) => (
 					<details>
-						<summary>{f.q}</summary>
+						<summary data-track="coagent-faq-click" data-track-label={f.q}>{f.q}</summary>
 						<p>{f.a}</p>
 					</details>
 				))}

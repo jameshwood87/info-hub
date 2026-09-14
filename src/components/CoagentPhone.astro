@@ -306,7 +306,7 @@ const bars = [6, 11, 16, 9, 14, 19, 12, 7, 15, 18, 10, 6, 13, 17, 9, 12, 16, 8, 
 <div class="cph" data-cph data-typing={ui.typing} data-online={ui.online} aria-label={ui.aria}>
 	<div class="cphTabs" role="tablist">
 		{scenes.map((s, i) => (
-			<button type="button" class={i === 0 ? 'cphTab on' : 'cphTab'} data-cph-tab={i} role="tab" id={`cph-${lang}-tab-${i}`} aria-controls={`cph-${lang}-scene-${i}`} aria-selected={i === 0 ? 'true' : 'false'}>
+			<button type="button" class={i === 0 ? 'cphTab on' : 'cphTab'} data-cph-tab={i} data-track="coagent-phone-tab" data-track-label={String(i + 1)} role="tab" id={`cph-${lang}-tab-${i}`} aria-controls={`cph-${lang}-scene-${i}`} aria-selected={i === 0 ? 'true' : 'false'}>
 				{s.label}
 			</button>
 		))}

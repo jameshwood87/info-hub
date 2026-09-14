@@ -12,8 +12,8 @@ const plListings = statPlus(__ps.listings, 'sv');
 const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
-const WA = coagentWaLink();
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgent-numret finns på https://info.propertylist.es/sv/1000-maklarbyraer/ från kl. 9. Skicka orden PropertyList CoAgent. De första 10 agenterna får en månad gratis.')}`;
+const WA = coagentWaLink('Hej');
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgent-numret finns på https://info.propertylist.es/sv/1000-maklarbyraer/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch från kl. 9. Säg bara hej. De första 10 agenterna får en månad gratis.')}`;
 
 const reviews = [
 	{ quote: 'Utformad utifrån mäklares verkliga vardag. Den sparar tid.', agency: 'Alain Fiddelers' },
@@ -25,7 +25,7 @@ const reviews = [
 const faqs = [
 	{
 		q: 'Vad kostar CoAgent?',
-		a: 'De första 10 agenterna som skriver till den får en månad gratis och obegränsat, räknat från sitt första meddelande. Alla agenter får 5 gratis meddelanden om dagen, och att svara YES räknas aldrig. Obegränsat kostar 50 krediter i månaden per agent. Fler än 3 agenter? Prata med oss om ett paket.',
+		a: 'De första 10 agenterna som skriver till den får en månad gratis och obegränsat, räknat från sitt första meddelande. Alla agenter får 20 gratis meddelanden i månaden, och att svara YES räknas aldrig. Obegränsat kostar 50 krediter i månaden per agent. Fler än 3 agenter? Prata med oss om ett paket.',
 	},
 	{
 		q: 'Ändrar den mitt CRM på egen hand?',
@@ -122,7 +122,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<li><b>Svar i bilen, utan dator</b></li>
 				</ul>
 				<p class="small light">Den finns i WhatsApp du redan använder. Inget sparas förrän du säger YES, och din röst sparas aldrig. CoAgent svarar på engelska, spanska, tyska, franska, portugisiska, bulgariska och grekiska.</p>
-				<a class="btnLight" href="/sv/coagent/">Se allt CoAgent gör</a>
+				<a class="btnLight" href="/sv/coagent/" data-track="see-coagent-click">Se allt CoAgent gör</a>
 			</div>
 			<CoagentPhone lang="sv" />
 		</div>
@@ -150,8 +150,9 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 
 				<div class="step">
 					<div class="stepWhen"><span>2</span> Tisdag 15 september, kl. 9</div>
-					<h3>Skicka två ord</h3>
-					<div class="waPreview"><span class="waBubble">PropertyList CoAgent</span></div>
+					<h3>Säg bara hej</h3>
+					<div class="waPreview"><span class="waBubble">Hej</span></div>
+					<p class="small center">CoAgent svarar och visar vad den kan göra.</p>
 					{WA ? (
 						<>
 							<p class="small center">Numret: <b>{COAGENT_NUMBER}</b></p>
@@ -176,7 +177,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<h2>Gå med dem. <span>Det är gratis.</span></h2>
 					<p>
 						Ditt nästa objekt framför {plAgencies} mäklarbyråer samma dag. Inga avgifter för att lägga upp, inget kontrakt, inget kort. Och CoAgent som
-						tar hand om pappersarbetet åt dig, med 5 gratis meddelanden om dagen.
+						tar hand om pappersarbetet åt dig, med 20 gratis meddelanden i månaden.
 					</p>
 				</div>
 				<div class="joinCta">
@@ -209,7 +210,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			<div class="faq">
 				{faqs.map((f) => (
 					<details>
-						<summary>{f.q}</summary>
+						<summary data-track="coagent-faq-click" data-track-label={f.q}>{f.q}</summary>
 						<p>{f.a}</p>
 					</details>
 				))}
@@ -222,7 +223,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			<h2>Tack för att du är <span>en del av det.</span></h2>
 			<p>Från alla på PropertyList. Skål för nästa 1 000.</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#first10">Ta en av de 10 gratis månaderna</a>
+				<a class="btnPrimary" href="#first10" data-track="claim-first10-click">Ta en av de 10 gratis månaderna</a>
 				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Gå med gratis</a>
 			</div>
 		</div>

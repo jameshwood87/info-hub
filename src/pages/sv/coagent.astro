@@ -16,9 +16,9 @@ const plAgencies = statPlus(__ps.agencies, 'sv');
 const plListings = statPlus(__ps.listings, 'sv');
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
-const WA = coagentWaLink();
+const WA = coagentWaLink('Hej');
 // A reminder for 9am Madrid time (07:00 UTC) on launch day, until the number exists.
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgents nummer finns på https://info.propertylist.es/sv/coagent/ från kl. 9. Innan du skriver till den, se till att du är registrerad och har ditt WhatsApp-nummer på din användare. De första 10 agenterna får en månad gratis.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgents nummer finns på https://info.propertylist.es/sv/coagent/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch från kl. 9. Innan du skriver till den, se till att du är registrerad och har ditt WhatsApp-nummer på din användare. De första 10 agenterna får en månad gratis.')}`;
 
 // Everything CoAgent does today, as the question an agent would actually send.
 // Tap a question to see what comes back. Answers are the verified descriptions.
@@ -82,7 +82,7 @@ const faqs = [
 	{ q: 'Kan den prata med andra byråer åt mig?', a: 'Ja. Fråga om ett objekt från en annan byrå fortfarande är tillgängligt, så erbjuder sig CoAgent att skicka förfrågan. Svara YES, så går den via MLS-systemet på samma sätt som en förfrågan skickad från CRM-skärmen, så den hamnar i deras vanliga flöde.' },
 	{ q: 'Vad händer om CoAgent inte känner igen mitt nummer?', a: 'Den svarar, på spanska och engelska, med en länk för att skapa ditt gratiskonto och en länk till Staff-sidan i ditt CRM, där du lägger till din mobil på din profil. Sätt landskoden framför om ditt nummer inte är spanskt, och skriv till den igen.' },
 	{ q: 'Vad kostar krediter?', a: 'Meddelanden ingår i din plan. En broschyr, marknadsrapporten efter din första gratis, och ett renoverat rum betalas med PropertyList-krediter, till samma pris som i CRM:et. CoAgent säger alltid priset och väntar på ditt YES innan den spenderar något, och en broschyr eller rendering som misslyckas debiteras aldrig.' },
-	{ q: 'Vad kostar det?', a: 'De första 10 agenterna som skriver till CoAgent får en månad gratis och obegränsat, räknat från sitt första meddelande. Alla agenter får 5 gratis meddelanden om dagen, och att svara YES räknas aldrig. Obegränsat kostar 50 krediter i månaden per agent, betalt med dina PropertyList-krediter, och du kan stoppa förnyelsen när du vill. Fler än 3 agenter? Prata med oss om ett paket. MLS-systemet och CRM-kärnan förblir gratis, och det kostar inget att skapa ditt konto.' },
+	{ q: 'Vad kostar det?', a: 'De första 10 agenterna som skriver till CoAgent får en månad gratis och obegränsat, räknat från sitt första meddelande. Alla agenter får 20 gratis meddelanden i månaden, och att svara YES räknas aldrig. Obegränsat kostar 50 krediter i månaden per agent, betalt med dina PropertyList-krediter, och du kan stoppa förnyelsen när du vill. Fler än 3 agenter? Prata med oss om ett paket. MLS-systemet och CRM-kärnan förblir gratis, och det kostar inget att skapa ditt konto.' },
 	{ q: 'Vad är inte lanserat än?', a: 'Att koppla ditt eget WhatsApp-nummer så att kundchattar arkiverar sig själva, en egen arbetslinje inuti PropertyList-appen, och att kundöversikten dyker upp av sig själv på din samtalsskärm. Allt annat på den här sidan fungerar redan idag.' },
 ];
 
@@ -112,7 +112,7 @@ const softwareLd = {
 	title={title}
 	description={description}
 	canonical={canonical}
-	ogImage="https://info.propertylist.es/og/og-coagent-sv.jpg"
+	ogImage="https://info.propertylist.es/og/og-coagent-v2-sv.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
@@ -145,7 +145,7 @@ const softwareLd = {
 					)}
 					<a class="btnGhost" href="#how">Se hur det fungerar</a>
 				</div>
-				<p class="micro">5 gratis meddelanden om dagen &middot; Inget att installera &middot; Din röst sparas aldrig &middot; CoAgent svarar på engelska, spanska, tyska, franska, portugisiska, bulgariska och grekiska</p>
+				<p class="micro">20 gratis meddelanden i månaden &middot; Inget att installera &middot; Din röst sparas aldrig &middot; CoAgent svarar på engelska, spanska, tyska, franska, portugisiska, bulgariska och grekiska</p>
 				{WA ? (
 					<p class="member">Redan på PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Lägg till ditt WhatsApp-nummer på din användare</a> så att CoAgent vet att det är du.</p>
 				) : (
@@ -350,8 +350,8 @@ const softwareLd = {
 			<div class="plans">
 				<div class="plan">
 					<div class="planWhen">Varje agent</div>
-					<div class="planPrice">5 om dagen</div>
-					<div class="planDesc">gratis meddelanden, varje dag. Att svara YES räknas aldrig.</div>
+					<div class="planPrice">20 i månaden</div>
+					<div class="planDesc">gratis meddelanden, varje månad. Att svara YES räknas aldrig.</div>
 				</div>
 				<div class="plan featured">
 					<div class="planBadge">De första 10 agenterna</div>
@@ -382,7 +382,7 @@ const softwareLd = {
 			<div class="faq">
 				{faqs.map((f) => (
 					<details>
-						<summary>{f.q}</summary>
+						<summary data-track="coagent-faq-click" data-track-label={f.q}>{f.q}</summary>
 						<p>{f.a}</p>
 					</details>
 				))}

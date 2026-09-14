@@ -983,6 +983,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
     if (p.indexOf('/blog/') === 0 || p.indexOf('/es/blog/') === 0 || p.indexOf('/es/informacion-general/') === 0) return 'blog';
     if (p.indexOf('/pricing/') === 0 || p.indexOf('/es/precios/') === 0) return 'pricing';
     if (p.indexOf('/search') === 0 || p.indexOf('/es/search') === 0) return 'search';
+    if (['/coagent/', '/1000-agencies/', '/es/coagent/', '/es/1000-agencias/', '/de/coagent/', '/de/1000-agenturen/', '/fr/coagent/', '/fr/1000-agences/', '/sv/coagent/', '/sv/1000-maklarbyraer/', '/ru/coagent/', '/ru/1000-agentstv/'].indexOf(p) > -1) return 'coagent-launch';
     return 'content';
   }
   function addUtm(url, loc){
@@ -1521,11 +1522,18 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				const track = (n, d) => { try { if (window.umami && umami.track) umami.track(n, d); else q.push([n, d]); } catch (e) {} };
 				const t = setInterval(() => { try { if (window.umami && umami.track) { q.splice(0).forEach((a) => umami.track(a[0], a[1])); clearInterval(t); } } catch (e) {} }, 400);
 				document.addEventListener("click", (ev) => {
+					// Elements marked data-track="event-name" (optional data-track-label) send that event, wherever inside them the click lands.
+					const tr = ev.target && ev.target.closest && ev.target.closest("[data-track]");
+					if (tr) track(tr.getAttribute("data-track"), { from: location.pathname, label: String(tr.getAttribute("data-track-label") || "").slice(0, 80) });
 					const a = ev.target && ev.target.closest && ev.target.closest("a[href]");
 					if (!a) return;
 					const h = a.getAttribute("href") || "";
 					if (h.indexOf("new_agency") > -1 || h.indexOf("developers.propertylist.es/signup") > -1) track("signup-click", { from: location.pathname });
 					if (h.indexOf("agents.propertylist.es/login") > -1) track("login-click", { from: location.pathname });
+					// CoAgent launch actions: a WhatsApp number link (share links are wa.me/?text= and are left out), adding the number to your user, and a calendar reminder.
+					if (h.indexOf("wa.me/") > -1 && h.indexOf("wa.me/?") === -1) track("whatsapp-click", { from: location.pathname });
+					if (h.indexOf("agents.propertylist.es/staff") > -1) track("crm-staff-click", { from: location.pathname });
+					if (h.indexOf("calendar.google.com/calendar/render") > -1) track("calendar-click", { from: location.pathname });
 				}, true);
 			})();
 		</script>

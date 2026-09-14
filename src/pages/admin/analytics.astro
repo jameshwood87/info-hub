@@ -508,6 +508,14 @@ import Layout from '../../layouts/Layout.astro';
 				['Costa del Sol - join free', d.clicks['coast-signup-click'] || 0],
 				['Costa del Sol - browse portal', d.clicks['coast-portal-click'] || 0],
 				['9-Minute Agency - join free', d.clicks['launch-signup-click'] || 0],
+				['CoAgent - WhatsApp button', d.clicks['whatsapp-click'] || 0],
+				['CoAgent - add my WhatsApp number', d.clicks['crm-staff-click'] || 0],
+				['CoAgent - calendar reminder', d.clicks['calendar-click'] || 0],
+				['Email me the details (any page)', d.clicks['agent-interested'] || 0],
+				['1,000 agencies - see everything CoAgent does', d.clicks['see-coagent-click'] || 0],
+				['1,000 agencies - claim one of the 10 free months', d.clicks['claim-first10-click'] || 0],
+				['CoAgent - phone demo tab clicks', d.clicks['coagent-phone-tab'] || 0],
+				['CoAgent - FAQ question clicks', d.clicks['coagent-faq-click'] || 0],
 			];
 			cb.innerHTML = clickRows.map(([l, n]) => '<tr><td>' + l + '</td><td>' + n + '</td></tr>').join('');
 			const coastLabels = { malaga: 'Malaga', torremolinos: 'Torremolinos', benalmadena: 'Benalmadena', fuengirola: 'Fuengirola', mijas: 'Mijas', marbella: 'Marbella', 'puerto-banus': 'Puerto Banus', estepona: 'Estepona', sotogrande: 'Sotogrande', interlude: 'The register message', finale: 'Finale + CTA' };
