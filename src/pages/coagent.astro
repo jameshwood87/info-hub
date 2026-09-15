@@ -19,7 +19,7 @@ const plListings = statPlus(__ps.listings, 'en');
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 const WA = coagentWaLink('Hi');
 // A reminder for 9am Madrid time (07:00 UTC) on launch day, until the number exists.
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/coagent/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch from 9am. Before you message it, be signed up with your WhatsApp number on your user. The first 10 agents get a month free.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/coagent/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch from 9am. Before you message it, be signed up with your WhatsApp number on your user. Free for every agent until 22 September.')}`;
 
 // Everything CoAgent does today, as the question an agent would actually send.
 // Tap a question to see what comes back. Answers are the verified descriptions.
@@ -39,7 +39,6 @@ const moments = [
 			{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
 			{ q: 'Tell me about PL22234', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
 			{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
-			{ photo: true, q: 'A photo of a tired room: "renovate"', a: 'Mid-viewing, send the kitchen as it is and get it back renovated a minute later, to show your buyer what it could be. It costs the same credits as in the CRM, and only a render that comes out well is charged.' },
 			{ q: 'How many apartments are for sale in San Pedro?', a: 'The real number on the market there, the best matches, and a link to the full list in your CRM.' },
 			{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
 		],
@@ -82,8 +81,8 @@ const faqs = [
 	{ q: 'Do I need to name a client every time?', a: 'No. Naming a client turns a voice note into CRM updates. Without one you can still ask for properties, your diary, a listing by reference or what an area is worth, which is what you want when a walk-in is standing next to you.' },
 	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
 	{ q: 'What if CoAgent does not know my number?', a: 'It replies, in Spanish and English, with a link to create your free account and a link to the Staff page of your CRM, where you add your mobile to your profile. Put the country code in front if your number is not Spanish, then write to it again.' },
-	{ q: 'What costs credits?', a: 'Messages are covered by your plan. A brochure, the market report after your first free one, and a renovated room are paid in PropertyList credits, at the same price as in the CRM. CoAgent always tells you the price and waits for your YES before it spends anything, and a brochure or render that fails is never charged.' },
-	{ q: 'What does it cost?', a: 'The first 10 agents to message CoAgent get a month free and unlimited, counted from their first message. Every agent gets 20 free messages a month, and approving with YES never counts toward them. Unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. If you have more than 3 agents to add, talk to us about a package. The MLS and the CRM core stay free, and creating your account costs nothing.' },
+	{ q: 'What costs credits?', a: 'Messages are covered by your plan. A brochure and the market report after your first free one are paid in PropertyList credits, at the same price as in the CRM. CoAgent always tells you the price and waits for your YES before it spends anything, and a brochure that fails is never charged.' },
+	{ q: 'What does it cost?', a: 'CoAgent is free for every agent until 22 September. From then on, every agent gets 20 free messages a month, and approving with YES never counts toward them. The first 10 agents to message it are the exception: free and unlimited until 1 November 2026. Unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. If you have more than 3 agents to add, talk to us about a package. The MLS and the CRM core stay free, and creating your account costs nothing.' },
 	{ q: 'What is not live yet?', a: 'Connecting your own WhatsApp number so client chats file themselves, a dedicated work line inside the PropertyList app, and the client brief appearing by itself on your caller screen. Everything else on this page works today.' },
 ];
 
@@ -113,7 +112,7 @@ const softwareLd = {
 	title={title}
 	description={description}
 	canonical={canonical}
-	ogImage="https://info.propertylist.es/og/og-coagent-v2.jpg"
+	ogImage="https://info.propertylist.es/og/og-coagent-v3.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
@@ -146,7 +145,8 @@ const softwareLd = {
 					)}
 					<a class="btnGhost" href="#how">See how it works</a>
 				</div>
-				<p class="micro">20 free messages a month &middot; Nothing to install &middot; Your voice is never kept</p>
+				<p class="micro">Free for every agent until 22 September &middot; Nothing to install &middot; Your voice is never kept</p>
+				{WA && <p class="member"><b>WhatsApp: <a href={WA} target="_blank" rel="noopener">{COAGENT_NUMBER}</a></b></p>}
 				{WA ? (
 					<p class="member">Already on PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a> so CoAgent knows it is you.</p>
 				) : (
@@ -221,7 +221,7 @@ const softwareLd = {
 					<div class="mini">
 						<div class="mb">
 							<b>Marta Ruiz · buyer</b>
-							<span class="kv"><i>Budget</i><em>€800k to €850k</em></span>
+							<span class="kv"><i>Budget</i><em>€850k</em></span>
 							<span class="kv"><i>Bedrooms</i><em>3</em></span>
 							<span class="kv"><i>Reminder</i><em>Cerquilla, Saturday</em></span>
 						</div>
@@ -352,13 +352,13 @@ const softwareLd = {
 				<div class="plan">
 					<div class="planWhen">Every agent</div>
 					<div class="planPrice">20 a month</div>
-					<div class="planDesc">free messages, every month. Replying YES never counts.</div>
+					<div class="planDesc">free messages after 22 September, free until then. Replying YES never counts.</div>
 				</div>
 				<div class="plan featured">
 					<div class="planBadge">The first 10 agents</div>
-					<div class="planWhen">Free and unlimited</div>
-					<div class="planPrice">1 month</div>
-					<div class="planDesc">from your first message. Tell us where it gets in the way, and it changes.</div>
+					<div class="planWhen">Free and unlimited until</div>
+					<div class="planPrice">1 November</div>
+					<div class="planDesc">Be one of the first 10 to message it. Tell us where it gets in the way, and it changes.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Message CoAgent now</a>
 					) : (
@@ -371,7 +371,7 @@ const softwareLd = {
 					<div class="planDesc">a month per agent. No contract, stop any time. More than 3 agents? Ask about a package.</div>
 				</div>
 			</div>
-			<p class="fine">Brochures, renovated rooms and the market report after your first free one cost credits, as in the CRM. It always asks first.</p>
+			<p class="fine">Brochures and the market report after your first free one cost credits, as in the CRM. It always asks first.</p>
 		</div>
 	</section>
 
@@ -404,7 +404,7 @@ const softwareLd = {
 			</div>
 			<p class="micro light">
 				{COAGENT_NUMBER ? (
-					<>Already a member? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a>.</>
+					<><b>WhatsApp: {COAGENT_NUMBER}</b> &middot; Already a member? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Add your WhatsApp number to your user</a>.</>
 				) : (
 					<>The number is available from 9am on Tuesday 15 September. Before you message it, make sure you are signed up and your <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp number is added to your user</a>.</>
 				)}

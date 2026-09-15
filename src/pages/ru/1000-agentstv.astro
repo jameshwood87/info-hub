@@ -13,7 +13,7 @@ const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 const WA = coagentWaLink('Здравствуйте');
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Написать PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Номер CoAgent появится на странице https://info.propertylist.es/ru/1000-agentstv/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch с 9:00. Просто поздоровайтесь. Первые 10 агентов получат месяц бесплатно.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Написать PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Номер CoAgent появится на странице https://info.propertylist.es/ru/1000-agentstv/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch с 9:00. Просто поздоровайтесь. Бесплатно для всех агентов до 22 сентября.')}`;
 
 const reviews = [
 	{ quote: 'Создана с учётом повседневной реальности агентов по недвижимости. Экономит время.', agency: 'Alain Fiddelers' },
@@ -25,7 +25,7 @@ const reviews = [
 const faqs = [
 	{
 		q: 'Сколько стоит CoAgent?',
-		a: 'Первые 10 агентов, которые напишут CoAgent, получают месяц бесплатно и без ограничений, отсчёт идёт с первого сообщения. У каждого агента есть 20 бесплатных сообщений в месяц, и ответ YES никогда не учитывается. Безлимит стоит 50 кредитов в месяц на агента. Больше 3 агентов? Свяжитесь с нами, чтобы обсудить пакет.',
+		a: 'CoAgent бесплатен для всех агентов до 22 сентября. После этого у каждого агента есть 20 бесплатных сообщений в месяц, и ответ YES никогда не учитывается. Исключение для первых 10 агентов, которые напишут CoAgent: бесплатно и без ограничений до 1 ноября 2026 года. Безлимит стоит 50 кредитов в месяц на агента. Больше 3 агентов? Свяжитесь с нами, чтобы обсудить пакет.',
 	},
 	{
 		q: 'Может ли он сам менять мой CRM?',
@@ -56,9 +56,9 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 <Layout
 	lang="ru"
 	title="Спасибо: 1 000 агентств на PropertyList | PropertyList"
-	description="В PropertyList уже более 1 000 зарегистрированных агентств. Спасибо, что вы с нами. Наш подарок: CoAgent, ваш CRM в WhatsApp, месяц бесплатно для первых 10 агентов."
+	description="В PropertyList уже более 1 000 зарегистрированных агентств. Спасибо, что вы с нами. Наш подарок: CoAgent, ваш CRM в WhatsApp, бесплатно для всех агентов до 22 сентября, а для первых 10 агентов до 1 ноября 2026 года."
 	canonical="https://info.propertylist.es/ru/1000-agentstv/"
-	ogImage="https://info.propertylist.es/og/og-1000-agencies-ru.jpg"
+	ogImage="https://info.propertylist.es/og/og-1000-agencies-terms-ru.jpg"
 	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/1000-agencies/' },
@@ -132,8 +132,8 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 		<div class="cx">
 			<div class="head center">
 				<div class="label">Первые 10 агентов</div>
-				<h2>Месяц бесплатно. <span>Станьте одним из 10.</span></h2>
-				<p>Бесплатно и без ограничений с первого сообщения, и вы помогаете определить, что получат остальные агенты.</p>
+				<h2>Бесплатно до 1 ноября. <span>Станьте одним из 10.</span></h2>
+				<p>Бесплатно и без ограничений до 1 ноября 2026 года, и вы помогаете определить, что получат остальные агенты.</p>
 			</div>
 
 			<div class="steps">
@@ -149,7 +149,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 				</div>
 
 				<div class="step">
-					<div class="stepWhen"><span>2</span> Вторник, 15 сентября, 9:00</div>
+					<div class="stepWhen"><span>2</span> {WA ? 'Уже работает' : 'Вторник, 15 сентября, 9:00'}</div>
 					<h3>Просто поздоровайтесь</h3>
 					<div class="waPreview"><span class="waBubble">Здравствуйте</span></div>
 					<p class="small center">CoAgent ответит и покажет, что умеет.</p>
@@ -177,7 +177,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<h2>Присоединяйтесь. <span>Это бесплатно.</span></h2>
 					<p>
 						Ваш следующий объект увидят {plAgencies} агентств в тот же день. Без платы за размещение, без договора, без
-						карты. А CoAgent возьмёт на себя бумажную работу, с 20 бесплатными сообщениями в месяц.
+						карты. А CoAgent возьмёт на себя бумажную работу, бесплатно до 22 сентября, а затем с 20 бесплатными сообщениями в месяц.
 					</p>
 				</div>
 				<div class="joinCta">
@@ -223,7 +223,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 			<h2>Спасибо, что вы <span>часть этого.</span></h2>
 			<p>От всей команды PropertyList. За следующую 1 000.</p>
 			<div class="ctaRow center">
-				<a class="btnPrimary" href="#first10" data-track="claim-first10-click">Забрать один из 10 бесплатных месяцев</a>
+				<a class="btnPrimary" href="#first10" data-track="claim-first10-click">Станьте одним из первых 10</a>
 				<a class="btnGhostDark" href={SIGNUP} target="_blank" rel="noopener">Присоединиться бесплатно</a>
 			</div>
 		</div>

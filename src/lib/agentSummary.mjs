@@ -157,9 +157,10 @@ const COPY = {
 	},
 };
 
-const waLink = (number) => {
+// Pre-fills the greeting: to start with CoAgent you just say hi.
+const waLink = (number, text) => {
 	const digits = String(number || '').replace(/[^0-9]/g, '');
-	return digits ? `https://wa.me/${digits}?text=${encodeURIComponent('PropertyList CoAgent')}` : '';
+	return digits ? `https://wa.me/${digits}?text=${encodeURIComponent(text)}` : '';
 };
 
 const button = (href, label, bg = '#00ae9a', color = '#ffffff') =>
@@ -172,7 +173,7 @@ const button = (href, label, bg = '#00ae9a', color = '#ffffff') =>
  */
 export function buildAgentSummary({ lang = 'en', stats, coagentNumber = '', unsubUrl = '', hasReplyTo = false }) {
 	const c = COPY[lang === 'es' ? 'es' : 'en'];
-	const wa = waLink(coagentNumber);
+	const wa = waLink(coagentNumber, lang === 'es' ? 'Hola' : 'Hi');
 	const url = (p) => {
 		// utm tags so a click from this email is attributable (Mandrill click tracking is off).
 		const [path, hash] = String(p).split('#');

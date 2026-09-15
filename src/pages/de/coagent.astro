@@ -18,7 +18,7 @@ const plListings = statPlus(__ps.listings, 'de');
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=de';
 const WA = coagentWaLink('Hallo');
 // A reminder for 9am Madrid time (07:00 UTC) on launch day, until the number exists.
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('PropertyList CoAgent anschreiben')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Die Nummer von CoAgent steht ab 9 Uhr auf https://info.propertylist.es/de/coagent/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch. Bevor Sie schreiben, seien Sie registriert und mit Ihrer WhatsApp-Nummer bei Ihrem Benutzer hinterlegt. Die ersten 10 Agenten bekommen einen Monat gratis.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('PropertyList CoAgent anschreiben')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('Die Nummer von CoAgent steht ab 9 Uhr auf https://info.propertylist.es/de/coagent/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch. Bevor Sie schreiben, seien Sie registriert und mit Ihrer WhatsApp-Nummer bei Ihrem Benutzer hinterlegt. Gratis für jeden Agenten bis zum 22. September.')}`;
 
 // Everything CoAgent does today, as the question an agent would actually send.
 // Tap a question to see what comes back. Answers are the verified descriptions.
@@ -38,7 +38,6 @@ const moments = [
 			{ q: 'Was haben wir in Marbella, drei Schlafzimmer, bis zwei Millionen?', a: 'Fünf Inserate aus dem gemeinsamen MLS mit Preisen und Links. Kein Kunde nötig, das funktioniert also auch, wenn jemand neben Ihnen sitzt.' },
 			{ q: 'Erzählen Sie mir von PL22234', a: 'Preis, Schlafzimmer, Größe, Lage und der Link zu diesem einen Inserat, ob es Ihres ist oder das einer anderen Agentur.' },
 			{ q: 'Welches ist das beste Angebot, PL5001, PL5002 oder PL5003?', a: 'CoAgent vergleicht sie mit ähnlichen Immobilien, die in der Nähe zum Verkauf stehen, mit dem Preis pro Quadratmeter, damit Sie einem Kunden sagen können, welches günstig ist und welches zu teuer. Fragen Sie direkt nach einer Suche, und CoAgent vergleicht diese Ergebnisse.' },
-			{ photo: true, q: 'Ein Foto eines abgenutzten Zimmers: „renovieren“', a: 'Mitten in der Besichtigung schicken Sie die Küche, wie sie ist, und bekommen sie eine Minute später renoviert zurück, um Ihrem Käufer zu zeigen, was daraus werden könnte. Es kostet die gleichen Credits wie im CRM, und berechnet wird nur ein Render, der gut gelingt.' },
 			{ q: 'Wie viele Wohnungen stehen in San Pedro zum Verkauf?', a: 'Die reale Zahl am Markt dort, die besten Treffer und ein Link zur vollständigen Liste in Ihrem CRM.' },
 			{ q: 'Ist PL22234 noch verfügbar?', a: 'Gehört das Inserat einer anderen Agentur, bietet CoAgent an, dort für Sie nachzufragen. Antworten Sie mit YES, und die Anfrage geht über das MLS an sie, und ihre Antwort kommt zu Ihnen zurück.' },
 		],
@@ -81,8 +80,8 @@ const faqs = [
 	{ q: 'Muss ich jedes Mal einen Kunden nennen?', a: 'Nein. Einen Kunden zu nennen macht aus einer Sprachnachricht CRM-Aktualisierungen. Ohne Namen können Sie trotzdem nach Immobilien, Ihrem Terminkalender, einem Inserat per Referenz oder dem Wert einer Gegend fragen, genau das, was Sie brauchen, wenn ein Laufkunde neben Ihnen steht.' },
 	{ q: 'Kann CoAgent für mich mit anderen Agenturen sprechen?', a: 'Ja. Fragen Sie, ob ein Inserat einer anderen Agentur noch verfügbar ist, und CoAgent bietet an, die Anfrage zu schicken. Antworten Sie mit YES, und sie geht über das MLS genauso raus wie eine, die vom CRM-Bildschirm aus geschickt wird, sodass sie in deren normalem Arbeitsablauf landet.' },
 	{ q: 'Was, wenn CoAgent meine Nummer nicht kennt?', a: 'CoAgent antwortet auf Spanisch und Englisch, mit einem Link, um Ihr kostenloses Konto zu erstellen, und einem Link zur Staff-Seite Ihres CRM, wo Sie Ihre Handynummer zu Ihrem Profil hinzufügen. Ist Ihre Nummer nicht spanisch, stellen Sie die Landesvorwahl voran und schreiben Sie noch einmal.' },
-	{ q: 'Was kostet Credits?', a: 'Nachrichten sind in Ihrem Plan enthalten. Eine Broschüre, der Marktbericht nach dem ersten gratis und ein renoviertes Zimmer werden in PropertyList Credits bezahlt, zum gleichen Preis wie im CRM. CoAgent sagt Ihnen immer den Preis und wartet auf Ihr YES, bevor etwas ausgegeben wird, und eine Broschüre oder ein Render, das fehlschlägt, wird nie berechnet.' },
-	{ q: 'Was kostet es?', a: 'Die ersten 10 Agenten, die CoAgent anschreiben, bekommen einen Monat gratis und unbegrenzt, gezählt ab ihrer ersten Nachricht. Jeder Agent hat 20 gratis Nachrichten im Monat, und mit YES zu antworten zählt nie dazu. Unbegrenzt kostet 50 Credits im Monat pro Agent, bezahlt aus Ihren PropertyList Credits, und Sie können die Verlängerung jederzeit stoppen. Haben Sie mehr als 3 Agenten hinzuzufügen, sprechen Sie mit uns über ein Paket. Das MLS und der Kern des CRM bleiben gratis, und ein Konto zu erstellen kostet nichts.' },
+	{ q: 'Was kostet Credits?', a: 'Nachrichten sind in Ihrem Plan enthalten. Eine Broschüre und der Marktbericht nach dem ersten gratis werden in PropertyList Credits bezahlt, zum gleichen Preis wie im CRM. CoAgent sagt Ihnen immer den Preis und wartet auf Ihr YES, bevor etwas ausgegeben wird, und eine Broschüre, die fehlschlägt, wird nie berechnet.' },
+	{ q: 'Was kostet es?', a: 'Bis zum 22. September ist CoAgent für jeden Agenten gratis. Ab dann hat jeder Agent 20 gratis Nachrichten im Monat, und mit YES zu antworten zählt nie dazu. Die ersten 10 Agenten, die CoAgent anschreiben, sind die Ausnahme: gratis und unbegrenzt bis zum 1. November 2026. Unbegrenzt kostet 50 Credits im Monat pro Agent, bezahlt aus Ihren PropertyList Credits, und Sie können die Verlängerung jederzeit stoppen. Haben Sie mehr als 3 Agenten hinzuzufügen, sprechen Sie mit uns über ein Paket. Das MLS und der Kern des CRM bleiben gratis, und ein Konto zu erstellen kostet nichts.' },
 	{ q: 'Was ist noch nicht verfügbar?', a: 'Die eigene WhatsApp-Nummer anzubinden, damit sich Kundenchats von selbst einordnen, eine eigene Arbeitsleitung in der PropertyList App und dass der Kundensteckbrief von selbst auf Ihrem Anrufbildschirm erscheint. Alles andere auf dieser Seite funktioniert schon heute.' },
 ];
 
@@ -112,7 +111,7 @@ const softwareLd = {
 	title={title}
 	description={description}
 	canonical={canonical}
-	ogImage="https://info.propertylist.es/og/og-coagent-v2-de.jpg"
+	ogImage="https://info.propertylist.es/og/og-coagent-v3-de.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
@@ -145,7 +144,8 @@ const softwareLd = {
 					)}
 					<a class="btnGhost" href="#how">So funktioniert es</a>
 				</div>
-				<p class="micro">20 gratis Nachrichten im Monat &middot; Nichts zu installieren &middot; Ihre Stimme wird nie gespeichert</p>
+				<p class="micro">Gratis für jeden Agenten bis zum 22. September &middot; Nichts zu installieren &middot; Ihre Stimme wird nie gespeichert</p>
+				{WA && <p class="member"><b>WhatsApp: <a href={WA} target="_blank" rel="noopener">{COAGENT_NUMBER}</a></b></p>}
 				{WA ? (
 					<p class="member">Schon bei PropertyList? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Fügen Sie Ihre WhatsApp-Nummer zu Ihrem Benutzer hinzu</a>, damit CoAgent weiß, dass Sie es sind.</p>
 				) : (
@@ -220,7 +220,7 @@ const softwareLd = {
 					<div class="mini">
 						<div class="mb">
 							<b>Marta Ruiz · Käuferin</b>
-							<span class="kv"><i>Budget</i><em>800.000 € bis 850.000 €</em></span>
+							<span class="kv"><i>Budget</i><em>850.000 €</em></span>
 							<span class="kv"><i>Schlafzimmer</i><em>3</em></span>
 							<span class="kv"><i>Erinnerung</i><em>Cerquilla, Samstag</em></span>
 						</div>
@@ -351,13 +351,13 @@ const softwareLd = {
 				<div class="plan">
 					<div class="planWhen">Jeder Agent</div>
 					<div class="planPrice">20 pro Monat</div>
-					<div class="planDesc">gratis Nachrichten, jeden Monat. Mit YES zu antworten zählt nie mit.</div>
+					<div class="planDesc">gratis Nachrichten nach dem 22. September, bis dahin gratis. Mit YES zu antworten zählt nie mit.</div>
 				</div>
 				<div class="plan featured">
 					<div class="planBadge">Die ersten 10 Agenten</div>
-					<div class="planWhen">Gratis und unbegrenzt</div>
-					<div class="planPrice">1 Monat</div>
-					<div class="planDesc">ab Ihrer ersten Nachricht. Sagen Sie uns, wo es hakt, und wir ändern es.</div>
+					<div class="planWhen">Gratis und unbegrenzt bis</div>
+					<div class="planPrice">1. November</div>
+					<div class="planDesc">Seien Sie einer der ersten 10, die CoAgent anschreiben. Sagen Sie uns, wo es hakt, und wir ändern es.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">CoAgent jetzt anschreiben</a>
 					) : (
@@ -370,7 +370,7 @@ const softwareLd = {
 					<div class="planDesc">im Monat pro Agent. Kein Vertrag, jederzeit kündbar. Mehr als 3 Agenten? Fragen Sie uns nach einem Paket.</div>
 				</div>
 			</div>
-			<p class="fine">Broschüren, renovierte Zimmer und der Marktbericht nach dem ersten gratis kosten Credits, wie im CRM. CoAgent fragt immer zuerst.</p>
+			<p class="fine">Broschüren und der Marktbericht nach dem ersten gratis kosten Credits, wie im CRM. CoAgent fragt immer zuerst.</p>
 		</div>
 	</section>
 
@@ -403,7 +403,7 @@ const softwareLd = {
 			</div>
 			<p class="micro light">
 				{COAGENT_NUMBER ? (
-					<>Schon Mitglied? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Fügen Sie Ihre WhatsApp-Nummer zu Ihrem Benutzer hinzu</a>.</>
+					<><b>WhatsApp: {COAGENT_NUMBER}</b> &middot; Schon Mitglied? <a href={CRM_STAFF_URL} target="_blank" rel="noopener">Fügen Sie Ihre WhatsApp-Nummer zu Ihrem Benutzer hinzu</a>.</>
 				) : (
 					<>Die Nummer ist Dienstag, 15. September, ab 9 Uhr verfügbar. Bevor Sie schreiben, stellen Sie sicher, dass Sie registriert sind und Ihre <a href={CRM_STAFF_URL} target="_blank" rel="noopener">WhatsApp-Nummer bei Ihrem Benutzer hinterlegt ist</a>.</>
 				)}
