@@ -1,6 +1,6 @@
 # PropertyList Info Hub - Full Text for AI Models
 
-Source: https://info.propertylist.es/ | Generated: 2026-09-01
+Source: https://info.propertylist.es/ | Generated: 2026-09-16
 This is the full-text companion to https://info.propertylist.es/llms.txt. Spanish versions of every page exist (see llms.txt for paths). First-party data APIs: https://mcp.propertylist.es/mcp (live listing counts and prices for Spain and Portugal, free) and https://oracle.propertylist.es (notary-verified sale prices).
 
 
@@ -13,18 +13,18 @@ How to use PropertyList
 
 Free forever property sharing for estate agents and developers
 
-# List once. Let 1,300+ agents sell it.
+# List once. Let 1,390+ agents sell it.
 
-PropertyList is Spain's free Smart MLS, CRM and property portal. List a property once and it reaches 1,300+
+PropertyList is Spain's free Smart MLS, CRM and property portal. List a property once and it reaches 1,390+
 registered agents and thousands of buyers - no setup fees, no monthly rent, no lock-ins. Add AI and marketing
 power only when a specific deal calls for it.
 
 Create your free account Browse the property portal
 
-6,478
+6,138
 Active Listings
 
-987
+1,008
 Agencies
 
 Multi-Language
@@ -46,7 +46,7 @@ Buyers & Renters
 
 For Estate Agents
 
-Stop paying monthly rent just to host your own listings. List them free on PropertyList, and 1,300+ registered agents can sell them for you - you set the commission and keep control.
+Stop paying monthly rent just to host your own listings. List them free on PropertyList, and 1,390+ registered agents can sell them for you - you set the commission and keep control.
 
 Match your buyers instantly against thousands of shared listings across the network. The MLS and CRM stay free forever - no setup fees, no lock-ins.
 
@@ -57,7 +57,7 @@ MLS & CRM User Guide Laws & Procedures Area Guides
 
 For Developers
 
-Put your whole development in front of 1,300+ registered agents the day you list it - for free. Your portfolio becomes shared inventory across the network, so a real sales force is selling your units, not just an advert parked on a portal.
+Put your whole development in front of 1,390+ registered agents the day you list it - for free. Your portfolio becomes shared inventory across the network, so a real sales force is selling your units, not just an advert parked on a portal.
 
 You only pay the commission you set, and only when an agent actually brings a buyer. Every euro is tied to a confirmed sale - no upfront ad spend, no wasted budget.
 
@@ -70,8 +70,8 @@ Reach agents and buyers at the exact moment they need you - not with a generic d
 
 Coming soon: our AI will do the introducing, putting your profile in front of the right people the moment a transaction calls for your trade. You will only pay for qualified connections tied to a real property deal.
 
-Create your free account
-Property Service Docs Area Guides
+Register your interest
+Property Services Area Guides
 
 For Buyers & Renters
 
@@ -157,16 +157,16 @@ Free
 
 ## Paid, in one sentence
 
-You pay for demand, never for supply: 1 credit when you choose to move a qualified buyer lead into the Buyer pipeline, with your first 5 free. Optional modules when you want them: Rentals (50 credits / 30 days, free 30-day trial), Automation & Nurture (20 credits/mo) and the Website Builder (50 credits/mo, free until you publish).
+You pay for demand, never for supply: 1 credit when you choose to move a qualified buyer lead into the Buyer pipeline, with your first 5 free. Optional modules when you want them: Rentals (50 credits / 30 days, free 30-day trial) and the Website Builder (50 credits/mo, free until you publish). Automation & Nurture is free.
 See all features -> Everything that's free Pricing
 
 ## Quick answers
 
 The questions agents ask before signing up. The full list lives on the FAQ and features pages.
 What is PropertyList?
-PropertyList is the system Spanish estate agencies run on: one login that replaces the CRM, the MLS, the portal presence, the agency website, the AI marketing tools and the market-data subscriptions an agency would otherwise buy from four or five vendors. It is also the network those tools plug into: list a property once and 1,300+ agents across 980+ agencies can sell it with you, while buyers find it on propertylist.es. The AI does the heavy lifting: a listing written from photos and a voice note, buyers matched against the whole market from a pasted client message, and follow-up that keeps working your database long after most agents stop - grounded in notary-verified sale prices, not asking-price guesses. Is PropertyList really free?
+PropertyList is the system Spanish estate agencies run on: one login that replaces the CRM, the MLS, the portal presence, the agency website, the AI marketing tools and the market-data subscriptions an agency would otherwise buy from four or five vendors. It is also the network those tools plug into: list a property once and 1,390+ agents across 1,000+ agencies can sell it with you, while buyers find it on propertylist.es. The AI does the heavy lifting: a listing written from photos and a voice note, buyers matched against the whole market from a pasted client message, and follow-up that keeps working your database long after most agents stop - grounded in notary-verified sale prices, not asking-price guesses. Is PropertyList really free?
 The core is free with no limit: the MLS, unlimited listings, team accounts, your MicroSite and the Lead, Seller and Property pipelines. Moving a qualified buyer lead into the Buyer pipeline costs 1 credit, and your first 5 are free. How does PropertyList make money?
-Credits, from one prepaid balance - and every charge is optional. Receiving a lead costs nothing: portal enquiries are free for a limited time, and leads from other agents or from your MicroSite are free forever. If you choose to move a qualified buyer into the Buyer pipeline, that is 1 credit, with your first 5 free - and if you never move them, you never pay. The same goes for featuring a listing, property reports, the Rentals and Automation & Nurture modules, the XML feed that puts the whole network's stock on your own website, and the custom Website Builder, which is free to build and preview and only billed once you publish it live. Nothing switches itself on. Listing and selling stay free, so the network keeps growing. Can I get free credits?
+Credits, from one prepaid balance - and every charge is optional. Receiving a lead costs nothing: portal enquiries are free for a limited time, and leads from other agents or from your MicroSite are free forever. If you choose to move a qualified buyer into the Buyer pipeline, that is 1 credit, with your first 5 free - and if you never move them, you never pay. The same goes for featuring a listing, property reports, the Rentals Module, the XML feed that puts the whole network's stock on your own website, and the custom Website Builder, which is free to build and preview and only billed once you publish it live. Nothing switches itself on. Listing and selling stay free, so the network keeps growing. Can I get free credits?
 Yes. Refer an agency: you earn 20 credits for every agency that signs up through your link, with no cap, and the new agency starts with 10. On top of that, verifying your agency (free, about two minutes) adds another 20 credits and puts the verified badge on your listings. Do I have to leave my current portal or CRM?
 No. Import your existing XML feed free and run PropertyList alongside whatever you use today. Pushing your listings out to other portals is free too. How fast can I start?
 Minutes. Create the free account (no card), add one property with Instant Listing, and it is live on the MLS and the portal. See the nine-minute walkthrough.
@@ -236,11 +236,11 @@ Everything paid draws from a single balance of credits - buy them when you like 
 
 See full pricing ->
 
+## For property developers
+
+Showcase your latest developments to a network of thousands of estate agents, investors and buyers - and list them at no cost. Partner with experienced agents to market and sell your projects faster. Developers list directly at developers.propertylist.es, and there is a developer guide to walk you through it.
+
 ## Coming soon
-
-### For property developers
-
-Showcase your latest developments to a network of thousands of estate agents, investors and buyers - and list them at no cost. Partner with experienced agents to market and sell your projects faster.
 
 ### For property professionals and tradesmen
 
@@ -250,11 +250,14 @@ Lawyers, architects, plumbers, builders - get noticed by thousands of agents, la
 
 PropertyList is redefining real estate: the first fusion of MLS efficiency and property-portal visibility. It is free to join, with no card required.
 
-Sign up free -> Previous Terms and Conditions • PropertyList Info Hub
+Sign up free ->
+
+Previous Terms and Conditions • PropertyList Info Hub
 On this page
 
 - What you get for free
 - What you can optionally pay for
+- For property developers
 - Coming soon
 - Ready to get started?
 
@@ -345,8 +348,8 @@ Client Relationship Management
 - Seller pipeline Free
 - Property pipeline Free
 - Tenants pipeline (Rentals Module) 50 credits / 30 days, free 30-day trial
-- Nurture pipeline (Automation & Nurture) 20 credits/mo
-- Connected inbox (Gmail, Outlook or other) Coming soon, 10 credits per mailbox/mo
+- Nurture pipeline (Automation & Nurture) Free
+- Connected inbox (Gmail, Outlook or other) 10 credits per mailbox/mo
 - Document Upload Free
 - AI Funnels Coming soon
 - AI Chatbot Coming soon
@@ -430,7 +433,7 @@ More add-ons released regularly - AI tools, integrations, area pages
 
 ## For developers
 
-No subscription and no listing fees. List your developments free, reach 1,300+ agents and direct portal buyers, and you set the commission on each listing. It is only due once the buyer has paid 10% or more towards the property - so you are never out of pocket for marketing that has not converted. And there is no paywall on the agent side: every agent with a PropertyList account gets full access to all developments, free - to share with their clients and sell. Your project reaches the whole network from day one.
+No subscription and no listing fees. List your developments free, reach 1,390+ agents and direct portal buyers, and you set the commission on each listing. It is only due once the buyer has paid 10% or more towards the property - so you are never out of pocket for marketing that has not converted. And there is no paywall on the agent side: every agent with a PropertyList account gets full access to all developments, free - to share with their clients and sell. Your project reaches the whole network from day one.
 Read the developer docs -> · Join as a developer ->
 
 ## For buyers and sellers
@@ -447,7 +450,7 @@ A home on PropertyList for the professionals around every move - cleaners, lawye
 See every feature explained in detail - website builder, XML feeds, Rentals, Market Intelligence, and more - on the Features FAQ page, or see how the CRM pipelines work.
 
 Is PropertyList really free for estate agents?
-The core is free with no limit: the MLS, unlimited listings, team accounts, contact management and the Lead, Seller and Property pipelines. The CRM is not 100% free, because moving a qualified buyer lead into the Buyer pipeline costs 1 credit. Your first 5 are free, then it is 1 credit each. Everything else paid is optional: featured listings (10 credits for 3 days), the Rentals Module (50 credits per 30 days, free 30-day trial), Automation & Nurture (20 credits a month) or the Website Builder (50 credits a month).
+The core is free with no limit: the MLS, unlimited listings, team accounts, contact management and the Lead, Seller and Property pipelines. The CRM is not 100% free, because moving a qualified buyer lead into the Buyer pipeline costs 1 credit. Your first 5 are free, then it is 1 credit each. Everything else paid is optional: featured listings (10 credits for 3 days), the Rentals Module (50 credits per 30 days, free 30-day trial) or the Website Builder (50 credits a month). Automation & Nurture is free.
 
 How do credits work?
 Everything paid on PropertyList draws from a single balance of credits. You buy them in packs - from €20 for 20 credits (€1 each) down to €0.80 per credit on the 1,000 pack - and credits you have bought never expire. Monthly subscriptions (like the Website Builder) and pay-as-you-go features (like market reports) all come from the same balance.
@@ -462,7 +465,7 @@ What do I get with the free plan?
 Unlimited property listings, List by Voice (add a full listing from photos and a voice note with Instant Listing), AI property search, unlimited staff accounts, a branded MicroSite for your agency, CRM with contacts and leads management, calendar events, lead pipeline, document upload, WhatsApp Community access, and social distribution to Facebook - all free.
 
 How do the CRM pipelines work?
-PropertyList includes six CRM pipelines. Lead, Seller and Property are free. Buyer costs 1 credit for each qualified lead you decide to move into it, and the first 5 are free. After that the credits come from your credit balance. Tenants is part of the Rentals Module (Tenants pipeline, Tenancies and Maintenance): 50 credits per 30-day period, with a free 30-day trial and no charge until you renew. Nurture is part of Automation & Nurture at 20 credits/month - one product at one price - which also includes the automated emails, Hot-lead detection and the Daily Action Queue. New leads land in New Lead and new listings land in Active Listing. Lead and Seller are fixed boards; Buyer and Property you can edit. The legal phase sits inside the Buyer and Property pipelines: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed.
+PropertyList includes six CRM pipelines. Lead, Seller and Property are free. Buyer costs 1 credit for each qualified lead you decide to move into it, and the first 5 are free. After that the credits come from your credit balance. Tenants is part of the Rentals Module (Tenants pipeline, Tenancies and Maintenance): 50 credits per 30-day period, with a free 30-day trial and no charge until you renew. Nurture is part of Automation & Nurture, which is free and also includes the automated emails, Hot-lead detection and the Daily Action Queue. New leads land in New Lead and new listings land in Active Listing. Lead and Seller are fixed boards; Buyer and Property you can edit. The legal phase sits inside the Buyer and Property pipelines: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed.
 
 How much does the Website Builder cost?
 The base site is 50 credits a month and includes your results page, property pages and your first few pages; extra pages are 10 credits/mo each. Add optional power-ups: Instant Content (30 credits/mo, unlimited AI blogs and area guides), AI SEO meta (5 credits/mo), popup lead capture (8 credits/mo), custom domain (20 credits/mo), or remove PropertyList branding (50 credits/mo). Free hosting, SSL, and automatic MLS listing loading are always included.
@@ -492,7 +495,7 @@ MLS, CRM and basic pipelines free forever - plus a website builder, live market 
 Open a free account See full pricing Website builder
 
 FreeMLS + CRM, forever
-1,300+Spanish agents
+1,390+Spanish agents
 1 = €1Credits never expire
 MinutesTo launch your site
 
@@ -504,9 +507,9 @@ A free MLS and CRM at the core, with powerful add-ons you turn on only when they
 
 A 3D walkthrough filmed and invoiced by an independent company on the Costa del Sol, from 129 EUR per property. PropertyList attaches the finished tour to your MLS listing, microsite and website automatically. Step inside an example ->
 
-### CoAgentComing soon
+### CoAgentNew
 
-Coming soon: an AI assistant that turns every call and WhatsApp chat into CRM updates, follow-ups and ranked property matches - and briefs you before every call. Audio never stored. See how it will work ->
+Your CRM on WhatsApp. Send a voice note after a viewing and CoAgent prepares the note, the follow-up and the matching listings, and saves nothing until you reply YES. Your voice is never kept. See how it works ->
 
 ### Instant DocumentsComing soon
 
@@ -532,9 +535,9 @@ Coming soon: connect the mailbox you already use. Client replies land on the rig
 
 Free forever. Six pipelines from first lead to closed deal, set up and backfilled on day one. You only pay a credit when you actually convert. Explore the CRM ->
 
-### 6,400+ Shared Properties
+### 6,130+ Shared Properties
 
-Free for estate agents. Tap into a shared pool of 6,400+ listings across the network - sell properties from other members, collaborate on deals and split the commission, at no extra cost. See the network ->
+Free for estate agents. Tap into a shared pool of 6,130+ listings across the network - sell properties from other members, collaborate on deals and split the commission, at no extra cost. See the network ->
 
 ### Rentals Module
 
@@ -593,10 +596,10 @@ Yes. Strategic Investor (€29/month) gives you 5 curated sectors, 10 deep-dive 
 
 ## CRM & Pipelines
 Is the PropertyList CRM really free?
-The core MLS and CRM are free forever. That includes the Lead, Seller and Property pipelines, with no limits. You pay only for demand: 1 credit for each qualified lead you decide to move into the Buyer pipeline, taken from your credit balance. The Tenants pipeline comes with the Rentals Module subscription and the Nurture pipeline with the Automation and Nurture subscription. See full pricing. What pipeline boards does the PropertyList CRM include?
-Six pipelines that work together automatically: Lead (every new lead lands in New Lead), Buyer (qualified purchasers), Seller (vendor journey), Property (stock status, new listings auto-land in Active Listing), Tenants (rental pipeline, part of the Rentals Module subscription) and Nurture (past clients and referrals, part of the Automation and Nurture subscription). The Buyer and Property pipelines also carry the legal phase: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed. Lead and Seller are fixed; Buyer and Property are editable. Do I have to set up the pipeline boards manually?
+The core MLS and CRM are free forever. That includes the Lead, Seller and Property pipelines, with no limits. You pay only for demand: 1 credit for each qualified lead you decide to move into the Buyer pipeline, taken from your credit balance. The Tenants pipeline comes with the Rentals Module subscription and the Nurture pipeline with Automation and Nurture, which is free. See full pricing. What pipeline boards does the PropertyList CRM include?
+Six pipelines that work together automatically: Lead (every new lead lands in New Lead), Buyer (qualified purchasers), Seller (vendor journey), Property (stock status, new listings auto-land in Active Listing), Tenants (rental pipeline, part of the Rentals Module subscription) and Nurture (past clients and referrals, part of Automation and Nurture, which is free). The Buyer and Property pipelines also carry the legal phase: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed. Lead and Seller are fixed; Buyer and Property are editable. Do I have to set up the pipeline boards manually?
 No. All boards are automatically configured and all existing contacts and properties are backfilled onto the correct boards on day one - nothing to set up. How does the pipeline pricing work - what do I actually pay for?
-You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with the Automation and Nurture subscription at 20 credits/month, which also covers all automated emails, Hot-lead detection and the Daily Action Queue. Can I keep a listing private and not share it with other agents?
+You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with Automation and Nurture, which is free and also covers all automated emails, Hot-lead detection and the Daily Action Queue. Can I keep a listing private and not share it with other agents?
 Yes. On My Listings, select any properties and use Bulk actions > "Do not share with other agents". The property is hidden from other agencies in the MLS, kept off their microsites and removed from all export feeds - but stays live on the public portal, so direct buyers still find it and every lead comes to you. Your first 5 live private listings are free, then 5 credits each, and you can re-enable sharing any time. Read the guide. Can I connect my own email (Gmail or Outlook) to the CRM?
 Coming soon. You will open Settings, then Connected inbox, in the CRM and connect Gmail/Google Workspace or Outlook/Microsoft 365 with a secure OAuth sign-in on their own page, so no password reaches PropertyList. Client replies then appear on the matching contact, and mail you write in the CRM goes out through your own account, so the client sees your address rather than a platform address. It costs 10 Credits per connected mailbox per month, and disconnecting stops the charge. See how it works or read the setup guide.
 
@@ -870,281 +873,288 @@ Pricing Free core + optional paid features (credits)
 # Website Builder
 URL: https://info.propertylist.es/website-builder/
 
-New: AI website assistant · Built for Spanish agencies
+Website Builder · all network listings · leads to your CRM
 
-# Your agency website,
-live in minutes.
+# Pick a design.
+Your listings fill it.
 
-Every MLS property auto-loaded, plus an AI assistant that builds and edits your pages from a single sentence. AI SEO, lead capture, landing & area pages, all built in - no developer, no hosting, no headache.
-Build my agency site ->I already have a site
-Free to build & previewthen 50 credits/mo (about €50) when you publish · cancel anytime
-New here? How to use the Website Builder ->
+Fifteen finished agency websites, loaded with the whole network and filtered how you want. Enquiries land in your CRM.
+Build for free I already have a website
+Free to build and preview. From 50 credits a month (about 50 EUR) once you publish. Cancel at the end of any month.
 
-1,300+
-Spanish agents
+Website Builder
 
-40,000+
-Facebook Pages & Groups
+1,390+
+registered agents on PropertyList
 
-Unlimited
-Listings & pages
+1,000+
+agencies running their business on it
 
-€0
-Setup. Forever.
+6,130+
+listings on the network
+Your site reads the same network as your MLS and CRM. Current the day you publish, and it updates itself after that.
+
+The fifteen
+
+## Fifteen designs, one platform.
+
+Every one is a complete agency website: same pages, same blocks, different look. Pick the one that matches how you already work.
+All fifteen ModernMinimalistLuxuryClassicShowcase
+
+yourbrand.estate-agency.co
+Showcase
+
+### Solaz
+
+Opens on a film. Cypress trees and coastline at dusk, the headline sitting low over the image.
+
+yourbrand.estate-agency.co
+Modern
+
+### Marina
+
+A teal and white header, a live search bar up top, and your latest listings in a grid below.
+
+yourbrand.estate-agency.co
+Luxury
+
+### Onyx
+
+A night-time photograph of a lit villa, a serif headline in white, one button.
+
+yourbrand.estate-agency.co
+Showcase
+
+### Horizon
+
+A split screen: a bold headline on one side, a full-height interior photograph on the other.
+
+yourbrand.estate-agency.co
+Minimalist
+
+### Blanca
+
+One full-width photograph of a villa and pool, a small nav bar, no headline over the image.
+
+yourbrand.estate-agency.co
+Modern
+
+### Puerto
+
+A full-width dusk photograph with a floating card over it showing the price and the details.
+
+yourbrand.estate-agency.co
+Luxury
+
+### Noir
+
+Opens on a film. A cinematic dark landscape with a large bold headline over it, minimal nav.
+
+yourbrand.estate-agency.co
+Classic
+
+### Sierra
+
+A cream background, space for your photograph beside your name and an editorial paragraph.
+
+yourbrand.estate-agency.co
+Modern
+
+### Continental
+
+A navy dusk photograph, a bold white headline, and a price card overlaid on the image.
+
+yourbrand.estate-agency.co
+Minimalist
+
+### Atrium
+
+Light grey and white, one accent colour in the headline, a search bar and a strip of latest properties.
+
+yourbrand.estate-agency.co
+Luxury
+
+### Imperial
+
+A cream background, a bold serif headline, two photographs underneath in a simple gallery.
+
+yourbrand.estate-agency.co
+Classic
+
+### Cortijo
+
+A warm parchment background, an arched picture frame beside your name and an introduction.
+
+yourbrand.estate-agency.co
+Minimalist
+
+### Meridian
+
+A pale background, an italic serif headline, a plain search bar, nothing competing for attention.
+
+yourbrand.estate-agency.co
+Classic
+
+### Heritage
+
+A white background, your name and an introduction paragraph, green call to action buttons.
+
+yourbrand.estate-agency.co
+Showcase
+
+### Faro
+
+Opens on a film. A dark mountain and sea silhouette, a large serif headline, minimal nav.
+
+Switch template later and keep your words, pages and settings. Solaz, Noir and Faro open on a film.
 
 How it works
 
-## A website that builds itself.
+## Pick. Make it yours. Publish.
 
-Three steps. No code. No agency quotes. No waiting weeks for a developer to update a single price.
-
+Choose a template
 1
 
-### Pick a layout, or just describe it
+### Pick a template
 
-Start from a clean, modern template, then drag-and-drop blocks to make it yours - or simply tell the AI assistant what you want and watch it build.
+Choose from fifteen finished agency website designs. Every one already has the pages an agency needs.
 
+Edit your website
 2
 
-### MLS Properties, auto-loaded
+### Make it yours
 
-Every property already in PropertyList appears on your site - with photos, descriptions, prices, and location data. No need to lift a finger.
+Your brand colour, your words, your photos, in an editor showing the real site. Each block has several arrangements.
 
+Review and publish
 3
 
-### Publish & capture leads
+### Publish
 
-Hit publish. Enquiries land in your CRM the moment a buyer fills the form. AI writes SEO meta for every page, automatically.
+Nothing to upload: the listings are already there. Enquiries start landing in your CRM.
 
-New · AI website assistant
+Built for an agency, not a cafe
 
-## Don't build it. Just describe it.
+## The blocks an estate agent actually needs.
 
-Type what you want in plain English and your site rewrites itself - copy, colours, fonts, whole sections. No blocks to drag, no menus to learn. Every change is a draft until you publish, so you can experiment with zero risk.
+Property grid, featured property, search, valuation form, area guides, team, reviews, numbers, what buying costs, new developments. Each one reads from your account instead of asking you to type.
+Every listing on the network, ready to show.
+Your listings are live the day you publish. The network's stock is there too: filter it and show what fits your buyers. Leads land in your CRM.
+Every enquiry arrives as a lead. Lead, Seller and Property pipelines are free with no limit; moving a qualified lead into Buyer costs 1 credit. Search that works like a portal.
+Buyers filter the stock by area, type and price on the Properties page, and can save a search. A free valuation form that does more.
+Each request arrives as a lead with a Property Intelligence Report already filled in, yours for 5 credits if you want it. What buying costs, kept current.
+Spanish purchase costs, law cited. We refresh the rates when they change, so it stays right without you touching it. Your lawyer confirms the figure. Numbers that count themselves.
+Properties on your site, areas you cover, languages you work in: counted from your live listings, never typed in, never out of date. Reviews and team, from what you already have.
+Connect Google Business Profile and your reviews appear, or type them in. Nothing is invented. Your team comes from your agency account. Every language your buyers speak.
+English and Spanish as standard. Add the other languages your buyers use.
 
-- Rewrite any page from a single sentence
-- Change your colours, fonts and tone in seconds
-- Add sections - testimonials, an FAQ, a contact form - just by asking
-- AI also writes your SEO meta titles and FAQ content
-- Works in English and Spanish - nothing goes live until you say soTry the AI builder free ->
+Included with every site
+
+## Hosting, SSL and Cloudflare security, all included.
+
+Nothing to rent, install or renew.
+Hosting
+Served from the Cloudflare network, so pages load fast wherever your buyer is. No hosting bill. SSL certificate
+Every site runs on https with a certificate that renews itself. Cloudflare security
+DDoS protection in front of your site. Attacks are absorbed before they reach it. Your address
+your-agency-name.estate-agency.co from day one. Add your own domain for 20 credits a month.
 
 Edit with AI
-"Make the hero say 'Your home on the Costa del Sol', add a testimonials section near the bottom, and switch the colours to navy and gold."
-Punchier headlineAdd testimonialsNavy & gold
-Updating your site
 
-Your home on the Costa del Sol
-Trusted local experts - browse every villa, apartment and townhouse, updated live from the MLS.
+## Click anything. Say what to change.
 
-Visual builder
+Describe a change in plain English and the page updates. Everything stays a draft until you publish.
 
-### Design like a pro, without one.
+Edit your website
+The headline selected in the editor.
 
-Real drag-and-drop. Add a hero, a property carousel, a contact block, a video, a map - drop, position, done. Live preview as you build.
+Pricing
 
-- Block-based editor with hero, headings, gallery, forms, video
-- Custom HTML when you need full control
-- Brand colours and typography applied site-wide
-- Save drafts, preview live, publish when ready
+## Free to build. 50 credits a month once you publish.
 
-your-domain-here.estate-agency.co ->
+One base plan, add-ons in credits, and you can stop any of them at the end of any month.
 
-AI SEO & geo pages
-
-### Rank where your buyers actually search.
-
-Every page - including each property and each location - gets AI-generated meta titles and descriptions optimised for the way buyers really search. The platform builds geo-targeted pages for the areas you cover so you appear in local results without writing a word.
-
-- AI-written meta titles and descriptions for every page
-- Auto-generated location pages: Marbella, Estepona, Mijas, anywhere you list
-- Schema markup built in for property listings
-- Updated automatically as your MLS changes
-
-your-domain-here.estate-agency.co
-
-Villas for sale in Marbella
-Browse 248 luxury villas in Marbella from €485,000 to €8.5M. Updated daily from the PropertyList MLS.
-
-Lead capture
-
-### Every enquiry, straight to your CRM.
-
-Embedded forms, exit-intent popups, property enquiry buttons - they all feed directly into the PropertyList CRM. Your team sees the lead the moment it lands. No Zapier. No spreadsheets. No leads slipping through.
-
-- Embedded contact forms anywhere on the site
-- Property enquiry buttons on every listing page
-- Lead capture popups with custom triggers
-- Auto-assigned to staff in your CRM with full source tracking
-
-NEW LEAD 12 SEC AGO
-Sarah Mitchell
-[email protected] · +44 7700 900124
-"Interested in the 3-bed in Estepona Hills. When can I view?"
-Auto-assignedSource: Website
-
-Make it yours
-
-### Video hero, custom domain, your brand throughout.
-
-Add a full-bleed video to your homepage. Connect your custom domain in minutes. Switch themes without losing content. Your site looks like yours - because it is.
-Video hero sectionsCustom domainBrand colours & fontsCustom HTML blocksMobile-perfect by defaultFooter brandingCookie banner
-
-Costa Homes
-Luxury Property Specialists
-
-Honest pricing
-
-## Pay for what you use. Nothing more.
-
-A simple base plan, plus optional add-ons in credits. Add what you need, drop what you don't, when you want.
-
-Start here
 Website Builder
-Everything you need to launch.
-A custom agency website normally costs thousands to build and takes weeks. Yours is live today.
-50 credits/month
+50 credits a month
+Nothing is charged until you publish.
 
-- 3 pages - homepage, about, contact, landing or area pages
-- Drag-and-drop builder with content blocks
-- Hero header, forms, custom HTML blocks
-- Your brand colours and fonts site-wide
-- All your MLS properties auto-loaded
-- Hosting and SSL included
-- Build and preview free, only pay when published
-- Cancel anytime, no contract
-Start building free ->
-✓ Build and preview free. 50 credits/month start only when you publish.
+- Home, Properties (search, filters, saved search), a page for every listing, About and Contact
+- Legal pages (aviso legal, privacy, cookies) and a cookie banner, included and never billed
+- Hosting and Cloudflare protection included
+- English and Spanish as standard, more languages can be added
+- All fifteen designs, switch any time and keep your work
+- Enquiries straight into your PropertyList CRM
+- Cancel any month; the site reverts to the free agency microsite and you keep your domain
+Build for free
+Extra pages: 10 credits a month each.
 
-#### Power-ups, à la carte.
+#### Add-ons, if you want them
 
-Add only what your agency needs. Switch on, switch off, never pay for features you don't use.
+Each is monthly, switched on from your account, stopped whenever you like.
 
--
-AI keyword & metaSEO-optimised meta on every page5/mo
--
-Monthly email digestNew listings sent to your contacts5/mo
--
-Popup lead captureExit-intent and timed popups to your CRM8/mo
--
-AI FAQAuto-generated FAQ sections per page8/mo
--
-Custom domainyour-agency.com instead of our subdomain20/mo
--
-Extra pagesClick "Add page" anytimePay-as-you-go
-Prices in credits. New add-ons released regularly - AI tools, integrations, more.
+- Extra pageOne more page beyond the included set10 credits a month
+- Instant ContentArea guides and a blog, written for you, unlimited30 credits a month
+- Your own domainYour domain instead of your-agency.estate-agency.co20 credits a month
+- Remove PropertyList brandingTakes the PropertyList mark off your site50 credits a month
+- Pop-up lead captureA pop-up that captures leads on your site8 credits a month
+- AI answers on listingsBuilds an FAQ from what buyers actually ask8 credits a month
+- Auto SEO and GEOChecks your site weekly and fixes what it can5 credits a month
+- Monthly email reportA performance summary emailed on the 1st of the month5 credits a month
+New developments feed: a separate module, priced in your account.
 
-#### What's a credit?
+#### What is a credit
 
-One credit works out at one euro or less depending on the pack. Top up any time, or buy in bulk for a discount. Credits never expire and apply across every add-on in your account.
-1 credit 1€
-
-Don't want to pay?
-
-### Earn your credits. Just share PropertyList.
-
-Every agent has a unique referral link. Share it with another agency - the moment they sign up, credits land in both your accounts. Real money, real platform credit, no strings.
-Refer enough agencies and your platform pays for itself.
-
-20 credits
-You earn
-
-10 credits
-They get
-Start referring ->
+PropertyList's unit for paid features, bought in packs: 1 credit is about 1 EUR at the smallest pack, less at larger ones. Credits do not expire.
+Refer another agency and you get 20 credits (about 20 EUR) once they complete verification, not on signup. The new agency gets 10 credits.
 
 Already have a website?
 
-## Keep your site. Get every property.
+## Keep your site. Feed it the whole network.
 
-Your existing website can pull your live PropertyList stock automatically, so it never shows a property you have already sold. Two ways in, same price: a live XML feed or the Website API.
-Your site stays yours. Your listings stay synced. No manual uploads, no stale data, no admin.
+Feed the network into the site you already have, filtered how you want: your own stock, or a selection from the network alongside it. XML or the Website API, connected once.
 
-XML feed
-A file your site reads on a schedule. Most website templates and portal importers already understand it, so it usually needs no development work. It is also what you point at other portals.
+35 creditsa month
+XML feed or Website API. Cancel any time.
 
-Website API
-A REST key your site calls directly, so results are live rather than as fresh as the last import. Better for custom sites and apps. You create, rotate and revoke keys yourself and see the call count on each one.
+- All network listings on your own site, filtered how you want
+- XML feed or Website API, your developer's choice
+- The docs are public; nothing to buy to read them Set up a feed
+Read the Website Builder and feed docs
 
-- Every listing in your account, whichever method you choose
-- Sales, long-term rentals and holiday rentals in one feed; new developments and off-plan in a separate dedicated feed at 25 credits a month
-- Feed your own site and any other portal you work with, at the same time
-- Setup support included
-Read the API docs ->
+Questions
 
-XML feed.
-API.
+## What agents ask first.
 
-Feed to your own website - XML
-35 credits/month
-35 credits a month · a live XML file your site reads on a schedule
-Get the feed ->
-Cancel anytime · Setup included · No contract
+Is it really free to build?
+Yes. Building and previewing cost nothing. You are charged only when you publish: 50 credits a month, plus any add-ons you switch on.
+What happens when I publish?
+Your site goes live with your listings and whatever network stock you chose to show. From then you pay 50 credits a month, plus any add-ons you switched on.
+Can I change template later?
+Yes. Switch to any of the fifteen whenever you want, and keep your words, pages and settings.
+Do I have to upload my listings?
+No. Your listings and the network stock are already there, and update when a listing changes in the CRM. Nothing is typed twice.
+Where do enquiries go?
+Into your PropertyList CRM, with an email for each one. Lead, Seller and Property pipelines are free with no limit; moving one into Buyer costs 1 credit.
+Can I use my own domain?
+Yes, for 20 credits a month. Until then your site runs at your-agency-name.estate-agency.co, so your name is in the address, not ours.
+What if I cancel?
+Your site reverts to the free agency microsite at the end of the billing period. You keep your domain.
+Is the SEO any good?
+Clean structure, titles and descriptions on every page from day one. Auto SEO and GEO (5 credits a month) rechecks your site weekly and updates the keywords to what buyers search for now. No platform can honestly promise rankings.
+Do I need to be technical?
+No. Pick a template, edit it in an editor showing the real site, publish when you are ready. Or describe the change in plain English and let the AI do it.
+Who hosts it, and is it secure?
+We do. Hosting and Cloudflare protection are included: fast, shielded from attacks, nothing for you to manage or renew.
+Are the legal pages included?
+Yes. Aviso legal, privacy and cookies pages, plus a cookie banner, come with every template and are never billed separately.
 
-For the technically inclined
+Built on the Costa del Sol · used across Spain
 
-### Your site has an API your developers will appreciate.
+## Your listings are ready.
+Is your website?
 
-Every website we build comes with access to the PropertyList MCP server - the same Model Context Protocol layer powering AI agents like Claude, Cursor and Perplexity. Your developers can query live MLS data directly: search, location matching, area market summaries, and full listing details, through one standard interface.
-
-search_propertiesStructured search by location, beds, price, type
-find_properties_by_descriptionNatural-language matching for buyers
-area_market_summaryMedian price, per m2, bedroom-band counts
-autocomplete_locationPlace names to PropertyList area IDs
-get_propertyFull listing detail by reference
-list_agenciesTop agencies in an area by active listings
-Explore the MCP docs ->
-
-Claude Desktop - propertylist mcp
-
-// Connect to PropertyList MCP
-"mcpServers":
-"propertylist":
-"url": "https://mcp.propertylist.es/mcp"
-
-// Search for villas in Marbella
-search_properties(
-location: "Marbella",
-property_type: "villa",
-min_beds: 3
-)
-
-Questions?
-
-## Everything you might be wondering.
-
-Can AI really build my site for me?
-Yes. Open Edit with AI, describe what you want in plain English - "add a section about our rental management service and make the headline warmer" - and the assistant rewrites the page, adjusts your colours and fonts, or adds whole sections in seconds. Every change is a draft, so you can refine it and only publish when you are happy. You stay in full control; the AI just does the heavy lifting.
-How long does it take to launch a site?
-Most agencies launch in 1 day or 2. Pick a layout, brand it, point your domain - and your MLS properties are already there. No content to upload, no developer to brief, no waiting.
-Do I need to upload my properties manually?
-No. Every property already in your PropertyList account appears on your site automatically. Add a property in your CRM and it's on your site within minutes - prices, photos, descriptions, the lot.
-What if I want to use my own domain?
-Connect your own domain - your-agency.com - in minutes. We handle SSL and hosting automatically. If you don't have a domain yet, we can help you register one.
-I already have a website. Can I still use PropertyList?
-Yes. The feed to your own website is 35 credits a month, as a live XML feed or through the Website API, whichever suits your site. It feeds every PropertyList property straight in, and the same feed can also push to other portals you work with. See the feed details ->
-What happens if I cancel?
-Your site reverts back to the free MicroSite at the end of your billing period. No cancellation fee, no commitment. You keep your domain. You can come back any time. And if you would rather never think about it, switch on auto top-up: your balance is refilled by the cost of your subscriptions before each renewal, so the site never pauses by accident.
-Is the SEO actually any good?
-The AI writes meta titles and descriptions tuned for the way buyers in Spain actually search - "villa con piscina en Marbella" rather than generic real estate copy. Schema markup is built in for every listing. Auto-generated location pages cover the areas you list in. We don't promise rankings (no one honest can), but we give you the technical foundation most agency sites lack.
-How do I get leads from my site to my CRM?
-Automatically. Every enquiry form, popup, and property enquiry button feeds directly into the PropertyList CRM with source tracking. Auto-assign rules send each lead to the right agent on your team.
-Do I need to be technical to use it?
-Not at all. The builder is drag-and-drop - if you can move a slide around in PowerPoint, you can build a page. For agents who do want full control, custom HTML blocks are available.
-What schema markup is included?
-Every site ships with structured data for RealEstateAgent, Location, FAQPage, BreadcrumbList, and WebSite schema. All built automatically - no code, no plugins, no SEO expert needed. You show up in Google rich snippets and AI overviews without extra work.
-
-Born on the Costa del Sol · Rolling out across Spain
-
-## Stop renting other people's portals.
-Build your own.
-
-Your agency deserves a website that works as hard as you do - and updates itself while you sleep.Start building free ->
-Or feed your existing site for 35€/month · Questions? WhatsApp +34 610 95 11 77
-
-## Not ready to create an account?
-
-We will email you the summary: what is included free, what the Website Builder costs, and what it replaces. Read it in your own time, or forward it to your business partner.Email me the details
-One email. Unsubscribe any time.
+Pick a design, make it yours, and publish when you want. Build for free
+Free to build and preview. From 50 credits a month once you publish. Read the docs.
 
 ---
 
@@ -1160,7 +1170,7 @@ into a complete listing - m2, bedrooms and bathrooms, features, condition and a 
 You review and publish. What used to take twenty minutes of form-filling now takes one.
 
 Create your free account See how it works
-Free with your PropertyList account - join 987 agencies on Spain's free MLS. Nothing publishes without you.
+Free with your PropertyList account - join 1008 agencies on Spain's free MLS. Nothing publishes without you.
 
 Start with AI
 
@@ -1236,7 +1246,7 @@ A finished listing is a lead engine waiting to run. The moment it is live, put i
 
 ### Feature it in the MLS
 
-Boost your listing to the top where 1,300+ agents browse, so the whole network sees it first.
+Boost your listing to the top where 1,390+ agents browse, so the whole network sees it first.
 
 ### Feature it on the portal
 
@@ -1544,11 +1554,11 @@ Instant Brochure - Coming soon
 Update the price, swap in new photos or mark a property under offer on the portal - and every live brochure link
 you have already shared updates itself, instantly, on every phone it is already on. No resending, no brochure that
 is wrong the moment the price moves. One click gives you a shareable web page that is never out of date, plus a
-print-ready PDF for windows and viewings. Agents create them in-platform from a few credits; anyone else at
+print-ready PDF for windows and viewings. Agents create them in-platform for free; anyone else at
 propertylist.es/brochures for 20 euros.
 
 Create your free agent account See how it will work
-Coming soon. Agents get it in their dashboard on pay-as-you-go credits; everyone else at propertylist.es/brochures. Create your free account now and be ready on day one.
+Coming soon. Agents get it free in their dashboard; everyone else at propertylist.es/brochures. Create your free account now and be ready on day one.
 
 €695,000
 
@@ -1652,10 +1662,10 @@ Create a professional brochure for a property at propertylist.es/brochures - no 
 
 For agents
 
-### Built into your platform, at a fraction of the price.
+### Built into your platform, free.
 
-Inside your PropertyList dashboard, brochures cost just a few credits - around 5 euros, a quarter of the public price - with your first at an intro price. One more reason your listings look sharper than the rest.
-~€5a few credits
+Inside your PropertyList dashboard, brochures are free. One more reason your listings look sharper than the rest.
+Freefor agents
 
 ## Legally correct, every time
 
@@ -1671,14 +1681,13 @@ unbranded sheet to show their client without your name on it. One property, the 
 ## Picture every listing looking like this.
 
 A crisp brochure makes a property - and the person marketing it - look the part, on the wall, in an inbox or in a
-buyer's hand. Instant Brochure turns 30 minutes of fiddling into one click, on any property, for a price that pays for
-itself the first time you win the instruction.
+buyer's hand. Instant Brochure turns 30 minutes of fiddling into one click, on any property, and it is free for agents.
 
 ## Questions, answered
 
 Can I use it if I am not an estate agent?
-Yes. Anyone can create a professional brochure for a property at propertylist.es/brochures for 20 euros each - ideal if you are selling privately and want your home to look like an agency listed it. Estate agents get it built into their platform at a lower, credit-based price. Why do agents pay less than the public?
-Agents are platform members - brochures are one of the tools inside their dashboard, priced in credits (about a quarter of the public price), with the first at an intro price. The 20 euro price is the one-off, no-membership option for everyone else. Which properties can have a brochure?
+Yes. Anyone can create a professional brochure for a property at propertylist.es/brochures for 20 euros each - ideal if you are selling privately and want your home to look like an agency listed it. Estate agents get it free, built into their platform. Why is it free for agents?
+Agents are platform members, and brochures are one of the free tools inside their dashboard. The 20 euro price is the one-off, no-membership option for everyone else. Which properties can have a brochure?
 Any property on the MLS or the public portal - sale or rental, resale or new development. If it has photos and details, it can become a brochure in seconds. What do I actually choose?
 A theme, whether it is branded or unbranded, and the language. Everything else - photos, price, features, map, energy label - is filled in automatically. You review it before you share it. Does it include the energy rating?
 Yes, and this matters: Spanish law requires the energy efficiency rating (A to G) in any property advertising, including brochures, and leaving it out can mean a fine of 300 to 6,000 euros. Instant Brochure builds the label straight in, so your brochures stay on the right side of the law without you thinking about it. What is the unbranded version for?
@@ -2240,7 +2249,7 @@ On the clock
 
 Agency created
 Listing live
-On 1,300+ agents' MLS
+On 1,390+ agents' MLS
 On the portal
 Website online
 Feeds streaming
@@ -2267,9 +2276,9 @@ Townhouse in Estepona 4 bed · 3 bath · €1,350,000
 
 02:30
 
-## List once. 1,300+ agents can sell it.
+## List once. 1,390+ agents can sell it.
 
-Your listing just landed in every MLS dashboard on the coast - 980+ agencies, all able to bring you a buyer.
+Your listing just landed in every MLS dashboard on the coast - 1,000+ agencies, all able to bring you a buyer.
 
 Townhouse in Estepona Shared to the network
 
@@ -2277,7 +2286,7 @@ Townhouse in Estepona Shared to the network
 
 ## Buyers can already find it.
 
-Live on propertylist.es next to 6,400+ homes - no listing fees, ever.
+Live on propertylist.es next to 6,130+ homes - no listing fees, ever.
 propertylist.es
 
 Yours · €1,350,000
@@ -2325,16 +2334,16 @@ AI Property Match
 ## The network works while you sleep.
 
 Save the brief as a property alert. When a matching home comes online anywhere on the network, the email finds you.
-Alert saved 3-bed · Estepona · under €500k Watching 6,400+ live listings
+Alert saved 3-bed · Estepona · under €500k Watching 6,130+ live listings
 
 09:12
 
 ## Time.
 
 1listing live on the portal
-1,300+agents who can sell it
+1,390+agents who can sell it
 1website online, free
-6,400+homes you can sell from day one
+6,130+homes you can sell from day one
 Total spent: €0
 Start your clock - join free
 A guided tour of live PropertyList features, shown with real product screens. Most agents beat the clock.
@@ -2355,20 +2364,20 @@ Free forever · no card, no contract
 # Win more listings. Sell more homes.
 Free.
 
-Most portals charge you to list. PropertyList works the other way round: you do not pay to be here, you earn from being here. Your listings reach 1,300+ agents who can sell them, and you can sell from all 6,400+ listings on the network, not just your own. The MLS, the CRM, your portal presence and a branded website are included, free.
+Most portals charge you to list. PropertyList works the other way round: you do not pay to be here, you earn from being here. Your listings reach 1,390+ agents who can sell them, and you can sell from all 6,130+ listings on the network, not just your own. The MLS, the CRM, your portal presence and a branded website are included, free.
 
 Most agencies pay €300-700 a month for this stack. Here it is €0.
 Create your free account See what it replaces
-1,300+ agents · 980+ agencies · 6,400+ live listings · no card
+1,390+ agents · 1,000+ agencies · 6,130+ live listings · no card
 
 Sounds too good to be true?
-Here is the honest version. The core - MLS, the CRM with your lead, seller and property pipelines, portal listings and a branded MicroSite - is free forever, no card. The trade: your listings are shared with the other agents on the network, which is how you all sell more. We make money when you choose something paid: 1 credit for a qualified lead you choose to move into the Buyer pipeline, featuring a listing, a valuation report, or a monthly module like Automation & Nurture at 20 credits a month. You pay for demand, never for supply. That is the whole catch.
+Here is the honest version. The core - MLS, the CRM with your lead, seller and property pipelines, portal listings and a branded MicroSite - is free forever, no card. The trade: your listings are shared with the other agents on the network, which is how you all sell more. We make money when you choose something paid: 1 credit for a qualified lead you choose to move into the Buyer pipeline, featuring a listing, a valuation report, or a monthly module like the Rentals Module at 50 credits per 30 days. You pay for demand, never for supply. That is the whole catch.
 
 ## What you get, free
 
-The shared MLS List once and 1,300+ agents can sell it with you, and you can sell from all 6,400+ listings on the network - not just your own. Leads and referrals between agents are free, forever.
+The shared MLS List once and 1,390+ agents can sell it with you, and you can sell from all 6,130+ listings on the network - not just your own. Leads and referrals between agents are free, forever.
 A free CRM Unlimited contacts, calendar and document storage, plus the Lead, Seller and Property pipelines - all free, with nothing to pay per deal. Buyer leads is 1 credit each, charged only when you choose to move a qualified lead into the Buyer pipeline, and your first 5 are free. Reaching Qualified costs nothing. The Tenants and Nurture pipelines sit inside the paid modules, Rentals and Automation & Nurture.
-Your listings on the portal Live on propertylist.es in front of buyers, next to 6,400+ homes. No listing fees, ever.
+Your listings on the portal Live on propertylist.es in front of buyers, next to 6,130+ homes. No listing fees, ever.
 A branded MicroSite Your own site at youragency.estate-agency.co, auto-built from your listings, with free hosting. Enquiries from it come straight to you, free forever. (Fully custom site and domain? That is the Website Builder.)
 Instant Listing Add your images then describe the property out loud - and the full listing writes itself, ready to review and publish.
 AI Property Match Paste a client message and it finds the match: your stock first, then the whole network. Free in beta.
@@ -2388,22 +2397,22 @@ Real estate CRM from €30/mo€29-150/mo is typical Freecore free; buyer leads 
 Agency website + hosting from €30/moor €500-2,000 to build Freebranded MicroSite
 Feed to other portals (XML) from €20/mooften an add-on Free
 Typical monthly spend €300 - €700+ €0
-And it is not just cheaper. Because your listings are shared across the network, every home you take on can be sold by 1,300+ agents - so the free option is also the one that finds your buyer faster.
+And it is not just cheaper. Because your listings are shared across the network, every home you take on can be sold by 1,390+ agents - so the free option is also the one that finds your buyer faster.
 The free website is your branded MicroSite - auto-built from your listings, with its own address. A fully custom site with your own domain is the Website Builder, from 50 credits/month. Comparison against typical Spanish market rates, 2026; ranges vary by agency size, region and portal promotions.
 
-1,300+agents on the network
-980+real local agencies
-6,400+live listings shared
+1,390+agents on the network
+1,000+real local agencies
+6,130+live listings shared
 €0to join and use
 
 ## Common questions
 
 Is it really free, or is it a trial?
-Free forever, not a trial. The MLS, the CRM core, your portal presence, your MicroSite and the tools above cost nothing and always will. There is no card required to start and no monthly fee on the core. What is paid is separate and optional: 1 credit for each qualified lead you choose to move into the Buyer pipeline, and the two monthly modules, Automation & Nurture and the Rentals Module. Then how does PropertyList make money?
-Two ways. Credits, for demand and one-offs: 1 credit for each qualified lead you decide to move into your Buyer pipeline, taken from your credit balance, plus featuring a listing to the top, notary-verified valuation reports, a full custom website builder, or keeping a sale off the shared network. And monthly subscriptions for the modules that run in the background: Automation & Nurture at 20 credits a month, and the Rentals Module at 50 credits per 30 days, with a free 30-day trial. Your listings and your sellers stay free, so you pay for demand and never for supply. The core stays free because a bigger, shared network is worth more to everyone on it. What is the catch?
+Free forever, not a trial. The MLS, the CRM core, your portal presence, your MicroSite and the tools above cost nothing and always will. There is no card required to start and no monthly fee on the core. What is paid is separate and optional: 1 credit for each qualified lead you choose to move into the Buyer pipeline, and the monthly Rentals Module. Automation & Nurture is free. Then how does PropertyList make money?
+Two ways. Credits, for demand and one-offs: 1 credit for each qualified lead you decide to move into your Buyer pipeline, taken from your credit balance, plus featuring a listing to the top, notary-verified valuation reports, a full custom website builder, or keeping a sale off the shared network. And a monthly subscription for the Rentals Module, which runs in the background: 50 credits per 30 days, with a free 30-day trial. Your listings and your sellers stay free, so you pay for demand and never for supply. The core stays free because a bigger, shared network is worth more to everyone on it. What is the catch?
 There is not one on price. The trade is that your listings are shared with other agents on the network - that is the point, it is how you get more people able to sell your stock. If you ever need a listing kept private, you can (first 5 free, then 5 credits each). Do I have to leave my current portal or CRM?
 No. Import your existing XML feed, keep whatever else you use, and run PropertyList alongside it for free. Most agents find they stop paying for the extras once they see what is included. How many agents are actually on it?
-More than 1,300+ agents across 980+ agencies, mostly on the Costa del Sol, with 6,400+ live listings in the shared pool. Real, registered local agencies - not bots or ghost accounts.
+More than 1,390+ agents across 1,000+ agencies, mostly on the Costa del Sol, with 6,130+ live listings in the shared pool. Real, registered local agencies - not bots or ghost accounts.
 
 ## Start free. Keep it free.
 
@@ -2414,7 +2423,7 @@ Create your free account See it built in 9 minutes
 
 The core stays free. These are the optional extras, priced openly: credits when we hand you demand or you want a one-off, a monthly subscription for the modules that run in the background.
 Verify your agency (free, and whenever you like) for 20 free credits to try any of these, and every paid feature has a free test - so you can try before you spend a cent.
-Buyer leads1 credit, charged only when you choose to move a qualified lead into the Buyer pipeline, from your credit balance1 credit each Automation & NurtureNurture pipeline, automated emails, Hot-lead detection and the Daily Action Queue20 credits/mo Rentals ModuleTenants pipeline, Tenancies, Maintenance and renewal reminders. Free 30-day trial50 credits / 30 days Property Intelligence ReportNotary-verified valuations with an agent brief5 credits Feature a listingTop of the MLS or the portalfrom 10 credits Website BuilderFull custom site - build & preview free50 credits/mo Instant ContentUnlimited AI blogs & area guides. Add-on to the Website Builder30 credits/mo
+Buyer leads1 credit, charged only when you choose to move a qualified lead into the Buyer pipeline, from your credit balance1 credit each Automation & NurtureNurture pipeline, automated emails, Hot-lead detection and the Daily Action QueueFree Rentals ModuleTenants pipeline, Tenancies, Maintenance and renewal reminders. Free 30-day trial50 credits / 30 days Property Intelligence ReportNotary-verified valuations with an agent brief5 credits Feature a listingTop of the MLS or the portalfrom 10 credits Website BuilderFull custom site - build & preview free50 credits/mo Instant ContentUnlimited AI blogs & area guides. Add-on to the Website Builder30 credits/mo
 Full pricing · All the tools · Drive the coast
 
 ---
@@ -2492,7 +2501,7 @@ iPhone is in final review with Apple.
 Get it onGoogle Play Open on the web ->
 Free with your PropertyList account. iPhone launches once Apple completes review - get notified.
 
-6,400+live MLS listings
+6,130+live MLS listings
 35+areas covered
 Notary-verifiedpricing data
 Freeto get started
@@ -2940,7 +2949,7 @@ free. You choose which of them is worth a credit.
 
 Create your free agency account
 See what it costs
-980+ agencies and 1,300+ agents are already on the network. No card, no setup fee.
+1,000+ agencies and 1,390+ agents are already on the network. No card, no setup fee.
 
 ## Where the money actually leaks
 
@@ -3011,15 +3020,15 @@ to call, with the reason attached.
 
 A lead that goes quiet in March often buys in October, usually from whoever stayed in touch.
 
-## You can watch it before you pay for it
+## You can watch it before you switch it on
 
-Without the subscription the Nurture board still fills up. Every closed deal still lands on it, the details are still collected, and
+Before you switch it on, the Nurture board still fills up. Every closed deal still lands on it, the details are still collected, and
 a counter tells you what the month would have sent.
 
-Nothing goes out until you decide it should. When you do subscribe, it starts with everything it has been collecting rather than from
+Nothing goes out until you decide it should. When you switch it on, it starts with everything it has been collecting rather than from
 an empty screen.
 
-20 credits a month One email per contact per week Off switch per contact
+Free One email per contact per week Off switch per contact
 
 ## One screen that answers "what do I do today"
 
@@ -3067,7 +3076,7 @@ the network.
 - Leads, Sellers and Property pipelines Free, no limit
 - Buyer lead 1 credit, only when you move them into the Buyer pipeline
 - Rentals Module: Tenants, Tenancies and Maintenance 50 credits / 30 days, free 30-day trial
-- Automation and Nurture, including the Daily Action Queue 20 credits a month
+- Automation and Nurture, including the Daily Action Queue Free
 - An enquiry that turns out to be another agent Never charged
 
 One credit balance covers all of it, the same one you use for featuring a listing or pulling a report. Credits you buy do not expire.
@@ -3076,11 +3085,11 @@ See the full price list.
 ## The questions agents actually ask
 
 What does it actually cost?
-The Leads, Sellers and Property pipelines are free with no limit. A buyer lead costs 1 credit, charged only when you choose to move that contact into the Buyer pipeline. Qualifying costs nothing, and an unqualified enquiry never costs anything. Two subscriptions cover the parts that run on their own: the Rentals Module at 50 credits per 30 days, free for the first 30 days, and Automation and Nurture at 20 credits a month. Everything comes out of the same credit balance you already use for featuring and reports. Do I have to set any of this up?
+The Leads, Sellers and Property pipelines are free with no limit. A buyer lead costs 1 credit, charged only when you choose to move that contact into the Buyer pipeline. Qualifying costs nothing, and an unqualified enquiry never costs anything. The Rentals Module, which runs on its own, is 50 credits per 30 days, free for the first 30 days. Automation and Nurture is free. Everything comes out of the same credit balance you already use for featuring and reports. Do I have to set any of this up?
 No. All six pipelines are configured for you, and your existing contacts and properties are placed on the right one from day one. New leads land in New Lead, new listings land in Active Listing. You can edit the stages on Buyers and Property. Leads and Sellers are fixed so the reporting stays comparable across agencies. Will it email my clients without me knowing?
 It will send, and you will always be able to see exactly what. Every contact has a timeline showing what has gone out and what is scheduled next, and you can view, edit or skip any of it. Marketing consent is recorded per contact, unsubscribes are honoured, and no contact receives more than one email a week however many sequences they are in. You can also switch nurture off for one person, or for one type of email, if you know something the system does not. What happens when another agent enquires on my listing?
-It is detected automatically, tagged in red, and it never costs you a credit. It is also excluded from every automated email, so we are not sending a homeowner valuation to a co-broker. The tag is a warning rather than a deletion, with one click to remove it if we get it wrong. What if I do not take the Automation subscription?
-The Nurture board still fills up. Every closed deal still puts the contact on it and the data is still collected, but nothing sends, and a counter shows you what would have gone out that month. If you subscribe later, the machine starts already loaded rather than from nothing.
+It is detected automatically, tagged in red, and it never costs you a credit. It is also excluded from every automated email, so we are not sending a homeowner valuation to a co-broker. The tag is a warning rather than a deletion, with one click to remove it if we get it wrong. What if I do not switch Automation on?
+The Nurture board still fills up. Every closed deal still puts the contact on it and the data is still collected, but nothing sends, and a counter shows you what would have gone out that month. If you switch it on later, the machine starts already loaded rather than from nothing.
 
 ## Free to run your agency. You pay when we bring you a buyer.
 
@@ -3098,17 +3107,17 @@ URL: https://info.propertylist.es/developers/
 
 For property developers
 
-# Reach 1,300+ agents and direct public buyers. Get the best of both worlds.
+# Reach 1,390+ agents and direct public buyers. Get the best of both worlds.
 
 While our agent network markets your properties to their buyers, our automated system books your public portal viewings for you. We hand the
 buyer directly to your in-house sales team, giving you 100% control to manage the relationship and close the deal.
 
 Join as a developer Get updates Read the developer docs
 
-1,300+
+1,390+
 Estate agents signed up
 
-6,400+
+6,130+
 Real estate listings
 
 ## How it works
@@ -3159,7 +3168,7 @@ Agents bring buyers. The portal sends direct leads.
 
 ### The Agency Network
 
-Our network of 1,300+ estate agents gets immediate free access to your developments. They act as an external distribution channel - sharing
+Our network of 1,390+ estate agents gets immediate free access to your developments. They act as an external distribution channel - sharing
 your promotions with their buyer lists and bringing qualified clients to you for viewings.
 
 ### The Direct Portal
@@ -3286,8 +3295,8 @@ Creating an account
 - Adding staff members and permissions
 - Updating account/profile information
 - MLS user preferences
-- Verified Agencies: How it works?
 - How do I navigate the MLS dashboard and interface
+- Verified Agencies: How it works?
 - Core Workflow
 Listing a Property (step-by-step)
 - Import Properties
@@ -3306,9 +3315,6 @@ Optimising your listings for maximum lead generation
 - Portal Leads (Direct)
 - MLS Leads (from other agents)
 - MicroSite Leads (Direct)
-- ReQuests
-Agent ReQuests
-- Client ReQuests
 - Convert a lead into a contact
 - Tracking & managing enquiries
 - Agent Detection: why some leads are free
@@ -3357,13 +3363,22 @@ Area Market Reports
 - AI & Automation
 AI Property Research Agent
 - Automations, Notifications & Lead Routing
+- How to use CoAgent
 - Credits & Referral Program
 How to earn/use credits
 - How referrals work
 - How billing works
 - Support
 Contact MLS Support
-- Video Tutorials
+- Video tutorials
+- Community Guidelines
+- ReQuests (coming soon)
+Agent ReQuests (coming soon)
+- Client ReQuests (coming soon)
+- Release Notes & Roadmap
+New Features & Roadmap
+- Request new features
+- FAQ (MLS & CRM)
 - Security & Compliance
 Data protection & GDPR guidance
 - Incident Response
@@ -3375,11 +3390,6 @@ Privacy Policy
 - Marketing Studio (AI content)
 Instant Images - Photo Enhancement & Marketing Images
 - Instant Video - AI Property Videos
-- Community Guidelines
-- FAQ (MLS & CRM)
-- Release Notes & Roadmap
-New Features & Roadmap
-- Request new features
 
 # How billing works
 
@@ -3447,7 +3457,9 @@ Auto-Renew is how you pay for credits automatically so your monthly subscription
 ### Next steps
 
 - How referrals work
-- Using & earning credits - what credits buy and how to earn them free. Previous How referrals work Next Support
+- Using & earning credits - what credits buy and how to earn them free.
+
+Previous How referrals work Next Support
 On this page
 
 - Buying credits
@@ -3474,8 +3486,8 @@ Creating an account
 - Adding staff members and permissions
 - Updating account/profile information
 - MLS user preferences
-- Verified Agencies: How it works?
 - How do I navigate the MLS dashboard and interface
+- Verified Agencies: How it works?
 - Core Workflow
 Listing a Property (step-by-step)
 - Import Properties
@@ -3494,9 +3506,6 @@ Optimising your listings for maximum lead generation
 - Portal Leads (Direct)
 - MLS Leads (from other agents)
 - MicroSite Leads (Direct)
-- ReQuests
-Agent ReQuests
-- Client ReQuests
 - Convert a lead into a contact
 - Tracking & managing enquiries
 - Agent Detection: why some leads are free
@@ -3545,13 +3554,22 @@ Area Market Reports
 - AI & Automation
 AI Property Research Agent
 - Automations, Notifications & Lead Routing
+- How to use CoAgent
 - Credits & Referral Program
 How to earn/use credits
 - How referrals work
 - How billing works
 - Support
 Contact MLS Support
-- Video Tutorials
+- Video tutorials
+- Community Guidelines
+- ReQuests (coming soon)
+Agent ReQuests (coming soon)
+- Client ReQuests (coming soon)
+- Release Notes & Roadmap
+New Features & Roadmap
+- Request new features
+- FAQ (MLS & CRM)
 - Security & Compliance
 Data protection & GDPR guidance
 - Incident Response
@@ -3563,11 +3581,6 @@ Privacy Policy
 - Marketing Studio (AI content)
 Instant Images - Photo Enhancement & Marketing Images
 - Instant Video - AI Property Videos
-- Community Guidelines
-- FAQ (MLS & CRM)
-- Release Notes & Roadmap
-New Features & Roadmap
-- Request new features
 
 ---
 
@@ -3599,8 +3612,8 @@ Creating an account
 - Adding staff members and permissions
 - Updating account/profile information
 - MLS user preferences
-- Verified Agencies: How it works?
 - How do I navigate the MLS dashboard and interface
+- Verified Agencies: How it works?
 - Core Workflow
 Listing a Property (step-by-step)
 - Import Properties
@@ -3619,9 +3632,6 @@ Optimising your listings for maximum lead generation
 - Portal Leads (Direct)
 - MLS Leads (from other agents)
 - MicroSite Leads (Direct)
-- ReQuests
-Agent ReQuests
-- Client ReQuests
 - Convert a lead into a contact
 - Tracking & managing enquiries
 - Agent Detection: why some leads are free
@@ -3670,13 +3680,22 @@ Area Market Reports
 - AI & Automation
 AI Property Research Agent
 - Automations, Notifications & Lead Routing
+- How to use CoAgent
 - Credits & Referral Program
 How to earn/use credits
 - How referrals work
 - How billing works
 - Support
 Contact MLS Support
-- Video Tutorials
+- Video tutorials
+- Community Guidelines
+- ReQuests (coming soon)
+Agent ReQuests (coming soon)
+- Client ReQuests (coming soon)
+- Release Notes & Roadmap
+New Features & Roadmap
+- Request new features
+- FAQ (MLS & CRM)
 - Security & Compliance
 Data protection & GDPR guidance
 - Incident Response
@@ -3688,11 +3707,6 @@ Privacy Policy
 - Marketing Studio (AI content)
 Instant Images - Photo Enhancement & Marketing Images
 - Instant Video - AI Property Videos
-- Community Guidelines
-- FAQ (MLS & CRM)
-- Release Notes & Roadmap
-New Features & Roadmap
-- Request new features
 
 # Community Guidelines
 
@@ -3757,7 +3771,9 @@ Report a problem or a scam ->
 
 We would rather help than penalise, so a first issue usually means a friendly heads-up. Serious or repeated breaches can lead to a listing being removed, losing access to community groups, or an account being suspended, and can affect Verified Agency status. These guidelines sit alongside our Terms and Conditions.
 
-Thank you for helping keep PropertyList a platform agents can trust. Previous Instant Video - AI Property Videos Next FAQ (MLS & CRM)
+Thank you for helping keep PropertyList a platform agents can trust.
+
+Previous Video tutorials Next ReQuests (coming soon)
 On this page
 
 - 1. Keep your listings real and accurate
@@ -3785,8 +3801,8 @@ Creating an account
 - Adding staff members and permissions
 - Updating account/profile information
 - MLS user preferences
-- Verified Agencies: How it works?
 - How do I navigate the MLS dashboard and interface
+- Verified Agencies: How it works?
 - Core Workflow
 Listing a Property (step-by-step)
 - Import Properties
@@ -3805,9 +3821,6 @@ Optimising your listings for maximum lead generation
 - Portal Leads (Direct)
 - MLS Leads (from other agents)
 - MicroSite Leads (Direct)
-- ReQuests
-Agent ReQuests
-- Client ReQuests
 - Convert a lead into a contact
 - Tracking & managing enquiries
 - Agent Detection: why some leads are free
@@ -3856,13 +3869,22 @@ Area Market Reports
 - AI & Automation
 AI Property Research Agent
 - Automations, Notifications & Lead Routing
+- How to use CoAgent
 - Credits & Referral Program
 How to earn/use credits
 - How referrals work
 - How billing works
 - Support
 Contact MLS Support
-- Video Tutorials
+- Video tutorials
+- Community Guidelines
+- ReQuests (coming soon)
+Agent ReQuests (coming soon)
+- Client ReQuests (coming soon)
+- Release Notes & Roadmap
+New Features & Roadmap
+- Request new features
+- FAQ (MLS & CRM)
 - Security & Compliance
 Data protection & GDPR guidance
 - Incident Response
@@ -3874,11 +3896,6 @@ Privacy Policy
 - Marketing Studio (AI content)
 Instant Images - Photo Enhancement & Marketing Images
 - Instant Video - AI Property Videos
-- Community Guidelines
-- FAQ (MLS & CRM)
-- Release Notes & Roadmap
-New Features & Roadmap
-- Request new features
 
 ---
 
@@ -3896,17 +3913,17 @@ with your friends or travel partners, and drop it straight into your calendar. F
 ## Marbella
 
 Starlite nights, ferias, street markets and the famous beach clubs.
-25 events on now and coming up · updated 31 August See the Marbella diary ->
+10 events on now and coming up · updated 14 September See the Marbella diary ->
 
 ## Estepona
 
 The flower-filled old town, the port after dark and the summer festival season.
-9 events on now and coming up · updated 31 August See the Estepona diary ->
+7 events on now and coming up · updated 14 September See the Estepona diary ->
 
 ## Malaga
 
 City culture, Michelin stars, chiringuito beaches and clubs open until dawn.
-25 events on now and coming up · updated 31 August See the Malaga diary ->
+34 events on now and coming up · updated 14 September See the Malaga diary ->
 
 Run a venue or organise events in another Costa del Sol town? Register your event or feed
 - new towns launch where the diary fills up.
@@ -3993,19 +4010,19 @@ professionals and tradesmen, including lawyers, architects, plumbers, and dedica
 We are also constantly exploring new technological frontiers. From AI tools to automation and smart funnels, we build things that
 take work off your desk and make the experience better for the client on the other end.
 
-980+
+1,000+
 Agencies
 
-1,300+
+1,390+
 Active agents
 
-6,400+
+6,130+
 Active listings
 
 ## Join the Movement
 
-The industry is shifting, and the smartest agencies are already securing their positions. Today, PropertyList is trusted by 980+ agencies
-and 1,300+ active agents across Spain, with 6,400+ properties actively listed.
+The industry is shifting, and the smartest agencies are already securing their positions. Today, PropertyList is trusted by 1,000+ agencies
+and 1,390+ active agents across Spain, with 6,130+ properties actively listed.
 
 If you are ready to step into a professional network designed to protect your deals, reduce your costs, and amplify your success - rather
 than compete with you - you are exactly where you need to be.
