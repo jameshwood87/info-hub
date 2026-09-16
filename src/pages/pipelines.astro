@@ -82,14 +82,14 @@ const prices = [
 	{ what: 'Leads, Sellers and Property pipelines', cost: 'Free, no limit' },
 	{ what: 'Buyer lead', cost: '1 credit, only when you move them into the Buyer pipeline' },
 	{ what: 'Rentals Module: Tenants, Tenancies and Maintenance', cost: '50 credits / 30 days, free 30-day trial' },
-	{ what: 'Automation and Nurture, including the Daily Action Queue', cost: '20 credits a month' },
+	{ what: 'Automation and Nurture, including the Daily Action Queue', cost: 'Free' },
 	{ what: 'An enquiry that turns out to be another agent', cost: 'Never charged' },
 ];
 
 const faqs = [
 	{
 		q: 'What does it actually cost?',
-		a: 'The Leads, Sellers and Property pipelines are free with no limit. A buyer lead costs 1 credit, charged only when you choose to move that contact into the Buyer pipeline. Qualifying costs nothing, and an unqualified enquiry never costs anything. Two subscriptions cover the parts that run on their own: the Rentals Module at 50 credits per 30 days, free for the first 30 days, and Automation and Nurture at 20 credits a month. Everything comes out of the same credit balance you already use for featuring and reports.',
+		a: 'The Leads, Sellers and Property pipelines are free with no limit. A buyer lead costs 1 credit, charged only when you choose to move that contact into the Buyer pipeline. Qualifying costs nothing, and an unqualified enquiry never costs anything. The Rentals Module, which runs on its own, is 50 credits per 30 days, free for the first 30 days. Automation and Nurture is free. Everything comes out of the same credit balance you already use for featuring and reports.',
 	},
 	{
 		q: 'Do I have to set any of this up?',
@@ -104,8 +104,8 @@ const faqs = [
 		a: 'It is detected automatically, tagged in red, and it never costs you a credit. It is also excluded from every automated email, so we are not sending a homeowner valuation to a co-broker. The tag is a warning rather than a deletion, with one click to remove it if we get it wrong.',
 	},
 	{
-		q: 'What if I do not take the Automation subscription?',
-		a: 'The Nurture board still fills up. Every closed deal still puts the contact on it and the data is still collected, but nothing sends, and a counter shows you what would have gone out that month. If you subscribe later, the machine starts already loaded rather than from nothing.',
+		q: 'What if I do not switch Automation on?',
+		a: 'The Nurture board still fills up. Every closed deal still puts the contact on it and the data is still collected, but nothing sends, and a counter shows you what would have gone out that month. If you switch it on later, the machine starts already loaded rather than from nothing.',
 	},
 ];
 
@@ -227,17 +227,17 @@ const faqLd = {
 				<p>A lead that goes quiet in March often buys in October, usually from whoever stayed in touch.</p>
 			</div>
 			<div class="card accent">
-				<h2>You can watch it before you pay for it</h2>
+				<h2>You can watch it before you switch it on</h2>
 				<p>
-					Without the subscription the Nurture board still fills up. Every closed deal still lands on it, the details are still collected, and
+					Before you switch it on, the Nurture board still fills up. Every closed deal still lands on it, the details are still collected, and
 					a counter tells you what the month would have sent.
 				</p>
 				<p>
-					Nothing goes out until you decide it should. When you do subscribe, it starts with everything it has been collecting rather than from
+					Nothing goes out until you decide it should. When you switch it on, it starts with everything it has been collecting rather than from
 					an empty screen.
 				</p>
 				<div class="pillRow">
-					<span class="pill">20 credits a month</span>
+					<span class="pill">Free</span>
 					<span class="pill">One email per contact per week</span>
 					<span class="pill">Off switch per contact</span>
 				</div>

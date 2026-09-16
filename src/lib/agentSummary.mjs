@@ -36,6 +36,7 @@ const COPY = {
 		free: [
 			'List your properties on the shared MLS and on the public portal propertylist.es, with no listing fees.',
 			'The CRM core: contacts, calendar, and the Lead, Seller and Property pipelines.',
+			'Automation & Nurture: follow-up emails that send themselves, Hot-lead detection and the Daily Action Queue.',
 			'Your own agency microsite, created for you.',
 			'XML import, and XML push to other portals.',
 			'Property alerts that email your buyers when a match comes online.',
@@ -56,7 +57,6 @@ const COPY = {
 		],
 		monthlyTitle: 'Monthly, only if you switch them on',
 		monthly: [
-			['Automation & Nurture', '20 credits a month'],
 			['Website Builder', '50 credits a month, free to build and preview'],
 			['Instant Content', '30 credits a month, requires the Website Builder'],
 			['Network feed for your own website', '35 credits a month'],
@@ -101,6 +101,7 @@ const COPY = {
 		free: [
 			'Publicar tus inmuebles en el MLS compartido y en el portal público propertylist.es, sin comisiones por anuncio.',
 			'El núcleo del CRM: contactos, calendario y los pipelines de leads, vendedores e inmuebles.',
+			'Automation y Nurture: emails de seguimiento que se envían solos, detección de leads calientes y la Daily Action Queue.',
 			'Tu propio microsite de agencia, creado para ti.',
 			'Importación XML y envío XML a otros portales.',
 			'Alertas que avisan por email a tus compradores cuando entra un inmueble que encaja.',
@@ -121,7 +122,6 @@ const COPY = {
 		],
 		monthlyTitle: 'Mensuales, solo si los activas',
 		monthly: [
-			['Automation y Nurture', '20 créditos al mes'],
 			['Constructor de webs', '50 créditos al mes, gratis crearla y previsualizarla'],
 			['Contenido Instantáneo', '30 créditos al mes, requiere el Constructor de webs'],
 			['Feed de la red para tu propia web', '35 créditos al mes'],

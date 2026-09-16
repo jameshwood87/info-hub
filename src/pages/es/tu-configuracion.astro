@@ -57,7 +57,7 @@ const allTasks: Task[] = [
 	{ id: 'matching', label: 'Bucear en portales buscando el piso de un comprador', hours: 2, after: 10, fix: 'free' },
 	{ id: 'desk', label: 'Volver a la oficina solo para usar el CRM', hours: 1, after: 0, fix: 'free' },
 	{ id: 'valuation', label: 'Discutir el precio con un propietario', hours: 2, after: 30, fix: 'peruse:Informe de Inteligencia de Propiedad' },
-	{ id: 'followup', label: 'Acordarme de a quién prometí llamar', hours: 3, after: 15, fix: 'addon:nur' },
+	{ id: 'followup', label: 'Acordarme de a quién prometí llamar', hours: 3, after: 15, fix: 'free' },
 	{ id: 'website', label: 'Suplicarle cambios al de la web', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
 	{ id: 'tenants', label: 'Alquileres viviendo en un Excel', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
 	{ id: 'callnotes', label: 'Pasar a limpio llamadas que ya dije en voz alta', hours: 2, after: 15, fix: 'free' },
@@ -68,6 +68,7 @@ const allTasks: Task[] = [
 // on from first paint, with ticks, because free has no off switch
 const freeTools = [
 	{ name: 'MLS y CRM compartidos', href: '/es/pipelines/' },
+	{ name: 'Automatización y Nurture', href: '/es/nurture/', note: 'Correos de seguimiento con tu propio nombre, detección de leads calientes y la lista de llamadas del día.' },
 	{ name: 'Anuncios y personal ilimitados' },
 	{ name: 'Listado Instantáneo', href: '/es/listado-instantaneo/' },
 	{ name: 'Feeds XML de tu propia cartera, de entrada y de salida', href: '/es/importar-feed-xml/', note: 'Tu propia cartera se mueve gratis, en cualquier dirección: hacia otros portales, CRMs y tu propia web. Lo de pago es el feed con toda la cartera de la red para tu web, 35 créditos al mes.' },
@@ -99,16 +100,6 @@ type Paid = {
 };
 
 const paidTools: Paid[] = [
-	{
-		key: 'nur',
-		name: 'Automatización y Nurture',
-		href: '/es/nurture/',
-		price: '20 créditos al mes',
-		monthly: 20,
-		taskId: 'followup',
-		note: 'Correos de seguimiento con tu propio nombre, detección de leads calientes y la lista de llamadas del día. Trabaja mientras estás en una visita.',
-		show: 'always',
-	},
 	{
 		key: 'rent',
 		name: 'Módulo de Alquileres',

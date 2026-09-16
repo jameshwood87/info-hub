@@ -18,8 +18,8 @@ const gets = [
 ];
 
 const faqs = [
-	{ q: '¿Puedo usarlo si no soy agente inmobiliario?', a: 'Sí. Cualquiera puede crear un folleto profesional de una propiedad en propertylist.es/brochures por 20 euros cada uno - ideal si vendes por tu cuenta y quieres que tu casa luzca como si la hubiera publicado una agencia. Los agentes lo tienen integrado en su plataforma a un precio menor, basado en créditos.' },
-	{ q: '¿Por qué los agentes pagan menos que el público?', a: 'Los agentes son miembros de la plataforma - los folletos son una de las herramientas de su panel, con precio en créditos (alrededor de una cuarta parte del precio público) y el primero a precio de estreno. Los 20 euros son la opción puntual, sin membresía, para todos los demás.' },
+	{ q: '¿Puedo usarlo si no soy agente inmobiliario?', a: 'Sí. Cualquiera puede crear un folleto profesional de una propiedad en propertylist.es/brochures por 20 euros cada uno - ideal si vendes por tu cuenta y quieres que tu casa luzca como si la hubiera publicado una agencia. Los agentes lo tienen gratis, integrado en su plataforma.' },
+	{ q: '¿Por qué es gratis para los agentes?', a: 'Los agentes son miembros de la plataforma, y los folletos son una de las herramientas gratis de su panel. Los 20 euros son la opción puntual, sin membresía, para todos los demás.' },
 	{ q: '¿Qué propiedades pueden tener folleto?', a: 'Cualquier propiedad en el MLS o en el portal público - venta o alquiler, segunda mano u obra nueva. Si tiene fotos y datos, puede convertirse en folleto en segundos.' },
 	{ q: '¿Qué elijo yo exactamente?', a: 'Un tema, si lleva tu marca o no, y el idioma. Todo lo demás - fotos, precio, características, mapa, etiqueta energética - se rellena automáticamente. Lo revisas antes de compartirlo.' },
 	{ q: '¿Incluye la etiqueta energética?', a: 'Sí, y esto importa: la ley española exige la calificación de eficiencia energética (de A a G) en cualquier publicidad inmobiliaria, incluidos los folletos, y omitirla puede acarrear una multa de 300 a 6.000 euros. Folleto Instantáneo integra la etiqueta directamente, así que tus folletos cumplen la norma sin que tengas que pensarlo.' },
@@ -45,7 +45,7 @@ const softwareLd = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
 	name: 'PropertyList Folleto Instantáneo',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
-	description: 'Muy pronto: genera un folleto de propiedad para cualquier anuncio con un clic - un PDF listo para imprimir más una página web en vivo que se actualiza sola cuando cambian el precio, las fotos y los datos en el portal, y capta consultas. Los agentes los crean en la plataforma desde unos créditos; el público en propertylist.es/brochures por 20 euros. Con etiqueta energética y código QR integrados.',
+	description: 'Muy pronto: genera un folleto de propiedad para cualquier anuncio con un clic - un PDF listo para imprimir más una página web en vivo que se actualiza sola cuando cambian el precio, las fotos y los datos en el portal, y capta consultas. Los agentes los crean gratis en la plataforma; el público en propertylist.es/brochures por 20 euros. Con etiqueta energética y código QR integrados.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
@@ -76,14 +76,13 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 					Cambia el precio, sube fotos nuevas o marca una propiedad como reservada en el portal - y cada enlace de folleto en
 					vivo que ya has compartido se actualiza solo, al instante, en cada móvil donde ya está. Sin reenviar nada, sin un
 					folleto que queda mal en cuanto cambia el precio. Un clic te da una página web para compartir que nunca se queda
-					desfasada, además de un PDF listo para imprimir para escaparates y visitas. Los agentes los crean en la plataforma
-					desde unos créditos; cualquier otra persona en <strong>propertylist.es/brochures</strong> por 20 euros.
+					desfasada, además de un PDF listo para imprimir para escaparates y visitas. Los agentes los crean gratis en la plataforma; cualquier otra persona en <strong>propertylist.es/brochures</strong> por 20 euros.
 				</p>
 				<div class="ctaRow">
 					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta de agente gratis</a>
 					<a class="btnSecondary" href="#how">Ver cómo funcionará</a>
 				</div>
-				<div class="note">Muy pronto. Los agentes lo tendrán en su panel con créditos de pago por uso; todos los demás en propertylist.es/brochures. Crea tu cuenta gratis ahora y estarás listo desde el primer día.</div>
+				<div class="note">Muy pronto. Los agentes lo tendrán gratis en su panel; todos los demás en propertylist.es/brochures. Crea tu cuenta gratis ahora y estarás listo desde el primer día.</div>
 			</div>
 
 			<div class="bcWrap" aria-hidden="true">
@@ -190,9 +189,9 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 			</div>
 			<div class="card accent">
 				<div class="tierTag">Para agentes</div>
-				<h3>Integrado en tu plataforma, a una fracción del precio.</h3>
-				<p>Dentro de tu panel de PropertyList, los folletos cuestan solo unos créditos - unos 5 euros, una cuarta parte del precio público - con el primero a precio de estreno. Un motivo más para que tus anuncios luzcan mejor que el resto.</p>
-				<div class="priceTag accentTag"><b>~5 &euro;</b><span>unos créditos</span></div>
+				<h3>Integrado en tu plataforma, gratis.</h3>
+				<p>Dentro de tu panel de PropertyList, los folletos son gratis. Un motivo más para que tus anuncios luzcan mejor que el resto.</p>
+				<div class="priceTag accentTag"><b>Gratis</b><span>para agentes</span></div>
 			</div>
 		</div>
 	</section>
@@ -224,8 +223,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 			<h2>Imagina cada anuncio con este aspecto.</h2>
 			<p>
 				Un folleto impecable hace que la propiedad - y quien la comercializa - luzcan, en la pared, en un correo o en la mano
-				de un comprador. Folleto Instantáneo convierte 30 minutos de pelea en un clic, en cualquier propiedad, por un precio
-				que se paga solo la primera vez que consigues el encargo.
+				de un comprador. Folleto Instantáneo convierte 30 minutos de pelea en un clic, en cualquier propiedad, y es gratis para los agentes.
 			</p>
 		</div>
 	</section>

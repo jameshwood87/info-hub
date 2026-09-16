@@ -18,8 +18,8 @@ const gets = [
 ];
 
 const faqs = [
-	{ q: 'Can I use it if I am not an estate agent?', a: 'Yes. Anyone can create a professional brochure for a property at propertylist.es/brochures for 20 euros each - ideal if you are selling privately and want your home to look like an agency listed it. Estate agents get it built into their platform at a lower, credit-based price.' },
-	{ q: 'Why do agents pay less than the public?', a: 'Agents are platform members - brochures are one of the tools inside their dashboard, priced in credits (about a quarter of the public price), with the first at an intro price. The 20 euro price is the one-off, no-membership option for everyone else.' },
+	{ q: 'Can I use it if I am not an estate agent?', a: 'Yes. Anyone can create a professional brochure for a property at propertylist.es/brochures for 20 euros each - ideal if you are selling privately and want your home to look like an agency listed it. Estate agents get it free, built into their platform.' },
+	{ q: 'Why is it free for agents?', a: 'Agents are platform members, and brochures are one of the free tools inside their dashboard. The 20 euro price is the one-off, no-membership option for everyone else.' },
 	{ q: 'Which properties can have a brochure?', a: 'Any property on the MLS or the public portal - sale or rental, resale or new development. If it has photos and details, it can become a brochure in seconds.' },
 	{ q: 'What do I actually choose?', a: 'A theme, whether it is branded or unbranded, and the language. Everything else - photos, price, features, map, energy label - is filled in automatically. You review it before you share it.' },
 	{ q: 'Does it include the energy rating?', a: 'Yes, and this matters: Spanish law requires the energy efficiency rating (A to G) in any property advertising, including brochures, and leaving it out can mean a fine of 300 to 6,000 euros. Instant Brochure builds the label straight in, so your brochures stay on the right side of the law without you thinking about it.' },
@@ -45,7 +45,7 @@ const softwareLd = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
 	name: 'PropertyList Instant Brochure',
 	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
-	description: 'Coming soon: generate a property brochure for any listing in one click - a print-ready PDF plus a shareable live web page that updates itself as the price, photos and details change on the portal, and captures enquiries. Agents create them in-platform from a few credits; the public at propertylist.es/brochures for 20 euros. Energy label and QR code built in.',
+	description: 'Coming soon: generate a property brochure for any listing in one click - a print-ready PDF plus a shareable live web page that updates itself as the price, photos and details change on the portal, and captures enquiries. Agents create them in-platform for free; the public at propertylist.es/brochures for 20 euros. Energy label and QR code built in.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
@@ -76,14 +76,14 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 					Update the price, swap in new photos or mark a property under offer on the portal - and every live brochure link
 					you have already shared updates itself, instantly, on every phone it is already on. No resending, no brochure that
 					is wrong the moment the price moves. One click gives you a shareable web page that is never out of date, plus a
-					print-ready PDF for windows and viewings. Agents create them in-platform from a few credits; anyone else at
+					print-ready PDF for windows and viewings. Agents create them in-platform for free; anyone else at
 					<strong>propertylist.es/brochures</strong> for 20 euros.
 				</p>
 				<div class="ctaRow">
 					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Create your free agent account</a>
 					<a class="btnSecondary" href="#how">See how it will work</a>
 				</div>
-				<div class="note">Coming soon. Agents get it in their dashboard on pay-as-you-go credits; everyone else at propertylist.es/brochures. Create your free account now and be ready on day one.</div>
+				<div class="note">Coming soon. Agents get it free in their dashboard; everyone else at propertylist.es/brochures. Create your free account now and be ready on day one.</div>
 			</div>
 
 			<div class="bcWrap" aria-hidden="true">
@@ -190,9 +190,9 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 			</div>
 			<div class="card accent">
 				<div class="tierTag">For agents</div>
-				<h3>Built into your platform, at a fraction of the price.</h3>
-				<p>Inside your PropertyList dashboard, brochures cost just a few credits - around 5 euros, a quarter of the public price - with your first at an intro price. One more reason your listings look sharper than the rest.</p>
-				<div class="priceTag accentTag"><b>~&euro;5</b><span>a few credits</span></div>
+				<h3>Built into your platform, free.</h3>
+				<p>Inside your PropertyList dashboard, brochures are free. One more reason your listings look sharper than the rest.</p>
+				<div class="priceTag accentTag"><b>Free</b><span>for agents</span></div>
 			</div>
 		</div>
 	</section>
@@ -222,8 +222,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 			<h2>Picture every listing looking like this.</h2>
 			<p>
 				A crisp brochure makes a property - and the person marketing it - look the part, on the wall, in an inbox or in a
-				buyer's hand. Instant Brochure turns 30 minutes of fiddling into one click, on any property, for a price that pays for
-				itself the first time you win the instruction.
+				buyer's hand. Instant Brochure turns 30 minutes of fiddling into one click, on any property, and it is free for agents.
 			</p>
 		</div>
 	</section>

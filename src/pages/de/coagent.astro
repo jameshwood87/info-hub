@@ -60,7 +60,7 @@ const moments = [
 			{ q: 'Was ist Nueva Andalucía wert?', a: 'Der mittlere Angebotspreis und die Spanne dessen, was dort tatsächlich am Markt ist. Haben wir in einer Gegend nicht genug Bestand, sagt CoAgent das, statt zu raten.' },
 			{ q: 'Was ist PL22234 wert?', a: 'Ein Wert aus notariell beurkundeten Verkäufen in diesem Ort, mit einer Spanne und einem Link zum öffentlichen Nachweis. Oder beschreiben Sie die Immobilie stattdessen: „eine 120 m² große Wohnung in Estepona“. CoAgent sagt Ihnen immer, worauf die Zahl beruht.' },
 			{ q: 'REPORT', a: 'Antworten Sie nach einer Bewertung mit REPORT für den vollständigen Property Intelligence Report, als Link, den Sie dem Verkäufer schicken können. Ihr erster ist gratis. Danach kostet es Credits, und CoAgent sagt Ihnen wie viele und fragt, bevor etwas ausgegeben wird.' },
-			{ q: 'BROCHURE PL22234', a: 'Eine Broschüre des Inserats mit Ihrem eigenen Branding: eine Seite, die Ihr Kunde öffnen kann, mit dem heutigen Preis und einer Möglichkeit anzufragen, plus das PDF. CoAgent sagt Ihnen zuerst den Preis in Credits, und eine Broschüre, die Sie schon erstellt haben, wird kostenlos erneut geschickt.' },
+			{ q: 'BROCHURE PL22234', a: 'Eine Broschüre des Inserats mit Ihrem eigenen Branding: eine Seite, die Ihr Kunde öffnen kann, mit dem heutigen Preis und einer Möglichkeit anzufragen, plus das PDF. Broschüren sind gratis.' },
 		],
 	},
 	{
@@ -80,7 +80,7 @@ const faqs = [
 	{ q: 'Muss ich jedes Mal einen Kunden nennen?', a: 'Nein. Einen Kunden zu nennen macht aus einer Sprachnachricht CRM-Aktualisierungen. Ohne Namen können Sie trotzdem nach Immobilien, Ihrem Terminkalender, einem Inserat per Referenz oder dem Wert einer Gegend fragen, genau das, was Sie brauchen, wenn ein Laufkunde neben Ihnen steht.' },
 	{ q: 'Kann CoAgent für mich mit anderen Agenturen sprechen?', a: 'Ja. Fragen Sie, ob ein Inserat einer anderen Agentur noch verfügbar ist, und CoAgent bietet an, die Anfrage zu schicken. Antworten Sie mit YES, und sie geht über das MLS genauso raus wie eine, die vom CRM-Bildschirm aus geschickt wird, sodass sie in deren normalem Arbeitsablauf landet.' },
 	{ q: 'Was, wenn CoAgent meine Nummer nicht kennt?', a: 'CoAgent antwortet auf Spanisch und Englisch, mit einem Link, um Ihr kostenloses Konto zu erstellen, und einem Link zur Staff-Seite Ihres CRM, wo Sie Ihre Handynummer zu Ihrem Profil hinzufügen. Ist Ihre Nummer nicht spanisch, stellen Sie die Landesvorwahl voran und schreiben Sie noch einmal.' },
-	{ q: 'Was kostet Credits?', a: 'Nachrichten sind in Ihrem Plan enthalten. Eine Broschüre und der Marktbericht nach dem ersten gratis werden in PropertyList Credits bezahlt, zum gleichen Preis wie im CRM. CoAgent sagt Ihnen immer den Preis und wartet auf Ihr YES, bevor etwas ausgegeben wird, und eine Broschüre, die fehlschlägt, wird nie berechnet.' },
+	{ q: 'Was kostet Credits?', a: 'Nachrichten sind in Ihrem Plan enthalten, und Broschüren sind gratis. Der Marktbericht nach dem ersten gratis wird in PropertyList Credits bezahlt, zum gleichen Preis wie im CRM. CoAgent sagt Ihnen immer den Preis und wartet auf Ihr YES, bevor etwas ausgegeben wird.' },
 	{ q: 'Was kostet es?', a: 'Bis zum 22. September ist CoAgent für jeden Agenten gratis. Ab dann hat jeder Agent 20 gratis Nachrichten im Monat, und mit YES zu antworten zählt nie dazu. Die ersten 10 Agenten, die CoAgent anschreiben, sind die Ausnahme: gratis und unbegrenzt bis zum 1. November 2026. Unbegrenzt kostet 50 Credits im Monat pro Agent, bezahlt aus Ihren PropertyList Credits, und Sie können die Verlängerung jederzeit stoppen. Haben Sie mehr als 3 Agenten hinzuzufügen, sprechen Sie mit uns über ein Paket. Das MLS und der Kern des CRM bleiben gratis, und ein Konto zu erstellen kostet nichts.' },
 	{ q: 'Was ist noch nicht verfügbar?', a: 'Die eigene WhatsApp-Nummer anzubinden, damit sich Kundenchats von selbst einordnen, eine eigene Arbeitsleitung in der PropertyList App und dass der Kundensteckbrief von selbst auf Ihrem Anrufbildschirm erscheint. Alles andere auf dieser Seite funktioniert schon heute.' },
 ];
@@ -370,7 +370,7 @@ const softwareLd = {
 					<div class="planDesc">im Monat pro Agent. Kein Vertrag, jederzeit kündbar. Mehr als 3 Agenten? Fragen Sie uns nach einem Paket.</div>
 				</div>
 			</div>
-			<p class="fine">Broschüren und der Marktbericht nach dem ersten gratis kosten Credits, wie im CRM. CoAgent fragt immer zuerst.</p>
+			<p class="fine">Broschüren sind gratis. Der Marktbericht nach dem ersten gratis kostet Credits, wie im CRM. CoAgent fragt immer zuerst.</p>
 		</div>
 	</section>
 

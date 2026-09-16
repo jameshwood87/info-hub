@@ -115,13 +115,13 @@ export const featureFaqItemsEs = [
     id: 'crm-free',
     q: '¿El CRM de PropertyList es realmente gratis?',
     aHtml:
-      'El MLS core y el CRM son gratis para siempre. Eso incluye los pipelines de Lead, Seller y Property, sin límites. Solo pagas por la demanda: 1 crédito por cada lead cualificado que decidas meter en el pipeline de Buyer, que se descuenta de tu saldo de créditos. El pipeline de Tenants va con la suscripción del Módulo de Alquileres y el de Nurture con la suscripción de Automatización y Nurture. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
+      'El MLS core y el CRM son gratis para siempre. Eso incluye los pipelines de Lead, Seller y Property, sin límites. Solo pagas por la demanda: 1 crédito por cada lead cualificado que decidas meter en el pipeline de Buyer, que se descuenta de tu saldo de créditos. El pipeline de Tenants va con la suscripción del Módulo de Alquileres y el de Nurture con Automatización y Nurture, que es gratis. <a href="https://info.propertylist.es/es/precios/">Ver precios</a>.',
   },
   {
     id: 'pipeline-boards',
     q: '¿Qué tableros de pipeline incluye el CRM de PropertyList?',
     aHtml:
-      'Seis pipelines que funcionan juntos automáticamente: Lead (todos los leads nuevos entran en New Lead), Buyer (compradores cualificados), Seller (recorrido del vendedor), Property (estado del stock, los anuncios nuevos entran en Active Listing), Tenants (pipeline de alquiler, incluido en la suscripción del Módulo de Alquileres) y Nurture (clientes pasados y referrals, incluido en la suscripción de Automatización y Nurture). Los pipelines de Buyer y Property también incluyen la fase legal: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment y WON - Deed Signed. Lead y Seller son fijos; Buyer y Property son editables.',
+      'Seis pipelines que funcionan juntos automáticamente: Lead (todos los leads nuevos entran en New Lead), Buyer (compradores cualificados), Seller (recorrido del vendedor), Property (estado del stock, los anuncios nuevos entran en Active Listing), Tenants (pipeline de alquiler, incluido en la suscripción del Módulo de Alquileres) y Nurture (clientes pasados y referrals, incluido en Automatización y Nurture, que es gratis). Los pipelines de Buyer y Property también incluyen la fase legal: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment y WON - Deed Signed. Lead y Seller son fijos; Buyer y Property son editables.',
   },
   {
     id: 'pipeline-setup',
@@ -133,7 +133,7 @@ export const featureFaqItemsEs = [
     id: 'pipeline-pricing',
     q: '¿Cómo funciona el precio de los pipelines - qué pago exactamente?',
     aHtml:
-      'Pagas por la demanda, no por el inventario. Los pipelines de Lead, Seller y Property son gratis. El pipeline de Buyer cuesta 1 crédito por cada lead cualificado que decidas meter en él, y los créditos se descuentan de tu saldo de créditos. El pipeline de Tenants va incluido en el Módulo de Alquileres: 50 créditos por período de 30 días, con prueba gratis de 30 días. El pipeline de Nurture va incluido en la suscripción de Automatización y Nurture, 20 créditos/mes, que cubre además todos los correos automáticos, la detección de leads calientes (Hot-lead) y la Daily Action Queue.',
+      'Pagas por la demanda, no por el inventario. Los pipelines de Lead, Seller y Property son gratis. El pipeline de Buyer cuesta 1 crédito por cada lead cualificado que decidas meter en él, y los créditos se descuentan de tu saldo de créditos. El pipeline de Tenants va incluido en el Módulo de Alquileres: 50 créditos por período de 30 días, con prueba gratis de 30 días. El pipeline de Nurture va incluido en Automatización y Nurture, que es gratis y cubre además todos los correos automáticos, la detección de leads calientes (Hot-lead) y la Daily Action Queue.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────

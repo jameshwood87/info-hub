@@ -57,7 +57,7 @@ const allTasks: Task[] = [
 	{ id: 'matching', label: "Scrolling portals to find a buyer's match", hours: 2, after: 10, fix: 'free' },
 	{ id: 'desk', label: 'Driving back to the office to use the CRM', hours: 1, after: 0, fix: 'free' },
 	{ id: 'valuation', label: 'Arguing with a vendor about their price', hours: 2, after: 30, fix: 'peruse:Property Intelligence Report' },
-	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15, fix: 'addon:nur' },
+	{ id: 'followup', label: 'Remembering who I promised to call back', hours: 3, after: 15, fix: 'free' },
 	{ id: 'website', label: 'Nagging a developer about my website', hours: 1, after: 10, fix: 'addon:wb', needs: 'nosite' },
 	{ id: 'tenants', label: 'Tenancies living in a spreadsheet', hours: 2, after: 30, fix: 'addon:rent', needs: 'lettings' },
 	{ id: 'callnotes', label: 'Typing up calls I already said out loud', hours: 2, after: 15, fix: 'free' },
@@ -68,6 +68,7 @@ const allTasks: Task[] = [
 // on from first paint, with ticks, because free has no off switch
 const freeTools = [
 	{ name: 'Shared MLS and CRM', href: '/pipelines/' },
+	{ name: 'Automation and Nurture', href: '/nurture/', note: 'Follow-up emails under your own name, hot-lead detection and the daily call list.' },
 	{ name: 'Unlimited listings and staff' },
 	{ name: 'Instant Listing', href: '/instant-listing/' },
 	{ name: 'XML feeds for your own stock, in and out', href: '/xml-feed-import/', note: 'Your own stock moves free, in any direction: out to other portals, CRMs and your own website. The paid thing is the feed of the whole network’s listings for your site, 35 credits a month.' },
@@ -101,16 +102,6 @@ type Paid = {
 };
 
 const paidTools: Paid[] = [
-	{
-		key: 'nur',
-		name: 'Automation and Nurture',
-		href: '/nurture/',
-		price: '20 credits a month',
-		monthly: 20,
-		taskId: 'followup',
-		note: 'Follow-up emails under your own name, hot-lead detection and the daily call list. It works while you are at a viewing.',
-		show: 'always',
-	},
 	{
 		key: 'rent',
 		name: 'Rentals Module',

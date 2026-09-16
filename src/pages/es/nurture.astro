@@ -6,7 +6,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/nurture/`;
 const title = 'Nurture: mantén a cada cliente antiguo, en automático | PropertyList';
 const description =
-	'Los clientes antiguos y los compradores que se enfriaron siguen en contacto solos, y te avisamos en cuanto uno está listo para moverse. 20 créditos al mes, y puedes verlo funcionar antes de pagar.';
+	'Los clientes antiguos y los compradores que se enfriaron siguen en contacto solos, y te avisamos en cuanto uno está listo para moverse. Gratis, y no se envía nada hasta que lo activas.';
 
 const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'es');
@@ -50,7 +50,7 @@ const control = [
 const faqs = [
 	{
 		q: '¿Qué cuesta?',
-		a: 'Nurture forma parte de la suscripción Automation y Nurture: 20 créditos al mes, del mismo saldo de créditos que ya usas para destacar un anuncio o sacar un informe. Ese precio cubre el pipeline de Nurture, todos los emails automáticos, la detección de contactos Caliente y la Cola de Acciones Diarias. Es un solo producto, así que no hay nada que configurar ni añadir.',
+		a: 'Nada. Nurture forma parte de Automation y Nurture, que es gratis. Incluye el pipeline de Nurture, todos los emails automáticos, la detección de contactos Caliente y la Cola de Acciones Diarias. Es un solo producto, así que no hay nada que configurar ni añadir.',
 	},
 	{
 		q: '¿Va a enviar cosas que me den vergüenza?',
@@ -65,8 +65,8 @@ const faqs = [
 		a: 'Los emails automáticos de ese contacto se paran, se le etiqueta como Caliente, y una llamada sube al principio de tu Cola de Acciones Diarias con el motivo delante, por ejemplo que ha abierto tres veces esta semana un email de valoración. Un contacto que vuelve a ti desde Nurture nunca cuesta un crédito. Ya pagaste por él una vez.',
 	},
 	{
-		q: '¿Puedo probarlo antes de suscribirme?',
-		a: 'El tablero se llena tanto si te suscribes como si no. Cada operación ganada coloca al contacto en él y los datos se recogen igual, pero no se envía nada, y un contador te muestra lo que ese mes habría salido. Cuando te suscribas, arranca con todo lo que lleva recogido y no desde una pantalla vacía.',
+		q: '¿Qué pasa antes de activarlo?',
+		a: 'El tablero se llena igual. Cada operación ganada coloca al contacto en él y los datos se recogen igual, pero no se envía nada, y un contador te muestra lo que ese mes habría salido. Cuando lo actives, arranca con todo lo que lleva recogido y no desde una pantalla vacía.',
 	},
 ];
 
@@ -104,7 +104,7 @@ const faqLd = {
 				</a>
 				<a class="btnSecondary" href="#que-cuesta">Ver qué cuesta</a>
 			</div>
-			<div class="note">{plAgencies} agencias y {plAgents} agentes ya están en la red. El tablero se llena antes de que pagues nada.</div>
+			<div class="note">{plAgencies} agencias y {plAgents} agentes ya están en la red. Nurture es gratis, y el tablero se llena antes de que actives nada.</div>
 		</div>
 	</section>
 
@@ -163,13 +163,13 @@ const faqLd = {
 				<p><strong>Un contacto que vuelve desde Nurture nunca cuesta un crédito.</strong> Ya pagaste por él una vez.</p>
 			</div>
 			<div class="card">
-				<h2>Míralo funcionar antes de pagar</h2>
+				<h2>Míralo funcionar antes de activarlo</h2>
 				<p>
-					Sin la suscripción el tablero se llena igual. Cada operación ganada sigue colocando al contacto, las fechas de firma y los cumpleaños
+					Antes de activarlo, el tablero se llena igual. Cada operación ganada sigue colocando al contacto, las fechas de firma y los cumpleaños
 					se siguen recogiendo, y un contador te dice lo que ese mes habría enviado.
 				</p>
 				<p>
-					No sale nada hasta que tú decides que salga. Cuando te suscribes, arranca con todo lo que lleva recogido y no desde una pantalla
+					No sale nada hasta que tú decides que salga. Cuando lo activas, arranca con todo lo que lleva recogido y no desde una pantalla
 					vacía.
 				</p>
 				<div class="pillRow">
@@ -195,13 +195,13 @@ const faqLd = {
 			<div class="card" id="que-cuesta">
 				<h2>Qué cuesta</h2>
 				<ul class="priceList">
-					<li><span>Automation y Nurture</span><strong>20 créditos al mes</strong></li>
+					<li><span>Automation y Nurture</span><strong>Gratis</strong></li>
 					<li><span>Emails automáticos, detección Caliente, Cola de Acciones Diarias</span><strong>Incluido</strong></li>
 					<li><span>Un contacto que vuelve a ti desde Nurture</span><strong>Nunca se cobra</strong></li>
-					<li><span>Ver cómo se llena el tablero antes de suscribirte</span><strong>Gratis</strong></li>
+					<li><span>Ver cómo se llena el tablero antes de activarlo</span><strong>Gratis</strong></li>
 				</ul>
 				<p class="quiet">
-					Un solo producto a un solo precio, del mismo saldo de créditos que ya usas. Los créditos que compras no caducan. Consulta los
+					Un solo producto, gratis, sin nada que añadir. Consulta los
 					<a href="/es/precios/">precios completos</a> o la
 					<a href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/nurture/">guía de configuración</a>.
 				</p>
@@ -210,7 +210,7 @@ const faqLd = {
 				<h2>Funciona porque lo demás es gratis</h2>
 				<p>
 					A Nurture lo alimentan los pipelines, y los pipelines que lo llenan no cuestan nada. Leads, Sellers y Property son gratis y sin
-					límite, así que cada operación que cierras entra en Nurture te suscribas o no.
+					límite, así que cada operación que cierras entra en Nurture actives o no el seguimiento.
 				</p>
 				<p>
 					De eso va cobrar por la demanda y no por la oferta: cuanto más lleves tu agencia aquí, más valiosa se vuelve la base de datos, y es
@@ -243,8 +243,7 @@ const faqLd = {
 		<div class="ctaInner">
 			<h2>Los clientes que ya tienes son los más baratos que volverás a ganar.</h2>
 			<p>
-				El MLS, el CRM y los pipelines que alimentan Nurture son gratis. Activa el seguimiento cuando el tablero tenga suficiente gente como
-				para que valga 20 créditos al mes.
+				El MLS, el CRM, los pipelines que alimentan Nurture y el propio Nurture son gratis. Activa el seguimiento cuando quieras.
 			</p>
 			<div class="ctaRow" aria-label="Únete a PropertyList">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">

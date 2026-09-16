@@ -6,7 +6,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/nurture/`;
 const title = 'Nurture: keep every past client, automatically | PropertyList';
 const description =
-	'Past clients and quiet buyers stay in touch on their own, and you get told the moment one of them is ready to move. 20 credits a month, and you can watch it work before you pay.';
+	'Past clients and quiet buyers stay in touch on their own, and you get told the moment one of them is ready to move. Free, and nothing sends until you switch it on.';
 
 const __ps = await getPortalStats();
 const plAgents = statPlus(__ps.agents, 'en');
@@ -50,7 +50,7 @@ const control = [
 const faqs = [
 	{
 		q: 'What does it cost?',
-		a: 'Nurture is part of the Automation and Nurture subscription: 20 credits a month, from the same credit balance you already use for featuring a listing or pulling a report. One price covers the Nurture pipeline, every automated email, Hot-lead detection and the Daily Action Queue. It is one product, so there is nothing to configure or add on.',
+		a: 'Nothing. Nurture is part of Automation and Nurture, which is free. It covers the Nurture pipeline, every automated email, Hot-lead detection and the Daily Action Queue. It is one product, so there is nothing to configure or add on.',
 	},
 	{
 		q: 'Will it send things I would be embarrassed by?',
@@ -65,8 +65,8 @@ const faqs = [
 		a: 'The automated emails for that contact stop, they are tagged Hot, and a call goes to the top of your Daily Action Queue with the reason attached, for example that they opened a valuation email three times this week. A contact coming back to you out of Nurture never costs a credit. You paid for them once already.',
 	},
 	{
-		q: 'Can I try it before subscribing?',
-		a: 'The board fills up whether you subscribe or not. Every won deal puts the contact on it and the details are collected as normal, but nothing sends, and a counter shows what the month would have gone out. When you do subscribe it starts with everything it has been gathering rather than from an empty screen.',
+		q: 'What happens before I switch it on?',
+		a: 'The board fills up either way. Every won deal puts the contact on it and the details are collected as normal, but nothing sends, and a counter shows what the month would have gone out. When you switch it on it starts with everything it has been gathering rather than from an empty screen.',
 	},
 ];
 
@@ -104,7 +104,7 @@ const faqLd = {
 				</a>
 				<a class="btnSecondary" href="#what-it-costs">See what it costs</a>
 			</div>
-			<div class="note">{plAgencies} agencies and {plAgents} agents are already on the network. The board fills up before you pay anything.</div>
+			<div class="note">{plAgencies} agencies and {plAgents} agents are already on the network. Nurture is free, and the board fills up before you switch anything on.</div>
 		</div>
 	</section>
 
@@ -181,13 +181,13 @@ const faqLd = {
 				<p><strong>A contact coming back out of Nurture never costs a credit.</strong> You paid for them once already.</p>
 			</div>
 			<div class="card">
-				<h2>Watch it work before you pay</h2>
+				<h2>Watch it work before you switch it on</h2>
 				<p>
-					Without the subscription the board still fills up. Every won deal still puts the contact on it, the sign dates and birthdays are
+					Before you switch it on, the board still fills up. Every won deal still puts the contact on it, the sign dates and birthdays are
 					still collected, and a counter tells you what that month would have sent.
 				</p>
 				<p>
-					Nothing goes out until you decide it should. When you subscribe, it starts with everything it has been gathering rather than from an
+					Nothing goes out until you decide it should. When you switch it on, it starts with everything it has been gathering rather than from an
 					empty screen.
 				</p>
 				<div class="pillRow">
@@ -213,13 +213,13 @@ const faqLd = {
 			<div class="card" id="what-it-costs">
 				<h2>What it costs</h2>
 				<ul class="priceList">
-					<li><span>Automation and Nurture</span><strong>20 credits a month</strong></li>
+					<li><span>Automation and Nurture</span><strong>Free</strong></li>
 					<li><span>Automated emails, Hot detection, Daily Action Queue</span><strong>Included</strong></li>
 					<li><span>A contact returning to you from Nurture</span><strong>Never charged</strong></li>
-					<li><span>Watching the board fill up before you subscribe</span><strong>Free</strong></li>
+					<li><span>Watching the board fill up before you switch it on</span><strong>Free</strong></li>
 				</ul>
 				<p class="quiet">
-					One product at one price, out of the same credit balance you already use. Credits you buy do not expire. See the
+					One product, free, with nothing to add on. See the
 					<a href="/pricing/">full pricing</a> or the <a href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/nurture/">setup guide</a>.
 				</p>
 			</div>
@@ -227,7 +227,7 @@ const faqLd = {
 				<h2>It only works because the rest is free</h2>
 				<p>
 					Nurture is fed by the pipelines, and the pipelines that fill it cost nothing. Leads, Sellers and Property run free with no limit, so
-					every deal you close lands in Nurture whether or not you ever subscribe.
+					every deal you close lands in Nurture whether or not you switch the follow-up on.
 				</p>
 				<p>
 					That is the point of charging for demand and not for supply: the more you run your agency here, the more valuable the database
@@ -260,8 +260,7 @@ const faqLd = {
 		<div class="ctaInner">
 			<h2>The clients you already have are the cheapest ones you will ever win again.</h2>
 			<p>
-				The MLS, the CRM and the pipelines that feed Nurture are free. Switch the follow-up on when the board has enough people on it to be
-				worth 20 credits a month.
+				The MLS, the CRM, the pipelines that feed Nurture and Nurture itself are free. Switch the follow-up on whenever you are ready.
 			</p>
 			<div class="ctaRow" aria-label="Join PropertyList">
 				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">

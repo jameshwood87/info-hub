@@ -82,14 +82,14 @@ const prices = [
 	{ what: 'Pipelines de Leads, Sellers y Property', cost: 'Gratis, sin límite' },
 	{ what: 'Lead de comprador', cost: '1 crédito, solo al meterlo en el pipeline de Buyer' },
 	{ what: 'Módulo de Alquileres: Tenants, Tenancies y Maintenance', cost: '50 créditos / 30 días, prueba gratis de 30 días' },
-	{ what: 'Automation y Nurture, con la Daily Action Queue incluida', cost: '20 créditos al mes' },
+	{ what: 'Automation y Nurture, con la Daily Action Queue incluida', cost: 'Gratis' },
 	{ what: 'Una consulta que resulta ser de otro agente', cost: 'Nunca se cobra' },
 ];
 
 const faqs = [
 	{
 		q: '¿Qué cuesta realmente?',
-		a: 'Los pipelines de Leads, Sellers y Property son gratis y sin límite. Un lead de comprador cuesta 1 crédito, que solo se gastan cuando decides meter ese contacto en el pipeline de Buyer. Cualificar no cuesta nada, y una consulta sin cualificar tampocola. Dos suscripciones cubren lo que funciona solo: el Módulo de Alquileres por 50 créditos por período de 30 días, gratis los primeros 30 días, y Automation y Nurture por 20 créditos al mes. Todo sale del mismo saldo de créditos que ya usas para destacar anuncios o sacar informes.',
+		a: 'Los pipelines de Leads, Sellers y Property son gratis y sin límite. Un lead de comprador cuesta 1 crédito, que solo se gastan cuando decides meter ese contacto en el pipeline de Buyer. Cualificar no cuesta nada, y una consulta sin cualificar tampocola. El Módulo de Alquileres, que funciona solo, cuesta 50 créditos por período de 30 días, gratis los primeros 30 días. Automation y Nurture es gratis. Todo sale del mismo saldo de créditos que ya usas para destacar anuncios o sacar informes.',
 	},
 	{
 		q: '¿Tengo que configurar algo de esto?',
@@ -104,8 +104,8 @@ const faqs = [
 		a: 'Se detecta solo, se etiqueta en rojo y nunca te cuesta un crédito. Además queda fuera de todos los emails automáticos, así que no le mandamos una valoración de vivienda a un agente colaborador. La etiqueta es un aviso, no un borrado, y se quita en un clic si nos equivocamos.',
 	},
 	{
-		q: '¿Y si no contrato la suscripción de Automatización?',
-		a: 'El tablero de Nurture se llena igual. Cada operación cerrada sigue colocando al contacto en él y los datos se siguen recogiendo, pero no se envía nada, y un contador te dice lo que ese mes habría salido. Si te suscribes más adelante, la máquina arranca con todo lo que lleva recogido y no desde cero.',
+		q: '¿Y si no activo la Automatización?',
+		a: 'El tablero de Nurture se llena igual. Cada operación cerrada sigue colocando al contacto en él y los datos se siguen recogiendo, pero no se envía nada, y un contador te dice lo que ese mes habría salido. Si la activas más adelante, la máquina arranca con todo lo que lleva recogido y no desde cero.',
 	},
 ];
 
@@ -227,17 +227,17 @@ const faqLd = {
 				<p>Un lead que se apaga en marzo compra muchas veces en octubre, normalmente con quien siguió en contacto.</p>
 			</div>
 			<div class="card accent">
-				<h2>Puedes verlo antes de pagarlo</h2>
+				<h2>Puedes verlo antes de activarlo</h2>
 				<p>
-					Sin la suscripción, el tablero de Nurture se llena igual. Cada operación cerrada sigue entrando, los datos se siguen recogiendo, y un
+					Antes de activarlo, el tablero de Nurture se llena igual. Cada operación cerrada sigue entrando, los datos se siguen recogiendo, y un
 					contador te dice lo que ese mes habría enviado.
 				</p>
 				<p>
-					No sale nada hasta que tú decides que salga. Y cuando te suscribes, arranca con todo lo que lleva recogido en vez de con una pantalla
+					No sale nada hasta que tú decides que salga. Y cuando lo activas, arranca con todo lo que lleva recogido en vez de con una pantalla
 					vacía.
 				</p>
 				<div class="pillRow">
-					<span class="pill">20 créditos al mes</span>
+					<span class="pill">Gratis</span>
 					<span class="pill">Un email por contacto y semana</span>
 					<span class="pill">Interruptor por contacto</span>
 				</div>

@@ -60,7 +60,7 @@ const moments = [
 			{ q: 'Combien vaut Nueva Andalucía ?', a: 'Le prix médian affiché et la fourchette de ce qui est réellement sur le marché là-bas. Si nous n’avons pas assez de biens dans une zone, il vous le dit plutôt que de deviner.' },
 			{ q: 'Combien vaut PL22234 ?', a: 'Une valeur basée sur des ventes actées devant notaire dans cette commune, avec une fourchette et un lien vers la preuve publique. Ou décrivez plutôt le bien : "un appartement de 120 m² à Estepona". Il vous dit toujours sur quoi se base le chiffre.' },
 			{ q: 'REPORT', a: 'Après une estimation, répondez REPORT pour recevoir le Property Intelligence Report complet, sous forme de lien à envoyer au vendeur. Le premier est gratuit. Ensuite, cela coûte des crédits, et il vous précise combien et demande avant de dépenser quoi que ce soit.' },
-			{ q: 'BROCHURE PL22234', a: 'Une brochure du bien à votre propre marque : une page que votre client peut ouvrir, avec le prix du jour et un moyen de vous contacter, plus le PDF. Il vous indique d’abord le prix en crédits, et une brochure déjà créée est renvoyée gratuitement.' },
+			{ q: 'BROCHURE PL22234', a: 'Une brochure du bien à votre propre marque : une page que votre client peut ouvrir, avec le prix du jour et un moyen de vous contacter, plus le PDF. Les brochures sont gratuites.' },
 		],
 	},
 	{
@@ -80,7 +80,7 @@ const faqs = [
 	{ q: 'Dois-je toujours nommer un client ?', a: 'Non. Nommer un client transforme une note vocale en mises à jour du CRM. Sans cela, vous pouvez toujours demander des biens, votre agenda, une annonce par référence ou la valeur d’une zone, ce qui est utile quand un client de passage est juste à côté de vous.' },
 	{ q: 'Peut-il parler à d’autres agences pour moi ?', a: 'Oui. Demandez si un bien d’une autre agence est toujours disponible et CoAgent propose d’envoyer la demande. Répondez YES et elle passe par le MLS, de la même façon qu’une demande envoyée depuis l’écran du CRM, et arrive donc dans leur circuit habituel.' },
 	{ q: 'Et si CoAgent ne reconnaît pas mon numéro ?', a: 'Il répond, en espagnol et en anglais, avec un lien pour créer votre compte gratuit et un lien vers la page Staff de votre CRM, où vous ajoutez votre mobile à votre profil. Ajoutez l’indicatif du pays devant si votre numéro n’est pas espagnol, puis écrivez-lui à nouveau.' },
-	{ q: 'Qu’est-ce qui coûte des crédits ?', a: 'Les messages sont couverts par votre forfait. Une brochure et le rapport de marché après le premier gratuit sont payés en crédits PropertyList, au même prix que dans le CRM. CoAgent vous indique toujours le prix et attend votre YES avant de dépenser quoi que ce soit, et une brochure qui échoue n’est jamais facturée.' },
+	{ q: 'Qu’est-ce qui coûte des crédits ?', a: 'Les messages sont couverts par votre forfait, et les brochures sont gratuites. Le rapport de marché après le premier gratuit est payé en crédits PropertyList, au même prix que dans le CRM. CoAgent vous indique toujours le prix et attend votre YES avant de dépenser quoi que ce soit.' },
 	{ q: 'Combien ça coûte ?', a: 'CoAgent est gratuit pour chaque agent jusqu’au 22 septembre. Ensuite, chaque agent a 20 messages gratuits par mois, et répondre YES ne compte jamais. Les 10 premiers agents qui lui écrivent font exception : gratuit et illimité jusqu’au 1er novembre 2026. L’illimité coûte 50 crédits par mois et par agent, payés avec vos crédits PropertyList, et vous pouvez arrêter le renouvellement quand vous voulez. Plus de 3 agents ? Parlez-nous d’un forfait. Le MLS et le cœur du CRM restent gratuits, et créer votre compte ne coûte rien.' },
 	{ q: 'Qu’est-ce qui n’est pas encore disponible ?', a: 'Connecter votre propre numéro WhatsApp pour que les conversations avec vos clients se classent toutes seules, une ligne de travail dédiée dans l’application PropertyList, et la fiche du client qui apparaît d’elle-même sur votre écran d’appel. Tout le reste sur cette page fonctionne déjà.' },
 ];
@@ -370,7 +370,7 @@ const softwareLd = {
 					<div class="planDesc">par mois et par agent. Sans engagement, arrêtez quand vous voulez. Plus de 3 agents ? Parlez-nous d’un forfait.</div>
 				</div>
 			</div>
-			<p class="fine">Les brochures et le rapport de marché après le premier gratuit coûtent des crédits, comme dans le CRM. Il demande toujours avant.</p>
+			<p class="fine">Les brochures sont gratuites. Le rapport de marché après le premier gratuit coûte des crédits, comme dans le CRM. Il demande toujours avant.</p>
 		</div>
 	</section>
 

@@ -104,13 +104,13 @@ export const featureFaqItems = [
     id: 'crm-free',
     q: 'Is the PropertyList CRM really free?',
     aHtml:
-      'The core MLS and CRM are free forever. That includes the Lead, Seller and Property pipelines, with no limits. You pay only for demand: 1 credit for each qualified lead you decide to move into the Buyer pipeline, taken from your credit balance. The Tenants pipeline comes with the Rentals Module subscription and the Nurture pipeline with the Automation and Nurture subscription. <a href="https://info.propertylist.es/pricing">See full pricing</a>.',
+      'The core MLS and CRM are free forever. That includes the Lead, Seller and Property pipelines, with no limits. You pay only for demand: 1 credit for each qualified lead you decide to move into the Buyer pipeline, taken from your credit balance. The Tenants pipeline comes with the Rentals Module subscription and the Nurture pipeline with Automation and Nurture, which is free. <a href="https://info.propertylist.es/pricing">See full pricing</a>.',
   },
   {
     id: 'pipeline-boards',
     q: 'What pipeline boards does the PropertyList CRM include?',
     aHtml:
-      'Six pipelines that work together automatically: Lead (every new lead lands in New Lead), Buyer (qualified purchasers), Seller (vendor journey), Property (stock status, new listings auto-land in Active Listing), Tenants (rental pipeline, part of the Rentals Module subscription) and Nurture (past clients and referrals, part of the Automation and Nurture subscription). The Buyer and Property pipelines also carry the legal phase: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed. Lead and Seller are fixed; Buyer and Property are editable.',
+      'Six pipelines that work together automatically: Lead (every new lead lands in New Lead), Buyer (qualified purchasers), Seller (vendor journey), Property (stock status, new listings auto-land in Active Listing), Tenants (rental pipeline, part of the Rentals Module subscription) and Nurture (past clients and referrals, part of Automation and Nurture, which is free). The Buyer and Property pipelines also carry the legal phase: Reservation Paid, Deposit Paid, Mortgage in Progress, Notary Appointment and WON - Deed Signed. Lead and Seller are fixed; Buyer and Property are editable.',
   },
   {
     id: 'pipeline-setup',
@@ -122,7 +122,7 @@ export const featureFaqItems = [
     id: 'pipeline-pricing',
     q: 'How does the pipeline pricing work - what do I actually pay for?',
     aHtml:
-      'You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with the Automation and Nurture subscription at 20 credits/month, which also covers all automated emails, Hot-lead detection and the Daily Action Queue.',
+      'You pay for demand, not for supply. The Lead, Seller and Property pipelines are free. The Buyer pipeline costs 1 credit for each qualified lead you decide to move into it, and buyer credits come from your credit balance. The Tenants pipeline comes with the Rentals Module: 50 credits per 30-day period, with a free 30-day trial. The Nurture pipeline comes with Automation and Nurture, which is free and also covers all automated emails, Hot-lead detection and the Daily Action Queue.',
   },
 
   // ─── Rentals Module ───────────────────────────────────────────────────

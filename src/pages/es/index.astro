@@ -51,7 +51,7 @@ const softwareAppLd = {
   "@type": "Organization",
   "name": "PropertyList"
  },
- "description": `Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by ${plAgents} agents across ${plAgencies} agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit, and only when the agent chooses to move it into the Buyer pipeline. Automation, rentals and the website builder are monthly credit subscriptions from one prepaid balance.`,
+ "description": `Estate agency system for Spain combining a CRM, an agent-to-agent MLS shared by ${plAgents} agents across ${plAgencies} agencies, and a public property portal. Listings, the CRM and the Lead, Seller and Property pipelines are free with no limit. A buyer lead costs 1 credit, and only when the agent chooses to move it into the Buyer pipeline. Automation and Nurture is free. Rentals and the website builder are monthly credit subscriptions from one prepaid balance.`,
  "featureList": [
   "Six CRM pipelines: Leads, Buyers, Sellers, Property, Tenants, Nurture",
   `Agent-to-agent MLS with co-broking across ${plAgencies} agencies`,
@@ -92,14 +92,9 @@ const softwareAppLd = {
   {
    "@type": "Offer",
    "name": "Automation and Nurture",
+   "price": "0",
    "priceCurrency": "EUR",
-   "priceSpecification": {
-    "@type": "UnitPriceSpecification",
-    "price": "20",
-    "priceCurrency": "EUR",
-    "unitText": "MONTH"
-   },
-   "description": "20 credits a month from the same prepaid credit balance as everything else. Includes the Nurture pipeline, all automated emails, Hot-lead detection and the Daily Action Queue. Paid in credits from a prepaid balance, bought in advance at 1.00 EUR each and less in larger packs, so the euro figure shown is the maximum."
+   "description": "Free. Includes the Nurture pipeline, all automated emails, Hot-lead detection and the Daily Action Queue."
   },
   {
    "@type": "Offer",
@@ -415,7 +410,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 				<div class="pricingHeader">
 					<h2 class="pricingTitle">De pago, en una frase</h2>
 				</div>
-				<p style="margin:0;color:rgba(16,24,40,0.78);line-height:1.65;">Pagas por la demanda, nunca por la oferta: 1 crédito cuando decides pasar un lead de comprador cualificado al pipeline de Buyer, con los 5 primeros gratis. Y módulos opcionales cuando los quieras: <a href="/es/alquileres/">Alquileres</a> (50 créditos / 30 días, prueba de 30 días), <a href="/es/nurture/">Automation &amp; Nurture</a> (20 créditos/mes) y el <a href="/es/constructor-de-webs/">Constructor de Webs</a> (50 créditos/mes, gratis hasta que publiques).</p>
+				<p style="margin:0;color:rgba(16,24,40,0.78);line-height:1.65;">Pagas por la demanda, nunca por la oferta: 1 crédito cuando decides pasar un lead de comprador cualificado al pipeline de Buyer, con los 5 primeros gratis. Y módulos opcionales cuando los quieras: <a href="/es/alquileres/">Alquileres</a> (50 créditos / 30 días, prueba de 30 días) y el <a href="/es/constructor-de-webs/">Constructor de Webs</a> (50 créditos/mes, gratis hasta que publiques). <a href="/es/nurture/">Automation &amp; Nurture</a> es gratis.</p>
 				<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
 					<a href="/es/funciones/" style="background:#00ae9a;color:#00100e;border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;font-size:14.5px;">Ver todas las funciones &rarr;</a>
 					<a href="/es/gratis/" style="border:1px solid rgba(16,24,40,0.18);border-radius:999px;padding:11px 18px;font-weight:800;text-decoration:none;font-size:14.5px;color:rgba(16,24,40,0.85);">Todo lo gratuito</a>
@@ -439,7 +434,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 			</details>
 			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
 				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Cómo gana dinero PropertyList?</summary>
-				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">Con créditos, de un único saldo prepagado - y todo cobro es opcional. Recibir un lead no cuesta nada: las consultas del portal son gratis por tiempo limitado, y los leads de otros agentes o de tu MicroSite son gratis para siempre. Si quieres trabajar un comprador cualificado en el pipeline de Buyer, es 1 crédito, con los 5 primeros gratis - y si nunca lo pasas, nunca pagas. Lo mismo con destacar un anuncio, los informes de propiedad, los módulos de Alquileres y Automation &amp; Nurture, el feed XML que pone el stock de toda la red en tu propia web, y el Constructor de Webs a medida, que es gratis para crear y previsualizar y solo se cobra cuando lo publicas. Nada se activa solo. Publicar y vender siguen siendo gratis, así la red no deja de crecer.</p>
+				<p style="margin:10px 0 0;color:rgba(16,24,40,0.75);line-height:1.65;">Con créditos, de un único saldo prepagado - y todo cobro es opcional. Recibir un lead no cuesta nada: las consultas del portal son gratis por tiempo limitado, y los leads de otros agentes o de tu MicroSite son gratis para siempre. Si quieres trabajar un comprador cualificado en el pipeline de Buyer, es 1 crédito, con los 5 primeros gratis - y si nunca lo pasas, nunca pagas. Lo mismo con destacar un anuncio, los informes de propiedad, el módulo de Alquileres, el feed XML que pone el stock de toda la red en tu propia web, y el Constructor de Webs a medida, que es gratis para crear y previsualizar y solo se cobra cuando lo publicas. Nada se activa solo. Publicar y vender siguen siendo gratis, así la red no deja de crecer.</p>
 			</details>
 			<details style="background:#fff;border:1px solid rgba(16,24,40,0.1);border-radius:14px;padding:14px 18px;">
 				<summary style="cursor:pointer;font-weight:800;letter-spacing:-0.01em;color:#101828;">¿Puedo conseguir créditos gratis?</summary>
