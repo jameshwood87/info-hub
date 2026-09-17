@@ -667,6 +667,13 @@ const faqs = [
 </Layout>
 
 <style>
+	/* Layout defines no accent colour, so without this every var(--pl-accent) below
+	   resolves to nothing: the CTA buttons, the chosen answer and the on switches go blank */
+	:global(:root) {
+		--pl-accent: #00ae9a;
+		--pl-accent-rgb: 0, 174, 154;
+	}
+
 	.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px 72px; }
 	.intro { padding: 44px 0 10px; }
 	.kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pl-accent); margin: 0 0 10px; }
