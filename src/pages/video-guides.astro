@@ -133,6 +133,21 @@ const videoLd = guides.map((g) => ({
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 }));
 
+// CoAgent film (portrait, 57s): its own band above the numbered guides, so it is not
+// counted in "14 guides". English only for now; the Spanish cut comes later (James, 18-09-26).
+const coagentLd = {
+	'@context': 'https://schema.org',
+	'@type': 'VideoObject',
+	name: 'CoAgent on WhatsApp - PropertyList video guide',
+	description: 'Tell CoAgent what a buyer needs and her file is saved with matches from the shared MLS, get a brief before a viewing, save the owner from a Se Vende sign, list a property from photos, answer your newest lead by email and make a branded brochure. Nothing is saved until you reply YES.',
+	thumbnailUrl: [`${origin}/videos/pl-coagent-film.jpg`],
+	uploadDate: '2026-09-18',
+	duration: 'PT57S',
+	contentUrl: `${origin}/videos/pl-coagent-film.mp4`,
+	embedUrl: canonical,
+	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
+};
+
 const breadcrumbLd = {
 	'@context': 'https://schema.org', '@type': 'BreadcrumbList',
 	itemListElement: [
@@ -159,6 +174,7 @@ const breadcrumbLd = {
 	{videoLd.map((ld) => (
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(ld)} />
 	))}
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(coagentLd)} />
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
 
 	<main class="vg">
@@ -172,6 +188,29 @@ const breadcrumbLd = {
 			<div class="heroMeta">
 				<span>14 guides</span><span class="dot">&middot;</span><span>about 10 minutes total</span>
 				<span class="dot">&middot;</span><span>free platform</span>
+			</div>
+		</section>
+
+		<section class="coagent" id="coagent" aria-labelledby="coagent-title">
+			<div class="caText">
+				<p class="num">CoAgent</p>
+				<h2 id="coagent-title">Your CRM, <em>on WhatsApp</em></h2>
+				<p class="blurb">
+					A one-minute look at what you can ask it: save a buyer with matches from the
+					shared MLS, get a brief before a viewing, save the owner from a Se Vende sign,
+					list a property from photos, answer your newest lead by email, and make a
+					branded brochure, free.
+				</p>
+				<p class="caNote">Nothing is saved until you reply YES.</p>
+				<div class="caRow">
+					<a class="btn primary" href="/coagent/">See what CoAgent can do</a>
+					<span class="badge">0:57</span>
+				</div>
+			</div>
+			<div class="phone">
+				<video controls preload="metadata" playsinline poster="/videos/pl-coagent-film.jpg">
+					<source src="/videos/pl-coagent-film.mp4" type="video/mp4" />
+				</video>
 			</div>
 		</section>
 
@@ -231,6 +270,16 @@ const breadcrumbLd = {
 		.heroMeta { margin-top: 22px; font-size: 15px; font-weight: 700; color: #5b6b73; display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
 		.heroMeta .dot { color: #b8c6cc; }
 
+		.coagent { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: center; background: linear-gradient(135deg, #0b1b22, #0f3a3a); border-radius: 24px; padding: 44px 52px; margin-bottom: 64px; color: #fff; }
+		.coagent .num { font-size: 14px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #5fd8c6; }
+		.coagent h2 { font-family: 'Lora', Georgia, serif; font-size: 38px; line-height: 1.12; font-weight: 700; color: #fff; margin: 8px 0 16px; }
+		.vg .coagent em { color: #5fd8c6; }
+		.coagent .blurb { color: rgba(255,255,255,.84); }
+		.caNote { font-size: 15px; color: rgba(255,255,255,.66); margin-top: 12px; }
+		.caRow { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 26px; }
+		.coagent .badge { position: static; background: rgba(255,255,255,.1); color: #fff; }
+		.phone video { width: 100%; display: block; aspect-ratio: 9/16; border-radius: 22px; background: #06121a; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 30px 70px -30px rgba(0,0,0,.6); }
+
 		.featured { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: center; margin-bottom: 64px; }
 		.player { position: relative; border-radius: 18px; overflow: hidden; background: #0b1b22; box-shadow: 0 30px 80px -34px rgba(11,27,34,.5); border: 1px solid #e7eef1; }
 		.player video { width: 100%; display: block; aspect-ratio: 16/9; background: #0b1b22; }
@@ -257,6 +306,9 @@ const breadcrumbLd = {
 		@media (max-width: 860px) {
 			.hero h1 { font-size: 42px; }
 			.featured { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+			.coagent { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 32px 22px; }
+			.coagent h2 { font-size: 32px; }
+			.phone { width: 100%; max-width: 300px; margin: 0 auto; }
 			.grid { grid-template-columns: minmax(0, 1fr); }
 		}
 	</style>

@@ -2,8 +2,8 @@
 
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
-Last Updated: 2026-09-16
-Version: 7.2
+Last Updated: 2026-09-18
+Version: 7.3
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -45,7 +45,7 @@ Agents create a complete property listing from photos plus a voice note: the AI 
 The objection page for agents afraid that sharing listings on an MLS means losing them: four controls that stay theirs, each live and documented. Reference numbers (your number on your website, brochures and feeds; the listing agent's on the portal; both in the CRM), private listings (per property, first 5 free then 5 credits), white-label MicroSite on a neutral domain, and PropertyList taking nothing from an agent-to-agent deal. Also states plainly what the platform does not control.
 
 #### /video-guides/ - Video guides for agents (English; Spanish at /es/video-guias/)
-Short screen-recorded tutorials, under a minute each, narrated: dashboard tour, MLS search, sharing a property, saving a shortlist, featuring a listing (10/20/30 credits for 3/7/15 days, top of the MLS, portal and every agent microsite), reference numbers on shared listings, and the MCP data server. Each has a transcript on the page.
+Short screen-recorded tutorials, under a minute each, narrated: dashboard tour, MLS search, sharing a property, saving a shortlist, featuring a listing (10/20/30 credits for 3/7/15 days, top of the MLS, portal and every agent microsite), reference numbers on shared listings, and the MCP data server. Each has a transcript on the page. The English page opens with a 57-second film of CoAgent on WhatsApp (an illustration, not a recording): a buyer saved with matches from the shared MLS, a brief before a viewing, a Se Vende sign saved as a contact, a new listing sent to review, an email reply to the newest lead and a free branded brochure.
 
 #### /instant-content/ - Instant Content (AI blogs & area guides, live, add-on to the Website Builder)
 AI-written blog posts and area guides for agency websites, grounded in the agency's own live listings and verified market data - no invented prices. Writes in English and Spanish as standard (German, French, Dutch and Swedish on demand), with review-first or auto-publish control. An add-on inside the paid Website Builder: 30 credits/month for unlimited posts and guides, fully automated (auto-publish) or review-first. Spanish version: /es/contenido-instantaneo/
