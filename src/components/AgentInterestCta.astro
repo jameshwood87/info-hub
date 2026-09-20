@@ -103,6 +103,10 @@ const t =
 				}
 				msg.textContent = strings.dataset.ok;
 				msg.className = 'aiCtaMsg ok';
+				// the summary is sent, so the exit-intent popup must not ask for the email again
+				try {
+					localStorage.setItem('pl_summary_sent', String(Date.now()));
+				} catch (e) {}
 				input.value = '';
 				if (window.umami && window.umami.track) {
 					window.umami.track('agent-interested', { page: box.dataset.page || location.pathname });

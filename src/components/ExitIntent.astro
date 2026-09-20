@@ -77,6 +77,8 @@ const t =
 		if (!box) return;
 
 		const KEY = 'pl_exit_intent';
+		// set for good by this popup or the inline summary box once the summary has been sent
+		const SENT = 'pl_summary_sent';
 		const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
 		// desktop only: a real mouse, and a wide viewport
@@ -84,13 +86,18 @@ const t =
 			window.matchMedia('(pointer: fine)').matches && window.matchMedia('(min-width: 1024px)').matches;
 		if (!isDesktop) return;
 
-		// already seen, dismissed or submitted recently?
-		try {
-			const seen = Number(localStorage.getItem(KEY) || 0);
-			if (seen && Date.now() - seen < THIRTY_DAYS) return;
-		} catch (e) {
-			return; // no storage means no frequency cap, so do not show at all
-		}
+		// already sent the summary, or seen or dismissed the popup recently? Checked at load and again
+		// at the moment it would open, because the inline box on the same page can send it in between.
+		const blocked = () => {
+			try {
+				if (localStorage.getItem(SENT)) return true;
+				const seen = Number(localStorage.getItem(KEY) || 0);
+				return Boolean(seen && Date.now() - seen < THIRTY_DAYS);
+			} catch (e) {
+				return true; // no storage means no frequency cap, so do not show at all
+			}
+		};
+		if (blocked()) return;
 
 		// never stack on the cookie banner while it is still unanswered
 		const consentPending = () => {
@@ -109,7 +116,7 @@ const t =
 
 		let shown = false;
 		const show = () => {
-			if (shown || consentPending()) return;
+			if (shown || consentPending() || blocked()) return;
 			shown = true;
 			remember();
 			box.hidden = false;
@@ -174,6 +181,9 @@ const t =
 				}
 				msg.textContent = box.dataset.ok;
 				msg.className = 'xiMsg ok';
+				try {
+					localStorage.setItem(SENT, String(Date.now()));
+				} catch (e) {}
 				input.value = '';
 				if (window.umami && window.umami.track) {
 					window.umami.track('exit-intent-submit', { page: location.pathname });
