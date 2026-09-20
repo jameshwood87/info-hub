@@ -15,6 +15,7 @@ import { listPrefixRedirects } from '../../lib/kbRedirects';
 import { getTotalViewCounts } from '../../lib/weeklyViews';
 import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../lib/deepl';
 import mlsManualArchive from '../../data/mls-manual-archive.json';
+import { docVideoFor } from '../../data/doc-videos';
 
 // Hrefs left behind by the WordPress import that point at routes this site never
 // rebuilt. Both forms show up in the bodies: root-relative and absolute on our own
@@ -906,6 +907,8 @@ const page =
 	} as any);
 
 const renderPath = normalizedPath;
+// A manual page with a Spanish video guide offers it above the text.
+const docVideo = docVideoFor(renderPath);
 const title = page.seo_title || page.title;
 const h1 = page.title;
 // Los títulos de barrio llevan el formato "Marbella, Málaga: guía del barrio",
@@ -2394,6 +2397,26 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 
 			<div class="docMain">
 				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" /> : null}
+				{docVideo ? (
+					<a
+						class="docVideoBar"
+						href={docVideo.href}
+						aria-label={docVideo.label}
+						data-doc-video
+						style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:12px 16px;border:1px solid rgba(0,174,154,0.3);border-radius:12px;background:rgba(0,174,154,0.07);color:#101828;text-decoration:none;font-size:15px;line-height:1.4;"
+					>
+						<span
+							aria-hidden="true"
+							style="flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#00ae9a;color:#fff;font-size:13px;padding-left:2px;"
+						>
+							&#9654;
+						</span>
+						<span style="flex:1 1 auto;min-width:0;">
+							{docVideo.lead} <b>{docVideo.title}</b>
+						</span>
+						<span style="flex:none;font-weight:700;color:#0a6d61;">{docVideo.dur}</span>
+					</a>
+				) : null}
 				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
 				<DocLightbox lang="es" />
 				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
