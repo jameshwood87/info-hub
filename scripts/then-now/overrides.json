@@ -1,0 +1,60 @@
+{
+ "marbella": {
+  "lat": 36.5095,
+  "lon": -4.886,
+  "why": "geocode sat 7 km east in the hills; old town + port"
+ },
+ "sierra-blanca": {
+  "lat": 36.523,
+  "lon": -4.904,
+  "why": "geocode on the mountainside; urbanisation above the Golden Mile"
+ },
+ "benalmadena": {
+  "lat": 36.597,
+  "lon": -4.53,
+  "why": "inland hills; Arroyo de la Miel + Puerto Marina coast"
+ },
+ "las-chapas": {
+  "lat": 36.506,
+  "lon": -4.79,
+  "why": "hills north of the urbanisation; Hacienda Las Chapas to the coast"
+ },
+ "atalaya": {
+  "lat": 36.4716,
+  "lon": -5.01306,
+  "why": "white no-data blocks at the sea edge; shifted north"
+ },
+ "mallorca": {
+  "lat": 39.5665,
+  "lon": 2.638,
+  "why": "geocode was Palma airport; cathedral + waterfront"
+ },
+ "ibiza": {
+  "lat": 38.911,
+  "lon": 1.439,
+  "why": "island centroid countryside; Ibiza town + Dalt Vila"
+ },
+ "_eras": {
+  "calahonda": {
+   "7080": "Nacional_1981-1986"
+  },
+  "riviera-del-sol": {
+   "7080": "Nacional_1981-1986"
+  },
+  "cabopino": {
+   "7080": "Nacional_1981-1986"
+  },
+  "benalmadena": {
+   "2000s": "PNOA2008"
+  },
+  "torremolinos": {
+   "2000s": "PNOA2008"
+  },
+  "el-limonar": {
+   "2000s": "PNOA2008"
+  },
+  "nerja": {
+   "2000s": "PNOA2008"
+  }
+ }
+}

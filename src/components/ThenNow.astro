@@ -1,0 +1,231 @@
+---
+// ThenNow - drag-to-compare aerial photos of an area guide, from the 1956 American
+// flight to the latest national flight (IGN). Renders nothing when the area has no
+// images, so an area without a manifest entry looks exactly as before.
+// Design notes (research 22-09-26): 50/50 start, no auto-animation, one primary
+// action right under the reveal, year picker above a single two-image slider,
+// only horizontal drags are captured so the page still scrolls on phones.
+import { thenNowFor } from '../lib/thenNow';
+
+interface Props {
+	areaName: string;
+	lang?: 'en' | 'es';
+	saleCount?: number;
+	listingsHref?: string;
+}
+const { areaName, lang = 'en', saleCount = 0, listingsHref } = Astro.props as Props;
+const es = lang === 'es';
+const t = (en: string, esT: string) => (es ? esT : en);
+const tn = thenNowFor(areaName, lang);
+
+const first = tn?.then[0];
+const now = tn?.now;
+const years = first && now ? now.year - first.year : 0;
+const km = tn ? (tn.groundWidthM / 1000).toLocaleString(es ? 'es-ES' : 'en-GB', { maximumFractionDigits: 1 }) : '';
+const n = Number(saleCount) || 0;
+const ctaHref = n > 0 && listingsHref ? listingsHref : es ? '/es/buscador-propiedades/' : '/property-finder/';
+// No count in the CTA: the MCP total can combine duplicate location records (Puerto Banus
+// counts 121 while the portal link it opens shows 46), and a promised number that does not
+// match the landing page costs more trust than specificity gains. Checked 22-09-26.
+const ctaText =
+	n > 1
+		? t(`See the homes for sale in ${areaName} today`, `Ver las viviendas en venta hoy en ${areaName}`)
+		: n === 1
+			? t(`See the home for sale in ${areaName} today`, `Ver la vivienda en venta hoy en ${areaName}`)
+			: t(`Looking in ${areaName}? Tell us what you need`, `¿Buscas en ${areaName}? Cuéntanos qué necesitas`);
+const credit = (thenCredit: string) =>
+	t(
+		`Aerial photos: ${thenCredit} and ${now?.credit}, CC-BY 4.0 ign.es (Instituto Geográfico Nacional).`,
+		`Fotos aéreas: ${thenCredit} y ${now?.credit}, CC-BY 4.0 ign.es (Instituto Geográfico Nacional).`,
+	);
+const rangeLabel = (thenLabel: string) =>
+	t(`Compare ${thenLabel} (left) with ${now?.label} (right)`, `Compara ${thenLabel} (izquierda) con ${now?.label} (derecha)`);
+const alt = (label: string) => t(`${areaName} from the air in ${label}`, `${areaName} desde el aire en ${label}`);
+const srcset = (e: { src800: string; src1600: string }) => `${e.src800} 800w, ${e.src1600} 1600w`;
+const sizes = '(max-width: 900px) 100vw, 860px';
+const shareText = first && now
+	? t(`${areaName} from the air in ${first.label} and ${now.label}. Drag the line and see what changed:`, `${areaName} desde el aire en ${first.label} y en ${now.label}. Arrastra la línea y mira lo que ha cambiado:`)
+	: '';
+---
+
+{tn && first && now ? (
+	<section class="tn" id="then-now" data-area={tn.slug} data-share-text={shareText} data-copied={t('Link copied', 'Enlace copiado')}>
+		<div class="tnHead">
+			<span class="tnEyebrow">{t('Then & now', 'Antes y ahora')}</span>
+			<h2>{t(`${areaName} from the air, ${first.label} to ${now.label}`, `${areaName} desde el aire, de ${first.label} a ${now.label}`)}</h2>
+			<p>{t(`The same ${km} km across, photographed from the air ${years} years apart. Drag the line to compare.`, `La misma zona, de ${km} km de ancho, fotografiada desde el aire con ${years} años de diferencia. Arrastra la línea para comparar.`)}</p>
+		</div>
+
+		{tn.then.length > 1 ? (
+			<div class="tnEras" role="group" aria-label={t(`Compare ${now.label} with`, `Compara ${now.label} con`)}>
+				<span class="tnErasLab" aria-hidden="true">{t(`Compare ${now.label} with`, `Compara ${now.label} con`)}</span>
+				{tn.then.map((e, i) => (
+					<button
+						type="button"
+						class="tnEra"
+						aria-pressed={i === 0 ? 'true' : 'false'}
+						data-label={e.label}
+						data-srcset={srcset(e)}
+						data-src={e.src1600}
+						data-alt={alt(e.label)}
+						data-credit={credit(e.credit)}
+						data-range={rangeLabel(e.label)}
+						data-era={e.key}
+					>{e.label}</button>
+				))}
+			</div>
+		) : null}
+
+		<div class="tnStage" style="--pos:50%">
+			<img class="tnNow" src={now.src1600} srcset={srcset(now)} sizes={sizes} width="1600" height="1067" alt={alt(now.label)} loading="lazy" decoding="async" />
+			<img class="tnThen" src={first.src1600} srcset={srcset(first)} sizes={sizes} width="1600" height="1067" alt={alt(first.label)} loading="lazy" decoding="async" />
+			<input class="tnRange" type="range" min="0" max="100" step="1" value="50" aria-label={rangeLabel(first.label)} />
+			<span class="tnLab tnLabL">{first.label}</span>
+			<span class="tnLab tnLabR">{now.label}</span>
+			<div class="tnDivider" aria-hidden="true">
+				<span class="tnKnob">
+					<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 6 3 12l6 6zM15 6l6 6-6 6z" /></svg>
+				</span>
+			</div>
+		</div>
+
+		<div class="tnFoot">
+			<a class="tnCta" href={ctaHref} target={n > 0 ? '_blank' : undefined} rel={n > 0 ? 'noopener' : undefined} data-umami-event="then-now-cta" data-umami-event-area={tn.slug}>{ctaText} →</a>
+			<div class="tnShare">
+				<button type="button" class="tnShareBtn" data-act="share">{t('Share this comparison', 'Compartir esta comparación')}</button>
+				<a class="tnShareAlt" data-act="whatsapp" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a>
+				<button type="button" class="tnShareAlt" data-act="copy" hidden>{t('Copy link', 'Copiar enlace')}</button>
+			</div>
+		</div>
+		<p class="tnCredit">{credit(first.credit)}</p>
+	</section>
+) : null}
+
+<style>
+	.tn { margin: 4px 0 22px; }
+	.tnHead { margin: 6px 0 12px; }
+	.tnEyebrow { display:block; font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#0f8f8a; margin-bottom:4px; }
+	.tnHead h2 { margin:0 0 4px; letter-spacing:-.03em; font-size:clamp(18px,2.6vw,24px); }
+	.tnHead p { margin:0; color:rgba(16,24,40,.65); font-size:13.5px; }
+	.tnEras { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 10px; }
+	.tnErasLab { font-size:13px; color:rgba(16,24,40,.65); margin-right:2px; }
+	.tnEra { font:inherit; font-size:13.5px; font-weight:800; padding:7px 14px; border-radius:999px; border:1px solid rgba(16,24,40,.14); background:#fff; color:#0b1b22; cursor:pointer; }
+	.tnEra[aria-pressed='true'] { background:#0b1b22; color:#fff; border-color:#0b1b22; }
+	.tnEra:focus-visible { outline:3px solid #00ae9a; outline-offset:2px; }
+	.tnStage { position:relative; aspect-ratio:3/2; border-radius:18px; overflow:hidden; background:#dfe6e9; touch-action:pan-y; cursor:ew-resize; user-select:none; -webkit-user-select:none; box-shadow:0 10px 30px rgba(13,43,46,.12); }
+	.tnStage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
+	.tnThen { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+	.tnRange { position:absolute; width:1px; height:1px; margin:0; padding:0; opacity:0; overflow:hidden; clip:rect(0 0 0 0); }
+	.tnLab { position:absolute; top:12px; padding:5px 11px; border-radius:999px; background:rgba(11,27,34,.74); color:#fff; font-weight:800; font-size:13.5px; pointer-events:none; }
+	.tnLabL { left:12px; }
+	.tnLabR { right:12px; }
+	.tnDivider { position:absolute; top:0; bottom:0; left:var(--pos); width:3px; margin-left:-1.5px; background:#fff; box-shadow:0 0 0 1px rgba(0,0,0,.12); pointer-events:none; }
+	.tnKnob { position:absolute; top:50%; left:50%; width:46px; height:46px; transform:translate(-50%,-50%); border-radius:50%; background:#fff; color:#0b1b22; display:grid; place-items:center; box-shadow:0 6px 18px rgba(0,0,0,.28); }
+	.tnRange:focus-visible ~ .tnDivider .tnKnob { outline:3px solid #00ae9a; outline-offset:3px; }
+	.tnFoot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 14px; margin-top:12px; }
+	.tnCta { display:inline-flex; background:#00ae9a; color:#00100e; border:1px solid rgba(0,0,0,.12); border-radius:999px; padding:12px 20px; font-weight:900; text-decoration:none; font-size:15px; }
+	.tnCta:hover { filter:brightness(.98); text-decoration:none; }
+	.tnCta.tnPeak { box-shadow:0 0 0 4px rgba(0,174,154,.28); transition:box-shadow .5s ease; }
+	.tnShare { display:flex; gap:8px; flex-wrap:wrap; }
+	.tnShareBtn, .tnShareAlt { font:inherit; font-size:13.5px; font-weight:800; padding:9px 14px; border-radius:999px; border:1px solid rgba(16,24,40,.16); background:#fff; color:#0b1b22; cursor:pointer; text-decoration:none; }
+	.tnShareBtn:hover, .tnShareAlt:hover { border-color:rgba(0,174,154,.5); text-decoration:none; }
+	.tnCredit { margin:10px 0 0; font-size:12px; color:rgba(16,24,40,.55); }
+	@media (max-width:640px) {
+		.tnErasLab { flex-basis:100%; }
+		.tnLab { font-size:12px; top:8px; padding:4px 9px; }
+		.tnLabL { left:8px; } .tnLabR { right:8px; }
+		.tnKnob { width:40px; height:40px; }
+		.tnFoot { flex-direction:column; align-items:stretch; }
+		.tnCta { justify-content:center; text-align:center; }
+		.tnShare { justify-content:center; }
+	}
+	@media (prefers-reduced-motion: reduce) { .tnCta.tnPeak { transition:none; } }
+</style>
+
+<script>
+	type Umami = { track: (name: string, data?: Record<string, string>) => void };
+	const track = (name: string, data: Record<string, string>) => {
+		try { (window as unknown as { umami?: Umami }).umami?.track(name, data); } catch { /* analytics must never break the page */ }
+	};
+	document.querySelectorAll<HTMLElement>('.tn').forEach((root) => {
+		const area = root.dataset.area || '';
+		const stage = root.querySelector<HTMLElement>('.tnStage');
+		const range = root.querySelector<HTMLInputElement>('.tnRange');
+		const thenImg = root.querySelector<HTMLImageElement>('.tnThen');
+		const labL = root.querySelector<HTMLElement>('.tnLabL');
+		const credit = root.querySelector<HTMLElement>('.tnCredit');
+		const cta = root.querySelector<HTMLElement>('.tnCta');
+		if (!stage || !range || !thenImg) return;
+		let dragged = false;
+		let peaked = false;
+		let startPos = 50;
+		const set = (pct: number) => {
+			const p = Math.max(0, Math.min(100, pct));
+			stage.style.setProperty('--pos', `${p}%`);
+			range.value = String(Math.round(p));
+		};
+		const fromEvent = (e: PointerEvent) => {
+			const r = stage.getBoundingClientRect();
+			return ((e.clientX - r.left) / r.width) * 100;
+		};
+		const markDragged = () => {
+			if (!dragged) { dragged = true; track('then-now-drag', { area }); }
+		};
+		const markPeak = (p: number) => {
+			// One quiet highlight on the next step once the reader has really compared.
+			if (!peaked && Math.abs(p - startPos) > 30) { peaked = true; cta?.classList.add('tnPeak'); }
+		};
+		stage.addEventListener('pointerdown', (e) => {
+			if (e.button !== 0) return;
+			stage.setPointerCapture(e.pointerId);
+			startPos = Number(range.value);
+			// Click-to-jump for a mouse only: on a phone the same tap may be the start of a
+			// page scroll, so touch moves the line only once it is dragged.
+			if (e.pointerType === 'mouse') set(fromEvent(e));
+		});
+		stage.addEventListener('pointermove', (e) => {
+			if (!stage.hasPointerCapture(e.pointerId)) return;
+			const p = fromEvent(e);
+			set(p);
+			markDragged();
+			markPeak(p);
+		});
+		const end = (e: PointerEvent) => { if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId); };
+		stage.addEventListener('pointerup', end);
+		stage.addEventListener('pointercancel', end);
+		range.addEventListener('input', () => { const p = Number(range.value); set(p); markDragged(); markPeak(p); });
+
+		root.querySelectorAll<HTMLButtonElement>('.tnEra').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				root.querySelectorAll('.tnEra').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+				btn.setAttribute('aria-pressed', 'true');
+				thenImg.srcset = btn.dataset.srcset || '';
+				thenImg.src = btn.dataset.src || thenImg.src;
+				thenImg.alt = btn.dataset.alt || thenImg.alt;
+				if (labL) labL.textContent = btn.dataset.label || '';
+				if (credit) credit.textContent = btn.dataset.credit || '';
+				range.setAttribute('aria-label', btn.dataset.range || '');
+				track('then-now-era', { area, era: btn.dataset.era || '' });
+			});
+		});
+
+		const pageUrl = () => `${location.origin}${location.pathname}#then-now`;
+		const text = root.dataset.shareText || '';
+		const shareBtn = root.querySelector<HTMLButtonElement>('[data-act="share"]');
+		const wa = root.querySelector<HTMLAnchorElement>('[data-act="whatsapp"]');
+		const copy = root.querySelector<HTMLButtonElement>('[data-act="copy"]');
+		const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
+		shareBtn?.addEventListener('click', async () => {
+			if (typeof nav.share === 'function') {
+				try { await nav.share({ title: document.title, text, url: pageUrl() }); track('then-now-share', { area, method: 'native' }); return; } catch { /* dismissed: fall back to the links */ }
+			}
+			if (wa) { wa.href = `https://wa.me/?text=${encodeURIComponent(`${text} ${pageUrl()}`)}`; wa.hidden = false; }
+			if (copy) copy.hidden = false;
+			shareBtn.hidden = true;
+		});
+		wa?.addEventListener('click', () => track('then-now-share', { area, method: 'whatsapp' }));
+		copy?.addEventListener('click', async () => {
+			try { await navigator.clipboard.writeText(pageUrl()); copy.textContent = root.dataset.copied || 'Copied'; track('then-now-share', { area, method: 'copy' }); } catch { /* clipboard blocked: leave the button as it was */ }
+		});
+	});
+</script>

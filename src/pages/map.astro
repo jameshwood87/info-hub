@@ -131,6 +131,15 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 				<button class="ghost" id="flattoggle" type="button">Flat view</button>
 			</div>
 
+			<div class="tnMapCtl" role="group" aria-label="Then and now" data-now="Today" data-slider="Drag to compare the old aerial photo with today">
+				<span class="tnMapTitle">Then &amp; now</span>
+				<button class="tnChip" type="button" data-era="1956" data-label="1956" data-credit="Left: Vuelo Americano Serie B 1956-1957, CC-BY 4.0 ign.es. Right: current satellite view (Esri)." aria-pressed="false">1956</button>
+				<button class="tnChip" type="button" data-era="7080" data-label="1970s-80s" data-credit="Left: Vuelo Interministerial 1973-1986 and Vuelo Nacional 1981-1986, CC-BY 4.0 ign.es. Right: current satellite view (Esri)." aria-pressed="false">1970s-80s</button>
+				<button class="tnChip" type="button" data-era="2004" data-label="2004" data-credit="Left: PNOA 2004, CC-BY 4.0 ign.es. Right: current satellite view (Esri)." aria-pressed="false">2004</button>
+				<button class="tnChip tnOff" type="button" hidden>Back to the data</button>
+			</div>
+			<p class="tnMapCredit" hidden><span class="tnMapHint">Drag the white line to compare.</span> <span class="tnMapSrc"></span></p>
+
 			<div class="maplayout">
 				<button id="skipintro" type="button">Skip intro</button>
 				<div id="map" role="application" aria-label="3D map of the PropertyList network">
@@ -229,8 +238,10 @@ const eur = (n: number | null) => (n == null ? '-' : '€' + n.toLocaleString('e
 		window.__PLTEXT__ = MAPTEXT;
 	</script>
 	<link rel="stylesheet" href="/map/maplibre-gl.css" />
+	<link rel="stylesheet" href="/map/then-now.css?v=20260922" />
 	<script is:inline src="/map/maplibre-gl.js"></script>
 	<script is:inline src="/map/map.js?v=20260914"></script>
+	<script is:inline src="/map/then-now.js?v=20260922"></script>
 </Layout>
 
 <style>

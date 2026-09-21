@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import wpSlugMap from '../data/wp-slug-map.json';
 import { readFileSync } from 'node:fs';
 import { areaImagePath } from '../lib/areaImages';
+import { thenNowOg } from '../lib/thenNow';
 import { canonicalAreaPath, provinceForAreaSlug } from '../lib/areaProvince';
 import AreaGuide from '../components/AreaGuide.astro';
 import AreaPage from '../components/AreaPage.astro';
@@ -3065,7 +3066,7 @@ const ldJson = JSON.stringify([
 		description={descriptionFinal}
 		canonical={canonical}
 		hreflangs={hreflangs}
-		ogImage={isBlogLike ? heroSrc : isNeighbourhood && areaImagePath(neighbourhoodSlug) ? `https://info.propertylist.es${areaImagePath(neighbourhoodSlug)}` : undefined}
+		ogImage={isBlogLike ? heroSrc : isNeighbourhood && (thenNowOg(neighbourhoodSlug, 'en') || areaImagePath(neighbourhoodSlug)) ? `https://info.propertylist.es${thenNowOg(neighbourhoodSlug, 'en') || areaImagePath(neighbourhoodSlug)}` : undefined}
 		twitterCard="summary_large_image"
 	>
 		<script type="application/ld+json" slot="head" is:inline set:html={ldJson} />

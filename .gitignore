@@ -53,3 +53,7 @@ public/videos/
 # one-off scratch scripts left in the repo root
 emd-tmp.mjs
 pw-tmp.mjs
+
+# Then & Now aerial images: rebuilt by scripts/then-now (see its README), too big for git.
+public/then-now/**/*.webp
+public/then-now/**/*.jpg

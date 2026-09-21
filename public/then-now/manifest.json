@@ -1,0 +1,1411 @@
+{
+ "areas": {
+  "marbella": {
+   "name": "Marbella",
+   "lat": 36.5095,
+   "lon": -4.886,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "sierra-blanca": {
+   "name": "Sierra Blanca",
+   "lat": 36.523,
+   "lon": -4.904,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "benalmadena": {
+   "name": "Benalmádena",
+   "lat": 36.597,
+   "lon": -4.53,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2008",
+     "en": "2008",
+     "es": "2008",
+     "credit": "PNOA 2008"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "torremolinos": {
+   "name": "Torremolinos",
+   "lat": 36.62428,
+   "lon": -4.49954,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2008",
+     "en": "2008",
+     "es": "2008",
+     "credit": "PNOA 2008"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "el-limonar": {
+   "name": "El Limonar",
+   "lat": 36.72631,
+   "lon": -4.39871,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2008",
+     "en": "2008",
+     "es": "2008",
+     "credit": "PNOA 2008"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "nerja": {
+   "name": "Nerja",
+   "lat": 36.74686,
+   "lon": -3.87902,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2008",
+     "en": "2008",
+     "es": "2008",
+     "credit": "PNOA 2008"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "calahonda": {
+   "name": "Calahonda",
+   "lat": 36.49103,
+   "lon": -4.72679,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Nacional_1981-1986",
+     "en": "1980s",
+     "es": "años 80",
+     "credit": "Vuelo Nacional 1981-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "las-chapas": {
+   "name": "Las Chapas",
+   "lat": 36.506,
+   "lon": -4.79,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "riviera-del-sol": {
+   "name": "Riviera del Sol",
+   "lat": 36.49062,
+   "lon": -4.70606,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Nacional_1981-1986",
+     "en": "1980s",
+     "es": "años 80",
+     "credit": "Vuelo Nacional 1981-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "atalaya": {
+   "name": "Atalaya",
+   "lat": 36.4716,
+   "lon": -5.01306,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "cabopino": {
+   "name": "Cabopino",
+   "lat": 36.48678,
+   "lon": -4.74102,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Nacional_1981-1986",
+     "en": "1980s",
+     "es": "años 80",
+     "credit": "Vuelo Nacional 1981-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "mallorca": {
+   "name": "Mallorca",
+   "lat": 39.5665,
+   "lon": 2.638,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Nacional_1981-1986",
+     "en": "1980s",
+     "es": "años 80",
+     "credit": "Vuelo Nacional 1981-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2006",
+     "en": "2006",
+     "es": "2006",
+     "credit": "PNOA 2006"
+    },
+    "now": {
+     "layer": "PNOA2024",
+     "en": "2024",
+     "es": "2024",
+     "credit": "PNOA 2024"
+    }
+   }
+  },
+  "ibiza": {
+   "name": "Ibiza",
+   "lat": 38.911,
+   "lon": 1.439,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Nacional_1981-1986",
+     "en": "1980s",
+     "es": "años 80",
+     "credit": "Vuelo Nacional 1981-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2006",
+     "en": "2006",
+     "es": "2006",
+     "credit": "PNOA 2006"
+    },
+    "now": {
+     "layer": "PNOA2024",
+     "en": "2024",
+     "es": "2024",
+     "credit": "PNOA 2024"
+    }
+   }
+  },
+  "madrid": {
+   "name": "Madrid",
+   "lat": 40.41678,
+   "lon": -3.7035,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "2000s": {
+     "layer": "PNOA2006",
+     "en": "2006",
+     "es": "2006",
+     "credit": "PNOA 2006"
+    },
+    "now": {
+     "layer": "PNOA2023",
+     "en": "2023",
+     "es": "2023",
+     "credit": "PNOA 2023"
+    }
+   }
+  },
+  "puerto-banus": {
+   "name": "Puerto Banús",
+   "lat": 36.48916,
+   "lon": -4.957,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "nueva-andalucia": {
+   "name": "Nueva Andalucía",
+   "lat": 36.50598,
+   "lon": -4.966,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "san-pedro-de-alcantara": {
+   "name": "San Pedro de Alcántara",
+   "lat": 36.49758,
+   "lon": -4.99309,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "guadalmina": {
+   "name": "Guadalmina",
+   "lat": 36.47196,
+   "lon": -5.00371,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "elviria": {
+   "name": "Elviria",
+   "lat": 36.50101,
+   "lon": -4.78361,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "los-monteros": {
+   "name": "Los Monteros",
+   "lat": 36.50292,
+   "lon": -4.82258,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "la-quinta": {
+   "name": "La Quinta",
+   "lat": 36.51852,
+   "lon": -5.002,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "la-zagaleta": {
+   "name": "La Zagaleta",
+   "lat": 36.53969,
+   "lon": -5.01961,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "benahavis": {
+   "name": "Benahavís",
+   "lat": 36.52227,
+   "lon": -5.04411,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "estepona": {
+   "name": "Estepona",
+   "lat": 36.42681,
+   "lon": -5.14685,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "cancelada": {
+   "name": "Cancelada",
+   "lat": 36.46159,
+   "lon": -5.05237,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "fuengirola": {
+   "name": "Fuengirola",
+   "lat": 36.53884,
+   "lon": -4.6234,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "mijas-costa": {
+   "name": "Mijas Costa",
+   "lat": 36.54346,
+   "lon": -4.63501,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "la-cala-de-mijas": {
+   "name": "La Cala de Mijas",
+   "lat": 36.50437,
+   "lon": -4.68071,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "pedregalejo": {
+   "name": "Pedregalejo (Málaga)",
+   "lat": 36.72374,
+   "lon": -4.3734,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2006",
+     "en": "2006",
+     "es": "2006",
+     "credit": "PNOA 2006"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "casares": {
+   "name": "Casares",
+   "lat": 36.44335,
+   "lon": -5.27289,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "manilva": {
+   "name": "Manilva",
+   "lat": 36.377,
+   "lon": -5.24898,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "el-paraiso": {
+   "name": "El Paraiso",
+   "lat": 36.47277,
+   "lon": -5.03351,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "mijas-pueblo": {
+   "name": "Mijas Pueblo",
+   "lat": 36.60003,
+   "lon": -4.6329,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "ojen": {
+   "name": "Ojén",
+   "lat": 36.56452,
+   "lon": -4.8565,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "coin": {
+   "name": "Coín",
+   "lat": 36.66005,
+   "lon": -4.75656,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "el-rosario": {
+   "name": "El Rosario",
+   "lat": 36.50811,
+   "lon": -4.80573,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "sotogrande": {
+   "name": "Sotogrande",
+   "lat": 36.28206,
+   "lon": -5.29706,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "alcaidesa": {
+   "name": "Alcaidesa",
+   "lat": 36.25653,
+   "lon": -5.35435,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "rio-real": {
+   "name": "Río Real",
+   "lat": 36.51481,
+   "lon": -4.84688,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "alhaurin-el-grande": {
+   "name": "Alhaurín el Grande",
+   "lat": 36.64212,
+   "lon": -4.68674,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "la-mairena": {
+   "name": "La Mairena",
+   "lat": 36.53104,
+   "lon": -4.75055,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "nagueles": {
+   "name": "Nagüeles",
+   "lat": 36.51813,
+   "lon": -4.92943,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "la-duquesa": {
+   "name": "La Duquesa",
+   "lat": 36.35718,
+   "lon": -5.23207,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  },
+  "torreblanca": {
+   "name": "Torreblanca",
+   "lat": 36.56496,
+   "lon": -4.60657,
+   "groundWidthM": 3200.0,
+   "eras": {
+    "1956": {
+     "layer": "AMS_1956-1957",
+     "en": "1956",
+     "es": "1956",
+     "credit": "Vuelo Americano Serie B 1956-1957"
+    },
+    "7080": {
+     "layer": "Interministerial_1973-1986",
+     "en": "1970s-80s",
+     "es": "años 70-80",
+     "credit": "Vuelo Interministerial 1973-1986"
+    },
+    "2000s": {
+     "layer": "PNOA2004",
+     "en": "2004",
+     "es": "2004",
+     "credit": "PNOA 2004"
+    },
+    "now": {
+     "layer": "PNOA2022",
+     "en": "2022",
+     "es": "2022",
+     "credit": "PNOA 2022"
+    }
+   }
+  }
+ },
+ "attribution": {
+  "licence": "CC-BY 4.0",
+  "holder": "ign.es",
+  "note": "Instituto Geografico Nacional. Composites carry 'Obra derivada de' per the IGN licence."
+ }
+}

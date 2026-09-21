@@ -1,0 +1,20 @@
+/* Then & now on the network map. Global on purpose: the overlay is created by then-now.js,
+   so Astro's scoped page styles would never reach it. */
+.tnMapCtl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 12px; }
+.tnMapTitle { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #0f8f8a; margin-right: 4px; }
+.tnChip { border: 1.5px solid #d5e2e0; background: #fff; color: #5b6b73; border-radius: 999px; padding: 9px 17px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.tnChip:hover { border-color: #00ae9a; color: #0b1b22; }
+.tnChip[aria-pressed='true'] { background: #0b1b22; border-color: #0b1b22; color: #fff; }
+.tnChip:focus-visible, .tnMapKnob:focus-visible { outline: 3px solid #00ae9a; outline-offset: 2px; }
+.tnOff { background: transparent; border-style: dashed; }
+.tnMapCredit { margin: -4px 0 12px; font-size: 12.5px; color: #5b6b73; }
+.tnMapHint { font-weight: 700; color: #0b1b22; }
+.tnMapWrap { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.tnMapClip { position: absolute; inset: 0; clip-path: inset(0 50% 0 0); }
+.tnMapThen { position: absolute; inset: 0; }
+.tnMapLine { position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, .15); }
+.tnMapKnob { position: absolute; top: 50%; left: 50%; width: 46px; height: 46px; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; color: #0b1b22; display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0, 0, 0, .3); cursor: ew-resize; pointer-events: auto; touch-action: none; }
+.tnMapLab { position: absolute; top: 12px; padding: 5px 11px; border-radius: 999px; background: rgba(11, 27, 34, .76); color: #fff; font-weight: 800; font-size: 13.5px; }
+.tnMapLabL { left: 12px; }
+.tnMapLabR { right: 60px; }
+@media (max-width: 640px) { .tnMapTitle { flex-basis: 100%; } .tnMapLab { font-size: 12px; top: 8px; } }
