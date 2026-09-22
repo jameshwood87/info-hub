@@ -20,7 +20,7 @@ const PAGES = [
 	['/instant-listing/', 'Instant Listing'],
 	['/instant-content/', 'Instant Content'],
 	['/instant-renovation/', 'Instant Renovation (coming soon)'],
-	['/instant-brochure/', 'Instant Brochure (coming soon)'],
+	['/instant-brochure/', 'Instant Brochure'],
 	['/instant-video/', 'Instant Video (coming soon)'],
 	['/instant-images/', 'Instant Images (coming soon)'],
 	['/ai-property-search/', 'AI Property Search'],
