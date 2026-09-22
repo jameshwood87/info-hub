@@ -280,17 +280,24 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 		<div class="wbHeroCard">
 			<div class="wbHeroInner">
 				<div class="wbHeroText">
-					<div class="wbBadge">Seis pipelines - tres de ellos gratis</div>
-					<h3 class="wbHeadline">Casi ninguna operación se pierde.<br />Nadie hizo el seguimiento.</h3>
-					<p class="wbSub">
-						Leads, Sellers y Property funcionan gratis y sin límite. Un lead recibe respuesta en cuanto entra, se te escribe
-						el plan de seguimiento, y un anuncio que se queda quieto crea su propia tarea de revisión de precio.<br />
-						Todo hasta cualificar a un comprador es gratis. Tú decides cuáles merecen los créditos, y decir que no no te cuesta
-						nada.<br />
-						Los clientes antiguos se mantienen solos en <a href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/nurture/" style="color:inherit;text-decoration:underline;font-weight:600">Nurture</a>,
-						y a ti te llega el que acaba de mostrar interés.
-					</p>
+					<div class="wbBadge">Seis pipelines - cuatro de ellos gratis</div>
+					<h3 class="wbHeadline">La mayoría de las operaciones perdidas<br />nunca tuvieron seguimiento.</h3>
+					<ul class="wbPoints">
+						<li>Cada consulta recibe una confirmación antes de que cojas el teléfono.</li>
+						<li>Tu seguimiento se planifica solo, en tareas: llamadas, WhatsApp y email durante la primera semana.</li>
+						<li>Leads, Sellers y Property son gratis y sin límite. <a href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/nurture/" style="color:inherit;text-decoration:underline;font-weight:600">Nurture</a>, para antiguos clientes, también es gratis.</li>
+					</ul>
 					<a href="/es/pipelines/" class="wbCta">Ver los seis pipelines &rarr;</a>
+				</div>
+				<div class="wbHeroImage">
+					<img
+						src="/img/pipelines-board-card.webp"
+						alt="El pipeline de leads de PropertyList: seis tableros arriba, cada uno marcado como gratis o de pago, y los leads nuevos con el tiempo que llevan esperando"
+						width="1262"
+						height="496"
+						loading="lazy"
+						decoding="async"
+					/>
 				</div>
 			</div>
 		</div>
@@ -370,7 +377,7 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 					<span class="itDesc">Entradas de blog SEO y guías de zona escritas a partir de tus propios inmuebles.</span>
 				</a>
 				<a class="instantTile" href="/es/folleto-instantaneo/">
-					<span class="itTop"><span class="itIcon">&#128196;</span><span class="itTag isSoon">Muy pronto</span></span>
+					<span class="itTop"><span class="itIcon">&#128196;</span><span class="itTag isLive">Disponible</span></span>
 					<span class="itName">Folleto Instantáneo</span>
 					<span class="itDesc">Un PDF listo para imprimir y una página web en vivo de cualquier inmueble, en un clic.</span>
 				</a>
@@ -922,6 +929,30 @@ Cuando quieras ir más rápido, destacar o crear tu propia web de agencia, activ
 		color: rgba(255,255,255,0.78);
 		font-size: 15px;
 		line-height: 1.6;
+	}
+	.wbPoints {
+		list-style: none;
+		margin: 0 0 20px;
+		padding: 0;
+		color: rgba(255,255,255,0.82);
+		font-size: 15px;
+		line-height: 1.5;
+	}
+	.wbPoints li {
+		position: relative;
+		padding-left: 26px;
+		margin-bottom: 9px;
+	}
+	.wbPoints li::before {
+		content: '';
+		position: absolute;
+		left: 3px;
+		top: 5px;
+		width: 11px;
+		height: 6px;
+		border-left: 2px solid #00ae9a;
+		border-bottom: 2px solid #00ae9a;
+		transform: rotate(-45deg);
 	}
 
 	.wbCta {

@@ -4,25 +4,24 @@ import AgentInterestCta from '../../components/AgentInterestCta.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/folleto-instantaneo/`;
-const title = 'Folleto Instantáneo (muy pronto) - un folleto de propiedad listo para imprimir en un clic | PropertyList';
+const title = 'Folleto Instantáneo - un folleto de propiedad listo para imprimir en un clic | PropertyList';
 const description =
-	'Muy pronto: folletos en un clic - un PDF listo para imprimir más una página web viva que se actualiza sola al cambiar el precio, las fotos o los datos.';
+	'Folletos en un clic - un PDF listo para imprimir más una página web viva que se actualiza sola al cambiar el precio, las fotos o los datos.';
 
 const gets = [
 	{ name: 'Listo para imprimir en un clic', desc: 'Un PDF A4 profesional, creado con las fotos y los datos del anuncio - sin software de diseño y sin esperar a un diseñador.' },
 	{ name: 'Un estilo que encaja con la casa', desc: 'Elige un tema cuidado - Clásico, Moderno o Lujo - para que el folleto encaje con la propiedad y, si eres agente, con tu marca.' },
-	{ name: 'Con o sin tu marca', desc: 'El logo, los colores y los datos de tu agencia, o una versión limpia sin marca para compartir o entregar a un agente colaborador.' },
-	{ name: 'Cumple la ley, automáticamente', desc: 'La etiqueta energética (de A a G) va integrada, así que cada folleto cumple la obligación legal de la publicidad inmobiliaria en España.' },
-	{ name: 'Fotos, características y la zona', desc: 'La galería, las características clave, un mapa y el contexto local - todo maquetado por ti a partir de los datos que ya tiene el anuncio.' },
+	{ name: 'Con o sin tu marca', desc: 'El logo y los datos de tu agencia, o una versión limpia sin marca para compartir o entregar a un agente colaborador.' },
+	{ name: 'Listo en segundos', desc: 'Elige un tema y está listo en unos 30 segundos, y queda guardado en tu CRM para no hacerlo nunca dos veces.' },
+	{ name: 'Fotos y características', desc: 'La galería y las características clave, maquetadas por ti a partir de los datos que ya tiene el anuncio.' },
 	{ name: 'Un código QR directo al anuncio', desc: 'Cada folleto con tu marca lleva un código QR a tu ficha en vivo de la propiedad, para que hasta una hoja impresa lleve al comprador directo a ella en internet.' },
 ];
 
 const faqs = [
-	{ q: '¿Puedo usarlo si no soy agente inmobiliario?', a: 'Sí. Cualquiera puede crear un folleto profesional de una propiedad en propertylist.es/brochures por 20 euros cada uno - ideal si vendes por tu cuenta y quieres que tu casa luzca como si la hubiera publicado una agencia. Los agentes lo tienen gratis, integrado en su plataforma.' },
-	{ q: '¿Por qué es gratis para los agentes?', a: 'Los agentes son miembros de la plataforma, y los folletos son una de las herramientas gratis de su panel. Los 20 euros son la opción puntual, sin membresía, para todos los demás.' },
+	{ q: '¿Puedo usarlo si no soy agente inmobiliario?', a: 'Sí. Cualquiera puede crear un folleto profesional de una propiedad publicada en propertylist.es/brochures, gratis con una cuenta de PropertyList - ideal si vendes por tu cuenta y quieres que tu casa luzca como si la hubiera publicado una agencia. Los agentes lo tienen integrado en su plataforma.' },
+	{ q: '¿De verdad es gratis?', a: 'Sí. Los agentes crean folletos gratis desde su panel, y cualquier otra persona los crea gratis en propertylist.es/brochures con una cuenta de PropertyList. No se cobra nada por folleto.' },
 	{ q: '¿Qué propiedades pueden tener folleto?', a: 'Cualquier propiedad en el MLS o en el portal público - venta o alquiler, segunda mano u obra nueva. Si tiene fotos y datos, puede convertirse en folleto en segundos.' },
-	{ q: '¿Qué elijo yo exactamente?', a: 'Un tema, si lleva tu marca o no, y el idioma. Todo lo demás - fotos, precio, características, mapa, etiqueta energética - se rellena automáticamente. Lo revisas antes de compartirlo.' },
-	{ q: '¿Incluye la etiqueta energética?', a: 'Sí, y esto importa: la ley española exige la calificación de eficiencia energética (de A a G) en cualquier publicidad inmobiliaria, incluidos los folletos, y omitirla puede acarrear una multa de 300 a 6.000 euros. Folleto Instantáneo integra la etiqueta directamente, así que tus folletos cumplen la norma sin que tengas que pensarlo.' },
+	{ q: '¿Qué elijo yo exactamente?', a: 'Un tema, si lleva tu marca o no, y el idioma. Todo lo demás - fotos, precio, características y tus datos de contacto - se rellena automáticamente. Lo revisas antes de compartirlo.' },
 	{ q: '¿Para qué es la versión sin marca?', a: 'Para compartir una propiedad con otro agente en el MLS sin tu marca en la hoja que le enseña a su cliente, o como documento de marca blanca. La versión con marca es para tu propio marketing de cara al cliente.' },
 	{ q: '¿Puedo compartirlo como enlace en vez de PDF?', a: 'Sí - cada folleto viene en los dos formatos. El PDF listo para imprimir está para escaparates, visitas y todo lo que quieras en papel; el enlace web en vivo se abre perfecto en un móvil o portátil, ideal para WhatsApp, email y redes. Un clic, los dos formatos, sin coste extra.' },
 	{ q: '¿El enlace compartido se mantiene actualizado y puedo ver quién lo abre?', a: 'Sí a las dos cosas. La versión web en vivo refleja el anuncio en el portal, así que si el precio cambia o la propiedad pasa a reservada, el enlace que un comprador ya tiene se actualiza solo - sin reenviar nada. También ves cuándo se ha abierto y cuántas veces, y su botón de consulta envía cualquier interés nuevo directo a tu pipeline del CRM. El PDF, en cambio, es una foto fija del momento en que lo exportas.' },
@@ -44,8 +43,8 @@ const breadcrumbLd = {
 const softwareLd = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication',
 	name: 'PropertyList Folleto Instantáneo',
-	applicationCategory: 'BusinessApplication', operatingSystem: 'Web, iOS, Android', url: canonical,
-	description: 'Muy pronto: genera un folleto de propiedad para cualquier anuncio con un clic - un PDF listo para imprimir más una página web en vivo que se actualiza sola cuando cambian el precio, las fotos y los datos en el portal, y capta consultas. Los agentes los crean gratis en la plataforma; el público en propertylist.es/brochures por 20 euros. Con etiqueta energética y código QR integrados.',
+	applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonical,
+	description: 'Genera un folleto de propiedad para cualquier anuncio con fotos en un clic - un PDF listo para imprimir más una página web en vivo que se actualiza sola cuando cambian el precio, las fotos y los datos en el portal, y lleva las consultas al CRM. Gratis para los agentes en la plataforma, y gratis para cualquiera en propertylist.es/brochures con una cuenta de PropertyList. Los folletos con marca llevan un código QR a la ficha en vivo.',
 	publisher: { '@type': 'Organization', name: 'PropertyList', url: 'https://propertylist.es/' },
 };
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
@@ -70,19 +69,20 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<section class="hero">
 		<div class="heroInner heroGrid">
 			<div>
-				<div class="kicker">Folleto Instantáneo - Muy pronto</div>
+				<div class="kicker">Folleto Instantáneo - Ya disponible</div>
 				<h1>Cámbialo una vez. Cada folleto se actualiza solo.</h1>
 				<p class="lead">
-					Cambia el precio, sube fotos nuevas o marca una propiedad como reservada en el portal - y cada enlace de folleto en
-					vivo que ya has compartido se actualiza solo, al instante, en cada móvil donde ya está. Sin reenviar nada, sin un
+					Cambia el precio, sube fotos nuevas o marca una propiedad como reservada en el portal, y cada enlace de folleto
+					que ya has compartido muestra el cambio la próxima vez que se abre. Sin reenviar nada, sin un
 					folleto que queda mal en cuanto cambia el precio. Un clic te da una página web para compartir que nunca se queda
-					desfasada, además de un PDF listo para imprimir para escaparates y visitas. Los agentes los crean gratis en la plataforma; cualquier otra persona en <strong>propertylist.es/brochures</strong> por 20 euros.
+					desfasada, además de un PDF listo para imprimir para escaparates y visitas. Gratis para los agentes en la plataforma, y gratis para cualquier otra persona en
+					<a href="https://propertylist.es/brochures?lang=es" target="_blank" rel="noopener"><strong>propertylist.es/brochures</strong></a> con una cuenta de PropertyList.
 				</p>
 				<div class="ctaRow">
 					<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta de agente gratis</a>
-					<a class="btnSecondary" href="#how">Ver cómo funcionará</a>
+					<a class="btnSecondary" href="#how">Ver cómo funciona</a>
 				</div>
-				<div class="note">Muy pronto. Los agentes lo tendrán gratis en su panel; todos los demás en propertylist.es/brochures. Crea tu cuenta gratis ahora y estarás listo desde el primer día.</div>
+				<div class="note">Ya disponible. Los agentes lo tienen gratis en su panel; cualquier otra persona puede crear uno gratis en propertylist.es/brochures con una cuenta de PropertyList.</div>
 			</div>
 
 			<div class="bcWrap" aria-hidden="true">
@@ -109,7 +109,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<section class="section">
 		<div class="sectionHead">
 			<h2>Una propiedad bonita merece algo mejor que un folleto improvisado</h2>
-			<p>Un comprador decide en segundos si una casa merece su tiempo - y una hoja improvisada dice, en voz baja, "no del todo". Un diseñador le hace justicia, pero eso son de 50 a 150 euros y días de espera. Hazlo tú y pierdes una tarde dentro de un software incómodo. Y si dejas fuera la etiqueta energética, en España el anuncio va contra la ley. Folleto Instantáneo resuelve las tres cosas en un clic.</p>
+			<p>Un comprador decide en segundos si una casa merece su tiempo - y una hoja improvisada dice, en voz baja, "no del todo". Un diseñador le hace justicia, pero eso son de 50 a 150 euros y días de espera. Hazlo tú y pierdes una tarde dentro de un software incómodo. Folleto Instantáneo resuelve las dos cosas en un clic.</p>
 		</div>
 	</section>
 
@@ -119,9 +119,9 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 			<p>Sin software de diseño, sin pelearte con plantillas, sin volver a teclear lo que ya está. De la propiedad a un PDF terminado sin salir de la página.</p>
 		</div>
 		<div class="grid4 steps">
-			<div class="card step"><div class="stepNum">1</div><h3>Abre la propiedad</h3><p>Toda propiedad en el MLS y en el portal público tendrá un botón de Folleto Instantáneo.</p></div>
+			<div class="card step"><div class="stepNum">1</div><h3>Abre la propiedad</h3><p>Cada anuncio con fotos, en el MLS y en el portal público, tiene un botón de Folleto Instantáneo.</p></div>
 			<div class="card step"><div class="stepNum">2</div><h3>Elige tema y marca</h3><p>Escoge un tema, con o sin tu marca, y el idioma. El resto se rellena por ti.</p></div>
-			<div class="card step"><div class="stepNum">3</div><h3>Míralo tomar forma</h3><p>Previsualiza el folleto terminado - fotos, características, mapa, etiqueta energética y datos de contacto, bien maquetados.</p></div>
+			<div class="card step"><div class="stepNum">3</div><h3>Míralo tomar forma</h3><p>Previsualiza el folleto terminado - fotos, características y datos de contacto, bien maquetados.</p></div>
 			<div class="card step"><div class="stepNum">4</div><h3>Descarga y comparte</h3><p>Exporta un PDF listo para imprimir para visitas, escaparates, email y WhatsApp. En segundos.</p></div>
 		</div>
 	</section>
@@ -166,11 +166,11 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 
 	<section class="section">
 		<div class="sectionHead">
-			<h2>Mira un ejemplo real</h2>
-			<p>Una casa de lujo en el casco antiguo de Estepona, como Folleto Instantáneo. Abre la versión web en vivo en tu móvil, o descarga el PDF para imprimir - el mismo folleto, los dos formatos.</p>
+			<h2>Mira un ejemplo</h2>
+			<p>Una casa de lujo en el casco antiguo de Estepona, como Folleto Instantáneo. Abre la versión web en tu móvil, o descarga el PDF para imprimir - el mismo folleto, los dos formatos.</p>
 		</div>
 		<div class="ctaRow" style="padding: 4px 2px 2px;">
-			<a class="btnPrimary" href="/examples/estepona-old-town-townhouse.html" target="_blank" rel="noopener">Ver el folleto web en vivo &rarr;</a>
+			<a class="btnPrimary" href="/examples/estepona-old-town-townhouse.html" target="_blank" rel="noopener">Ver el folleto web &rarr;</a>
 			<a class="btnSecondary" href="/examples/estepona-old-town-townhouse.pdf" target="_blank" rel="noopener">Descargar el PDF</a>
 		</div>
 	</section>
@@ -178,14 +178,14 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<section class="section">
 		<div class="sectionHead">
 			<h2>Dos formas de conseguirlo</h2>
-			<p>El mismo folleto profesional, lo cree quien lo cree - con el precio adecuado a cómo lo usas.</p>
+			<p>El mismo folleto profesional, lo cree quien lo cree.</p>
 		</div>
 		<div class="grid2">
 			<div class="card">
 				<div class="tierTag">Para todos</div>
 				<h3>¿Vendes por tu cuenta? Que parezca que lo hizo una agencia.</h3>
-				<p>Crea un folleto profesional de una propiedad en <strong>propertylist.es/brochures</strong> - sin membresía, sin nada que configurar. Una fracción de lo que cobra un diseñador, listo en minutos, tuyo para imprimir y compartir.</p>
-				<div class="priceTag"><b>20 &euro;</b><span>por folleto</span></div>
+				<p>Crea un folleto profesional de cualquier propiedad publicada en <a href="https://propertylist.es/brochures?lang=es" target="_blank" rel="noopener"><strong>propertylist.es/brochures</strong></a> con una cuenta gratuita de PropertyList. Listo en minutos, tuyo para imprimir y compartir.</p>
+				<div class="priceTag"><b>Gratis</b><span>con una cuenta</span></div>
 			</div>
 			<div class="card accent">
 				<div class="tierTag">Para agentes</div>
@@ -199,18 +199,16 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 	<section class="section">
 		<div class="grid2">
 			<div class="card accent">
-				<h2>Correcto ante la ley, siempre</h2>
+				<h2>Guardado, con sus resultados</h2>
 				<p>
-					En España, la calificación de eficiencia energética (de A a G) es obligatoria en cualquier publicidad inmobiliaria,
-					incluidos los folletos, y omitirla puede acarrear una multa de 300 a 6.000 euros. Folleto Instantáneo integra la
-					etiqueta energética directamente - así, un riesgo real de cumplimiento se convierte en una cosa menos en la que
-					pensar.
+					Cada folleto queda guardado en la sección Marketing de tu CRM, con las veces que se ha abierto y los leads que ha
+					traído. Nunca tienes que hacer el mismo dos veces.
 				</p>
 			</div>
 			<div class="card">
 				<h2>Con marca para clientes, sin marca para agentes</h2>
 				<p>
-					Muestra tu propia marca a los compradores - tu logo, tus colores y tus datos. O entrega a un agente colaborador una
+					Muestra tu propia marca a los compradores - tu logo y tus datos. O entrega a un agente colaborador una
 					hoja limpia sin marca para que se la enseñe a su cliente sin tu nombre. Una propiedad, la versión adecuada para cada
 					público.
 				</p>
@@ -244,8 +242,8 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 
 	<section class="cta">
 		<div class="ctaInner">
-			<h2>Prepárate para el día del lanzamiento.</h2>
-			<p>Folleto Instantáneo llega muy pronto a cada propiedad. Agentes: crea tu cuenta gratis ahora y estará esperándote en tu panel desde el primer día, dentro de la plataforma gratuita de <a href="/es/funciones/">PropertyList</a>. Todos los demás: estará en propertylist.es/brochures.</p>
+			<h2>Haz el primero hoy.</h2>
+			<p>Folleto Instantáneo ya está disponible en cada anuncio con fotos. Agentes: ya está en tu panel, dentro de la plataforma gratuita de <a href="/es/funciones/">PropertyList</a>. Todos los demás: crea uno gratis en <a href="https://propertylist.es/brochures?lang=es" target="_blank" rel="noopener"><strong>propertylist.es/brochures</strong></a> con una cuenta de PropertyList.</p>
 			<div class="ctaRow">
 				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta de agente gratis</a>
 			</div>

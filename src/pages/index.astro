@@ -289,17 +289,24 @@ When you want to move faster, stand out, or build your own agency website - tap 
 		<div class="wbHeroCard">
 			<div class="wbHeroInner">
 				<div class="wbHeroText">
-					<div class="wbBadge">Six pipelines - three of them free</div>
-					<h3 class="wbHeadline">Most lost deals were never lost.<br />They were never followed up.</h3>
-					<p class="wbSub">
-						Leads, Sellers and Property run free with no limit. A lead is answered the moment it lands, a follow-up plan is
-						written for you, and a listing that goes quiet raises its own price-review task.<br />
-						Everything up to qualifying a buyer is free. You decide which ones are worth the credits, and saying no costs you
-						nothing.<br />
-						Past clients keep themselves warm in <a href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/nurture/" style="color:inherit;text-decoration:underline;font-weight:600">Nurture</a>,
-						and you get handed the one who just showed interest.
-					</p>
+					<div class="wbBadge">Six pipelines - four of them free</div>
+					<h3 class="wbHeadline">Most lost deals<br />were never followed up.</h3>
+					<ul class="wbPoints">
+						<li>Every enquiry is acknowledged before you pick up the phone.</li>
+						<li>Your follow-up is planned for you as tasks: calls, WhatsApp and email across the first week.</li>
+						<li>Leads, Sellers and Property are free with no limit. <a href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/nurture/" style="color:inherit;text-decoration:underline;font-weight:600">Nurture</a>, for past clients, is free too.</li>
+					</ul>
 					<a href="/pipelines/" class="wbCta">See the six pipelines &rarr;</a>
+				</div>
+				<div class="wbHeroImage">
+					<img
+						src="/img/pipelines-board-card.webp"
+						alt="The PropertyList Lead Pipeline: six boards along the top, each labelled free or paid, and new leads showing how long they have waited"
+						width="1262"
+						height="496"
+						loading="lazy"
+						decoding="async"
+					/>
 				</div>
 			</div>
 		</div>
@@ -379,7 +386,7 @@ When you want to move faster, stand out, or build your own agency website - tap 
 					<span class="itDesc">SEO blog posts and area guides written from your own listings.</span>
 				</a>
 				<a class="instantTile" href="/instant-brochure/">
-					<span class="itTop"><span class="itIcon">&#128196;</span><span class="itTag isSoon">Coming soon</span></span>
+					<span class="itTop"><span class="itIcon">&#128196;</span><span class="itTag isLive">Live</span></span>
 					<span class="itName">Instant Brochure</span>
 					<span class="itDesc">A print-ready PDF and a live web page for any property, in one click.</span>
 				</a>
@@ -944,6 +951,30 @@ When you want to move faster, stand out, or build your own agency website - tap 
 		color: rgba(255,255,255,0.78);
 		font-size: 15px;
 		line-height: 1.6;
+	}
+	.wbPoints {
+		list-style: none;
+		margin: 0 0 20px;
+		padding: 0;
+		color: rgba(255,255,255,0.82);
+		font-size: 15px;
+		line-height: 1.5;
+	}
+	.wbPoints li {
+		position: relative;
+		padding-left: 26px;
+		margin-bottom: 9px;
+	}
+	.wbPoints li::before {
+		content: '';
+		position: absolute;
+		left: 3px;
+		top: 5px;
+		width: 11px;
+		height: 6px;
+		border-left: 2px solid #00ae9a;
+		border-bottom: 2px solid #00ae9a;
+		transform: rotate(-45deg);
 	}
 
 	.wbCta {
