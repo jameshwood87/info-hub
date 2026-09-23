@@ -4,7 +4,7 @@
   "sources": {
     "google": { "rating": 5.0, "count": 36, "url": "https://www.google.com/maps/place/?q=place_id:ChIJxfMLK3KQ0EgRq-CcwhLFdCI", "writeUrl": "https://search.google.com/local/writereview?placeid=ChIJxfMLK3KQ0EgRq-CcwhLFdCI" },
     "facebook": { "recommendPct": 100, "count": 27, "url": "https://www.facebook.com/PropertyList.es/reviews/" },
-    "trustpilot": { "rating": 4.1, "count": 6, "url": "https://www.trustpilot.com/review/propertylist.es" }
+    "trustpilot": { "rating": 4.1, "count": 6, "url": "https://www.trustpilot.com/review/propertylist.es", "writeUrl": "https://www.trustpilot.com/evaluate/propertylist.es" }
   },
   "reviews": [
     { "platform": "trustpilot", "author": "Nicholas Giardina", "rating": 5, "date": "2026-08-26", "lang": "en", "text": "Great tools for realtors on the Costa del Sol and super service by them all 👏🏼" },

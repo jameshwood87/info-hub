@@ -35,7 +35,8 @@ const T = {
 		google: `${num(S.google.rating)} on Google, ${S.google.count} reviews`,
 		facebook: `${S.facebook.recommendPct}% recommend on Facebook, ${S.facebook.count} reviews`,
 		trustpilot: `${num(S.trustpilot.rating)} on Trustpilot, ${S.trustpilot.count} reviews`,
-		write: 'Leave a review on Google',
+		write: 'Leave a review on Trustpilot',
+		writeAlt: 'or on Google',
 		all: 'All',
 		read: 'Read on',
 		translated: 'shown in Google’s English translation',
@@ -58,7 +59,8 @@ const T = {
 		google: `${num(S.google.rating)} en Google, ${S.google.count} reseñas`,
 		facebook: `El ${S.facebook.recommendPct}% recomienda en Facebook, ${S.facebook.count} reseñas`,
 		trustpilot: `${num(S.trustpilot.rating)} en Trustpilot, ${S.trustpilot.count} reseñas`,
-		write: 'Deja tu reseña en Google',
+		write: 'Deja tu reseña en Trustpilot',
+		writeAlt: 'o en Google',
 		all: 'Todas',
 		read: 'Leer en',
 		translated: 'en la traducción al inglés de Google',
@@ -85,7 +87,10 @@ const platformName = { google: 'Google', trustpilot: 'Trustpilot', facebook: 'Fa
 			<a href={S.facebook.url} target="_blank" rel="noopener" data-track="reviews-source-click" data-track-label="facebook">{T.facebook}</a>
 			<a href={S.trustpilot.url} target="_blank" rel="noopener" data-track="reviews-source-click" data-track-label="trustpilot">{T.trustpilot}</a>
 		</div>
-		<a class="rvWrite" href={S.google.writeUrl} target="_blank" rel="noopener" data-track="reviews-write-click">{T.write} &rarr;</a>
+		<div class="rvWriteRow">
+			<a class="rvWrite" href={S.trustpilot.writeUrl} target="_blank" rel="noopener" data-track="reviews-write-click" data-track-label="trustpilot">{T.write} &rarr;</a>
+			<a class="rvWriteAlt" href={S.google.writeUrl} target="_blank" rel="noopener" data-track="reviews-write-click" data-track-label="google">{T.writeAlt} &rarr;</a>
+		</div>
 	</div>
 </section>
 
@@ -160,7 +165,10 @@ const platformName = { google: 'Google', trustpilot: 'Trustpilot', facebook: 'Fa
 	.rvBadges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 	.rvBadges a { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.14); color: #101828; font-weight: 700; font-size: 14px; text-decoration: none; }
 	.rvBadges a:hover { border-color: rgba(var(--pl-accent-rgb), 0.6); }
+	.rvWriteRow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
 	.rvWrite { display: inline-block; background: #00ae9a; color: #00100e; border-radius: 999px; padding: 12px 20px; font-weight: 800; text-decoration: none; font-size: 15px; }
+	.rvWriteAlt { color: #075e53; font-weight: 800; text-decoration: none; font-size: 14.5px; }
+	.rvWriteAlt:hover { text-decoration: underline; }
 	.rvSection { margin: 0 0 20px; }
 	.rvFilters { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; }
 	.rvFilters button { border: 1px solid rgba(16, 24, 40, 0.14); background: #fff; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 14px; font-weight: 700; color: rgba(16, 24, 40, 0.8); cursor: pointer; }
