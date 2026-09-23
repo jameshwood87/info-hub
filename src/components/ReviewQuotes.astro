@@ -1,0 +1,54 @@
+---
+// Three quotes from real reviews on the homepage, under the community band. The quotes are verbatim
+// excerpts marked feature: "en" or "es" in src/data/reviews.json, each with a link to the source and to
+// the full reviews page. No review schema (see ReviewsPage.astro).
+import data from '../data/reviews.json';
+
+export interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+type Review = { platform: 'google' | 'trustpilot' | 'facebook'; author: string; agency?: string; rating?: number; date: string; lang: string; text: string; hold?: boolean; feature?: 'en' | 'es'; quote?: string };
+const picks = (data.reviews as Review[]).filter((r) => !r.hold && r.feature === lang && r.quote).slice(0, 3);
+const S = data.sources;
+const src = { google: S.google.url, trustpilot: S.trustpilot.url, facebook: S.facebook.url } as Record<string, string>;
+const name = { google: 'Google', trustpilot: 'Trustpilot', facebook: 'Facebook' } as Record<string, string>;
+const T = {
+	en: { title: 'What agents say', read: 'Read on', all: `All ${S.google.count + S.trustpilot.count + S.facebook.count} reviews`, allHref: '/reviews/' },
+	es: { title: 'Lo que dicen los agentes', read: 'Leer en', all: `Las ${S.google.count + S.trustpilot.count + S.facebook.count} reseñas`, allHref: '/es/opiniones/' },
+}[lang];
+---
+
+{picks.length > 0 && (
+	<section class="rq" aria-label={T.title}>
+		<div class="rqHead">
+			<h2>{T.title}</h2>
+			<a href={T.allHref} data-track="reviews-all-click">{T.all} &rarr;</a>
+		</div>
+		<div class="rqGrid">
+			{picks.map((r) => (
+				<blockquote class="rqCard" lang={r.lang}>
+					<p>&ldquo;{r.quote}&rdquo;</p>
+					<footer>
+						<span><strong>{r.author}</strong>{r.agency ? `, ${r.agency}` : ''}</span>
+						<a href={src[r.platform]} target="_blank" rel="noopener" data-track="reviews-read-click" data-track-label={r.platform}>{`${T.read} ${name[r.platform]}`} &rarr;</a>
+					</footer>
+				</blockquote>
+			))}
+		</div>
+	</section>
+)}
+
+<style>
+	.rq { max-width: 1120px; margin: 24px auto 0; padding: 0 20px; }
+	.rqHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 12px; }
+	.rqHead h2 { margin: 0; letter-spacing: -0.02em; }
+	.rqHead a { color: #075e53; font-weight: 800; text-decoration: none; font-size: 14.5px; }
+	.rqHead a:hover { text-decoration: underline; }
+	.rqGrid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+	.rqCard { margin: 0; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 22px; display: flex; flex-direction: column; min-width: 0; }
+	.rqCard p { margin: 0 0 12px; font-size: 16px; line-height: 1.55; color: rgba(16, 24, 40, 0.88); }
+	.rqCard footer { margin-top: auto; font-size: 14px; color: rgba(16, 24, 40, 0.8); display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+	.rqCard footer a { color: #075e53; font-weight: 700; text-decoration: none; }
+	.rqCard footer a:hover { text-decoration: underline; }
+</style>

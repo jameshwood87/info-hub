@@ -251,6 +251,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			{ from: '/es/instant-brochure/', to: '/es/folleto-instantaneo/' },
 			{ from: '/es/instant-video/', to: '/es/video-instantaneo/' },
 			{ from: '/es/instant-images/', to: '/es/imagenes-instantaneas/' },
+			{ from: '/es/reviews/', to: '/es/opiniones/' },
 			{ from: '/es/mobile-app/', to: '/es/app-movil/' },
 		];
 		for (const r of esAliasRedirects) {

@@ -1,0 +1,187 @@
+---
+// The reviews page body, shared by /reviews/ (EN) and /es/opiniones/ (ES). Every review comes from
+// src/data/reviews.json, shown as published on Google or Trustpilot and in the language it was written,
+// with a link to the source. No Review or AggregateRating schema: Google treats a site publishing its
+// own ratings as self-serving, so this stays plain HTML. The platform filter is progressive: without JS
+// every review is shown.
+import data from '../data/reviews.json';
+
+export interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+// Facebook entries are recommendations: no star rating, "recommends" instead (rating omitted).
+type Review = { platform: 'google' | 'trustpilot' | 'facebook'; author: string; agency?: string; rating?: number; date: string; approx?: boolean; lang: string; text: string; translatedByGoogle?: boolean; hold?: boolean; feature?: 'en' | 'es'; quote?: string };
+const S = data.sources;
+const all = (data.reviews as Review[]).filter((r) => !r.hold).sort((a, b) => b.date.localeCompare(a.date));
+const withText = all.filter((r) => r.text && r.text.trim());
+const starOnly = all.filter((r) => !r.text || !r.text.trim());
+const fbCount = withText.filter((r) => r.platform === 'facebook').length;
+const bySource = { google: S.google.url, trustpilot: S.trustpilot.url, facebook: S.facebook.url } as Record<string, string>;
+const num = (n: number) => (lang === 'es' ? n.toFixed(1).replace('.', ',') : n.toFixed(1));
+const monthYear = (iso: string) => new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso.slice(0, 7) + '-15T12:00:00Z'));
+const fullDate = (iso: string) => new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T12:00:00Z'));
+const when = (r: (typeof all)[number]) => (r.approx ? (lang === 'es' ? `hacia ${monthYear(r.date)}` : `around ${monthYear(r.date)}`) : fullDate(r.date));
+const checkedText = fullDate(data.checked);
+
+const T = {
+	en: {
+		kicker: 'Reviews',
+		h1: 'What agents say about PropertyList',
+		lead: fbCount
+			? 'Reviews PropertyList has received on Google, Facebook and Trustpilot, shown as they were published and in the language they were written, each with a link to the original. No wording has been changed.'
+			: 'Reviews PropertyList has received on Google and Trustpilot, shown as they were published and in the language they were written, each with a link to the original. No wording has been changed.',
+		recommends: 'Recommends PropertyList',
+		google: `${num(S.google.rating)} on Google, ${S.google.count} reviews`,
+		facebook: `${S.facebook.recommendPct}% recommend on Facebook, ${S.facebook.count} reviews`,
+		trustpilot: `${num(S.trustpilot.rating)} on Trustpilot, ${S.trustpilot.count} reviews`,
+		write: 'Leave a review on Google',
+		all: 'All',
+		read: 'Read on',
+		translated: 'shown in Google’s English translation',
+		starOnly: (n: number) => `Plus ${n} five-star ratings on Google left without a comment.`,
+		fbTitle: fbCount ? 'On Facebook' : 'Also on Facebook',
+		fbText: fbCount
+			? `${S.facebook.count} people recommend PropertyList on Facebook. Facebook recommendations carry no star rating, only "recommends", so those cards show that instead of stars.`
+			: `${S.facebook.count} people recommend PropertyList on Facebook. Facebook does not let us copy those here, so read them on the page itself.`,
+		fbLink: 'Read the Facebook reviews',
+		aboutTitle: 'About these reviews',
+		about: `They are copied from ${fbCount ? 'Google, Facebook and Trustpilot' : 'Google and Trustpilot'}, where anyone can post a review and where we cannot edit one. No wording has been changed; where Google shortens a long review, we show what Google shows. We do not offer anything in return for a review. Google shows dates as "x months ago", so Google dates here are approximate. If you wrote one of these and would rather it did not appear on this page, email info@propertylist.es and we will take it down. Checked ${checkedText}.`,
+	},
+	es: {
+		kicker: 'Opiniones',
+		h1: 'Lo que dicen los agentes de PropertyList',
+		lead: fbCount
+			? 'Reseñas que PropertyList ha recibido en Google, Facebook y Trustpilot, tal como se publicaron y en el idioma en que se escribieron, cada una con enlace al original. No se ha cambiado ni una palabra.'
+			: 'Reseñas que PropertyList ha recibido en Google y Trustpilot, tal como se publicaron y en el idioma en que se escribieron, cada una con enlace al original. No se ha cambiado ni una palabra.',
+		recommends: 'Recomienda PropertyList',
+		google: `${num(S.google.rating)} en Google, ${S.google.count} reseñas`,
+		facebook: `El ${S.facebook.recommendPct}% recomienda en Facebook, ${S.facebook.count} reseñas`,
+		trustpilot: `${num(S.trustpilot.rating)} en Trustpilot, ${S.trustpilot.count} reseñas`,
+		write: 'Deja tu reseña en Google',
+		all: 'Todas',
+		read: 'Leer en',
+		translated: 'en la traducción al inglés de Google',
+		starOnly: (n: number) => `Además, ${n} valoraciones de cinco estrellas en Google sin comentario.`,
+		fbTitle: fbCount ? 'En Facebook' : 'También en Facebook',
+		fbText: fbCount
+			? `${S.facebook.count} personas recomiendan PropertyList en Facebook. Las recomendaciones de Facebook no llevan estrellas, solo "recomienda", así que esas tarjetas lo muestran en lugar de estrellas.`
+			: `${S.facebook.count} personas recomiendan PropertyList en Facebook. Facebook no permite copiarlas aquí, así que léelas en la propia página.`,
+		fbLink: 'Leer las reseñas de Facebook',
+		aboutTitle: 'Sobre estas reseñas',
+		about: `Están copiadas de ${fbCount ? 'Google, Facebook y Trustpilot' : 'Google y Trustpilot'}, donde cualquiera puede publicar una reseña y donde nosotros no podemos editarlas. No se ha cambiado ni una palabra; cuando Google acorta una reseña larga, mostramos lo que muestra Google. No ofrecemos nada a cambio de una reseña. Google muestra las fechas como "hace x meses", así que las fechas de Google son aproximadas. Si escribiste una y prefieres que no aparezca en esta página, escribe a info@propertylist.es y la retiraremos. Comprobado el ${checkedText}.`,
+	},
+}[lang];
+const platformName = { google: 'Google', trustpilot: 'Trustpilot', facebook: 'Facebook' } as Record<string, string>;
+---
+
+<section class="rvHero">
+	<div class="rvHeroInner">
+		<div class="rvKicker">{T.kicker}</div>
+		<h1>{T.h1}</h1>
+		<p class="rvLead">{T.lead}</p>
+		<div class="rvBadges">
+			<a href={S.google.url} target="_blank" rel="noopener" data-track="reviews-source-click" data-track-label="google">{T.google}</a>
+			<a href={S.facebook.url} target="_blank" rel="noopener" data-track="reviews-source-click" data-track-label="facebook">{T.facebook}</a>
+			<a href={S.trustpilot.url} target="_blank" rel="noopener" data-track="reviews-source-click" data-track-label="trustpilot">{T.trustpilot}</a>
+		</div>
+		<a class="rvWrite" href={S.google.writeUrl} target="_blank" rel="noopener" data-track="reviews-write-click">{T.write} &rarr;</a>
+	</div>
+</section>
+
+<section class="rvSection">
+	<div class="rvFilters" role="group" aria-label={T.kicker} data-rv-filters>
+		<button type="button" class="isOn" data-filter="all">{T.all} ({withText.length})</button>
+		<button type="button" data-filter="google">Google ({withText.filter((r) => r.platform === 'google').length})</button>
+		{fbCount > 0 && <button type="button" data-filter="facebook">Facebook ({fbCount})</button>}
+		<button type="button" data-filter="trustpilot">Trustpilot ({withText.filter((r) => r.platform === 'trustpilot').length})</button>
+	</div>
+	<div class="rvGrid" data-rv-list>
+		{withText.map((r) => (
+			<article class="rvCard" data-platform={r.platform} lang={r.lang}>
+				{r.rating ? (
+					<div class="rvStars" aria-label={`${r.rating} / 5`}>
+						{[1, 2, 3, 4, 5].map((i) => (
+							<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M10 1.6l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.5 7.8l5.9-.8z" fill={i <= (r.rating as number) ? '#00ae9a' : 'rgba(16,24,40,0.15)'} /></svg>
+						))}
+					</div>
+				) : (
+					<div class="rvRec">{T.recommends}</div>
+				)}
+				<p class="rvText">{r.text}</p>
+				<div class="rvWho">
+					<strong>{r.author}</strong>{r.agency ? `, ${r.agency}` : ''}
+				</div>
+				<div class="rvMeta">
+					<span>{`${platformName[r.platform]}, ${when(r)}${r.translatedByGoogle ? `, ${T.translated}` : ''}`}</span>
+					<a href={bySource[r.platform]} target="_blank" rel="noopener" data-track="reviews-read-click" data-track-label={r.platform}>{`${T.read} ${platformName[r.platform]}`} &rarr;</a>
+				</div>
+			</article>
+		))}
+	</div>
+	{starOnly.length > 0 && <p class="rvStarOnly">{T.starOnly(starOnly.length)}</p>}
+</section>
+
+<section class="rvSection rvTwo">
+	<div class="rvBox">
+		<h2>{T.fbTitle}</h2>
+		<p>{T.fbText}</p>
+		<a href={S.facebook.url} target="_blank" rel="noopener" data-track="reviews-source-click" data-track-label="facebook">{T.fbLink} &rarr;</a>
+	</div>
+	<div class="rvBox rvAbout">
+		<h2>{T.aboutTitle}</h2>
+		<p>{T.about}</p>
+	</div>
+</section>
+
+<script is:inline>
+	(function () {
+		var wrap = document.querySelector('[data-rv-filters]');
+		var list = document.querySelector('[data-rv-list]');
+		if (!wrap || !list) return;
+		wrap.addEventListener('click', function (ev) {
+			var b = ev.target && ev.target.closest && ev.target.closest('button[data-filter]');
+			if (!b) return;
+			var f = b.getAttribute('data-filter');
+			wrap.querySelectorAll('button').forEach(function (x) { x.classList.toggle('isOn', x === b); });
+			list.querySelectorAll('[data-platform]').forEach(function (c) { c.hidden = f !== 'all' && c.getAttribute('data-platform') !== f; });
+		});
+	})();
+</script>
+
+<style>
+	:global(:root) { --pl-accent: #00ae9a; --pl-accent-rgb: 0, 174, 154; }
+	h1, h2 { letter-spacing: -0.03em; }
+	.rvHero { border-radius: 22px; padding: 16px; margin: 0 0 16px; border: 1px solid rgba(16, 24, 40, 0.08); background: radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0)); }
+	.rvHeroInner { background: rgba(255, 255, 255, 0.78); border: 1px solid rgba(16, 24, 40, 0.06); border-radius: 18px; padding: 22px; }
+	.rvKicker { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #075e53; margin-bottom: 8px; }
+	.rvHero h1 { margin: 0 0 10px; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; }
+	.rvLead { margin: 0 0 16px; max-width: 760px; color: rgba(16, 24, 40, 0.72); font-size: 16px; line-height: 1.55; }
+	.rvBadges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+	.rvBadges a { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.14); color: #101828; font-weight: 700; font-size: 14px; text-decoration: none; }
+	.rvBadges a:hover { border-color: rgba(var(--pl-accent-rgb), 0.6); }
+	.rvWrite { display: inline-block; background: #00ae9a; color: #00100e; border-radius: 999px; padding: 12px 20px; font-weight: 800; text-decoration: none; font-size: 15px; }
+	.rvSection { margin: 0 0 20px; }
+	.rvFilters { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; }
+	.rvFilters button { border: 1px solid rgba(16, 24, 40, 0.14); background: #fff; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 14px; font-weight: 700; color: rgba(16, 24, 40, 0.8); cursor: pointer; }
+	.rvFilters button.isOn { background: #0b1220; color: #fff; border-color: #0b1220; }
+	/* column flow so a long review does not leave empty space beside short ones */
+	.rvGrid { columns: 300px; column-gap: 14px; }
+	.rvCard { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; min-width: 0; break-inside: avoid; margin: 0 0 14px; }
+	.rvCard[hidden] { display: none; }
+	.rvStars { display: flex; gap: 2px; margin-bottom: 10px; }
+	.rvRec { display: inline-block; align-self: flex-start; margin-bottom: 10px; padding: 3px 10px; border-radius: 999px; background: rgba(0, 174, 154, 0.14); color: #075e53; font-size: 12.5px; font-weight: 800; }
+	.rvText { margin: 0 0 12px; white-space: pre-line; color: rgba(16, 24, 40, 0.86); font-size: 15px; line-height: 1.6; overflow-wrap: anywhere; }
+	.rvWho { margin-top: auto; font-size: 14px; color: rgba(16, 24, 40, 0.9); }
+	.rvMeta { margin-top: 4px; font-size: 13px; color: rgba(16, 24, 40, 0.6); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+	.rvMeta a { color: #075e53; font-weight: 700; text-decoration: none; }
+	.rvMeta a:hover { text-decoration: underline; }
+	.rvStarOnly { margin: 14px 2px 0; font-size: 14px; color: rgba(16, 24, 40, 0.66); }
+	.rvTwo { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+	.rvBox { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 20px; }
+	.rvBox h2 { margin: 0 0 6px; font-size: 20px; }
+	.rvBox p { margin: 0 0 8px; color: rgba(16, 24, 40, 0.72); font-size: 14.5px; line-height: 1.55; }
+	.rvBox a { color: #075e53; font-weight: 800; text-decoration: none; }
+	.rvBox a:hover { text-decoration: underline; }
+	.rvAbout { background: rgba(0, 174, 154, 0.05); border-color: rgba(0, 174, 154, 0.28); }
+</style>
