@@ -1,0 +1,163 @@
+---
+// The community band on the homepage: the WhatsApp groups, the Facebook page and the Facebook groups,
+// with the counts in src/data/socialProof.ts (floors, dated). No review or rating schema on purpose:
+// Google treats a site quoting its own rating as self-serving, so the figures stay plain text that
+// links to where they can be checked. Outbound links open in a new tab and are not nofollowed
+// (they are our own profiles). Clicks are tracked through the sitewide data-track listener.
+import { SOCIAL_PROOF } from '../data/socialProof';
+import { statPlus } from '../lib/portalStats';
+
+export interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+const P = SOCIAL_PROOF;
+const groupsTotal = P.facebookGroups.groups.reduce((s, g) => s + g.members, 0);
+const groupsTotalText = statPlus(Math.floor(groupsTotal / 100) * 100, lang);
+const fmtDate = (iso: string) =>
+	new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+		new Date(iso + 'T12:00:00Z'),
+	);
+const R = P.reviews;
+const rating = (n: number) => (lang === 'es' ? n.toFixed(1).replace('.', ',') : n.toFixed(1));
+const checked = [...new Set([P.whatsapp.checked, P.facebookPage.checked, P.instagram.checked, P.facebookGroups.checked, R.google.checked, R.facebook.checked, R.trustpilot.checked])].sort();
+// "Checked 23 September 2026", or "Checked 23 and 24 September 2026" when the reads fell either side of midnight
+const monthYear = (iso: string) => new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T12:00:00Z'));
+const sameMonth = checked.every((d) => d.slice(0, 7) === checked[0].slice(0, 7));
+const checkedText = checked.length === 1
+	? (lang === 'es' ? `el ${fmtDate(checked[0])}` : fmtDate(checked[0]))
+	: sameMonth
+		? (lang === 'es' ? `el ${checked.map((d) => String(+d.slice(8, 10))).join(' y ')} de ${monthYear(checked[0])}` : `${checked.map((d) => String(+d.slice(8, 10))).join(' and ')} ${monthYear(checked[0])}`)
+		: (lang === 'es' ? `entre el ${fmtDate(checked[0])} y el ${fmtDate(checked[checked.length - 1])}` : `between ${fmtDate(checked[0])} and ${fmtDate(checked[checked.length - 1])}`);
+
+const COPY = {
+	en: {
+		aria: 'Community',
+		eyebrow: 'Community',
+		title: 'Join the agents already here',
+		lead: 'PropertyList is also a community. Free WhatsApp groups where agents share listings and client requests, Facebook groups that reach buyers and renters, and reviews you can read where they were written.',
+		waLabel: 'members in our WhatsApp groups',
+		waText: 'Groups for Marbella, Málaga, Estepona, Madrid, Barcelona, Mallorca and Ibiza. Share what you list and what your clients are looking for.',
+		waCta: 'See the groups',
+		rvLabel: `on Google, from ${R.google.count} reviews`,
+		rvText: 'Agents and clients on the platforms where we cannot edit a word.',
+		rvGoogle: `Google, ${R.google.count} reviews`,
+		rvFacebook: `Facebook, ${R.facebook.count} reviews`,
+		rvFacebookScore: `${R.facebook.recommendPct}% recommend`,
+		rvTrustpilot: `Trustpilot, ${R.trustpilot.count} reviews`,
+		grLabel: `members in our ${P.facebookGroups.groups.length} Facebook groups`,
+		grText: `Listings, new developments, services and local events, open to everyone. Plus ${statPlus(P.facebookPage.followers, lang)} followers on Facebook and ${statPlus(P.instagram.followers, lang)} on Instagram.`,
+		fbCta: 'Follow on Facebook',
+		igCta: 'Instagram',
+		foot: `Counts rounded down, ratings as each platform shows them. Checked ${checkedText}.`,
+	},
+	es: {
+		aria: 'Comunidad',
+		eyebrow: 'Comunidad',
+		title: 'Únete a los agentes que ya están aquí',
+		lead: 'PropertyList también es una comunidad. Grupos de WhatsApp gratuitos donde los agentes comparten inmuebles y demandas de clientes, grupos de Facebook que llegan a compradores e inquilinos, y reseñas que puedes leer donde se escribieron.',
+		waLabel: 'miembros en nuestros grupos de WhatsApp',
+		waText: 'Grupos para Marbella, Málaga, Estepona, Madrid, Barcelona, Mallorca e Ibiza. Comparte lo que captas y lo que buscan tus clientes.',
+		waCta: 'Ver los grupos',
+		rvLabel: `en Google, con ${R.google.count} reseñas`,
+		rvText: 'Agentes y clientes, en plataformas donde no podemos cambiar ni una palabra.',
+		rvGoogle: `Google, ${R.google.count} reseñas`,
+		rvFacebook: `Facebook, ${R.facebook.count} reseñas`,
+		rvFacebookScore: `${R.facebook.recommendPct}% recomienda`,
+		rvTrustpilot: `Trustpilot, ${R.trustpilot.count} reseñas`,
+		grLabel: `miembros en nuestros ${P.facebookGroups.groups.length} grupos de Facebook`,
+		grText: `Inmuebles, obra nueva, servicios y eventos locales, abiertos a todos. Además, ${statPlus(P.facebookPage.followers, lang)} seguidores en Facebook y ${statPlus(P.instagram.followers, lang)} en Instagram.`,
+		fbCta: 'Seguir en Facebook',
+		igCta: 'Instagram',
+		foot: `Cifras redondeadas a la baja; valoraciones tal como las muestra cada plataforma. Comprobadas ${checkedText}.`,
+	},
+}[lang];
+---
+
+<section class="cp" aria-label={COPY.aria}>
+	<div class="cpHead">
+		<div class="cpEyebrow">{COPY.eyebrow}</div>
+		<h2 class="cpTitle">{COPY.title}</h2>
+		<p class="cpLead">{COPY.lead}</p>
+	</div>
+	<div class="cpGrid">
+		<div class="cpCard">
+			<div class="cpIcon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5z" /><path d="M8 8.5h8M8 11.5h5" /></svg>
+			</div>
+			<div class="cpNum">{statPlus(P.whatsapp.members, lang)}</div>
+			<div class="cpLabel">{COPY.waLabel}</div>
+			<p class="cpText">{COPY.waText}</p>
+			<a class="cpCta" href={P.whatsapp.docsPath[lang]} data-track="community-whatsapp-click">{COPY.waCta} &rarr;</a>
+		</div>
+		<div class="cpCard">
+			<div class="cpIcon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v10H4V10z" /><path d="M7 10l4-6.5c1.4 0 2.3 1 2.1 2.4L12.6 9H18a2 2 0 0 1 2 2.3l-1.1 6.6A2.5 2.5 0 0 1 16.4 20H7" /></svg>
+			</div>
+			<div class="cpNum">{rating(R.google.rating)}</div>
+			<div class="cpLabel">{COPY.rvLabel}</div>
+			<p class="cpText">{COPY.rvText}</p>
+			<ul class="cpList">
+				<li>
+					<a href={R.google.url} target="_blank" rel="noopener" data-track="community-review-click" data-track-label="google">{COPY.rvGoogle}</a>
+					<span>{rating(R.google.rating)} / 5</span>
+				</li>
+				<li>
+					<a href={R.facebook.url} target="_blank" rel="noopener" data-track="community-review-click" data-track-label="facebook">{COPY.rvFacebook}</a>
+					<span>{COPY.rvFacebookScore}</span>
+				</li>
+				{R.trustpilot.show && (
+					<li>
+						<a href={R.trustpilot.url} target="_blank" rel="noopener" data-track="community-review-click" data-track-label="trustpilot">{COPY.rvTrustpilot}</a>
+						<span>{rating(R.trustpilot.rating)} / 5</span>
+					</li>
+				)}
+			</ul>
+		</div>
+		<div class="cpCard">
+			<div class="cpIcon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2" /><circle cx="16.5" cy="9.5" r="2.6" /><path d="M3.5 19c.4-3.3 2.6-5.2 5.5-5.2s5.1 1.9 5.5 5.2z" /><path d="M14.8 14.2c2.6 0 4.6 1.5 5.2 4.8h-4.2" /></svg>
+			</div>
+			<div class="cpNum">{groupsTotalText}</div>
+			<div class="cpLabel">{COPY.grLabel}</div>
+			<p class="cpText">{COPY.grText}</p>
+			<ul class="cpList">
+				{P.facebookGroups.groups.map((g) => (
+					<li>
+						<a href={g.url} target="_blank" rel="noopener" data-track="community-facebook-group-click" data-track-label={g.name}>{g.name}</a>
+						<span>{statPlus(g.members, lang)}</span>
+					</li>
+				))}
+			</ul>
+			<div class="cpCtas">
+				<a class="cpCta" href={P.facebookPage.url} target="_blank" rel="noopener me" data-track="community-facebook-page-click">{COPY.fbCta} &rarr;</a>
+				<a class="cpCta" href={P.instagram.url} target="_blank" rel="noopener me" data-track="community-instagram-click">{COPY.igCta} &rarr;</a>
+			</div>
+		</div>
+	</div>
+	<p class="cpFoot">{COPY.foot}</p>
+</section>
+
+<style>
+	.cp { max-width: 1120px; margin: 36px auto 0; padding: 0 20px; }
+	.cpHead { max-width: 720px; }
+	.cpEyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #075e53; margin: 0 0 6px; }
+	.cpTitle { margin: 0 0 6px; letter-spacing: -0.02em; }
+	.cpLead { margin: 0 0 16px; color: rgba(16, 24, 40, 0.65); font-size: 14.5px; line-height: 1.55; }
+	.cpGrid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: start; }
+	.cpCard { position: relative; display: flex; flex-direction: column; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 22px 20px; min-width: 0; }
+	.cpIcon { width: 40px; height: 40px; border-radius: 12px; background: rgba(0, 174, 154, 0.14); color: #075e53; display: grid; place-items: center; margin-bottom: 12px; }
+	.cpNum { font-size: 34px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; color: #101828; font-variant-numeric: tabular-nums; }
+	.cpLabel { margin-top: 6px; font-size: 14px; font-weight: 700; color: rgba(16, 24, 40, 0.8); }
+	.cpText { margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.66); }
+	.cpCta { display: inline-block; margin-top: auto; padding-top: 14px; font-size: 14.5px; font-weight: 800; color: #075e53; text-decoration: none; }
+	.cpCta:hover { text-decoration: underline; }
+	.cpCtas { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: auto; padding-top: 14px; }
+	.cpCtas .cpCta { margin-top: 0; padding-top: 0; }
+	.cpList { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
+	.cpList li { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; line-height: 1.5; border-top: 1px solid rgba(16, 24, 40, 0.07); padding-top: 4px; }
+	.cpList a { color: #101828; font-weight: 700; text-decoration: none; min-width: 0; }
+	.cpList a:hover { text-decoration: underline; }
+	.cpList span { flex: none; color: rgba(16, 24, 40, 0.6); font-variant-numeric: tabular-nums; }
+	.cpFoot { margin: 12px 0 0; font-size: 12.5px; color: rgba(16, 24, 40, 0.66); }
+</style>

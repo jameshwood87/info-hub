@@ -5,6 +5,7 @@ const plAgents = statPlus(__ps.agents, 'en');
 const plAgencies = statPlus(__ps.agencies, 'en');
 const plListings = statPlus(__ps.listings, 'en');
 import Layout from '../layouts/Layout.astro';
+import CommunityProof from '../components/CommunityProof.astro';
 import background from '../assets/background.svg';
 import { getPortalStats } from '../lib/portalStats';
 
@@ -439,6 +440,8 @@ const softwareAppLd = {
 			</div>
 		</div>
 	</section>
+
+	<CommunityProof lang="en" />
 
 	<section aria-label="Quick answers" style="max-width:1120px;margin:36px auto 0;padding:0 20px;">
 		<h2 style="margin:0 0 6px;letter-spacing:-0.02em;">Quick answers</h2>
