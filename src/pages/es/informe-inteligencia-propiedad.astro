@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 
 const title = 'Property Intelligence Report | PropertyList';
 const description =
-	'Valoraciones verificadas ante notario en segundos: brief con manejo de objeciones, PDF y enlace para el cliente que controlas y rastreas.';
+	'Estimación de precio de mercado en segundos: comparables del MLS, precios verificados ante notario, brief del agente, PDF y enlace con seguimiento.';
 
 const faqs = [
 	{
@@ -48,7 +48,7 @@ const appLd = {
 	applicationCategory: 'BusinessApplication',
 	operatingSystem: 'Web',
 	description:
-		'Informes CMA por propiedad para agentes inmobiliarios en España: valor de mercado verificado ante notario, comparables, estrategia de precio, perspectiva de inversión, brief de preparación para el agente con manejo de objeciones, exportación a PDF y enlace para el cliente con secciones configurables y seguimiento de apertura.',
+		'Informes CMA por propiedad para agentes inmobiliarios en España: estimación de precio de mercado contrastada con precios de venta verificados ante notario, comparables, estrategia de precio, perspectiva de inversión, brief de preparación para el agente con manejo de objeciones, exportación a PDF y enlace para el cliente con secciones configurables y seguimiento de apertura.',
 	offers: { '@type': 'Offer', price: '5', priceCurrency: 'EUR', description: '5 créditos por informe.' + ' Se paga con créditos de un saldo prepago, comprados por adelantado a 1,00 EUR cada uno y menos en packs grandes, así que la cifra en euros es el máximo.' },
 	url: 'https://info.propertylist.es/es/informe-inteligencia-propiedad/',
 };
@@ -81,7 +81,7 @@ const breadcrumbLd = {
 			<div class="badge"><span class="dot"></span> Disponible en el MLS &middot; los 3 primeros gratis, luego 5 cr&eacute;ditos</div>
 			<h1>El vendedor cree que vale un 20% m&aacute;s.<br /><span class="accent">Ll&eacute;vale el registro.</span></h1>
 			<p class="lead">
-				El Property Intelligence Report convierte cualquier anuncio en una valoraci&oacute;n basada en evidencia en segundos,
+				El Property Intelligence Report convierte cualquier anuncio en una estimaci&oacute;n de precio de mercado basada en evidencia en segundos,
 				con datos en vivo del MLS y <strong>precios de venta verificados ante notario</strong> del registro oficial espa&ntilde;ol.
 				Adem&aacute;s te dice qu&eacute; decir, resuelve las objeciones que vas a o&iacute;r y le da a tu cliente una versi&oacute;n
 				limpia que t&uacute; controlas y puedes rastrear.
@@ -106,7 +106,7 @@ const breadcrumbLd = {
 		<section class="block">
 			<h2>Qu&eacute; demuestra el informe</h2>
 			<ul class="points">
-				<li><strong>Valor verificado, no opini&oacute;n.</strong> El &euro;/m&sup2; del registro notarial junto al &euro;/m&sup2; de asking: a cu&aacute;nto se cerr&oacute; de verdad, frente a lo que esperaban los vendedores.</li>
+				<li><strong>El registro, no una opini&oacute;n.</strong> El &euro;/m&sup2; del registro notarial junto al &euro;/m&sup2; de asking: a cu&aacute;nto se cerr&oacute; de verdad, frente a lo que esperaban los vendedores.</li>
 				<li><strong>La realidad del precio de salida.</strong> Mediana de asking, tendencia interanual, mediana de d&iacute;as en mercado y qu&eacute; porcentaje de anuncios ya ha bajado de precio.</li>
 				<li><strong>Tres opciones de precio, con su coste.</strong> Conservadora para vender r&aacute;pido, objetivo para los d&iacute;as en mercado t&iacute;picos, agresiva para un vendedor paciente, cada una con su contrapartida explicada.</li>
 				<li><strong>Comparables, ubicaci&oacute;n y contexto de distrito.</strong> D&oacute;nde encaja esta propiedad dentro de su segmento.</li>
@@ -123,8 +123,7 @@ const breadcrumbLd = {
 		<section class="block">
 			<h2>Te dice qu&eacute; decir</h2>
 			<p>
-				Tu copia abre con un <strong>brief del agente</strong>, la parte que ninguna otra herramienta de valoraci&oacute;n te
-				da. Se&ntilde;ala la frase m&aacute;s potente de este informe concreto, redacta las respuestas a las objeciones que
+				Tu copia abre con un <strong>brief del agente</strong>, escrito solo para ti. Se&ntilde;ala la frase m&aacute;s potente de este informe concreto, redacta las respuestas a las objeciones que
 				vas a o&iacute;r de verdad y avisa de qu&eacute; cifras hay que manejar con cuidado antes de ponerlas delante de nadie.
 			</p>
 			<figure><img src="/docs-images/cma/agent-brief.jpg" alt="Brief del agente marcado como no compartir: qu&eacute; hace el informe, cu&aacute;ndo usarlo, con qu&eacute; abrir y respuestas a las objeciones del vendedor" loading="lazy" /><figcaption>"Agent brief - do not share": cu&aacute;ndo usarlo, con qu&eacute; abrir y objeciones resueltas con los n&uacute;meros de esta propiedad.</figcaption></figure>
@@ -138,8 +137,8 @@ const breadcrumbLd = {
 		<section class="block">
 			<h2>Tu cliente recibe otro informe, y sabes cu&aacute;ndo lo lee</h2>
 			<p>
-				El PDF del agente es tuyo. Para el cliente creas un enlace compartido y decides exactamente qu&eacute; contiene: valor
-				y condiciones de mercado, comparables, ubicaci&oacute;n, perspectiva de inversi&oacute;n, narrativa del analista.
+				El PDF del agente es tuyo. Para el cliente creas un enlace compartido y decides exactamente qu&eacute; contiene: la estimaci&oacute;n de precio
+				y las condiciones de mercado, comparables, ubicaci&oacute;n, perspectiva de inversi&oacute;n, narrativa del analista.
 				A&ntilde;ade una nota personal, pide que lo enviemos por email, o pega el enlace en WhatsApp.
 			</p>
 			<figure><img src="/docs-images/cma/share-editions.webp" alt="Panel de compartir con las ediciones Comprador, Vendedor, Informe completo y Personalizado, nota opcional, campo de email y un enlace activo que indica que a&uacute;n no se ha abierto" loading="lazy" /><figcaption>Elige una edici&oacute;n, a&ntilde;ade una nota, crea el enlace. Se copia al portapapeles al instante y ves que a&uacute;n no se ha abierto.</figcaption></figure>
@@ -201,7 +200,7 @@ const breadcrumbLd = {
 		</section>
 
 		<section class="final">
-			<h2>Tu pr&oacute;xima cita de valoraci&oacute;n es el jueves.</h2>
+			<h2>Tu pr&oacute;xima cita de captaci&oacute;n es el jueves.</h2>
 			<p>Entra con el registro, las objeciones resueltas y un informe que se van a quedar.</p>
 			<div class="ctaRow center">
 				<a class="btnPrimary" href="https://agents.propertylist.es/" target="_blank" rel="noopener">Generar un informe</a>
