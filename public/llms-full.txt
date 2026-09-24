@@ -106,7 +106,7 @@ The questions agents ask before signing up. The full list lives on the FAQ and f
 What is PropertyList?
 One login for an estate agency in Spain: the shared MLS, the CRM, your listings on the public portal, your MicroSite and the AI tools, with notary-verified sale prices behind the numbers. The core is free; you pay in credits only for the tools you switch on. Is PropertyList really free?
 The core is free with no limit: the MLS, unlimited listings, team accounts, your MicroSite and the Lead, Seller and Property pipelines. Moving a qualified buyer lead into the Buyer pipeline costs 1 credit, and your first 5 are free. Can I get free credits?
-Yes. Refer an agency: you earn 20 credits for every agency that signs up through your link, with no cap, and the new agency starts with 10. On top of that, verifying your agency (free, about two minutes) adds another 20 credits and puts the verified badge on your listings. Do I have to leave my current portal or CRM?
+Yes. Refer an agency: you earn 20 credits for every agency that signs up through your link and is approved, with no cap, and the new agency starts with 10. On top of that, verifying your agency (free, about two minutes) adds another 20 credits and puts the verified badge on your listings. Do I have to leave my current portal or CRM?
 No. Import your existing XML feed free and run PropertyList alongside whatever you use today. Pushing your listings out to other portals is free too. How much admin time does it save?
 Tick what you hate doing and drag the hours on the hours page. It totals the bill and shows the fix for every line.
 
@@ -282,7 +282,7 @@ Client Relationship Management
 - Property pipeline Free
 - Tenants pipeline (Rentals Module) 50 credits / 30 days, free 30-day trial
 - Nurture pipeline (Automation & Nurture) Free
-- Connected inbox (Gmail, Outlook or other) 10 credits per mailbox/mo
+- Connected inbox (Gmail, Outlook or other) Coming soon
 - Document Upload Free
 - AI Funnels Coming soon
 - AI Chatbot Coming soon
@@ -545,7 +545,7 @@ It gives you the evidence, not the compliance. The audit log timestamps every st
 How do PropertyList credits work?
 1 credit. Buy in bulk for a discount. Credits never expire. Used to unlock paid features across the platform. For anything monthly, you can switch on auto top-up: a saved card refills your balance by the cost of your active subscriptions the day before renewal, so nothing pauses. It is a way to pay, not an extra charge. See credit pricing. Do credits expire?
 No. PropertyList credits never expire - use them at your own pace. Can I earn free credits on PropertyList?
-Yes. Get your agency verified (free, and any time you like) and receive 20 free credits. Agents also earn 20 credits for each agency that signs up via their referral link - and the new signup gets 10 credits.
+Yes. Get your agency verified (free, and any time you like) and receive 20 free credits. Agents also earn 20 credits for each agency that signs up via their referral link and is approved - and the new agency gets 10 credits.
 
 ## MCP & Developers
 Does PropertyList have an API for developers?
@@ -3025,8 +3025,7 @@ The Nurture board still fills up. Every closed deal still puts the contact on it
 ## Free to run your agency. You pay when we bring you a buyer.
 
 The MLS, the CRM, unlimited listings and unlimited staff accounts cost nothing. Turn on the parts that work while you sleep whenever
-they are worth it to you. A connected inbox puts the client’s replies on the contact they
-belong to, without you copying anything across.
+they are worth it to you. A connected inbox, coming soon, will put the client’s replies on the contact they belong to, without you copying anything across.
 
 Create your free agency account
 Read the pipeline guide
