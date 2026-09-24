@@ -1,0 +1,64 @@
+---
+// How it works, in three steps, then the same button again. Facts: XML feeds are re-read daily, Instant
+// Listing makes a listing from photos plus a voice note, the listing agent sets the commission split,
+// leads land in the CRM, agent-to-agent leads are never charged (free-vs-paid ledger).
+export interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+const es = lang === 'es';
+const signup = `https://agents.propertylist.es/new_agency/new?locale=${es ? 'es' : 'en'}`;
+const T = {
+	en: {
+		h2: 'How it works',
+		steps: [
+			['Create your free account', 'No card, about two minutes. Your agency gets its own branded MicroSite on the spot.'],
+			['Add your listings', 'Upload them, or connect your XML feed and we re-read it every day. A few photos and a voice note make a listing in about a minute.'],
+			['The network sells with you', 'You set the commission split, leads land in your CRM, and leads from other agents are never charged.'],
+		],
+		cta: 'Create your free account',
+		micro: 'No card. About two minutes.',
+	},
+	es: {
+		h2: 'Cómo funciona',
+		steps: [
+			['Crea tu cuenta gratis', 'Sin tarjeta, unos dos minutos. Tu agencia recibe al momento su MicroSite con tu marca.'],
+			['Añade tus inmuebles', 'Súbelos, o conecta tu feed XML y lo releemos cada día. Unas fotos y una nota de voz crean un anuncio en un minuto.'],
+			['La red vende contigo', 'Tú fijas el reparto de comisión, los leads llegan a tu CRM y los leads de otros agentes nunca se cobran.'],
+		],
+		cta: 'Crea tu cuenta gratis',
+		micro: 'Sin tarjeta. Unos dos minutos.',
+	},
+}[lang];
+---
+
+<section class="hs" aria-label={T.h2}>
+	<h2>{T.h2}</h2>
+	<ol class="hsSteps">
+		{T.steps.map(([t, d], i) => (
+			<li>
+				<span class="hsNum">{i + 1}</span>
+				<div><strong>{t}</strong><p>{d}</p></div>
+			</li>
+		))}
+	</ol>
+	<div class="hsCtaRow">
+		<a class="hsCta" href={signup} target="_blank" rel="noopener" data-track="home-steps-cta">{T.cta}</a>
+		<span class="hsMicro">{T.micro}</span>
+	</div>
+</section>
+
+<style>
+	.hs { max-width: 1120px; margin: 36px auto 0; padding: 0 20px; }
+	.hs h2 { margin: 0 0 14px; letter-spacing: -0.02em; }
+	.hsSteps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); counter-reset: step; }
+	.hsSteps li { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 20px; }
+	.hsNum { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #0b1220; color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 15px; }
+	.hsSteps strong { display: block; font-size: 16.5px; letter-spacing: -0.01em; color: #101828; margin: 6px 0 4px; }
+	.hsSteps p { margin: 0; font-size: 14.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.68); }
+	.hsCtaRow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 16px; }
+	.hsCta { display: inline-block; background: #00ae9a; color: #00100e; border-radius: 999px; padding: 13px 22px; font-weight: 800; text-decoration: none; font-size: 15.5px; }
+	.hsCta:hover { background: #0f8f8a; color: #fff; }
+	.hsMicro { font-size: 14px; font-weight: 600; color: rgba(16, 24, 40, 0.6); }
+	@media (max-width: 600px) { .hsCta { width: 100%; text-align: center; } }
+</style>

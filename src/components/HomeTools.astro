@@ -1,0 +1,71 @@
+---
+// The tools an agent switches on, one line each. All six are live (feature-status ledger, 24-09-26):
+// CoAgent, the six pipelines, Instant Listing, Website Builder, Instant Content, AI Property Match and
+// the portal's AI search (Instant Brochure sits in the free list on HomeFree). Prices stay on the feature
+// pages. Spanish uses the site's own product names: Listado Instantáneo, Contenido Instantáneo.
+export interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+const es = lang === 'es';
+const T = {
+	en: {
+		h2: 'Tools you switch on',
+		lead: 'Each one lives on its own page with its price. Nothing is charged until you use it.',
+		tiles: [
+			['CoAgent', 'Your CRM on WhatsApp. Send a voice note and the contact, the follow-up and the matching homes are drafted. Nothing is saved until you reply YES.', '/coagent/'],
+			['Pipelines', 'Six boards. Every enquiry is acknowledged before you pick up the phone, and the first week of follow-up is planned as tasks.', '/pipelines/'],
+			['Instant Listing', 'A few photos and a voice note become a complete, ready-to-publish listing in about a minute. Free.', '/instant-listing/'],
+			['Website Builder', "Your agency website in a few clicks, filled with the network's stock alongside your own. Build and preview free; pay when you publish.", '/website-builder/'],
+			['Instant Content', 'A blog post and an area guide every week, written from your own listings and notary-verified prices.', '/instant-content/'],
+			['AI Property Match', 'Describe what a client wants in plain words and get matching homes back from across the network. Free while in beta.', '/ai-property-search/'],
+		],
+		more: 'Instant Renovation, Instant Video and Instant Images are on the way.', moreLink: 'See what is coming', moreHref: '/features/', live: 'Live',
+	},
+	es: {
+		h2: 'Herramientas que activas',
+		lead: 'Cada una tiene su propia página con su precio. No se cobra nada hasta que la usas.',
+		tiles: [
+			['CoAgent', 'Tu CRM en WhatsApp. Envía una nota de voz y quedan redactados el contacto, el seguimiento y los inmuebles que encajan. No se guarda nada hasta que respondes SÍ.', '/es/coagent/'],
+			['Pipelines', 'Seis tableros. Cada consulta recibe respuesta antes de que cojas el teléfono, y la primera semana de seguimiento queda planificada como tareas.', '/es/pipelines/'],
+			['Listado Instantáneo', 'Unas fotos y una nota de voz se convierten en un anuncio completo y listo para publicar en un minuto. Gratis.', '/es/listado-instantaneo/'],
+			['Constructor de webs', 'La web de tu agencia en unos clics, con el stock de la red junto al tuyo. Construir y previsualizar es gratis; pagas al publicar.', '/es/constructor-de-webs/'],
+			['Contenido Instantáneo', 'Un artículo de blog y una guía de zona cada semana, escritos a partir de tus inmuebles y de precios notariales.', '/es/contenido-instantaneo/'],
+			['AI Property Match', 'Describe lo que busca un cliente con tus palabras y recibe los inmuebles que encajan de toda la red. Gratis mientras está en beta.', '/es/busqueda-ia/'],
+		],
+		more: 'Instant Renovation, Instant Video e Instant Images están en camino.', moreLink: 'Ver lo que viene', moreHref: '/es/funciones/', live: 'Disponible',
+	},
+}[lang];
+---
+
+<section class="ht" aria-label={T.h2}>
+	<h2>{T.h2}</h2>
+	<p class="htLead">{T.lead}</p>
+	<div class="htGrid">
+		{T.tiles.map(([name, desc, href]) => (
+			<a class="htTile" href={href} data-track="home-tool-click" data-track-label={name}>
+				<span class="htTop"><strong>{name}</strong><span class="htTag">{T.live}</span></span>
+				<span class="htDesc">{desc}</span>
+				<span class="htMore">&rarr;</span>
+			</a>
+		))}
+	</div>
+	<p class="htFoot">{T.more} <a href={T.moreHref}>{T.moreLink} &rarr;</a></p>
+</section>
+
+<style>
+	.ht { max-width: 1120px; margin: 36px auto 0; padding: 0 20px; }
+	.ht h2 { margin: 0 0 6px; letter-spacing: -0.02em; }
+	.htLead { margin: 0 0 14px; color: rgba(16, 24, 40, 0.65); font-size: 14.5px; }
+	.htGrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+	.htTile { position: relative; display: flex; flex-direction: column; gap: 8px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 20px 20px; text-decoration: none; color: inherit; min-width: 0; }
+	.htTile:hover { border-color: rgba(0, 174, 154, 0.6); box-shadow: 0 14px 30px -22px rgba(16, 24, 40, 0.5); }
+	.htTop { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+	.htTop strong { font-size: 17px; letter-spacing: -0.01em; color: #101828; }
+	.htTag { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #075e53; background: rgba(0, 174, 154, 0.14); border-radius: 999px; padding: 3px 9px; flex: none; }
+	.htDesc { font-size: 14.5px; line-height: 1.55; color: rgba(16, 24, 40, 0.7); }
+	.htMore { margin-top: auto; font-weight: 800; color: #075e53; }
+	.htFoot { margin: 12px 2px 0; font-size: 14px; color: rgba(16, 24, 40, 0.62); }
+	.htFoot a { color: #075e53; font-weight: 700; text-decoration: none; }
+	.htFoot a:hover { text-decoration: underline; }
+</style>

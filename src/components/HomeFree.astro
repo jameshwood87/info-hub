@@ -1,0 +1,70 @@
+---
+// Why it is free: the reason, the exact free list, and the paid part in one sentence. Every item is in the
+// free-vs-paid ledger: MLS with unlimited listings, CRM core (contacts, staff, calendar, documents), the
+// Lead, Seller and Property pipelines, the MicroSite, Instant Listing and Instant Brochure (free since
+// 16-09-26); Buyer pipeline 1 credit per lead after the first 5; Rentals, Website Builder and Instant
+// Content priced in credits on /pricing/.
+export interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+const es = lang === 'es';
+const T = {
+	en: {
+		h2: 'Why it is free',
+		lead: 'Free, because we charge for the tools that move a deal, not for visibility.',
+		freeTitle: 'Free, with no limit',
+		free: ['The shared MLS, with unlimited listings', 'The CRM core: contacts, staff accounts, calendar, documents', 'The Lead, Seller and Property pipelines', 'Your branded MicroSite, created at signup', 'Instant Listing and Instant Brochure'],
+		paidTitle: 'Paid, in one sentence',
+		paid: 'Moving a qualified buyer into the Buyer pipeline costs 1 credit after your first 5, and the optional modules (Rentals, Website Builder, Instant Content) are priced in credits on one page. Nothing switches itself on.',
+		pricing: 'See pricing', pricingHref: '/pricing/', all: "Everything that's free", allHref: '/free/',
+	},
+	es: {
+		h2: 'Por qué es gratis',
+		lead: 'Gratis, porque cobramos por las herramientas que cierran operaciones, no por la visibilidad.',
+		freeTitle: 'Gratis, sin límite',
+		free: ['El MLS compartido, con inmuebles ilimitados', 'El núcleo del CRM: contactos, cuentas de equipo, calendario, documentos', 'Los pipelines de Leads, Vendedores y Propiedades', 'Tu MicroSite con tu marca, creado al registrarte', 'Listado Instantáneo y Folleto Instantáneo'],
+		paidTitle: 'De pago, en una frase',
+		paid: 'Mover un comprador cualificado al pipeline de Compradores cuesta 1 crédito a partir del sexto, y los módulos opcionales (Alquileres, Constructor de webs, Contenido Instantáneo) tienen su precio en créditos en una sola página. Nada se activa solo.',
+		pricing: 'Ver precios', pricingHref: '/es/precios/', all: 'Todo lo que es gratis', allHref: '/es/gratis/',
+	},
+}[lang];
+---
+
+<section class="hf" aria-label={T.h2}>
+	<h2>{T.h2}</h2>
+	<p class="hfLead">{T.lead}</p>
+	<div class="hfGrid">
+		<div class="hfBox">
+			<div class="hfHead"><h3>{T.freeTitle}</h3><span class="hfBadge">{es ? 'Gratis' : 'Free'}</span></div>
+			<ul>{T.free.map((f) => <li>{f}</li>)}</ul>
+		</div>
+		<div class="hfBox hfPaid">
+			<div class="hfHead"><h3>{T.paidTitle}</h3></div>
+			<p>{T.paid}</p>
+			<div class="hfLinks">
+				<a class="hfBtn" href={T.pricingHref} data-track="home-pricing-click">{T.pricing} &rarr;</a>
+				<a class="hfGhost" href={T.allHref} data-track="home-free-click">{T.all} &rarr;</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hf { max-width: 1120px; margin: 36px auto 0; padding: 0 20px; }
+	.hf h2 { margin: 0 0 6px; letter-spacing: -0.02em; }
+	.hfLead { margin: 0 0 14px; color: rgba(16, 24, 40, 0.72); font-size: 16px; line-height: 1.5; max-width: 720px; }
+	.hfGrid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+	.hfBox { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 20px; }
+	.hfPaid { background: rgba(0, 174, 154, 0.05); border-color: rgba(0, 174, 154, 0.28); }
+	.hfHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+	.hfHead h3 { margin: 0; font-size: 19px; letter-spacing: -0.01em; }
+	.hfBadge { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #075e53; background: rgba(0, 174, 154, 0.14); border-radius: 999px; padding: 4px 10px; }
+	.hfBox ul { list-style: none; margin: 0; padding: 0; }
+	.hfBox li { position: relative; padding: 6px 0 6px 26px; color: rgba(16, 24, 40, 0.78); line-height: 1.5; font-size: 15px; }
+	.hfBox li::before { content: '\2713'; position: absolute; left: 0; color: #0a6d61; font-weight: 900; }
+	.hfBox p { margin: 0; color: rgba(16, 24, 40, 0.78); line-height: 1.6; font-size: 15px; }
+	.hfLinks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+	.hfBtn { background: #00ae9a; color: #00100e; border-radius: 999px; padding: 11px 18px; font-weight: 800; text-decoration: none; font-size: 14.5px; }
+	.hfGhost { border: 1px solid rgba(16, 24, 40, 0.18); border-radius: 999px; padding: 11px 18px; font-weight: 800; text-decoration: none; font-size: 14.5px; color: rgba(16, 24, 40, 0.85); }
+</style>

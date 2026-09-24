@@ -1,0 +1,146 @@
+---
+// Homepage hero: one message, one button, proof under the button, and a CSS-only picture of the idea
+// (one listing fanning out to the network). Persona-aware so /?persona=developers|services|public keep
+// their own headline and action; the switch line under the hero replaces the old tabs and panels.
+// Counts come from the live portal stats (statPlus strings); the Google figure from src/data/reviews.json.
+import reviews from '../data/reviews.json';
+
+export interface Props {
+	lang?: 'en' | 'es';
+	persona?: 'agents' | 'developers' | 'services' | 'public';
+	agents: string;
+	agencies: string;
+	listings: string;
+}
+const { lang = 'en', persona = 'agents', agents, agencies, listings } = Astro.props;
+const es = lang === 'es';
+const G = reviews.sources.google;
+const gRating = es ? G.rating.toFixed(1).replace('.', ',') : G.rating.toFixed(1);
+const signup = `https://agents.propertylist.es/new_agency/new?locale=${es ? 'es' : 'en'}`;
+
+const COPY = {
+	agents: {
+		en: { eyebrow: 'Free MLS, CRM and property portal for estate agents in Spain', h1: `List once. Let ${agents} agents sell it.`, sub: 'Your listing goes to every agent on the network and onto the public portal the day you add it. No listing fees, no subscription.', cta: 'Create your free account', href: signup, micro: 'No card. About two minutes.' },
+		es: { eyebrow: 'MLS, CRM y portal inmobiliario gratis para agentes en España', h1: `Publica una vez. Deja que ${agents} agentes lo vendan.`, sub: 'Tu inmueble llega a todos los agentes de la red y al portal público el mismo día que lo publicas. Sin cuotas por anuncio, sin suscripción.', cta: 'Crea tu cuenta gratis', href: signup, micro: 'Sin tarjeta. Unos dos minutos.' },
+	},
+	developers: {
+		en: { eyebrow: 'For property developers', h1: `Put your whole development in front of ${agents} agents.`, sub: 'List it once, free. A real sales force sells your units, and you pay on completion.', cta: 'Create your free account', href: 'https://developers.propertylist.es/signup/new', micro: 'No listing cost. Commission on completion.' },
+		es: { eyebrow: 'Para promotores', h1: `Pon toda tu promoción delante de ${agents} agentes.`, sub: 'Publícala una vez, gratis. Una red de agentes vende tus unidades y pagas al cierre.', cta: 'Crea tu cuenta gratis', href: 'https://developers.propertylist.es/signup/new', micro: 'Sin coste por publicar. Comisión al cierre.' },
+	},
+	services: {
+		en: { eyebrow: 'For property services', h1: 'Be there when the deal needs you.', sub: 'Lawyers, movers, photographers and more, shown to agents and buyers inside the transaction. Pre-register now; pricing is published at launch.', cta: 'Register your interest', href: '/property-services/', micro: 'Not launched yet. No charge to register.' },
+		es: { eyebrow: 'Para servicios inmobiliarios', h1: 'Estar ahí cuando la operación te necesita.', sub: 'Abogados, mudanzas, fotógrafos y más, visibles para agentes y compradores dentro de la operación. Regístrate ahora; los precios se publican en el lanzamiento.', cta: 'Registra tu interés', href: '/es/servicios-inmobiliarios/', micro: 'Aún no lanzado. Registrarse no cuesta nada.' },
+	},
+	public: {
+		en: { eyebrow: 'For buyers and renters', h1: 'The whole market, every price visible.', sub: 'Homes from real local agencies only, listed once, with no duplicates and no sign-up wall.', cta: 'Browse the property portal', href: 'https://propertylist.es/en', micro: 'No account needed.' },
+		es: { eyebrow: 'Para compradores e inquilinos', h1: 'Todo el mercado, con todos los precios a la vista.', sub: 'Viviendas solo de agencias locales reales, publicadas una vez, sin duplicados y sin registro para buscar.', cta: 'Buscar propiedades', href: 'https://propertylist.es', micro: 'Sin cuenta.' },
+	},
+}[persona][lang];
+
+const L = {
+	en: { agencies: 'agencies', listings: 'live listings', google: `on Google, ${G.count} reviews`, reviewsHref: '/reviews/', switchLabel: persona === 'agents' ? 'Not an estate agent?' : 'Looking for something else?', tag: 'Your listing', label: `${agents} agents can sell it`, personas: { agents: 'Estate agents', developers: 'Developers', services: 'Property services', public: 'Buyers and renters' } },
+	es: { agencies: 'agencias', listings: 'inmuebles activos', google: `en Google, ${G.count} reseñas`, reviewsHref: '/es/opiniones/', switchLabel: persona === 'agents' ? '¿No eres agente inmobiliario?' : '¿Buscas otra cosa?', tag: 'Tu inmueble', label: `${agents} agentes pueden venderlo`, personas: { agents: 'Agentes inmobiliarios', developers: 'Promotores', services: 'Servicios inmobiliarios', public: 'Compradores e inquilinos' } },
+}[lang];
+const others = (['agents', 'developers', 'services', 'public'] as const).filter((p) => p !== persona);
+const personaHref = (p: string) => (es ? '/es/' : '/') + (p === 'agents' ? '' : `?persona=${p}`);
+const external = /^https?:/.test(COPY.href);
+
+// network picture: 12 agent chips on a 520 x 300 canvas, lines from the listing card to each chip
+const CHIPS = [0, 1, 2, 3].flatMap((r) => [0, 1, 2].map((c) => ({ x: 300 + c * 100, y: 45 + r * 70, i: r * 3 + c })));
+const path = (x: number, y: number) => `M162 150 C 235 150, 235 ${y}, ${x - 24} ${y}`;
+---
+
+<section class="hh" data-persona={persona}>
+	<div class="hhInner">
+		<div class="hhCopy">
+			<div class="hhEyebrow">{COPY.eyebrow}</div>
+			<h1>{COPY.h1}</h1>
+			<p class="hhSub">{COPY.sub}</p>
+			<div class="hhCtaRow">
+				<a class="hhCta" href={COPY.href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined} data-track="home-hero-cta" data-track-label={persona}>{COPY.cta}</a>
+				<span class="hhMicro">{COPY.micro}</span>
+			</div>
+			<ul class="hhProof" aria-label={es ? 'Cifras' : 'Figures'}>
+				<li><strong>{agencies}</strong> {L.agencies}</li>
+				<li><strong>{listings}</strong> {L.listings}</li>
+				<li><a href={L.reviewsHref} data-track="home-hero-reviews"><strong>{gRating}</strong> {L.google}</a></li>
+			</ul>
+		</div>
+		<div class="hhVisual" aria-hidden="true">
+			<div class="net">
+				<svg class="netLines" viewBox="0 0 520 300" preserveAspectRatio="none">
+					{CHIPS.map((c) => <path d={path(c.x, c.y)} pathLength="100" style={`--i:${c.i}`} />)}
+				</svg>
+				<div class="nCard">
+					<div class="nPhoto"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v9h13v-9" /><path d="M10 19v-5h4v5" /></svg></div>
+					<div class="nLine nLine1"></div>
+					<div class="nLine nLine2"></div>
+					<div class="nTag">{L.tag}</div>
+				</div>
+				{CHIPS.map((c) => (
+					<div class="nAgent" style={`left:${(c.x / 520) * 100}%;top:${(c.y / 300) * 100}%;--i:${c.i}`}>
+						<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M5 19.5c1.2-3.6 3.6-5.4 7-5.4s5.8 1.8 7 5.4" /></svg>
+					</div>
+				))}
+				<div class="nLabel">{L.label}</div>
+			</div>
+		</div>
+	</div>
+	<p class="hhSwitch">
+		{L.switchLabel}
+		{others.map((p, i) => (
+			<Fragment>{i > 0 ? <span class="hhDot">·</span> : null}<a href={personaHref(p)} data-track="home-persona-switch" data-track-label={p}>{L.personas[p]}</a></Fragment>
+		))}
+	</p>
+</section>
+
+<style>
+	.hh { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+	.hhInner { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr); gap: 32px 44px; align-items: center; border-radius: 22px; padding: 44px 40px 40px; border: 1px solid rgba(16, 24, 40, 0.08); background: radial-gradient(1200px 600px at 20% -10%, rgba(0, 174, 154, 0.2), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(0, 174, 154, 0.12), rgba(255, 255, 255, 0)), #fff; }
+	.hhEyebrow { display: inline-block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #075e53; margin-bottom: 14px; }
+	h1 { margin: 0 0 14px; font-size: clamp(34px, 3.6vw, 44px); line-height: 1.08; letter-spacing: -0.03em; color: #101828; text-wrap: balance; }
+	.hhSub { margin: 0 0 22px; font-size: 19px; line-height: 1.5; color: rgba(16, 24, 40, 0.74); max-width: 560px; }
+	.hhCtaRow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+	.hhCta { display: inline-block; background: #00ae9a; color: #00100e; border-radius: 999px; padding: 15px 26px; font-weight: 800; text-decoration: none; font-size: 17px; line-height: 1.1; box-shadow: 0 10px 24px -14px rgba(0, 174, 154, 0.9); }
+	.hhCta:hover { background: #0f8f8a; color: #fff; }
+	.hhMicro { font-size: 14px; font-weight: 600; color: rgba(16, 24, 40, 0.6); }
+	.hhProof { list-style: none; margin: 26px 0 0; padding: 18px 0 0; border-top: 1px solid rgba(16, 24, 40, 0.1); display: flex; flex-wrap: wrap; gap: 8px 26px; font-size: 14.5px; color: rgba(16, 24, 40, 0.7); }
+	.hhProof strong { color: #101828; font-weight: 800; font-variant-numeric: tabular-nums; }
+	.hhProof a { color: inherit; text-decoration: none; }
+	.hhProof a:hover { text-decoration: underline; }
+	.hhSwitch { margin: 14px 4px 0; font-size: 14px; color: rgba(16, 24, 40, 0.6); }
+	.hhSwitch a { color: #075e53; font-weight: 700; text-decoration: none; margin-left: 6px; }
+	.hhSwitch a:hover { text-decoration: underline; }
+	.hhDot { margin-left: 6px; color: rgba(16, 24, 40, 0.35); }
+
+	/* the picture: one card, twelve agents, lines that draw in and chips that light up, on a loop */
+	.hhVisual { min-width: 0; }
+	.net { position: relative; width: 100%; max-width: 520px; aspect-ratio: 520 / 300; margin: 0 auto; }
+	.netLines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+	.netLines path { fill: none; stroke: #00ae9a; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0.55; animation: draw 7s ease-in-out infinite; animation-delay: calc(var(--i) * 0.28s); }
+	.nCard { position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 31%; background: #fff; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 14px; padding: 8px; box-shadow: 0 18px 40px -22px rgba(16, 24, 40, 0.5); }
+	.nPhoto { height: 62px; border-radius: 10px; background: linear-gradient(135deg, #0f8f8a, #00ae9a 60%, #7deede); display: grid; place-items: center; }
+	.nLine { height: 7px; border-radius: 99px; background: rgba(16, 24, 40, 0.14); margin: 9px 0 0; }
+	.nLine1 { width: 78%; } .nLine2 { width: 52%; margin-top: 6px; }
+	.nTag { display: inline-block; margin-top: 9px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #075e53; background: rgba(0, 174, 154, 0.14); border-radius: 999px; padding: 3px 8px; }
+	.nAgent { position: absolute; width: 44px; height: 44px; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; border: 2px solid rgba(16, 24, 40, 0.12); color: rgba(16, 24, 40, 0.45); display: grid; place-items: center; animation: lit 7s ease-in-out infinite; animation-delay: calc(var(--i) * 0.28s + 0.35s); }
+	.nLabel { position: absolute; left: 50%; bottom: -30px; transform: translateX(-50%); white-space: nowrap; font-size: 13.5px; font-weight: 800; color: #075e53; opacity: 0; animation: label 7s ease-in-out infinite; }
+	@keyframes draw { 0% { stroke-dashoffset: 100; } 9% { stroke-dashoffset: 0; } 80% { stroke-dashoffset: 0; opacity: 0.55; } 92%, 100% { stroke-dashoffset: 100; opacity: 0; } }
+	@keyframes lit { 0%, 3% { background: #fff; border-color: rgba(16, 24, 40, 0.12); color: rgba(16, 24, 40, 0.45); transform: translate(-50%, -50%) scale(1); } 9% { transform: translate(-50%, -50%) scale(1.12); } 12%, 80% { background: #00ae9a; border-color: #00ae9a; color: #00100e; transform: translate(-50%, -50%) scale(1); } 92%, 100% { background: #fff; border-color: rgba(16, 24, 40, 0.12); color: rgba(16, 24, 40, 0.45); } }
+	@keyframes label { 0%, 52% { opacity: 0; transform: translate(-50%, 6px); } 60%, 84% { opacity: 1; transform: translate(-50%, 0); } 92%, 100% { opacity: 0; } }
+	@media (prefers-reduced-motion: reduce) {
+		.netLines path, .nAgent, .nLabel { animation: none; }
+		.netLines path { stroke-dashoffset: 0; }
+		.nAgent { background: #00ae9a; border-color: #00ae9a; color: #00100e; }
+		.nLabel { opacity: 1; }
+	}
+	@media (max-width: 860px) {
+		.hhInner { grid-template-columns: 1fr; padding: 30px 22px 44px; gap: 26px; }
+		.hhSub { font-size: 17px; }
+		.hhCta { padding: 16px 24px; width: 100%; text-align: center; }
+		.hhVisual { padding-bottom: 26px; }
+		.nAgent { width: 36px; height: 36px; }
+		.nPhoto { height: 46px; }
+		.nLabel { bottom: -26px; font-size: 12.5px; }
+	}
+</style>
