@@ -204,9 +204,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			'/de/gebiete/los-monteros/',
 			'/de/gebiete/puerto-banus/',
 		]);
+		// The WordPress site's investor pages (invest in PropertyList, revenue and profit
+		// projections), deliberately not carried over to this site. They still drew views
+		// and answered 404; 410 tells crawlers they are gone for good (James, 25-09-26).
+		const LEGACY_WP_GONE = new Set([
+			'/invest-in-propertylist/',
+			'/en_gb/invest-in-propertylist/',
+			'/en_gb/revenue-profit-projections/',
+		]);
 		{
 			const p = pathname.endsWith('/') ? pathname : pathname + '/';
-			if (DE_PILOT_GONE.has(p)) {
+			if (DE_PILOT_GONE.has(p) || LEGACY_WP_GONE.has(p)) {
 				return new Response('Gone', { status: 410, headers: { 'content-type': 'text/plain; charset=utf-8' } });
 			}
 		}
@@ -228,6 +236,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		// Legacy WordPress video page -> the real video guides (it still said COMING SOON)
 		if (pathname === '/propertylist-video-tutorials/' || pathname === '/propertylist-video-tutorials') {
 			return new Response(null, { status: 301, headers: { Location: `/video-guides/${url.search}` } });
+		}
+
+		// WordPress pages among the 40 most viewed before the move (GA4, Aug-2024 to Jan-2026)
+		// that answered 404 after it, each sent to the page that now does the same job:
+		// the fixed short-let law page, the feature board, the WhatsApp groups that replaced
+		// the forum, and the sitemap (James, 25-09-26). Exact matches only.
+		const legacyWpRedirects: Array<{ from: string; to: string }> = [
+			{ from: '/docs/laws-procedures/renting-a-property-9964/short-term-holiday/', to: '/docs/laws-procedures/renting-a-property/short-term-holiday/' },
+			{ from: '/new-features/', to: '/request-new-features/' },
+			{ from: '/docs/propertylist-mls-user-manual/new-features/', to: '/request-new-features/' },
+			{ from: '/forums/', to: '/whatsapp-groups/' },
+			{ from: '/forums/feed/', to: '/whatsapp-groups/' },
+			{ from: '/sitemap/', to: '/sitemap.xml' },
+		];
+		for (const r of legacyWpRedirects) {
+			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
+				return new Response(null, { status: 301, headers: { Location: `${r.to}${url.search}` } });
+			}
 		}
 
 		// Removed page /mls/ -> moved to the agents app (property sharing)
