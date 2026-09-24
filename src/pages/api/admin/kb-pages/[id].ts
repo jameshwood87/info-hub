@@ -13,8 +13,9 @@ import {
 	mapDocsSpanishToEnglishPath,
 	type KbPageWrite,
 } from '../../../../lib/directus';
+import { checkBlogPublish, lintBlockedResponse, publishTwin, recordOverride } from '../../../../lib/blogPublishGate';
 
-const readEnv = (k: string) => (process.env[k] as string | undefined) || (import.meta as any).env?.[k] || undefined;
+const readEnv =(k: string) => (process.env[k] as string | undefined) || (import.meta as any).env?.[k] || undefined;
 
 const mapNeighbourhoodEnglishToSpanishPath = (p: string) => {
 	const path = String(p || '');
@@ -131,8 +132,20 @@ export const PATCH: APIRoute = async ({ request, params, clientAddress }) => {
 		});
 		assertLanguageMatchesPath(scope, sanitised.language, sanitised.path);
 
+		// Blog posts: lint when a save publishes the post (24-09-26). See lib/blogPublishGate.
+		const gateIp = (request.headers.get('x-forwarded-for') || '').split(',')[0]?.trim() || clientAddress || '';
+		let gate: any = null;
+		if (String(sanitised.status || '') === 'published' && String(existing.status || '') !== 'published') {
+			gate = await checkBlogPublish({ path: sanitised.path, title: sanitised.title, body: sanitised.body, language: sanitised.language as any });
+			if (gate.applies && !gate.ok && body?.force !== true) return lintBlockedResponse([{ id, path: sanitised.path, errors: gate.errors }]);
+		}
+
 		await snapshotVersion(existing, session.userId).catch(() => undefined);
 		const updated = await adminUpdateKbPage(id, sanitised);
+		if (gate?.applies) {
+			if (!gate.ok) await recordOverride({ userId: session.userId, ip: gateIp, path: updated.path, kbPageId: String(updated.id), errors: gate.errors, via: 'admin editor save' });
+			await publishTwin(gate.twin, session.userId, gateIp);
+		}
 		if (prevPath && updated.path && prevPath !== updated.path) {
 			await addPrefixRedirect(prevPath, updated.path).catch(() => undefined);
 		}

@@ -9,10 +9,20 @@
 
 const stripHtml = (h) => String(h || '').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 
-// text that must never reach a reader
+// Quoted examples are not placeholders. The pool post (kb 1929, 20-09-26) warned that you
+// cannot claim "a pool adds X percent" without comparables, the lint blocked it, and it
+// was published through the admin button with no record. The placeholder rules below now
+// skip text inside quotation marks, and match only a capital X, Y or Z: case-insensitive
+// matching also caught Spanish "y" (and) before a euro amount. A straight quote opens only
+// after a non-letter and closes only before one, so an inch mark (a 55" TV) or an apostrophe
+// cannot hide the unquoted text that follows it.
+const QUOTED = /(?<![\p{L}\p{N}])"[^"\n]{1,200}"(?![\p{L}\p{N}])|“[^”\n]{1,200}”|«[^»\n]{1,200}»|‘(?:[^’\n]|’(?=[\p{L}\p{N}])){1,200}’(?![\p{L}\p{N}])/gu;
+const unquote = (s) => String(s || '').replace(QUOTED, ' ');
+
+// text that must never reach a reader ({ unquoted: true } = checked with quoted spans removed)
 const HARD_PATTERNS = [
-  [/\b[XYZ] (month|months|percent|per cent|year|years|days?|weeks?|euros?|€)\b/i, 'unfilled template placeholder (X month / Y percent)'],
-  [/\bexceeds [XYZ]\b/i, 'unfilled template placeholder'],
+  [/\b[XYZ] (?:[Mm]onths?|[Pp]ercent|[Pp]er cent|[Yy]ears?|[Dd]ays?|[Ww]eeks?|[Ee]uros?)\b|\b[XYZ] €(?!\s?\d)/, 'unfilled template placeholder (X month / Y percent)', { unquoted: true }],
+  [/\b[Ee]xceeds [XYZ]\b/, 'unfilled template placeholder', { unquoted: true }],
   [/\[(TODO|TBD|INSERT|CITATION NEEDED|PLACEHOLDER)[^\]]*\]/i, 'editorial placeholder left in text'],
   // case-sensitive on purpose: 'todo' is an ordinary Spanish word, and the
   // insensitive version blocked any Spanish body containing it (26-08-26)
@@ -35,12 +45,24 @@ const PRIMARY_HOST = /(boe\.es|juntadeandalucia\.es|ine\.es|eur-lex\.europa\.eu|
 // sensational framing that needs a named source in the body
 const SENSATIONAL = /\b(breaking|urgent|shock|bombshell|will (lose|ban|end|abolish)|to be banned|is banned|now illegal)\b/i;
 
+// PropertyList wording the claims ledgers ban (scripts/lib/claims-ledger.mjs). Warnings,
+// not errors: the approval email shows them and James decides.
+const PL_WORDING = [
+  [/\bfree forever\b|\bgratis para siempre\b|\bpara siempre gratis\b/i, 'says "free forever", which the ledger bans: say "free"'],
+  [/\bverified (agents?|agenc(?:y|ies)|listings?|properties)\b|\bagentes verificados\b|\bagencias verificadas\b|\banuncios verificados\b|\binmuebles verificados\b/i, 'says "verified" about agents or listings: the ledger wording is "registered agents"'],
+  [/\bunlimited (listings?|users?|team|seats?|staff|agents?|properties)\b|\b(anuncios|usuarios|agentes|inmuebles) ilimitad[oa]s\b/i, 'says "unlimited" listings or users: no ledger entry confirms it'],
+  [/\b1 credit\s*(=|equals|is)\s*(€\s?1\b|1\s?(€|euros?)\b)|\b1 cr[eé]dito\s*(=|equivale a|es)\s*(€\s?1\b|1\s?(€|euros?)\b)/i, 'says "1 credit = 1 euro": one credit costs about 1 euro, EUR 0.80 to 1 plus IVA by pack'],
+  [/\bSpain'?s first\b|\bthe only (platform|MLS|portal)\b|\bel (único|primer) (portal|MLS)\b|\bla única plataforma\b/i, 'superlative about PropertyList with no proof on file'],
+  [/\b(PropertyList|our|nuestr[oa]s?)\b[^.]{0,60}\b(valuations?|tasaci[oó]n(?:es)?)\b/i, 'calls a PropertyList product a valuation or tasación, banned in Spain-facing copy'],
+];
+
 export function lintBlogPost({ title = '', body = '', bodyEs = '' } = {}) {
   const errors = [], warnings = [];
   const text = stripHtml(body), textEs = stripHtml(bodyEs), t = `${title} ${text}`;
 
-  for (const [re, why] of HARD_PATTERNS) {
-    for (const [label, s] of [['EN', `${title}\n${text}`], ['ES', textEs]]) {
+  for (const [re, why, opts] of HARD_PATTERNS) {
+    for (const [label, raw] of [['EN', `${title}\n${text}`], ['ES', textEs]]) {
+      const s = opts && opts.unquoted ? unquote(raw) : raw;
       if (s && re.test(s)) errors.push(`${label}: ${why}: "${(s.match(re) || [''])[0]}"`);
     }
   }
@@ -66,6 +88,10 @@ export function lintBlogPost({ title = '', body = '', bodyEs = '' } = {}) {
   if (triads >= 3) warnings.push(`${triads} "three X" triad constructions: reads as machine-written`);
   if (/\b(in conclusion|it is important to note|let'?s dive in|in today'?s fast-paced|navigate the complexities|unlock|game-changer)\b/i.test(text)) warnings.push('stock AI phrasing found (in conclusion / it is important to note / dive in / navigate the complexities)');
   if (/\bsome jurisdictions\b/i.test(text)) warnings.push('"some jurisdictions" in a single-jurisdiction article');
+  for (const [re, why] of PL_WORDING) {
+    const m = `${title} ${text} ${textEs}`.match(re);
+    if (m) warnings.push(`${why}: "${m[0]}"`);
+  }
   if (text.length < 1500) warnings.push('very short body');
 
   return { ok: errors.length === 0, errors, warnings, regulatory };

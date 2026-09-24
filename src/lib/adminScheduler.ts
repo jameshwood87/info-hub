@@ -1,6 +1,7 @@
 import { adminGetKbPageById, adminUpdateKbPage, listKbPagesByPrefix } from './directus';
 import { getKbMetaSnapshot, listDueScheduled, setKbMeta } from './adminMeta';
 import { writeAudit } from './adminContent';
+import { checkBlogPublish, isBlogPath, publishTwin } from './blogPublishGate';
 import { refreshKbStatsForKeyWithSnapshot } from '../pages/api/update-area-stats';
 
 let lastRunMs = 0;
@@ -23,7 +24,33 @@ export const runPublishScheduler = async (opts?: { minIntervalMs?: number }) => 
 					continue;
 				}
 				if (String(page.status || '') !== 'published') {
+					// Scheduled blog posts pass the same lint as every other publish (24-09-26).
+					// Nobody is at the keyboard to say "publish anyway", so a blocked post stays a
+					// draft, the schedule is cleared and the reason goes to the audit log. If the
+					// check itself throws, a blog post is held back rather than published unchecked,
+					// and is tried again on the next run.
+					let gate: Awaited<ReturnType<typeof checkBlogPublish>> | null = null;
+					try {
+						gate = await checkBlogPublish(page as any);
+					} catch (err) {
+						if (isBlogPath(String(page.path || ''))) {
+							console.error('[scheduler] blog lint failed, post held:', page.path, err);
+							continue;
+						}
+					}
+					if (gate && gate.applies && !gate.ok) {
+						await writeAudit({
+							action: 'kb_pages.scheduled_publish_blocked',
+							userId: 'scheduler',
+							kbPageId: item.id,
+							path: page.path,
+							details: { scheduledAt: item.scheduledAt, errors: gate.errors },
+						}).catch(() => undefined);
+						await setKbMeta(item.id, { scheduledAt: null });
+						continue;
+					}
 					await adminUpdateKbPage(item.id, { status: 'published' as any });
+					if (gate && gate.applies) await publishTwin(gate.twin, 'scheduler').catch(() => null);
 					await writeAudit({
 						action: 'kb_pages.scheduled_publish',
 						userId: 'scheduler',

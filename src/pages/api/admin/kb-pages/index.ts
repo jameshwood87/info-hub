@@ -23,6 +23,7 @@ import {
 	type KbPageWrite,
 } from '../../../../lib/directus';
 import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../../../lib/deepl';
+import { checkBlogPublish, lintBlockedResponse, publishTwin, recordOverride } from '../../../../lib/blogPublishGate';
 
 const json = (status: number, body: any) =>
 	new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
@@ -522,7 +523,18 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 				existingStatus: existing.status,
 				existingLanguage: existing.language,
 			});
+		// Blog posts created straight as published go through the same lint gate (24-09-26).
+		const gateIp = (request.headers.get('x-forwarded-for') || '').split(',')[0]?.trim() || clientAddress || '';
+		let gate: any = null;
+		if (scope === 'blog' && String(sanitised.status || '') === 'published') {
+			gate = await checkBlogPublish({ path: sanitised.path, title: sanitised.title, body: sanitised.body, language: sanitised.language as any });
+			if (gate.applies && !gate.ok && body?.force !== true) return lintBlockedResponse([{ id: '', path: sanitised.path, errors: gate.errors }]);
+		}
 		const created = await adminCreateKbPage(sanitised);
+		if (gate?.applies) {
+			if (!gate.ok) await recordOverride({ userId: session.userId, ip: gateIp, path: created.path, kbPageId: String(created.id), errors: gate.errors, via: 'admin create' });
+			await publishTwin(gate.twin, session.userId, gateIp);
+		}
 
 		let translation: null | { ok: boolean; id?: string; path?: string; language?: string; error?: string } = null;
 		const autoTranslateEnabled = String(readEnv('INFO_HUB_AUTO_TRANSLATE_ES') || '').trim() !== '0';

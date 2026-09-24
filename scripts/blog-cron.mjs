@@ -126,12 +126,22 @@ function nextCandidate() {
   return null;
 }
 
-const firstCandidate = nextCandidate();
-if (!firstCandidate) { console.log('blog-cron: all topics covered for now - exiting.'); process.exit(0); }
-console.log(`blog-cron [${new Date().toISOString()}] topic:`, firstCandidate.topic);
-if (DRY) process.exit(0);
+// Review mode (24-09-26): run the checks and build the approval email for an existing
+// draft or post without generating anything. With --preview-email the email is written
+// to that file and not sent.
+//   node scripts/blog-cron.mjs --review=<enId> --preview-email=/tmp/review.html
+const argVal = (name) => ((process.argv.find((a) => a.startsWith(`--${name}=`)) || '').slice(name.length + 3)).trim();
+const REVIEW_ID = argVal('review');
+const PREVIEW_PATH = argVal('preview-email');
 
-const before = await (async () => {
+if (!REVIEW_ID) {
+  const firstCandidate = nextCandidate();
+  if (!firstCandidate) { console.log('blog-cron: all topics covered for now - exiting.'); process.exit(0); }
+  console.log(`blog-cron [${new Date().toISOString()}] topic:`, firstCandidate.topic);
+  if (DRY) process.exit(0);
+}
+
+const before = REVIEW_ID ? [] : await (async () => {
   const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=/blog/&fields=path&limit=-1`, { headers: { Authorization: `Bearer ${TOKEN}` } });
   return ((await r.json()).data || []).map((x) => String(x.path || ''));
 })();
@@ -144,7 +154,7 @@ const genPath = new URL('./generate-blog-post.mjs', import.meta.url).pathname;
 const failures = [];
 let topic = null;
 
-while (attempted.size < MAX_ATTEMPTS) {
+while (!REVIEW_ID && attempted.size < MAX_ATTEMPTS) {
   const cand = nextCandidate();
   if (!cand) break;
   attempted.add(cand.topic);
@@ -201,7 +211,7 @@ if (failures.length) {
   }
 }
 
-if (!topic) {
+if (!topic && !REVIEW_ID) {
   console.error(`blog-cron: no draft generated this run (${failures.length} topic(s) failed).`);
   process.exit(1);
 }
@@ -214,14 +224,39 @@ const listDrafts = async (prefix) => {
   const r = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_starts_with]=${encodeURIComponent(prefix)}&filter[status][_eq]=draft&fields=id,path,title,body,language,date_created&sort=-date_created&limit=4`, { headers: hdr });
   return ((await r.json()).data || []);
 };
-const fresh = (await listDrafts('/blog/')).filter((p) => !before.includes(p.path));
-if (!fresh.length) { console.log('blog-cron: no new draft found after generation - nothing to review.'); process.exit(0); }
-const en = fresh[0];
-const esList = await listDrafts('/es/blog/');
-const es = esList.find((p) => p.path === `/es${en.path}`) || null;
+let en = null, es = null;
+if (REVIEW_ID) {
+  const r1 = await fetch(`${DIRECTUS_URL}/items/kb_pages/${encodeURIComponent(REVIEW_ID)}?fields=id,path,title,body,language,status,date_created`, { headers: hdr });
+  en = r1.ok ? (await r1.json()).data : null;
+  if (!en) { console.log('blog-cron: --review id not found:', REVIEW_ID); process.exit(1); }
+  const bare = String(en.path || '').replace(/\/+$/, '');
+  const r2 = await fetch(`${DIRECTUS_URL}/items/kb_pages?filter[path][_in]=${encodeURIComponent(`/es${bare},/es${bare}/`)}&filter[language][_eq]=es&fields=id,path,title,body,language,status&limit=1`, { headers: hdr });
+  es = r2.ok ? (((await r2.json()).data || [])[0] || null) : null;
+} else {
+  const fresh = (await listDrafts('/blog/')).filter((p) => !before.includes(p.path));
+  if (!fresh.length) { console.log('blog-cron: no new draft found after generation - nothing to review.'); process.exit(0); }
+  en = fresh[0];
+  const esList = await listDrafts('/es/blog/');
+  es = esList.find((p) => p.path === `/es${en.path}`) || null;
+}
 
 const lint = lintBlogPost({ title: en.title, body: en.body, bodyEs: es ? es.body : '' });
 console.log('lint:', JSON.stringify({ ok: lint.ok, regulatory: lint.regulatory, errors: lint.errors.length, warnings: lint.warnings.length }));
+
+// ---- checks added 24-09-26: live law status, sources, PropertyList claims ----
+// All three are warnings in the approval email; none of them hides the approve button.
+const { legalStatus } = await import('./lib/legal-status.mjs');
+const { sourceCheck } = await import('./lib/source-check.mjs');
+const { claimsCheck } = await import('./lib/claims-check.mjs');
+const { claimsLedgerBlock, liveCounts } = await import('./lib/claims-ledger.mjs');
+const legal = await legalStatus(en.body).catch((e) => [{ ref: 'BOE check', status: 'error', statusText: `could not run: ${String(e && e.message || e).slice(0, 100)}`, partial: [], attention: false }]);
+const sources = await sourceCheck(en.body).catch((e) => ({ links: [], uncited: [], totalLinks: 0, error: String(e && e.message || e).slice(0, 100) }));
+const claims = await claimsCheck({ title: en.title, body: en.body, ledger: claimsLedgerBlock(await liveCounts()) });
+const missingFigures = sources.links.flatMap((l) => l.figures.filter((f) => f.found === false).map((f) => ({ ...f, host: l.host, url: l.url })));
+const badLinks = sources.links.filter((l) => l.result === 'broken' || l.result === 'unreachable');
+const legalAttention = legal.filter((l) => l.attention);
+const contradicts = claims.issues.filter((i) => i.verdict === 'contradicts');
+console.log('checks:', JSON.stringify({ laws: legal.length, lawsToRead: legalAttention.length, links: sources.links.length, badLinks: badLinks.length, figuresNotFound: missingFigures.length, uncited: sources.uncited.length, claims: claims.issues.length, claimsError: claims.error || null }));
 
 // ---- approval email ----
 const envText = fs.readFileSync('/opt/info-hub/.env', 'utf8');
@@ -249,6 +284,44 @@ const li = (arr, color) => arr.map((x) => `<li style="color:${color};margin:4px 
 const badge = lint.regulatory ? '<span style="background:#fef3c7;color:#92400e;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:800">REGULATORY, check the law is current</span>' : '<span style="background:#ecfdf5;color:#065f46;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:800">market / guide</span>';
 const btn = (href, label, bg) => `<a href="${href}" style="display:inline-block;background:${bg};color:#fff;text-decoration:none;font-weight:800;padding:12px 22px;border-radius:999px;margin:6px 8px 6px 0">${label}</a>`;
 
+// ---- the three check sections ----
+const TONE = {
+  red: 'border:2px solid #b42318;background:#fef3f2', amber: 'border:1px solid #f59e0b;background:#fffbeb',
+  green: 'border:1px solid #a6f4c5;background:#ecfdf3', grey: 'border:1px solid #e4e7ec;background:#f9fafb',
+};
+const section = (tone, title, inner) => `<div style="${TONE[tone]};border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#101828">${title}</b>${inner}</div>`;
+const ul = (items) => `<ul style="margin:6px 0 0;padding-left:18px">${items.map((x) => `<li style="margin:4px 0;color:#344054">${x}</li>`).join('')}</ul>`;
+const legalHtml = !legal.length
+  ? '<p style="color:#667085;font-size:14px;margin:0 0 14px">Laws: none cited.</p>'
+  : section(legalAttention.length ? 'red' : legal.some((l) => !['in_force', 'not_found'].includes(l.status)) ? 'amber' : 'green',
+    `Laws cited, checked on boe.es today${legalAttention.length ? ': read these' : ''}`,
+    ul(legal.map((l) => `${esc(l.ref)}: ${esc(l.statusText)}${l.id ? ` (<a href="${esc(l.url)}">${esc(l.id)}</a>)` : ''}`
+      + (l.attention ? ' <b style="color:#b42318">The post does not say so where it cites it.</b>' : l.review ? ' <b style="color:#b54708">Check the post does not rely on the annulled or repealed parts.</b>' : l.mentionsDead ? ' The post says so.' : '')
+      + (l.partial && l.partial.length ? `<br><span style="font-size:13px;color:#667085">${esc(l.partial[0])}</span>` : ''))));
+const resultText = { broken: 'broken link', unreachable: 'did not answer', blocked: 'blocks automatic checks, open it yourself', pdf: 'PDF, figures not checked', not_checked: 'not checked (map, photo or social link)' };
+const sourceItems = [
+  ...badLinks.map((l) => `<a href="${esc(l.url)}">${esc(l.host)}</a>: ${resultText[l.result]}${l.http ? ` (HTTP ${l.http})` : ''}`),
+  ...missingFigures.map((f) => `"${esc(f.figure)}" is written next to <a href="${esc(f.url)}">${esc(f.host)}</a> but is not on that page`),
+  ...sources.links.filter((l) => l.result === 'blocked' || l.result === 'pdf').map((l) => `<a href="${esc(l.url)}">${esc(l.host)}</a>: ${resultText[l.result]}`),
+  ...sources.uncited.map((s) => `No source named in this paragraph: ${esc(s)}`),
+];
+const okLinks = sources.links.filter((l) => l.result === 'ok').length;
+const sourcesHtml = sources.error
+  ? section('grey', 'Sources: the check could not run', `<p style="margin:6px 0 0;color:#667085">${esc(sources.error)}</p>`)
+  : !sources.totalLinks && !sources.uncited.length
+    ? '<p style="color:#667085;font-size:14px;margin:0 0 14px">Sources: no outside links in the post.</p>'
+    : section(badLinks.length || missingFigures.length ? 'amber' : sourceItems.length ? 'grey' : 'green',
+      `Sources: ${sources.totalLinks} outside link${sources.totalLinks === 1 ? '' : 's'}, ${okLinks} opened${sourceItems.length ? '' : ', every figure next to a link found on its page'}`,
+      sourceItems.length ? ul(sourceItems.slice(0, 12)) : '');
+const claimsHtml = claims.error
+  ? section('grey', 'PropertyList claims: the check could not run', `<p style="margin:6px 0 0;color:#667085">${esc(claims.error)}</p>`)
+  : !claims.issues.length
+    ? section('green', 'PropertyList claims: nothing contradicts the ledger', '')
+    : section(contradicts.length ? 'red' : 'amber', `PropertyList claims: ${claims.issues.length} to read`,
+      ul(claims.issues.map((i) => `"${esc(i.quote)}" <b>${i.verdict === 'contradicts' ? 'contradicts the ledger' : 'not in the ledger'}</b>. ${esc(i.why)}${i.fix ? `<br><span style="font-size:13px;color:#667085">Suggested: ${esc(i.fix)}</span>` : ''}`)));
+const checksHtml = legalHtml + sourcesHtml + claimsHtml;
+const flagged = legalAttention.length > 0 || contradicts.length > 0;
+
 const html = `<div style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;color:#101828">
 <p style="font-size:13px;color:#667085;margin:0 0 6px">Info hub blog draft for review ${badge}</p>
 <h2 style="margin:0 0 6px;font-size:22px;line-height:1.3">${esc(en.title)}</h2>
@@ -257,15 +330,25 @@ ${heroImg ? `<img src="${esc(heroImg.src)}" alt="" width="680" style="display:bl
 <p style="margin:0 0 14px;font-size:13px;color:#667085">${heroImg.credit ? 'Featured image picked automatically (' + esc(heroImg.credit) + '). Check it fits the article before approving.' : 'Featured image from our own library.'}</p>` : '<p style="margin:0 0 14px;font-size:13px;color:#b42318">No featured image assigned - the post will show the default hero.</p>'}
 ${lint.errors.length ? `<div style="border:2px solid #b42318;background:#fef3f2;border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#b42318">BLOCKED, cannot be approved until fixed:</b><ul style="margin:6px 0 0;padding-left:18px">${li(lint.errors, '#b42318')}</ul></div>` : ''}
 ${lint.warnings.length ? `<div style="border:1px solid #f59e0b;background:#fffbeb;border-radius:10px;padding:12px 14px;margin:0 0 14px"><b style="color:#92400e">Read these before approving:</b><ul style="margin:6px 0 0;padding-left:18px">${li(lint.warnings, '#78350f')}</ul></div>` : '<p style="color:#065f46;font-size:14px">Lint: no warnings.</p>'}
+${checksHtml}
 <div style="border:1px solid #e4e7ec;border-radius:10px;padding:14px 16px;margin:0 0 16px;font-size:14px;line-height:1.6;color:#344054;max-height:none">${esc(plain.slice(0, 1800))}${plain.length > 1800 ? ' [...]' : ''}</div>
 <p style="margin:0 0 6px;font-size:13px;color:#667085">Read the full draft (admin login): <a href="${SITE}/admin/blog">${SITE}/admin/blog</a></p>
-<p style="margin:14px 0">${lint.ok ? btn(link('approve'), 'Approve and publish', '#00ae9a') : ''}${btn(link('reject'), 'Reject (archive)', '#b42318')}</p>
+<p style="margin:14px 0">${lint.ok ? btn(link('approve'), 'Approve and publish', '#0a6d61') : ''}${btn(link('reject'), 'Reject (archive)', '#b42318')}</p>
 <p style="font-size:12px;color:#98a2b3">Links expire in 7 days and are single-purpose. Nothing is published unless you click approve. Reply to this email with corrections and it stays a draft.</p></div>`;
 
 const text = `Blog draft for review${lint.regulatory ? ' [REGULATORY]' : ''}: ${en.title}\n${SITE}${en.path}\n\n` +
   (lint.errors.length ? 'BLOCKED:\n' + lint.errors.map((e) => ' - ' + e).join('\n') + '\n\n' : '') +
   (lint.warnings.length ? 'Warnings:\n' + lint.warnings.map((w) => ' - ' + w).join('\n') + '\n\n' : '') +
+  (legal.length ? 'Laws cited (boe.es):\n' + legal.map((l) => ` - ${l.ref}: ${l.statusText}${l.attention ? ' - THE POST DOES NOT SAY SO' : l.review ? ' - check the post does not rely on the annulled parts' : ''}`).join('\n') + '\n\n' : '') +
+  (badLinks.length || missingFigures.length ? 'Sources:\n' + [...badLinks.map((l) => ` - ${l.host}: ${resultText[l.result]}`), ...missingFigures.map((f) => ` - "${f.figure}" not found on ${f.host}`)].join('\n') + '\n\n' : '') +
+  (claims.issues.length ? 'PropertyList claims:\n' + claims.issues.map((i) => ` - "${i.quote}" (${i.verdict === 'contradicts' ? 'contradicts the ledger' : 'not in the ledger'})`).join('\n') + '\n\n' : '') +
   (lint.ok ? `Approve: ${link('approve')}\n` : '') + `Reject: ${link('reject')}\n`;
+
+if (PREVIEW_PATH) {
+  fs.writeFileSync(PREVIEW_PATH, `<!doctype html><meta charset="utf-8"><title>${esc(en.title)}</title><body style="margin:24px">${html}</body>`);
+  console.log(`blog-cron: review email written to ${PREVIEW_PATH}, not sent.`);
+  process.exit(0);
+}
 
 if (!KEY || !TO || !SECRET) {
   console.log('blog-cron: approval email NOT sent (missing MANDRILL_API_KEY / NOTIFY_TO / BLOG_APPROVE_SECRET). Draft left in Directus:', en.path);
@@ -275,7 +358,7 @@ try {
   const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
     method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO, type: 'to' }],
-      subject: `${lint.ok ? (lint.regulatory ? '[REVIEW, regulatory]' : '[REVIEW]') : '[BLOCKED]'} blog draft: ${en.title}`.slice(0, 180), html, text } }),
+      subject: `${lint.ok ? (flagged ? '[REVIEW, checks flagged]' : lint.regulatory ? '[REVIEW, regulatory]' : '[REVIEW]') : '[BLOCKED]'} blog draft: ${en.title}`.slice(0, 180), html, text } }),
   });
   console.log('approval email:', res.status, (await res.text()).slice(0, 100));
 } catch (e) { console.log('approval email failed:', e.message, '- draft left in Directus:', en.path); }

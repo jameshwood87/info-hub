@@ -316,6 +316,14 @@ import Layout from '../../layouts/Layout.astro';
 			return { ok: res.ok, status: res.status, data };
 		};
 
+		// Blog lint gate (24-09-26): publishing a blog post answers 409 lint_blocked with the
+		// reasons. Publishing anyway resends with force; the server logs the override and
+		// publishes the other language with it.
+		const confirmLintOverride = (blocked) => {
+			const list = (Array.isArray(blocked) ? blocked : []).map((b) => `${b.path}\n  - ${(b.errors || []).join('\n  - ')}`).join('\n\n');
+			return confirm(`The blog lint blocked publishing:\n\n${list}\n\nPublish anyway? The override is logged, and the other language is published with it.`);
+		};
+
 		const fmtDate = (iso) => {
 			if (!iso) return '';
 			const d = new Date(iso);
@@ -968,10 +976,18 @@ import Layout from '../../layouts/Layout.astro';
 			const mode = state.edit.mode;
 			const id = state.edit.id;
 
-			const res =
+			const send = (force) =>
 				mode === 'new'
-					? await api('/api/admin/kb-pages', { method: 'POST', body: JSON.stringify({ scope: 'blog', page }) })
-					: await api(`/api/admin/kb-pages/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ patch: page }) });
+					? api('/api/admin/kb-pages', { method: 'POST', body: JSON.stringify(force ? { scope: 'blog', page, force: true } : { scope: 'blog', page }) })
+					: api(`/api/admin/kb-pages/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(force ? { patch: page, force: true } : { patch: page }) });
+			let res = await send(false);
+			if (res.status === 409 && res.data?.error === 'lint_blocked') {
+				if (!confirmLintOverride(res.data.blocked)) {
+					saveBtn.disabled = false;
+					return setSaveError('Not published: the blog lint blocked it. Fix the text, or save again and choose publish anyway.');
+				}
+				res = await send(true);
+			}
 
 			if (!res.ok) {
 				saveBtn.disabled = false;
@@ -1032,7 +1048,11 @@ import Layout from '../../layouts/Layout.astro';
 			if (safeAction === 'purge' && !confirm(`Permanently delete ${ids.length} posts? This cannot be undone.`)) return;
 			if (safeAction === 'archive' && !confirm(`Archive ${ids.length} posts?`)) return;
 			if (safeAction === 'unarchive' && !confirm(`Restore ${ids.length} posts from Archive?`)) return;
-			const res = await api('/api/admin/kb-pages/bulk', { method: 'POST', body: JSON.stringify({ action: safeAction, ids }) });
+			let res = await api('/api/admin/kb-pages/bulk', { method: 'POST', body: JSON.stringify({ action: safeAction, ids }) });
+			if (res.status === 409 && res.data?.error === 'lint_blocked') {
+				if (!confirmLintOverride(res.data.blocked)) return;
+				res = await api('/api/admin/kb-pages/bulk', { method: 'POST', body: JSON.stringify({ action: safeAction, ids, force: true }) });
+			}
 			if (!res.ok) {
 				if (!opts.quiet) setError('Bulk operation failed.');
 				return;

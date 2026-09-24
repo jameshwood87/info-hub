@@ -13,6 +13,7 @@
  */
 import fs from 'fs';
 import { legalCurrencyBlock } from './lib/legal-currency.mjs';
+import { claimsLedgerBlock, liveCounts } from './lib/claims-ledger.mjs';
 
 // ---- minimal .env loader (does not override real env) ----
 try {
@@ -156,9 +157,13 @@ console.log(`Topic: ${topic}\nModel: ${MODEL} @ ${AI_BASE}`);
 const market = await marketData();
 console.log(market ? `Market data: ${market.split('\n').length} areas (incl. Oracle-verified)` : 'Market data: unavailable (continuing without)');
 
+// What the article may say about PropertyList itself (24-09-26): the generator never saw
+// the price sheet or the free-versus-paid ledger before, so product claims were unchecked.
+const counts = await liveCounts();
 const system = 'You are a senior property-market editor for PropertyList, the Spanish property MLS information hub. You write authoritative, genuinely useful, original guides for buyers, sellers and agents. Voice: calm, expert, data-led, plain-spoken. Use plain hyphens only - NEVER em-dashes or en-dashes.\n\n'
   + legalCurrencyBlock()
-  + '\nIf the topic refers to one of the retired laws above, write about the current position instead and say plainly that the decree was repealed on 30-04-26. Never present it as in force.';
+  + '\nIf the topic refers to one of the retired laws above, write about the current position instead and say plainly that the decree was repealed on 30-04-26. Never present it as in force.\n\n'
+  + claimsLedgerBlock(counts);
 const user = `Write a comprehensive, original blog article in English on: "${topic}".
 ${market ? `\nVERIFIED MARKET DATA (use ONLY these real figures; never invent numbers; when you cite a notary-verified price, link its source as an HTML <a> tag):\n${market}\n` : ''}
 Requirements:

@@ -10,6 +10,7 @@ import {
 	writeAudit,
 } from '../../../../lib/adminContent';
 import { adminDeleteKbPage, adminGetKbPageById, adminUpdateKbPage } from '../../../../lib/directus';
+import { checkBlogPublish, lintBlockedResponse, publishTwin, recordOverride } from '../../../../lib/blogPublishGate';
 
 const json = (status: number, body: any) =>
 	new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
@@ -45,6 +46,23 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 			return json(400, { ok: false, error: 'invalid_action' });
 		}
 		if (effectiveAction === 'purge') assertRole(session, ['admin']);
+
+		// Blog posts: lint before publishing (24-09-26). A blocked publish returns 409 with the
+		// reasons; the admin page asks "publish anyway?" and resends with force, which is logged.
+		const gateIp = (request.headers.get('x-forwarded-for') || '').split(',')[0]?.trim() || clientAddress || '';
+		const gates = new Map<string, any>();
+		if (effectiveAction === 'publish') {
+			const blocked: Array<{ id: string; path: string; errors: string[] }> = [];
+			for (const id of ids) {
+				const p = await adminGetKbPageById(id).catch(() => null);
+				if (!p || String(p.status || '') === 'published') continue;
+				const g = await checkBlogPublish(p as any);
+				if (!g.applies) continue;
+				gates.set(id, g);
+				if (!g.ok) blocked.push({ id, path: p.path, errors: g.errors });
+			}
+			if (blocked.length && body?.force !== true) return lintBlockedResponse(blocked);
+		}
 
 		const results: Array<{ id: string; ok: boolean; error?: string }> = [];
 		for (const id of ids) {
@@ -144,6 +162,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
 				const status = effectiveAction === 'publish' ? 'published' : effectiveAction === 'draft' ? 'draft' : existing.status;
 				await adminUpdateKbPage(id, { status });
+				if (effectiveAction === 'publish' && gates.has(id)) {
+					const g = gates.get(id);
+					if (!g.ok) await recordOverride({ userId: session.userId, ip: gateIp, path: existing.path, kbPageId: String(existing.id), errors: g.errors, via: 'admin publish button' });
+					await publishTwin(g.twin, session.userId, gateIp);
+				}
 				results.push({ id, ok: true });
 			} catch (e: any) {
 				const { error } = mapError(e);
