@@ -55,15 +55,16 @@ export async function gscResearch(days = 28) {
   }
 }
 
-/** Raw Search Analytics query. opts: {days, endOffsetDays, rowLimit, pageContains} */
+/** Raw Search Analytics query. opts: {days, endOffsetDays, rowLimit, pageContains, startDate, endDate}
+ *  startDate/endDate (YYYY-MM-DD, both inclusive) override days and endOffsetDays. */
 export async function rawQuery(dimensions, opts = {}) {
-  const { days = 28, endOffsetDays = 0, rowLimit = 1000, pageContains = '' } = opts;
+  const { days = 28, endOffsetDays = 0, rowLimit = 1000, pageContains = '', startDate = '', endDate = '' } = opts;
   const key = JSON.parse(fs.readFileSync(KEY_PATH, 'utf8'));
   const tok = await accessToken(key);
   const fmt = (d) => d.toISOString().slice(0, 10);
   const end = new Date(Date.now() - endOffsetDays * 86400000);
   const start = new Date(end.getTime() - days * 86400000);
-  const body = { startDate: fmt(start), endDate: fmt(end), dimensions, rowLimit };
+  const body = { startDate: startDate || fmt(start), endDate: endDate || fmt(end), dimensions, rowLimit };
   if (pageContains) body.dimensionFilterGroups = [{ filters: [{ dimension: 'page', operator: 'contains', expression: pageContains }] }];
   const res = await fetch(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(SITE)}/searchAnalytics/query`, {
     method: 'POST', headers: { Authorization: `Bearer ${tok}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body),

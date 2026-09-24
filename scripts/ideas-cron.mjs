@@ -128,6 +128,19 @@ let queue = [];
 try { queue = JSON.parse(fs.readFileSync(QUEUE_PATH, 'utf8')); } catch {}
 const planned = queue.map((q) => q.topic);
 
+// James's topic mix (24-09-26): once a month he reads the blog scorecard's results by post
+// type (node scripts/blog-scorecard.mjs --monthly) and decides what to write more or less of.
+// The decision lives in var/admin/topic-mix.json, e.g.
+//   {"decided": "05-10-26", "more": ["law and tax explainers"], "less": ["town price data"], "note": "..."}
+let mix = null;
+try { mix = JSON.parse(fs.readFileSync(process.env.TOPIC_MIX_PATH || '/opt/info-hub/var/admin/topic-mix.json', 'utf8')); } catch {}
+const mixList = (a) => (Array.isArray(a) ? a.map((x) => String(x).trim()).filter(Boolean) : []);
+const mixMore = mixList(mix && mix.more), mixLess = mixList(mix && mix.less);
+const mixBlock = mixMore.length || mixLess.length
+  ? `\nTHIS MONTH'S TOPIC MIX (James's decision${mix.decided ? ` of ${String(mix.decided)}` : ''}, from how our past posts performed; it outranks the order of preference below):${mixMore.length ? `\n- Write more: ${mixMore.join('; ')}` : ''}${mixLess.length ? `\n- Write fewer: ${mixLess.join('; ')}` : ''}${mix.note ? `\n- ${String(mix.note).trim()}` : ''}\n`
+  : '';
+if (mixBlock) console.log(`topic mix in use: more [${mixMore.join(', ')}], fewer [${mixLess.join(', ')}]`);
+
 // ---- AI gap analysis ----
 const prompt = `You are the content strategist for PropertyList (info.propertylist.es), the Spanish property MLS info hub targeting Costa del Sol buyers, owners, landlords and estate agents. Our unfair advantage: live MLS listing data and notary-verified prices (Price Oracle) that competitors cannot cite.
 
@@ -141,7 +154,7 @@ ${planned.length ? 'ALREADY QUEUED:\n' + planned.map((t) => `- ${t}`).join('\n')
 
 ${legalCurrencyBlock()}
 Do not propose topics that treat these as current law. A news headline that still refers to them is out of date. You may propose a topic about what replaced them or about the position today.
-
+${mixBlock}
 Give extra weight to the SEARCH CONSOLE sections: a striking-distance query is the strongest possible signal (real demand where we nearly rank). Propose the 5 best NEW blog-post ideas for next week. PRIORITISE, in order: (a) topics only PropertyList can write because they rest on our live MLS listings or notary-verified Price Oracle prices - who is buying, what sells, what a feature is worth, how one town compares with another - using only figures present in the market-data block or live listing data the writer is given; never calculate, estimate or infer a number that data does not contain; (b) a specific question that buyers, owners or landlords are demonstrably typing (a Search Console query with impressions) that none of our existing pages answers - check the paths in WE ALREADY COVER, and if one of our pages already targets it, set skip=true and say which page in the angle; (c) proven local formats that earn: events, area comparisons, what things actually cost. Regulation only when an instrument is IN FORCE and you can name its BOE reference. Never propose forecasts, drafts, proposals, "plans to", "could hit", "the next registry" or "what happens if": the last four weeks of our own Search Console show that genre ranks for queries nobody types and earns nothing, one such post has already been withdrawn for an unsourced forecast about government policy, and four pages needed correction notices for stating law that was no longer in force. hot=true means one thing only: an in-force change with a BOE date inside the last 30 days. Avoid anything we already cover or that is queued.
 
 Write every topic, angle and keyword in ENGLISH (articles are written in English first, then translated to Spanish). Return JSON: {"ideas":[{"topic":"full working title","angle":"1 sentence: our unique angle / why we win","target_keyword":"main search phrase","hot":true|false,"skip":true|false,"source":"which headline/competitor inspired it"}]} with exactly 5 ideas, best first. skip=true means one of our existing pages already targets this question and the idea must not be queued. Plain hyphens only, no em-dashes.`;

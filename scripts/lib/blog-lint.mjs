@@ -56,6 +56,18 @@ const PL_WORDING = [
   [/\b(PropertyList|our|nuestr[oa]s?)\b[^.]{0,60}\b(valuations?|tasaci[oó]n(?:es)?)\b/i, 'calls a PropertyList product a valuation or tasación, banned in Spain-facing copy'],
 ];
 
+// For short texts such as search titles and descriptions (scripts/lib/title-checks.mjs,
+// 24-09-26): the hard rules, the PropertyList wording rules and sensational framing, as
+// one list of problems. Empty means fine.
+export function shortTextProblems(text) {
+  const s = String(text || '');
+  const out = [];
+  for (const [re, why, opts] of HARD_PATTERNS) if (re.test(opts && opts.unquoted ? unquote(s) : s)) out.push(why);
+  for (const [re, why] of PL_WORDING) if (re.test(s)) out.push(why);
+  if (SENSATIONAL.test(s)) out.push('sensational framing (breaking, urgent, will ban...)');
+  return out;
+}
+
 export function lintBlogPost({ title = '', body = '', bodyEs = '' } = {}) {
   const errors = [], warnings = [];
   const text = stripHtml(body), textEs = stripHtml(bodyEs), t = `${title} ${text}`;

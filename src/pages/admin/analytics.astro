@@ -325,12 +325,15 @@ import Layout from '../../layouts/Layout.astro';
 		fillTable('docsTable', d.docs);
 		$('docsCount').textContent = `(${d.docs.length})`;
 
-		$('expTable').querySelector('tbody').innerHTML = (d.experiments || []).map((e) => `<tr>
+		// judged tests (24-09-26) carry result.before/after for the exact 28-day windows and a verdict
+		const expRate = (x) => (x && x.impressions ? ((x.ctr != null ? x.ctr : x.clicks / x.impressions) * 100).toFixed(1) + '% of ' + Number(x.impressions).toLocaleString() + ' clicked' : '-');
+		const expVerdict = { better: '✅ better', worse: '↩️ worse', no_clear_difference: '➖ no clear difference', too_little_data: '➖ too little traffic to tell' };
+		$('expTable').querySelector('tbody').innerHTML = (d.experiments || []).filter((e) => e.status !== 'failed_checks').map((e) => `<tr>
 			<td class="cellTitle"><a href="${esc(e.path)}" target="_blank" rel="noopener">${esc(e.path)}</a></td>
 			<td>${esc((e.applied || '').slice(0, 10))}</td>
-			<td>${e.before ? (e.before.ctr * 100).toFixed(1) + '% of ' + e.before.impressions.toLocaleString() + ' clicked' : '-'}</td>
-			<td>${e.after ? (e.after.ctr * 100).toFixed(1) + '% of ' + e.after.impressions.toLocaleString() + ' clicked' : 'waiting…'}</td>
-			<td>${e.status === 'active' ? '⏳ running' : e.status === 'reported' ? (e.after && e.before && e.after.ctr > e.before.ctr ? '✅ improved' : '➖ no change') : esc(e.status || '')}</td>
+			<td>${e.result ? expRate(e.result.before) : expRate(e.before)}</td>
+			<td>${e.result ? expRate(e.result.after) : e.after ? expRate(e.after) : 'waiting…'}</td>
+			<td>${e.status === 'active' ? '⏳ running' : e.result ? esc(expVerdict[e.result.verdict] || e.result.verdict) + (e.status === 'undone' ? ', undone' : e.status === 'undone_by_james' ? ', undone by James' : e.status === 'worse_not_undone' ? ', NOT undone (see the email)' : '') : e.status === 'undone_by_james' ? 'undone by James' : e.status === 'reported' ? (e.after && e.before && e.after.ctr > e.before.ctr ? '✅ improved' : '➖ no change') : esc(e.status || '')}</td>
 		</tr>`).join('') || '<tr><td colspan="5">None yet - the first one starts automatically on Monday.</td></tr>';
 
 		$('queryTable').querySelector('tbody').innerHTML = d.topQueries
