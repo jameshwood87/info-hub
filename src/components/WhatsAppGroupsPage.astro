@@ -1,0 +1,608 @@
+---
+// WhatsApp groups landing page, EN and ES from one component. The finder is server-rendered for every area
+// and the small script at the bottom only switches what is visible, so the page still works without it.
+// Every figure comes from src/data (socialProof.ts, whatsappGroups.ts, reviews.json, spainMap.ts); nothing
+// is typed in by hand here. The docs page (kb 1609 / 1612) stays the reference list with the full rules.
+import { AREAS, INFO_GROUP, INVITE, KIND_LABEL, fmtNum, type Lang } from '../data/whatsappGroups';
+import { SOCIAL_PROOF } from '../data/socialProof';
+import reviewsData from '../data/reviews.json';
+import { SPAIN_MAP, projectSpain, projectInset } from '../data/spainMap';
+
+export interface Props {
+	lang?: Lang;
+}
+const { lang = 'en' } = Astro.props;
+const es = lang === 'es';
+const origin = 'https://info.propertylist.es';
+const pageUrl = `${origin}${es ? '/es/grupos-whatsapp/' : '/whatsapp-groups/'}`;
+const signup = `https://agents.propertylist.es/new_agency/new?locale=${lang}`;
+const docsPath = SOCIAL_PROOF.whatsapp.docsPath[lang];
+const termsPath = es ? '/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/' : '/docs/propertylist-mls-user-manual/legal/terms-conditions/';
+const reviewsPath = es ? '/es/opiniones/' : '/reviews/';
+const coagentPath = es ? '/es/coagent/' : '/coagent/';
+const num = (n: number) => fmtNum(n, lang);
+
+const members = SOCIAL_PROOF.whatsapp.members;
+const groupCount = AREAS.reduce((n, a) => n + a.groups.length, 0) + 1; // plus the info group
+const areaCount = AREAS.filter((a) => a.id !== 'specialist').length;
+const fb = SOCIAL_PROOF.facebookGroups.groups;
+const fbTotal = Math.floor(fb.reduce((n, g) => n + g.members, 0) / 100) * 100;
+
+type Review = { platform: string; author: string; agency?: string; rating: number; lang: string; text: string; hold?: boolean };
+const waReviews = (reviewsData.reviews as Review[]).filter((r) => /whatsapp/i.test(r.text) && !r.hold);
+
+const T = {
+	en: {
+		eyebrow: 'Free WhatsApp groups for estate agents in Spain',
+		h1: 'Pick your area. Join the agents already there.',
+		sub: `Free WhatsApp groups where ${num(members)}+ estate agents in Spain share listings and client requests, by area and by type. One tap joins a whole community.`,
+		where: 'Where do you work?',
+		allAreas: 'All areas',
+		members: 'members',
+		groupsWord: 'groups',
+		areasWord: 'areas',
+		freeWith: 'Free with a PropertyList account',
+		mapAria: 'Map of Spain with the PropertyList WhatsApp communities',
+		mapNote: 'Tap a dot on the map, or pick an area above.',
+		costa: 'Costa del Sol',
+		insetLabel: { estepona: ['Estepona', 'Sotogrande'], marbella: ['Marbella'], malaga: ['Málaga'] } as Record<string, string[]>,
+		allTitle: 'Every community and group, by area',
+		nGroups: (n: number) => `${n} ${n === 1 ? 'group' : 'groups'}`,
+		nGroupsOneLink: (n: number) => `${n} groups, one link`,
+		seeGroups: 'See the groups',
+		joinCommunity: 'Join the community',
+		join: 'Join',
+		waitlist: 'Waiting list',
+		full: 'Full',
+		showOnly: 'Show only',
+		all: 'All',
+		ofGroups: (n: number) => `{n} of ${n} groups`,
+		fullNote: 'Full groups: the link puts you on the waiting list. Priority goes to agencies that add their properties to the network: connect your XML feed, or send the feed link to',
+		fullNoteEnd: 'on WhatsApp.',
+		stepsTitle: 'How it works',
+		steps: [
+			{ h: 'Create your free PropertyList account', p: 'The groups are for registered agents. No card, about two minutes.' },
+			{ h: 'Join your area', p: 'The community link puts you in every group in it at once. Or pick single groups from the list.' },
+			{ h: 'Share your listings', p: 'The PropertyList link for your listing, or your own post for it. Up to five properties a day, the same property once a week.' },
+		],
+		rulesTitle: 'The rules, in short',
+		rules: ['Your own listings, or your clients\' requests in the requests groups.', 'Up to five properties a day, the same property once a week.', 'No spam, no promotions, nothing unrelated to property.', 'No direct messages to other members unless they have asked you to.'],
+		rulesLink: 'Full rules and every group, on the docs page',
+		terms: 'By joining a group you accept the WhatsApp group policy, section 5.6 of our',
+		termsLink: 'Terms and Conditions',
+		reviewsTitle: 'What agents say about the groups',
+		reviewsNote: 'Shown as written. No wording has been changed.',
+		reviewsAll: 'All reviews',
+		platform: { google: 'Google review', trustpilot: 'Trustpilot review', facebook: 'Facebook recommendation' } as Record<string, string>,
+		fbTitle: 'Also on Facebook',
+		fbSub: `${fb.length} groups, ${num(fbTotal)}+ members`,
+		open: 'Open',
+		membersShort: 'members',
+		shareTitle: 'Know an agent who should be in these groups?',
+		shareSub: 'Send them this page. It opens WhatsApp with the link ready to go.',
+		shareBtn: 'Share on WhatsApp',
+		copyBtn: 'Copy the link',
+		copied: 'Link copied',
+		shareText: `PropertyList WhatsApp groups for estate agents in Spain. Pick your area and join in one tap: ${pageUrl}`,
+		qrAlt: 'QR code for this page',
+		qrCaption: 'Print the QR code for the office wall.',
+		ctaTitle: 'Not on PropertyList yet?',
+		ctaSub: 'You need a free PropertyList account to join the groups.',
+		cta: 'Create your free account',
+		ctaMicro: 'No card. About two minutes.',
+	},
+	es: {
+		eyebrow: 'Grupos de WhatsApp gratis para agentes inmobiliarios en España',
+		h1: 'Elige tu zona. Únete a los agentes que ya están dentro.',
+		sub: `Grupos de WhatsApp gratis donde más de ${num(members)} agentes inmobiliarios en España comparten inmuebles y demandas de clientes, por zona y por tipo. Con un toque entras en toda una comunidad.`,
+		where: '¿Dónde trabajas?',
+		allAreas: 'Todas las zonas',
+		members: 'miembros',
+		groupsWord: 'grupos',
+		areasWord: 'zonas',
+		freeWith: 'Gratis con una cuenta de PropertyList',
+		mapAria: 'Mapa de España con las comunidades de WhatsApp de PropertyList',
+		mapNote: 'Toca un punto del mapa o elige tu zona arriba.',
+		costa: 'Costa del Sol',
+		insetLabel: { estepona: ['Estepona', 'y Sotogrande'], marbella: ['Marbella'], malaga: ['Málaga'] } as Record<string, string[]>,
+		allTitle: 'Todas las comunidades y grupos, por zona',
+		nGroups: (n: number) => `${n} ${n === 1 ? 'grupo' : 'grupos'}`,
+		nGroupsOneLink: (n: number) => `${n} grupos, un solo enlace`,
+		seeGroups: 'Ver los grupos',
+		joinCommunity: 'Unirme a la comunidad',
+		join: 'Unirme',
+		waitlist: 'Lista de espera',
+		full: 'Lleno',
+		showOnly: 'Mostrar solo',
+		all: 'Todos',
+		ofGroups: (n: number) => `{n} de ${n} grupos`,
+		fullNote: 'Grupos llenos: el enlace te apunta a la lista de espera. La prioridad es para las agencias que añaden sus inmuebles a la red: conecta tu feed XML o envía el enlace del feed a',
+		fullNoteEnd: 'por WhatsApp.',
+		stepsTitle: 'Cómo funciona',
+		steps: [
+			{ h: 'Crea tu cuenta gratis en PropertyList', p: 'Los grupos son para agentes registrados. Sin tarjeta, unos dos minutos.' },
+			{ h: 'Únete a tu zona', p: 'El enlace de la comunidad te mete en todos sus grupos de una vez. O elige grupos sueltos de la lista.' },
+			{ h: 'Comparte tus inmuebles', p: 'El enlace de PropertyList de tu inmueble, o tu propia publicación. Hasta cinco inmuebles al día, el mismo inmueble una vez por semana.' },
+		],
+		rulesTitle: 'Las normas, en corto',
+		rules: ['Tus propios inmuebles, o las demandas de tus clientes en los grupos de demandas.', 'Hasta cinco inmuebles al día, el mismo inmueble una vez por semana.', 'Sin spam ni promociones, nada ajeno al sector inmobiliario.', 'Sin mensajes directos a otros miembros salvo que te lo hayan pedido.'],
+		rulesLink: 'Todas las normas y todos los grupos, en la documentación',
+		terms: 'Al unirte a un grupo aceptas la política de grupos de WhatsApp, apartado 5.6 de nuestros',
+		termsLink: 'Términos y Condiciones',
+		reviewsTitle: 'Lo que dicen los agentes de los grupos',
+		reviewsNote: 'Tal como se escribieron, en inglés. No se ha cambiado ninguna palabra.',
+		reviewsAll: 'Todas las opiniones',
+		platform: { google: 'Reseña en Google', trustpilot: 'Reseña en Trustpilot', facebook: 'Recomendación en Facebook' } as Record<string, string>,
+		fbTitle: 'También en Facebook',
+		fbSub: `${fb.length} grupos, más de ${num(fbTotal)} miembros`,
+		open: 'Abrir',
+		membersShort: 'miembros',
+		shareTitle: '¿Conoces a un agente que debería estar en estos grupos?',
+		shareSub: 'Envíale esta página. Se abre WhatsApp con el enlace listo.',
+		shareBtn: 'Compartir por WhatsApp',
+		copyBtn: 'Copiar el enlace',
+		copied: 'Enlace copiado',
+		shareText: `Grupos de WhatsApp de PropertyList para agentes inmobiliarios en España. Elige tu zona y únete con un toque: ${pageUrl}`,
+		qrAlt: 'Código QR de esta página',
+		qrCaption: 'Imprime el código QR para la pared de la oficina.',
+		ctaTitle: '¿Aún no estás en PropertyList?',
+		ctaSub: 'Necesitas una cuenta gratis de PropertyList para entrar en los grupos.',
+		cta: 'Crea tu cuenta gratis',
+		ctaMicro: 'Sin tarjeta. Unos dos minutos.',
+	},
+}[lang];
+
+// map geometry: the shared projection from spainMap.ts, an inset circle in the sea south-east of Murcia
+const VIEW = '0 0 500 428';
+const IX = 395;
+const IY = 345;
+const R = SPAIN_MAP.inset.r;
+const costa = projectSpain(-4.885, 36.51);
+const mainDots = AREAS.filter((a) => a.map?.layer === 'main').map((a) => ({ a, p: projectSpain(a.map!.lon, a.map!.lat) }));
+const insetDots = AREAS.filter((a) => a.map?.layer === 'inset').map((a) => ({ a, p: projectInset(a.map!.lon, a.map!.lat) }));
+const mainLabel: Record<string, { dx: number; dy: number; anchor: string }> = {
+	madrid: { dx: 11, dy: 4, anchor: 'start' },
+	barcelona: { dx: 11, dy: -5, anchor: 'start' },
+	mallorca: { dx: 0, dy: 21, anchor: 'middle' },
+	ibiza: { dx: -11, dy: 4, anchor: 'end' },
+};
+const insetLabel: Record<string, { dx: number; dy: number; anchor: string }> = {
+	estepona: { dx: 2, dy: 26, anchor: 'middle' },
+	marbella: { dx: 9, dy: 4, anchor: 'start' },
+	malaga: { dx: -9, dy: -3, anchor: 'end' },
+};
+const shareHref = `https://wa.me/?text=${encodeURIComponent(T.shareText)}`;
+const subtitle = (a: (typeof AREAS)[number]) => (a.groups.length && a.community ? T.nGroupsOneLink(a.groups.length) : a.groups.length ? T.nGroups(a.groups.length) : a.community?.desc[lang] || '');
+---
+
+<div class="wg" data-wg>
+	<section class="wgHero">
+		<div class="wgHeroInner">
+			<div class="wgCopy">
+				<div class="wgEyebrow">{T.eyebrow}</div>
+				<h1>{T.h1}</h1>
+				<p class="wgSub">{T.sub}</p>
+				<div class="wgPick" role="group" aria-label={T.where}>
+					<span class="wgPickLabel">{T.where}</span>
+					<div class="wgChips">
+						<button type="button" class="wgChip on" data-area="all" aria-pressed="true" data-track="wa-landing-area" data-track-label="all">{T.allAreas}</button>
+						{AREAS.map((a) => (
+							<button type="button" class="wgChip" data-area={a.id} aria-pressed="false" data-track="wa-landing-area" data-track-label={a.id}>{a.short[lang]}</button>
+						))}
+					</div>
+				</div>
+				<ul class="wgProof" aria-label={es ? 'Cifras' : 'Figures'}>
+					<li><strong>{num(members)}+</strong> {T.members}</li>
+					<li><strong>{groupCount}</strong> {T.groupsWord}</li>
+					<li><strong>{areaCount}</strong> {T.areasWord}</li>
+					<li>{T.freeWith}</li>
+				</ul>
+			</div>
+			<div class="wgMapWrap">
+				<svg class="wgMap" viewBox={VIEW} role="img" aria-label={T.mapAria}>
+					<path class="land" d={SPAIN_MAP.main} />
+					<line class="leader" x1={costa[0] + 10} y1={costa[1] + 1} x2={IX - R} y2={IY} />
+					<a href="#marbella" class="wgDot costaDot" data-area="marbella" data-track="wa-landing-map" data-track-label="costa" aria-label={T.costa}>
+						<circle class="hit" cx={costa[0]} cy={costa[1]} r="16" />
+						<circle class="halo" cx={costa[0]} cy={costa[1]} r="9" />
+						<circle class="pt" cx={costa[0]} cy={costa[1]} r="4.2" />
+						<text x={costa[0] - 14} y={costa[1] + 4.5} text-anchor="end">{T.costa}</text>
+					</a>
+					{mainDots.map(({ a, p }, i) => (
+						<a href={`#${a.id}`} class="wgDot" data-area={a.id} data-track="wa-landing-map" data-track-label={a.id} aria-label={a.short[lang]} style={`--i:${i}`}>
+							<circle class="hit" cx={p[0]} cy={p[1]} r="16" />
+							<circle class="ring" cx={p[0]} cy={p[1]} r="6" />
+							<circle class="pt" cx={p[0]} cy={p[1]} r="5" />
+							<text x={p[0] + mainLabel[a.id].dx} y={p[1] + mainLabel[a.id].dy} text-anchor={mainLabel[a.id].anchor}>{a.short[lang]}</text>
+						</a>
+					))}
+					<g class="inset" transform={`translate(${IX} ${IY})`}>
+						<clipPath id={`wgClip-${lang}`}><circle r={R} /></clipPath>
+						<circle class="sea" r={R} />
+						<path class="land" d={SPAIN_MAP.inset.d} clip-path={`url(#wgClip-${lang})`} />
+						<circle class="rim" r={R} />
+						{insetDots.map(({ a, p }, i) => (
+							<a href={`#${a.id}`} class="wgDot" data-area={a.id} data-track="wa-landing-map" data-track-label={a.name[lang]} aria-label={a.name[lang]} style={`--i:${i + 4}`}>
+								<circle class="hit" cx={p[0]} cy={p[1]} r="14" />
+								<circle class="ring" cx={p[0]} cy={p[1]} r="6" />
+								<circle class="pt" cx={p[0]} cy={p[1]} r="5" />
+								<text class="small" x={p[0] + insetLabel[a.id].dx} y={p[1] + insetLabel[a.id].dy} text-anchor={insetLabel[a.id].anchor}>
+									{T.insetLabel[a.id].map((line, li) => (
+										<tspan x={p[0] + insetLabel[a.id].dx} dy={li === 0 ? 0 : 12}>{line}</tspan>
+									))}
+								</text>
+							</a>
+						))}
+					</g>
+				</svg>
+				<p class="wgMapNote">{T.mapNote}</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="wgFinder" id="groups">
+		<div class="wgInfo">
+			<span class="wgText"><span class="wgName">{INFO_GROUP.name[lang]}</span><span class="wgDesc">{INFO_GROUP.desc[lang]}</span></span>
+			<a class="wgJoin" href={INVITE(INFO_GROUP.code)} target="_blank" rel="noopener" data-track="wa-landing-join" data-track-label={INFO_GROUP.code}>{T.join} &rarr;</a>
+		</div>
+
+		<div class="wgAll on" data-area-card="all">
+			<h2>{T.allTitle}</h2>
+			<div class="wgTiles">
+				{AREAS.map((a) => (
+					<article class="wgTile">
+						<h3>{a.name[lang]}</h3>
+						<p>{subtitle(a)}</p>
+						<div class="wgTileActs">
+							{a.community ? (
+								<a class="wgBtn" href={INVITE(a.community.code)} target="_blank" rel="noopener" data-track="wa-landing-community" data-track-label={a.id}>{T.joinCommunity} &rarr;</a>
+							) : null}
+							{a.groups.length ? (
+								<button type="button" class="wgLinkBtn" data-area={a.id} data-track="wa-landing-area" data-track-label={a.id}>{T.seeGroups} &rarr;</button>
+							) : null}
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+
+		{AREAS.map((a) => (
+			<article class="wgArea" data-area-card={a.id} id={`area-${a.id}`}>
+				<header class="wgAreaHead">
+					<div>
+						<button type="button" class="wgBack" data-area="all" data-track="wa-landing-area" data-track-label="all">&larr; {T.allAreas}</button>
+						<h2>{a.name[lang]}</h2>
+						<p>{subtitle(a)}</p>
+					</div>
+					{a.community ? (
+						<a class="wgBtn" href={INVITE(a.community.code)} target="_blank" rel="noopener" data-track="wa-landing-community" data-track-label={a.id}>{T.joinCommunity} &rarr;</a>
+					) : null}
+				</header>
+				{a.groups.length > 1 ? (
+					<div class="wgKinds" role="group" aria-label={T.showOnly}>
+						<span class="wgKindsLabel">{T.showOnly}</span>
+						<button type="button" class="wgKind on" data-kind-pick="all" aria-pressed="true">{T.all}</button>
+						{a.groups.map((g) => (
+							<button type="button" class="wgKind" data-kind-pick={g.kind} aria-pressed="false">{KIND_LABEL[g.kind][lang]}</button>
+						))}
+						<span class="wgCount" data-count data-all={T.nGroups(a.groups.length)} data-of={T.ofGroups(a.groups.length)}>{T.nGroups(a.groups.length)}</span>
+					</div>
+				) : null}
+				{a.groups.length ? (
+					<ul class="wgList">
+						{a.groups.map((g) => (
+							<li data-kind={g.kind} class:list={[{ isFull: !!g.full }]}>
+								<span class="wgText"><span class="wgName">{g.name[lang]}</span><span class="wgDesc">{g.desc[lang]}</span></span>
+								<span class="wgAct">
+									{g.full ? <span class="wgTag">{T.full}</span> : null}
+									<a class:list={['wgJoin', { wgWait: !!g.full }]} href={INVITE(g.code)} target="_blank" rel="noopener" data-track="wa-landing-join" data-track-label={g.code}>{g.full ? T.waitlist : T.join} &rarr;</a>
+								</span>
+							</li>
+						))}
+					</ul>
+				) : null}
+				{a.groups.some((g) => g.full) ? (
+					<p class="wgFullNote">{T.fullNote} <a href={coagentPath}>CoAgent</a> {T.fullNoteEnd}</p>
+				) : null}
+			</article>
+		))}
+	</section>
+
+	<section class="wgSteps">
+		<h2>{T.stepsTitle}</h2>
+		<ol>
+			{T.steps.map((s, i) => (
+				<li>
+					<span class="wgNum">{i + 1}</span>
+					<div>
+						<h3>{i === 0 ? <a href={signup} target="_blank" rel="noopener">{s.h}</a> : s.h}</h3>
+						<p>{s.p}</p>
+					</div>
+				</li>
+			))}
+		</ol>
+		<div class="wgRules">
+			<h3>{T.rulesTitle}</h3>
+			<ul>{T.rules.map((r) => <li>{r}</li>)}</ul>
+			<p class="wgRulesLinks">
+				<a href={docsPath}>{T.rulesLink} &rarr;</a>
+			</p>
+			<p class="wgTerms">{T.terms} <a href={termsPath}>{T.termsLink}</a>.</p>
+		</div>
+	</section>
+
+	{waReviews.length ? (
+		<section class="wgReviews">
+			<div class="wgSecHead">
+				<h2>{T.reviewsTitle}</h2>
+				<p>{T.reviewsNote} <a href={reviewsPath}>{T.reviewsAll} &rarr;</a></p>
+			</div>
+			<div class="wgQuotes">
+				{waReviews.map((r) => (
+					<figure class="wgQuote">
+						<blockquote>{r.text}</blockquote>
+						<figcaption><strong>{r.author}</strong>{r.agency ? `, ${r.agency}` : ''} <span class="wgPlat">{T.platform[r.platform] || r.platform}</span></figcaption>
+					</figure>
+				))}
+			</div>
+		</section>
+	) : null}
+
+	<section class="wgFb">
+		<div class="wgSecHead">
+			<h2>{T.fbTitle}</h2>
+			<p>{T.fbSub}</p>
+		</div>
+		<ul class="wgFbList">
+			{fb.map((g) => (
+				<li>
+					<a href={g.url} target="_blank" rel="noopener" data-track="wa-landing-facebook" data-track-label={g.name}>
+						<span class="wgName">{g.name}</span>
+						<span class="wgDesc">{num(g.members)}+ {T.membersShort}</span>
+						<span class="wgOpen">{T.open} &rarr;</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+
+	<section class="wgShare">
+		<div class="wgShareCopy">
+			<h2>{T.shareTitle}</h2>
+			<p>{T.shareSub}</p>
+			<div class="wgShareActs">
+				<a class="wgBtn" href={shareHref} target="_blank" rel="noopener" data-track="wa-landing-share">{T.shareBtn} &rarr;</a>
+				<button type="button" class="wgBtn2" data-copy={pageUrl} data-label={T.copyBtn} data-done={T.copied} data-track="wa-landing-copy">{T.copyBtn}</button>
+			</div>
+		</div>
+		<figure class="wgQr">
+			<img src={`/whatsapp-groups/qr-${lang}.svg`} width="132" height="132" alt={T.qrAlt} />
+			<figcaption>{T.qrCaption}</figcaption>
+		</figure>
+	</section>
+
+	<section class="wgCta">
+		<h2>{T.ctaTitle}</h2>
+		<p>{T.ctaSub}</p>
+		<a class="wgBtn big" href={signup} target="_blank" rel="noopener" data-track="wa-landing-signup">{T.cta}</a>
+		<span class="wgMicro">{T.ctaMicro}</span>
+	</section>
+</div>
+
+<script>
+	const root = document.querySelector('[data-wg]');
+	if (root) {
+		root.classList.add('js');
+		const cards = Array.from(root.querySelectorAll('[data-area-card]'));
+		const ids = cards.map((c) => c.getAttribute('data-area-card'));
+		const controls = Array.from(root.querySelectorAll('[data-area]'));
+		const finder = root.querySelector('#groups');
+		const select = (wanted, scroll) => {
+			const id = ids.includes(wanted) ? wanted : 'all';
+			cards.forEach((c) => c.classList.toggle('on', c.getAttribute('data-area-card') === id));
+			controls.forEach((b) => {
+				const on = b.getAttribute('data-area') === id;
+				b.classList.toggle('on', on);
+				if (b.tagName === 'BUTTON') b.setAttribute('aria-pressed', String(on));
+			});
+			const h = id === 'all' ? '' : '#' + id;
+			if (location.hash !== h) history.replaceState(null, '', location.pathname + location.search + h);
+			if (scroll && finder) {
+				const r = finder.getBoundingClientRect();
+				if (r.top < 0 || r.top > window.innerHeight * 0.6) finder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+		};
+		controls.forEach((b) =>
+			b.addEventListener('click', (ev) => {
+				ev.preventDefault();
+				select(b.getAttribute('data-area') || 'all', true);
+			})
+		);
+		window.addEventListener('hashchange', () => select(location.hash.slice(1) || 'all', true));
+		select(location.hash.slice(1) || 'all', false);
+		if (location.hash && finder) setTimeout(() => finder.scrollIntoView({ block: 'start' }), 60);
+
+		// "Show only" chips inside an area card
+		cards.forEach((card) => {
+			const picks = Array.from(card.querySelectorAll('[data-kind-pick]'));
+			const rows = Array.from(card.querySelectorAll('li[data-kind]'));
+			const count = card.querySelector('[data-count]');
+			picks.forEach((k) =>
+				k.addEventListener('click', () => {
+					const v = k.getAttribute('data-kind-pick');
+					picks.forEach((x) => {
+						const on = x === k;
+						x.classList.toggle('on', on);
+						x.setAttribute('aria-pressed', String(on));
+					});
+					let shown = 0;
+					rows.forEach((r) => {
+						const show = v === 'all' || r.getAttribute('data-kind') === v;
+						r.hidden = !show;
+						if (show) shown++;
+					});
+					if (count) count.textContent = v === 'all' ? count.getAttribute('data-all') || '' : (count.getAttribute('data-of') || '').replace('{n}', String(shown));
+				})
+			);
+		});
+
+		// copy the page link
+		const copy = root.querySelector('[data-copy]');
+		if (copy) {
+			copy.addEventListener('click', async () => {
+				try {
+					await navigator.clipboard.writeText(copy.getAttribute('data-copy') || location.href);
+					copy.textContent = copy.getAttribute('data-done') || '';
+					setTimeout(() => {
+						copy.textContent = copy.getAttribute('data-label') || '';
+					}, 1800);
+				} catch (e) {
+					/* clipboard blocked: the share button still works */
+				}
+			});
+		}
+	}
+</script>
+
+<style>
+	.wg { max-width: 1120px; margin: 0 auto; padding: 0 20px 48px; color: #101828; }
+	.wg h2 { margin: 0; font-size: clamp(24px, 2.6vw, 30px); line-height: 1.15; letter-spacing: -0.02em; }
+	.wg h3 { margin: 0; font-size: 17px; line-height: 1.3; }
+	.wg p { line-height: 1.55; }
+	.wg a { color: #075e53; }
+
+	/* hero */
+	.wgHeroInner { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); gap: 28px 40px; align-items: center; border-radius: 22px; padding: 40px 40px 36px; border: 1px solid rgba(16, 24, 40, 0.08); background: radial-gradient(1200px 600px at 20% -10%, rgba(0, 174, 154, 0.2), rgba(255, 255, 255, 0)), radial-gradient(900px 500px at 90% 10%, rgba(0, 174, 154, 0.12), rgba(255, 255, 255, 0)), #fff; }
+	.wgEyebrow { display: inline-block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #075e53; margin-bottom: 14px; }
+	.wg h1 { margin: 0 0 14px; font-size: clamp(32px, 3.4vw, 42px); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+	.wgSub { margin: 0 0 22px; font-size: 18px; color: rgba(16, 24, 40, 0.74); max-width: 560px; }
+	.wgPickLabel { display: block; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(16, 24, 40, 0.55); margin-bottom: 10px; }
+	.wgChips { display: flex; flex-wrap: wrap; gap: 8px; }
+	.wgChip, .wgKind { appearance: none; cursor: pointer; font: inherit; font-size: 14.5px; font-weight: 700; color: #101828; background: #fff; border: 1px solid rgba(16, 24, 40, 0.16); border-radius: 999px; padding: 9px 15px; line-height: 1.1; min-height: 40px; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+	.wgChip:hover, .wgKind:hover { border-color: #00ae9a; }
+	.wgChip.on, .wgKind.on { background: #00ae9a; border-color: #00ae9a; color: #00100e; }
+	.wgProof { list-style: none; margin: 24px 0 0; padding: 16px 0 0; border-top: 1px solid rgba(16, 24, 40, 0.1); display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14.5px; color: rgba(16, 24, 40, 0.7); }
+	.wgProof strong { color: #101828; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+	/* map */
+	.wgMapWrap { min-width: 0; }
+	.wgMap { display: block; width: 100%; height: auto; max-width: 520px; margin: 0 auto; overflow: visible; }
+	.wgMap .land { fill: #e4f5f1; stroke: rgba(16, 24, 40, 0.3); stroke-width: 0.8; stroke-linejoin: round; }
+	.wgMap .leader { stroke: rgba(16, 24, 40, 0.35); stroke-width: 1; stroke-dasharray: 3 4; }
+	.wgMap .sea { fill: #fff; }
+	.wgMap .rim { fill: none; stroke: rgba(16, 24, 40, 0.28); stroke-width: 1.2; }
+	.wgMap text { font-size: 12.5px; font-weight: 800; fill: #101828; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
+	.wgMap text.small { font-size: 10.5px; }
+	.wgDot { cursor: pointer; outline: none; }
+	.wgDot .hit { fill: transparent; pointer-events: all; }
+	.wgDot:focus-visible .hit { fill: rgba(0, 174, 154, 0.18); }
+	.wgDot .pt { fill: #00ae9a; stroke: #fff; stroke-width: 1.6; transition: transform 0.2s; transform-box: fill-box; transform-origin: center; }
+	.wgDot .halo { fill: none; stroke: #00ae9a; stroke-width: 1.6; stroke-dasharray: 2 3; }
+	.wgDot .ring { fill: rgba(0, 174, 154, 0.35); transform-box: fill-box; transform-origin: center; animation: wgPulse 2.8s ease-out infinite; animation-delay: calc(var(--i, 0) * 0.35s); }
+	.wgDot:hover .pt, .wgDot:focus-visible .pt, .wgDot.on .pt { fill: #075e53; transform: scale(1.35); }
+	.wgDot.on text { fill: #075e53; }
+	.wgMapNote { margin: 10px 0 0; text-align: center; font-size: 13px; color: rgba(16, 24, 40, 0.55); }
+	@keyframes wgPulse { 0% { transform: scale(1); opacity: 0.8; } 70%, 100% { transform: scale(2.6); opacity: 0; } }
+
+	/* finder */
+	.wgFinder { margin: 22px 0 0; scroll-margin-top: 84px; }
+	.wgInfo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 12px 18px; border: 1px solid rgba(0, 174, 154, 0.35); background: rgba(0, 174, 154, 0.05); border-radius: 14px; margin-bottom: 18px; }
+	.wgText { flex: 1 1 200px; min-width: 0; }
+	.wgName { display: block; font-weight: 800; }
+	.wgDesc { display: block; font-size: 13.5px; color: rgba(16, 24, 40, 0.62); line-height: 1.4; margin-top: 2px; }
+	.wgJoin { margin-left: auto; display: inline-block; border: 1px solid rgba(0, 174, 154, 0.55); color: #0a6d61; border-radius: 999px; padding: 7px 14px; font-weight: 800; font-size: 13.5px; text-decoration: none; white-space: nowrap; }
+	.wgJoin:hover { background: rgba(0, 174, 154, 0.1); }
+	.wgWait { border-color: rgba(16, 24, 40, 0.25); color: rgba(16, 24, 40, 0.72); }
+	.wgWait:hover { background: rgba(16, 24, 40, 0.05); }
+	.wgTag { display: inline-block; background: rgba(16, 24, 40, 0.06); color: rgba(16, 24, 40, 0.6); border-radius: 999px; padding: 7px 12px; font-weight: 800; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+	.wgAct { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
+	.wgAct .wgJoin { margin-left: 0; }
+	.wgBtn { display: inline-block; background: #00ae9a; color: #00100e; border-radius: 999px; padding: 12px 20px; font-weight: 800; text-decoration: none; font-size: 15px; line-height: 1.1; white-space: nowrap; box-shadow: 0 10px 24px -14px rgba(0, 174, 154, 0.9); }
+	.wgBtn:hover { background: #0f8f8a; color: #fff; }
+	.wgBtn.big { padding: 15px 26px; font-size: 17px; }
+	.wgBtn2 { appearance: none; cursor: pointer; font: inherit; font-size: 15px; font-weight: 800; color: #101828; background: #fff; border: 1px solid rgba(16, 24, 40, 0.18); border-radius: 999px; padding: 12px 20px; line-height: 1.1; }
+	.wgBtn2:hover { border-color: #00ae9a; }
+	.wgLinkBtn { appearance: none; cursor: pointer; font: inherit; font-size: 14.5px; font-weight: 800; color: #075e53; background: none; border: 0; padding: 10px 2px; }
+	.wgLinkBtn:hover { text-decoration: underline; }
+	.wgAll h2 { margin-bottom: 14px; }
+	.wgTiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+	.wgTile { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 18px 14px; display: flex; flex-direction: column; }
+	.wgTile p { margin: 4px 0 12px; font-size: 14px; color: rgba(16, 24, 40, 0.62); flex: 1; }
+	.wgTileActs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+	.wgArea { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 18px; padding: 8px 22px 16px; }
+	.wgAreaHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 18px; padding: 12px 0 12px; border-bottom: 1px solid rgba(16, 24, 40, 0.08); }
+	.wgAreaHead p { margin: 4px 0 0; font-size: 14px; color: rgba(16, 24, 40, 0.62); }
+	.wgBack { appearance: none; cursor: pointer; font: inherit; background: none; border: 0; padding: 0 0 8px; font-size: 13.5px; font-weight: 800; color: #075e53; }
+	.wgBack:hover { text-decoration: underline; }
+	.wgKinds { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 12px 0 4px; }
+	.wgKindsLabel { font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(16, 24, 40, 0.5); margin-right: 4px; }
+	.wgKind { font-size: 13px; padding: 6px 11px; min-height: 32px; }
+	.wgCount { margin-left: auto; font-size: 13px; color: rgba(16, 24, 40, 0.55); }
+	.wgList { list-style: none; margin: 0; padding: 0; }
+	.wgList li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; padding: 12px 0; border-bottom: 1px solid rgba(16, 24, 40, 0.07); font-size: 14.5px; }
+	.wgList li:last-child { border-bottom: 0; }
+	.wgList .wgText { flex: 1 1 150px; }
+	.wgFullNote { margin: 12px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(16, 24, 40, 0.035); font-size: 13.5px; color: rgba(16, 24, 40, 0.72); }
+	.js .wgAll:not(.on), .js .wgArea:not(.on) { display: none; }
+	.wg:not(.js) .wgArea { margin-top: 14px; }
+	.wg:not(.js) .wgBack { display: none; }
+
+	/* steps and rules */
+	.wgSteps { margin-top: 44px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 24px 40px; align-items: start; }
+	.wgSteps h2 { grid-column: 1 / -1; }
+	.wgSteps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+	.wgSteps li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; }
+	.wgSteps li p { margin: 4px 0 0; color: rgba(16, 24, 40, 0.7); font-size: 15px; }
+	.wgNum { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(0, 174, 154, 0.14); color: #075e53; font-weight: 900; }
+	.wgRules { background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 18px; padding: 20px 22px; }
+	.wgRules ul { margin: 10px 0 0; padding-left: 20px; color: rgba(16, 24, 40, 0.78); line-height: 1.55; font-size: 15px; }
+	.wgRules li { margin: 0 0 6px; }
+	.wgRulesLinks { margin: 12px 0 0; font-weight: 700; }
+	.wgTerms { margin: 12px 0 0; font-size: 13.5px; color: rgba(16, 24, 40, 0.62); }
+
+	/* reviews */
+	.wgReviews, .wgFb, .wgShare, .wgCta { margin-top: 44px; }
+	.wgSecHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; margin-bottom: 14px; }
+	.wgSecHead p { margin: 0; font-size: 14px; color: rgba(16, 24, 40, 0.62); }
+	.wgQuotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+	.wgQuote { margin: 0; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; }
+	.wgQuote blockquote { margin: 0 0 12px; font-size: 15px; line-height: 1.55; color: rgba(16, 24, 40, 0.86); white-space: pre-line; flex: 1; }
+	.wgQuote figcaption { font-size: 13.5px; color: rgba(16, 24, 40, 0.62); }
+	.wgQuote figcaption strong { color: #101828; }
+	.wgPlat { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #075e53; }
+
+	/* facebook */
+	.wgFbList { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+	.wgFbList a { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; padding: 12px 16px; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; text-decoration: none; color: #101828; }
+	.wgFbList a:hover { border-color: #00ae9a; }
+	.wgFbList .wgName { flex: 1 1 100%; }
+	.wgFbList .wgDesc { margin: 0; }
+	.wgOpen { margin-left: auto; font-size: 13.5px; font-weight: 800; color: #075e53; }
+
+	/* share and cta */
+	.wgShare { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; border-radius: 22px; padding: 30px 32px; border: 1px solid rgba(16, 24, 40, 0.08); background: radial-gradient(900px 500px at 10% 0%, rgba(0, 174, 154, 0.16), rgba(255, 255, 255, 0)), #fff; }
+	.wgShareCopy { flex: 1 1 420px; }
+	.wgShareCopy p { margin: 8px 0 18px; color: rgba(16, 24, 40, 0.72); }
+	.wgShareActs { display: flex; flex-wrap: wrap; gap: 10px 12px; }
+	.wgQr { margin: 0; text-align: center; }
+	.wgQr img { display: block; width: 132px; height: 132px; margin: 0 auto; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 12px; background: #fff; padding: 6px; }
+	.wgQr figcaption { margin-top: 8px; font-size: 12.5px; color: rgba(16, 24, 40, 0.55); max-width: 160px; }
+	.wgCta { text-align: center; padding: 8px 0 0; }
+	.wgCta p { margin: 8px auto 18px; color: rgba(16, 24, 40, 0.7); max-width: 520px; }
+	.wgMicro { display: block; margin-top: 10px; font-size: 14px; font-weight: 600; color: rgba(16, 24, 40, 0.6); }
+
+	@media (prefers-reduced-motion: reduce) {
+		.wgDot .ring { animation: none; opacity: 0; }
+		.wgDot .pt { transition: none; }
+	}
+	@media (max-width: 860px) {
+		.wgHeroInner { grid-template-columns: 1fr; padding: 26px 20px 24px; gap: 20px; }
+		.wgSub { font-size: 16.5px; }
+		.wgMap text { font-size: 15px; }
+		.wgMap text.small { font-size: 13px; }
+		.wgSteps { grid-template-columns: 1fr; }
+		.wgShare { padding: 24px 20px; }
+		.wgArea { padding: 8px 16px 14px; }
+		.wgCount { flex: 1 1 100%; margin-left: 0; }
+	}
+</style>

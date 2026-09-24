@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WhatsAppGroupsPage from '../components/WhatsAppGroupsPage.astro';
+import { SOCIAL_PROOF } from '../data/socialProof';
+import { AREAS, fmtNum } from '../data/whatsappGroups';
+
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/whatsapp-groups/`;
+const members = fmtNum(SOCIAL_PROOF.whatsapp.members, 'en');
+const groups = AREAS.reduce((n, a) => n + a.groups.length, 0) + 1;
+const title = 'WhatsApp groups for estate agents in Spain | PropertyList';
+const description = `Free WhatsApp groups where ${members}+ estate agents share listings and client requests: ${groups} groups across Marbella, Málaga, Estepona, Madrid, Barcelona, Mallorca and Ibiza. Pick your area and join in one tap.`;
+
+const breadcrumbLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+		{ '@type': 'ListItem', position: 2, name: 'WhatsApp groups', item: canonical },
+	],
+};
+---
+
+<Layout
+	lang="en"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage="https://info.propertylist.es/og/og-whatsapp-groups-v1.jpg"
+	hideSearch
+	hreflangs={[
+		{ hreflang: 'en', href: canonical },
+		{ hreflang: 'es', href: `${origin}/es/grupos-whatsapp/` },
+		{ hreflang: 'x-default', href: canonical },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+	<WhatsAppGroupsPage lang="en" />
+</Layout>
