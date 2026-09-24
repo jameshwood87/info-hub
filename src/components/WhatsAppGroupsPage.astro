@@ -7,6 +7,7 @@ import { AREAS, INFO_GROUP, INVITE, KIND_LABEL, fmtNum, type Lang } from '../dat
 import { SOCIAL_PROOF } from '../data/socialProof';
 import reviewsData from '../data/reviews.json';
 import { SPAIN_MAP, projectSpain, projectInset } from '../data/spainMap';
+import { COAGENT_NUMBER, coagentWaLink, CRM_STAFF_URL } from '../data/coagent';
 
 export interface Props {
 	lang?: Lang;
@@ -70,6 +71,20 @@ const T = {
 		rulesLink: 'Full rules and every group, on the docs page',
 		terms: 'By joining a group you accept the WhatsApp group policy, section 5.6 of our',
 		termsLink: 'Terms and Conditions',
+		coEyebrow: 'CoAgent · your CRM on WhatsApp',
+		coH2: 'Already on WhatsApp all day? So is your CRM.',
+		coP: 'CoAgent is the PropertyList CRM assistant inside WhatsApp. Talk to it like a colleague: it shows you what it heard, and nothing is saved until you reply YES. Nothing to install, and your voice is never kept.',
+		coExamples: [
+			{ q: '“Is PL22234 still available?”', a: 'Handy after a group post. If the listing is another agency\'s, CoAgent asks them for you through the MLS when you reply YES, and their answer comes back to you.' },
+			{ q: '“What have we got in Marbella, three beds, up to two million?”', a: 'Listings from the shared MLS with prices and links.' },
+			{ q: '“Add a note to Marta: she wants to see it again Saturday”', a: 'It reads the note back in your own words and saves it to her file when you reply YES.' },
+			{ q: '“Let\'s list a property”', a: 'Send the photos, then the price, where it is and the bedrooms, typed or as a voice note. No commands to learn.' },
+		],
+		coAria: 'Examples of what you can ask CoAgent',
+		coBtn: 'Message CoAgent on WhatsApp',
+		coMore: 'How CoAgent works',
+		coPrice: 'Every agent gets 20 free messages a month, every month; replying YES never counts. Unlimited is 50 credits a month per agent.',
+		coSetup: 'Your mobile number needs to be on your CRM profile, so CoAgent knows you are an agent and not a client.',
 		reviewsTitle: 'What agents say about the groups',
 		reviewsNote: 'Shown as written. No wording has been changed.',
 		reviewsAll: 'All reviews',
@@ -129,6 +144,20 @@ const T = {
 		rulesLink: 'Todas las normas y todos los grupos, en la documentación',
 		terms: 'Al unirte a un grupo aceptas la política de grupos de WhatsApp, apartado 5.6 de nuestros',
 		termsLink: 'Términos y Condiciones',
+		coEyebrow: 'CoAgent · tu CRM en WhatsApp',
+		coH2: '¿Todo el día en WhatsApp? Tu CRM también.',
+		coP: 'CoAgent es el asistente del CRM de PropertyList dentro de WhatsApp. Háblale como a un compañero: te enseña lo que ha entendido y no se guarda nada hasta que respondes SÍ. Nada que instalar, y tu voz nunca se guarda.',
+		coExamples: [
+			{ q: '“¿PL22234 sigue disponible?”', a: 'Útil después de una publicación en un grupo. Si el inmueble es de otra agencia, CoAgent les pregunta por ti a través del MLS cuando respondes SÍ, y su respuesta te llega a ti.' },
+			{ q: '“¿Qué tenemos en Marbella, tres dormitorios, hasta dos millones?”', a: 'Inmuebles del MLS compartido con precios y enlaces.' },
+			{ q: '“Añade una nota a Marta: quiere verla otra vez el sábado”', a: 'Te lee la nota con tus palabras y la guarda en su ficha cuando respondes SÍ.' },
+			{ q: '“Vamos a publicar un inmueble”', a: 'Envía las fotos y luego el precio, dónde está y los dormitorios, escrito o en nota de voz. Sin comandos que aprender.' },
+		],
+		coAria: 'Ejemplos de lo que puedes pedirle a CoAgent',
+		coBtn: 'Escribe a CoAgent por WhatsApp',
+		coMore: 'Cómo funciona CoAgent',
+		coPrice: 'Cada agente tiene 20 mensajes gratis al mes, todos los meses; responder SÍ nunca cuenta. El ilimitado son 50 créditos al mes por agente.',
+		coSetup: 'Tu móvil tiene que estar en tu perfil del CRM para que CoAgent sepa que eres agente y no cliente.',
 		reviewsTitle: 'Lo que dicen los agentes de los grupos',
 		reviewsNote: 'Tal como se escribieron, en inglés. No se ha cambiado ninguna palabra.',
 		reviewsAll: 'Todas las opiniones',
@@ -328,6 +357,31 @@ const subtitle = (a: (typeof AREAS)[number]) => (a.groups.length && a.community 
 				<a href={docsPath}>{T.rulesLink} &rarr;</a>
 			</p>
 			<p class="wgTerms">{T.terms} <a href={termsPath}>{T.termsLink}</a>.</p>
+		</div>
+	</section>
+
+	<section class="wgCo">
+		<div class="wgCoInner">
+			<div class="wgCoCopy">
+				<div class="wgEyebrow">{T.coEyebrow}</div>
+				<h2>{T.coH2}</h2>
+				<p class="wgCoP">{T.coP}</p>
+				<div class="wgCoActs">
+					<a class="wgBtn" href={coagentWaLink(es ? 'Hola' : 'Hi')} target="_blank" rel="noopener" data-track="wa-landing-coagent" data-track-label="message">{T.coBtn} &rarr;</a>
+					<a class="wgCoMore" href={coagentPath} data-track="wa-landing-coagent" data-track-label="page">{T.coMore} &rarr;</a>
+				</div>
+				<p class="wgCoMeta"><strong>WhatsApp: {COAGENT_NUMBER}</strong></p>
+				<p class="wgCoMeta">{T.coPrice}</p>
+				<p class="wgCoMeta">{T.coSetup} <a href={CRM_STAFF_URL} target="_blank" rel="noopener">{es ? 'Añádelo en el CRM' : 'Add it in the CRM'} &rarr;</a></p>
+			</div>
+			<ul class="wgCoChat" aria-label={T.coAria}>
+				{T.coExamples.map((x) => (
+					<li>
+						<span class="wgQ">{x.q}</span>
+						<span class="wgA">{x.a}</span>
+					</li>
+				))}
+			</ul>
 		</div>
 	</section>
 
@@ -560,6 +614,24 @@ const subtitle = (a: (typeof AREAS)[number]) => (a.groups.length && a.community 
 	.wgRulesLinks { margin: 12px 0 0; font-weight: 700; }
 	.wgTerms { margin: 12px 0 0; font-size: 13.5px; color: rgba(16, 24, 40, 0.62); }
 
+	/* coagent */
+	.wgCo { margin-top: 44px; border-radius: 22px; border: 1px solid rgba(16, 24, 40, 0.08); background: radial-gradient(900px 500px at 92% 0%, rgba(0, 174, 154, 0.22), rgba(11, 22, 32, 0)), #0b1620; color: #fff; padding: 36px 36px 32px; }
+	.wgCoInner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 26px 44px; align-items: start; }
+	.wgCoCopy, .wgCoChat { min-width: 0; }
+	.wgCo .wgEyebrow { color: #5ce7cf; }
+	.wgCo h2 { color: #fff; }
+	.wgCoP { margin: 12px 0 18px; color: rgba(255, 255, 255, 0.78); font-size: 16.5px; }
+	.wgCoActs { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+	.wgCoMore { color: #5ce7cf; font-weight: 800; text-decoration: none; }
+	.wgCoMore:hover { text-decoration: underline; }
+	.wgCoMeta { margin: 14px 0 0; font-size: 13.5px; color: rgba(255, 255, 255, 0.62); }
+	.wgCoMeta strong { color: rgba(255, 255, 255, 0.92); font-weight: 800; }
+	.wgCoMeta a { color: #5ce7cf; font-weight: 700; }
+	.wgCoChat { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+	.wgCoChat li { display: grid; gap: 6px; }
+	.wgQ { justify-self: end; max-width: 88%; background: #00ae9a; color: #00100e; border-radius: 16px 16px 4px 16px; padding: 9px 13px; font-weight: 700; font-size: 14.5px; line-height: 1.35; }
+	.wgA { justify-self: start; max-width: 92%; background: rgba(255, 255, 255, 0.09); color: rgba(255, 255, 255, 0.86); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px 16px 16px 4px; padding: 9px 13px; font-size: 14px; line-height: 1.45; }
+
 	/* reviews */
 	.wgReviews, .wgFb, .wgShare, .wgCta { margin-top: 44px; }
 	.wgSecHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; margin-bottom: 14px; }
@@ -601,6 +673,9 @@ const subtitle = (a: (typeof AREAS)[number]) => (a.groups.length && a.community 
 		.wgMap text { font-size: 15px; }
 		.wgMap text.small { font-size: 13px; }
 		.wgSteps { grid-template-columns: 1fr; }
+		.wgCoInner { grid-template-columns: minmax(0, 1fr); }
+		.wgCo { padding: 26px 20px 24px; }
+		.wgCoActs .wgBtn, .wgShareActs .wgBtn { width: 100%; text-align: center; white-space: normal; }
 		.wgShare { padding: 24px 20px; }
 		.wgArea { padding: 8px 16px 14px; }
 		.wgCount { flex: 1 1 100%; margin-left: 0; }
