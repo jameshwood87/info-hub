@@ -16,6 +16,7 @@ const PAGES = [
 	['/pricing/', 'Pricing'],
 	['/features/', 'Features FAQ'],
 	['/faq/', 'General FAQ'],
+	['/whatsapp-groups/', 'WhatsApp groups for estate agents'],
 	['/website-builder/', 'Website Builder'],
 	['/instant-listing/', 'Instant Listing'],
 	['/instant-content/', 'Instant Content'],
