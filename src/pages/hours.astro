@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 // "Pick your poison" - the pain-first router built as a shareable tally.
 // Tick what you hate, the hours mount up, the receipt prints the damage and the
 // fix for each pain. Everything (pains AND fixes) ships in static HTML so search
@@ -57,7 +63,7 @@ const pains: Pain[] = [
 // putting an invented hours figure on them was the one dishonest thing
 // on a page whose whole argument is that we counted honestly.
 const costs: Cost[] = [
-	{ id: 'exposure', label: 'Listings only my own buyers ever see', tag: 'DEALS', sting: 'One buyer pool, when there could be 1,300 agents.', fix: 'MLS sharing', fixHref: '/launch/', fixLine: 'List once, 1,300+ agents can sell it with you.' },
+	{ id: 'exposure', label: 'Listings only my own buyers ever see', tag: 'DEALS', sting: 'One buyer pool, when there could be ' + plAgentsN + ' agents.', fix: 'MLS sharing', fixHref: '/launch/', fixLine: 'List once, ' + plAgents + ' agents can sell it with you.' },
 	{ id: 'own-stock', label: 'A website with only my own stock on it', tag: 'DEALS', sting: 'Buyers leave to find what you do not list.', fix: 'Network XML feed', fixHref: '/features/#topic-xml', fixLine: 'Every listing on the network, on your site, in sync.' },
 	{ id: 'market', label: 'Guessing what the market is actually doing', tag: 'DEALS', sting: 'Priced on a hunch, sold at a discount.', fix: 'Live market data', fixHref: '/neighbourhood/', fixLine: 'Notary-verified prices for every area. Free.' },
 	{ id: 'blog', label: 'A blog I have not touched since March', tag: 'DEALS', sting: 'Costs you 0h a week. That is the problem.', fix: 'Instant Content', fixHref: '/instant-content/', fixLine: 'SEO posts and area guides write themselves.' },

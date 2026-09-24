@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 import Layout from '../../layouts/Layout.astro';
 
 // Gemelo español de /free-mls/. Todos los precios salen del ledger de
@@ -8,7 +14,7 @@ import Layout from '../../layouts/Layout.astro';
 
 const free = [
 	['Publicar tus propiedades', 'Sin límite, con 25 fotos gratis en cada una, documentos y tu propia referencia'],
-	['El MLS compartido', 'Más de 1.300 agentes pueden venderlo contigo'],
+	['El MLS compartido', 'Más de ' + plAgentsN + ' agentes pueden venderlo contigo'],
 	['El portal público', 'Tu anuncio aparece en propertylist.es'],
 	['Tu MicroSite', 'Una web de marca para tu agencia, sincronizada sola'],
 	['Feeds XML de entrada y salida', 'Importa tu cartera y publícala en Idealista, Fotocasa, Rightmove'],
@@ -87,7 +93,7 @@ const faqs = [
 		<h2 class="mH2">Primero, qué es realmente un MLS</h2>
 		<p>
 			Un portal anuncia tu propiedad a compradores. Un <strong>MLS la comparte con otros agentes</strong>. Cuando
-			publicas en PropertyList, más de 1.300 agentes de la Costa del Sol pueden venderla contigo, y la comisión se
+			publicas en PropertyList, más de {plAgentsN} agentes de la Costa del Sol pueden venderla contigo, y la comisión se
 			reparte según las condiciones que tú fijas en el anuncio.
 		</p>
 		<p>

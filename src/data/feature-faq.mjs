@@ -178,7 +178,7 @@ export const featureFaqItems = [
     id: 'earn-free-credits',
     q: 'Can I earn free credits on PropertyList?',
     aHtml:
-      'Yes. Get your agency verified (free, and any time you like) and receive 20 free credits. Agents also earn 20 credits for each agency that signs up via their referral link - and the new signup gets 10 credits.',
+      'Yes. Get your agency verified (free, and any time you like) and receive 20 free credits. Agents also earn 20 credits for each agency that signs up via their referral link and is approved - and the new agency gets 10 credits.',
   },
 
   // ─── MCP / Developers ─────────────────────────────────────────────────

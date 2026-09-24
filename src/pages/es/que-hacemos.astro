@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 // "One listing. Watch what happens." - the agent film (10-08-26).
 // The answer to the most common piece of feedback PropertyList gets: agents
 // cannot tell what the platform actually is. So instead of another feature
@@ -29,14 +35,14 @@ const canonical = `${origin}/es/que-hacemos/`;
 
 const title = 'Qué es PropertyList de verdad: un anuncio, seguido de principio a fin';
 const description =
-	'Sigue un anuncio a través de todo PropertyList: el MLS donde 1.300+ agentes pueden venderlo, el portal, tu propia web, los feeds XML, la consulta, el pipeline, la venta en red. Cada coste sellado en el momento en que ocurre, casi todos 0 EUR.';
+	'Sigue un anuncio a través de todo PropertyList: el MLS donde ' + plAgents + ' agentes pueden venderlo, el portal, tu propia web, los feeds XML, la consulta, el pipeline, la venta en red. Cada coste sellado en el momento en que ocurre, casi todos 0 EUR.';
 
 const dots = Array.from({ length: 130 }, (_, i) => i);
 
 const faqs = [
 	{
 		q: '¿Qué es PropertyList?',
-		a: 'PropertyList es una plataforma inmobiliaria para agentes en España construida alrededor de un MLS compartido: publicas una propiedad una vez y 1.300+ agentes pueden venderla contigo, mientras el mismo anuncio aparece automáticamente en el portal público, en tu propia web y en tus feeds XML hacia otros portales. Alrededor del MLS hay un CRM con pipelines y seguimientos automáticos, un creador de webs, un módulo de alquileres, datos de mercado verificados por notario y un conjunto de herramientas de IA.',
+		a: 'PropertyList es una plataforma inmobiliaria para agentes en España construida alrededor de un MLS compartido: publicas una propiedad una vez y ' + plAgents + ' agentes pueden venderla contigo, mientras el mismo anuncio aparece automáticamente en el portal público, en tu propia web y en tus feeds XML hacia otros portales. Alrededor del MLS hay un CRM con pipelines y seguimientos automáticos, un creador de webs, un módulo de alquileres, datos de mercado verificados por notario y un conjunto de herramientas de IA.',
 	},
 	{
 		q: '¿Cuánto cuesta PropertyList?',
@@ -84,7 +90,7 @@ const faqLd = {
 		<!-- ================= INTRO ================= -->
 		<header class="intro">
 			<p class="kicker">&iquest;Qu&eacute; es PropertyList?</p>
-			<h1>Publica una vez.<br /><em>1.300+ agentes</em> la venden contigo.</h1>
+			<h1>Publica una vez.<br /><em>{plAgents} agentes</em> la venden contigo.</h1>
 			<p class="sub">
 				Esa es toda la idea. MLS, portal, CRM y microsite gratis, todo desde un solo guardar. Abajo, m&iacute;ralo
 				pasar con un anuncio real, con cada coste sellado en el momento exacto en que ocurre. Casi todos dicen 0 &euro;.
@@ -161,11 +167,11 @@ const faqLd = {
 						<div class="dest dFace front">
 							<div class="dHead">El MLS</div>
 							<div class="dotGrid" aria-hidden="true">{dots.map((i) => <span class="dot" style={`--d:${(i * 7) % 900}ms`}></span>)}</div>
-							<div class="dLine"><b data-count-agents>1.300</b>+ agentes pueden venderlo</div>
+							<div class="dLine"><b data-count-agents data-to={agentsTo}>{plAgentsN}</b>+ agentes pueden venderlo</div>
 							<span class="stamp stF1 hit">&euro;0</span>
 						</div>
 						<div class="dest dFace back">
-							<div class="dHead">900+ microsites de agencias</div>
+							<div class="dHead">{plAgencies} microsites de agencias</div>
 							<div class="siteRow" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 							<div class="dLine">los escaparates de toda la red lo muestran</div>
 							<span class="stamp stB1 hit">&euro;0</span>
@@ -243,8 +249,8 @@ const faqLd = {
 		<div class="breather">
 			<h2>Todos los sitios donde vendes, con un solo guardar</h2>
 			<p>
-				Un guardar llega a ocho sitios. El MLS (1.300+ agentes), el portal público, tu microsite gratis y los
-				microsites de 970+ agencias de la red. El feed XML lo lleva a Idealista, Fotocasa y Rightmove. Los asistentes
+				Un guardar llega a ocho sitios. El MLS ({plAgents} agentes), el portal público, tu microsite gratis y los
+				microsites de {plAgencies} agencias de la red. El feed XML lo lleva a Idealista, Fotocasa y Rightmove. Los asistentes
 				de IA pueden consultarlo por el MCP, con datos verificados por notario detrás. Tu propia web recibe tu cartera
 				gratis, o todos los anuncios de la red por 35 créditos al mes. E Instant Marketing, cuando llegue, comprará los
 				anuncios de Google, Facebook e Instagram en un clic. Siete en vivo hoy, todo gratis salvo el feed completo de
@@ -329,7 +335,7 @@ const faqLd = {
 		</div>
 
 		<div class="breather">
-			<h2>1.300+ agentes vendiendo contigo, no contra ti</h2>
+			<h2>{plAgents} agentes vendiendo contigo, no contra ti</h2>
 			<p>
 				Esta es la parte de PropertyList realmente inusual en España. Los anuncios se comparten en la red, cualquier
 				agente puede traer a su comprador, y el reparto de comisión viaja con el propio anuncio. A esta compradora no
@@ -402,11 +408,11 @@ const faqLd = {
 					<div class="tHead">PROPERTYLIST &middot; LA CUENTA</div>
 					{[
 						['Publicar la propiedad (Anuncio instantáneo)', '0 €'],
-						['MLS: 1.300+ agentes pueden venderla', '0 €'],
+						['MLS: ' + plAgents + ' agentes pueden venderla', '0 €'],
 						['Visibilidad en el portal público', '0 €'],
 						['Tu microsite gratis, siempre sincronizado', '0 €'],
 						['Feeds XML: Idealista, Fotocasa, Rightmove', '0 €'],
-						['900+ microsites de agencias lo muestran', '0 €'],
+						[plAgencies + ' microsites de agencias lo muestran', '0 €'],
 						['Asistentes de IA + datos en vivo (MCP)', '0 €'],
 						['Datos de mercado verificados por notario', '0 €'],
 						['App móvil (Android)', '0 €'],
@@ -1006,7 +1012,7 @@ const faqLd = {
 					}
 					if (sc.counter) {
 						const c = stage.querySelector(sc.counter.sel) as HTMLElement;
-						if (c) c.textContent = Math.round(sc.counter.to * clamp((p - sc.counter.from) / (sc.counter.end - sc.counter.from))).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+						if (c) c.textContent = Math.round((Number(c.dataset.to) || sc.counter.to) * clamp((p - sc.counter.from) / (sc.counter.end - sc.counter.from))).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 					}
 					if (sc.roll) {
 						const el = stage.querySelector(sc.roll.sel) as HTMLElement;

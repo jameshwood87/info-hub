@@ -14,7 +14,7 @@ const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 const WA = coagentWaLink('Hola');
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Escribir a PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('El número de CoAgent está en https://info.propertylist.es/es/1000-agencias/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch desde las 9:00. Solo di hola. Gratis para todos los agentes hasta el 22 de septiembre.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Escribir a PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('El número de CoAgent está en https://info.propertylist.es/es/1000-agencias/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch desde las 9:00. Solo di hola. 20 mensajes gratis al mes para cada agente.')}`;
 
 const reviews = [
 	{ quote: 'Está pensada para el día a día real de un agente inmobiliario. Ahorra tiempo.', agency: 'Alain Fiddelers' },
@@ -26,7 +26,7 @@ const reviews = [
 const faqs = [
 	{
 		q: '¿Cuánto cuesta CoAgent?',
-		a: 'CoAgent es gratis para todos los agentes hasta el 22 de septiembre. A partir de entonces, cada agente tiene 20 mensajes gratis al mes, y responder SÍ nunca cuenta. Los primeros 10 agentes que le escriban son la excepción: gratis e ilimitado hasta el 1 de noviembre de 2026. El ilimitado cuesta 50 créditos al mes por agente. ¿Más de 3 agentes? Habla con nosotros sobre un paquete.',
+		a: 'Cada agente tiene 20 mensajes gratis al mes, y responder SÍ nunca cuenta. Los primeros 10 agentes que le escriban son la excepción: gratis e ilimitado hasta el 1 de noviembre de 2026. El ilimitado cuesta 50 créditos al mes por agente. ¿Más de 3 agentes? Habla con nosotros sobre un paquete.',
 	},
 	{
 		q: '¿Cambia mi CRM por su cuenta?',
@@ -57,7 +57,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 <Layout
 	lang="es"
 	title="Gracias: 1.000 agencias en PropertyList | PropertyList"
-	description="PropertyList ha superado las 1.000 agencias registradas. Gracias por ser parte de esto. Nuestro regalo es CoAgent, tu CRM en WhatsApp, gratis para todos los agentes hasta el 22 de septiembre, y para los primeros 10 que le escriban hasta el 1 de noviembre de 2026."
+	description="PropertyList ha superado las 1.000 agencias registradas. Gracias por ser parte de esto. Nuestro regalo es CoAgent, tu CRM en WhatsApp, con 20 mensajes gratis al mes para cada agente, y gratis e ilimitado hasta el 1 de noviembre de 2026 para los primeros 10 que le escriban."
 	canonical="https://info.propertylist.es/es/1000-agencias/"
 	ogImage="https://info.propertylist.es/og/og-1000-agencias-terms.jpg"
 	fullBleed
@@ -178,7 +178,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<h2>Únete. <span>Es gratis.</span></h2>
 					<p>
 						Tu próximo anuncio delante de {plAgencies} agencias el mismo día. Sin comisiones por publicar, sin contrato, sin
-						tarjeta. Y CoAgent para quitarte el papeleo de encima, gratis hasta el 22 de septiembre y después con 20 mensajes gratis al mes.
+						tarjeta. Y CoAgent para quitarte el papeleo de encima, con 20 mensajes gratis al mes para cada agente.
 					</p>
 				</div>
 				<div class="joinCta">

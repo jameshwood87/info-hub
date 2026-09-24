@@ -178,7 +178,7 @@ export const featureFaqItemsEs = [
     id: 'earn-free-credits',
     q: '¿Puedo ganar créditos gratis en PropertyList?',
     aHtml:
-      'Sí. Verifica tu agencia (gratis, y cuando quieras) y recibe 20 créditos gratis. Los agentes también ganan 20 créditos por cada agencia que se registra a través de su enlace de referido - y el nuevo usuario recibe 10 créditos.',
+      'Sí. Verifica tu agencia (gratis, y cuando quieras) y recibe 20 créditos gratis. Los agentes también ganan 20 créditos por cada agencia que se registra a través de su enlace de referido y es aprobada - y la nueva agencia recibe 10 créditos.',
   },
 
   // ─── MCP / Developers ─────────────────────────────────────────────────

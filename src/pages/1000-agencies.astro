@@ -14,7 +14,7 @@ const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 const WA = coagentWaLink('Hi');
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/1000-agencies/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch from 9am. Just say hi. Free for every agent until 22 September.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Message PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('The CoAgent number is on https://info.propertylist.es/1000-agencies/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch from 9am. Just say hi. 20 free messages a month for every agent.')}`;
 
 const reviews = [
 	{ quote: 'Designed with the daily reality of real estate agents in mind. It saves time.', agency: 'Alain Fiddelers' },
@@ -26,7 +26,7 @@ const reviews = [
 const faqs = [
 	{
 		q: 'What does CoAgent cost?',
-		a: 'CoAgent is free for every agent until 22 September. From then on, every agent gets 20 free messages a month, and replying YES never counts. The first 10 agents to message it are the exception: free and unlimited until 1 November 2026. Unlimited is 50 credits a month per agent. More than 3 agents? Talk to us about a package.',
+		a: 'Every agent gets 20 free messages a month, and replying YES never counts. The first 10 agents to message it are the exception: free and unlimited until 1 November 2026. Unlimited is 50 credits a month per agent. More than 3 agents? Talk to us about a package.',
 	},
 	{
 		q: 'Will it change my CRM on its own?',
@@ -57,7 +57,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 <Layout
 	lang="en"
 	title="Thank you: 1,000 agencies on PropertyList | PropertyList"
-	description="PropertyList passed 1,000 registered agencies. Thank you for being part of it. Our thank-you gift is CoAgent, your CRM on WhatsApp, free for every agent until 22 September, and for the first 10 to message it until 1 November 2026."
+	description="PropertyList passed 1,000 registered agencies. Thank you for being part of it. Our thank-you gift is CoAgent, your CRM on WhatsApp, with 20 free messages a month for every agent, and free and unlimited until 1 November 2026 for the first 10 to message it."
 	canonical="https://info.propertylist.es/1000-agencies/"
 	ogImage="https://info.propertylist.es/og/og-1000-agencies-terms.jpg"
 	fullBleed
@@ -178,7 +178,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<h2>Join them. <span>It is free.</span></h2>
 					<p>
 						Your next listing in front of {plAgencies} agencies the same day. No listing fees, no contract, no card. And CoAgent to
-						take the admin off your hands, free until 22 September, then 20 free messages a month.
+						take the admin off your hands, with 20 free messages a month for every agent.
 					</p>
 				</div>
 				<div class="joinCta">

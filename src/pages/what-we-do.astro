@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 // "One listing. Watch what happens." - the agent film (10-08-26).
 // The answer to the most common piece of feedback PropertyList gets: agents
 // cannot tell what the platform actually is. So instead of another feature
@@ -29,14 +35,14 @@ const canonical = `${origin}/what-we-do/`;
 
 const title = 'What PropertyList actually is: one listing, watched end to end';
 const description =
-	'Follow one property listing through the whole of PropertyList: the MLS where 1,300+ agents can sell it, the portal, your own website, the XML feeds, the enquiry, the pipeline, the network sale. Every cost stamped the moment it happens, most of them 0 EUR.';
+	'Follow one property listing through the whole of PropertyList: the MLS where ' + plAgents + ' agents can sell it, the portal, your own website, the XML feeds, the enquiry, the pipeline, the network sale. Every cost stamped the moment it happens, most of them 0 EUR.';
 
 const dots = Array.from({ length: 130 }, (_, i) => i);
 
 const faqs = [
 	{
 		q: 'What is PropertyList?',
-		a: 'PropertyList is a property platform for Spanish agents built around a shared MLS: list a property once and 1,300+ agents can sell it with you, while the same listing appears automatically on the public portal, your own website and your XML feeds to other portals. Around the MLS sit a CRM with pipelines and automated follow-ups, a website builder, a rentals module, notary-verified market data and a set of AI tools.',
+		a: 'PropertyList is a property platform for Spanish agents built around a shared MLS: list a property once and ' + plAgents + ' agents can sell it with you, while the same listing appears automatically on the public portal, your own website and your XML feeds to other portals. Around the MLS sit a CRM with pipelines and automated follow-ups, a website builder, a rentals module, notary-verified market data and a set of AI tools.',
 	},
 	{
 		q: 'What does PropertyList cost?',
@@ -84,7 +90,7 @@ const faqLd = {
 		<!-- ================= INTRO ================= -->
 		<header class="intro">
 			<p class="kicker">What is PropertyList?</p>
-			<h1>List once.<br /><em>1,300+ agents</em> sell it with you.</h1>
+			<h1>List once.<br /><em>{plAgents} agents</em> sell it with you.</h1>
 			<p class="sub">
 				That is the whole idea. Free MLS, portal, CRM and a microsite, all from one save. Below, watch it
 				happen to one real listing, with every cost stamped at the exact moment it occurs. Most of them say &euro;0.
@@ -161,11 +167,11 @@ const faqLd = {
 						<div class="dest dFace front">
 							<div class="dHead">The MLS</div>
 							<div class="dotGrid" aria-hidden="true">{dots.map((i) => <span class="dot" style={`--d:${(i * 7) % 900}ms`}></span>)}</div>
-							<div class="dLine"><b data-count-agents>1,300</b>+ agents can sell it</div>
+							<div class="dLine"><b data-count-agents data-to={agentsTo}>{plAgentsN}</b>+ agents can sell it</div>
 							<span class="stamp stF1 hit">&euro;0</span>
 						</div>
 						<div class="dest dFace back">
-							<div class="dHead">970+ agency microsites</div>
+							<div class="dHead">{plAgencies} agency microsites</div>
 							<div class="siteRow" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 							<div class="dLine">the whole network's shopfronts carry it</div>
 							<span class="stamp stB1 hit">&euro;0</span>
@@ -243,8 +249,8 @@ const faqLd = {
 		<div class="breather">
 			<h2>Everywhere you sell, from one save</h2>
 			<p>
-				One save reaches eight places. The MLS (1,300+ agents), the public portal, your free microsite, and the
-				microsites of 970+ agencies across the network. The XML feed carries it to Idealista, Fotocasa and Rightmove.
+				One save reaches eight places. The MLS ({plAgents} agents), the public portal, your free microsite, and the
+				microsites of {plAgencies} agencies across the network. The XML feed carries it to Idealista, Fotocasa and Rightmove.
 				AI assistants can query it through the MCP, with notary-verified data behind it. Your own website takes your
 				stock free, or every network listing for 35 credits a month. And Instant Marketing, when it ships, will buy the
 				Google, Facebook and Instagram ads in one click. Seven live today, all of them free except the full network
@@ -329,7 +335,7 @@ const faqLd = {
 		</div>
 
 		<div class="breather">
-			<h2>1,300+ agents selling with you, not against you</h2>
+			<h2>{plAgents} agents selling with you, not against you</h2>
 			<p>
 				This is the part of PropertyList that is genuinely unusual in Spain. Listings are shared across the network,
 				any agent can bring their buyer, and the commission split rides on the listing itself. You did not find this
@@ -402,11 +408,11 @@ const faqLd = {
 					<div class="tHead">PROPERTYLIST &middot; THE BILL</div>
 					{[
 						['List the property (Instant Listing)', '€0'],
-						['MLS: 1,300+ agents can sell it', '€0'],
+						['MLS: ' + plAgents + ' agents can sell it', '€0'],
 						['Public portal visibility', '€0'],
 						['Your free microsite, kept in sync', '€0'],
 						['XML feeds: Idealista, Fotocasa, Rightmove', '€0'],
-						['970+ agency microsites carry it', '€0'],
+						[plAgencies + ' agency microsites carry it', '€0'],
 						['AI assistants + live data (MCP)', '€0'],
 						['Market data, notary-verified', '€0'],
 						['Mobile app (Android)', '€0'],
@@ -1006,7 +1012,7 @@ const faqLd = {
 					}
 					if (sc.counter) {
 						const c = stage.querySelector(sc.counter.sel) as HTMLElement;
-						if (c) c.textContent = Math.round(sc.counter.to * clamp((p - sc.counter.from) / (sc.counter.end - sc.counter.from))).toLocaleString('en-GB');
+						if (c) c.textContent = Math.round((Number(c.dataset.to) || sc.counter.to) * clamp((p - sc.counter.from) / (sc.counter.end - sc.counter.from))).toLocaleString('en-GB');
 					}
 					if (sc.roll) {
 						const el = stage.querySelector(sc.roll.sel) as HTMLElement;

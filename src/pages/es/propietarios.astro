@@ -1,4 +1,8 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgentsN = plAgents.replace('+', '');
 import Layout from '../../layouts/Layout.astro';
 
 // Gemelo español de /landlord/. Cada afirmación legal está comprobada contra
@@ -149,7 +153,7 @@ const faqs = [
 		<h2 class="lH2">Si prefieres que se encargue alguien</h2>
 		<p>
 			PropertyList es la red compartida en la que trabajan los agentes locales: un anuncio es visible para más de
-			1.300 agentes de la Costa del Sol, así que una propiedad no queda limitada a los compradores o inquilinos de
+			{plAgentsN} agentes de la Costa del Sol, así que una propiedad no queda limitada a los compradores o inquilinos de
 			una sola oficina. Los propietarios no publican aquí directamente, lo hacen los agentes. Si quieres un agente,
 			indícalo en la guía de arriba y un agente local registrado te contacta.
 		</p>

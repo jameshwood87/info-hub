@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 import Layout from '../layouts/Layout.astro';
 
 // Owner-facing landing page. Every legal statement here is checked against the
@@ -147,7 +153,7 @@ const faqs = [
 	<section class="lBand lAlt">
 		<h2 class="lH2">If you would rather someone handled it</h2>
 		<p>
-			PropertyList is the shared network the local agents work in: one listing is visible to more than 1,300 agents
+			PropertyList is the shared network the local agents work in: one listing is visible to more than {plAgentsN} agents
 			across the Costa del Sol, so a property is not limited to the buyers or tenants of one office. Owners do not
 			list here directly, agents do. If you want an agent involved, say so on the guide above and a registered local
 			agent gets in touch.

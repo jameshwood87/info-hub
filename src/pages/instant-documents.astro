@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 import Layout from '../layouts/Layout.astro';
 import AgentInterestCta from '../components/AgentInterestCta.astro';
 
@@ -275,7 +281,7 @@ const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 				<h2>Inside the platform you already use</h2>
 				<p>
 					No separate signature tool, no document folder on someone's laptop. Instant Documents lives inside PropertyList,
-					where 1,300+ agents and 970+ agencies already work - next to the listings, the CRM and the deals it writes about.
+					where {plAgents} agents and {plAgencies} agencies already work - next to the listings, the CRM and the deals it writes about.
 				</p>
 			</div>
 		</div>

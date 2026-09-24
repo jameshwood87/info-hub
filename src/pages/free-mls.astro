@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'en');
+const plAgencies = statPlus(__ps.agencies, 'en');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 import Layout from '../layouts/Layout.astro';
 
 // Agent-facing explainer for the "free MLS" search intent. Every price below
@@ -8,7 +14,7 @@ import Layout from '../layouts/Layout.astro';
 
 const free = [
 	['Listing your properties', 'Unlimited, with 25 free photos each, documents and your own reference'],
-	['The shared MLS', 'More than 1,300 agents can sell your listing with you'],
+	['The shared MLS', 'More than ' + plAgentsN + ' agents can sell your listing with you'],
 	['The public portal', 'Your listing appears on propertylist.es'],
 	['Your MicroSite', 'A branded site for your agency, kept in sync automatically'],
 	['XML feeds in and out', 'Import your stock, push it to Idealista, Fotocasa, Rightmove'],
@@ -87,7 +93,7 @@ const faqs = [
 		<h2 class="mH2">First, what an MLS actually is</h2>
 		<p>
 			A portal advertises your property to buyers. An <strong>MLS shares it with other agents</strong>. When you list
-			on PropertyList, more than 1,300 agents across the Costa del Sol can sell that property alongside you, and the
+			on PropertyList, more than {plAgentsN} agents across the Costa del Sol can sell that property alongside you, and the
 			commission splits on the terms you set on the listing.
 		</p>
 		<p>

@@ -13,7 +13,7 @@ const agencyTarget = parseInt(plAgencies.replace(/[^0-9]/g, ''), 10) || 1000;
 
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=en';
 const WA = coagentWaLink('Hej');
-const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgent-numret finns på https://info.propertylist.es/sv/1000-maklarbyraer/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch från kl. 9. Säg bara hej. Gratis för alla agenter till 22 september.')}`;
+const CAL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Skriv till PropertyList CoAgent')}&dates=20260915T070000Z/20260915T071500Z&details=${encodeURIComponent('CoAgent-numret finns på https://info.propertylist.es/sv/1000-maklarbyraer/?utm_source=calendar&utm_medium=reminder&utm_campaign=coagent-launch från kl. 9. Säg bara hej. 20 gratis meddelanden i månaden för alla agenter.')}`;
 
 const reviews = [
 	{ quote: 'Utformad utifrån mäklares verkliga vardag. Den sparar tid.', agency: 'Alain Fiddelers' },
@@ -25,7 +25,7 @@ const reviews = [
 const faqs = [
 	{
 		q: 'Vad kostar CoAgent?',
-		a: 'CoAgent är gratis för alla agenter till 22 september. Därefter får alla agenter 20 gratis meddelanden i månaden, och att svara YES räknas aldrig. De första 10 agenterna som skriver till den är undantaget: gratis och obegränsat till 1 november 2026. Obegränsat kostar 50 krediter i månaden per agent. Fler än 3 agenter? Prata med oss om ett paket.',
+		a: 'Alla agenter får 20 gratis meddelanden i månaden, och att svara YES räknas aldrig. De första 10 agenterna som skriver till den är undantaget: gratis och obegränsat till 1 november 2026. Obegränsat kostar 50 krediter i månaden per agent. Fler än 3 agenter? Prata med oss om ett paket.',
 	},
 	{
 		q: 'Ändrar den mitt CRM på egen hand?',
@@ -56,7 +56,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 <Layout
 	lang="sv"
 	title="Tack: 1 000 mäklarbyråer på PropertyList | PropertyList"
-	description="PropertyList passerade 1 000 registrerade mäklarbyråer. Tack för att du är en del av det. Vår tackgåva är CoAgent, ditt CRM i WhatsApp, gratis för alla agenter till 22 september, och för de första 10 som skriver till den till 1 november 2026."
+	description="PropertyList passerade 1 000 registrerade mäklarbyråer. Tack för att du är en del av det. Vår tackgåva är CoAgent, ditt CRM i WhatsApp, med 20 gratis meddelanden i månaden för alla agenter, och gratis och obegränsat till 1 november 2026 för de första 10 som skriver till den."
 	canonical="https://info.propertylist.es/sv/1000-maklarbyraer/"
 	ogImage="https://info.propertylist.es/og/og-1000-agencies-terms-sv.jpg"
 	fullBleed
@@ -177,7 +177,7 @@ const confetti = Array.from({ length: 28 }, (_, i) => i);
 					<h2>Gå med dem. <span>Det är gratis.</span></h2>
 					<p>
 						Ditt nästa objekt framför {plAgencies} mäklarbyråer samma dag. Inga avgifter för att lägga upp, inget kontrakt, inget kort. Och CoAgent som
-						tar hand om pappersarbetet åt dig, gratis till 22 september, sedan 20 gratis meddelanden i månaden.
+						tar hand om pappersarbetet åt dig, med 20 gratis meddelanden i månaden för alla agenter.
 					</p>
 				</div>
 				<div class="joinCta">

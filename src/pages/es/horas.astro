@@ -1,4 +1,10 @@
 ---
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+const __ps = await getPortalStats();
+const plAgents = statPlus(__ps.agents, 'es');
+const plAgencies = statPlus(__ps.agencies, 'es');
+const plAgentsN = plAgents.replace('+', '');
+const agentsTo = Math.floor(__ps.agents / 10) * 10;
 // "Pick your poison" - the pain-first router built as a shareable tally.
 // Tick what you hate, the hours mount up, the receipt prints the damage and the
 // fix for each pain. Everything (pains AND fixes) ships in static HTML so search
@@ -57,7 +63,7 @@ const pains: Pain[] = [
 // putting an invented hours figure on them was the one dishonest thing
 // on a page whose whole argument is that we counted honestly.
 const costs: Cost[] = [
-	{ id: 'exposure', label: 'Anuncios que solo ven mis propios compradores', tag: 'OPERACIONES', sting: 'Una sola bolsa de compradores, pudiendo ser 1.300 agentes.', fix: 'Compartir en el MLS', fixHref: '/es/lanza-tu-agencia/', fixLine: 'Publica una vez y 1.300+ agentes pueden venderla contigo.' },
+	{ id: 'exposure', label: 'Anuncios que solo ven mis propios compradores', tag: 'OPERACIONES', sting: 'Una sola bolsa de compradores, pudiendo ser ' + plAgentsN + ' agentes.', fix: 'Compartir en el MLS', fixHref: '/es/lanza-tu-agencia/', fixLine: 'Publica una vez y ' + plAgents + ' agentes pueden venderla contigo.' },
 	{ id: 'own-stock', label: 'Una web solo con mi propio stock', tag: 'OPERACIONES', sting: 'El comprador se va a buscar lo que tú no publicas.', fix: 'Feed XML de la red', fixHref: '/es/funciones/#topic-xml', fixLine: 'Todos los anuncios de la red, en tu web, sincronizados.' },
 	{ id: 'market', label: 'Adivinar qué está haciendo el mercado', tag: 'OPERACIONES', sting: 'Precio a ojo, venta con descuento.', fix: 'Datos de mercado en vivo', fixHref: '/es/barrios/', fixLine: 'Precios verificados por notaría en cada zona. Gratis.' },
 	{ id: 'blog', label: 'Un blog que no toco desde marzo', tag: 'OPERACIONES', sting: 'Te cuesta 0h a la semana. Ese es el problema.', fix: 'Instant Content', fixHref: '/es/contenido-instantaneo/', fixLine: 'Los posts SEO y las guías de zona se escriben solos.' },
