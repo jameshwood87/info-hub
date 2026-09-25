@@ -178,6 +178,7 @@ export async function GET() {
     '/film-test/', // redirect stub -> /what-we-do/
     '/360walkthrough/', // redirect stub -> /360-walkthrough/
     '/activate/',
+    '/costa-del-sol-3d/', // noindex 3D prototype, not linked
     '/es/activar/', // noindex: dormant-agent activation
     '/agents-survey/',
     '/es/encuesta-agentes/',
