@@ -37,10 +37,10 @@ const moments = [
 		label: 'With a client beside you',
 		asks: [
 			{ q: 'What have we got in Marbella, three beds, up to two million?', a: 'Five listings from the shared MLS with prices and links. No client needed, so it works with someone sitting next to you.' },
-			{ q: 'Tell me about PL22234', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
+			{ q: 'Tell me about PL99999', a: 'Price, bedrooms, size, location and the link for that one listing, whether it is yours or another agency’s.' },
 			{ q: 'Which is the best value, PL5001, PL5002 or PL5003?', a: 'It ranks them against comparable homes for sale nearby, with the price per square metre, so you can tell a client which one is keenly priced and which is asking too much. Ask straight after a search and it compares those results.' },
 			{ q: 'How many apartments are for sale in San Pedro?', a: 'The real number on the market there, the best matches, and a link to the full list in your CRM.' },
-			{ q: 'Is PL22234 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
+			{ q: 'Is PL99999 still available?', a: 'If the listing belongs to another agency, CoAgent offers to ask them for you. Reply YES and the enquiry goes to them through the MLS, and their answer comes back to you.' },
 		],
 	},
 	{
@@ -59,9 +59,9 @@ const moments = [
 			{ photo: true, q: 'Photos of a new listing', a: 'Send them straight from your camera roll, then tell CoAgent about the property, typed or as a voice note. It asks for anything missing, like the price, reads the listing back, and on YES writes the title, description and features. Reply PUBLISH and it goes to review, as it would from the CRM. Nothing goes live without that.' },
 			{ photo: true, q: 'A photo of a Se Vende sign', a: 'CoAgent reads the phone number off the sign, with any name or price on it. Reply YES and the owner is saved as a contact in your CRM with a note of the sign and a follow-up to call them.' },
 			{ q: 'What is Nueva Andalucía worth?', a: 'The middle asking price and the range across what is actually on the market there. If we do not hold enough stock in an area, it says so rather than guessing.' },
-			{ q: 'What is PL22234 worth?', a: 'A value from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
-			{ q: 'REPORT', a: 'After a valuation, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
-			{ q: 'BROCHURE PL22234', a: 'A brochure of the listing with your own branding: a page your client can open, with today’s price and a way to enquire, plus the PDF. Brochures are free.' },
+			{ q: 'What is PL99999 worth?', a: 'A market price estimate from notary-recorded sales in that town, with a range and a link to the public proof. Or describe the home instead: “a 120 m² apartment in Estepona”. It always tells you what the figure is based on.' },
+			{ q: 'REPORT', a: 'After a market price estimate, reply REPORT for the full Property Intelligence Report, as a link you can send to the seller. Your first one is free. After that it costs credits, and it tells you how many and asks before spending anything.' },
+			{ q: 'BROCHURE PL99999', a: 'A brochure of the listing with your own branding: a page your client can open, with today’s price and a way to enquire, plus the PDF. Brochures are free.' },
 		],
 	},
 	{
@@ -82,7 +82,7 @@ const faqs = [
 	{ q: 'Can it talk to other agencies for me?', a: 'Yes. Ask whether a listing from another agency is still available and CoAgent offers to send the enquiry. Reply YES and it goes through the MLS the same way one sent from the CRM screen does, so it lands in their normal workflow.' },
 	{ q: 'What if CoAgent does not know my number?', a: 'It replies, in Spanish and English, with a link to create your free account and a link to the Staff page of your CRM, where you add your mobile to your profile. Put the country code in front if your number is not Spanish, then write to it again.' },
 	{ q: 'What costs credits?', a: 'Messages are covered by your plan, and brochures are free. The market report after your first free one is paid in PropertyList credits, at the same price as in the CRM. CoAgent always tells you the price and waits for your YES before it spends anything.' },
-	{ q: 'What does it cost?', a: 'Every agent gets 20 free messages a month, and approving with YES never counts toward them. The first 10 agents to message it are the exception: free and unlimited until 1 November 2026. Unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. If you have more than 3 agents to add, talk to us about a package. The MLS and the CRM core stay free, and creating your account costs nothing.' },
+	{ q: 'What does it cost?', a: 'Every agent gets 20 free messages a month, and approving with YES never counts toward them. The first 10 agents to message it have it free and unlimited until 1 November 2026; those places have gone. Unlimited is 50 credits a month per agent, paid from your PropertyList credits, and you can stop it renewing any time. If you have more than 3 agents to add, talk to us about a package. The MLS and the CRM core stay free, and creating your account costs nothing.' },
 	{ q: 'What is not live yet?', a: 'Connecting your own WhatsApp number so client chats file themselves, a dedicated work line inside the PropertyList app, and the client brief appearing by itself on your caller screen. Everything else on this page works today.' },
 ];
 
@@ -279,7 +279,7 @@ const softwareLd = {
 					<ul class="checks">
 						<li>The whole shared MLS, not just your listings</li>
 						<li>Best value ranked on price per m²</li>
-						<li>Values from notary-recorded sales, with the proof</li>
+						<li>Market price estimates from notary-recorded sales, with the proof</li>
 					</ul>
 				</div>
 				<div class="matchVisual" aria-hidden="true">
@@ -355,10 +355,10 @@ const softwareLd = {
 					<div class="planDesc">free messages a month, every month. Replying YES never counts.</div>
 				</div>
 				<div class="plan featured">
-					<div class="planBadge">The first 10 agents</div>
-					<div class="planWhen">Free and unlimited until</div>
-					<div class="planPrice">1 November</div>
-					<div class="planDesc">Be one of the first 10 to message it. Tell us where it gets in the way, and it changes.</div>
+					<div class="planBadge">Start here</div>
+					<div class="planWhen">Try it on WhatsApp</div>
+					<div class="planPrice">Say hi</div>
+					<div class="planDesc">Nothing to install. Just say hi on WhatsApp. Tell us where it gets in the way, and it changes.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Message CoAgent now</a>
 					) : (

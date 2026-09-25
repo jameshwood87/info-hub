@@ -36,10 +36,10 @@ const moments = [
 		label: 'Med en kund bredvid dig',
 		asks: [
 			{ q: 'Vad har vi i Marbella, tre sovrum, upp till två miljoner?', a: 'Fem objekt från det delade MLS-systemet med priser och länkar. Ingen kund behöver anges, så det fungerar även med någon som sitter bredvid dig.' },
-			{ q: 'Berätta om PL22234', a: 'Pris, sovrum, storlek, läge och länken till just det objektet, oavsett om det är ditt eller en annan byrås.' },
+			{ q: 'Berätta om PL99999', a: 'Pris, sovrum, storlek, läge och länken till just det objektet, oavsett om det är ditt eller en annan byrås.' },
 			{ q: 'Vilket har bäst värde, PL5001, PL5002 eller PL5003?', a: 'Den rangordnar dem mot jämförbara bostäder till salu i närheten, med pris per kvadratmeter, så att du kan säga till en kund vilket som är attraktivt prissatt och vilket som begär för mycket. Fråga direkt efter en sökning, så jämför den de resultaten.' },
 			{ q: 'Hur många lägenheter är till salu i San Pedro?', a: 'Det verkliga antalet på marknaden där, de bästa träffarna och en länk till hela listan i ditt CRM.' },
-			{ q: 'Är PL22234 fortfarande tillgänglig?', a: 'Om objektet tillhör en annan byrå erbjuder sig CoAgent att fråga dem åt dig. Svara YES, så går förfrågan till dem via MLS-systemet, och deras svar kommer tillbaka till dig.' },
+			{ q: 'Är PL99999 fortfarande tillgänglig?', a: 'Om objektet tillhör en annan byrå erbjuder sig CoAgent att fråga dem åt dig. Svara YES, så går förfrågan till dem via MLS-systemet, och deras svar kommer tillbaka till dig.' },
 		],
 	},
 	{
@@ -58,9 +58,9 @@ const moments = [
 			{ photo: true, q: 'Foton av ett nytt objekt', a: 'Skicka dem direkt från kamerarullen, berätta sedan om objektet för CoAgent, skrivet eller som röstanteckning. Den frågar efter det som saknas, som priset, läser upp objektet, och skriver rubrik, beskrivning och egenskaper när du svarar YES. Svara PUBLISH, så går det till granskning, precis som från CRM:et. Inget publiceras utan det.' },
 			{ photo: true, q: 'Ett foto av en Se Vende-skylt', a: 'CoAgent läser av telefonnumret på skylten, plus namn eller pris om det står med. Svara YES, så sparas ägaren som kontakt i ditt CRM med en anteckning om skylten och en påminnelse om att ringa.' },
 			{ q: 'Vad är Nueva Andalucía värt?', a: 'Medianpriset och intervallet för det som faktiskt finns till salu där. Om vi inte har tillräckligt med objekt i ett område säger den det istället för att gissa.' },
-			{ q: 'Vad är PL22234 värt?', a: 'Ett värde från notariebekräftade försäljningar i den staden, med ett intervall och en länk till det offentliga underlaget. Eller beskriv bostaden istället: "en lägenhet på 120 m² i Estepona". Den säger alltid vad siffran bygger på.' },
-			{ q: 'REPORT', a: 'Efter en värdering, svara REPORT för den fullständiga Property Intelligence Report, som en länk du kan skicka till säljaren. Din första är gratis. Efter det kostar det krediter, och den säger hur många och frågar innan den spenderar något.' },
-			{ q: 'BROCHURE PL22234', a: 'En broschyr för objektet med din egen varumärkesprofil: en sida din kund kan öppna, med dagens pris och ett sätt att höra av sig, plus PDF:en. Broschyrer är gratis.' },
+			{ q: 'Vad är PL99999 värt?', a: 'Ett uppskattat marknadspris från notariebekräftade försäljningar i den staden, med ett intervall och en länk till det offentliga underlaget. Eller beskriv bostaden istället: "en lägenhet på 120 m² i Estepona". Den säger alltid vad siffran bygger på.' },
+			{ q: 'REPORT', a: 'Efter ett uppskattat marknadspris, svara REPORT för den fullständiga Property Intelligence Report, som en länk du kan skicka till säljaren. Din första är gratis. Efter det kostar det krediter, och den säger hur många och frågar innan den spenderar något.' },
+			{ q: 'BROCHURE PL99999', a: 'En broschyr för objektet med din egen varumärkesprofil: en sida din kund kan öppna, med dagens pris och ett sätt att höra av sig, plus PDF:en. Broschyrer är gratis.' },
 		],
 	},
 	{
@@ -81,7 +81,7 @@ const faqs = [
 	{ q: 'Kan den prata med andra byråer åt mig?', a: 'Ja. Fråga om ett objekt från en annan byrå fortfarande är tillgängligt, så erbjuder sig CoAgent att skicka förfrågan. Svara YES, så går den via MLS-systemet på samma sätt som en förfrågan skickad från CRM-skärmen, så den hamnar i deras vanliga flöde.' },
 	{ q: 'Vad händer om CoAgent inte känner igen mitt nummer?', a: 'Den svarar, på spanska och engelska, med en länk för att skapa ditt gratiskonto och en länk till Staff-sidan i ditt CRM, där du lägger till din mobil på din profil. Sätt landskoden framför om ditt nummer inte är spanskt, och skriv till den igen.' },
 	{ q: 'Vad kostar krediter?', a: 'Meddelanden ingår i din plan, och broschyrer är gratis. Marknadsrapporten efter din första gratis betalas med PropertyList-krediter, till samma pris som i CRM:et. CoAgent säger alltid priset och väntar på ditt YES innan den spenderar något.' },
-	{ q: 'Vad kostar det?', a: 'Alla agenter får 20 gratis meddelanden i månaden, och att svara YES räknas aldrig. De första 10 agenterna som skriver till CoAgent är undantaget: gratis och obegränsat till 1 november 2026. Obegränsat kostar 50 krediter i månaden per agent, betalt med dina PropertyList-krediter, och du kan stoppa förnyelsen när du vill. Fler än 3 agenter? Prata med oss om ett paket. MLS-systemet och CRM-kärnan förblir gratis, och det kostar inget att skapa ditt konto.' },
+	{ q: 'Vad kostar det?', a: 'Alla agenter får 20 gratis meddelanden i månaden, och att svara YES räknas aldrig. De första 10 agenterna som skrev till CoAgent har gratis och obegränsat till 1 november 2026; de platserna är redan tagna. Obegränsat kostar 50 krediter i månaden per agent, betalt med dina PropertyList-krediter, och du kan stoppa förnyelsen när du vill. Fler än 3 agenter? Prata med oss om ett paket. MLS-systemet och CRM-kärnan förblir gratis, och det kostar inget att skapa ditt konto.' },
 	{ q: 'Vad är inte lanserat än?', a: 'Att koppla ditt eget WhatsApp-nummer så att kundchattar arkiverar sig själva, en egen arbetslinje inuti PropertyList-appen, och att kundöversikten dyker upp av sig själv på din samtalsskärm. Allt annat på den här sidan fungerar redan idag.' },
 ];
 
@@ -278,7 +278,7 @@ const softwareLd = {
 					<ul class="checks">
 						<li>Hela det delade MLS-systemet, inte bara dina objekt</li>
 						<li>Bästa värde rangordnat efter pris per m²</li>
-						<li>Värderingar från notariebekräftade försäljningar, med bevis</li>
+						<li>Uppskattade marknadspriser från notariebekräftade försäljningar, med bevis</li>
 					</ul>
 				</div>
 				<div class="matchVisual" aria-hidden="true">
@@ -354,10 +354,10 @@ const softwareLd = {
 					<div class="planDesc">gratis meddelanden i månaden, varje månad. Att svara YES räknas aldrig.</div>
 				</div>
 				<div class="plan featured">
-					<div class="planBadge">De första 10 agenterna</div>
-					<div class="planWhen">Gratis och obegränsat till</div>
-					<div class="planPrice">1 november</div>
-					<div class="planDesc">Bli en av de första 10 som skriver till den. Säg till oss var den är i vägen, så ändrar vi det.</div>
+					<div class="planBadge">Börja här</div>
+					<div class="planWhen">Testa i WhatsApp</div>
+					<div class="planPrice">Säg hej</div>
+					<div class="planDesc">Inget att installera. Säg bara hej i WhatsApp. Säg till oss var den är i vägen, så ändrar vi det.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Skriv till CoAgent nu</a>
 					) : (

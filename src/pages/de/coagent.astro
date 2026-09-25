@@ -36,10 +36,10 @@ const moments = [
 		label: 'Mit einem Kunden neben Ihnen',
 		asks: [
 			{ q: 'Was haben wir in Marbella, drei Schlafzimmer, bis zwei Millionen?', a: 'Fünf Inserate aus dem gemeinsamen MLS mit Preisen und Links. Kein Kunde nötig, das funktioniert also auch, wenn jemand neben Ihnen sitzt.' },
-			{ q: 'Erzählen Sie mir von PL22234', a: 'Preis, Schlafzimmer, Größe, Lage und der Link zu diesem einen Inserat, ob es Ihres ist oder das einer anderen Agentur.' },
+			{ q: 'Erzählen Sie mir von PL99999', a: 'Preis, Schlafzimmer, Größe, Lage und der Link zu diesem einen Inserat, ob es Ihres ist oder das einer anderen Agentur.' },
 			{ q: 'Welches ist das beste Angebot, PL5001, PL5002 oder PL5003?', a: 'CoAgent vergleicht sie mit ähnlichen Immobilien, die in der Nähe zum Verkauf stehen, mit dem Preis pro Quadratmeter, damit Sie einem Kunden sagen können, welches günstig ist und welches zu teuer. Fragen Sie direkt nach einer Suche, und CoAgent vergleicht diese Ergebnisse.' },
 			{ q: 'Wie viele Wohnungen stehen in San Pedro zum Verkauf?', a: 'Die reale Zahl am Markt dort, die besten Treffer und ein Link zur vollständigen Liste in Ihrem CRM.' },
-			{ q: 'Ist PL22234 noch verfügbar?', a: 'Gehört das Inserat einer anderen Agentur, bietet CoAgent an, dort für Sie nachzufragen. Antworten Sie mit YES, und die Anfrage geht über das MLS an sie, und ihre Antwort kommt zu Ihnen zurück.' },
+			{ q: 'Ist PL99999 noch verfügbar?', a: 'Gehört das Inserat einer anderen Agentur, bietet CoAgent an, dort für Sie nachzufragen. Antworten Sie mit YES, und die Anfrage geht über das MLS an sie, und ihre Antwort kommt zu Ihnen zurück.' },
 		],
 	},
 	{
@@ -58,9 +58,9 @@ const moments = [
 			{ photo: true, q: 'Fotos eines neuen Inserats', a: 'Schicken Sie sie direkt aus Ihrer Kamerarolle und erzählen Sie CoAgent dann von der Immobilie, getippt oder als Sprachnachricht. CoAgent fragt nach allem, was fehlt, etwa dem Preis, liest Ihnen das Inserat vor und schreibt bei YES den Titel, die Beschreibung und die Ausstattung. Antworten Sie mit PUBLISH, und es geht zur Prüfung, genau wie aus dem CRM. Ohne das geht nichts online.' },
 			{ photo: true, q: 'Ein Foto eines Schilds mit „Se Vende“', a: 'CoAgent liest die Telefonnummer vom Schild ab, dazu Name oder Preis, falls vorhanden. Antworten Sie mit YES, und der Eigentümer wird als Kontakt in Ihrem CRM gespeichert, mit einer Notiz zum Schild und einer Wiedervorlage, ihn anzurufen.' },
 			{ q: 'Was ist Nueva Andalucía wert?', a: 'Der mittlere Angebotspreis und die Spanne dessen, was dort tatsächlich am Markt ist. Haben wir in einer Gegend nicht genug Bestand, sagt CoAgent das, statt zu raten.' },
-			{ q: 'Was ist PL22234 wert?', a: 'Ein Wert aus notariell beurkundeten Verkäufen in diesem Ort, mit einer Spanne und einem Link zum öffentlichen Nachweis. Oder beschreiben Sie die Immobilie stattdessen: „eine 120 m² große Wohnung in Estepona“. CoAgent sagt Ihnen immer, worauf die Zahl beruht.' },
-			{ q: 'REPORT', a: 'Antworten Sie nach einer Bewertung mit REPORT für den vollständigen Property Intelligence Report, als Link, den Sie dem Verkäufer schicken können. Ihr erster ist gratis. Danach kostet es Credits, und CoAgent sagt Ihnen wie viele und fragt, bevor etwas ausgegeben wird.' },
-			{ q: 'BROCHURE PL22234', a: 'Eine Broschüre des Inserats mit Ihrem eigenen Branding: eine Seite, die Ihr Kunde öffnen kann, mit dem heutigen Preis und einer Möglichkeit anzufragen, plus das PDF. Broschüren sind gratis.' },
+			{ q: 'Was ist PL99999 wert?', a: 'Eine Marktpreisschätzung aus notariell beurkundeten Verkäufen in diesem Ort, mit einer Spanne und einem Link zum öffentlichen Nachweis. Oder beschreiben Sie die Immobilie stattdessen: „eine 120 m² große Wohnung in Estepona“. CoAgent sagt Ihnen immer, worauf die Zahl beruht.' },
+			{ q: 'REPORT', a: 'Antworten Sie nach einer Marktpreisschätzung mit REPORT für den vollständigen Property Intelligence Report, als Link, den Sie dem Verkäufer schicken können. Ihr erster ist gratis. Danach kostet es Credits, und CoAgent sagt Ihnen wie viele und fragt, bevor etwas ausgegeben wird.' },
+			{ q: 'BROCHURE PL99999', a: 'Eine Broschüre des Inserats mit Ihrem eigenen Branding: eine Seite, die Ihr Kunde öffnen kann, mit dem heutigen Preis und einer Möglichkeit anzufragen, plus das PDF. Broschüren sind gratis.' },
 		],
 	},
 	{
@@ -81,7 +81,7 @@ const faqs = [
 	{ q: 'Kann CoAgent für mich mit anderen Agenturen sprechen?', a: 'Ja. Fragen Sie, ob ein Inserat einer anderen Agentur noch verfügbar ist, und CoAgent bietet an, die Anfrage zu schicken. Antworten Sie mit YES, und sie geht über das MLS genauso raus wie eine, die vom CRM-Bildschirm aus geschickt wird, sodass sie in deren normalem Arbeitsablauf landet.' },
 	{ q: 'Was, wenn CoAgent meine Nummer nicht kennt?', a: 'CoAgent antwortet auf Spanisch und Englisch, mit einem Link, um Ihr kostenloses Konto zu erstellen, und einem Link zur Staff-Seite Ihres CRM, wo Sie Ihre Handynummer zu Ihrem Profil hinzufügen. Ist Ihre Nummer nicht spanisch, stellen Sie die Landesvorwahl voran und schreiben Sie noch einmal.' },
 	{ q: 'Was kostet Credits?', a: 'Nachrichten sind in Ihrem Plan enthalten, und Broschüren sind gratis. Der Marktbericht nach dem ersten gratis wird in PropertyList Credits bezahlt, zum gleichen Preis wie im CRM. CoAgent sagt Ihnen immer den Preis und wartet auf Ihr YES, bevor etwas ausgegeben wird.' },
-	{ q: 'Was kostet es?', a: 'Jeder Agent hat 20 gratis Nachrichten im Monat, und mit YES zu antworten zählt nie dazu. Die ersten 10 Agenten, die CoAgent anschreiben, sind die Ausnahme: gratis und unbegrenzt bis zum 1. November 2026. Unbegrenzt kostet 50 Credits im Monat pro Agent, bezahlt aus Ihren PropertyList Credits, und Sie können die Verlängerung jederzeit stoppen. Haben Sie mehr als 3 Agenten hinzuzufügen, sprechen Sie mit uns über ein Paket. Das MLS und der Kern des CRM bleiben gratis, und ein Konto zu erstellen kostet nichts.' },
+	{ q: 'Was kostet es?', a: 'Jeder Agent hat 20 gratis Nachrichten im Monat, und mit YES zu antworten zählt nie dazu. Die ersten 10 Agenten, die CoAgent angeschrieben haben, haben es gratis und unbegrenzt bis zum 1. November 2026; diese Plätze sind bereits vergeben. Unbegrenzt kostet 50 Credits im Monat pro Agent, bezahlt aus Ihren PropertyList Credits, und Sie können die Verlängerung jederzeit stoppen. Haben Sie mehr als 3 Agenten hinzuzufügen, sprechen Sie mit uns über ein Paket. Das MLS und der Kern des CRM bleiben gratis, und ein Konto zu erstellen kostet nichts.' },
 	{ q: 'Was ist noch nicht verfügbar?', a: 'Die eigene WhatsApp-Nummer anzubinden, damit sich Kundenchats von selbst einordnen, eine eigene Arbeitsleitung in der PropertyList App und dass der Kundensteckbrief von selbst auf Ihrem Anrufbildschirm erscheint. Alles andere auf dieser Seite funktioniert schon heute.' },
 ];
 
@@ -278,7 +278,7 @@ const softwareLd = {
 					<ul class="checks">
 						<li>Das gesamte gemeinsame MLS, nicht nur Ihre Inserate</li>
 						<li>Bestes Angebot nach Preis pro m² sortiert</li>
-						<li>Werte aus notariell beurkundeten Verkäufen, mit Nachweis</li>
+						<li>Marktpreisschätzungen aus notariell beurkundeten Verkäufen, mit Nachweis</li>
 					</ul>
 				</div>
 				<div class="matchVisual" aria-hidden="true">
@@ -354,10 +354,10 @@ const softwareLd = {
 					<div class="planDesc">gratis Nachrichten im Monat, jeden Monat. Mit YES zu antworten zählt nie mit.</div>
 				</div>
 				<div class="plan featured">
-					<div class="planBadge">Die ersten 10 Agenten</div>
-					<div class="planWhen">Gratis und unbegrenzt bis</div>
-					<div class="planPrice">1. November</div>
-					<div class="planDesc">Seien Sie einer der ersten 10, die CoAgent anschreiben. Sagen Sie uns, wo es hakt, und wir ändern es.</div>
+					<div class="planBadge">Hier starten</div>
+					<div class="planWhen">Auf WhatsApp ausprobieren</div>
+					<div class="planPrice">Hallo sagen</div>
+					<div class="planDesc">Nichts zu installieren. Sagen Sie einfach Hallo auf WhatsApp. Sagen Sie uns, wo es hakt, und wir ändern es.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">CoAgent jetzt anschreiben</a>
 					) : (

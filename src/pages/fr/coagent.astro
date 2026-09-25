@@ -36,10 +36,10 @@ const moments = [
 		label: 'Avec un client à côté de vous',
 		asks: [
 			{ q: 'Qu’est-ce qu’on a à Marbella, trois chambres, jusqu’à deux millions ?', a: 'Cinq biens du MLS partagé avec les prix et les liens. Pas besoin de nommer un client, donc ça marche avec quelqu’un assis à côté de vous.' },
-			{ q: 'Parlez-moi de PL22234', a: 'Le prix, les chambres, la surface, l’emplacement et le lien de ce bien, qu’il soit à vous ou à une autre agence.' },
+			{ q: 'Parlez-moi de PL99999', a: 'Le prix, les chambres, la surface, l’emplacement et le lien de ce bien, qu’il soit à vous ou à une autre agence.' },
 			{ q: 'Quel est le meilleur rapport qualité-prix, PL5001, PL5002 ou PL5003 ?', a: 'Il les compare à des biens similaires en vente à proximité, avec le prix au mètre carré, pour que vous puissiez dire à un client lequel est bien placé et lequel demande trop. Posez la question juste après une recherche et il compare ces résultats.' },
 			{ q: 'Combien d’appartements sont en vente à San Pedro ?', a: 'Le vrai chiffre du marché là-bas, les meilleures correspondances, et un lien vers la liste complète dans votre CRM.' },
-			{ q: 'PL22234 est-il toujours disponible ?', a: 'Si le bien appartient à une autre agence, CoAgent propose de leur demander pour vous. Répondez YES et la demande leur parvient via le MLS, et leur réponse vous revient.' },
+			{ q: 'PL99999 est-il toujours disponible ?', a: 'Si le bien appartient à une autre agence, CoAgent propose de leur demander pour vous. Répondez YES et la demande leur parvient via le MLS, et leur réponse vous revient.' },
 		],
 	},
 	{
@@ -58,9 +58,9 @@ const moments = [
 			{ photo: true, q: 'Des photos d’un nouveau bien', a: 'Envoyez-les directement depuis votre pellicule, puis décrivez le bien à CoAgent, par écrit ou en note vocale. Il demande ce qui manque, comme le prix, vous relit l’annonce, et sur YES rédige le titre, la description et les caractéristiques. Répondez PUBLISH et l’annonce part en validation, comme depuis le CRM. Rien ne passe en ligne sans cela.' },
 			{ photo: true, q: 'La photo d’un panneau Se Vende', a: 'CoAgent lit le numéro de téléphone sur le panneau, avec le nom ou le prix s’ils y figurent. Répondez YES et le propriétaire est enregistré comme contact dans votre CRM, avec une note sur le panneau et un rappel pour l’appeler.' },
 			{ q: 'Combien vaut Nueva Andalucía ?', a: 'Le prix médian affiché et la fourchette de ce qui est réellement sur le marché là-bas. Si nous n’avons pas assez de biens dans une zone, il vous le dit plutôt que de deviner.' },
-			{ q: 'Combien vaut PL22234 ?', a: 'Une valeur basée sur des ventes actées devant notaire dans cette commune, avec une fourchette et un lien vers la preuve publique. Ou décrivez plutôt le bien : "un appartement de 120 m² à Estepona". Il vous dit toujours sur quoi se base le chiffre.' },
-			{ q: 'REPORT', a: 'Après une estimation, répondez REPORT pour recevoir le Property Intelligence Report complet, sous forme de lien à envoyer au vendeur. Le premier est gratuit. Ensuite, cela coûte des crédits, et il vous précise combien et demande avant de dépenser quoi que ce soit.' },
-			{ q: 'BROCHURE PL22234', a: 'Une brochure du bien à votre propre marque : une page que votre client peut ouvrir, avec le prix du jour et un moyen de vous contacter, plus le PDF. Les brochures sont gratuites.' },
+			{ q: 'Combien vaut PL99999 ?', a: 'Une estimation du prix de marché basée sur des ventes actées devant notaire dans cette commune, avec une fourchette et un lien vers la preuve publique. Ou décrivez plutôt le bien : "un appartement de 120 m² à Estepona". Il vous dit toujours sur quoi se base le chiffre.' },
+			{ q: 'REPORT', a: 'Après une estimation du prix de marché, répondez REPORT pour recevoir le Property Intelligence Report complet, sous forme de lien à envoyer au vendeur. Le premier est gratuit. Ensuite, cela coûte des crédits, et il vous précise combien et demande avant de dépenser quoi que ce soit.' },
+			{ q: 'BROCHURE PL99999', a: 'Une brochure du bien à votre propre marque : une page que votre client peut ouvrir, avec le prix du jour et un moyen de vous contacter, plus le PDF. Les brochures sont gratuites.' },
 		],
 	},
 	{
@@ -81,7 +81,7 @@ const faqs = [
 	{ q: 'Peut-il parler à d’autres agences pour moi ?', a: 'Oui. Demandez si un bien d’une autre agence est toujours disponible et CoAgent propose d’envoyer la demande. Répondez YES et elle passe par le MLS, de la même façon qu’une demande envoyée depuis l’écran du CRM, et arrive donc dans leur circuit habituel.' },
 	{ q: 'Et si CoAgent ne reconnaît pas mon numéro ?', a: 'Il répond, en espagnol et en anglais, avec un lien pour créer votre compte gratuit et un lien vers la page Staff de votre CRM, où vous ajoutez votre mobile à votre profil. Ajoutez l’indicatif du pays devant si votre numéro n’est pas espagnol, puis écrivez-lui à nouveau.' },
 	{ q: 'Qu’est-ce qui coûte des crédits ?', a: 'Les messages sont couverts par votre forfait, et les brochures sont gratuites. Le rapport de marché après le premier gratuit est payé en crédits PropertyList, au même prix que dans le CRM. CoAgent vous indique toujours le prix et attend votre YES avant de dépenser quoi que ce soit.' },
-	{ q: 'Combien ça coûte ?', a: 'Chaque agent a 20 messages gratuits par mois, et répondre YES ne compte jamais. Les 10 premiers agents qui lui écrivent font exception : gratuit et illimité jusqu’au 1er novembre 2026. L’illimité coûte 50 crédits par mois et par agent, payés avec vos crédits PropertyList, et vous pouvez arrêter le renouvellement quand vous voulez. Plus de 3 agents ? Parlez-nous d’un forfait. Le MLS et le cœur du CRM restent gratuits, et créer votre compte ne coûte rien.' },
+	{ q: 'Combien ça coûte ?', a: 'Chaque agent a 20 messages gratuits par mois, et répondre YES ne compte jamais. Les 10 premiers agents qui lui ont écrit en bénéficient gratuitement et sans limite jusqu’au 1er novembre 2026 ; ces places sont prises. L’illimité coûte 50 crédits par mois et par agent, payés avec vos crédits PropertyList, et vous pouvez arrêter le renouvellement quand vous voulez. Plus de 3 agents ? Parlez-nous d’un forfait. Le MLS et le cœur du CRM restent gratuits, et créer votre compte ne coûte rien.' },
 	{ q: 'Qu’est-ce qui n’est pas encore disponible ?', a: 'Connecter votre propre numéro WhatsApp pour que les conversations avec vos clients se classent toutes seules, une ligne de travail dédiée dans l’application PropertyList, et la fiche du client qui apparaît d’elle-même sur votre écran d’appel. Tout le reste sur cette page fonctionne déjà.' },
 ];
 
@@ -278,7 +278,7 @@ const softwareLd = {
 					<ul class="checks">
 						<li>Tout le MLS partagé, pas seulement vos annonces</li>
 						<li>Meilleur rapport qualité-prix, classé au prix au m²</li>
-						<li>Valeurs issues de ventes actées devant notaire, avec la preuve</li>
+						<li>Estimations du prix de marché issues de ventes actées devant notaire, avec la preuve</li>
 					</ul>
 				</div>
 				<div class="matchVisual" aria-hidden="true">
@@ -354,10 +354,10 @@ const softwareLd = {
 					<div class="planDesc">messages gratuits par mois, chaque mois. Répondre YES ne compte jamais.</div>
 				</div>
 				<div class="plan featured">
-					<div class="planBadge">Les 10 premiers agents</div>
-					<div class="planWhen">Gratuit et illimité jusqu’au</div>
-					<div class="planPrice">1er novembre</div>
-					<div class="planDesc">Soyez l’un des 10 premiers à lui écrire. Dites-nous où ça gêne, et ça change.</div>
+					<div class="planBadge">Commencez ici</div>
+					<div class="planWhen">Essayez sur WhatsApp</div>
+					<div class="planPrice">Dites bonjour</div>
+					<div class="planDesc">Rien à installer. Dites juste bonjour sur WhatsApp. Dites-nous où ça gêne, et ça change.</div>
 					{WA ? (
 						<a class="btnPrimary full" href={WA} target="_blank" rel="noopener">Écrivez à CoAgent maintenant</a>
 					) : (
