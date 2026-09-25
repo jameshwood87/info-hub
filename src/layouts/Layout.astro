@@ -1,5 +1,7 @@
 ---
 import LangPicker from '../components/LangPicker.astro';
+import '../styles/fonts.css';
+import pjsLatinUrl from '../styles/fonts/pjs-latin.woff2?url';
 type HreflangLink = { hreflang: string; href: string };
 
 type Props = {
@@ -346,6 +348,7 @@ const htmlLang = Astro.url.pathname.startsWith('/es/') ? 'es' : lang === 'en' ? 
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<link rel="preload" href={pjsLatinUrl} as="font" type="font/woff2" crossorigin />
 		{isHomePath ? <meta name="msvalidate.01" content="857E5CCA77840A51978AD13A8D53D0B5" /> : null}
 		<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
 		<link rel="icon" href="/favicon.ico" sizes="any" />
@@ -1964,7 +1967,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		overflow-x: clip;
 		background: #f6f8fc;
 		color: #0b1220;
-		font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+		font-family: 'Plus Jakarta Sans', 'Nunito', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 	}
 
 	.skipLink {
