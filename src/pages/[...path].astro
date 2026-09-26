@@ -25,6 +25,7 @@ import { listPrefixRedirects } from '../lib/kbRedirects';
 import { getTotalViewCounts } from '../lib/weeklyViews';
 import mlsManualArchive from '../data/mls-manual-archive.json';
 import { docVideoFor } from '../data/doc-videos';
+import AREA_LOCATIONS from '../data/area-locations.json';
 
 const rawPath = Astro.params.path ?? '';
 const requestUrl = new URL(Astro.request.url);
@@ -1515,6 +1516,14 @@ const isNeighbourhood = renderPath.startsWith('/neighbourhood/');
 const neighbourhoodParts = isNeighbourhood ? renderPath.split('/').filter(Boolean) : [];
 const neighbourhoodSlug = neighbourhoodParts.length >= 2 ? neighbourhoodParts[neighbourhoodParts.length - 1] || '' : '';
 const neighbourhoodPortalUrlRaw = neighbourhoodSlug ? `https://propertylist.es/en/portal/for-sale/${encodeURIComponent(neighbourhoodSlug)}` : 'https://propertylist.es/en';
+// Area guides: the portal path checked for each guide (src/data/area-locations.json, 26-09-26) wins over the
+// municipality guess below, which sent Calahonda to Nerja and El Limonar to a town called "este". portalLabelEn is set
+// when the portal cannot show the district, so the link searches the whole town and the text names that town.
+const areaLoc: { portal?: string | null; portalLabelEn?: string } | null =
+	isNeighbourhood && neighbourhoodSlug ? ((AREA_LOCATIONS as Record<string, any>)[neighbourhoodSlug] ?? null) : null;
+const areaLocPortalUrl = areaLoc?.portal
+	? `https://propertylist.es/en/for-sale/${String(areaLoc.portal).split('/').filter(Boolean).map((p) => encodeURIComponent(p)).join('/')}`
+	: '';
 const NAMED_ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', ndash: '–', mdash: '—', hellip: '…', eacute: 'é', aacute: 'á', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', laquo: '«', raquo: '»' };
 const cleanText = (v: string | null | undefined) => {
 	let out = String(v || '');
@@ -1981,6 +1990,7 @@ const neighbourhoodMeta = (() => {
 const neighbourhoodPortalUrl = (() => {
 	if (!isNeighbourhood) return '';
 	if (!neighbourhoodSlug) return 'https://propertylist.es/en';
+	if (areaLocPortalUrl) return areaLocPortalUrl;
 	// The /portal/for-sale/{muni}/ mapping below forces the municipality onto a hard-coded
 	// Costa-del-Sol town list, so it is only trustworthy for guides that actually sit in the
 	// Costa del Sol (Malaga / Cadiz provinces). For areas outside that footprint (Baleares,
@@ -2022,6 +2032,9 @@ if (isNeighbourhood && neighbourhoodSlug) {
 		}
 	} catch {}
 }
+// the checked path replaces the old-style link; a whole-town link carries no count, since the town has more homes
+if (areaLocPortalUrl) neighbourhoodSeoUrl = areaLocPortalUrl;
+if (areaLoc?.portalLabelEn) neighbourhoodSaleCount = null;
 const featuredImageUrl =
 	typeof (kbMeta as any).featuredImageUrl === 'string' && String((kbMeta as any).featuredImageUrl).trim()
 		? String((kbMeta as any).featuredImageUrl).trim()
@@ -3536,7 +3549,7 @@ const ldJson = JSON.stringify([
 	<a class="areaPortalCta" href={neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
 		<span style="min-width:0;">
 			<span style="display:block;font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">{neighbourhoodSaleCount ? `See all ${neighbourhoodSaleCount.toLocaleString('en-GB')} homes for sale in ${areaNameClean}` : `Ready to explore ${areaNameClean}?`}</span>
-			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">{neighbourhoodSaleCount ? `Every home for sale, to rent and for holidays in ${areaNameClean} - browse them all on PropertyList.` : `Search every home for sale, to rent and for holidays in ${areaNameClean} on the PropertyList portal.`}</span>
+			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">{neighbourhoodSaleCount ? `Every home for sale, to rent and for holidays in ${areaNameClean} - browse them all on PropertyList.` : `Search every home for sale, to rent and for holidays in ${areaLoc?.portalLabelEn || areaNameClean} on the PropertyList portal.`}</span>
 		</span>
 		<span style="white-space:nowrap;background:#00ae9a;color:#00100e;border:1px solid rgba(0,0,0,0.12);border-radius:999px;padding:12px 20px;font-weight:900;">Search properties &rarr;</span>
 	</a>
@@ -3703,7 +3716,7 @@ const ldJson = JSON.stringify([
 									</a>
 								))}
 							</div>
-							<a href={neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:inline-block;margin-top:12px;font-weight:800;font-size:13px;color:#0d9488;text-decoration:none;">See all in {areaNameClean} →</a>
+							<a href={neighbourhoodSeoUrl || neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:inline-block;margin-top:12px;font-weight:800;font-size:13px;color:#0d9488;text-decoration:none;">See all in {areaLoc?.portalLabelEn || areaNameClean} →</a>
 						</div>
 					) : null}
 				</aside>

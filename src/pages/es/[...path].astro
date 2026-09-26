@@ -17,6 +17,7 @@ import { getTotalViewCounts } from '../../lib/weeklyViews';
 import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../../lib/deepl';
 import mlsManualArchive from '../../data/mls-manual-archive.json';
 import { docVideoFor } from '../../data/doc-videos';
+import AREA_LOCATIONS from '../../data/area-locations.json';
 
 // Hrefs left behind by the WordPress import that point at routes this site never
 // rebuilt. Both forms show up in the bodies: root-relative and absolute on our own
@@ -1346,7 +1347,17 @@ ${hasMarket ? `<p><a href="${escapeHtmlAttr(portalUrl)}" target="_blank" rel="no
 };
 
 const barrioSlug = isNeighbourhood ? normalizedPath.split('/').filter(Boolean)[2] || '' : '';
-const neighbourhoodPortalUrl = barrioSlug ? `https://propertylist.es/portal/for-sale/${encodeURIComponent(barrioSlug)}` : 'https://propertylist.es';
+// Area guides: the portal path checked for each guide (src/data/area-locations.json, 26-09-26). A district alone after
+// /portal/for-sale/ reads as a town on the portal and shows 0 results. portalLabelEs names the town when the portal
+// cannot show the district and the link searches the whole town.
+const areaLocEs: { portal?: string | null; portalLabelEs?: string } | null = barrioSlug
+	? ((AREA_LOCATIONS as Record<string, any>)[barrioSlug] ?? null)
+	: null;
+const neighbourhoodPortalUrl = areaLocEs?.portal
+	? `https://propertylist.es/for-sale/${String(areaLocEs.portal).split('/').filter(Boolean).map((p) => encodeURIComponent(p)).join('/')}`
+	: barrioSlug
+		? `https://propertylist.es/portal/for-sale/${encodeURIComponent(barrioSlug)}`
+		: 'https://propertylist.es';
 const neighbourhoodName = stripTags(h1)
 	.replace(/\s*(?:gu[ií]a\s+de\s+(?:barrio|zona)|neighbourhood\s+guide|area\s+guide)\s*$/i, '')
 	.replace(/\s+/g, ' ')
@@ -2427,7 +2438,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 	<a class="areaPortalCta" href={neighbourhoodPortalUrl} target="_blank" rel="noopener" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0 8px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.16), rgba(255,255,255,0.6));text-decoration:none;color:inherit;">
 		<span style="min-width:0;">
 			<span style="display:block;font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">¿Listo para explorar {areaNameClean}?</span>
-			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">Busca cada vivienda en venta, en alquiler y vacacional en {areaNameClean} en el portal de PropertyList.</span>
+			<span style="display:block;font-size:14px;color:rgba(16,24,40,0.7);margin-top:4px;">Busca cada vivienda en venta, en alquiler y vacacional en {areaLocEs?.portalLabelEs || areaNameClean} en el portal de PropertyList.</span>
 		</span>
 		<span style="white-space:nowrap;background:#00ae9a;color:#00100e;border:1px solid rgba(0,0,0,0.12);border-radius:999px;padding:12px 20px;font-weight:900;">Buscar propiedades &rarr;</span>
 	</a>
