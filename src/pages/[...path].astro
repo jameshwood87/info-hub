@@ -3178,7 +3178,7 @@ const ldJson = JSON.stringify([
 			) : null}
 
 			<div class="docMain">
-				{isNeighbourhood ? <AreaGuide areaName={h1} lang="en" /> : null}
+				{isNeighbourhood ? <AreaGuide areaName={h1} lang="en" slug={renderPath.split('/').filter(Boolean).pop()} /> : null}
 
 				{isNeighbourhood ? (
 					<style>

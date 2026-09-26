@@ -2397,7 +2397,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 			) : null}
 
 			<div class="docMain">
-				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" /> : null}
+				{isNeighbourhood ? <AreaGuide areaName={h1} lang="es" slug={normalizedPath.split('/').filter(Boolean).pop()} /> : null}
 				{docVideo ? (
 					<a
 						class="docVideoBar"

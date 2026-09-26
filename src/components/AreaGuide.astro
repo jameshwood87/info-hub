@@ -6,12 +6,15 @@ import { marketsForArea, searchProperties, type AreaMarketSummary, type MarketLi
 import { areaImagePath } from '../lib/areaImages';
 import ThenNow from './ThenNow.astro';
 import { REGIONS, regionFromProvince, countryOfRegion, type Region, type Country } from '../data/geo';
+import AREA_LOCATIONS from '../data/area-locations.json';
 
 interface Props {
 	areaName: string;
 	lang?: 'en' | 'es';
+	// the page's URL slug (malaga-centre): the key for its place in area-locations.json and for its hero image
+	slug?: string;
 }
-const { areaName: rawName, lang = 'en' } = Astro.props as Props;
+const { areaName: rawName, lang = 'en', slug = '' } = Astro.props as Props;
 const es = lang === 'es';
 
 // Spanish guide titles read "Marbella, Málaga: guía del barrio", so the place
@@ -47,7 +50,25 @@ const areaName = stripProvinceTail(
 		.replace(/\s+/g, ' ')
 		.trim(),
 );
-const [markets, listings] = await Promise.all([marketsForArea(areaName), searchProperties(areaName, 'for-sale', 6)]);
+// The title is not a lookup key. The MCP and the portal each name places their own way ("Málaga Historic Centre" is
+// "Malaga Center" to the MCP and malaga/malaga-centro on the portal), and a district alone in a portal URL reads as a
+// town and shows 0 results. area-locations.json holds each guide's names, checked by hand against both (26-09-26).
+// Optional per guide: portalLabel when the portal path is the whole town because the portal's district search shows
+// nothing (the button then reads "Search Marbella", not "View all 148"); data + note when the figures cover a
+// different area than the guide (Estepona Old Town is filed as Estepona town), so the numbers carry their real place.
+type AreaLocation = {
+	mcp?: string | null;
+	portal?: string | null;
+	portalLabelEn?: string;
+	portalLabelEs?: string;
+	dataEn?: string;
+	dataEs?: string;
+	noteEn?: string;
+	noteEs?: string;
+};
+const loc: AreaLocation = (slug && (AREA_LOCATIONS as Record<string, AreaLocation>)[slug]) || {};
+const lookupName = loc.mcp || areaName;
+const [markets, listings] = await Promise.all([marketsForArea(lookupName), searchProperties(lookupName, 'for-sale', 6)]);
 const sale = markets.sale;
 const rent = markets.rent;
 const holiday = markets.holiday;
@@ -62,6 +83,18 @@ const hasSale = !!sale && sale.totalListings > 0;
 // listings here" from the MCP itself. Failure or an unmatched name gets the
 // neutral invite instead.
 const showFounding = markets.ok && !!sale && sale.totalListings === 0;
+// Nothing for sale but homes to rent or for holidays (Nerja, 26-09-26): show those rather than an empty page.
+const otherType: 'holiday-rentals' | 'for-rent' | null = hasSale
+	? null
+	: holiday && holiday.totalListings > 0
+		? 'holiday-rentals'
+		: rent && rent.totalListings > 0
+			? 'for-rent'
+			: null;
+const otherListings = otherType ? await searchProperties(lookupName, otherType, 6) : [];
+const scopeNote = (es ? loc.noteEs : loc.noteEn) || '';
+const dataName = (es ? loc.dataEs : loc.dataEn) || areaName; // the place the figures are for
+const portalLabel = (es ? loc.portalLabelEs : loc.portalLabelEn) || '';
 
 const eurCompact = (n: number | null | undefined) => {
 	const v = Number(n);
@@ -114,13 +147,17 @@ const heroPick = [...listings].sort((a, b) => {
 		Math.min(1, (l.buildSqm || 0) / 300);
 	return score(b) - score(a);
 })[0];
-const heroPhoto = heroPick?.photoUrl || listings.find((l) => l.photoUrl)?.photoUrl || null;
+const heroPhoto = heroPick?.photoUrl || listings.find((l) => l.photoUrl)?.photoUrl || otherListings.find((l) => l.photoUrl)?.photoUrl || null;
 
 const portalBase = `https://propertylist.es${es ? '' : '/en'}`;
 const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-const areaImage = areaImagePath(areaSlug);
+// hero files are named by the page's URL slug; the title-derived slug stays as a fallback
+const areaImage = (slug && areaImagePath(slug)) || areaImagePath(areaSlug);
 const heroImage = areaImage || heroPhoto;
-const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') => `${portalBase}/${ty}/${encodeURIComponent(areaSlug || areaName.toLowerCase())}`;
+const portalPath = String(loc.portal || areaSlug || areaName.toLowerCase());
+const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') =>
+	`${portalBase}/${ty}/${portalPath.split('/').filter(Boolean).map((p) => encodeURIComponent(p)).join('/')}`;
+const perUnit = (l: MarketListing) => (l.pricePeriod === 'per_week' ? t('/wk', '/sem') : l.pricePeriod === 'per_month' ? t('/mo', '/mes') : '');
 const signupHref = `https://agents.propertylist.es/new_agency/new?locale=${es ? 'es' : 'en'}&area=${encodeURIComponent(areaName)}${
 	region ? `&region=${encodeURIComponent(region.key)}` : ''
 }${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area`;
@@ -146,10 +183,11 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			{rent && rent.totalListings ? <div class="agChip"><span class="agNum">{nfmt(rent.totalListings)}</span><span class="agLab">{t('to rent', 'en alquiler')}</span></div> : null}
 			{holiday && holiday.totalListings ? <div class="agChip"><span class="agNum">{nfmt(holiday.totalListings)}</span><span class="agLab">{t('holiday lets', 'vacacional')}</span></div> : null}
 		</div>
+		{scopeNote ? <p class="agScope">{scopeNote}</p> : null}
 
 		<ThenNow areaName={areaName} lang={lang} saleCount={sale!.totalListings} listingsHref={portalSearch('for-sale')} />
 
-		<div class="agSecHead"><h2>{t('The market right now', 'El mercado ahora')}</h2><p>{t(`Live counts and prices across every way to live in ${areaName}.`, `Datos en directo de todas las formas de vivir en ${areaName}.`)}</p></div>
+		<div class="agSecHead"><h2>{t('The market right now', 'El mercado ahora')}</h2><p>{t(`Live counts and prices across every way to live in ${dataName}.`, `Datos en directo de todas las formas de vivir en ${dataName}.`)}</p></div>
 		<div class="agMarketGrid">
 			{marketCards.map((m) => (
 				<div class={`agMCard ${m.data && m.data.totalListings ? '' : 'agMCardEmpty'}`}>
@@ -166,9 +204,9 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 							) : m.data.medianPrice ? (
 								<div class="agMSubline">{t(`Only ${nfmt(m.data.totalListings)} listing${m.data.totalListings === 1 ? '' : 's'} right now - too few for a reliable median.`, `Solo ${nfmt(m.data.totalListings)} anuncio${m.data.totalListings === 1 ? '' : 's'} ahora mismo: pocos para una mediana fiable.`)}</div>
 							) : (
-								<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${areaName} right now.`, `Disponibilidad en directo en ${areaName}.`)}</div>
+								<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${dataName} right now.`, `Disponibilidad en directo en ${dataName}.`)}</div>
 							)}
-							<a class="agMCta" href={portalSearch(m.type)} target="_blank" rel="noopener">{`${t('View all', 'Ver los')} ${nfmt(m.data.totalListings)} →`}</a>
+							<a class="agMCta" href={portalSearch(m.type)} target="_blank" rel="noopener">{portalLabel ? t(`Search ${portalLabel} →`, `Buscar en ${portalLabel} →`) : `${t('View all', 'Ver los')} ${nfmt(m.data.totalListings)} →`}</a>
 						</>
 					) : (
 						<div class="agMNone">{t(`No live ${m.label.toLowerCase()} listings yet.`, 'Aún no hay anuncios aquí.')}</div>
@@ -187,7 +225,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 
 		{bands.some((b) => b.n > 0) ? (
 			<>
-				<div class="agSecHead"><h2>{t('What is for sale', 'Qué hay en venta')}</h2><p>{t(`Homes for sale in ${areaName} by bedrooms.`, `Viviendas en venta en ${areaName} por dormitorios.`)}</p></div>
+				<div class="agSecHead"><h2>{t('What is for sale', 'Qué hay en venta')}</h2><p>{t(`Homes for sale in ${dataName} by bedrooms.`, `Viviendas en venta en ${dataName} por dormitorios.`)}</p></div>
 				<div class="agBandWrap">
 					{bands.map((b) => (
 						<div class="agBandRow">
@@ -223,8 +261,8 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 		<div class="agSecHead"><h2>{t(`Who ${areaName} suits`, `Para quién es ${areaName}`)}</h2></div>
 		<div class="agAudGrid">
 			<div class="agAudCard"><h3>{t('Buyers', 'Compradores')}</h3><p>{sale!.totalListings ? t(`${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `median ${eurFull(sale!.medianPrice) || '-'}` : 'too few for a reliable median'}${sale!.oracle.verified ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`, `${nfmt(sale!.totalListings)} viviendas en venta, desde ${eurCompact(sale!.minPrice) || '-'} hasta ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `precio mediano ${eurFull(sale!.medianPrice) || '-'}` : 'pocos anuncios para una mediana fiable'}${sale!.oracle.verified ? `. Valor verificado ante notario ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`) : t('No homes for sale here yet.', 'Aún no hay viviendas en venta aquí.')}</p></div>
-			<div class="agAudCard"><h3>{t('Long-term renters', 'Alquiler de larga duración')}</h3><p>{rent && rent.totalListings ? t(`${nfmt(rent.totalListings)} long-term rentals available to browse right now in ${areaName}.`, `${nfmt(rent.totalListings)} alquileres de larga duración disponibles ahora en ${areaName}.`) : t('No long-term rentals listed here yet.', 'Aún no hay alquileres de larga duración.')}</p></div>
-			<div class="agAudCard"><h3>{t('Holiday-makers', 'Vacacional')}</h3><p>{holiday && holiday.totalListings ? t(`${nfmt(holiday.totalListings)} holiday properties available for short stays in ${areaName}.`, `${nfmt(holiday.totalListings)} propiedades vacacionales disponibles en ${areaName}.`) : t('No holiday lets listed here yet.', 'Aún no hay alojamientos vacacionales.')}</p></div>
+			<div class="agAudCard"><h3>{t('Long-term renters', 'Alquiler de larga duración')}</h3><p>{rent && rent.totalListings ? t(`${nfmt(rent.totalListings)} long-term rentals available to browse right now in ${dataName}.`, `${nfmt(rent.totalListings)} alquileres de larga duración disponibles ahora en ${dataName}.`) : t('No long-term rentals listed here yet.', 'Aún no hay alquileres de larga duración.')}</p></div>
+			<div class="agAudCard"><h3>{t('Holiday-makers', 'Vacacional')}</h3><p>{holiday && holiday.totalListings ? t(`${nfmt(holiday.totalListings)} holiday properties available for short stays in ${dataName}.`, `${nfmt(holiday.totalListings)} propiedades vacacionales disponibles en ${dataName}.`) : t('No holiday lets listed here yet.', 'Aún no hay alojamientos vacacionales.')}</p></div>
 		</div>
 
 		<a class="agIntel" href="https://intelligence.propertylist.es/" target="_blank" rel="noopener">
@@ -238,6 +276,65 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			</span>
 			<span class="agIntelBtn">{t('Explore Intelligence →', 'Explora Intelligence →')}</span>
 		</a>
+
+		<div class="agFoundingInline">
+			<div>
+				<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
+				<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits (verification is free, any time).`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).`)}</div>
+			</div>
+			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
+		</div>
+	</div>
+) : otherType ? (
+	<div class="ag">
+		{heroImage ? (
+			<div class="agHero" style={`background-image:url('${heroImage}')`} role="img" aria-label={areaImage ? t(`View of ${areaName}`, `Vista de ${areaName}`) : t(`Property in ${areaName}`, `Propiedad en ${areaName}`)}>
+				<div class="agHeroCap">{areaName}{regionLabel ? `, ${regionLabel}` : ''}</div>
+			</div>
+		) : null}
+		<div class="agChips">
+			{rent && rent.totalListings ? <div class="agChip"><span class="agNum">{nfmt(rent.totalListings)}</span><span class="agLab">{t('to rent', 'en alquiler')}</span></div> : null}
+			{holiday && holiday.totalListings ? <div class="agChip"><span class="agNum">{nfmt(holiday.totalListings)}</span><span class="agLab">{t('holiday lets', 'vacacional')}</span></div> : null}
+		</div>
+		{scopeNote ? <p class="agScope">{scopeNote}</p> : null}
+
+		<ThenNow areaName={areaName} lang={lang} />
+
+		<div class="agSecHead"><h2>{t('The market right now', 'El mercado ahora')}</h2><p>{t(`Nothing is listed for sale in ${dataName} right now. These are the homes to rent and for holidays.`, `Ahora mismo no hay nada en venta en ${dataName}. Estas son las viviendas en alquiler y vacacionales.`)}</p></div>
+		<div class="agMarketGrid">
+			{marketCards.map((m) => (
+				<div class={`agMCard ${m.data && m.data.totalListings ? '' : 'agMCardEmpty'}`}>
+					<div class="agMHead"><div class="agMLabel">{m.label}</div><div class="agMSub">{m.sub}</div></div>
+					{m.data && m.data.totalListings ? (
+						<>
+							<div class="agMBig">{nfmt(m.data.totalListings)}<span> {m.data.totalListings === 1 ? t('listing', 'anuncio') : t('listings', 'anuncios')}</span></div>
+							<div class="agMSubline">{t(`Live ${m.label.toLowerCase()} availability in ${dataName} right now.`, `Disponibilidad en directo en ${dataName}.`)}</div>
+							<a class="agMCta" href={portalSearch(m.type)} target="_blank" rel="noopener">{portalLabel ? t(`Search ${portalLabel} →`, `Buscar en ${portalLabel} →`) : `${t('View all', 'Ver los')} ${nfmt(m.data.totalListings)} →`}</a>
+						</>
+					) : (
+						<div class="agMNone">{t(`No live ${m.label.toLowerCase()} listings yet.`, 'Aún no hay anuncios aquí.')}</div>
+					)}
+				</div>
+			))}
+		</div>
+
+		{otherListings.length ? (
+			<>
+				<div class="agSecHead"><h2>{otherType === 'holiday-rentals' ? t('Holiday homes', 'Viviendas vacacionales') : t('Homes to rent', 'Viviendas en alquiler')}</h2><p>{t('Live from the PropertyList MLS.', 'En directo desde el MLS de PropertyList.')}</p></div>
+				<div class="agListGrid">
+					{otherListings.slice(0, 6).map((l: MarketListing) => (
+						<a class="agLCard" href={l.url || portalSearch(otherType)} target="_blank" rel="noopener">
+							<div class="agLImg" style={l.photoUrl ? `background-image:url('${l.photoUrl}')` : ''}></div>
+							<div class="agLBody">
+								<div class="agLPrice">{eurFull(l.price) ? `${eurFull(l.price)}${perUnit(l)}` : t('Price on request', 'Precio a consultar')}</div>
+								<div class="agLMeta">{[l.bedrooms ? `${l.bedrooms} ${t('bed', 'dorm')}` : '', l.bathrooms ? `${l.bathrooms} ${t('bath', Number(l.bathrooms) === 1 ? 'baño' : 'baños')}` : '', l.buildSqm ? `${l.buildSqm} m²` : ''].filter(Boolean).join(' · ')}</div>
+								<div class="agLLoc">{[l.suburb, l.city].filter(Boolean).join(', ') || areaName}</div>
+							</div>
+						</a>
+					))}
+				</div>
+			</>
+		) : null}
 
 		<div class="agFoundingInline">
 			<div>
@@ -287,6 +384,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 	.agNum { font-size:21px; font-weight:900; letter-spacing:-.03em; color:#00806f; }
 	.agLab { font-size:12px; color:rgba(16,24,40,.6); font-weight:600; }
 	.agVer { color:#00937f; font-weight:800; }
+	.agScope { margin:-8px 0 16px; font-size:12.5px; color:rgba(16,24,40,.6); }
 
 	.agSecHead { margin:6px 0 12px; }
 	.agSecHead h2 { margin:0 0 4px; letter-spacing:-.03em; font-size:clamp(18px,2.6vw,24px); }
