@@ -19,6 +19,7 @@ const pageUrl = `${origin}${es ? '/es/grupos-whatsapp/' : '/whatsapp-groups/'}`;
 const signup = `https://agents.propertylist.es/new_agency/new?locale=${lang}`;
 const docsPath = SOCIAL_PROOF.whatsapp.docsPath[lang];
 const termsPath = es ? '/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/' : '/docs/propertylist-mls-user-manual/legal/terms-conditions/';
+const privacyPath = es ? '/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/' : '/docs/propertylist-mls-user-manual/legal/privacy-policy/';
 const reviewsPath = es ? '/es/opiniones/' : '/reviews/';
 const coagentPath = es ? '/es/coagent/' : '/coagent/';
 const num = (n: number) => fmtNum(n, lang);
@@ -71,6 +72,10 @@ const T = {
 		rulesLink: 'Full rules and every group, on the docs page',
 		terms: 'By joining a group you accept the WhatsApp group policy, section 5.6 of our',
 		termsLink: 'Terms and Conditions',
+		privacyH: 'Privacy:',
+		privacyA: 'PropertyList.es runs these groups. Other members can see what you post and may see your name and phone number, so a work number is best. You can leave a group at any time. Data requests:',
+		privacyB: 'More in our',
+		privacyLink: 'Privacy Policy',
 		coEyebrow: 'CoAgent · your CRM on WhatsApp',
 		coH2: 'Already on WhatsApp all day? So is your CRM.',
 		coP: 'CoAgent is the PropertyList CRM assistant inside WhatsApp. Talk to it like a colleague: it shows you what it heard, and nothing is saved until you reply YES. Nothing to install, and your voice is never kept.',
@@ -144,6 +149,10 @@ const T = {
 		rulesLink: 'Todas las normas y todos los grupos, en la documentación',
 		terms: 'Al unirte a un grupo aceptas la política de grupos de WhatsApp, apartado 5.6 de nuestros',
 		termsLink: 'Términos y Condiciones',
+		privacyH: 'Privacidad:',
+		privacyA: 'PropertyList.es gestiona estos grupos. Los demás miembros ven lo que publicas y pueden ver tu nombre y tu número de teléfono, así que mejor usa un número de trabajo. Puedes salir de un grupo cuando quieras. Solicitudes sobre tus datos:',
+		privacyB: 'Más en nuestra',
+		privacyLink: 'Política de Privacidad',
 		coEyebrow: 'CoAgent · tu CRM en WhatsApp',
 		coH2: '¿Todo el día en WhatsApp? Tu CRM también.',
 		coP: 'CoAgent es el asistente del CRM de PropertyList dentro de WhatsApp. Háblale como a un compañero: te enseña lo que ha entendido y no se guarda nada hasta que respondes SÍ. Nada que instalar, y tu voz nunca se guarda.',
@@ -357,6 +366,7 @@ const subtitle = (a: (typeof AREAS)[number]) => (a.groups.length && a.community 
 				<a href={docsPath}>{T.rulesLink} &rarr;</a>
 			</p>
 			<p class="wgTerms">{T.terms} <a href={termsPath}>{T.termsLink}</a>.</p>
+			<p class="wgTerms"><strong>{T.privacyH}</strong> {T.privacyA} <a href="mailto:personal-data@propertylist.es">personal-data@propertylist.es</a>. {T.privacyB} <a href={privacyPath}>{T.privacyLink}</a>.</p>
 		</div>
 	</section>
 
