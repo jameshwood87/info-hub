@@ -127,7 +127,15 @@ const oracleSource = (() => {
 	return raw.replace(/spanish notarial register/i, 'registro notarial español');
 })();
 const unitLab = (d: AreaMarketSummary | null) => (d?.priceUnit === 'per_month' ? t('/mo', '/mes') : d?.priceUnit === 'per_week' ? t('/wk', '/sem') : '');
-const oracleSqm = sale?.oracle?.verified ? sale.oracle.verifiedPricePerSqm : null;
+// The notary figure belongs to a municipality. When that municipality sits in another province from every listing
+// shown, it is a namesake, not this area (26-09-26: the MCP rolled Ibiza up to Madrid and El Rosario to Tenerife), so
+// it is not shown as this area's verified price. INE municipality codes start with the province. It fails closed:
+// without a code on the figure and on at least one listing, the province cannot be confirmed, so nothing says verified.
+const listingProvinces = new Set(listings.map((l) => String(l.municipalityCode || '').slice(0, 2)).filter((c) => /^\d\d$/.test(c)));
+const oracleProvince = String(sale?.oracle?.municipalityCode || '').slice(0, 2);
+const oracleFits = /^\d\d$/.test(oracleProvince) && listingProvinces.has(oracleProvince);
+const oracleOk = !!sale?.oracle?.verified && oracleFits;
+const oracleSqm = oracleOk ? sale!.oracle.verifiedPricePerSqm : null;
 const listSqm = sale?.medianPricePerSqm || null;
 
 const bandOrder = ['1_bed', '2_bed', '3_bed', '4_bed', '5_bed_plus'];
@@ -179,7 +187,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 		<div class="agChips">
 			<div class="agChip"><span class="agNum">{nfmt(sale!.totalListings)}</span><span class="agLab">{t('for sale', 'en venta')}</span></div>
 			{sale!.medianPrice && sale!.totalListings >= 3 ? <div class="agChip"><span class="agNum">{eurCompact(sale!.medianPrice)}</span><span class="agLab">{t('median price', 'precio mediano')}</span></div> : null}
-			{oracleSqm || listSqm ? <div class="agChip"><span class="agNum">€{nfmt(oracleSqm || listSqm)}</span><span class="agLab">{t('per m²', 'por m²')}{sale!.oracle.verified ? <span class="agVer"> · {t('verified', 'verificado')}</span> : null}</span></div> : null}
+			{oracleSqm || listSqm ? <div class="agChip"><span class="agNum">€{nfmt(oracleSqm || listSqm)}</span><span class="agLab">{t('per m²', 'por m²')}{oracleOk ? <span class="agVer"> · {t('verified', 'verificado')}</span> : null}</span></div> : null}
 			{rent && rent.totalListings ? <div class="agChip"><span class="agNum">{nfmt(rent.totalListings)}</span><span class="agLab">{t('to rent', 'en alquiler')}</span></div> : null}
 			{holiday && holiday.totalListings ? <div class="agChip"><span class="agNum">{nfmt(holiday.totalListings)}</span><span class="agLab">{t('holiday lets', 'vacacional')}</span></div> : null}
 		</div>
@@ -215,7 +223,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			))}
 		</div>
 
-		{sale!.oracle.verified && sale!.oracle.attestationUrl ? (
+		{oracleOk && sale!.oracle.attestationUrl ? (
 			<p class="agOracle">
 				{t('The "verified" €/m² is notary-verified by', 'El €/m² "verificado" está verificado ante notario por')}{' '}
 				<a href={sale!.oracle.attestationUrl} target="_blank" rel="noopener">PropertyList Oracle</a>
@@ -260,7 +268,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 
 		<div class="agSecHead"><h2>{t(`Who ${areaName} suits`, `Para quién es ${areaName}`)}</h2></div>
 		<div class="agAudGrid">
-			<div class="agAudCard"><h3>{t('Buyers', 'Compradores')}</h3><p>{sale!.totalListings ? t(`${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `median ${eurFull(sale!.medianPrice) || '-'}` : 'too few for a reliable median'}${sale!.oracle.verified ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`, `${nfmt(sale!.totalListings)} viviendas en venta, desde ${eurCompact(sale!.minPrice) || '-'} hasta ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `precio mediano ${eurFull(sale!.medianPrice) || '-'}` : 'pocos anuncios para una mediana fiable'}${sale!.oracle.verified ? `. Valor verificado ante notario ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`) : t('No homes for sale here yet.', 'Aún no hay viviendas en venta aquí.')}</p></div>
+			<div class="agAudCard"><h3>{t('Buyers', 'Compradores')}</h3><p>{sale!.totalListings ? t(`${nfmt(sale!.totalListings)} homes for sale, from ${eurCompact(sale!.minPrice) || '-'} to ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `median ${eurFull(sale!.medianPrice) || '-'}` : 'too few for a reliable median'}${oracleOk ? `. Notary-verified value ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`, `${nfmt(sale!.totalListings)} viviendas en venta, desde ${eurCompact(sale!.minPrice) || '-'} hasta ${eurCompact(sale!.maxPrice) || '-'}, ${sale!.totalListings >= 3 ? `precio mediano ${eurFull(sale!.medianPrice) || '-'}` : 'pocos anuncios para una mediana fiable'}${oracleOk ? `. Valor verificado ante notario ≈ €${nfmt(sale!.oracle.verifiedPricePerSqm)}/m².` : '.'}`) : t('No homes for sale here yet.', 'Aún no hay viviendas en venta aquí.')}</p></div>
 			<div class="agAudCard"><h3>{t('Long-term renters', 'Alquiler de larga duración')}</h3><p>{rent && rent.totalListings ? t(`${nfmt(rent.totalListings)} long-term rentals available to browse right now in ${dataName}.`, `${nfmt(rent.totalListings)} alquileres de larga duración disponibles ahora en ${dataName}.`) : t('No long-term rentals listed here yet.', 'Aún no hay alquileres de larga duración.')}</p></div>
 			<div class="agAudCard"><h3>{t('Holiday-makers', 'Vacacional')}</h3><p>{holiday && holiday.totalListings ? t(`${nfmt(holiday.totalListings)} holiday properties available for short stays in ${dataName}.`, `${nfmt(holiday.totalListings)} propiedades vacacionales disponibles en ${dataName}.`) : t('No holiday lets listed here yet.', 'Aún no hay alojamientos vacacionales.')}</p></div>
 		</div>

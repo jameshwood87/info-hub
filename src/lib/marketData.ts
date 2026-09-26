@@ -44,6 +44,10 @@ export type OracleInfo = {
 	source: string | null;
 	attestationUrl: string | null;
 	note: string | null;
+	// the municipality the figure belongs to (INE code, first two digits = province). The MCP rolls a sub-area up to
+	// "its" municipality by name, which can be a namesake elsewhere in Spain (Ibiza -> Madrid 28079, 26-09-26).
+	municipality: string | null;
+	municipalityCode: string | null;
 };
 
 export type AreaMarketSummary = {
@@ -203,6 +207,8 @@ const buildSummary = (sc: any, loc: string, searchType: SearchType): AreaMarketS
 			source: o.source ? String(o.source) : null,
 			attestationUrl: o.attestation_url ? String(o.attestation_url) : null,
 			note: o.note ? String(o.note) : null,
+			municipality: o.municipality ? String(o.municipality) : null,
+			municipalityCode: o.municipality_code ? String(o.municipality_code) : null,
 		},
 	};
 };
