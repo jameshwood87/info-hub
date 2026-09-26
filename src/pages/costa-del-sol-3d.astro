@@ -237,7 +237,7 @@ const breadcrumbLd = {
 					<div class="sky p4"></div>
 					<div class="sky p5"></div>
 				</div>
-				<!-- 3D prototype: real terrain, drawn by /coast3d/coast3d.js once it has loaded -->
+				<!-- 3D prototype: real terrain, drawn by /_astro/coast3d/v2/coast3d.js once it has loaded -->
 				<div class="c3d" aria-hidden="true"></div>
 				<p class="c3dCredit">Aerial photo: Obra derivada de PNOA máxima actualidad CC-BY 4.0 scne.es. 3D terrain: Mapzen terrain tiles on AWS. Europe terrain data produced using Copernicus data and information funded by the European Union - EU-DEM layers; SRTM and GMTED2010 terrain data courtesy of the U.S. Geological Survey; ETOPO1 terrain data U.S. National Oceanic and Atmospheric Administration.</p>
 				<div class="nightVeil" aria-hidden="true"></div>
@@ -1425,8 +1425,12 @@ const breadcrumbLd = {
 		let api = null;
 		const ready = () => { document.documentElement.classList.add('c3d-on'); setTimeout(() => document.documentElement.classList.add('c3d-done'), 1000); };
 		const hasGL = () => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } };
-		const start = () => hasGL() && import('/coast3d/coast3d.js')
-			.then(m => m.mountCoast3D(el, { base: '/coast3d/', getProgress: progress, onReady: ready }))
+		// The scene files live under /_astro/, which the server marks cacheable for a year, so they
+		// must never change in place: a new build of the scene goes in a new folder (v3), and C3D below
+		// must be updated to match.
+		const C3D = '/_astro/coast3d/v2/';
+		const start = () => hasGL() && import(C3D + 'coast3d.js')
+			.then(m => m.mountCoast3D(el, { base: C3D, getProgress: progress, onReady: ready }))
 			.then(a => { api = a; window.__c3d = a; })
 			.catch(() => {});
 		let started = false;
