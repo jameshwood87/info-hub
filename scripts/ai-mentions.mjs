@@ -387,6 +387,8 @@ try {
     if (!(await guard(next, viaOR))) return;
     const ans = await ask(t);
     settle(next, ans.cost || 0, viaOR);
+    // OpenRouter refuses with 402 when the account can't cover in-flight requests: stop, don't log a row of failures.
+    if (!ans.ok && /^HTTP 402/.test(ans.error || '')) { stopReason ||= 'OpenRouter refused for lack of credit (HTTP 402)'; return; }
     answers.push(ans);
     if (answers.length % 25 === 0) console.log(`ai-mentions: ${answers.length}/${tasks.length} answers, ${usd(spent)} spent`);
   });
