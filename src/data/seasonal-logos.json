@@ -48,8 +48,8 @@
   "christmas-santa": {
     "start": "12-24",
     "end": "12-26",
-    "logo": "logo-christmas-santa-h160.png",
+    "logo": "logo-santa-h160.png",
     "og": "og-christmas.png",
-    "icon": "icon-christmas-santa-200.png"
+    "icon": "icon-santa-200.png"
   }
 }
