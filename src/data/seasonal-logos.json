@@ -19,8 +19,7 @@
     "icon": "icon-stpatricks.png"
   },
   "easter": {
-    "start": "2026-04-02",
-    "end": "2026-04-06",
+    "easterOffsets": [-3, 1],
     "logo": "logo-easter.png",
     "og": "og-easter.png",
     "icon": "icon-easter.png"
