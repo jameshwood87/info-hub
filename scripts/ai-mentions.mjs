@@ -207,6 +207,10 @@ function settle(next, actual, viaOpenRouter = true) {
   if (viaOpenRouter) { reservedOR -= next; spentOR += actual; }
 }
 const saveSpend = () => { spendLog[MONTH] = Math.round((monthBefore + spent) * 10000) / 10000; fs.writeFileSync(SPEND_FILE, JSON.stringify(spendLog, null, 2)); };
+// A killed run still records what it spent (calls in flight count at their heavy estimate).
+for (const sig of ['SIGTERM', 'SIGINT']) {
+  process.on(sig, () => { spent += reserved; saveSpend(); console.log(`ai-mentions: ${sig}, spend saved (${usd(spent)} this run)`); process.exit(143); });
+}
 
 // ---------------------------------------------------------------- API
 async function call(body) {
