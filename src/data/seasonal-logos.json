@@ -7,22 +7,22 @@
   "valentines": {
     "start": "02-01",
     "end": "02-14",
-    "logo": "logo-valentines.png",
+    "logo": "logo-valentines-h160.png",
     "og": "og-valentines.png",
-    "icon": "icon-valentines.png"
+    "icon": "icon-valentines-200.png"
   },
   "stpatricks": {
     "start": "03-15",
     "end": "03-18",
-    "logo": "logo-stpatricks.png",
+    "logo": "logo-stpatricks-h160.png",
     "og": "og-stpatricks.png",
-    "icon": "icon-stpatricks.png"
+    "icon": "icon-stpatricks-200.png"
   },
   "easter": {
     "easterOffsets": [-3, 1],
-    "logo": "logo-easter.png",
+    "logo": "logo-easter-h160.png",
     "og": "og-easter.png",
-    "icon": "icon-easter.png"
+    "icon": "icon-easter-200.png"
   },
   "summer": {
     "start": "06-01",
@@ -34,22 +34,22 @@
   "halloween": {
     "start": "10-24",
     "end": "10-31",
-    "logo": "logo-halloween.png",
+    "logo": "logo-halloween-h160.png",
     "og": "og-halloween.png",
-    "icon": "icon-halloween.png"
+    "icon": "icon-halloween-200.png"
   },
   "christmas": {
     "start": "12-01",
     "end": "12-23",
-    "logo": "logo-christmas.png",
+    "logo": "logo-christmas-h160.png",
     "og": "og-christmas.png",
-    "icon": "icon-christmas.png"
+    "icon": "icon-christmas-200.png"
   },
   "christmas-santa": {
     "start": "12-24",
     "end": "12-26",
-    "logo": "logo-christmas-santa.png",
+    "logo": "logo-christmas-santa-h160.png",
     "og": "og-christmas.png",
-    "icon": "icon-christmas-santa.png"
+    "icon": "icon-christmas-santa-200.png"
   }
 }
