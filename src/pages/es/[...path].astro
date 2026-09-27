@@ -18,6 +18,7 @@ import { canTranslateWithDeepL, deeplTranslate, deeplTranslateHtml } from '../..
 import mlsManualArchive from '../../data/mls-manual-archive.json';
 import { docVideoFor } from '../../data/doc-videos';
 import AREA_LOCATIONS from '../../data/area-locations.json';
+import AgentBlock from '../../components/AgentBlock.astro';
 
 // Hrefs left behind by the WordPress import that point at routes this site never
 // rebuilt. Both forms show up in the bodies: root-relative and absolute on our own
@@ -2444,7 +2445,7 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 	</a>
 ) : null}
 
-				{isBlogLike || isPublicDocs ? (
+				{isPublicDocs ? (
 					<section class="blogOracleBand" aria-label="Datos de mercado verificados" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:26px 0 6px;padding:20px 22px;border-radius:18px;border:1px solid rgba(0,174,154,0.25);background:radial-gradient(800px 300px at 20% 0%, rgba(0,174,154,0.14), rgba(255,255,255,0.65));">
 						<div style="min-width:0;max-width:640px;">
 							<div style="font-weight:900;letter-spacing:-0.02em;font-size:18px;color:rgba(16,24,40,0.92);">No adivines los precios - verifícalos</div>
@@ -2496,6 +2497,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						</p>
 					</section>
 				) : null}
+
+				{isBlogLike && renderPath.split('/').filter(Boolean).length > 2 ? <AgentBlock lang="es" pageTitle={h1} path={renderPath} /> : null}
 
 				{esAllPosts.length ? (
 					<section class="docArticles" aria-label="Todos los artículos">

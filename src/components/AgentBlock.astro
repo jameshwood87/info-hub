@@ -1,0 +1,100 @@
+---
+// The "for agents" block at the end of a blog post: one feature, one fact, one button, picked by the post's topic
+// (src/data/agent-blocks.ts). Clicks reach Umami as agent-block{from, label: block id} through the layout's data-track.
+import { agentBlockCopy, pickAgentBlock } from '../data/agent-blocks';
+
+interface Props {
+	lang: 'en' | 'es';
+	pageTitle: string;
+	path: string;
+}
+
+const { lang, pageTitle, path } = Astro.props;
+const id = pickAgentBlock(pageTitle, path);
+const copy = agentBlockCopy(id, lang, pageTitle);
+const external = /^https?:/.test(copy.href);
+const label = lang === 'es' ? 'Para agentes' : 'For agents';
+---
+
+<aside class="agentBlock" aria-label={label} data-agent-block={id}>
+	<div class="agentBlockText">
+		<p class="agentBlockEyebrow">{label}</p>
+		<p class="agentBlockTitle">{copy.title}</p>
+		<p class="agentBlockBody">{copy.body}</p>
+	</div>
+	<a
+		class="agentBlockBtn"
+		href={copy.href}
+		data-track="agent-block"
+		data-track-label={id}
+		target={external ? '_blank' : undefined}
+		rel={external ? 'noopener' : undefined}>{copy.button} &rarr;</a
+	>
+</aside>
+
+<style>
+	.agentBlock {
+		display: flex;
+		gap: 16px 18px;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		margin: 22px 0 6px;
+		padding: 20px 22px;
+		border-radius: 18px;
+		border: 1px solid rgba(0, 174, 154, 0.25);
+		background: radial-gradient(800px 300px at 20% 0%, rgba(0, 174, 154, 0.12), rgba(255, 255, 255, 0.7));
+	}
+	.agentBlockText {
+		flex: 1 1 320px;
+		min-width: 0;
+		max-width: 640px;
+	}
+	.agentBlockEyebrow {
+		margin: 0 0 4px;
+		font-size: 13px;
+		font-weight: 800;
+		color: #0a6d61;
+	}
+	.agentBlockTitle {
+		margin: 0;
+		font-size: 18px;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		line-height: 1.3;
+		color: rgba(16, 24, 40, 0.92);
+		text-wrap: balance;
+	}
+	.agentBlockBody {
+		margin: 6px 0 0;
+		font-size: 14px;
+		line-height: 1.55;
+		color: rgba(16, 24, 40, 0.72);
+	}
+	.agentBlockBtn {
+		flex: none;
+		white-space: nowrap;
+		background: #0a6d61;
+		color: #fff;
+		font-weight: 800;
+		font-size: 15px;
+		text-decoration: none;
+		border-radius: 999px;
+		padding: 11px 18px;
+	}
+	.agentBlockBtn:hover {
+		background: #008a7a;
+		color: #fff;
+	}
+	.agentBlockBtn:focus-visible {
+		outline: 2px solid #0a6d61;
+		outline-offset: 3px;
+	}
+	@media (max-width: 560px) {
+		.agentBlockBtn {
+			flex: 1 1 100%;
+			white-space: normal;
+			text-align: center;
+		}
+	}
+</style>

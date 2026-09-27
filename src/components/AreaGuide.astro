@@ -168,7 +168,7 @@ const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') =>
 const perUnit = (l: MarketListing) => (l.pricePeriod === 'per_week' ? t('/wk', '/sem') : l.pricePeriod === 'per_month' ? t('/mo', '/mes') : '');
 const signupHref = `https://agents.propertylist.es/new_agency/new?locale=${es ? 'es' : 'en'}&area=${encodeURIComponent(areaName)}${
 	region ? `&region=${encodeURIComponent(region.key)}` : ''
-}${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area`;
+}${country ? `&country=${encodeURIComponent(country.key)}` : ''}&offer=founding-area&utm_source=info-hub&utm_medium=agent-block&utm_campaign=area-guide`;
 
 const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary | null; type: 'for-sale' | 'for-rent' | 'holiday-rentals' }> = [
 	{ label: t('Buy', 'Comprar'), sub: t('For sale', 'En venta'), data: sale, type: 'for-sale' },
@@ -290,7 +290,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 				<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
 				<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits (verification is free, any time).`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).`)}</div>
 			</div>
-			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
+			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener" data-track="agent-block" data-track-label="area-guide">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
 		</div>
 	</div>
 ) : otherType ? (
@@ -349,7 +349,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 				<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
 				<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits (verification is free, any time).`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).`)}</div>
 			</div>
-			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
+			<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener" data-track="agent-block" data-track-label="area-guide">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
 		</div>
 	</div>
 ) : showFounding ? (
@@ -365,7 +365,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 				<li>{t('50€ of credits', '50€ en créditos')} {t('to feature your listings or generate area-specific market reports.', 'para destacar tus anuncios o generar informes de mercado de la zona.')}</li>
 				<li>{t(`Founding-member status for ${areaName} as we grow the area.`, `Estatus de miembro fundador de ${areaName} a medida que crece la zona.`)}</li>
 			</ul>
-			<a class="agFBtn" href={signupHref} target="_blank" rel="noopener">{t(`Become the founding agent for ${areaName} →`, `Conviértete en el agente fundador de ${areaName} →`)}</a>
+			<a class="agFBtn" href={signupHref} target="_blank" rel="noopener" data-track="agent-block" data-track-label="area-founding">{t(`Become the founding agent for ${areaName} →`, `Conviértete en el agente fundador de ${areaName} →`)}</a>
 			<p class="agFFine">{t('Free MLS + CRM forever. Verified agencies also get 20 free credits (verify any time, free).', 'MLS + CRM gratis para siempre. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).')}</p>
 		</div>
 	</section>
@@ -378,7 +378,7 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			<div class="agFiTitle">{t(`Are you an agent in ${areaName}?`, `¿Eres agente en ${areaName}?`)}</div>
 			<div class="agFiBody">{t(`List your properties free and they appear right here, in front of buyers and renters searching ${areaName}. Verified agencies get 20 free credits (verification is free, any time).`, `Publica tus propiedades gratis y aparecerán aquí, ante compradores e inquilinos que buscan en ${areaName}. Las agencias verificadas reciben 20 créditos gratis (verificarse es gratis, cuando quieras).`)}</div>
 		</div>
-		<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
+		<a class="agFiBtn" href={signupHref} target="_blank" rel="noopener" data-track="agent-block" data-track-label="area-guide">{t('List free on PropertyList →', 'Publica gratis en PropertyList →')}</a>
 	</div>
 	</>
 )}
