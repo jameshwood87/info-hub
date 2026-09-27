@@ -2572,17 +2572,6 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						) : null}
 					</footer>
 				) : null}
-				{isBlogLike ? (
-					<section class="blogSub" aria-labelledby="blogSubTitle">
-						<h2 class="blogSubTitle" id="blogSubTitle">Recibe el informe del mercado de la Costa del Sol</h2>
-						<p class="blogSubText">Un email al mes: precios reales, cambios legales que afectan a los propietarios y lo que de verdad se ha movido. Sin spam, puedes darte de baja cuando quieras.</p>
-						<form class="blogSubForm" data-blog-sub>
-							<input class="blogSubInput" type="email" name="email" required placeholder="tu@email.com" aria-label="tu@email.com" autocomplete="email" />
-							<button class="blogSubBtn" type="submit">Enviádmelo</button>
-						</form>
-						<p class="blogSubMsg" data-blog-sub-msg role="status" aria-live="polite"></p>
-					</section>
-				) : null}
 			</div>
 
 			{isBlogLike && blogListings.length ? (
@@ -2953,48 +2942,6 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 	</Layout>
 )}
 
-<script is:inline define:vars={{ subOk: 'Listo. El próximo llega a tu bandeja de entrada.', subBad: 'Introduce un email válido.', subErr: 'Algo ha fallado. Inténtalo de nuevo.' }}>
-	(function () {
-		var form = document.querySelector('[data-blog-sub]');
-		if (!form) return;
-		var msg = document.querySelector('[data-blog-sub-msg]');
-		var input = form.querySelector('input[type=email]');
-		var btn = form.querySelector('button');
-		var set = function (t, cls) { if (msg) { msg.textContent = t; msg.className = 'blogSubMsg' + (cls ? ' ' + cls : ''); } };
-		form.addEventListener('submit', async function (e) {
-			e.preventDefault();
-			var email = String(input.value || '').trim();
-			if (!email || email.indexOf('@') < 0) { set(subBad, 'bad'); return; }
-			btn.disabled = true;
-			set('', '');
-			try {
-				var res = await fetch('/api/subscribe', {
-					method: 'POST',
-					headers: { 'content-type': 'application/json' },
-					body: JSON.stringify({ email: email, tag: 'blog', lang: document.documentElement.lang || 'en', page: location.pathname }),
-				});
-				var data = await res.json().catch(function () { return {}; });
-				if (!res.ok || !data.ok) { set(subErr, 'bad'); btn.disabled = false; return; }
-				set(subOk, 'ok');
-				input.value = '';
-				if (window.umami && window.umami.track) window.umami.track('blog-subscribe', { page: location.pathname });
-			} catch (_) { set(subErr, 'bad'); }
-			btn.disabled = false;
-		});
-	})();
-</script>
 
 <style>
-	.blogSub { margin: 34px 0 8px; padding: 22px 24px; border: 1px solid rgba(0, 174, 154, 0.28); border-radius: 16px; background: linear-gradient(180deg, rgba(0, 174, 154, 0.07), rgba(0, 174, 154, 0.02)); }
-	.blogSubTitle { margin: 0 0 6px; font-size: 19px; line-height: 1.25; font-weight: 800; color: #101828; }
-	.blogSubText { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.68); }
-	.blogSubForm { display: flex; gap: 8px; flex-wrap: wrap; }
-	.blogSubInput { flex: 1 1 220px; min-width: 0; padding: 11px 14px; font-size: 15px; border: 1px solid rgba(16, 24, 40, 0.18); border-radius: 10px; background: #fff; }
-	.blogSubInput:focus { outline: 2px solid rgba(0, 174, 154, 0.5); outline-offset: 1px; }
-	.blogSubBtn { flex: 0 0 auto; padding: 11px 20px; font-size: 15px; font-weight: 800; color: #fff; background: #00ae9a; border: 0; border-radius: 10px; cursor: pointer; }
-	.blogSubBtn:hover { background: #0a9285; }
-	.blogSubBtn:disabled { opacity: 0.6; cursor: default; }
-	.blogSubMsg { margin: 10px 0 0; font-size: 13.5px; min-height: 1em; }
-	.blogSubMsg.ok { color: #0a6d61; font-weight: 700; }
-	.blogSubMsg.bad { color: #b42318; }
 </style>

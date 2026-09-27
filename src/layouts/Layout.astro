@@ -42,6 +42,7 @@ const {
 import { getSeasonalAssets } from "../lib/seasonalLogo";
 import { getPortalStats, statPlus } from '../lib/portalStats';
 import { canonicalAreaPath } from "../lib/areaProvince";
+import AgentInterestCta from '../components/AgentInterestCta.astro';
 
 const __lps = await getPortalStats();
 const { logo, og, icon } = getSeasonalAssets();
@@ -92,6 +93,20 @@ const normalizeCanonical = (value?: string) => {
 
 const pathname = Astro.url?.pathname ?? '/';
 const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/');
+// The footer offers the one-email agent summary (AgentInterestCta) where the Costa del Sol market signup was; that
+// monthly email was never switched on (James, 27-09-26). English and Spanish pages only; not on the manual, whose
+// readers already have accounts, not for signed-in agents, not on noindex pages (unsubscribe, activation, surveys),
+// and not on pages that show the box in their own content.
+const SUMMARY_IN_PAGE = new Set(["/free/","/es/gratis/","/pricing/","/es/precios/","/coagent/","/es/coagent/","/1000-agencies/","/es/1000-agencias/","/instant-listing/","/es/listado-instantaneo/","/instant-content/","/es/contenido-instantaneo/","/instant-brochure/","/es/folleto-instantaneo/","/instant-renovation/","/es/renovacion-instantanea/","/instant-documents/","/es/documentos-instantaneos/","/xml-feed-import/","/es/importar-feed-xml/"]);
+const footerPath = pathname.endsWith('/') ? pathname : `${pathname}/`;
+const showFooterSummary =
+	!isAdminPath &&
+	!existingUser &&
+	!/noindex/.test(String(robots || '')) &&
+	(lang === 'en' || lang === 'es') &&
+	!/^\/(de|fr|sv|ru|pt)\//.test(pathname) &&
+	!/^\/(es\/)?docs\/propertylist-mls-(user-manual|manual-de-usuario)\//.test(pathname) &&
+	!SUMMARY_IN_PAGE.has(footerPath);
 const isHomePath = pathname === '/' || pathname === '/es/';
 const showSearch = pathname.startsWith('/docs') || pathname.startsWith('/es/docs') || pathname === '/search' || pathname === '/es/search';
 const mapDocsToEnglish = (p: string) => {
@@ -777,21 +792,11 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 							</a>
 						</div>
 					</div>
-					<div class="footerNews">
-						<div class="footerNewsCopy">
-							<div class="footerNewsTitle">{lang === 'es' ? 'El mercado de la Costa del Sol, en tu correo' : 'The Costa del Sol market, in your inbox'}</div>
-							<p class="footerNewsSub">{lang === 'es' ? 'Precios, oferta y lo que cambia - un email breve con datos, sin spam.' : "Prices, supply and what's changing - a short data email, no spam."}</p>
+					{showFooterSummary ? (
+						<div class="footerSummary">
+							<AgentInterestCta lang={lang === 'es' ? 'es' : 'en'} page={footerPath} />
 						</div>
-						<form class="footerNewsForm" data-newsletter novalidate>
-							<div class="footerNewsRow">
-								<input type="email" name="email" required inputmode="email" autocomplete="email" maxlength="160" aria-label={lang === 'es' ? 'Tu correo electrónico' : 'Your email address'} placeholder={lang === 'es' ? 'tu@agencia.com' : 'you@agency.com'} />
-								<input type="text" name="website" class="footerNewsHp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-								<button type="submit">{lang === 'es' ? 'Suscribirme' : 'Sign up'}</button>
-							</div>
-							<p class="footerNewsConsent">{lang === 'es' ? 'Guardamos tu correo solo para enviarte este email. Puedes darte de baja cuando quieras. ' : 'We store your address only to send you this email. You can unsubscribe at any time. '}<a href={lang === 'es' ? '/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/' : '/docs/propertylist-mls-user-manual/legal/privacy-policy/'}>{lang === 'es' ? 'Política de privacidad' : 'Privacy Policy'}</a></p>
-							<p class="footerNewsStatus" role="status" aria-live="polite"></p>
-						</form>
-					</div>
+					) : null}
 					<div class="footerBottom2">
 						<span class="footerCopy">&copy; {new Date().getFullYear()} PropertyList.es &middot; {lang === 'de' ? 'Alle Rechte vorbehalten' : lang === 'es' ? 'Todos los derechos reservados' : 'All rights reserved'}</span>
 						<span class="footerFine2">{lang === 'de' ? 'Die Informationen auf dieser Website sind allgemeine Hinweise, keine professionelle Beratung.' : lang === 'es' ? 'La información de este sitio es orientación general, no asesoramiento profesional.' : 'Information on this site is general guidance, not professional advice.'}</span>
@@ -799,62 +804,6 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 				</div>
 			</footer>
 
-		<script is:inline data-newsletter-form>
-			(function () {
-				var form = document.querySelector('form[data-newsletter]');
-				if (!form) return;
-				var box = form.closest('.footerNews');
-				var status = form.querySelector('.footerNewsStatus');
-				var emailEl = form.querySelector('input[name="email"]');
-				var hpEl = form.querySelector('input[name="website"]');
-				var btn = form.querySelector('button[type="submit"]');
-				var es = (document.documentElement.lang || '').toLowerCase().indexOf('es') === 0;
-				var RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-				function say(cls, msg) {
-					status.className = 'footerNewsStatus' + (cls ? ' ' + cls : '');
-					status.textContent = msg;
-				}
-				form.addEventListener('submit', function (e) {
-					e.preventDefault();
-					var email = ((emailEl && emailEl.value) || '').trim();
-					if (!RE.test(email) || email.length > 160) {
-						say('err', es ? 'Escribe un correo electrónico válido.' : 'Please enter a valid email address.');
-						if (emailEl) emailEl.focus();
-						return;
-					}
-					if (btn) btn.disabled = true;
-					say('', es ? 'Enviando...' : 'Sending...');
-					fetch('/api/newsletter', {
-						method: 'POST',
-						headers: { 'content-type': 'application/json' },
-						body: JSON.stringify({ email: email, website: hpEl ? hpEl.value : '', lang: es ? 'es' : 'en', source: location.pathname })
-					})
-						.then(function (r) {
-							return r
-								.json()
-								.catch(function () {
-									return {};
-								})
-								.then(function (j) {
-									return { ok: r.ok, body: j };
-								});
-						})
-						.then(function (res) {
-							if (res.ok && res.body && res.body.ok) {
-								if (box) box.classList.add('done');
-								say('ok', es ? 'Hecho. Te escribiremos cuando salga el próximo email.' : "You're in. We'll email you when the next one goes out.");
-							} else {
-								if (btn) btn.disabled = false;
-								say('err', es ? 'No hemos podido guardarlo. Revisa el correo e inténtalo de nuevo.' : 'We could not save that. Check the address and try again.');
-							}
-						})
-						.catch(function () {
-							if (btn) btn.disabled = false;
-							say('err', es ? 'Algo ha fallado. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
-						});
-				});
-			})();
-		</script>
 		<script is:inline data-cta-tracker>
 			document.addEventListener('click', function (e) {
 				try {
@@ -3167,7 +3116,7 @@ gtag('config', '${GA_MEASUREMENT_ID.replace(/'/g, "\\'")}', plGaCfg);
 		color: #0a6d61 !important;
 		font-weight: 800 !important;
 	}
-	/* footer newsletter signup (capture-only: no email provider connected yet) */
+	/* market email signup: off the footer since 27-09-26 until its monthly send is switched on; kept for reuse */
 	.footerNews {
 		margin-top: 32px;
 		padding: 20px 22px;
