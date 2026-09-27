@@ -1,4 +1,5 @@
-// The Costa del Sol market email the footer signup promises.
+// The Costa del Sol market email. The footer signup that offered it was taken down on 27-09-26 because this had
+// never been switched on; it comes back where people look at prices once the monthly send runs.
 //
 // Everything in it is computed from data the site already collects: the daily
 // portal pull in var/admin/budget-data.json (the same figures /budget/ shows)
@@ -43,16 +44,27 @@ const SECRET = (process.env.NEWSLETTER_SECRET || '').trim();
 // ---------------------------------------------------------------- helpers
 const esc = (v) =>
 	String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-// Spanish and English both read dd-mm-yy here, so one format serves both.
+// dd-mm-yy is for the log lines only; readers get the date written out (brand voice rule for public copy).
 const ddmmyy = (iso) => {
 	const d = new Date(iso);
 	const p = (n) => String(n).padStart(2, '0');
 	return `${p(d.getDate())}-${p(d.getMonth() + 1)}-${String(d.getFullYear()).slice(2)}`;
 };
+const longDate = (iso, lang, withYear = true) =>
+	new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', {
+		day: 'numeric',
+		month: 'long',
+		...(withYear ? { year: 'numeric' } : {}),
+		timeZone: 'Europe/Madrid',
+	}).format(new Date(iso));
 const eur = (n) => (n == null ? null : '€' + Math.round(n).toLocaleString('en-GB').replace(/,/g, ','));
 const eurEs = (n) => (n == null ? null : Math.round(n).toLocaleString('de-DE') + ' €');
 const pct = (now, was) => (was && now ? ((now - was) / was) * 100 : null);
 const signed = (p, dp = 1) => (p == null ? null : (p >= 0 ? '+' : '') + p.toFixed(dp) + '%');
+// Under 0.05% the figure would print as "+0.0%"; say it plainly instead.
+const flat = (p) => p != null && Math.abs(p) < 0.05;
+const change = (p, lang) =>
+	p == null ? null : flat(p) ? (lang === 'es' ? 'sin cambios' : 'no change') : lang === 'es' ? signed(p).replace('.', ',') : signed(p);
 
 const unsubToken = (email) =>
 	crypto.createHmac('sha256', SECRET).update(String(email).toLowerCase()).digest('hex').slice(0, 32);
@@ -70,6 +82,9 @@ if (!now?.towns?.length) {
 // Under MIN_GAP days apart, day-to-day listing churn dominates and the movement
 // column would be noise sold as a trend, so it is dropped instead.
 const MIN_GAP = 20;
+// A town with few listings can swing several per cent on a handful of homes (Manilva read -11% in three weeks on
+// 42 listings, James's review 27-09-26), so the change is only shown where both snapshots have MIN_N or more.
+const MIN_N = 100;
 const nowMs = Date.parse(now.updatedAt);
 let prev = null;
 try {
@@ -99,7 +114,7 @@ const rows = now.towns
 			n: t.n,
 			med: t.medPrice,
 			m2: t.m2eur,
-			dM2: p ? pct(t.m2eur, p.m2eur) : null,
+			dM2: p && t.n >= MIN_N && p.n >= MIN_N ? pct(t.m2eur, p.m2eur) : null,
 			dN: p ? t.n - p.n : null,
 			oracle: t.oracle && t.oracle.verifiedPricePerSqm ? t.oracle : null,
 		};
@@ -108,19 +123,22 @@ const rows = now.towns
 const totalListings = rows.reduce((a, r) => a + (r.n || 0), 0);
 const cheapest = rows[0];
 const dearest = rows[rows.length - 1];
-const movers = rows.filter((r) => r.dM2 != null).sort((a, b) => Math.abs(b.dM2) - Math.abs(a.dM2)).slice(0, 3);
+const movers = rows.filter((r) => r.dM2 != null && !flat(r.dM2)).sort((a, b) => Math.abs(b.dM2) - Math.abs(a.dM2)).slice(0, 3);
 const stamp = ddmmyy(now.updatedAt);
 const prevStamp = prev ? ddmmyy(prev.updatedAt) : null;
+const when = { en: longDate(now.updatedAt, 'en'), es: longDate(now.updatedAt, 'es') };
+const since = prev ? { en: longDate(prev.updatedAt, 'en', false), es: longDate(prev.updatedAt, 'es', false) } : { en: '', es: '' };
 
 // ---------------------------------------------------------------- the email
 const T = {
 	en: {
-		subject: `Costa del Sol asking prices, ${stamp}`,
+		subject: `Costa del Sol asking prices, ${when.en}`,
 		preheader: `Median asking price and EUR per m2 across ${rows.length} towns, counted from ${totalListings.toLocaleString('en-GB')} live listings.`,
 		title: 'The Costa del Sol market',
-		intro: `Every figure below is counted from the ${totalListings.toLocaleString('en-GB')} homes for sale on the portal on ${stamp}. Asking prices, not sold prices.`,
-		thTown: 'Town', thN: 'Listings', thMed: 'Median asking', thM2: 'EUR per m2', thChg: `EUR per m2 vs ${prevStamp}`,
-		movedH: 'What moved',
+		intro: `Every figure below is counted from the ${totalListings.toLocaleString('en-GB')} homes for sale on the portal on ${when.en}. Asking prices, not sold prices.`,
+		thTown: 'Town', thN: 'Listings', thMed: 'Median asking', thM2: 'EUR per m2', thChg: `Change since ${since.en}`,
+		chgNote: `Change is EUR per m2 since ${since.en}, shown for towns with at least ${MIN_N} listings: in smaller towns a handful of homes can move the figure by several per cent.`,
+		movedH: prev ? `What moved since ${since.en}` : 'What moved',
 		movedNone: `This is the first issue with a comparison window, so movement starts in the next one.`,
 		spreadH: 'The spread',
 		spread: `${cheapest.name} is the cheapest of the ${rows.length} by EUR per m2 at ${eur(cheapest.m2)}, ${dearest.name} the dearest at ${eur(dearest.m2)}.`,
@@ -131,12 +149,13 @@ const T = {
 		privacy: 'Privacy',
 	},
 	es: {
-		subject: `Precios de salida en la Costa del Sol, ${stamp}`,
+		subject: `Precios de salida en la Costa del Sol, ${when.es}`,
 		preheader: `Precio medio de salida y euros por m2 en ${rows.length} municipios, contados sobre ${totalListings.toLocaleString('de-DE')} anuncios en vivo.`,
 		title: 'El mercado de la Costa del Sol',
-		intro: `Cada cifra de abajo está contada sobre las ${totalListings.toLocaleString('de-DE')} viviendas en venta en el portal el ${stamp}. Precios de salida, no precios de venta.`,
-		thTown: 'Municipio', thN: 'Anuncios', thMed: 'Mediana de salida', thM2: 'Euros por m2', thChg: `Euros por m2 vs ${prevStamp}`,
-		movedH: 'Qué se ha movido',
+		intro: `Cada cifra de abajo está contada sobre las ${totalListings.toLocaleString('de-DE')} viviendas en venta en el portal el ${when.es}. Precios de salida, no precios de venta.`,
+		thTown: 'Municipio', thN: 'Anuncios', thMed: 'Mediana de salida', thM2: 'Euros por m2', thChg: `Cambio desde el ${since.es}`,
+		chgNote: `El cambio es en euros por m2 desde el ${since.es} y solo se muestra en municipios con al menos ${MIN_N} anuncios: en los más pequeños, unas pocas viviendas pueden mover la cifra varios puntos.`,
+		movedH: prev ? `Qué se ha movido desde el ${since.es}` : 'Qué se ha movido',
 		movedNone: 'Este es el primer número con ventana de comparación, así que el movimiento empieza en el siguiente.',
 		spreadH: 'La horquilla',
 		spread: `${cheapest.name} es el más barato de los ${rows.length} por euros por m2, con ${eurEs(cheapest.m2)}, y ${dearest.name} el más caro, con ${eurEs(dearest.m2)}.`,
@@ -161,9 +180,9 @@ const buildHtml = (lang, email) => {
 	const head = 'padding:10px 12px;border-bottom:2px solid #0d2b2e;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:#4a5b5d;text-align:left';
 	const trs = rows
 		.map((r) => {
-			const chg = signed(r.dM2);
+			const chg = change(r.dM2, lang);
 			const chgCell = prev
-				? `<td style="${cell};text-align:right;color:${r.dM2 == null ? '#8aa0a2' : r.dM2 >= 0 ? '#0d7a6a' : '#b0413e'}">${chg ? esc(chg) : '-'}</td>`
+				? `<td style="${cell};text-align:right;color:${r.dM2 == null || flat(r.dM2) ? '#8aa0a2' : r.dM2 >= 0 ? '#0d7a6a' : '#b0413e'}">${chg ? esc(chg) : '-'}</td>`
 				: '';
 			return (
 				`<tr><td style="${cell}"><strong>${esc(r.name)}</strong></td>` +
@@ -182,7 +201,7 @@ const buildHtml = (lang, email) => {
 				.map((m) => {
 					const dir = lang === 'es' ? (m.dM2 >= 0 ? 'sube' : 'baja') : m.dM2 >= 0 ? 'up' : 'down';
 					return lang === 'es'
-						? `<strong>${esc(m.name)}</strong> ${dir} un ${esc(Math.abs(m.dM2).toFixed(1))}% por m2${m.dN != null ? `, ${m.dN >= 0 ? '+' : ''}${m.dN} anuncios` : ''}.`
+						? `<strong>${esc(m.name)}</strong> ${dir} un ${esc(Math.abs(m.dM2).toFixed(1).replace('.', ','))}% por m2${m.dN != null ? `, ${m.dN >= 0 ? '+' : ''}${m.dN} anuncios` : ''}.`
 						: `<strong>${esc(m.name)}</strong> ${dir} ${esc(Math.abs(m.dM2).toFixed(1))}% per m2${m.dN != null ? `, ${m.dN >= 0 ? '+' : ''}${m.dN} listings` : ''}.`;
 				})
 				.join(' ') +
@@ -196,7 +215,7 @@ const buildHtml = (lang, email) => {
 		`<div style="background:#0d2b2e;padding:22px 26px">` +
 		`<div style="font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:#6fe5d3;font-weight:700">PropertyList</div>` +
 		`<div style="font-size:24px;line-height:1.25;color:#fff;margin-top:6px">${esc(t.title)}</div>` +
-		`<div style="font-size:13px;color:#b8c9cb;margin-top:4px">${esc(stamp)}</div></div>` +
+		`<div style="font-size:13px;color:#b8c9cb;margin-top:4px">${esc(when[lang])}</div></div>` +
 		`<div style="padding:24px 26px">` +
 		`<p style="margin:0 0 18px;font-size:15px;line-height:1.65;color:#4a5b5d">${esc(t.intro)}</p>` +
 		`<table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:22px">` +
@@ -204,6 +223,7 @@ const buildHtml = (lang, email) => {
 		`<th style="${head};text-align:right">${esc(t.thMed)}</th><th style="${head};text-align:right">${esc(t.thM2)}</th>` +
 		(prev ? `<th style="${head};text-align:right">${esc(t.thChg)}</th>` : '') +
 		`</tr>${trs}</table>` +
+		(prev ? `<p style="margin:-12px 0 22px;font-size:12.5px;line-height:1.6;color:#8aa0a2">${esc(t.chgNote)}</p>` : '') +
 		`<h3 style="margin:0 0 8px;font-size:16px;color:#0d2b2e">${esc(t.movedH)}</h3>${moved}` +
 		`<h3 style="margin:18px 0 8px;font-size:16px;color:#0d2b2e">${esc(t.spreadH)}</h3>` +
 		`<p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:#0d2b2e">${esc(t.spread)}</p>` +
@@ -221,11 +241,12 @@ const buildHtml = (lang, email) => {
 const buildText = (lang, email) => {
 	const t = T[lang];
 	const lines = rows.map((r) => {
-		const chg = prev && r.dM2 != null ? `  ${signed(r.dM2)}` : '';
-		return `  ${r.name}: ${r.n} ${lang === 'es' ? 'anuncios' : 'listings'}, ${money(lang, r.med)}, ${money(lang, r.m2)}/m2${chg}`;
+		const chg = prev && r.dM2 != null ? `  ${change(r.dM2, lang)}` : '';
+		return `  ${r.name}: ${r.n.toLocaleString(lang === 'es' ? 'de-DE' : 'en-GB')} ${lang === 'es' ? 'anuncios' : 'listings'}, ${money(lang, r.med)}, ${money(lang, r.m2)}/m2${chg}`;
 	});
 	return (
-		`${t.title} - ${stamp}\n\n${t.intro}\n\n${lines.join('\n')}\n\n` +
+		`${t.title}, ${when[lang]}\n\n${t.intro}\n\n${lines.join('\n')}\n\n` +
+		(prev ? `${t.chgNote}\n\n` : '') +
 		`${t.spreadH}: ${t.spread}\n\n${budgetUrl(lang)}\n\n${t.note}\n\n` +
 		`${t.why}\n${t.unsub}: ${unsubUrl(email, lang)}\n`
 	);
