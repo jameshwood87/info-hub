@@ -4,7 +4,10 @@ import fs from 'node:fs';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/que-hacer/estepona/`;
-const title = 'Eventos en Estepona 2026: agenda cultural, qué hacer hoy y este fin de semana | PropertyList';
+// Current month in Madrid time, so the title names the month people search for.
+const __madrid = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Madrid' }));
+const __mes = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][__madrid.getMonth()];
+const title = `Agenda cultural de Estepona, ${__mes} ${__madrid.getFullYear()}: qué hacer | PropertyList`;
 const description =
 	'Agenda de eventos en Estepona siempre al día: ferias, conciertos, exposiciones, deporte y planes en familia - de fuentes oficiales, actualizada automáticamente.';
 
@@ -186,7 +189,7 @@ const townLabel = (k: string) =>
 	<section class="hero">
 		<div class="heroInner">
 			<div class="kicker">Qué hacer &middot; Estepona</div>
-			<h1>Eventos y agenda de Estepona: qué hacer hoy y este fin de semana</h1>
+			<h1>Agenda cultural de Estepona: eventos de este mes</h1>
 			<p class="lead">
 				Tu noche, tu feria, tu día de playa - todo lo que merece la pena en Estepona, del casco antiguo lleno de flores al puerto, en una agenda
 				siempre al día. Toca <strong>+ Añadir al plan</strong> para montar tu itinerario, compártelo con tus amigos y pásalo

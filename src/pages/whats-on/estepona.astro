@@ -4,7 +4,10 @@ import fs from 'node:fs';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/whats-on/estepona/`;
-const title = "What's On in Estepona 2026: Events, Festivals & Things To Do | PropertyList";
+// Current month in Madrid time, so the title names the month people search for.
+const __madrid = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Madrid' }));
+const __month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][__madrid.getMonth()];
+const title = `What's on in Estepona, ${__month} ${__madrid.getFullYear()}: things to do | PropertyList`;
 const description =
 	'A curated, always-current diary of events in Estepona - festivals, concerts, exhibitions, sport and family days out - from official sources, updated automatically.';
 
@@ -186,7 +189,7 @@ const townLabel = (k: string) =>
 	<section class="hero">
 		<div class="heroInner">
 			<div class="kicker">What's On &middot; Estepona</div>
-			<h1>What's on in Estepona</h1>
+			<h1>What's on in Estepona: events this month</h1>
 			<p class="lead">
 				Your night out, your feria, your beach day - everything worth doing in Estepona, from the flower-filled old town to the port, in one
 				always-current diary. Tap <strong>+ Add to plan</strong> to build your own itinerary, share it with your friends and
