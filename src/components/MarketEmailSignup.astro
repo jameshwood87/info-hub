@@ -1,0 +1,111 @@
+---
+// Sign-up for the monthly Costa del Sol market email (scripts/market-digest.mjs, sent on the 1st at 08:00 Madrid
+// time). Shown where people look at prices: /budget/ and the area guides the email has figures for (James,
+// 27-09-26: "launch it"). Uses the old footer box's global styles in Layout (.footerNews*) and posts to
+// /api/newsletter as the footer form did; a successful sign-up reaches Umami as market-email-signup. Each copy of the
+// script binds every box not yet bound, so two boxes on one page both work; method="post" keeps the address out of
+// the URL if the script never runs.
+interface Props {
+	lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+const es = lang === 'es';
+---
+
+<div class="footerNews marketEmail">
+	<div class="footerNewsCopy">
+		<div class="footerNewsTitle">{es ? 'El mercado de la Costa del Sol, en tu correo' : 'The Costa del Sol market, in your inbox'}</div>
+		<p class="footerNewsSub">
+			{es
+				? 'Una vez al mes: precios de salida y euros por m2, municipio a municipio, contados sobre los anuncios del portal. Sin spam.'
+				: 'Once a month: asking prices and EUR per m2, town by town, counted from the listings on the portal. No spam.'}
+		</p>
+	</div>
+	<form class="footerNewsForm" data-newsletter data-lang={lang} method="post" novalidate>
+		<div class="footerNewsRow">
+			<input
+				type="email"
+				name="email"
+				required
+				inputmode="email"
+				autocomplete="email"
+				maxlength="160"
+				aria-label={es ? 'Tu correo electrónico' : 'Your email address'}
+				placeholder={es ? 'tu@email.com' : 'your@email.com'}
+			/>
+			<input type="text" name="website" class="footerNewsHp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+			<button type="submit">{es ? 'Suscribirme' : 'Sign up'}</button>
+		</div>
+		<p class="footerNewsConsent">
+			{es
+				? 'Guardamos tu correo solo para enviarte este email. Puedes darte de baja cuando quieras. '
+				: 'We store your address only to send you this email. You can unsubscribe at any time. '}<a
+				href={es ? '/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/' : '/docs/propertylist-mls-user-manual/legal/privacy-policy/'}
+				>{es ? 'Política de privacidad' : 'Privacy Policy'}</a
+			>
+		</p>
+		<p class="footerNewsStatus" role="status" aria-live="polite"></p>
+	</form>
+</div>
+
+<script is:inline>
+	(function () {
+		document.querySelectorAll('form[data-newsletter]').forEach(function (form) {
+			if (form.getAttribute('data-bound')) return;
+			form.setAttribute('data-bound', '1');
+			var box = form.closest('.footerNews');
+			var status = form.querySelector('.footerNewsStatus');
+			var emailEl = form.querySelector('input[name="email"]');
+			var hpEl = form.querySelector('input[name="website"]');
+			var btn = form.querySelector('button[type="submit"]');
+			var es = form.getAttribute('data-lang') === 'es';
+			var RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			function say(cls, msg) {
+				status.className = 'footerNewsStatus' + (cls ? ' ' + cls : '');
+				status.textContent = msg;
+			}
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+				var email = ((emailEl && emailEl.value) || '').trim();
+				if (!RE.test(email) || email.length > 160) {
+					say('err', es ? 'Escribe un correo electrónico válido.' : 'Please enter a valid email address.');
+					if (emailEl) emailEl.focus();
+					return;
+				}
+				if (btn) btn.disabled = true;
+				say('', es ? 'Enviando...' : 'Sending...');
+				fetch('/api/newsletter', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ email: email, website: hpEl ? hpEl.value : '', lang: es ? 'es' : 'en', source: location.pathname })
+				})
+					.then(function (r) {
+						return r
+							.json()
+							.catch(function () {
+								return {};
+							})
+							.then(function (j) {
+								return { ok: r.ok, body: j };
+							});
+					})
+					.then(function (res) {
+						if (res.ok && res.body && res.body.ok) {
+							if (box) box.classList.add('done');
+							say('ok', es ? 'Hecho. Te escribiremos cuando salga el próximo email.' : "You're in. We'll email you when the next one goes out.");
+							try {
+								if (window.umami && window.umami.track) window.umami.track('market-email-signup', { page: location.pathname });
+							} catch (err) {}
+						} else {
+							if (btn) btn.disabled = false;
+							say('err', es ? 'No hemos podido guardarlo. Revisa el correo e inténtalo de nuevo.' : 'We could not save that. Check the address and try again.');
+						}
+					})
+					.catch(function () {
+						if (btn) btn.disabled = false;
+						say('err', es ? 'Algo ha fallado. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
+					});
+			});
+		});
+	})();
+</script>

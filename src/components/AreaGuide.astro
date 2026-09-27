@@ -7,6 +7,8 @@ import { areaImagePath } from '../lib/areaImages';
 import ThenNow from './ThenNow.astro';
 import { REGIONS, regionFromProvince, countryOfRegion, type Region, type Country } from '../data/geo';
 import AREA_LOCATIONS from '../data/area-locations.json';
+import { readFile } from 'node:fs/promises';
+import MarketEmailSignup from './MarketEmailSignup.astro';
 
 interface Props {
 	areaName: string;
@@ -163,6 +165,20 @@ const areaSlug = areaName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 const areaImage = (slug && areaImagePath(slug)) || areaImagePath(areaSlug);
 const heroImage = areaImage || heroPhoto;
 const portalPath = String(loc.portal || areaSlug || areaName.toLowerCase());
+// The monthly market email (scripts/market-digest.mjs) has one row per town in var/admin/budget-data.json, so a
+// guide offers it only when its town has a row today: the first part of the portal path (marbella for Nueva
+// Andalucia), with san-pedro-de-alcantara, mijas-costa and la-duquesa mapped to the email's San Pedro, Mijas and
+// Manilva. No data, no box.
+const EMAIL_TOWN_OF: Record<string, string> = { 'san-pedro-de-alcantara': 'san-pedro-alcantara', 'mijas-costa': 'mijas', 'la-duquesa': 'manilva' };
+let emailTowns: string[] = [];
+for (const p of ['/opt/info-hub/var/admin/budget-data.json', 'var/admin/budget-data.json']) {
+	try {
+		emailTowns = (JSON.parse(await readFile(p, 'utf8')).towns || []).map((t: { slug?: string }) => String(t.slug || ''));
+		break;
+	} catch {}
+}
+const guideTown = portalPath.split('/').filter(Boolean)[0] || '';
+const marketEmail = emailTowns.includes(EMAIL_TOWN_OF[guideTown] || guideTown);
 const portalSearch = (ty: 'for-sale' | 'for-rent' | 'holiday-rentals') =>
 	`${portalBase}/${ty}/${portalPath.split('/').filter(Boolean).map((p) => encodeURIComponent(p)).join('/')}`;
 const perUnit = (l: MarketListing) => (l.pricePeriod === 'per_week' ? t('/wk', '/sem') : l.pricePeriod === 'per_month' ? t('/mo', '/mes') : '');
@@ -284,6 +300,8 @@ const marketCards: Array<{ label: string; sub: string; data: AreaMarketSummary |
 			</span>
 			<span class="agIntelBtn">{t('Explore Intelligence →', 'Explora Intelligence →')}</span>
 		</a>
+
+		{marketEmail ? <MarketEmailSignup lang={es ? 'es' : 'en'} /> : null}
 
 		<div class="agFoundingInline">
 			<div>

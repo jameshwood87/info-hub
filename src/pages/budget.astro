@@ -8,6 +8,7 @@
 // Shares carry ?b=N so the OG preview in the group chat shows THEIR budget.
 import { readFile } from 'node:fs/promises';
 import Layout from '../layouts/Layout.astro';
+import MarketEmailSignup from '../components/MarketEmailSignup.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/budget/`;
@@ -255,6 +256,7 @@ const payload = JSON.stringify({
 				<span class="nextLine">See every home that fits, straight from the agencies that listed them &rarr;</span>
 			</a>
 		</section>
+		<MarketEmailSignup lang="en" />
 	</div>
 
 	<script type="application/json" id="bd" set:html={payload} />

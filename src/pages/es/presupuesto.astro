@@ -3,6 +3,7 @@
 // Ver src/pages/budget.astro para las notas de arquitectura.
 import { readFile } from 'node:fs/promises';
 import Layout from '../../layouts/Layout.astro';
+import MarketEmailSignup from '../../components/MarketEmailSignup.astro';
 
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/presupuesto/`;
@@ -247,6 +248,7 @@ const payload = JSON.stringify({
 				<span class="nextLine">Mira cada vivienda que encaja, directa de las agencias que la publicaron &rarr;</span>
 			</a>
 		</section>
+		<MarketEmailSignup lang="es" />
 	</div>
 
 	<script type="application/json" id="bd" set:html={payload} />
