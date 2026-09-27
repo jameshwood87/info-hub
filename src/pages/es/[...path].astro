@@ -1,5 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import wpSlugMap from '../../data/wp-slug-map.json';
 import { areaImagePath } from '../../lib/areaImages';
 import { thenNowOg } from '../../lib/thenNow';
@@ -179,6 +181,19 @@ const translateEnKbPageToEs = async (pageEn: any, targetPath: string) => {
 	const titleSrc = String(pageEn?.seo_title || pageEn?.title || '');
 	const descSrc = String(pageEn?.seo_description || pageEn?.description || '');
 	const bodySrc = String(pageEn?.body || '');
+	// Saved translations survive restarts and deploys: one DeepL call per version of the
+	// English text, instead of one per process (the in-memory cache alone spent the monthly
+	// allowance, 27-09-26).
+	const esTrFile = `/opt/info-hub/var/cache/es-translations/${createHash('sha1').update(`${targetPath}\n${titleSrc}\n${descSrc}\n${bodySrc}`).digest('hex')}.json`;
+	try {
+		const saved = JSON.parse(fs.readFileSync(esTrFile, 'utf8'));
+		if (saved && saved.body) {
+			esRuntimeTranslationCache.set(cacheKey, saved);
+			return saved;
+		}
+	} catch {
+		// not saved yet
+	}
 
 	let translatedTitle = '';
 	let translatedDesc = '';
@@ -212,6 +227,14 @@ const translateEnKbPageToEs = async (pageEn: any, targetPath: string) => {
 		seo_description: translatedDesc || null,
 	} as any;
 	esRuntimeTranslationCache.set(cacheKey, pageEs);
+	if (pageEs.body) {
+		try {
+			fs.mkdirSync('/opt/info-hub/var/cache/es-translations', { recursive: true });
+			fs.writeFileSync(esTrFile, JSON.stringify(pageEs));
+		} catch {
+			// disk full or read-only: the in-memory cache still works
+		}
+	}
 	return pageEs;
 };
 const prefixRedirects = (await listPrefixRedirects().catch(() => []))
@@ -2157,7 +2180,28 @@ const howToLd =
 			}
 		: null;
 
-const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] : [])]);
+// Same parser as the EN template: an FAQ h2 followed by h3 questions and p answers.
+const blogFaqLd = (() => {
+  if (!isBlogLike && !isDocs) return null;
+  const m = /<h2[^>]*>[^<]*(?:FAQ|Frequently asked|Preguntas)[^<]*<\/h2>([\s\S]*?)(?=<h2|$)/i.exec(bodyHtml);
+  if (!m) return null;
+  const seg = m[1] || '';
+  const qa: Array<{ q: string; a: string }> = [];
+  const re = /<h3[^>]*>([\s\S]*?)<\/h3>\s*((?:<p[^>]*>[\s\S]*?<\/p>\s*)+)/gi;
+  let mm;
+  while ((mm = re.exec(seg)) && qa.length < 8) {
+    const q = mm[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const a = mm[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (q && a) qa.push({ q, a });
+  }
+  if (qa.length < 2) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: qa.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })),
+  };
+})();
+const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] : []), ...(blogFaqLd ? [blogFaqLd] : [])]);
 ---
 
 {notFound ? (
