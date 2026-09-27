@@ -315,27 +315,47 @@ async function sourceMalagaTownHall() {
 }
 
 async function sourceEsteponaTownHall() {
-  // ayuntamiento.estepona.es/agenda: the listing is modal-driven, but every
-  // card carries data-remote='...doActionData.asp?show=Event&idE=N' and the
-  // detail endpoint (direct fetch OK) has title, venue and "Fecha y Hora"
-  // (DD/MM/YYYY, ranges as "Del X al Y"). Details cached; one AI extract call.
-  const CACHE = path.join(VAR_DIR, 'estepona-details.json');
-  const cache = readJson(CACHE, {});
-  const html = await fetchText('https://ayuntamiento.estepona.es/agenda', { timeoutMs: 60000 });
-  const ids = [...new Set([...html.matchAll(/idE=(\d+)/g)].map((m) => m[1]))];
-  let fetched = 0;
-  for (const id of ids) {
-    if (Object.prototype.hasOwnProperty.call(cache, id)) continue;
-    try {
-      const d = await fetchText(`https://ayuntamiento.estepona.es/includes/doActionData.asp?show=Event&idE=${id}`, { timeoutMs: 30000 });
-      cache[id] = stripHtml(d).replace(/^[\s\S]*?Cerrar/, '').slice(0, 1200);
-      fetched++;
-      await new Promise((r) => setTimeout(r, 200));
-    } catch { /* not cached - retried next run */ }
+  // ayuntamiento.estepona.es was rebuilt in September 2026 (Next.js + Strapi): the agenda
+  // loads client-side from the public API below, so the old idE= scrape found nothing from
+  // 21-09-26. The API returns the same events the council's agenda shows (es_evento, not
+  // exclusive, ending today or later). Each becomes an EVENT block in the old detail-page
+  // shape ("Fecha y Hora: Del DD/MM/YYYY al DD/MM/YYYY") so the extraction prompt is unchanged.
+  const now = new Date().toISOString();
+  const q = [
+    'filters[es_evento][$eq]=true',
+    'filters[es_noticia_exclusiva][$ne]=true',
+    `filters[$or][0][fecha_evento_fin][$gte]=${encodeURIComponent(now)}`,
+    'filters[$or][1][fecha_evento_fin][$null]=true',
+    'populate[lugar]=true',
+    'sort[0]=fecha_evento_inicio:asc',
+    'pagination[pageSize]=100',
+  ].join('&');
+  let rows = [];
+  try {
+    const res = await fetch(`https://www.estepona.es/api/noticiass?${q}`, { headers: { 'User-Agent': 'PropertyList events-cron' }, signal: AbortSignal.timeout(60000) });
+    rows = (await res.json())?.data || [];
+  } catch (e) {
+    log(`estepona.es: API failed: ${String(e?.message || e).slice(0, 120)}`);
   }
-  try { fs.writeFileSync(CACHE, JSON.stringify(cache, null, 2)); } catch {}
-  const texts = ids.filter((id) => cache[id]).map((id) => `EVENT idE=${id}:\n${cache[id]}`).join('\n\n');
-  log(`estepona.es: ${ids.length} ids on the agenda (${fetched} new detail pages)`);
+  const ymd = (iso) => {
+    if (!iso) return '';
+    const p = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', day: '2-digit', month: '2-digit', year: 'numeric' }).formatToParts(new Date(iso));
+    const g = (t) => p.find((x) => x.type === t)?.value || '';
+    return `${g('day')}/${g('month')}/${g('year')}`;
+  };
+  const ids = rows.map((r) => String(r.documentId || r.id));
+  const fetched = ids.length;
+  const texts = rows.map((r) => {
+    const a = r.attributes || r;
+    const title = a.titulo_evento || a.titular || '';
+    const from = ymd(a.fecha_evento_inicio), to = ymd(a.fecha_evento_fin);
+    const when = from && to && from !== to ? `Del ${from} al ${to}` : from || to;
+    const lugar = a.lugar?.data?.attributes || a.lugar || {};
+    const venue = lugar.nombre || lugar.titulo || lugar.name || '';
+    const blurb = stripHtml(String(a.breve || a.noticia || '')).slice(0, 700);
+    return `EVENT idE=${r.documentId || r.id}:\n${title}\nFecha y Hora: ${when}${venue ? `\nLugar: ${venue}` : ''}\n${blurb}`;
+  }).join('\n\n');
+  log(`estepona.es: ${ids.length} events from the API (${fetched} rows)`);
   if (!texts) return [];
   const out = await aiJson([{ role: 'user', content: EXTRACT_PROMPT('Estepona town hall agenda detail pages (each EVENT block is one event in the Estepona municipality; "Fecha y Hora" holds the date or range - "Del X al Y" is a range; dates are DD/MM/YYYY; include the 24h start time when one is stated)', texts.slice(0, 60000)) }]);
   return (out.events || []).map((e) => ({ ...e, town: e.town || 'Estepona', url: e.url && /^https?:\/\//.test(String(e.url)) ? e.url : 'https://www.estepona.es/agenda', source: 'estepona.es' }));
