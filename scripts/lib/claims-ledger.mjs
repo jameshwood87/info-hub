@@ -8,7 +8,7 @@
 // Deliberately short: anything unsettled in the ledgers (portal lead prices, Rentals
 // prices, signup credits) is listed as "do not state" rather than guessed.
 
-export const LEDGER_CHECKED = '24-09-26';
+export const LEDGER_CHECKED = '27-09-26';
 
 const plus = (n) => `${(Math.floor(Number(n) / 10) * 10).toLocaleString('en-GB')}+`;
 
@@ -43,6 +43,7 @@ export function claimsLedgerBlock(counts) {
 - Credits pay for optional extras. One credit costs about 1 euro (EUR 0.80 to EUR 1 plus IVA, depending on the pack). Never write "1 credit = 1 euro".
 - Prices in credits, quote only these: featuring a listing 10 credits for 3 days, 20 for 7 days, 30 for 15 days; moving a qualified buyer lead into the Buyer pipeline 1 credit, the first 5 free; the Property Intelligence Report 5 credits, the first 3 reports free; the Website Builder from 50 credits a month, free to build and preview; an own-website XML feed or the Website API 35 credits a month, with no annual price; extra listing photos 1 credit each after the first 25; CoAgent on WhatsApp 20 free messages a month for every agent${coagentFirst10}, then 50 credits a month per agent for unlimited messages.
 ${countsLine}
+- Sharing is per listing and all-or-nothing: a shared listing is visible to every registered agency on the MLS, with the commission split on the listing set by the listing agency (James 27-09-26); or the agency marks it "Do not share with other agents", which takes it off the MLS and other agencies' sites and feeds but keeps it on the public portal (the first 5 private listings free, then 5 credits each). There is no way to share with chosen agencies only.
 - New agencies are reviewed within 24 hours. Never claim a licence or registry check. Never write "verified agents", "verified agencies" or "verified listings"; write "registered agents".
 - Price Oracle figures are prices recorded by Spanish notaries. Never call a PropertyList report a "valuation" or "tasación"; call it the Property Intelligence Report or a market report.
 - Not live, never present as available: Instant Renovation, Instant Video and Instant Images (coming soon), a verified-agency badge, connecting a Gmail or Outlook inbox.
