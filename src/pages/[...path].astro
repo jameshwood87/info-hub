@@ -27,6 +27,8 @@ import mlsManualArchive from '../data/mls-manual-archive.json';
 import { docVideoFor } from '../data/doc-videos';
 import AREA_LOCATIONS from '../data/area-locations.json';
 import AgentBlock from '../components/AgentBlock.astro';
+import CoAgentTip from '../components/CoAgentTip.astro';
+import { coagentTipFor } from '../data/coagent-tips';
 
 const rawPath = Astro.params.path ?? '';
 const requestUrl = new URL(Astro.request.url);
@@ -2438,6 +2440,8 @@ const finalBodyHtml = (() => {
 	}
 	return out;
 })();
+// The CoAgent tip (src/data/coagent-tips.ts) goes right after the page's own title heading at the start of its text.
+const coagentTipSplit = isDocs && coagentTipFor(renderPath, 'en') ? String(finalBodyHtml || '').match(/^([\s\S]{0,3000}?<\/h1>)([\s\S]*)$/) : null;
 
 const toc = isNeighbourhood && String(page.body || '').trim().length < 400 ? neighbourhoodAutoToc : sourceToc;
 
@@ -3541,7 +3545,8 @@ const ldJson = JSON.stringify([
 						<span style="flex:none;font-weight:700;color:#0a6d61;">{docVideo.dur}</span>
 					</a>
 				) : null}
-				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+				{isDocs && !coagentTipSplit ? <CoAgentTip lang="en" path={renderPath} /> : null}
+				<div class="docContent">{finalBodyHtml ? (coagentTipSplit ? <><Fragment set:html={coagentTipSplit[1]} /><CoAgentTip lang="en" path={renderPath} /><Fragment set:html={coagentTipSplit[2]} /></> : <Fragment set:html={finalBodyHtml} />) : null}</div>
 				<DocLightbox lang="en" />
 				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
 					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Last reviewed: {blogDateFmt.format(docReviewedDate)}</p>

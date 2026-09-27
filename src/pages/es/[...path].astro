@@ -19,6 +19,8 @@ import mlsManualArchive from '../../data/mls-manual-archive.json';
 import { docVideoFor } from '../../data/doc-videos';
 import AREA_LOCATIONS from '../../data/area-locations.json';
 import AgentBlock from '../../components/AgentBlock.astro';
+import CoAgentTip from '../../components/CoAgentTip.astro';
+import { coagentTipFor } from '../../data/coagent-tips';
 
 // Hrefs left behind by the WordPress import that point at routes this site never
 // rebuilt. Both forms show up in the bodies: root-relative and absolute on our own
@@ -1641,6 +1643,8 @@ const finalBodyHtml = (() => {
 	}
 	return `${translationNoticeHtml}${out}`;
 })();
+// The CoAgent tip (src/data/coagent-tips.ts) goes right after the page's own title heading at the start of its text.
+const coagentTipSplit = isDocs && coagentTipFor(renderPath, 'es') ? String(finalBodyHtml || '').match(/^([\s\S]{0,3000}?<\/h1>)([\s\S]*)$/) : null;
 const docsPrefix = strictEs ? '/es/docs/' : '/docs/';
 const docsItemsEnRaw =
 	!strictEs && isDocs ? await listKbPagesByPrefixes({ prefixes: ['/docs/', '/es/docs/'], lang: 'en', limit: 2000 }) : [];
@@ -2430,7 +2434,8 @@ const ldJson = JSON.stringify([breadcrumbLd, articleLd, ...(howToLd ? [howToLd] 
 						<span style="flex:none;font-weight:700;color:#0a6d61;">{docVideo.dur}</span>
 					</a>
 				) : null}
-				<div class="docContent">{finalBodyHtml ? <Fragment set:html={finalBodyHtml} /> : null}</div>
+				{isDocs && !coagentTipSplit ? <CoAgentTip lang="es" path={renderPath} /> : null}
+				<div class="docContent">{finalBodyHtml ? (coagentTipSplit ? <><Fragment set:html={coagentTipSplit[1]} /><CoAgentTip lang="es" path={renderPath} /><Fragment set:html={coagentTipSplit[2]} /></> : <Fragment set:html={finalBodyHtml} />) : null}</div>
 				<DocLightbox lang="es" />
 				{isPublicDocs && docReviewedDate && !/(last reviewed|ltima revisi)/i.test(String(finalBodyHtml || '')) ? (
 					<p style="margin:18px 0 0;font-size:13px;color:rgba(16,24,40,0.55);font-style:italic;">Última revisión: {blogDateFmt.format(docReviewedDate)}</p>

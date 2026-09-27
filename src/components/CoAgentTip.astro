@@ -1,0 +1,57 @@
+---
+// "Or just ask CoAgent" at the top of the manual pages whose task CoAgent can do (src/data/coagent-tips.ts); renders
+// nothing on any other page. Clicks reach Umami as coagent-tip{from, label: the page's manual path}.
+import { COAGENT_HOWTO, coagentTipFor } from '../data/coagent-tips';
+
+interface Props {
+	lang: 'en' | 'es';
+	path: string;
+}
+
+const { lang, path } = Astro.props;
+const tip = coagentTipFor(path, lang);
+const es = lang === 'es';
+---
+
+{
+	tip ? (
+		<aside class="coagentTip" aria-label={es ? 'Pídeselo a CoAgent' : 'Ask CoAgent'}>
+			<p>
+				<strong>{es ? 'O pídeselo a CoAgent.' : 'Or just ask CoAgent.'}</strong>{' '}
+				{es ? <>Por WhatsApp, envía «{tip.ask}»{tip.then}</> : <>On WhatsApp, send "{tip.ask}"{tip.then}</>}{' '}
+				{es ? '20 mensajes gratis al mes.' : '20 free messages a month.'}{' '}
+				<a href={COAGENT_HOWTO[lang]} data-track="coagent-tip" data-track-label={tip.sub}>
+					{es ? 'Cómo usar CoAgent' : 'How to use CoAgent'} &rarr;
+				</a>
+			</p>
+		</aside>
+	) : null
+}
+
+<style>
+	.coagentTip {
+		margin: 0 0 20px;
+		padding: 12px 16px;
+		border-left: 3px solid #00ae9a;
+		border-radius: 10px;
+		background: rgba(0, 174, 154, 0.07);
+	}
+	.coagentTip p {
+		margin: 0;
+		font-size: 14.5px;
+		line-height: 1.55;
+		color: rgba(16, 24, 40, 0.8);
+	}
+	.coagentTip strong {
+		color: rgba(16, 24, 40, 0.92);
+	}
+	.coagentTip a {
+		font-weight: 700;
+		color: #0a6d61;
+		white-space: nowrap;
+	}
+	.coagentTip a:focus-visible {
+		outline: 2px solid #0a6d61;
+		outline-offset: 2px;
+	}
+</style>
