@@ -1,6 +1,6 @@
 ---
 // "What does your budget actually buy?" - the consumer twin of /hours/.
-// One budget, 14 Costa del Sol towns, bars show how far the money stretches.
+// One budget, every Costa del Sol town with enough live listings, bars show how far the money stretches.
 // Every number is computed from every live for-sale listing on the MLS
 // (scripts/budget-data.mjs, daily 04:50), so the counts always match what the
 // portal deep link opens. Rows ship fully rendered in static HTML for search
@@ -33,6 +33,9 @@ for (const p of ['/opt/info-hub/var/admin/budget-data.json', 'var/admin/budget-d
 }
 const grid: number[] = data?.grid ?? [];
 const towns: Town[] = data?.towns ?? [];
+// Towns under 25 listings drop out of the data, so the count is read from it, never written in (the page said 14
+// while the data had 13, James 27-09-26).
+const townsLabel = towns.length ? `${towns.length} Costa del Sol towns` : 'Costa del Sol towns';
 const totalListings = towns.reduce((a, t) => a + t.n, 0);
 
 // ---- budget from the URL (shares), clamped to the grid range ----
@@ -88,11 +91,11 @@ const ratio = best && worst ? (worst.m2eur / best.m2eur).toFixed(1) : '0';
 
 const title = shared
 	? `What ${fmtEur(b)} actually buys on the Costa del Sol`
-	: 'What does your budget actually buy? 14 Costa del Sol towns compared';
+	: `What does your budget actually buy? ${townsLabel} compared`;
 const description = best
-	? `${fmtEur(b)} is ${best.sqm}m2 in ${best.name} but ${worst.sqm}m2 in ${worst.name}. Live median asking prices from ${totalListings.toLocaleString('en-GB')} listings in 14 towns, updated daily, with every home under your budget one tap away.`
-	: 'Live median asking prices across 14 Costa del Sol towns, updated daily.';
-const ogImage = `${origin}/api/og-budget.png?b=${b}&v=2`;
+	? `${fmtEur(b)} is ${best.sqm}m2 in ${best.name} but ${worst.sqm}m2 in ${worst.name}. Live median asking prices from ${totalListings.toLocaleString('en-GB')} listings in ${towns.length} towns, updated daily, with every home under your budget one tap away.`
+	: `Live median asking prices across ${townsLabel}, updated daily.`;
+const ogImage = `${origin}/api/og-budget.png?b=${b}&v=3`;
 
 const mIdx = grid.indexOf(500000);
 const marbella = towns.find((t) => t.slug === 'marbella');
@@ -106,7 +109,7 @@ const faqLd = {
 					name: 'Where does a budget go furthest on the Costa del Sol?',
 					acceptedAnswer: {
 						'@type': 'Answer',
-						text: `Of the 14 towns compared, ${best.name} currently has the lowest median asking price at €${best.m2eur.toLocaleString('en-GB')} per m2 and ${worst.name} the highest at €${worst.m2eur.toLocaleString('en-GB')} per m2. The same budget buys about ${ratio} times more built space in ${best.name}, based on every live for-sale listing from registered agencies on the PropertyList MLS.`,
+						text: `Of the ${towns.length} towns compared, ${best.name} currently has the lowest median asking price at €${best.m2eur.toLocaleString('en-GB')} per m2 and ${worst.name} the highest at €${worst.m2eur.toLocaleString('en-GB')} per m2. The same budget buys about ${ratio} times more built space in ${best.name}, based on every live for-sale listing from registered agencies on the PropertyList MLS.`,
 					},
 				}
 			: null,
@@ -161,7 +164,7 @@ const payload = JSON.stringify({
 			<p class="eyebrow">Same money. Different postcode.</p>
 			<h1>What does your budget <span class="und">actually</span> buy?</h1>
 			<p class="sub">
-				Median asking prices from <strong>{totalListings.toLocaleString('en-GB')} live listings</strong> in 14 Costa del Sol towns, updated daily. Pick a number and watch it stretch.
+				Median asking prices from <strong>{totalListings.toLocaleString('en-GB')} live listings</strong> in {townsLabel}, updated daily. Pick a number and watch it stretch.
 			</p>
 			<div class="amount" role="group" aria-label="Your budget">
 				<button class="step" data-step="-1" aria-label="Lower budget">&minus;</button>

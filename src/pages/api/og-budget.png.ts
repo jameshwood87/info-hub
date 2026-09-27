@@ -65,7 +65,9 @@ export const GET: APIRoute = async ({ url }) => {
 	}
 
 	const sub =
-		lang === 'es' ? '14 pueblos de la Costa del Sol comparados' : '14 Costa del Sol towns compared';
+		towns.length
+			? lang === 'es' ? `${towns.length} pueblos de la Costa del Sol comparados` : `${towns.length} Costa del Sol towns compared`
+			: lang === 'es' ? 'Pueblos de la Costa del Sol comparados' : 'Costa del Sol towns compared';
 	const svg = `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
 	<rect width="1200" height="630" fill="#0d2b2e"/>
 	<circle cx="1080" cy="70" r="330" fill="#00ae9a" opacity="0.10"/>
