@@ -40,29 +40,41 @@ export const GET: APIRoute = async ({ url }) => {
 	).replace(/\/+$/, '');
 	const token = (process.env.DIRECTUS_TOKEN as string | undefined) || import.meta.env.DIRECTUS_TOKEN || '';
 
-	const params = new URLSearchParams();
-	params.set('limit', `${limit}`);
-	params.set('fields', 'id,path,title,description,language');
-	params.set('filter[status][_eq]', 'published');
-	params.set('filter[language][_eq]', lang);
-	params.set('sort', '-id');
-	params.set('filter[_or][0][title][_icontains]', q);
-	params.set('filter[_or][1][body][_icontains]', q);
-	if (prefix) params.set('filter[path][_starts_with]', prefix);
+	// Title matches first, then pages that only mention the words in their body, newest first within each.
+	// One title-or-body query sorted by id put "Export Listings XML" 18th for "xml" (27-09-26).
+	const query = (field: 'title' | 'body') => {
+		const params = new URLSearchParams();
+		params.set('limit', `${limit}`);
+		params.set('fields', 'id,path,title,description,language');
+		params.set('filter[status][_eq]', 'published');
+		params.set('filter[language][_eq]', lang);
+		params.set('sort', '-id');
+		params.set(`filter[${field}][_icontains]`, q);
+		if (prefix) params.set('filter[path][_starts_with]', prefix);
+		return fetch(`${directusUrl}/items/kb_pages?${params.toString()}`, {
+			headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+		})
+			.then(async (res) => (res.ok ? ((await res.json()) as { data?: unknown[] }).data : null))
+			.catch(() => null);
+	};
+	const [byTitle, byBody] = await Promise.all([query('title'), query('body')]);
 
-	const res = await fetch(`${directusUrl}/items/kb_pages?${params.toString()}`, {
-		headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-	});
-
-	if (!res.ok) {
+	if (!Array.isArray(byTitle) && !Array.isArray(byBody)) {
 		return new Response(JSON.stringify({ results: [] }), {
 			status: 200,
 			headers: { 'content-type': 'application/json; charset=utf-8' },
 		});
 	}
 
-	const json = (await res.json()) as { data?: unknown[] };
-	const results = Array.isArray(json.data) ? json.data : [];
+	const seen = new Set<unknown>();
+	const results = [...(Array.isArray(byTitle) ? byTitle : []), ...(Array.isArray(byBody) ? byBody : [])]
+		.filter((r) => {
+			const id = (r as { id?: unknown } | null)?.id;
+			if (seen.has(id)) return false;
+			seen.add(id);
+			return true;
+		})
+		.slice(0, limit);
 
 	const normalised = results.map((r) => {
 		const o = (r || {}) as {
