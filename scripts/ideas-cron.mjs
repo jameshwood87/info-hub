@@ -166,11 +166,11 @@ for (const i of ideas) console.log(`${i.skip ? '[SKIP - already covered] ' : ''}
 
 if (DRY) { console.log('--- dry run: not queueing / posting ---'); process.exit(0); }
 
-// ---- queue the 2 best non-skipped ideas in the model's own ranked order. hot no
-// longer jumps the queue: the cron runs twice a week, so 2 keeps the queue lean ----
+// ---- queue the best non-skipped idea in the model's own ranked order. hot no
+// longer jumps the queue: the blog runs once a week (Fridays, since 28-09-26), so 1 keeps the queue lean ----
 const skipped = ideas.filter((i) => i.skip);
 for (const i of skipped) console.log(`skipped (already covered): ${i.topic}`);
-const toQueue = ideas.filter((i) => !i.skip).slice(0, 2);
+const toQueue = ideas.filter((i) => !i.skip).slice(0, 1);
 const now = new Date().toISOString();
 // The model ignores "no em-dashes" often enough that a dash in a topic reaches the
 // title, fails lint, and parks the topic after two silent failures. Normalise here.
@@ -182,9 +182,9 @@ console.log(`queued ${toQueue.length} topics (queue length now ${queue.length})`
 // ---- Discord ----
 if (WEBHOOK) {
   const line = (i, n) => `${n}. ${i.hot ? '⚡' : '📗'} **${i.topic}**\n   _${i.angle || ''}_ · kw: \`${i.target_keyword || '-'}\`${toQueue.includes(i) ? ' · **QUEUED**' : ''}`;
-  const content = [`📚 **Weekly blog ideas** (${new Date().toLocaleDateString('en-GB')}) - top ${toQueue.length} auto-queued for the Tue/Fri auto-blog:`,
+  const content = [`📚 **Weekly blog ideas** (${new Date().toLocaleDateString('en-GB')}) - top ${toQueue.length} auto-queued for the Friday auto-blog:`,
     ...ideas.map((i, n) => line(i, n + 1)),
-    `_Reply here + tell Claude to swap/remove any of these before Tuesday._`].join('\n').slice(0, 1990);
+    `_Reply here + tell Claude to swap/remove any of these before Friday._`].join('\n').slice(0, 1990);
   try {
     const res = await fetch(WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content, username: 'PropertyList Ideas' }) });
     console.log('Discord post:', res.status);
