@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-09-28
-Version: 8.0
+Version: 8.1
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -148,6 +148,9 @@ The canonical answer to "what is PropertyList", told by following one listing th
 
 #### /landlord/ - Renting out a property in Andalucia in 2026 (owner-facing)
 What actually applies to a Spanish landlord after Real Decreto-ley 8/2026 was rejected by Congress on 28 April 2026 and repealed with effect from 30 April 2026. There is NO 2% national rent cap in force. Rent updates follow the IRAV index for contracts signed from 26 May 2023 and the contract (usually CPI) for earlier ones. Andalucia has declared no stressed market zones and no Andalusian municipality appears in the Ministry of Housing register, so national rent-control coverage does not describe the Costa del Sol. Checked against the BOE, primary sources linked. Spanish version: /es/propietarios/
+
+#### /docs/laws-procedures/property-taxes-in-andalucia/impuesto-sobre-la-renta-de-no-residentes-irnr/ - Non-resident income tax (IRNR) on a home in Spain
+For owners who are tax-resident outside Spain. Rent is taxed at 19% for EU and EEA residents, who can deduct expenses directly linked to the let, and at 24% on the gross rent for everyone else, including UK and US residents; the Supreme Court admitted a case on 15 July 2026 that will decide whether non-EU owners can also deduct expenses. A home that stands empty or is used by its owner is taxed on an imputed income of 1.1% or 2% of its cadastral value. Modelo 210 deadlines changed with Orden HAC/623/2026: from 2026 income, rent with tax to pay is declared once a year, between 1 and 20 April of the following year, and imputed income between 1 April and 31 December of the following year. Checked against the BOE on 28 September 2026. Spanish version: /es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-la-renta-de-no-residentes-irnr/
 
 #### /free-mls/ - What a free MLS means, and the full price list
 Explains the difference between a portal (advertises to buyers) and an MLS (shares your listing with {{AGENTS}} agents who can sell it with you, commission splitting on terms set on the listing). PropertyList takes no cut of an agent-to-agent deal in either direction, ever. Lists everything free (listing, MLS sharing, portal, MicroSite, XML feeds both ways, CRM core with the Lead, Seller and Property pipelines, Automation and Nurture, town-level market data, mobile app) and everything paid, verbatim: extra photos beyond the free 25 at 1 credit each and listing videos at 5 credits each - both charged only at Publish and refunded if the listing is rejected, with YouTube links free - Buyer pipeline 1 credit with the first 5 free, Property Intelligence Report 5 credits for a limited time, Instant Content 30 credits a month, Rentals Module 50 credits per 30 days after a free trial, Website Builder 50 credits a month once published, whole-network feed for your own website 35 credits a month. Portal enquiries are free for a limited time. The CRM is explicitly NOT 100% free. Spanish version: /es/mls-gratuito/
