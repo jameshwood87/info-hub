@@ -249,6 +249,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			{ from: '/forums/', to: '/whatsapp-groups/' },
 			{ from: '/forums/feed/', to: '/whatsapp-groups/' },
 			{ from: '/sitemap/', to: '/sitemap.xml' },
+			// The old national-register pages and the May 2026 EU-rules post presented the annulled national
+			// registration number as mandatory; the docs pages rewritten on 03-09-26 say what applies (James, 28-09-26).
+			{ from: '/general-information/spains-new-national-register-for-short-term-rentals/', to: '/docs/laws-procedures/renting-a-property/short-term-holiday/national-registration-and-eu-rules/' },
+			{ from: '/es/informacion-general/nuevo-registro-nacional-espanol-de-alquileres-de-corta-duracion/', to: '/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/national-registration-and-eu-rules/' },
+			{ from: '/blog/eu-short-term-rental-rules-spain-may-2026/', to: '/docs/laws-procedures/renting-a-property/short-term-holiday/national-registration-and-eu-rules/' },
+			{ from: '/es/blog/eu-short-term-rental-rules-spain-may-2026/', to: '/es/docs/leyes-procedimientos/renting-a-property/short-term-holiday/national-registration-and-eu-rules/' },
 		];
 		for (const r of legacyWpRedirects) {
 			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
