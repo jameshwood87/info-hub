@@ -78,10 +78,39 @@ const parkTopic = (item, why) => {
 
 const attempted = new Set();
 
+// Near-duplicate guard (James, 28-09-26: "skip any idea too close to something published in the last two months").
+// Every candidate is compared with the English posts of the last 60 days (live or awaiting approval), see
+// lib/topic-similarity.mjs. A queued topic that is too close is parked with the reason; a guide or area post is
+// skipped for this run. If the recent posts cannot be loaded the run carries on without the check.
+const { recentBlogTitles, closestRecent } = await import('./lib/topic-similarity.mjs');
+let RECENT = [];
+try { RECENT = await recentBlogTitles({ directusUrl: DIRECTUS_URL, token: TOKEN }); }
+catch (e) { console.error(`blog-cron: near-duplicate check could not load recent posts (${e.message}); running without it.`); }
+const tooCloseToRecent = (topic) => {
+  const hit = closestRecent(topic, RECENT);
+  if (!hit) return false;
+  attempted.add(topic);
+  console.log(`blog-cron: skipped "${topic}" - too close to "${hit.post.title}" (${hit.post.date}); shared words: ${hit.sim.shared.join(', ')}`);
+  return true;
+};
+
 // Queue items are matched by topic text, never by index: ideas-cron can append
 // to the queue while this run is in flight.
 function nextCandidate() {
-  const item = readJsonArray(QUEUE_PATH).find((q) => q && q.topic && !attempted.has(String(q.topic)));
+  let item = null;
+  for (const q of readJsonArray(QUEUE_PATH)) {
+    if (!q || !q.topic || attempted.has(String(q.topic))) continue;
+    if (tooCloseToRecent(String(q.topic))) {
+      if (!DRY) {
+        const cur = readJsonArray(QUEUE_PATH);
+        const i = cur.findIndex((x) => x && String(x.topic) === String(q.topic));
+        if (i >= 0) { cur.splice(i, 1); writeJson(QUEUE_PATH, cur); parkTopic(q, 'too close to an English post from the last 60 days'); }
+      }
+      continue;
+    }
+    item = q;
+    break;
+  }
   if (item) {
     const topic = String(item.topic);
     return {
@@ -115,14 +144,14 @@ function nextCandidate() {
     };
   }
   if (dow === 5) {
-    const g = GUIDES.find((x) => !state.usedGuides.includes(x.key) && !attempted.has(x.topic));
+    const g = GUIDES.find((x) => !state.usedGuides.includes(x.key) && !attempted.has(x.topic) && !tooCloseToRecent(x.topic));
     if (g) return { topic: g.topic, label: 'evergreen guide', commit: () => { state.usedGuides.push(g.key); writeState(state); }, fail: () => 'skipped for this run' };
   }
   for (let i = 0; i < AREAS.length; i++) {
     const a = AREAS[(isoWeek + i) % AREAS.length];
     const areaMonth = `${a.toLowerCase().replace(/\s+/g, '-')}:${monthKey}`;
     const t = `${a} property market ${monthName} ${year}: live prices, listings and notary-verified values`;
-    if (state.areaMonths.includes(areaMonth) || attempted.has(t)) continue;
+    if (state.areaMonths.includes(areaMonth) || attempted.has(t) || tooCloseToRecent(t)) continue;
     return { topic: t, label: 'area market post', commit: () => { state.areaMonths.push(areaMonth); writeState(state); }, fail: () => 'skipped for this run' };
   }
   return null;

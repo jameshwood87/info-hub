@@ -10,6 +10,7 @@
 import fs from 'fs';
 import { gscResearch } from './gsc.mjs';
 import { legalCurrencyBlock } from './lib/legal-currency.mjs';
+import { recentBlogTitles, closestRecent } from './lib/topic-similarity.mjs';
 
 try {
   const envPath = new URL('../.env', import.meta.url).pathname;
@@ -164,13 +165,26 @@ const ideas = Array.isArray(out.ideas) ? out.ideas.slice(0, 5) : [];
 if (!ideas.length) { console.log('AI returned no ideas - exiting'); process.exit(0); }
 for (const i of ideas) console.log(`${i.skip ? '[SKIP - already covered] ' : ''}${i.hot ? '[HOT] ' : ''}${i.topic} | ${i.target_keyword}`);
 
+// Near-duplicate guard (James, 28-09-26): skip any idea too close to an English post of the last 60 days (live or
+// awaiting approval) or to a topic already queued. Plain word overlap, see lib/topic-similarity.mjs. Runs before the
+// dry-run exit so a dry run shows what would be skipped.
+let recentPosts = [];
+try { recentPosts = await recentBlogTitles({ directusUrl: DIRECTUS_URL, token: TOKEN }); }
+catch (e) { console.error(`near-duplicate check could not load recent posts (${e.message}); checking the queue only`); }
+const queuedAsPosts = queue.filter((q) => q && q.topic).map((q) => ({ title: String(q.topic), date: 'queued' }));
+for (const i of ideas) {
+  if (i.skip) continue;
+  const hit = closestRecent(i.topic, [...recentPosts, ...queuedAsPosts]);
+  if (hit) { i.tooClose = hit.post.title; console.log(`skipped (too close to "${hit.post.title}", ${hit.post.date}): ${i.topic}`); }
+}
+
 if (DRY) { console.log('--- dry run: not queueing / posting ---'); process.exit(0); }
 
 // ---- queue the best non-skipped idea in the model's own ranked order. hot no
 // longer jumps the queue: the blog runs once a week (Fridays, since 28-09-26), so 1 keeps the queue lean ----
 const skipped = ideas.filter((i) => i.skip);
 for (const i of skipped) console.log(`skipped (already covered): ${i.topic}`);
-const toQueue = ideas.filter((i) => !i.skip).slice(0, 1);
+const toQueue = ideas.filter((i) => !i.skip && !i.tooClose).slice(0, 1);
 const now = new Date().toISOString();
 // The model ignores "no em-dashes" often enough that a dash in a topic reaches the
 // title, fails lint, and parks the topic after two silent failures. Normalise here.
@@ -181,7 +195,7 @@ console.log(`queued ${toQueue.length} topics (queue length now ${queue.length})`
 
 // ---- Discord ----
 if (WEBHOOK) {
-  const line = (i, n) => `${n}. ${i.hot ? '⚡' : '📗'} **${i.topic}**\n   _${i.angle || ''}_ · kw: \`${i.target_keyword || '-'}\`${toQueue.includes(i) ? ' · **QUEUED**' : ''}`;
+  const line = (i, n) => `${n}. ${i.hot ? '⚡' : '📗'} **${i.topic}**\n   _${i.angle || ''}_ · kw: \`${i.target_keyword || '-'}\`${toQueue.includes(i) ? ' · **QUEUED**' : ''}${i.tooClose ? ' · skipped: too close to a recent post' : ''}`;
   const content = [`📚 **Weekly blog ideas** (${new Date().toLocaleDateString('en-GB')}) - top ${toQueue.length} auto-queued for the Friday auto-blog:`,
     ...ideas.map((i, n) => line(i, n + 1)),
     `_Reply here + tell Claude to swap/remove any of these before Friday._`].join('\n').slice(0, 1990);
