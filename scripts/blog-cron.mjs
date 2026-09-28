@@ -5,8 +5,10 @@
  * + PUBLISHES (EN + ES), then pings IndexNow for the fresh URLs.
  *
  * Topic scheme:
- *  - Fri: next unused evergreen guide from GUIDES (state-tracked).
- *  - Other days (cron runs Tue): month-stamped area market post rotating
+ *  - Cron runs Fridays only, one post a week (James, 28-09-26).
+ *  - The ideas queue (var/admin/blog-topics-queue.json) goes first on any day.
+ *  - Queue empty on a Friday: next unused evergreen guide from GUIDES (state-tracked).
+ *  - Otherwise, or once the guides run out: month-stamped area market post rotating
  *    through AREAS; each area at most once per calendar month (state-tracked).
  * Usage: node scripts/blog-cron.mjs [--dry-run]
  */
