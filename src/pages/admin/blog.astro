@@ -1891,8 +1891,11 @@ import Layout from '../../layouts/Layout.astro';
 		padding-left: 6px;
 	}
 
+	/* The panel clipped the table, so long titles pushed the Actions buttons out of
+	   view (James, 08-10-26). The table now scrolls sideways inside the panel and the
+	   Actions column stays pinned to its right edge. */
 	.tableWrap {
-		overflow: hidden;
+		overflow-x: auto;
 	}
 
 	.table {
@@ -1924,6 +1927,14 @@ import Layout from '../../layouts/Layout.astro';
 	.actionsCol {
 		width: 120px;
 		text-align: right;
+		position: sticky;
+		right: 0;
+		background: #fff;
+		box-shadow: -10px 0 10px -10px rgba(16, 24, 40, 0.25);
+	}
+
+	.table thead th.actionsCol {
+		background: #f8f8f9;
 	}
 
 	.tTitle {
