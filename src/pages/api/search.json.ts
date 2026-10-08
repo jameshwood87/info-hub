@@ -50,9 +50,11 @@ export const GET: APIRoute = async ({ url }) => {
 
 	// Title matches first, then pages that only mention the words in their body, newest first within each.
 	// One title-or-body query sorted by id put "Export Listings XML" 18th for "xml" (27-09-26).
+	// match=all fetches a wider pool, then ranks it by whole-word hits (see below).
+	const fetchLimit = words.length ? Math.min(50, limit * 4) : limit;
 	const query = (field: 'title' | 'body') => {
 		const params = new URLSearchParams();
-		params.set('limit', `${limit}`);
+		params.set('limit', `${fetchLimit}`);
 		params.set('fields', 'id,path,title,description,language');
 		params.set('sort', '-id');
 		if (words.length) {
@@ -93,14 +95,37 @@ export const GET: APIRoute = async ({ url }) => {
 	}
 
 	const seen = new Set<unknown>();
-	const results = [...(Array.isArray(byTitle) ? byTitle : []), ...(Array.isArray(byBody) ? byBody : [])]
+	let pool = [...(Array.isArray(byTitle) ? byTitle : []), ...(Array.isArray(byBody) ? byBody : [])]
 		.filter((r) => {
 			const id = (r as { id?: unknown } | null)?.id;
 			if (seen.has(id)) return false;
 			seen.add(id);
 			return true;
-		})
-		.slice(0, limit);
+		});
+
+	// match=all ranking: a whole word in the title counts most, then in the description, then part of a
+	// title word ("IBI" inside "Ibiza" scores low). Ties keep the title-first, newest-first order.
+	if (words.length) {
+		const esc = (w: string) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const score = (r: unknown) => {
+			const o = (r || {}) as { title?: unknown; description?: unknown };
+			const t = String(o.title || '').toLowerCase();
+			const d = String(o.description || '').toLowerCase();
+			let s = 0;
+			for (const w of words) {
+				const whole = new RegExp(`(^|[^\\p{L}\\p{N}])${esc(w)}($|[^\\p{L}\\p{N}])`, 'u');
+				if (whole.test(t)) s += 4;
+				else if (t.includes(w)) s += 1;
+				if (whole.test(d)) s += 2;
+			}
+			return s;
+		};
+		pool = pool
+			.map((r, i) => ({ r, i, s: score(r) }))
+			.sort((a, b) => b.s - a.s || a.i - b.i)
+			.map((x) => x.r);
+	}
+	const results = pool.slice(0, limit);
 
 	const normalised = results.map((r) => {
 		const o = (r || {}) as {

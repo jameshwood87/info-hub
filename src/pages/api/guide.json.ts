@@ -4,20 +4,40 @@ import type { APIRoute } from 'astro';
 // (the PropertyList MCP's get_guide tool) and anyone else who needs our guides in machine-readable form.
 // Read-only. It fetches the page from this same server, so it serves exactly what visitors see.
 // Pages marked noindex (drafts, surveys, activation) are refused.
+// Params: path (or a full info.propertylist.es URL), max_chars (500-30000, default 12000),
+// offset (to continue a truncated text; use next_offset from the previous response).
 
 const ORIGIN = 'https://info.propertylist.es';
 const DEFAULT_MAX = 12000;
 const HARD_MAX = 30000;
 
-const json = (body: unknown, status = 200, cache = 'public, max-age=3600') =>
+const json = (body: unknown, status = 200) =>
 	new Response(JSON.stringify(body), {
 		status,
 		headers: {
 			'content-type': 'application/json; charset=utf-8',
-			'cache-control': status === 200 ? cache : 'no-store',
+			'cache-control': status === 200 ? 'public, max-age=3600' : 'no-store',
 			'access-control-allow-origin': '*',
 		},
 	});
+
+// Same-site page paths only. Our page paths are plain ASCII slugs (all 732 sitemap URLs on 08-10-26),
+// so any percent-encoding is refused outright: that closes double-encoding tricks such as /%2561dmin/.
+function safePath(raw: string): string | null {
+	let p = raw.trim();
+	if (p.startsWith(ORIGIN)) p = p.slice(ORIGIN.length) || '/';
+	p = p.split('#')[0].split('?')[0];
+	if (
+		!p.startsWith('/') ||
+		p.startsWith('//') ||
+		p.includes('..') ||
+		p.length > 300 ||
+		!/^[A-Za-z0-9\-\/_.]*$/.test(p) ||
+		/^\/(api|admin|_astro|_image|internal)(\/|$)/i.test(p)
+	) return null;
+	if (!/\.[a-z0-9]{2,5}$/i.test(p) && !p.endsWith('/')) p += '/';
+	return p;
+}
 
 function decode(s: string) {
 	return s
@@ -63,58 +83,63 @@ function innerOfFirstDiv(html: string, cls: string): string | null {
 	return null;
 }
 
+const plain = (s: string) => decode(s.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+
 const firstMatch = (html: string, re: RegExp) => {
 	const m = html.match(re);
-	return m ? decode(m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()) : null;
+	return m ? plain(m[1]) : null;
 };
 
+// The page's review date, as the page states it. Pages write it several ways:
+// "Last reviewed: 28 September 2026", "Last reviewed: 25-09-26. Checked against ...",
+// "Checked on 28-09-26 against the texts on the BOE", "Checked against the consolidated texts on the BOE on 25-09-26",
+// "Última revisión: 25-09-26", "Última revisión: 28 de septiembre de 2026", "Comprobado ... el 25-09-26".
+const DATE = String.raw`(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}|\d{1,2}(?: de)? [A-Za-zÀ-ÿ]+(?: de)? \d{4})`;
+function reviewDate(text: string): string | null {
+	const patterns = [
+		new RegExp(String.raw`Last reviewed:\s*` + DATE, 'i'),
+		new RegExp(String.raw`Última revisión:\s*` + DATE, 'i'),
+		new RegExp(String.raw`Checked on ` + DATE, 'i'),
+		new RegExp(String.raw`Checked against[^.\n]{0,120}? on ` + DATE, 'i'),
+		new RegExp(String.raw`Comprobad[oa][^.\n]{0,120}? el ` + DATE, 'i'),
+	];
+	for (const re of patterns) {
+		const m = text.match(re);
+		if (m) return m[1];
+	}
+	return null;
+}
+
+async function fetchPage(path: string) {
+	const port = process.env.PORT || '3000';
+	return fetch(`http://127.0.0.1:${port}${path}`, {
+		headers: { 'user-agent': 'info-hub-guide-api', accept: 'text/html' },
+		redirect: 'manual',
+	});
+}
+
 export const GET: APIRoute = async ({ url }) => {
-	let path = (url.searchParams.get('path') || '').trim();
+	let path = safePath(url.searchParams.get('path') || '');
+	if (!path) {
+		return json({ error: 'invalid_path', message: 'Pass the path or URL of a public page on info.propertylist.es, for example /docs/laws-procedures/.' }, 400);
+	}
 	const maxRaw = Number.parseInt(url.searchParams.get('max_chars') || `${DEFAULT_MAX}`, 10);
 	const maxChars = Math.min(Math.max(Number.isFinite(maxRaw) ? maxRaw : DEFAULT_MAX, 500), HARD_MAX);
+	const offRaw = Number.parseInt(url.searchParams.get('offset') || '0', 10);
+	const offset = Number.isFinite(offRaw) && offRaw > 0 ? offRaw : 0;
 
-	// Accept a full info-hub URL as well as a path.
-	if (path.startsWith(ORIGIN)) path = path.slice(ORIGIN.length) || '/';
-	path = path.split('#')[0].split('?')[0];
-
-	// Only same-site page paths: no other hosts, no traversal, no API or admin routes.
-	if (
-		!path.startsWith('/') ||
-		path.startsWith('//') ||
-		path.includes('..') ||
-		path.length > 300 ||
-		!/^[A-Za-z0-9\-\/_.%]*$/.test(path) ||
-		/^\/(api|admin|_astro|_image|internal)(\/|$)/i.test(path)
-	) {
-		return json({ error: 'invalid_path', message: 'Pass the path of a public page on info.propertylist.es, for example /docs/laws-procedures/.' }, 400);
-	}
-	if (!/\.[a-z0-9]{2,5}$/i.test(path) && !path.endsWith('/')) path += '/';
-
-	const port = process.env.PORT || '3000';
 	let res: Response;
 	try {
-		res = await fetch(`http://127.0.0.1:${port}${path}`, {
-			headers: { 'user-agent': 'info-hub-guide-api', accept: 'text/html' },
-			redirect: 'manual',
-		});
+		res = await fetchPage(path);
+		// Follow one same-site redirect (old paths that moved), checked by the same guard.
+		if (res.status >= 300 && res.status < 400) {
+			const next = safePath(res.headers.get('location') || '');
+			if (!next) return json({ error: 'not_found' }, 404);
+			path = next;
+			res = await fetchPage(path);
+		}
 	} catch {
 		return json({ error: 'unavailable' }, 503);
-	}
-
-	// Follow one same-site redirect (old paths that moved).
-	if (res.status >= 300 && res.status < 400) {
-		const loc = res.headers.get('location') || '';
-		const next = loc.startsWith(ORIGIN) ? loc.slice(ORIGIN.length) : loc;
-		if (!next.startsWith('/') || next.startsWith('//')) return json({ error: 'not_found' }, 404);
-		path = next.split('#')[0].split('?')[0];
-		try {
-			res = await fetch(`http://127.0.0.1:${port}${path}`, {
-				headers: { 'user-agent': 'info-hub-guide-api', accept: 'text/html' },
-				redirect: 'manual',
-			});
-		} catch {
-			return json({ error: 'unavailable' }, 503);
-		}
 	}
 	if (res.status !== 200) return json({ error: 'not_found' }, 404);
 	if (!(res.headers.get('content-type') || '').includes('text/html')) return json({ error: 'not_a_page' }, 404);
@@ -133,10 +158,6 @@ export const GET: APIRoute = async ({ url }) => {
 		firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
 		firstMatch(html, /<title>([\s\S]*?)<\/title>/i);
 	const description = html.match(/<meta name="description" content="([^"]*)"/i)?.[1];
-	// Law and tax pages carry a curated review dateline; return it so an assistant can say how current the page is.
-	const reviewed =
-		firstMatch(html, /Last reviewed:\s*([^<]{4,40})</i) ||
-		firstMatch(html, /(?:Última revisión|Revisado(?: el)?):\s*([^<]{4,40})</i);
 
 	// Docs pages hold the text in <div class="docContent">, beside the docNav sidebar and docToc contents list.
 	// Blog and area-guide pages wrap it in <article class="doc ...">. Asides are dropped either way.
@@ -146,19 +167,22 @@ export const GET: APIRoute = async ({ url }) => {
 		html.match(/<main[^>]*>([\s\S]*?)<\/main>/i)?.[1] ||
 		html
 	).replace(/<aside[\s\S]*?<\/aside>/gi, ' ');
-	let text = htmlToMarkdown(main);
-	const truncated = text.length > maxChars;
-	if (truncated) text = text.slice(0, maxChars);
+
+	const full = htmlToMarkdown(main);
+	const text = full.slice(offset, offset + maxChars);
+	const truncated = offset + maxChars < full.length;
 
 	return json({
 		url: canonical,
 		title,
 		description: description ? decode(description) : null,
 		language,
-		last_reviewed: reviewed,
+		last_reviewed: reviewDate(plain(html)),
 		alternates,
 		text,
 		truncated,
+		next_offset: truncated ? offset + maxChars : null,
+		total_chars: full.length,
 		source: 'PropertyList Info Hub (info.propertylist.es)',
 	});
 };
