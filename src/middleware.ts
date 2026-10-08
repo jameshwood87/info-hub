@@ -226,6 +226,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			// slugged Spanish version. Retired 09-09-26; the Spanish-slugged page is
 			// longer and earns more, so it keeps the topic.
 			{ from: '/es/blog/a-new-five-star-gem-for-marbella/', to: '/es/informacion-general/una-nueva-joya-de-cinco-estrellas-para-marbella/' },
+			// Called the October 2026 housing decree a "draft" after it was enacted. Retired
+			// 08-10-26; the post on what was rejected and what applies now replaces it.
+			{ from: '/blog/fiscal-penalties-rent-increases-housing-decree-costa-del-sol/', to: '/blog/spain-rental-decrees-october-2026-what-applies/' },
+			{ from: '/es/blog/fiscal-penalties-rent-increases-housing-decree-costa-del-sol/', to: '/es/blog/spain-rental-decrees-october-2026-what-applies/' },
 		];
 		for (const r of blogRedirects) {
 			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
