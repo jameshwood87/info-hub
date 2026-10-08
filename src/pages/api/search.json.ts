@@ -3,6 +3,7 @@ import { canonicalAreaPath } from '../../lib/areaProvince';
 import { normaliseKbText } from '../../lib/directus';
 
 const DEFAULT_LIMIT = 20;
+const ORIGIN = 'https://info.propertylist.es';
 
 const canonicalNeighbourhoodPath = (p: string) => {
 	const path = String(p || '');
@@ -20,6 +21,9 @@ export const GET: APIRoute = async ({ url }) => {
 	const q = (url.searchParams.get('q') || '').trim();
 	const lang = (url.searchParams.get('lang') || 'en').trim();
 	const prefix = (url.searchParams.get('prefix') || '').trim();
+	// match=all: every word of the query must appear (in the title or the body), in any order.
+	// Used by the PropertyList MCP's search_guides tool; the site search keeps the default phrase match.
+	const matchAll = (url.searchParams.get('match') || '').trim() === 'all';
 	const limitRaw = url.searchParams.get('limit') || '';
 	const limit = Math.min(
 		Math.max(Number.parseInt(limitRaw || `${DEFAULT_LIMIT}`, 10) || DEFAULT_LIMIT, 1),
@@ -40,23 +44,45 @@ export const GET: APIRoute = async ({ url }) => {
 	).replace(/\/+$/, '');
 	const token = (process.env.DIRECTUS_TOKEN as string | undefined) || import.meta.env.DIRECTUS_TOKEN || '';
 
+	const words = matchAll
+		? Array.from(new Set(q.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length >= 3))).slice(0, 6)
+		: [];
+
 	// Title matches first, then pages that only mention the words in their body, newest first within each.
 	// One title-or-body query sorted by id put "Export Listings XML" 18th for "xml" (27-09-26).
 	const query = (field: 'title' | 'body') => {
 		const params = new URLSearchParams();
 		params.set('limit', `${limit}`);
 		params.set('fields', 'id,path,title,description,language');
-		params.set('filter[status][_eq]', 'published');
-		params.set('filter[language][_eq]', lang);
 		params.set('sort', '-id');
-		params.set(`filter[${field}][_icontains]`, q);
-		if (prefix) params.set('filter[path][_starts_with]', prefix);
+		if (words.length) {
+			// Every word must appear somewhere; the title pass also needs at least one of the words in the title.
+			const and: unknown[] = [
+				{ status: { _eq: 'published' } },
+				{ language: { _eq: lang } },
+				...words.map((w) => ({ _or: [{ title: { _icontains: w } }, { body: { _icontains: w } }] })),
+			];
+			if (field === 'title') and.push({ _or: words.map((w) => ({ title: { _icontains: w } })) });
+			if (prefix) and.push({ path: { _starts_with: prefix } });
+			params.set('filter', JSON.stringify({ _and: and }));
+		} else {
+			params.set('filter[status][_eq]', 'published');
+			params.set('filter[language][_eq]', lang);
+			params.set(`filter[${field}][_icontains]`, q);
+			if (prefix) params.set('filter[path][_starts_with]', prefix);
+		}
 		return fetch(`${directusUrl}/items/kb_pages?${params.toString()}`, {
 			headers: token ? { Authorization: `Bearer ${token}` } : undefined,
 		})
 			.then(async (res) => (res.ok ? ((await res.json()) as { data?: unknown[] }).data : null))
 			.catch(() => null);
 	};
+	if (matchAll && !words.length) {
+		return new Response(JSON.stringify({ results: [] }), {
+			status: 200,
+			headers: { 'content-type': 'application/json; charset=utf-8' },
+		});
+	}
 	const [byTitle, byBody] = await Promise.all([query('title'), query('body')]);
 
 	if (!Array.isArray(byTitle) && !Array.isArray(byBody)) {
@@ -89,6 +115,7 @@ export const GET: APIRoute = async ({ url }) => {
 		return {
 			...o,
 			path,
+			url: typeof path === 'string' ? `${ORIGIN}${path}` : undefined,
 			title: normaliseKbText(typeof o.title === 'string' ? o.title : '', language, { stripSuffix: true, decode: true }),
 			description:
 				typeof o.description === 'string'
