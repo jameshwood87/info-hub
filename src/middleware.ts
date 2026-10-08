@@ -230,6 +230,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			// 08-10-26; the post on what was rejected and what applies now replaces it.
 			{ from: '/blog/fiscal-penalties-rent-increases-housing-decree-costa-del-sol/', to: '/blog/spain-rental-decrees-october-2026-what-applies/' },
 			{ from: '/es/blog/fiscal-penalties-rent-increases-housing-decree-costa-del-sol/', to: '/es/blog/spain-rental-decrees-october-2026-what-applies/' },
+			// Said the national housing decree was postponed and "not law until published"; it was
+			// published, repealed and replaced by RDL 29/2026. Retired 08-10-26 (James: "fix the other six pages").
+			{ from: '/blog/real-decreto-vivienda-postponed-september-costa-del-sol/', to: '/blog/spain-rental-decrees-october-2026-what-applies/' },
+			{ from: '/es/blog/real-decreto-vivienda-postponed-september-costa-del-sol/', to: '/es/blog/spain-rental-decrees-october-2026-what-applies/' },
 		];
 		for (const r of blogRedirects) {
 			if (pathname === r.from || pathname === r.from.slice(0, -1)) {
