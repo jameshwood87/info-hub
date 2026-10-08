@@ -8,35 +8,40 @@ const agentsTo = Math.floor(__ps.agents / 10) * 10;
 import Layout from '../layouts/Layout.astro';
 
 // Owner-facing landing page. Every legal statement here is checked against the
-// BOE and the Ministry of Housing stressed-zone register, and dated, because
-// the previous version of this content described a decree that had been
-// repealed for three months. Nothing is asserted that is not linked.
-const CHECKED = '11 August 2026';
+// BOE and dated, because the previous version of this content described a
+// decree that had been repealed for three months. The main texts are linked.
+// Rewritten 08-10-26 for Royal Decree-law 29/2026 (in force 08-10-26, not yet
+// validated). Re-check after the Diputación Permanente vote.
+const CHECKED = '8 October 2026';
 
 const faqs = [
 	{
-		q: 'Is there a limit on how much I can raise the rent in 2026?',
-		a: 'Not a national cap, no. The 2% ceiling introduced in March 2026 was repealed on 30 April 2026 when Congress refused to ratify it. What limits your increase now is your own contract and the index that applies to it: the IRAV for contracts signed from 26 May 2023, and whatever the contract says (usually CPI) for earlier ones.',
+		q: 'Is there a limit on how much I can raise the rent?',
+		a: 'Yes. Since 8 October 2026, under Royal Decree-law 29/2026, the rent can be updated only on the lease anniversary, only if the lease expressly provides for an update, and never by more than the change in the IRAV index. For updates falling due between 8 October 2026 and 31 December 2027 there is a further rule: no increase if the rent is above the applicable maximum price limit, and otherwise the increase is what you and the tenant agree, or at most 2% if you agree nothing. The decree does not say how the price limit works outside a stressed zone, or how this fits with the express-clause rule, so check before applying any increase. The decree still has to be validated or repealed by the standing committee of Congress. The earlier 2% cap from March 2026 was repealed on 30 April 2026.',
 	},
 	{
 		q: 'Is my property in a stressed area?',
-		a: 'Not if it is in Andalucia. Stressed market areas only exist where the regional government declares them, and no Andalusian municipality appears in the Ministry of Housing register. The Junta de Andalucia has declined to activate the mechanism and has challenged the state housing law before the Constitutional Court.',
+		a: 'Not if it is in Andalucia. Stressed market areas only exist where the regional government declares them, and none of the quarterly lists the Ministry of Housing publishes in the BOE, the latest dated 24 July 2026, includes an Andalusian municipality. That keeps the stressed-zone caps on new rents out of Andalucia, but the update rules to 31 December 2027, the IRAV cap on successive temporary lets and the room-by-room rule apply everywhere.',
 	},
 	{
 		q: 'How long am I tied in for if I let long term?',
-		a: 'The Urban Leasing Act sets a minimum of five years when the landlord is a private individual and seven when the landlord is a company, extended year by year at the tenant’s option, with a tacit extension of up to three further years if neither side gives notice in time. The repeal in April did not change any of this.',
+		a: 'The Urban Leasing Act sets a minimum of five years when the landlord is a private individual and seven when the landlord is a company or other legal person, extended year by year at the tenant\'s option. After that, if neither side gives notice in time, the lease extends year by year for up to three more years. Royal Decree-law 29/2026 did not change this. Royal Decree-law 28/2026, due to apply from 15 November 2026 if it is validated, would replace that three-year extension with renewals of five years at a time (seven for a legal person) for leases whose term ends after that date, and a landlord who does not renew would owe the tenant compensation, except in the cases it lists. Leases already in a yearly tacit extension would stay on the old rule until it ends, and the landlord\'s notice would rise from four to six months (four months for a lease with less than six months left on 15 November 2026).',
+	},
+	{
+		q: 'Can I let it as a temporary or seasonal let instead?',
+		a: 'Only for a tenant who is away from their usual home for a justified and provable reason, which must be written into the contract. The term must be over 31 days and, as a general rule, no more than twelve months. Without that cause, the lease counts as a main-home lease from the day it was signed. Tourist lets are outside the Urban Leasing Act and follow the regional tourism rules; they cannot run longer than 31 days.',
 	},
 	{
 		q: 'Should I let it or sell it?',
-		a: 'That depends on what the property would actually achieve on each side, and most owners only know the asking prices they see advertised. The free guide below starts from registered sale prices in the notarial register instead, so you can compare a realistic sale figure against the rent you would collect.',
+		a: 'That depends on what the property would achieve on each side, and most owners only know the asking prices they see advertised. The free guide on this page starts from registered sale prices in the notarial register where the area has them, so you can compare a realistic sale figure against the rent you would collect.',
 	},
 ];
 ---
 
 <Layout
 	lang="en"
-	title="Renting out a property in Andalucia: what actually applies in 2026 | PropertyList"
-	description="The 2% rent cap was repealed on 30 April 2026. What governs your rent increase now, why Andalucia has no stressed zones, and what has not changed. Checked against the BOE."
+	title="Renting out a property in Andalucia: what applies in 2026 | PropertyList"
+	description="Since 8 October 2026 a new decree limits rent updates and changes the rules on temporary lets, guarantees and costs. What applies in Andalucia, checked against the BOE."
 	canonical="https://info.propertylist.es/landlord/"
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/landlord/' },
@@ -55,108 +60,164 @@ const faqs = [
 >
 	<section class="lHero">
 		<p class="lKick">For property owners on the Costa del Sol</p>
-		<h1 class="lH1">The rules changed twice this year. Here is where they actually stand.</h1>
+		<h1 class="lH1">Spain's rental rules changed again on 8 October 2026</h1>
 		<p class="lLead">
-			In March 2026 Spain capped rent increases at 2%. Six weeks later the cap was gone. A lot of what you will read
-			online still describes the version that no longer applies, so this page states the current position and links
-			every claim to its source.
+			A 2% cap on rent increases came in March 2026 and was repealed in April. Two more decrees were published and
+			repealed between 30 September and 2 October. Since 8 October 2026 a new one, Royal Decree-law 29/2026, is in
+			force, and the standing committee of Congress still has to vote on it. Much of what you will read online
+			describes a version that no longer applies, so this page states the current position as checked against the
+			BOE on the date below, and links the main texts.
 		</p>
 		<p class="lStamp">Checked against the BOE on {CHECKED}</p>
 	</section>
 
+	<section class="lBand lAlt">
+		<h2 class="lH2">What governs your rent update now</h2>
+		<div class="lTwo">
+			<div class="lCard">
+				<h3 class="lH3">Every main-home lease, whenever it was signed</h3>
+				<p>
+					The rent can be updated only on each anniversary of the lease, and only if the lease expressly provides for
+					it. No clause, no update. If the clause names no index, the <strong>IRAV</strong> applies, the reference
+					index published monthly by the National Statistics Institute. Either way, the increase can never exceed the
+					change in the IRAV, using the latest figure published on the update date. Since 8 October 2026 this also
+					reaches leases signed before 26 May 2023.
+				</p>
+			</div>
+			<div class="lCard">
+				<h3 class="lH3">Anniversaries from 8 October 2026 to 31 December 2027</h3>
+				<p>
+					If the current rent is above the applicable maximum price limit, there is no increase. Otherwise the
+					increase is whatever you and the tenant agree, and if you agree nothing, it cannot exceed 2%. The decree
+					does not say how that price limit works for a home outside a declared stressed zone, or how this rule fits
+					with the general one, so check before applying any increase.
+				</p>
+			</div>
+		</div>
+		<p class="lFine">
+			The increase is never automatic: you notify the tenant in writing, stating the percentage applied, and the new
+			rent is due from the month after the notice. A note on the previous month's receipt counts as notice. Sources:
+			article 18 of the <a href="https://www.boe.es/buscar/act.php?id=BOE-A-1994-26003" rel="nofollow">Urban Leasing
+			Act</a> as reworded, and final provision six of
+			<a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-20823" rel="nofollow">Royal Decree-law 29/2026</a>.
+			<a href="/blog/spain-rental-decrees-october-2026-what-applies/">What each decree says, and what is still to be voted on</a>.
+		</p>
+	</section>
+
 	<section class="lBand">
-		<h2 class="lH2">The cap that no longer exists</h2>
+		<h2 class="lH2">What else changed on 8 October</h2>
+		<p>
+			The changes to the Urban Leasing Act below (early exit, costs, guarantees, repairs and the end-of-lease record)
+			depend on when the lease was signed. Leases signed before 26 May 2023 keep the rules in force when they were
+			signed, except for the renewal rules in article 10 as introduced in 2023, the 2023 law's limit on updates and
+			article 18.1 as now worded. For leases signed from 26 May 2023 to 7 October 2026, the decree does not say
+			whether these changes reach them. The extension request and the eviction rules apply under their own terms,
+			and the temporary-let rules turn on whether the contract was signed before 8 October. Take advice before
+			relying on the points below for an existing lease.
+		</p>
+		<ul class="lList">
+			<li><strong>Tenant leaving early:</strong> after six months, with 30 days' notice, and you can no longer claim compensation for it. On a temporary let, after one month, with 10 days' notice.</li>
+			<li><strong>Costs:</strong> property taxes cannot be charged to the tenant unless the tenant is the taxpayer. This is new. Agency and contract costs have been the landlord's since 2023; the decree adds that they cannot be passed on directly or indirectly, under any name.</li>
+			<li><strong>Guarantees:</strong> on top of the deposit, the extra guarantee was already capped at two months' rent on leases of up to five years (seven if the landlord is a company or other legal person). New: a one-month cap on a temporary let, and you cannot require rent-default insurance.</li>
+			<li><strong>Repairs:</strong> for damage affecting habitability, safety or health, or repairs that are yours to make, the tenant can send a written request with a quote. You can accept it, propose an alternative or do the work yourself. If you do not answer, or refuse without justification, within 15 calendar days, the tenant can do the work and deduct the reasonable, documented cost from the rent.</li>
+			<li><strong>End of the lease:</strong> both sides sign a record of the state of the home. Without it, the home is presumed handed back in good condition, unless proved otherwise.</li>
+			<li><strong>Temporary lets:</strong> they need a justified, provable cause written into the contract, a term over 31 days and, as a rule, no more than twelve months, or they count as a main-home lease. More than two successive temporary contracts between the same parties for the same home also turn the first into a main-home lease, and successive temporary lets cannot raise the rent by more than the IRAV change. Contracts signed before 8 October keep the old rules until their agreed end and then expire, with no extension.</li>
+			<li><strong>Extensions:</strong> a tenant whose lease was in force on 8 October 2026 and whose minimum term ends before 31 December 2028 can ask for up to two more years in yearly periods, if the rent has been paid in each of the previous eight months. Leases whose tacit extension or tacit renewal is coming to an end are also covered; the date limit belongs to the first case, so take advice if yours is one of these. You must accept unless you agree other terms or a new contract, or you gave valid notice that you need the home for yourself or close family. It does not apply if you and the tenant renew or sign a new lease at a rent at least 5% lower. If Royal Decree-law 28/2026 enters into force, its five-year renewal and this extension do not stack.</li>
+			<li><strong>Evictions:</strong> if a tenant who is economically vulnerable is evicted for non-payment, the administration has two months to offer housing or pay the arrears and costs. If it does neither, it takes over the debt, the eviction does not go ahead and the lease stays in force until it expires, for as long as the tenant's economic vulnerability lasts. In other evictions of vulnerable households with no housing alternative, until 31 December 2030 the court can suspend the case, with a review every 12 months and for three years at most, and the administration compensates an individual landlord, up to the rent not received, unpaid utilities and court costs. In those other cases the tenant's economic vulnerability does not prevail where the landlord is an individual who owns two or fewer homes. <a href="/docs/laws-procedures/renting-a-property/long-term/evictions/">How evictions work</a>.</li>
+		</ul>
+		<p class="lFine">
+			Source: <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-20823" rel="nofollow">Royal Decree-law 29/2026</a>,
+			articles 2, 3, 4 and 5 and final provision five.
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">Andalucia has no stressed zones</h2>
+		<p>
+			Almost every headline about rent control in Spain is about <strong>stressed market areas</strong>, where a
+			region can impose real limits on the rent in new contracts. That regime only operates where the regional
+			government declares it. The Ministry of Housing publishes each quarter's declarations in the BOE, and
+			<strong>none of its lists includes an Andalusian municipality</strong>
+			(the latest, <a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-16532" rel="nofollow">dated 24 July 2026</a>,
+			covers the second quarter of 2026).
+		</p>
+		<p>
+			The Junta de Andalucia had declared none as of the July 2026 list. It challenged the state housing law before the Constitutional Court,
+			which in May 2024 (<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-12808" rel="nofollow">ruling
+			79/2024</a>) struck down a few provisions and dismissed the rest of the appeal. Its own housing law,
+			<a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2026-423" rel="nofollow">Ley 5/2025</a>, published in the
+			BOJA on 24 December 2025 and applying since 24 January 2026, works through housing supply, protected housing
+			and incentives rather than rent caps.
+		</p>
+		<p>
+			The update rules above, the IRAV cap on successive temporary lets and the rule that room rents cannot add up to
+			more than the rent for the whole home all apply in Andalucia too.
+		</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">What did not change</h2>
+		<ul class="lList">
+			<li>Minimum term of five years when the landlord is an individual, seven when the landlord is a company or other legal person, extended year by year at the tenant's option.</li>
+			<li>After the minimum term, a tacit extension of up to three further years if neither side gives notice in time. <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-20822" rel="nofollow">Royal Decree-law 28/2026</a> would change this from 15 November 2026 if it is validated.</li>
+			<li>The deposit for a main-home lease is one month's rent.</li>
+			<li>Tourist lets stay outside the Urban Leasing Act, under the regional tourism rules.</li>
+		</ul>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">The March cap, and two decrees that lasted a day</h2>
 		<p>
 			Real Decreto-ley 8/2026 capped annual rent updates at 2% and gave tenants the right to ask for an
 			extraordinary two-year extension. It was in force from 22 March 2026. The Congress of Deputies
 			<strong>rejected it on 28 April 2026</strong> and it was repealed with effect from 30 April. The BOE entry
 			(<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-6545" rel="nofollow">BOE-A-2026-6545</a>) is now
-			headed <em>Disposicion derogada</em>.
+			headed <em>Disposición derogada</em>.
 		</p>
 		<p>
-			If you applied the 2% ceiling to an update inside that six-week window, that was correct and stays correct.
-			The repeal is not retroactive. From 29 April 2026 onwards, ordinary rules apply again.
-		</p>
-	</section>
-
-	<section class="lBand lAlt">
-		<h2 class="lH2">What governs your increase now</h2>
-		<div class="lTwo">
-			<div class="lCard">
-				<h3 class="lH3">Signed from 26 May 2023</h3>
-				<p>
-					The update uses the <strong>IRAV</strong>, the reference index published monthly by the National
-					Statistics Institute. You cannot swap it for the CPI, even by agreement, and you cannot exceed it. Use
-					the figure for the month your anniversary falls in.
-				</p>
-			</div>
-			<div class="lCard">
-				<h3 class="lH3">Signed before 26 May 2023</h3>
-				<p>
-					Your contract governs. Most refer to the CPI. If the contract sets out no update mechanism at all,
-					there is no automatic right to raise the rent during the term.
-				</p>
-			</div>
-		</div>
-		<p class="lFine">
-			Either way the increase is not automatic: you have to notify in writing, showing the index applied, the
-			percentage and the resulting rent, and it takes effect the following month, never retroactively.
-			<a href="/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/">The full explanation, with worked detail</a>.
-		</p>
-	</section>
-
-	<section class="lBand">
-		<h2 class="lH2">Andalucia has no stressed zones</h2>
-		<p>
-			Almost every headline about rent control in Spain is really about <strong>stressed market areas</strong>, where
-			a region can impose real limits on the rent in new contracts. That regime only operates where the regional
-			government declares it, and <strong>no Andalusian municipality is in the Ministry of Housing register</strong>.
+			Whether updates applied inside that window survive the repeal is not settled: the Constitution does not say
+			whether a repeal works from the start or only going forward, and we found no court ruling on it. Royal
+			Decree-law 29/2026 does treat extension requests made under the March decree as validly made.
 		</p>
 		<p>
-			The Junta de Andalucia has declined to activate the mechanism and has challenged the state housing law before
-			the Constitutional Court. Its own housing law, Ley 5/2025, published in the BOJA on 24 December 2025 and
-			applying since 24 January 2026, works through subsidies rather than caps.
+			Royal Decree-laws 26/2026 and 27/2026 were published on 30 September and 1 October 2026. Congress repealed
+			both on 2 October
+			(<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20526" rel="nofollow">BOE-A-2026-20526</a> and
+			<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20527" rel="nofollow">BOE-A-2026-20527</a>).
+			Neither applies.
 		</p>
-		<p class="lPull">
-			If your property is in Malaga province, the rent-control coverage filling the national press does not describe
-			your situation.
-		</p>
-	</section>
-
-	<section class="lBand lAlt">
-		<h2 class="lH2">What did not change</h2>
-		<ul class="lList">
-			<li>Minimum term of five years when the landlord is an individual, seven when the landlord is a company.</li>
-			<li>Year-by-year extension at the tenant's option, plus tacit extension of up to three further years.</li>
-			<li>Deposit for habitual-residence lettings remains one month's rent, plus any additional guarantee agreed.</li>
-			<li>Seasonal and tourist lettings sit under a different regime entirely, with their own regional rules.</li>
-		</ul>
 	</section>
 
 	<section class="lBand">
 		<h2 class="lH2">Let it, or sell it?</h2>
 		<p>
-			With the cap gone, the arithmetic is back to being an ordinary decision: what the property would fetch as a
-			sale against what it would collect as a rent. Most owners only ever see asking prices, which are what other
-			sellers hope for rather than what buyers paid.
+			Either way, the decision comes down to what the property would fetch as a sale against what it would collect
+			as a rent under the rules above. Most owners only ever see asking prices, which are what other sellers hope for
+			rather than what buyers paid.
 		</p>
 		<p>
-			Our free guide starts from <strong>registered sale prices in the Spanish notarial register</strong> instead. Two
-			questions, no account, and no agent contacts you unless you tick the box.
+			Our free guide starts from <strong>registered sale prices in the Spanish notarial register</strong> where the
+			area has them. A short form, no account, and no agent contacts you unless you tick the box.
+		</p>
+		<p>
+			If you sell, the maximum coefficients for plusvalía, the council tax on the rise in land value, change on
+			1 December 2026 if the decree survives.
+			<a href="/docs/laws-procedures/property-taxes-in-andalucia/impuesto-sobre-el-incremento-de-valor-de-los-terrenos-plusvalia/">Our plusvalía guide</a>
+			sets out both tables.
 		</p>
 		<p class="lCtaRow">
 			<a class="lBtn" href="/what-is-my-property-worth/">See what your property is actually worth</a>
-			<a class="lBtnG" href="/blog/spain-housing-rules-2026-what-applies-in-andalucia/">Which 2026 rules apply in Andalucia</a>
+			<a class="lBtnG" href="/blog/spain-rental-decrees-october-2026-what-applies/">The October 2026 decrees, explained</a>
 		</p>
 	</section>
 
 	<section class="lBand lAlt">
 		<h2 class="lH2">If you would rather someone handled it</h2>
 		<p>
-			PropertyList is the shared network the local agents work in: one listing is visible to more than {plAgentsN} agents
-			across the Costa del Sol, so a property is not limited to the buyers or tenants of one office. Owners do not
-			list here directly, agents do. If you want an agent involved, say so on the guide above and a registered local
-			agent gets in touch.
+			PropertyList is the shared network the local agents work in: one listing is visible to more than {plAgentsN}
+			registered agents on the network, so a property is not limited to the buyers or tenants of one office. Owners do
+			not list here directly, agents do. If you want an agent involved, say so on the guide above and a registered
+			local agent gets in touch.
 		</p>
 	</section>
 
@@ -171,9 +232,10 @@ const faqs = [
 			))}
 		</div>
 		<p class="lNote">
-			This is general information for property owners, checked against the BOE and the Ministry of Housing register
-			on {CHECKED}. It is not legal advice, and rental rules in Spain change often. Check your own contract and take
-			professional advice before acting.
+			This is general information for property owners, checked against the BOE, including the Ministry of Housing's
+			quarterly lists of stressed zones, on {CHECKED}. Royal Decree-law 29/2026 still has to be validated or repealed,
+			and we will update this page after the vote. It is not legal advice, and rental rules in Spain change often.
+			Check your own contract and take professional advice before acting.
 		</p>
 	</section>
 </Layout>

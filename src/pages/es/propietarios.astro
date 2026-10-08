@@ -6,35 +6,40 @@ const plAgentsN = plAgents.replace('+', '');
 import Layout from '../../layouts/Layout.astro';
 
 // Gemelo español de /landlord/. Cada afirmación legal está comprobada contra
-// el BOE y el registro de zonas tensionadas del Ministerio de Vivienda, y
-// fechada: la versión anterior de este contenido describía un decreto que
-// llevaba tres meses derogado.
-const CHECKED = '11 de agosto de 2026';
+// el BOE y fechada: la versión anterior de este contenido describía un decreto
+// que llevaba tres meses derogado. Se enlazan los textos principales.
+// Reescrita el 08-10-26 por el Real Decreto-ley 29/2026 (en vigor el 08-10-26,
+// pendiente de convalidación). Revisar tras la votación de la Diputación Permanente.
+const CHECKED = '8 de octubre de 2026';
 
 const faqs = [
 	{
-		q: '¿Hay un límite a cuánto puedo subir la renta en 2026?',
-		a: 'Un tope nacional no. El límite del 2% que se introdujo en marzo de 2026 quedó derogado el 30 de abril de 2026, cuando el Congreso no lo convalidó. Lo que limita tu subida ahora es tu propio contrato y el índice que le corresponde: el IRAV para contratos firmados desde el 26 de mayo de 2023, y lo que diga el contrato (normalmente el IPC) para los anteriores.',
+		q: '¿Hay un límite a cuánto puedo subir la renta?',
+		a: 'Sí. Desde el 8 de octubre de 2026, con el Real Decreto-ley 29/2026, la renta solo puede actualizarse en el aniversario del contrato, solo si el contrato lo prevé expresamente, y nunca por encima de la variación del índice IRAV. Para las actualizaciones que vencen entre el 8 de octubre de 2026 y el 31 de diciembre de 2027 hay una regla más: no hay subida si la renta supera el límite máximo del precio aplicable y, si no, la subida es la que acordéis tú y el inquilino, o como máximo un 2% si no acordáis nada. El decreto no aclara cómo funciona el límite de precio fuera de una zona tensionada ni cómo encaja con la exigencia de cláusula expresa, así que compruébalo antes de aplicar una subida. El decreto aún tiene que ser convalidado o derogado por la Diputación Permanente del Congreso. El tope del 2% anterior, de marzo de 2026, quedó derogado el 30 de abril de 2026.',
 	},
 	{
 		q: '¿Mi propiedad está en zona tensionada?',
-		a: 'En Andalucía no. Las zonas de mercado residencial tensionado solo existen donde las declara el gobierno autonómico, y ningún municipio andaluz figura en el registro del Ministerio de Vivienda. La Junta de Andalucía ha optado por no activar el mecanismo y ha recurrido la ley estatal de vivienda ante el Tribunal Constitucional.',
+		a: 'En Andalucía no. Las zonas de mercado residencial tensionado solo existen donde las declara el gobierno autonómico, y ninguna de las relaciones trimestrales que el Ministerio de Vivienda publica en el BOE, la última de 24 de julio de 2026, incluye un municipio andaluz. Eso deja fuera de Andalucía los topes a las nuevas rentas de las zonas tensionadas, pero las reglas de actualización hasta el 31 de diciembre de 2027, el tope del IRAV en los arrendamientos temporales sucesivos y la norma habitación por habitación se aplican en todas partes.',
 	},
 	{
 		q: '¿Cuánto tiempo quedo vinculado si alquilo a largo plazo?',
-		a: 'La Ley de Arrendamientos Urbanos fija un mínimo de cinco años si el arrendador es persona física y siete si es persona jurídica, prorrogable año a año a voluntad del inquilino, con prórroga tácita de hasta tres años más si ninguna parte avisa a tiempo. La derogación de abril no cambió nada de esto.',
+		a: 'La Ley de Arrendamientos Urbanos fija un mínimo de cinco años si el arrendador es persona física y siete si es persona jurídica, prorrogable año a año a voluntad del inquilino. Después, si ninguna parte avisa a tiempo, el contrato se prorroga año a año hasta tres años más. El Real Decreto-ley 29/2026 no cambió esto. El Real Decreto-ley 28/2026, previsto desde el 15 de noviembre de 2026 si se convalida, sustituiría esa prórroga de tres años por renovaciones de cinco años cada vez (siete si el arrendador es persona jurídica) para contratos cuyo plazo termine después de esa fecha, y el arrendador que no renueve debería indemnizar al inquilino, salvo en los casos que enumera. Los contratos que ya estén en prórroga tácita anual seguirían con la regla anterior hasta que termine, y el preaviso del arrendador pasaría de cuatro a seis meses (cuatro meses si al contrato le quedan menos de seis el 15 de noviembre de 2026).',
+	},
+	{
+		q: '¿Puedo alquilarla como arrendamiento temporal o de temporada?',
+		a: 'Solo a un inquilino que está fuera de su vivienda habitual por una razón justificada y acreditable, que debe constar en el contrato. La duración debe ser superior a 31 días y, como norma general, no superar los doce meses. Sin esa causa, el contrato se considera de vivienda habitual desde el día en que se firmó. El alquiler turístico queda fuera de la Ley de Arrendamientos Urbanos y se rige por la normativa turística autonómica; no puede superar los 31 días.',
 	},
 	{
 		q: '¿Alquilar o vender?',
-		a: 'Depende de lo que la propiedad conseguiría por cada vía, y la mayoría de propietarios solo conoce los precios que ve anunciados. La guía gratuita de abajo parte de los precios de venta registrados en el registro notarial, para que puedas comparar una cifra realista de venta con la renta que ingresarías.',
+		a: 'Depende de lo que la propiedad conseguiría por cada vía, y la mayoría de propietarios solo conoce los precios que ve anunciados. La guía gratuita de esta página parte de los precios de venta registrados en el registro notarial cuando hay cifra notarial para la zona, para que puedas comparar una cifra realista de venta con la renta que ingresarías.',
 	},
 ];
 ---
 
 <Layout
 	lang="es"
-	title="Alquilar una propiedad en Andalucía: qué se aplica de verdad en 2026 | PropertyList"
-	description="El tope del 2% quedó derogado el 30 de abril de 2026. Qué rige ahora tu subida de renta, por qué Andalucía no tiene zonas tensionadas y qué no ha cambiado. Comprobado en el BOE."
+	title="Alquilar una propiedad en Andalucía: qué se aplica en 2026 | PropertyList"
+	description="Desde el 8 de octubre de 2026 un nuevo decreto limita la actualización de la renta y cambia los arrendamientos temporales, las garantías y los gastos. Qué se aplica en Andalucía, comprobado en el BOE."
 	canonical="https://info.propertylist.es/es/propietarios/"
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/landlord/' },
@@ -53,17 +58,118 @@ const faqs = [
 >
 	<section class="lHero">
 		<p class="lKick">Para propietarios en la Costa del Sol</p>
-		<h1 class="lH1">Las normas cambiaron dos veces este año. Esto es lo que se aplica hoy.</h1>
+		<h1 class="lH1">Las normas del alquiler volvieron a cambiar el 8 de octubre de 2026</h1>
 		<p class="lLead">
-			En marzo de 2026 España limitó las subidas de renta al 2%. Seis semanas después el tope ya no existía. Mucho de
-			lo que se lee en internet sigue describiendo la versión que ya no se aplica, así que esta página fija la
-			posición actual y enlaza cada afirmación a su fuente.
+			En marzo de 2026 llegó un tope del 2% a las subidas de renta, derogado en abril. Entre el 30 de septiembre y el
+			2 de octubre se publicaron y se derogaron otros dos decretos. Desde el 8 de octubre de 2026 está en vigor uno
+			nuevo, el Real Decreto-ley 29/2026, y la Diputación Permanente del Congreso todavía tiene que votarlo. Mucho de
+			lo que se lee en internet describe una versión que ya no se aplica, así que esta página fija la posición actual
+			comprobada en el BOE en la fecha indicada y enlaza los textos principales.
 		</p>
 		<p class="lStamp">Comprobado en el BOE el {CHECKED}</p>
 	</section>
 
+	<section class="lBand lAlt">
+		<h2 class="lH2">Qué rige tu actualización de renta ahora</h2>
+		<div class="lTwo">
+			<div class="lCard">
+				<h3 class="lH3">Todos los contratos de vivienda habitual, sea cual sea la fecha de firma</h3>
+				<p>
+					La renta solo puede actualizarse en cada aniversario del contrato, y solo si el contrato lo prevé
+					expresamente. Sin pacto, no hay actualización. Si la cláusula no indica el índice, se aplica el
+					<strong>IRAV</strong>, el índice de referencia que publica mensualmente el Instituto Nacional de
+					Estadística. En todo caso, la subida nunca puede superar la variación del IRAV, con el último dato
+					publicado en la fecha de actualización. Desde el 8 de octubre de 2026 esto alcanza también a los contratos
+					firmados antes del 26 de mayo de 2023.
+				</p>
+			</div>
+			<div class="lCard">
+				<h3 class="lH3">Aniversarios entre el 8 de octubre de 2026 y el 31 de diciembre de 2027</h3>
+				<p>
+					Si la renta actual supera el límite máximo del precio aplicable, no hay subida. Si no, la subida es la que
+					acordéis tú y el inquilino, y si no acordáis nada, no puede superar el 2%. El decreto no dice cómo funciona
+					ese límite para una vivienda fuera de una zona tensionada declarada, ni cómo encaja esta regla con la
+					general, así que compruébalo antes de aplicar cualquier subida.
+				</p>
+			</div>
+		</div>
+		<p class="lFine">
+			La subida nunca es automática: hay que notificarla por escrito al inquilino, indicando el porcentaje aplicado, y
+			la nueva renta es exigible desde el mes siguiente a la notificación. Vale como notificación una nota en el
+			recibo del mes anterior. Fuentes: artículo 18 de la
+			<a href="https://www.boe.es/buscar/act.php?id=BOE-A-1994-26003" rel="nofollow">Ley de Arrendamientos Urbanos</a>
+			en su redacción actual y disposición final sexta del
+			<a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-20823" rel="nofollow">Real Decreto-ley 29/2026</a>.
+			<a href="/es/blog/spain-rental-decrees-october-2026-what-applies/">Qué dice cada decreto y qué queda por votar</a>.
+		</p>
+	</section>
+
 	<section class="lBand">
-		<h2 class="lH2">El tope que ya no existe</h2>
+		<h2 class="lH2">Qué más cambió el 8 de octubre</h2>
+		<p>
+			Los cambios en la Ley de Arrendamientos Urbanos que siguen (salida anticipada, gastos, garantías, reparaciones y
+			documento de fin de contrato) dependen de cuándo se firmó el contrato. Los firmados antes del 26 de mayo de 2023
+			mantienen las normas vigentes cuando se firmaron, salvo las de prórroga del artículo 10 en su redacción de 2023,
+			el límite a la actualización de la renta de la ley de 2023 y el artículo 18.1 en su redacción actual. Para los
+			firmados entre el 26 de mayo de 2023 y el 7 de octubre de 2026, el decreto no dice si les alcanzan estos
+			cambios. La solicitud de prórroga y las reglas de desahucio se aplican según sus propios términos, y las de
+			arrendamiento temporal dependen de si el contrato se firmó antes del 8 de octubre. Consulta con un profesional
+			antes de apoyarte en los puntos siguientes para un contrato ya firmado.
+		</p>
+		<ul class="lList">
+			<li><strong>Salida anticipada del inquilino:</strong> pasados seis meses, con 30 días de preaviso, y ya no puedes reclamar indemnización por ello. En un arrendamiento temporal, pasado un mes y con 10 días de preaviso.</li>
+			<li><strong>Gastos:</strong> los tributos del inmueble no pueden repercutirse al inquilino salvo que este sea el contribuyente. Esto es nuevo. Los gastos de gestión inmobiliaria y de formalización del contrato corren a cargo del arrendador desde 2023; el decreto añade que no pueden trasladarse ni directa ni indirectamente, bajo ningún concepto o denominación.</li>
+			<li><strong>Garantías:</strong> además de la fianza, la garantía adicional ya estaba limitada a dos mensualidades de renta en contratos de hasta cinco años (siete si el arrendador es persona jurídica). Novedad: una mensualidad como máximo en un arrendamiento temporal, y no puedes exigir un seguro de impago de la renta.</li>
+			<li><strong>Reparaciones:</strong> si hay daños que afecten a la habitabilidad, la seguridad o la salud, o reparaciones que te corresponde hacer, el inquilino puede enviarte una solicitud por escrito con un presupuesto. Puedes aceptarlo, proponer una alternativa o hacer tú la obra. Si no contestas, o te niegas sin justificación, en 15 días naturales, el inquilino puede hacer la obra y descontar de la renta el coste razonable y documentado.</li>
+			<li><strong>Fin del contrato:</strong> ambas partes firman un documento que recoge el estado de la vivienda. Sin él, se presume que la vivienda se devuelve en buen estado, salvo prueba en contrario.</li>
+			<li><strong>Arrendamientos temporales:</strong> necesitan una causa justificada y acreditable que conste en el contrato, una duración superior a 31 días y, como norma general, no superior a doce meses, o se consideran de vivienda habitual. Más de dos contratos temporales sucesivos entre las mismas partes sobre la misma vivienda también convierten el primero en un arrendamiento de vivienda habitual, y en los arrendamientos temporales sucesivos la renta no puede subir más que la variación del IRAV. Los contratos firmados antes del 8 de octubre mantienen las normas anteriores hasta su fin pactado y luego se extinguen, sin posibilidad de prórroga.</li>
+			<li><strong>Prórrogas:</strong> el inquilino cuyo contrato estuviera vigente el 8 de octubre de 2026 y cuya duración obligatoria termine antes del 31 de diciembre de 2028 puede pedir hasta dos años más por periodos anuales, si pagó la renta en cada uno de los ocho meses anteriores. También alcanza a los contratos cuya prórroga tácita o renovación tácita esté llegando a su fin; el límite de fecha corresponde al primer supuesto, así que consulta si el tuyo es uno de estos. Debes aceptarla salvo que pactéis otras condiciones o un contrato nuevo, o que hayas notificado válidamente que necesitas la vivienda para ti o un familiar cercano. No se aplica si acordáis la renovación o un contrato nuevo con una renta al menos un 5% inferior. Si el Real Decreto-ley 28/2026 entra en vigor, su renovación de cinco años y esta prórroga no se suman.</li>
+			<li><strong>Desahucios:</strong> si se desahucia por impago a un inquilino en situación de vulnerabilidad económica, la administración tiene dos meses para ofrecer vivienda o pagar la deuda y las costas. Si no hace ninguna de las dos cosas, se subroga en la deuda, el desahucio no sigue adelante y el contrato se mantiene vigente hasta su expiración mientras dure la vulnerabilidad económica del inquilino. En los demás desahucios de hogares vulnerables sin alternativa habitacional, hasta el 31 de diciembre de 2030 el tribunal puede suspender el proceso, con revisión cada 12 meses y durante tres años como máximo, y la administración compensa al arrendador persona física, hasta la renta no percibida, los suministros impagados y las costas. En esos otros casos, la vulnerabilidad económica del inquilino no prevalece cuando el arrendador es una persona física titular de dos o menos viviendas. <a href="/es/docs/leyes-procedimientos/renting-a-property/long-term/evictions/">Cómo funcionan los desahucios</a>.</li>
+		</ul>
+		<p class="lFine">
+			Fuente: <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-20823" rel="nofollow">Real Decreto-ley 29/2026</a>,
+			artículos 2, 3, 4 y 5 y disposición final quinta.
+		</p>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">Andalucía no tiene zonas tensionadas</h2>
+		<p>
+			Casi todos los titulares sobre control de alquileres en España hablan de las <strong>zonas de mercado
+			residencial tensionado</strong>, donde una comunidad puede imponer límites reales a la renta en los contratos
+			nuevos. Ese régimen solo funciona donde el gobierno autonómico lo declara. El Ministerio de Vivienda publica
+			cada trimestre en el BOE las zonas declaradas, y <strong>ninguna de sus relaciones incluye un municipio
+			andaluz</strong> (la última,
+			<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-16532" rel="nofollow">de 24 de julio de 2026</a>,
+			recoge el segundo trimestre de 2026).
+		</p>
+		<p>
+			La Junta de Andalucía no había declarado ninguna en la relación de julio de 2026. Recurrió la ley estatal de vivienda ante el Tribunal
+			Constitucional, que en mayo de 2024 (<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-12808" rel="nofollow">sentencia
+			79/2024</a>) anuló unos pocos preceptos y desestimó el resto del recurso. Su propia ley,
+			la <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2026-423" rel="nofollow">Ley 5/2025</a>, publicada en el
+			BOJA el 24 de diciembre de 2025 y aplicable desde el 24 de enero de 2026, va por la vía de la oferta de
+			vivienda, la vivienda protegida y los incentivos, en lugar de los topes a la renta.
+		</p>
+		<p>
+			Las reglas de actualización de arriba, el tope del IRAV en los arrendamientos temporales sucesivos y la norma de
+			que la suma de las rentas de las habitaciones no puede superar la renta de la vivienda completa también se
+			aplican en Andalucía.
+		</p>
+	</section>
+
+	<section class="lBand">
+		<h2 class="lH2">Qué no ha cambiado</h2>
+		<ul class="lList">
+			<li>Duración mínima de cinco años si el arrendador es persona física y siete si es persona jurídica, prorrogable año a año a voluntad del inquilino.</li>
+			<li>Tras la duración mínima, prórroga tácita de hasta tres años más si ninguna parte avisa a tiempo. El <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2026-20822" rel="nofollow">Real Decreto-ley 28/2026</a> cambiaría esto desde el 15 de noviembre de 2026 si se convalida.</li>
+			<li>La fianza en vivienda habitual es una mensualidad de renta.</li>
+			<li>El alquiler turístico sigue fuera de la Ley de Arrendamientos Urbanos, con la normativa turística autonómica.</li>
+		</ul>
+	</section>
+
+	<section class="lBand lAlt">
+		<h2 class="lH2">El tope de marzo, y dos decretos que duraron un día</h2>
 		<p>
 			El Real Decreto-ley 8/2026 limitaba la actualización anual al 2% y daba al inquilino derecho a pedir una
 			prórroga extraordinaria de dos años. Estuvo en vigor desde el 22 de marzo de 2026. El Congreso de los Diputados
@@ -72,80 +178,41 @@ const faqs = [
 			como <em>Disposición derogada</em>.
 		</p>
 		<p>
-			Si aplicaste el tope del 2% a una actualización dentro de esas seis semanas, fue correcto y lo sigue siendo. La
-			derogación no es retroactiva. Desde el 29 de abril de 2026 vuelven a regir las reglas ordinarias.
-		</p>
-	</section>
-
-	<section class="lBand lAlt">
-		<h2 class="lH2">Qué rige tu subida ahora</h2>
-		<div class="lTwo">
-			<div class="lCard">
-				<h3 class="lH3">Firmado desde el 26 de mayo de 2023</h3>
-				<p>
-					La actualización usa el <strong>IRAV</strong>, el índice de referencia que publica mensualmente el
-					Instituto Nacional de Estadística. No se puede sustituir por el IPC, ni de mutuo acuerdo, ni superarlo.
-					Usa el dato del mes en que cae tu aniversario.
-				</p>
-			</div>
-			<div class="lCard">
-				<h3 class="lH3">Firmado antes del 26 de mayo de 2023</h3>
-				<p>
-					Manda tu contrato. La mayoría remiten al IPC. Si el contrato no prevé ningún mecanismo de
-					actualización, no hay derecho automático a subir la renta durante el plazo.
-				</p>
-			</div>
-		</div>
-		<p class="lFine">
-			En ambos casos la subida no es automática: hay que notificar por escrito, indicando el índice aplicado, el
-			porcentaje y la renta resultante, y surte efecto el mes siguiente, nunca con efectos retroactivos.
-			<a href="/es/blog/spain-rent-cap-law-rdl-8-2026-landlord-guide/">La explicación completa, con el detalle</a>.
-		</p>
-	</section>
-
-	<section class="lBand">
-		<h2 class="lH2">Andalucía no tiene zonas tensionadas</h2>
-		<p>
-			Casi todos los titulares sobre control de alquileres en España hablan en realidad de las <strong>zonas de
-			mercado residencial tensionado</strong>, donde una comunidad puede imponer límites reales a la renta en los
-			contratos nuevos. Ese régimen solo funciona donde el gobierno autonómico lo declara, y <strong>ningún municipio
-			andaluz está en el registro del Ministerio de Vivienda</strong>.
+			No está resuelto si las actualizaciones aplicadas dentro de ese periodo sobreviven a la derogación: la
+			Constitución no dice si una derogación surte efecto desde el principio o solo hacia delante, y no encontramos
+			ninguna sentencia sobre ello. El Real Decreto-ley 29/2026 sí considera válidamente formuladas las solicitudes
+			de prórroga hechas al amparo del decreto de marzo.
 		</p>
 		<p>
-			La Junta de Andalucía ha optado por no activar el mecanismo y ha recurrido la ley estatal de vivienda ante el
-			Tribunal Constitucional. Su propia ley, la Ley 5/2025, publicada en el BOJA el 24 de diciembre de 2025 y
-			aplicable desde el 24 de enero de 2026, va por la vía de las ayudas en lugar de los topes.
+			Los Reales Decretos-leyes 26/2026 y 27/2026 se publicaron el 30 de septiembre y el 1 de octubre de 2026. El
+			Congreso derogó ambos el 2 de octubre
+			(<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20526" rel="nofollow">BOE-A-2026-20526</a> y
+			<a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20527" rel="nofollow">BOE-A-2026-20527</a>).
+			Ninguno se aplica.
 		</p>
-		<p class="lPull">
-			Si tu propiedad está en la provincia de Málaga, la cobertura sobre control de alquileres que llena la prensa
-			nacional no describe tu situación.
-		</p>
-	</section>
-
-	<section class="lBand lAlt">
-		<h2 class="lH2">Qué no ha cambiado</h2>
-		<ul class="lList">
-			<li>Duración mínima de cinco años si el arrendador es persona física y siete si es persona jurídica.</li>
-			<li>Prórroga año a año a voluntad del inquilino, más prórroga tácita de hasta tres años adicionales.</li>
-			<li>La fianza en vivienda habitual sigue siendo una mensualidad, más las garantías adicionales que se pacten.</li>
-			<li>El alquiler de temporada y el turístico van por un régimen distinto, con sus propias normas autonómicas.</li>
-		</ul>
 	</section>
 
 	<section class="lBand">
 		<h2 class="lH2">¿Alquilar o vender?</h2>
 		<p>
-			Sin el tope, la cuenta vuelve a ser una decisión normal: lo que la propiedad conseguiría en venta frente a lo
-			que ingresaría en alquiler. La mayoría de propietarios solo ve precios de oferta, que son lo que otros
+			En cualquier caso, la decisión se reduce a lo que la propiedad conseguiría en venta frente a lo que ingresaría
+			en alquiler con las normas de arriba. La mayoría de propietarios solo ve precios de oferta, que son lo que otros
 			vendedores esperan, no lo que los compradores pagaron.
 		</p>
 		<p>
-			Nuestra guía gratuita parte de los <strong>precios de venta registrados en el registro notarial</strong>. Dos
-			preguntas, sin crear cuenta, y ningún agente te contacta salvo que marques la casilla.
+			Nuestra guía gratuita parte de los <strong>precios de venta registrados en el registro notarial</strong> cuando
+			hay cifra notarial para la zona. Un formulario breve, sin crear cuenta, y ningún agente te contacta salvo que
+			marques la casilla.
+		</p>
+		<p>
+			Si vendes, los coeficientes máximos de la plusvalía municipal, el impuesto local sobre el incremento de valor
+			del suelo, cambian el 1 de diciembre de 2026 si el decreto sobrevive.
+			<a href="/es/docs/leyes-procedimientos/property-taxes-in-andalucia/impuesto-sobre-el-incremento-de-valor-de-los-terrenos-plusvalia/">Nuestra guía de la plusvalía</a>
+			recoge las dos tablas.
 		</p>
 		<p class="lCtaRow">
 			<a class="lBtn" href="/es/cuanto-vale-mi-propiedad/">Mira cuánto vale de verdad tu propiedad</a>
-			<a class="lBtnG" href="/es/blog/spain-housing-rules-2026-what-applies-in-andalucia/">Qué normas de 2026 aplican en Andalucía</a>
+			<a class="lBtnG" href="/es/blog/spain-rental-decrees-october-2026-what-applies/">Los decretos de octubre de 2026, explicados</a>
 		</p>
 	</section>
 
@@ -153,9 +220,9 @@ const faqs = [
 		<h2 class="lH2">Si prefieres que se encargue alguien</h2>
 		<p>
 			PropertyList es la red compartida en la que trabajan los agentes locales: un anuncio es visible para más de
-			{plAgentsN} agentes de la Costa del Sol, así que una propiedad no queda limitada a los compradores o inquilinos de
-			una sola oficina. Los propietarios no publican aquí directamente, lo hacen los agentes. Si quieres un agente,
-			indícalo en la guía de arriba y un agente local registrado te contacta.
+			{plAgentsN} agentes registrados de la red, así que una propiedad no queda limitada a los compradores o
+			inquilinos de una sola oficina. Los propietarios no publican aquí directamente, lo hacen los agentes. Si quieres
+			un agente, indícalo en la guía de arriba y un agente local registrado te contacta.
 		</p>
 	</section>
 
@@ -170,9 +237,10 @@ const faqs = [
 			))}
 		</div>
 		<p class="lNote">
-			Esto es información general para propietarios, comprobada en el BOE y en el registro del Ministerio de Vivienda
-			el {CHECKED}. No es asesoramiento jurídico y las normas de alquiler en España cambian a menudo. Revisa tu
-			contrato y consulta con un profesional antes de actuar.
+			Esto es información general para propietarios, comprobada en el BOE, incluidas las relaciones trimestrales de
+			zonas tensionadas del Ministerio de Vivienda, el {CHECKED}. El Real Decreto-ley 29/2026 aún tiene que
+			convalidarse o derogarse, y actualizaremos esta página tras la votación. No es asesoramiento jurídico y las
+			normas de alquiler en España cambian a menudo. Revisa tu contrato y consulta con un profesional antes de actuar.
 		</p>
 	</section>
 </Layout>
