@@ -1,3 +1,4 @@
+import { mandrillFetch } from './sesMail.mjs';
 // The summary email an agent asks for from the "Not ready to create an account?"
 // box (AgentInterestCta) or the exit-intent popup: what is free, what costs
 // credits, what it replaces, and live features to try, CoAgent first.
@@ -309,7 +310,7 @@ export async function sendAgentSummary({ email, lang, stats, coagentNumber, unsu
 		headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
 	}
 	try {
-		const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+		const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
 			method: 'POST',
 			headers: { 'content-type': 'application/json' },
 			signal: AbortSignal.timeout(8000),

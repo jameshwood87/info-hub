@@ -20,6 +20,7 @@
  *
  *   node scripts/ctr-experiments.mjs [--dry-run]   (dry run: reads and calls the model, changes nothing)
  */
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from 'fs';
 import { createHmac, randomBytes } from 'node:crypto';
 import { rawQuery } from './gsc.mjs';
@@ -334,7 +335,7 @@ if (!started.length && !judged.length) {
 ${started.length ? `<h3 style="font-size:16px;margin:18px 0 8px">Changed this week</h3>${startedHtml}` : ''}${judged.length ? `<h3 style="font-size:16px;margin:18px 0 8px">Judged this week</h3>${judgedHtml}` : ''}${skippedHtml}
 <p style="font-size:12px;color:#98a2b3">Undo links work for 30 days. A test is judged on the 28 days that start 3 days after the change, against the 28 days before, allowing for how the untouched pages moved.</p></div>`;
     const text = [...started.map((p) => `CHANGED ${ORIGIN}${p.path}\nWas: ${p.before.seo_title || p.before.title}\nNow: ${p.applied_fields.seo_title}${p.undo_ok ? `\nUndo: ${link(p.pid)}` : '\nNo Undo: the old wording fails the checks.'}`), ...judged.map((e) => `JUDGED ${ORIGIN}${e.path}\n${verdictLine(e)}${['kept', 'worse_not_undone'].includes(e.status) && e.undo_ok ? `\nUndo: ${link(e.pid)}` : ''}`)].join('\n\n');
-    const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+    const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO, type: 'to' }], subject, html, text } }),
     });

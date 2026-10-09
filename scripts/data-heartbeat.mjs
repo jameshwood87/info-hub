@@ -12,6 +12,7 @@
 // fresh file with no towns in it.
 //
 // Run daily by cron at 09:15, after finder-counts (04:30) and budget-data (04:50).
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from "node:fs/promises";
 
 const ENV = "/opt/info-hub/.env";
@@ -107,7 +108,7 @@ const html =
   `Check the logs in /opt/info-hub/var/log/.</p></div>`;
 
 try {
-  const res = await fetch("https://mandrillapp.com/api/1.0/messages/send.json", {
+  const res = await mandrillFetch("https://mandrillapp.com/api/1.0/messages/send.json", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({

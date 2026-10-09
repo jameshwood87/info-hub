@@ -8,6 +8,7 @@
  * does not train you to ignore it.
  * State: var/admin/feature-digest-state.json.  Usage: node scripts/feature-digest.mjs [--dry-run]
  */
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from 'fs';
 
 try {
@@ -101,7 +102,7 @@ if (DRY) {
 }
 if (!KEY || !TO || !FROM) { console.log('mail not configured, skipping send'); process.exit(0); }
 
-const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
   method: 'POST',
   headers: { 'content-type': 'application/json' },
   body: JSON.stringify({

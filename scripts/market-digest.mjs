@@ -14,6 +14,7 @@
 //
 // The guard exists because a cron that fires twice is a list that unsubscribes
 // twice as fast. State lives in var/admin/market-digest-state.json.
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 
@@ -310,7 +311,7 @@ for (const r of recipients) {
 		},
 	};
 	try {
-		const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+		const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
 			method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
 		});
 		const out = await res.json().catch(() => null);

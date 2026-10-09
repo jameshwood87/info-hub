@@ -1,3 +1,4 @@
+import { mandrillFetch } from './sesMail.mjs';
 import { areaMarketSummary } from './marketData';
 
 // The market breakdown we promise the seller on /what-is-my-property-worth/.
@@ -206,7 +207,7 @@ export const sendSellerBreakdown = async (f: SellerFacts): Promise<boolean> => {
 		const ctl = new AbortController();
 		const timer = setTimeout(() => ctl.abort(), 10000);
 		try {
-			const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+			const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
 				signal: ctl.signal,

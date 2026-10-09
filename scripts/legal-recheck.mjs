@@ -9,6 +9,7 @@
  *
  * Cron: 1st of the month, 06:50 UTC.   Usage: node scripts/legal-recheck.mjs [--dry-run]
  */
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from 'node:fs';
 import { legalStatus } from './lib/legal-status.mjs';
 
@@ -91,7 +92,7 @@ const text = `Monthly law re-check: ${byPage.size} posts to read, ${changes.leng
   + changes.map((c) => `CHANGED ${c.ref}: ${c.before} -> ${c.after}`).join('\n')
   + (changes.length ? '\n\n' : '')
   + [...byPage.values()].map(({ page, laws }) => `${SITE}${page.path}\n` + laws.map((l) => `  - ${l.ref}: ${l.statusText}`).join('\n')).join('\n\n');
-const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
   method: 'POST', headers: { 'content-type': 'application/json' },
   body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO, type: 'to' }], subject: `[Law re-check] ${byPage.size} blog post${byPage.size === 1 ? '' : 's'} to read, ${changes.length} law${changes.length === 1 ? '' : 's'} changed${partlyVoid.length ? `, ${partlyVoid.length} partly annulled (first run)` : ''}`, html, text } }),
 });

@@ -12,6 +12,7 @@
  *    through AREAS; each area at most once per calendar month (state-tracked).
  * Usage: node scripts/blog-cron.mjs [--dry-run]
  */
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 
@@ -221,7 +222,7 @@ if (failures.length) {
     const envText = fs.readFileSync('/opt/info-hub/.env', 'utf8');
     const cfg = (k) => (envText.match(new RegExp('^' + k + '=(.*)$', 'm'))?.[1] || '').trim().replace(/^[\"']|[\"']$/g, '');
     const listed = failures.map((f) => `- ${f.topic}\n  outcome: ${f.outcome}\n  error: ${f.reason}`).join('\n\n');
-    await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+    await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key: cfg('MANDRILL_API_KEY'), message: {
@@ -386,7 +387,7 @@ if (!KEY || !TO || !SECRET) {
   process.exit(0);
 }
 try {
-  const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+  const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
     method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO, type: 'to' }],
       subject: `${lint.ok ? (flagged ? '[REVIEW, checks flagged]' : lint.regulatory ? '[REVIEW, regulatory]' : '[REVIEW]') : '[BLOCKED]'} blog draft: ${en.title}`.slice(0, 180), html, text } }),

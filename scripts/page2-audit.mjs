@@ -19,6 +19,7 @@
  *   latest.json       copy of the newest report
  *   latest.html       dashboard
  */
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { rawQuery } from './gsc.mjs';
@@ -323,7 +324,7 @@ ${lastRun ? `\nSINCE LAST RUN (${report.previousRun})\n${moved.length ? moved.jo
 
 Full dashboard: ${DASH || 'var/admin/page2-audit/latest.html on the droplet'}
 Movement from on-page changes shows in 2-4 weeks. Do not re-edit a page every Friday.`;
-  const res = await fetch('https://mandrillapp.com/api/1.0/messages/send', {
+  const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key: KEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO }], subject: `[SEO] Page-2 audit ${ddmmyy(today)}: +${report.clicksInPlay} clicks/mo in play, ${cann.length} cannibalization, ${report.intents.filter((c) => c.split).length} split intents`, text, tags: ['info-hub', 'page2-audit'], track_opens: false, track_clicks: false } }),
   });

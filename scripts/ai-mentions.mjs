@@ -23,6 +23,7 @@
 // Gemini goes to Google directly (AI_MENTIONS_GEMINI_KEY, an AI Studio key): through
 // OpenRouter Gemini silently answers without searching (tested 26-09-26). No key, no Gemini.
 
+import { mandrillFetch } from '../src/lib/sesMail.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { claimsLedgerBlock, liveCounts } from './lib/claims-ledger.mjs';
@@ -573,7 +574,7 @@ if (SEND_EMAIL) {
   const subject = stopReason && !main.length
     ? `[GEO] AI mentions ${ddmmyy(now)}: not run - ${stopReason}`
     : `[GEO] AI mentions ${ddmmyy(now)}: ${stopReason ? 'PARTIAL, ' : ''}named or linked in ${summary.overall.visible}% of ${main.length} answers${brandFlags.length + lawFlags.length ? `, ${brandFlags.length + lawFlags.length} to check` : ''}`;
-  const res = await fetch('https://mandrillapp.com/api/1.0/messages/send', {
+  const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key: MKEY, message: { from_email: FROM, from_name: 'PropertyList Info Hub', to: [{ email: TO }], subject, text, tags: ['info-hub', 'ai-mentions'], track_opens: false, track_clicks: false } }),
   });

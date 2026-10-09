@@ -1,3 +1,4 @@
+import { mandrillFetch } from './sesMail.mjs';
 // Email notification for public form submissions, via Mandrill (Mailchimp Transactional).
 //
 // SEND-ONLY by design: this module never reads or changes Mandrill configuration
@@ -72,7 +73,7 @@ export const notifySubmission = async (opts: NotifyOptions): Promise<void> => {
 		const ctl = new AbortController();
 		const timer = setTimeout(() => ctl.abort(), 8000);
 		try {
-			const res = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+			const res = await mandrillFetch('https://mandrillapp.com/api/1.0/messages/send.json', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
 				signal: ctl.signal,
