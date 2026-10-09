@@ -16,10 +16,10 @@ const mcpUrl = 'https://mcp.propertylist.es/mcp';
 
 const faq = [
 	['Will it email my clients on its own?', 'No. Sending listings, booking a viewing, moving a deal, qualifying a lead, assigning a listing and changing its status all show you a preview and wait for your yes. Adding a contact, a note or a draft listing saves straight into your CRM, like typing it yourself.'],
-	['What does it cost?', 'The connection and your agency key are free with your PropertyList account. AI matching includes 200 searches a month; after that it is 1 credit per 10 searches from your wallet. Anything that costs credits in your CRM, such as qualifying a lead onto the Buyer board, costs the same here, and the assistant shows you the cost before you say yes.'],
-	['Which AI assistants work?', 'Claude, on every plan including the free one (the free plan allows one custom connector). ChatGPT, free with limits, using the MCP key from your CRM. Gemini and Copilot do not connect yet.'],
+	['What does it cost?', 'The connection and your agency key are free with your PropertyList account. AI matching includes 200 searches every 30 days; after that it is 1 credit per 10 searches from your wallet. Anything that costs credits in your CRM, such as qualifying a lead onto the Buyer board, costs the same here, and the assistant shows you the cost before you say yes.'],
+	['Which AI assistants work?', 'Claude, on every plan including the free one (the free plan allows one custom connector): sign in and everything on this page works. ChatGPT: with your MCP key it reads your CRM and saves notes, contacts and draft listings; anything that changes a client or a listing (sending, booking, moving a deal, qualifying a lead, assigning a listing, changing its status) needs a signed-in account. Gemini and Copilot do not connect yet.'],
 	["Can it see other agencies' data?", 'No. Every tool answers only for your own agency. Public listings are searched the way anyone can search PropertyList.'],
-	["I don't use an AI assistant.", 'Then use CoAgent: the same work over WhatsApp, and it asks before it saves or sends anything.'],
+	["I don't use an AI assistant.", 'Then use CoAgent: the main jobs over WhatsApp, and it asks before it saves or sends anything.'],
 ];
 const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
 const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
@@ -51,7 +51,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 			<h1>Your PropertyList CRM, inside the AI <b>you already use.</b></h1>
 			<p class="lead">It drafts the email and the viewing from your CRM, shows you what it will send, and waits. <strong>Nothing goes to a client without your yes.</strong></p>
 			<a class="btn" href="#connect">Connect your CRM to your AI</a>
-			<p class="fric">Free with your PropertyList account, and nothing to install.</p>
+			<p class="fric">The connection is free with your PropertyList account, and there is nothing to install.</p>
 		</div>
 		<div>
 			<div class="phone" aria-hidden="true"><div class="screen">
@@ -88,7 +88,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 		<p class="sub">Six things agents ask on a normal Tuesday. Each one is a real tool in your CRM.</p>
 		<div class="asks">
 			<div>"What came in overnight?"<span>Your newest enquiries</span></div>
-			<div>"Which of my listings have no photos?"<span>Listings going nowhere</span></div>
+			<div>"Which of my listings have too few photos?"<span>Listings going nowhere</span></div>
 			<div>"Send Juan the three best matches."<span>Drafted, then your yes</span></div>
 			<div>"Book Thursday 12:00 with María."<span>Into your diary, after your yes</span></div>
 			<div>"Where is the Pérez sale on the board?"<span>Your pipeline</span></div>
@@ -98,17 +98,17 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 			<div><b>{agents}</b><span>agents on PropertyList</span></div>
 			<div><b>{agencies}</b><span>agencies</span></div>
 			<div><b>6</b><span>actions that always wait for your yes</span></div>
-			<div><b>200</b><span>free AI searches a month</span></div>
+			<div><b>200</b><span>free AI searches every 30 days</span></div>
 		</div>
 	</div></section>
 
 	<section class="band connect" id="connect"><div class="cx">
 		<h2>Connect in <b>three steps.</b></h2>
-		<p class="sub">Works in Claude on every plan, including the free one, and in ChatGPT. Gemini and Copilot: not yet.</p>
+		<p class="sub">Claude, on every plan including the free one: sign in and everything on this page works. ChatGPT: with your MCP key it reads your CRM and saves notes and contacts; the six actions that wait for your yes need you signed in. Gemini and Copilot: not yet.</p>
 		<ol>
-			<li><div><b>Open your AI's connectors</b><p>In Claude: Customize, then Connectors, then Add custom connector. In ChatGPT: add it as a connector with your MCP key.</p></div></li>
+			<li><div><b>Open your AI's connectors</b><p>In Claude: Customize, then Connectors, then Add custom connector. In ChatGPT: add it as a connector and paste your MCP key.</p></div></li>
 			<li><div><b>Paste this address</b><p>Add a custom connector and name it PropertyList.</p><code class="addr">{mcpUrl}</code></div></li>
-			<li><div><b>Sign in, or paste your key</b><p>Claude asks you to sign in with your PropertyList account. ChatGPT takes the MCP key from your CRM: <a href="https://agents.propertylist.es/settings/api" rel="noopener">Settings, then API</a>. Then ask it "what came in overnight?" to check.</p></div></li>
+			<li><div><b>Sign in, or paste your key</b><p>Claude asks you to sign in with your PropertyList account; that unlocks the six actions that wait for your yes, because they happen in your name. ChatGPT takes the MCP key from your CRM (<a href="https://agents.propertylist.es/settings/api" rel="noopener">Settings, then API</a>) and reads your CRM and saves notes, contacts and draft listings. Then ask it "what came in overnight?" to check.</p></div></li>
 		</ol>
 		<p class="ctaRow"><a class="btn" href="https://agents.propertylist.es/settings/api" rel="noopener">Get your key in the CRM</a></p>
 	</div></section>
@@ -136,11 +136,11 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	.grid { display: grid; gap: 28px; }
 	.kicker { font-size: 17px; font-weight: 700; color: #0a6d61; margin: 0 0 14px; }
 	h1 { font-size: 40px; line-height: 1.06; letter-spacing: -0.03em; font-weight: 800; margin: 0; }
-	h1 b, h2 b { color: #00ae9a; }
+	h1 b, h2 b { color: #008a7a; }
 	.lead { font-size: 19px; line-height: 1.5; color: #28383f; margin: 18px 0 24px; max-width: 34ch; }
 	.lead strong { color: #0b1220; }
 	.btn { display: inline-block; background: #0a6d61; color: #fff; font-weight: 800; font-size: 18px; padding: 16px 24px; border-radius: 14px; text-decoration: none; }
-	.btn:hover { background: #008a7a; }
+	.btn:hover { background: #08584e; }
 	.fric { font-size: 15px; color: #5b6b73; margin: 12px 0 0; }
 	.phone { width: 300px; margin: 8px auto 0; background: #0b1b22; border-radius: 36px; padding: 12px; box-shadow: 0 30px 60px rgba(11,27,34,0.22); }
 	.screen { background: #f4f4f0; border-radius: 26px; padding: 14px 14px 16px; color: #182024; font-size: 14px; }
@@ -186,8 +186,8 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	.faqItem:last-of-type { border-bottom: 1px solid #e7eef1; }
 	.faqItem summary { font-weight: 800; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
 	.faqItem summary::-webkit-details-marker { display: none; }
-	.faqItem summary::after { content: '+'; color: #00ae9a; font-size: 26px; line-height: 1; }
-	.faqItem[open] summary::after { content: '\2013'; }
+	.faqItem summary::after { content: '+'; color: #008a7a; font-size: 26px; line-height: 1; }
+	.faqItem[open] summary::after { content: '-'; }
 	.faqItem p { margin: 10px 0 0; color: #28383f; max-width: 60ch; }
 	.close { background: #0b1b22; color: #fff; border-top: 0; }
 	.close h2 { color: #fff; }

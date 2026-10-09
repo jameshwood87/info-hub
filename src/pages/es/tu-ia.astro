@@ -14,10 +14,10 @@ const mcpUrl = 'https://mcp.propertylist.es/mcp';
 
 const faq = [
 	['¿Escribirá a mis clientes por su cuenta?', 'No. Enviar inmuebles, agendar una visita, mover una operación, calificar un lead, asignar un inmueble y cambiar su estado: en todos los casos te muestra una vista previa y espera tu sí. Añadir un contacto, una nota o un borrador de inmueble se guarda directamente en tu CRM, como si lo escribieras tú.'],
-	['¿Cuánto cuesta?', 'La conexión y tu clave de agencia son gratis con tu cuenta de PropertyList. La búsqueda con IA incluye 200 búsquedas al mes; después cuesta 1 crédito por cada 10 búsquedas, de tu monedero. Lo que cuesta créditos en tu CRM, como calificar un lead al tablero de compradores, cuesta lo mismo aquí, y el asistente te muestra el coste antes de que digas sí.'],
-	['¿Con qué asistentes de IA funciona?', 'Con Claude, en todos los planes, incluido el gratuito (el plan gratuito permite un conector personalizado). ChatGPT, gratis con límites, con la clave MCP de tu CRM. Gemini y Copilot aún no se conectan.'],
+	['¿Cuánto cuesta?', 'La conexión y tu clave de agencia son gratis con tu cuenta de PropertyList. La búsqueda con IA incluye 200 búsquedas cada 30 días; después cuesta 1 crédito por cada 10 búsquedas, de tu monedero. Lo que cuesta créditos en tu CRM, como calificar un lead como comprador, cuesta lo mismo aquí, y el asistente te muestra el coste antes de que digas sí.'],
+	['¿Con qué asistentes de IA funciona?', 'Con Claude, en todos los planes, incluido el gratuito (el plan gratuito permite un conector personalizado): inicia sesión y todo lo de esta página funciona. ChatGPT: con tu clave MCP lee tu CRM y guarda notas, contactos y borradores de inmuebles; todo lo que cambia un cliente o un inmueble (enviar, agendar, mover una operación, calificar un lead, asignar un inmueble, cambiar su estado) necesita una cuenta con sesión iniciada. Gemini y Copilot aún no se conectan.'],
 	['¿Puede ver los datos de otras agencias?', 'No. Cada herramienta responde solo con los datos de tu agencia. Los anuncios públicos se buscan igual que los busca cualquiera en PropertyList.'],
-	['No uso ningún asistente de IA.', 'Entonces usa CoAgent: el mismo trabajo por WhatsApp, y pregunta antes de guardar o enviar nada.'],
+	['No uso ningún asistente de IA.', 'Entonces usa CoAgent: los trabajos principales por WhatsApp, y pregunta antes de guardar o enviar nada.'],
 ];
 const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
 const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
@@ -47,9 +47,9 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 		<div>
 			<p class="kicker">¿Dejarías que la IA escriba a tus clientes? Nosotros tampoco.</p>
 			<h1>Tu CRM, dentro de la IA <b>que ya usas.</b></h1>
-			<p class="lead">Prepara el email y la visita desde tu CRM, te muestra lo que va a enviar y espera. <strong>Nada llega a un cliente sin tu sí.</strong></p>
-			<a class="btn" href="#conectar">Conecta PropertyList a tu IA</a>
-			<p class="fric">Gratis con tu cuenta de PropertyList, y sin nada que instalar.</p>
+			<p class="lead">Prepara el email y la visita desde tu CRM de PropertyList, te muestra lo que va a enviar y espera. <strong>Nada llega a un cliente sin tu sí.</strong></p>
+			<a class="btn" href="#conectar">Conecta tu CRM a tu IA</a>
+			<p class="fric">La conexión es gratis con tu cuenta de PropertyList, y no hay nada que instalar.</p>
 		</div>
 		<div>
 			<div class="phone" aria-hidden="true"><div class="screen">
@@ -75,7 +75,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	<section class="band"><div class="cx">
 		<h2>Prepara. Tú apruebas. <b>Después envía.</b></h2>
 		<div class="steps">
-			<div class="step"><h3>Prepara.</h3><p>Tu IA lee tus inmuebles, tus contactos y tu agenda, y prepara el email y la visita.</p></div>
+			<div class="step"><h3>Prepara.</h3><p>Tu IA lee tus inmuebles, tus leads y tu agenda, y prepara el email y la visita.</p></div>
 			<div class="step"><h3>Tú apruebas.</h3><p>Te muestra el destinatario, el asunto, el mensaje y los adjuntos. Responde sí, o cámbialo.</p></div>
 			<div class="step"><h3>Después envía.</h3><p>El email llega a tu cliente. La visita queda en tu agenda.</p></div>
 		</div>
@@ -86,7 +86,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 		<p class="sub">Seis cosas que los agentes piden un martes cualquiera. Cada una es una herramienta real de tu CRM.</p>
 		<div class="asks">
 			<div>"¿Qué ha entrado esta noche?"<span>Tus consultas más recientes</span></div>
-			<div>"¿Qué inmuebles míos no tienen fotos?"<span>Anuncios que no van a ninguna parte</span></div>
+			<div>"¿Qué inmuebles míos tienen pocas fotos?"<span>Anuncios que no van a ninguna parte</span></div>
 			<div>"Mándale a Juan las tres mejores coincidencias."<span>Preparado, y luego tu sí</span></div>
 			<div>"Agenda el jueves a las 12:00 con María."<span>A tu agenda, tras tu sí</span></div>
 			<div>"¿En qué punto está la venta de los Pérez?"<span>Tu embudo de ventas</span></div>
@@ -96,17 +96,17 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 			<div><b>{agents}</b><span>agentes en PropertyList</span></div>
 			<div><b>{agencies}</b><span>agencias</span></div>
 			<div><b>6</b><span>acciones que siempre esperan tu sí</span></div>
-			<div><b>200</b><span>búsquedas con IA gratis al mes</span></div>
+			<div><b>200</b><span>búsquedas con IA gratis cada 30 días</span></div>
 		</div>
 	</div></section>
 
 	<section class="band connect" id="conectar"><div class="cx">
 		<h2>Conecta en <b>tres pasos.</b></h2>
-		<p class="sub">Funciona en Claude con todos los planes, también el gratuito, y en ChatGPT. Gemini y Copilot: todavía no.</p>
+		<p class="sub">Claude, con todos los planes, también el gratuito: inicia sesión y todo lo de esta página funciona. ChatGPT: con tu clave MCP lee tu CRM y guarda notas y contactos; las seis acciones que esperan tu sí necesitan que hayas iniciado sesión. Gemini y Copilot: todavía no.</p>
 		<ol>
-			<li><div><b>Abre los conectores de tu IA</b><p>En Claude: Personalizar, luego Conectores, luego Añadir conector personalizado. En ChatGPT: añádelo como conector con tu clave MCP.</p></div></li>
+			<li><div><b>Abre los conectores de tu IA</b><p>En Claude: Personalizar, luego Conectores, luego Añadir conector personalizado. En ChatGPT: añádelo como conector y pega tu clave MCP.</p></div></li>
 			<li><div><b>Pega esta dirección</b><p>Añade un conector personalizado y llámalo PropertyList.</p><code class="addr">{mcpUrl}</code></div></li>
-			<li><div><b>Inicia sesión, o pega tu clave</b><p>Claude te pide iniciar sesión con tu cuenta de PropertyList. ChatGPT usa la clave MCP de tu CRM: <a href="https://agents.propertylist.es/settings/api" rel="noopener">Ajustes, luego API</a>. Después pregúntale "¿qué ha entrado esta noche?" para comprobarlo.</p></div></li>
+			<li><div><b>Inicia sesión, o pega tu clave</b><p>Claude te pide iniciar sesión con tu cuenta de PropertyList; eso desbloquea las seis acciones que esperan tu sí, porque se hacen en tu nombre. ChatGPT usa la clave MCP de tu CRM (<a href="https://agents.propertylist.es/settings/api" rel="noopener">Ajustes, luego API</a>) y lee tu CRM y guarda notas, contactos y borradores de inmuebles. Después pregúntale "¿qué ha entrado esta noche?" para comprobarlo.</p></div></li>
 		</ol>
 		<p class="ctaRow"><a class="btn" href="https://agents.propertylist.es/settings/api" rel="noopener">Consigue tu clave en el CRM</a></p>
 	</div></section>
@@ -122,7 +122,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 
 	<section class="band close"><div class="cx">
 		<h2>Nada llega a un cliente <b>sin tu sí.</b></h2>
-		<a class="btn btnLight" href="#conectar">Conecta PropertyList a tu IA</a>
+		<a class="btn btnLight" href="#conectar">Conecta tu CRM a tu IA</a>
 		<p class="alt">¿No tienes IA propia? <b>CoAgent también pregunta antes, en WhatsApp.</b> <a href="/es/coagent/">CoAgent en PropertyList</a></p>
 		<p class="dev">¿Eres desarrollador? El servidor MCP, las herramientas y las claves de API están en <a href="https://propertylist.es/mcp" rel="noopener">propertylist.es/mcp</a>.</p>
 	</div></section>
@@ -134,11 +134,11 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	.grid { display: grid; gap: 28px; }
 	.kicker { font-size: 17px; font-weight: 700; color: #0a6d61; margin: 0 0 14px; }
 	h1 { font-size: 40px; line-height: 1.06; letter-spacing: -0.03em; font-weight: 800; margin: 0; }
-	h1 b, h2 b { color: #00ae9a; }
+	h1 b, h2 b { color: #008a7a; }
 	.lead { font-size: 19px; line-height: 1.5; color: #28383f; margin: 18px 0 24px; max-width: 34ch; }
 	.lead strong { color: #0b1220; }
 	.btn { display: inline-block; background: #0a6d61; color: #fff; font-weight: 800; font-size: 18px; padding: 16px 24px; border-radius: 14px; text-decoration: none; }
-	.btn:hover { background: #008a7a; }
+	.btn:hover { background: #08584e; }
 	.fric { font-size: 15px; color: #5b6b73; margin: 12px 0 0; }
 	.phone { width: 300px; margin: 8px auto 0; background: #0b1b22; border-radius: 36px; padding: 12px; box-shadow: 0 30px 60px rgba(11,27,34,0.22); }
 	.screen { background: #f4f4f0; border-radius: 26px; padding: 14px 14px 16px; color: #182024; font-size: 14px; }
@@ -184,8 +184,8 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	.faqItem:last-of-type { border-bottom: 1px solid #e7eef1; }
 	.faqItem summary { font-weight: 800; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
 	.faqItem summary::-webkit-details-marker { display: none; }
-	.faqItem summary::after { content: '+'; color: #00ae9a; font-size: 26px; line-height: 1; }
-	.faqItem[open] summary::after { content: '\2013'; }
+	.faqItem summary::after { content: '+'; color: #008a7a; font-size: 26px; line-height: 1; }
+	.faqItem[open] summary::after { content: '-'; }
 	.faqItem p { margin: 10px 0 0; color: #28383f; max-width: 60ch; }
 	.close { background: #0b1b22; color: #fff; border-top: 0; }
 	.close h2 { color: #fff; }
