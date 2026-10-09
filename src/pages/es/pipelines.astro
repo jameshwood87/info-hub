@@ -5,7 +5,7 @@ import { getPortalStats, statPlus } from '../../lib/portalStats';
 // Espejo en español de /pipelines/ (reestructurada 09-10-26, auditoría PropertyList/pipelines-page-audit-09-10-26.md).
 // Misma sustancia, nueva forma: una línea grande por sección, una o dos líneas pequeñas debajo, el detalle tras un toque.
 // Precios según el ledger free-vs-paid y la hoja de precios 14-09-26: Buyer 5 primeros gratis y luego 1 crédito; Alquileres 50 créditos / 30 días.
-// Reglas de la casa: fuera las palabras vetadas de info-hub-security y del ledger free-vs-paid, y sin rayas.
+// Reglas de la casa: nunca "tasación" ni lenguaje de tasación oficial (info-hub-security, James 09-10-26), sin rayas.
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/pipelines/`;
 const title = 'Pipelines de CRM para Inmobiliarias | PropertyList';
@@ -28,8 +28,8 @@ const boards = [
 		more: 'Las etapas son fijas, así que nada se desvía y los datos siguen siendo comparables entre agencias.' },
 	{ name: 'Buyers', line: 'De financiación confirmada a escritura firmada, con las visitas y la oferta en medio.', tag: 'Los 5 primeros gratis, luego 1 crédito', free: false,
 		more: 'Financiación confirmada, visitas, oferta, negociación, arras, notaría y escritura firmada. Todo hasta cualificarlo es gratis. El crédito solo se gasta cuando decides meter un lead cualificado. Si dices que no, se queda en tus contactos.' },
-	{ name: 'Sellers', line: 'De estimación de precio agendada a anuncio publicado.', tag: 'Gratis', free: true,
-		more: 'Estimación de precio agendada, estimación hecha, contrato firmado, fotos y anuncio publicado. Gratis a propósito: los anuncios son lo que más queremos.' },
+	{ name: 'Sellers', line: 'De valoración agendada a anuncio publicado.', tag: 'Gratis', free: true,
+		more: 'Valoración agendada, valoración hecha, contrato firmado, fotos y anuncio publicado. Gratis a propósito: los anuncios son lo que más queremos.' },
 	{ name: 'Property', line: 'Tu stock de fuera de mercado a completado, con los días en mercado en cada tarjeta.', tag: 'Gratis', free: true,
 		more: 'Recuperación en un clic si una venta se cae.' },
 	{ name: 'Tenants', href: '/es/alquileres/', link: 'Sobre el Módulo de Alquileres', line: 'De la consulta a una tenancy que avisa de su propia renovación.', tag: 'Módulo de Alquileres', free: false,
@@ -49,13 +49,13 @@ const automatic = [
 
 const nurture = [
 	['Cumpleaños y el día que firmaron.', 'Con una nota honesta sobre cuánto vale ahora su casa.'],
-	['Se para en cuanto muestran interés.', 'Un clic en un enlace de estimación de precio, o tres aperturas del mismo email en una semana, y se te avisa de que llames, con el motivo.'],
+	['Se para en cuanto muestran interés.', 'Un clic en un enlace de valoración, o tres aperturas del mismo email en una semana, y se te avisa de que llames, con el motivo.'],
 	['Como mucho, un email por contacto y semana.', 'Consentimiento registrado, bajas respetadas y un interruptor por contacto.'],
 	['Míralo antes de activarlo.', 'El tablero se llena y un contador te dice lo que ese mes habría salido. No sale nada hasta que tú lo digas.'],
 ];
 
 const queue = [
-	['Primero los contactos calientes', 'Alguien que acaba de pinchar un enlace de estimación de precio, con el motivo en la tarjeta.'],
+	['Primero los contactos calientes', 'Alguien que acaba de pinchar un enlace de valoración, con el motivo en la tarjeta.'],
 	['Leads nuevos todavía a tiempo', 'Aquellos en los que responder en los próximos minutos aún decide quién se queda al cliente.'],
 	['Operaciones que se enfrían', 'Un comprador que lleva diez días en Viewings Booked y necesita un empujón hoy.'],
 	['Las personales', 'El cumpleaños de un cliente antiguo. El email ya salió. Veinte segundos de WhatsApp valen más.'],
@@ -73,7 +73,7 @@ const faqs = [
 	['¿Qué cuesta?', 'Los pipelines de Leads, Sellers y Property son gratis y sin límite. Un lead de comprador cuesta 1 crédito a partir de los 5 primeros, que solo se gasta cuando decides meter ese lead cualificado en el pipeline de Buyer. Cualificar no cuesta nada, y una consulta sin cualificar tampoco. El Módulo de Alquileres, que funciona solo, cuesta 50 créditos por período de 30 días, gratis los primeros 30 días. Automation y Nurture es gratis. Todo sale del mismo saldo de créditos que ya usas para destacar anuncios o sacar informes.'],
 	['¿Tengo que configurar algo de esto?', 'No. Los seis pipelines se configuran por ti, y tus contactos y propiedades actuales se colocan en el correcto desde el primer día. Los leads nuevos entran en New Lead y los anuncios nuevos en Active Listing. Puedes editar las etapas de Buyers y Property. Leads y Sellers son fijos para que los datos sigan siendo comparables entre agencias.'],
 	['¿Va a escribir a mis clientes sin que yo lo sepa?', 'Enviará, y siempre podrás ver exactamente qué. Cada contacto tiene un historial con lo que ha salido y lo que está programado, y puedes verlo, editarlo o saltártelo. El consentimiento de marketing se registra por contacto, se respetan las bajas, y ningún contacto recibe más de un email por semana, esté en las secuencias que esté. También puedes desactivar Nurture para una sola persona, o para un tipo de email, si sabes algo que el sistema no sabe.'],
-	['¿Qué pasa cuando otro agente pregunta por mi anuncio?', 'Se detecta solo, se etiqueta en rojo y nunca te cuesta un crédito. Además queda fuera de todos los emails automáticos, así que la estimación de precio de una vivienda nunca llega a un agente colaborador. La etiqueta es un aviso, no un borrado, y se quita en un clic si nos equivocamos.'],
+	['¿Qué pasa cuando otro agente pregunta por mi anuncio?', 'Se detecta solo, se etiqueta en rojo y nunca te cuesta un crédito. Además queda fuera de todos los emails automáticos, así que la valoración de una vivienda nunca llega a un agente colaborador. La etiqueta es un aviso, no un borrado, y se quita en un clic si nos equivocamos.'],
 	['¿Y si no activo Automation?', 'El tablero de Nurture se llena igual. Cada operación cerrada sigue colocando al contacto en él y los datos se siguen recogiendo, pero no se envía nada, y un contador te dice lo que ese mes habría salido. Si la activas más adelante, arranca con todo lo que lleva recogido y no desde cero.'],
 ];
 

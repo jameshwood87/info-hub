@@ -6,7 +6,7 @@ import { getPortalStats, statPlus } from '../lib/portalStats';
 // as the 28-07-26 rewrite, new shape: a big line per section that makes the point on its own, one or two small lines
 // under it, detail behind a tap. The real Lead Pipeline screenshot sits directly under the hero. Prices per the
 // free-vs-paid ledger and the 14-09-26 price sheet: Buyer first 5 free then 1 credit; Rentals 50 credits per 30 days.
-// House rules: the two banned price and appraisal words from info-hub-security and the free-vs-paid ledger are out, and no dashes.
+// House rules: never "tasación" or official-appraisal wording (info-hub-security, James 09-10-26), no dashes.
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/pipelines/`;
 const title = 'CRM Pipelines for Estate Agents | PropertyList';
@@ -29,8 +29,8 @@ const boards = [
 		more: 'The stages are fixed, so nothing drifts and the reporting stays comparable across agencies.' },
 	{ name: 'Buyers', line: 'Finance confirmed to signed deed, with the viewings and the offer in between.', tag: 'First 5 free, then 1 credit', free: false,
 		more: 'Finance confirmed, viewings, offer, negotiation, arras, notary, signed deed. Everything up to qualifying is free. The credit is only spent when you choose to move a qualified lead in. Say no and they stay in your contacts.' },
-	{ name: 'Sellers', line: 'Price estimate booked to live on the portal.', tag: 'Free', free: true,
-		more: 'Price estimate booked, price estimate done, agreement signed, photos, live on the portal. Free on purpose: listings are the thing we want more of.' },
+	{ name: 'Sellers', line: 'Valuation booked to live on the portal.', tag: 'Free', free: true,
+		more: 'Valuation booked, valuation done, agreement signed, photos, live on the portal. Free on purpose: listings are the thing we want more of.' },
 	{ name: 'Property', line: 'Your stock from off market to completed, days on market on every card.', tag: 'Free', free: true,
 		more: 'One-click recovery when a sale falls through.' },
 	{ name: 'Tenants', href: '/rentals/', link: 'About the Rentals Module', line: 'From enquiry to a tenancy that prompts its own renewal.', tag: 'Rentals Module', free: false,
@@ -50,13 +50,13 @@ const automatic = [
 
 const nurture = [
 	['Birthdays and the day they signed.', 'With an honest note on what their home is worth now.'],
-	['Stops the moment they show interest.', 'A click on a price-estimate link, or three opens of the same email in a week, and you are told to call, with the reason.'],
+	['Stops the moment they show interest.', 'A click on a valuation link, or three opens of the same email in a week, and you are told to call, with the reason.'],
 	['One email a week per contact, at most.', 'Consent recorded, unsubscribes honoured, an off switch per contact.'],
 	['Watch it before you switch it on.', 'The board fills up and a counter shows what the month would have sent. Nothing goes out until you say so.'],
 ];
 
 const queue = [
-	['Hot contacts first', 'Someone who just clicked a price-estimate link, with the reason on the card.'],
+	['Hot contacts first', 'Someone who just clicked a valuation link, with the reason on the card.'],
 	['New leads still in time', 'Where a reply in the next few minutes still decides who gets the client.'],
 	['Deals going stale', 'A buyer ten days in Viewings Booked who needs a nudge today.'],
 	['The personal ones', 'A past client’s birthday. The email went. Twenty seconds on WhatsApp is worth more.'],
@@ -74,7 +74,7 @@ const faqs = [
 	['What does it cost?', 'The Leads, Sellers and Property pipelines are free with no limit. A buyer lead costs 1 credit after your first 5, charged only when you choose to move a qualified lead into the Buyer pipeline. Qualifying costs nothing, and an unqualified enquiry never costs anything. The Rentals Module, which runs on its own, is 50 credits per 30 days, free for the first 30 days. Automation and Nurture is free. Everything comes out of the same credit balance you already use for featuring and reports.'],
 	['Do I have to set any of this up?', 'No. All six pipelines are configured for you, and your existing contacts and properties are placed on the right one from day one. New leads land in New Lead, new listings land in Active Listing. You can edit the stages on Buyers and Property. Leads and Sellers are fixed so the reporting stays comparable across agencies.'],
 	['Will it email my clients without me knowing?', 'It will send, and you will always be able to see exactly what. Every contact has a timeline showing what has gone out and what is scheduled next, and you can view, edit or skip any of it. Marketing consent is recorded per contact, unsubscribes are honoured, and no contact receives more than one email a week however many sequences they are in. You can also switch nurture off for one person, or for one type of email, if you know something the system does not.'],
-	['What happens when another agent enquires on my listing?', 'It is detected automatically, tagged in red, and it never costs you a credit. It is also excluded from every automated email, so a price estimate for a homeowner never goes to a co-broker. The tag is a warning rather than a deletion, with one click to remove it if we get it wrong.'],
+	['What happens when another agent enquires on my listing?', 'It is detected automatically, tagged in red, and it never costs you a credit. It is also excluded from every automated email, so a valuation for a homeowner never goes to a co-broker. The tag is a warning rather than a deletion, with one click to remove it if we get it wrong.'],
 	['What if I do not switch Automation on?', 'The Nurture board still fills up. Every closed deal still puts the contact on it and the data is still collected, but nothing sends, and a counter shows you what would have gone out that month. If you switch it on later, it starts already loaded rather than from nothing.'],
 ];
 
