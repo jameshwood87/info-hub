@@ -4,81 +4,75 @@ import { getPortalStats, statPlus } from '../../lib/portalStats';
 import AgentInterestCta from '../../components/AgentInterestCta.astro';
 import ExitIntent from '../../components/ExitIntent.astro';
 
+// Espejo en español de /free/ (rediseño 09-10-26). Un solo gesto fuerte: el ticket de la cabecera, la factura mensual
+// de una agencia típica con los mínimos habituales del mercado (portal desde 250, CRM desde 30, web desde 30, XML desde
+// 20 = desde 330 al mes), tachado línea a línea y sellado a 0. Movimiento solo con transform y opacity, estado final
+// estático con movimiento reducido.
 const __ps = await getPortalStats();
 const plListings = statPlus(__ps.listings, 'es');
 const plAgents = statPlus(__ps.agents, 'es');
 const plAgencies = statPlus(__ps.agencies, 'es');
-
 const SIGNUP = 'https://agents.propertylist.es/new_agency/new?locale=es';
 
-// What agents normally stitch together and pay for, vs free on PropertyList.
-// Ranges are typical Spanish market rates (2026), kept conservative and defensible.
-const stack = [
-	{ tool: 'Presencia en portal inmobiliario', usual: 'desde 250 €/mes', note: 'a menudo 700+ €/mes con promociones' },
-	{ tool: 'CRM inmobiliario', usual: 'desde 30 €/mes', note: '29-150 €/mes es lo habitual', freeNote: 'núcleo gratis; leads de compradores 1cr' },
-	{ tool: 'Web de agencia + hosting', usual: 'desde 30 €/mes', note: 'o 500-2.000 € por crearla', freeNote: 'MicroSite con tu marca' },
-	{ tool: 'Envío a otros portales (XML)', usual: 'desde 20 €/mes', note: 'suele ser un extra' },
+const bill = [
+	{ tool: 'Presencia en portal inmobiliario', eur: 250, note: 'a menudo 700+ con promociones', freeNote: '' },
+	{ tool: 'CRM inmobiliario', eur: 30, note: 'lo habitual es de 29 a 150', freeNote: 'núcleo gratis; leads de compradores 1 crédito cada uno' },
+	{ tool: 'Web de agencia + hosting', eur: 30, note: 'o de 500 a 2.000 por crearla', freeNote: 'MicroSite con tu marca' },
+	{ tool: 'Envío a otros portales (XML)', eur: 20, note: 'suele ser un extra', freeNote: '' },
+];
+const billTotal = bill.reduce((s, b) => s + b.eur, 0);
+
+const trade = [
+	['Lo esencial es gratis.', 'El MLS, el CRM con tus pipelines de Leads, Vendedores y Propiedades, los anuncios en el portal y un MicroSite con tu marca. Sin tarjeta, sin contrato.'],
+	['Tus anuncios se comparten.', `Con los ${plAgents} agentes de la red, que pueden venderlos por ti.`],
+	['Ganamos cuando eliges un extra.', 'Un lead de comprador cualificado, destacar un anuncio, un informe, el feed de la red, el Creador de Webs o el Rentals Module. Todo opcional, con su precio más abajo.'],
 ];
 
-const free = [
-	{ t: 'El MLS compartido', d: `Publica una vez y más de ${plAgents} agentes pueden venderlo contigo, y tú puedes vender los más de ${plListings} anuncios de la red - no solo los tuyos. Los leads y referidos entre agentes son gratis, para siempre.` },
-	{ t: 'Un CRM gratis', d: 'Contactos ilimitados, calendario y almacenamiento de documentos, más los pipelines de Leads, Vendedores y Propiedades - todo gratis y sin coste por operación. Los leads de compradores cuestan 1 crédito cada uno, solo se cobra cuando decides pasar un lead cualificado al pipeline de Buyer, y los 5 primeros son gratis. Llegar a Qualified no cuesta nada. El pipeline de Nurture también es gratis, dentro de Automation & Nurture. El de Inquilinos va dentro del Rentals Module, que es de pago.' },
-	{ t: 'Tus anuncios en el portal', d: `En vivo en propertylist.es ante los compradores, junto a más de ${plListings} viviendas. Sin cuotas de publicación, nunca.` },
-	{ t: 'Un MicroSite con tu marca', d: 'Tu propia web en tuagencia.estate-agency.co, generada sola con tus anuncios y con hosting gratis. Las consultas que llegan por ella son tuyas, gratis para siempre. (¿Web a medida con tu dominio? Eso es el Creador de Webs.)' },
-	{ t: 'Instant Listing', d: 'Añade tus imágenes y describe la propiedad en voz alta - el anuncio completo se redacta solo, listo para revisar y publicar.' },
-	{ t: 'AI Property Match', d: 'Pega el mensaje de un cliente y encuentra el match: primero tu cartera, después toda la red. Gratis en beta.' },
-	{ t: 'Datos de mercado gratis', d: 'Informes mensuales de 20+ municipios de la Costa del Sol - precios y tendencias, respaldados por valores verificados ante notario del registro oficial - precios reales registrados, no solo medias de precios de salida.' },
-	{ t: 'Alertas de propiedades', d: 'Guarda el encargo de un cliente y recibe un email en cuanto aparezca una vivienda que encaje en cualquier punto de la red.' },
-	{ t: 'XML de entrada y salida', d: 'Importa tu feed actual y envía tus anuncios a otros portales: ambas cosas, gratis.' },
-	{ t: 'La app de Android', d: 'Tu MLS y CRM en el bolsillo: capta un anuncio, registra un lead, revisa tu pipeline en movimiento.' },
-	{ t: 'Comunidad de WhatsApp', d: 'Los grupos de agentes donde se cierran los tratos de verdad. Incluido con tu cuenta.' },
+const smallTiles = [
+	['Un MicroSite con tu marca', 'Tu propia web en tuagencia.estate-agency.co, generada con tus anuncios y con hosting gratis. Las consultas te llegan directas.', 'microsite'],
+	['Instant Listing', 'Añade tus imágenes, describe la propiedad en voz alta y el anuncio completo se redacta solo, listo para revisar.', ''],
+	['AI Property Match', 'Pega el mensaje de un cliente y encuentra el match: primero tu cartera, después toda la red. Gratis en beta.', 'beta'],
+	['Datos de mercado gratis', 'Informes mensuales de 20+ municipios de la Costa del Sol, basados en precios notariales de cada zona.', ''],
+	['Alertas de propiedades', 'Guarda el encargo de un cliente y recibe un email en cuanto aparezca una vivienda que encaje en cualquier punto de la red.', ''],
+	['XML de entrada y salida', 'Importa tu feed actual y envía tus propios anuncios a tu web o a otros portales. Ambas cosas, gratis.', ''],
+	['La app de Android', 'Tu MLS y tu CRM en el bolsillo: capta un anuncio, registra un lead, revisa tu pipeline.', ''],
+	['Comunidad de WhatsApp', 'Los grupos de WhatsApp de agentes, incluidos con tu cuenta.', ''],
+];
+
+const extras = [
+	['/es/precios/', 'Leads de compradores', 'Solo se cobra cuando decides pasar un lead cualificado al pipeline de Buyer', '1 crédito cada uno, los 5 primeros gratis'],
+	['/es/precios/', 'Automation & Nurture', 'Pipeline de Nurture, emails automáticos, detección de leads calientes y Daily Action Queue', 'Gratis'],
+	['/es/precios/', 'Rentals Module', 'Pipeline de Inquilinos, Tenancies, Mantenimiento y recordatorios de renovación, con prueba gratis de 30 días', '50 créditos / 30 días'],
+	['/es/informe-inteligencia-propiedad/', 'Property Intelligence Report', 'Una valoración basada en precios notariales de la zona, con brief para el agente', '5 créditos, los 3 primeros gratis'],
+	['/es/precios/', 'Destacar un anuncio', 'Arriba del MLS o del portal', 'desde 10 créditos'],
+	['/es/precios/', 'Feed de la red', 'Todos los anuncios de la red en tu propia web, por XML o con la Website API. Tus propios anuncios siguen gratis por feed XML', '35 créditos / mes'],
+	['/es/constructor-de-webs/', 'Creador de Webs', 'Una web totalmente a medida. Tu propio dominio es un extra de 20 créditos. Crear y previsualizar gratis', 'desde 50 créditos / mes'],
+	['/es/contenido-instantaneo/', 'Instant Content', 'Un artículo de blog y una guía de zona con IA cada semana, complemento del Creador de Webs', '30 créditos / mes'],
 ];
 
 const faqs = [
-	{
-		q: '¿Es de verdad gratis o es una prueba?',
-		a: 'Gratis para siempre, no una prueba. El MLS, el núcleo del CRM, tu presencia en el portal, tu MicroSite y las herramientas de arriba no cuestan nada y nunca lo harán. No hace falta tarjeta para empezar ni hay cuota mensual en lo esencial. Lo de pago va aparte y es opcional: 1 crédito por cada lead cualificado que decides meter en el pipeline de Buyer y el módulo mensual Rentals Module. Automation & Nurture es gratis.',
-	},
-	{
-		q: '¿Entonces cómo gana dinero PropertyList?',
-		a: 'De dos formas. Con créditos, para la demanda y los extras puntuales: 1 crédito por cada lead cualificado que decidas meter en tu pipeline de Buyers, descontado de tu saldo de créditos, además de destacar un anuncio arriba, informes de valoración verificados ante notario, un creador de webs a medida o mantener una venta fuera de la red compartida. Y con una suscripción mensual para el Rentals Module, que trabaja de fondo: 50 créditos por período de 30 días, con prueba gratis de 30 días. Tus anuncios y tus vendedores siguen gratis: pagas por la demanda, nunca por la oferta. Lo esencial sigue gratis porque una red más grande y compartida vale más para todos los que están en ella.',
-	},
-	{
-		q: '¿Cuál es la trampa?',
-		a: 'En el precio no hay ninguna. El intercambio es que tus anuncios se comparten con otros agentes de la red: ese es el objetivo, así consigues que más gente pueda vender tu cartera. Si alguna vez necesitas mantener un anuncio privado, puedes (los 5 primeros gratis, después 5 créditos cada uno).',
-	},
-	{
-		q: '¿Tengo que dejar mi portal o CRM actual?',
-		a: 'No. Importa tu feed XML actual, conserva lo demás que uses y ejecuta PropertyList en paralelo, gratis. La mayoría de los agentes acaban dejando de pagar los extras al ver lo que ya viene incluido.',
-	},
-	{
-		q: '¿Cuántos agentes hay de verdad?',
-		a: `Más de ${plAgents} agentes en ${plAgencies} agencias, sobre todo en la Costa del Sol, con más de ${plListings} anuncios en vivo en la cartera compartida. Agencias locales reales y registradas, no bots ni cuentas fantasma.`,
-	},
+	{ q: '¿Es de verdad gratis o es una prueba?', a: 'Gratis para siempre, no una prueba. El MLS, el núcleo del CRM, anunciar en el portal y tu MicroSite no cuestan nada y nunca lo harán, y el resto de herramientas de arriba también son gratis (AI Property Match mientras esté en beta). No hace falta tarjeta para empezar ni hay cuota mensual en lo esencial. Todo lo de pago es opcional y tiene su precio en esta página. Automation & Nurture es gratis.' },
+	{ q: '¿Entonces cómo gana dinero PropertyList?', a: 'De dos formas. Con créditos, para la demanda y los extras puntuales: 1 crédito por cada lead cualificado que decidas meter en tu pipeline de Buyer, además de destacar un anuncio, los Property Intelligence Reports o mantener una venta fuera de la red compartida. Y con suscripciones mensuales, pagadas en créditos: el Rentals Module (50 créditos por período de 30 días, con prueba gratis de 30 días), el Creador de Webs y el feed de la red. Publicar en la red (hasta 25 fotos por anuncio) y tu pipeline de Vendedores no cuestan nada.' },
+	{ q: '¿Cuál es la trampa?', a: 'En el precio no hay ninguna. El intercambio es que tus anuncios se comparten con otros agentes de la red: ese es el objetivo, así consigues que más gente pueda vender tu cartera. Si alguna vez necesitas mantener un anuncio privado, puedes (los 5 primeros gratis, después 5 créditos cada uno).' },
+	{ q: '¿Tengo que dejar mi portal o CRM actual?', a: 'No. Importa tu feed XML actual, conserva lo demás que uses y usa PropertyList en paralelo, gratis.' },
+	{ q: '¿Cuántos agentes hay de verdad?', a: `${plAgents} agentes en ${plAgencies} agencias, con ${plListings} anuncios en vivo en la cartera compartida. Agencias reales y registradas.` },
 ];
 
-const faqLd = {
-	'@context': 'https://schema.org',
-	'@type': 'FAQPage',
-	mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
-};
-const breadcrumbLd = {
-	'@context': 'https://schema.org',
-	'@type': 'BreadcrumbList',
-	itemListElement: [
-		{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/es/' },
-		{ '@type': 'ListItem', position: 2, name: 'Lo que consigues gratis', item: 'https://info.propertylist.es/es/gratis/' },
-	],
-};
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+	{ '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://info.propertylist.es/es/' },
+	{ '@type': 'ListItem', position: 2, name: 'Lo que consigues gratis', item: 'https://info.propertylist.es/es/gratis/' },
+] };
 ---
-
 <Layout
 	lang="es"
 	title="CRM inmobiliario y MLS gratis para tu agencia | PropertyList"
-	description="MLS, CRM, anuncios en el portal, web con tu marca y herramientas de IA: gratis para siempre para inmobiliarias en España. Mira qué incluye y qué sustituye."
+	description="MLS, CRM, anuncios en el portal, web con tu marca y herramientas de IA, gratis para inmobiliarias en España. Mira qué incluye y qué sustituye."
 	canonical="https://info.propertylist.es/es/gratis/"
-	ogImage="https://info.propertylist.es/og/og-free-es.jpg"
+	ogImage="https://info.propertylist.es/og/og-free-v2-es.jpg"
 	twitterCard="summary_large_image"
+	hideSearch
+	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: 'https://info.propertylist.es/free/' },
 		{ hreflang: 'es', href: 'https://info.propertylist.es/es/gratis/' },
@@ -87,199 +81,240 @@ const breadcrumbLd = {
 >
 	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqLd)} />
 	<script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(breadcrumbLd)} />
-	<main class="wrap">
-		<section class="hero">
-			<div class="badge"><span class="dot"></span> Gratis para siempre &middot; sin tarjeta, sin contrato</div>
-			<h1>Capta más propiedades. Vende más casas.<br /><span class="accent">Gratis.</span></h1>
-			<p class="lead">
-				La mayoría de los portales te cobran por publicar. PropertyList funciona al revés: no pagas por estar aquí, ganas por estar aquí. Tus anuncios llegan a {plAgents} agentes que pueden venderlos, y tú puedes vender los más de {plListings} anuncios de la red, no solo los tuyos. El MLS, el CRM, tu presencia en el portal y una web con tu marca van incluidos, gratis.
-			</p>
-			<p class="anchor">La mayoría de las agencias pagan <b>300-700 &euro; al mes</b> por este montaje. Aquí son <b>0 &euro;</b>.</p>
-			<div class="ctaRow">
-				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
-				<a class="btnGhost" href="#stack">Ver qué sustituye &darr;</a>
-			</div>
-			<p class="micro">{plAgents} agentes &middot; {plAgencies} agencias &middot; {plListings} anuncios en vivo &middot; sin tarjeta</p>
-		</section>
 
-		<section class="honest">
-			<div class="honestInner">
-				<span class="honestTag">&iquest;Suena demasiado bien?</span>
-				<p>Esta es la versi&oacute;n honesta. El n&uacute;cleo - MLS, el CRM con tus pipelines de Leads, Vendedores y Propiedades, anuncios en el portal y un MicroSite con tu marca - es gratis para siempre, sin tarjeta. El intercambio: tus anuncios se comparten con el resto de agentes de la red, que es como vend&eacute;is todos m&aacute;s. Ganamos dinero cuando eliges algo de pago: 1 cr&eacute;dito cuando decides pasar un lead de comprador cualificado al pipeline de Buyer, destacar un anuncio, un informe de valoraci&oacute;n o un m&oacute;dulo mensual como el Rentals Module por 50 cr&eacute;ditos cada 30 d&iacute;as. Pagas por la demanda, nunca por la oferta. Esa es toda la trampa.</p>
+	<section class="hero"><div class="cx heroGrid">
+		<div class="heroCopy">
+			<p class="badge"><span class="dot"></span>Sin tarjeta. Sin contrato.</p>
+			<h1>Capta más propiedades. Vende más casas. <b>Gratis.</b></h1>
+			<p class="lead">La mayoría de los portales te cobran por anunciar. PropertyList funciona al revés: tus anuncios llegan a {plAgents} agentes que pueden venderlos, y tú puedes vender los {plListings} anuncios de la red.</p>
+			<p class="ctaRow"><a class="btn" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a> <a class="ghost" href="#gratis">Ver todo lo que incluye</a></p>
+			<p class="micro">{plAgents} agentes &middot; {plAgencies} agencias &middot; {plListings} anuncios en vivo</p>
+		</div>
+		<figure class="rWrap" id="stack">
+			<div class="receipt" role="group" aria-labelledby="rTitle">
+				<p class="rHead" id="rTitle">La factura mensual de una agencia típica</p>
+				<p class="rSub">Precios de partida con tarifas habituales del mercado español, 2026</p>
+				<ul class="rLines">
+					{bill.map((b, i) => (
+						<li style={`--i:${i}`}>
+							<span class="rTool">{b.tool}<em>{b.note}</em></span>
+							<span class="rCost"><s>desde {b.eur} &euro;</s><b class="rFree">Gratis{b.freeNote ? <em>{b.freeNote}</em> : null}</b></span>
+						</li>
+					))}
+				</ul>
+				<div class="rTotal"><span>Total al mes</span><s>desde {billTotal} &euro;</s></div>
+				<div class="stamp"><span>Lo esencial en PropertyList</span><b>0 &euro;</b></div>
 			</div>
-		</section>
+			<figcaption>Mínimos de las tarifas habituales del mercado español, 2026; los rangos varían según el tamaño de la agencia, la región y las promociones. La web gratis es tu MicroSite con tu marca; una web totalmente a medida es el <a href="/es/constructor-de-webs/">Creador de Webs</a>, desde 50 créditos al mes, con tu propio dominio como extra de 20 créditos.</figcaption>
+		</figure>
+		<script is:inline>(function(){var r=document.querySelector('.receipt');if(!r||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;r.classList.add('pre');var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){r.classList.add('anim');io.disconnect();}},{threshold:0.4});io.observe(r);})();</script>
+	</div></section>
 
-		<section class="block">
-			<h2>Lo que consigues, gratis</h2>
-			<div class="freeGrid">
-				{free.map((f) => (
-					<div class="freeCard">
-						<span class="tick" aria-hidden="true">&#10003;</span>
-						<b>{f.t}</b>
-						<span>{f.d}</span>
-					</div>
-				))}
+	<section class="band"><div class="cx">
+		<h2>¿Suena demasiado bien? <b>Este es el intercambio.</b></h2>
+		<div class="steps">
+			{trade.map(([h, p]) => (<div class="step"><h3>{h}</h3><p>{p}</p></div>))}
+		</div>
+	</div></section>
+
+	<section class="band soft" id="gratis"><div class="cx">
+		<h2>Lo que consigues, <b>gratis.</b></h2>
+		<p class="sub">Todo lo que necesita una agencia, del primer anuncio al trato cerrado.</p>
+		<div class="bento">
+			<div class="tile xl">
+				<p class="tName">El MLS compartido</p>
+				<p class="big">{plAgents}</p>
+				<p class="bigLabel">agentes pueden vender tu anuncio</p>
+				<p class="tText">Publica una vez y vende los {plListings} anuncios de la red, no solo los tuyos. Los leads y referidos entre agentes son gratis, para siempre.</p>
 			</div>
-		</section>
-
-		<section class="block" id="stack">
-			<h2>Lo que los agentes suelen pagar por esto</h2>
-			<p class="sub">La mayoría de las agencias juntan varias herramientas de varios proveedores. Súmalo y suele ser <strong>de 300 a 700 € al mes</strong>, más cuando entran las promociones del portal.</p>
-			<div class="cmp">
-				<div class="cmpHead"><span>Lo que necesitas</span><span>La forma habitual</span><span class="ok">PropertyList</span></div>
-				{stack.map((s) => (
-					<div class="cmpRow">
-						<span class="cTool">{s.tool}</span>
-						<span class="cUsual">{s.usual}<em>{s.note}</em></span>
-						<span class="cFree">Gratis{s.freeNote ? <em>{s.freeNote}</em> : null}</span>
-					</div>
-				))}
-				<div class="cmpRow cmpTotal">
-					<span class="cTool">Gasto mensual habitual</span>
-					<span class="cUsual">300 - 700+ &euro;</span>
-					<span class="cFree">0 &euro;</span>
+			<div class="tile wide">
+				<p class="tName">Un CRM gratis</p>
+				<p class="tText">Contactos ilimitados, calendario y documentos. Los pipelines de Leads, Vendedores y Propiedades son gratis, y Nurture también. Un lead de comprador cuesta 1 crédito al pasarlo al pipeline de Buyer, los 5 primeros gratis. Inquilinos va con el Rentals Module.</p>
+				<p class="chips"><span>Leads</span><span>Vendedores</span><span>Propiedades</span><span>Nurture</span></p>
+			</div>
+			<div class="tile wide">
+				<p class="tName">Tus anuncios en el portal</p>
+				<p class="mid">{plListings}</p>
+				<p class="tText">viviendas en propertylist.es ante los compradores, con las tuyas entre ellas. Sin cuotas de publicación, nunca.</p>
+			</div>
+			{smallTiles.map(([t, d, kind]) => (
+				<div class="tile">
+					<p class="tName">{t}{kind === 'beta' ? <span class="beta">Beta</span> : null}</p>
+					{kind === 'microsite' ? <p class="url"><i></i>tuagencia.estate-agency.co</p> : null}
+					<p class="tText">{d}</p>
 				</div>
-			</div>
-			<p class="betterLine">Y no solo es más barato. Como tus anuncios se comparten en toda la red, cada vivienda que captas la pueden vender {plAgents} agentes, así que la opción gratis es también la que encuentra antes a tu comprador.</p>
-			<p class="fine">La web gratis es tu MicroSite con tu marca - se genera solo con tus anuncios y tiene su propia dirección. Una web totalmente a medida con tu propio dominio es el <a href="/es/constructor-de-webs/">Creador de Webs</a>, desde 50 créditos/mes. Comparación con tarifas habituales del mercado español, 2026; los rangos varían según el tamaño de la agencia, la región y las promociones.</p>
-		</section>
+			))}
+		</div>
+	</div></section>
 
-		<section class="proof">
+	<section class="band dark"><div class="cx">
+		<div class="proof">
 			<div><b>{plAgents}</b><span>agentes en la red</span></div>
 			<div><b>{plAgencies}</b><span>agencias locales reales</span></div>
 			<div><b>{plListings}</b><span>anuncios en vivo compartidos</span></div>
-			<div><b>0 &euro;</b><span>para unirte y usarlo</span></div>
-		</section>
+			<div><b>0 &euro;</b><span>para unirte, sin tarjeta</span></div>
+		</div>
+		<p class="alt">Cada vivienda que captas la pueden vender {plAgents} agentes, así que hay más agentes buscando comprador para ella.</p>
+	</div></section>
 
-		<section class="block">
-			<h2>Preguntas frecuentes</h2>
-			<div class="faq">
-				{faqs.map((f) => (
-					<details>
-						<summary>{f.q}</summary>
-						<p>{f.a}</p>
-					</details>
-				))}
-			</div>
-		</section>
+	<section class="band"><div class="cx">
+		<h2>Cuando quieras crecer, <b>precios a la vista.</b></h2>
+		<p class="sub">Lo esencial sigue gratis. Créditos cuando te pasamos demanda o quieres algo puntual; una suscripción mensual para lo que trabaja de fondo. <a href="/es/verifica-tu-agencia/">Verifica tu agencia</a> (gratis, cuando quieras) y consigue 20 créditos gratis, y la mayoría de las funciones de pago tienen una prueba gratis.</p>
+		<div class="extras">
+			{extras.map(([href, t, d, price]) => (
+				<a href={href}><b>{t}</b><span>{d}</span><em>{price}</em></a>
+			))}
+		</div>
+		<p class="links"><a href="/es/precios/">Precios completos</a> <a href="/es/funciones/">Todas las herramientas</a> <a href="/es/costa-del-sol/">Recorre la costa</a></p>
+	</div></section>
 
-		<section class="ctaBand">
-			<h2>Empieza gratis. Sigue gratis.</h2>
-			<p>Crea tu cuenta, importa tus anuncios y estarás en la red en minutos. Sin tarjeta, sin contrato, sin trampa.</p>
-			<div class="ctaRow center">
-				<a class="btnPrimary" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a>
-				<a class="btnGhost" href="/es/lanza-tu-agencia/">Míralo montarse en 9 minutos</a>
-			</div>
-		</section>
+	<section class="band soft"><div class="cx">
+		<h2>Preguntas frecuentes.</h2>
+		<div class="faqwrap">
+			{faqs.map((f) => (<details class="faqItem"><summary>{f.q}</summary><p>{f.a}</p></details>))}
+		</div>
+	</div></section>
 
-		<section class="grow">
-			<h3>Cuando quieras crecer</h3>
-			<p class="growLead">Lo esencial sigue gratis. Estos son los extras opcionales, con su precio a la vista: créditos cuando te pasamos demanda o quieres algo puntual, y una suscripción mensual para los módulos que trabajan de fondo.</p>
-			<p class="growCredits"><a href="/es/verifica-tu-agencia/">Verifica tu agencia</a> (gratis, y cuando quieras) y consigue <strong>20 cr&eacute;ditos gratis</strong> para probar cualquiera de estos; adem&aacute;s, cada funci&oacute;n de pago tiene una <strong>prueba gratis</strong>, as&iacute; que pruebas antes de gastar un c&eacute;ntimo.</p>
-			<div class="growGrid">
-				<a href="/es/precios/"><b>Leads de compradores</b><span>1 crédito por cada lead cualificado que decidas meter, desde tu saldo de créditos</span><em>1 crédito cada uno</em></a>
-				<a href="/es/precios/"><b>Automation &amp; Nurture</b><span>Pipeline de Nurture, emails automáticos, detección de leads calientes y Daily Action Queue</span><em>Gratis</em></a>
-				<a href="/es/precios/"><b>Rentals Module</b><span>Pipeline de Inquilinos, Tenancies, Mantenimiento y recordatorios de renovaci&oacute;n. Prueba gratis de 30 d&iacute;as</span><em>50 cr&eacute;ditos / 30 d&iacute;as</em></a>
-				<a href="/es/informe-inteligencia-propiedad/"><b>Property Intelligence Report</b><span>Valoraciones verificadas ante notario con brief para el agente</span><em>5 créditos</em></a>
-				<a href="/es/precios/"><b>Destacar un anuncio</b><span>Arriba del MLS o del portal</span><em>desde 10 créditos</em></a>
-				<a href="/es/constructor-de-webs/"><b>Creador de Webs</b><span>Web a medida completa: crear y previsualizar gratis</span><em>50 créditos/mes</em></a>
-				<a href="/es/contenido-instantaneo/"><b>Instant Content</b><span>1 artículo de blog y 1 guía de zona con IA cada semana. Complemento del Constructor de Webs</span><em>30 créditos/mes</em></a>
-			</div>
-			<p class="growMore"><a href="/es/precios/">Precios completos</a> &middot; <a href="/es/funciones/">Todas las herramientas</a> &middot; <a href="/es/costa-del-sol/">Recorre la costa</a></p>
-		</section>
-	</main>
+	<section class="band close"><div class="cx">
+		<h2>Empieza gratis. <b>Sigue gratis.</b></h2>
+		<p class="alt">Crea tu cuenta, importa tus anuncios y estarás en la red en minutos. Sin tarjeta, sin contrato.</p>
+		<p class="ctaRow"><a class="btn" href={SIGNUP} target="_blank" rel="noopener">Crea tu cuenta gratis</a> <a class="ghost" href="/es/lanza-tu-agencia/">Míralo montarse en 9 minutos</a></p>
+	</div></section>
+
 	<AgentInterestCta lang="es" page="/es/gratis/" />
 	<ExitIntent lang="es" />
 </Layout>
 
 <style>
-	.wrap { max-width: 900px; margin: 0 auto; padding: 42px 20px 72px; }
-	.hero { text-align: center; margin-bottom: 12px; }
-	.badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0, 174, 154, 0.35); background: rgba(0, 174, 154, 0.07); color: #0a6d61; font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; margin-bottom: 18px; }
-	.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ae9a; }
-	h1 { font-size: clamp(32px, 5.4vw, 56px); line-height: 1.05; letter-spacing: -0.025em; margin: 0 0 14px; font-weight: 900; }
-	.accent { color: #00ae9a; }
-	.lead { max-width: 640px; margin: 0 auto 22px; color: rgba(16, 24, 40, 0.72); font-size: 17px; line-height: 1.62; }
-	.micro { font-size: 13px; color: rgba(16, 24, 40, 0.55); margin: 14px 0 0; }
-	.ctaRow { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-	.ctaRow.center { justify-content: center; }
-	.btnPrimary { background: #00ae9a; color: #fff; font-weight: 800; font-size: 15px; padding: 14px 26px; border-radius: 12px; text-decoration: none; box-shadow: 0 12px 30px -12px rgba(0, 174, 154, 0.6); }
-	.btnPrimary:hover { background: #008a7a; text-decoration: none; }
-	.btnGhost { background: #fff; color: #0a6d61; border: 1px solid rgba(0, 174, 154, 0.4); font-weight: 700; font-size: 15px; padding: 13px 22px; border-radius: 12px; text-decoration: none; }
-	.btnGhost:hover { background: rgba(0, 174, 154, 0.06); text-decoration: none; }
+	.cx { width: min(1120px, 100% - 32px); margin: 0 auto; }
 
-	.block { margin-top: 52px; }
-	.honest { margin-top: 26px; }
-	.honestInner { max-width: 720px; margin: 0 auto; background: #fff; border: 1px solid rgba(0, 174, 154, 0.3); border-left: 4px solid #00ae9a; border-radius: 14px; padding: 20px 24px; }
-	.honestTag { display: block; font-size: 15.5px; font-weight: 900; color: #0a6d61; margin-bottom: 6px; }
-	.honest p { font-size: 14.5px; line-height: 1.62; color: rgba(16, 24, 40, 0.76); margin: 0; }
-	.block h2 { font-size: clamp(23px, 3vw, 32px); letter-spacing: -0.02em; margin: 0 0 8px; text-align: center; font-weight: 900; }
-	.sub { text-align: center; max-width: 620px; margin: 0 auto 24px; color: rgba(16, 24, 40, 0.7); font-size: 15.5px; line-height: 1.6; }
+	/* Hero: brand ink, one teal glow, the receipt as the single bold move */
+	.hero { position: relative; overflow: hidden; background: #0b1b22; color: #fff; padding: 36px 0 56px; }
+	.hero::before { content: ''; position: absolute; width: 720px; height: 720px; right: -220px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 174, 154, 0.28), rgba(0, 174, 154, 0) 70%); pointer-events: none; }
+	.heroGrid { position: relative; display: grid; gap: 36px; align-items: center; }
+	.badge { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; padding: 6px 12px; border-radius: 999px; background: rgba(125, 238, 222, 0.12); border: 1px solid rgba(125, 238, 222, 0.35); color: #c9f5ee; font-size: 14px; font-weight: 700; }
+	.dot { width: 8px; height: 8px; border-radius: 50%; background: #00ae9a; box-shadow: 0 0 0 4px rgba(0, 174, 154, 0.2); }
+	h1 { font-size: 44px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; margin: 0; max-width: 15ch; }
+	h1 b { color: #7deede; }
+	.lead { font-size: 19px; line-height: 1.5; color: #c9d6da; margin: 18px 0 24px; max-width: 44ch; }
+	.ctaRow { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+	.btn { display: inline-block; background: #00ae9a; color: #0b1b22; font-weight: 800; font-size: 18px; padding: 16px 26px; border-radius: 14px; text-decoration: none; box-shadow: 0 10px 30px rgba(0, 174, 154, 0.35); }
+	.btn:hover { background: #7deede; }
+	.ghost { color: #c9d6da; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+	.ghost:hover { color: #fff; }
+	.micro { margin: 16px 0 0; font-size: 14px; color: #8fa0a6; }
 
-	.freeGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 22px; }
-	.freeCard { position: relative; background: #fff; border: 1px solid rgba(16, 24, 40, 0.1); border-radius: 14px; padding: 16px 18px 16px 46px; }
-	.freeCard .tick { position: absolute; left: 16px; top: 17px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 174, 154, 0.14); color: #0a6d61; display: grid; place-items: center; font-size: 11px; font-weight: 900; }
-	.freeCard b { display: block; font-size: 15px; margin-bottom: 3px; color: #0b1220; }
-	.freeCard span { font-size: 13.5px; color: rgba(16, 24, 40, 0.66); line-height: 1.5; }
+	.rWrap { margin: 0; position: relative; }
+	.rWrap figcaption { margin: 76px auto 0; max-width: 420px; font-size: 12px; line-height: 1.5; color: #8fa0a6; text-align: center; }
+	.rWrap figcaption a { color: #c9d6da; }
+	.receipt { position: relative; max-width: 440px; margin: 0 auto; background: #fbfaf6; color: #0b1b22; padding: 26px 24px 30px; border-radius: 4px 4px 0 0; transform: rotate(1.6deg); box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45); }
+	.receipt::after { content: ''; position: absolute; left: 0; right: 0; bottom: -12px; height: 12px; background: linear-gradient(-45deg, transparent 8px, #fbfaf6 0) 0 0 / 16px 12px repeat-x, linear-gradient(45deg, transparent 8px, #fbfaf6 0) 0 0 / 16px 12px repeat-x; }
+	.rHead { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; text-align: center; }
+	.rSub { margin: 4px 0 14px; font-size: 12px; color: #5b6b73; text-align: center; padding-bottom: 14px; border-bottom: 2px dashed #d5dcdf; }
+	.rLines { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+	.rLines li { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+	.rTool { font-size: 15px; font-weight: 700; line-height: 1.3; }
+	.rTool em { display: block; font-style: normal; font-weight: 500; font-size: 12px; color: #5b6b73; margin-top: 2px; }
+	.rCost { display: grid; justify-items: end; text-align: right; flex-shrink: 0; max-width: 46%; font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; }
+	.rCost s, .rTotal s { position: relative; text-decoration: none; color: #3d4a4f; font-size: 15px; white-space: nowrap; }
+	.rCost s::after, .rTotal s::after { content: ''; position: absolute; left: -3px; right: -3px; top: 52%; height: 2px; background: #b4232a; transform: scaleX(1); transform-origin: left center; }
+	.rFree { font-family: inherit; font-size: 15px; color: #0a6d61; }
+	.rFree em { display: block; white-space: normal; line-height: 1.3; margin-top: 2px; font-style: normal; font-weight: 500; font-size: 11px; color: #3d4a4f; font-family: system-ui, sans-serif; }
+	.rTotal { --i: 4.2; display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; padding-top: 14px; border-top: 2px dashed #d5dcdf; font-weight: 800; }
+	.rTotal s { font-size: 20px; font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; color: #0b1b22; }
+	.stamp { position: absolute; right: -6px; bottom: -58px; z-index: 2; display: grid; justify-items: center; padding: 8px 16px 6px; border: 4px solid #00ae9a; border-radius: 12px; color: #0a6d61; background: rgba(230, 247, 244, 0.95); transform: rotate(-8deg); }
+	.stamp span { font-size: 11px; font-weight: 800; }
+	.stamp b { font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; }
+	/* Default is the finished receipt (no JS, reduced motion). The inline script adds .pre (start state) and then .anim
+	   when the receipt is 40% in view, so the strike-through plays where the visitor can see it, including on a phone. */
+	.receipt.pre .rCost s::after, .receipt.pre .rTotal s::after { transform: scaleX(0); }
+	.receipt.pre .rFree { opacity: 0; transform: translateY(6px); }
+	.receipt.pre .stamp { opacity: 0; transform: rotate(-10deg) scale(1.9); }
+	.receipt.anim .rCost s::after, .receipt.anim .rTotal s::after { animation: strike 0.45s ease-out forwards; animation-delay: calc(0.3s + var(--i, 0) * 0.38s); }
+	.receipt.anim .rFree { animation: rise 0.4s ease-out forwards; animation-delay: calc(0.55s + var(--i, 0) * 0.38s); }
+	.receipt.anim .stamp { animation: stamp 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) 2.5s forwards; }
+	@keyframes strike { to { transform: scaleX(1); } }
+	@keyframes rise { to { opacity: 1; transform: none; } }
+	@keyframes stamp { to { opacity: 1; transform: rotate(-8deg) scale(1); } }
+	@media (prefers-reduced-motion: reduce) {
+		.receipt.pre .rCost s::after, .receipt.pre .rTotal s::after { transform: scaleX(1); animation: none; }
+		.receipt.pre .rFree { opacity: 1; transform: none; animation: none; }
+		.receipt.pre .stamp { opacity: 1; transform: rotate(-8deg); animation: none; }
+	}
+	/* Bands */
+	.band { padding: 48px 0; border-top: 1px solid #e7eef1; background: #fff; }
+	.soft { background: #f4f7f8; }
+	h2 { font-size: 32px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 800; margin: 0; max-width: 22ch; }
+	h2 b { color: #008a7a; }
+	.sub { font-size: 17px; line-height: 1.5; color: #28383f; margin: 10px 0 0; max-width: 60ch; }
+	.sub a { color: #0a6d61; font-weight: 700; }
+	.steps { display: grid; gap: 22px; margin-top: 26px; }
+	.step { padding-top: 14px; border-top: 3px solid #00ae9a; }
+	.step h3 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
+	.step p { margin: 6px 0 0; color: #28383f; max-width: 38ch; }
 
-	.anchor { font-size: 17px; margin: 4px auto 22px; color: rgba(16, 24, 40, 0.82); }
-	.anchor b { color: #0a6d61; font-weight: 900; }
-	.cmp { border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 16px; overflow: hidden; max-width: 720px; margin: 0 auto; }
-	.cmpHead, .cmpRow { display: grid; grid-template-columns: 1.5fr 1.1fr 1fr; align-items: center; }
-	.cmpHead { background: #0b1220; color: rgba(255, 255, 255, 0.85); font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
-	.cmpHead span { padding: 13px 16px; }
-	.cmpHead .ok { background: #00ae9a; color: #04231f; text-align: center; }
-	.cmpRow { border-top: 1px solid rgba(16, 24, 40, 0.08); }
-	.cmpRow:nth-child(odd) { background: #fafcfe; }
-	.cTool { padding: 13px 16px; font-size: 14px; font-weight: 700; color: #0b1220; }
-	.cUsual { padding: 13px 16px; font-size: 14px; font-weight: 800; color: #a5382c; }
-	.cUsual em { display: block; font-style: normal; font-size: 11.5px; font-weight: 500; color: rgba(16, 24, 40, 0.58); margin-top: 2px; }
-	.cFree { padding: 13px 16px; text-align: center; font-size: 14px; font-weight: 900; color: #0a6d61; background: rgba(0, 174, 154, 0.08); height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-	.cFree em { font-style: normal; font-size: 10.5px; font-weight: 700; color: #0a6d61; opacity: 0.72; margin-top: 3px; line-height: 1.25; }
-	.cmpTotal { border-top: 2px solid rgba(16, 24, 40, 0.16); background: #fff !important; }
-	.cmpTotal .cTool { font-weight: 900; font-size: 15px; }
-	.cmpTotal .cUsual { font-weight: 900; font-size: 15px; }
-	.cmpTotal .cFree { font-size: 22px; }
-	.betterLine { text-align: center; max-width: 620px; margin: 22px auto 0; font-size: 15px; line-height: 1.6; color: rgba(16, 24, 40, 0.78); font-weight: 500; }
-	.fine { text-align: center; font-size: 12px; color: rgba(16, 24, 40, 0.45); margin: 12px auto 0; max-width: 620px; line-height: 1.5; }
+	/* Bento of free tools */
+	.bento { display: grid; gap: 12px; margin-top: 26px; }
+	.tile { background: #fff; border: 1px solid #dfe6e8; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 6px; }
+	.tName { margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+	.tText { margin: 0; font-size: 15px; line-height: 1.5; color: #3d4a4f; }
+	.beta { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #e6f7f4; color: #0a6d61; }
+	.url { margin: 2px 0 4px; display: flex; align-items: center; gap: 8px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #28383f; background: #f4f7f8; border: 1px solid #dfe6e8; border-radius: 8px; padding: 6px 10px; overflow-wrap: anywhere; }
+	.url i { width: 8px; height: 8px; border-radius: 50%; background: #00ae9a; flex-shrink: 0; }
+	.tile.xl { background: #0a6d61; border-color: #0a6d61; color: #fff; justify-content: flex-end; min-height: 280px; background-image: radial-gradient(circle at 85% 10%, rgba(125, 238, 222, 0.35), rgba(125, 238, 222, 0) 55%); }
+	.tile.xl .tName { color: #c9f5ee; }
+	.tile.xl .tText { color: #e6f7f4; }
+	.big { margin: 4px 0 0; font-size: 72px; line-height: 0.95; font-weight: 800; letter-spacing: -0.04em; }
+	.bigLabel { margin: 0 0 8px; font-size: 18px; font-weight: 700; color: #c9f5ee; }
+	.mid { margin: 2px 0 0; font-size: 44px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; color: #0a6d61; }
+	.chips { margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+	.chips span { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: #e6f7f4; color: #0a6d61; }
 
-	.proof { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 54px 0 0; text-align: center; }
-	.proof div { background: #0b1220; color: #fff; border-radius: 14px; padding: 22px 10px; }
-	.proof b { display: block; font-size: 26px; font-weight: 900; color: #7ee8d8; }
-	.proof span { font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+	/* Proof */
+	.dark { background: #0b1b22; color: #fff; border-top: 0; }
+	.proof { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 16px; }
+	.proof b { display: block; font-size: 44px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; color: #7deede; }
+	.proof span { display: block; margin-top: 6px; font-size: 15px; color: #c9d6da; }
+	.alt { margin: 26px 0 0; color: #c9d6da; font-size: 17px; line-height: 1.5; max-width: 60ch; }
 
-	.faq { max-width: 680px; margin: 20px auto 0; }
-	.faq details { border-bottom: 1px solid rgba(16, 24, 40, 0.1); }
-	.faq summary { cursor: pointer; padding: 15px 2px; font-weight: 700; font-size: 15.5px; list-style: none; }
-	.faq summary::-webkit-details-marker { display: none; }
-	.faq p { padding: 0 2px 15px; margin: 0; font-size: 14.5px; color: rgba(16, 24, 40, 0.72); line-height: 1.6; }
+	/* Extras */
+	.extras { display: grid; gap: 10px; margin-top: 24px; }
+	.extras a { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: baseline; padding: 14px 16px; border: 1px solid #dfe6e8; border-radius: 14px; text-decoration: none; color: #0b1b22; background: #fff; }
+	.extras a:hover { border-color: #00ae9a; }
+	.extras b { font-size: 17px; }
+	.extras span { grid-column: 1 / -1; grid-row: 2; font-size: 14px; color: #3d4a4f; }
+	.extras em { font-style: normal; font-weight: 800; font-size: 14px; color: #0a6d61; text-align: right; }
+	.links { display: flex; flex-wrap: wrap; gap: 18px; margin: 18px 0 0; }
+	.links a { color: #0a6d61; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 
-	.ctaBand { margin-top: 54px; text-align: center; background: linear-gradient(135deg, rgba(0, 174, 154, 0.1), rgba(126, 165, 255, 0.08)); border: 1px solid rgba(0, 174, 154, 0.25); border-radius: 20px; padding: 36px 24px; }
-	.ctaBand h2 { font-size: clamp(24px, 3.2vw, 34px); margin: 0 0 8px; font-weight: 900; }
-	.ctaBand p { color: rgba(16, 24, 40, 0.7); margin: 0 0 18px; max-width: 500px; margin-inline: auto; }
+	/* FAQ and close */
+	.faqwrap { margin-top: 20px; }
+	.faqItem { border-top: 1px solid #e7eef1; padding: 14px 0; }
+	.faqItem:last-child { border-bottom: 1px solid #e7eef1; }
+	.faqItem summary { font-weight: 800; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+	.faqItem summary::-webkit-details-marker { display: none; }
+	.faqItem summary::after { content: '+'; color: #008a7a; font-size: 26px; line-height: 1; }
+	.faqItem[open] summary::after { content: '-'; }
+	.faqItem p { margin: 10px 0 0; color: #28383f; max-width: 62ch; }
+	.close { background: #0b1b22; color: #fff; border-top: 0; }
+	.close h2 b { color: #7deede; }
+	.close .ctaRow { margin-top: 24px; }
+	.band[id] { scroll-margin-top: 72px; }
 
-	.grow { max-width: 900px; margin: 44px auto 0; text-align: center; }
-	.grow h3 { font-size: 20px; font-weight: 900; margin: 0 0 6px; }
-	.growLead { font-size: 14px; color: rgba(16, 24, 40, 0.6); margin: 0 0 14px; }
-	.growCredits { font-size: 14px; line-height: 1.55; color: rgba(16, 24, 40, 0.75); margin: 0 auto 22px; max-width: 580px; background: rgba(0, 174, 154, 0.07); border: 1px solid rgba(0, 174, 154, 0.22); border-radius: 12px; padding: 12px 18px; }
-	.growCredits strong { color: #0a6d61; }
-	.growGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-	.growGrid a { display: grid; gap: 5px; text-align: left; background: #fff; border: 1px solid rgba(16, 24, 40, 0.09); border-radius: 14px; padding: 16px; text-decoration: none; color: inherit; }
-	.growGrid a:hover { border-color: rgba(0, 174, 154, 0.45); text-decoration: none; }
-	.growGrid b { font-size: 14px; }
-	.growGrid span { font-size: 12px; color: rgba(16, 24, 40, 0.55); line-height: 1.45; }
-	.growGrid em { font-style: normal; font-size: 12.5px; font-weight: 800; color: #0a6d61; }
-	.growMore { margin: 22px 0 0; font-size: 13.5px; color: rgba(16, 24, 40, 0.55); }
-	.growMore a { color: #0a6d61; font-weight: 700; }
-
-	@media (max-width: 720px) {
-		.freeGrid { grid-template-columns: minmax(0, 1fr); }
-		.proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-		.cmpHead { display: none; }
-		.cmpRow { grid-template-columns: 1fr auto; grid-template-areas: 'tool free' 'usual free'; row-gap: 0; padding: 6px 0; }
-		.cTool { grid-area: tool; padding: 8px 14px 0; }
-		.cUsual { grid-area: usual; padding: 0 14px 8px; }
-		.cFree { grid-area: free; border-left: 1px solid rgba(0,174,154,0.18); min-width: 84px; }
-		.cmpTotal .cFree { font-size: 20px; }
+	@media (min-width: 900px) {
+		.hero { padding: 64px 0 84px; }
+		.heroGrid { grid-template-columns: 1.08fr 1fr; gap: 56px; }
+		h1 { font-size: 66px; }
+		.lead { font-size: 21px; }
+		.band { padding: 72px 0; }
+		h2 { font-size: 44px; }
+		.steps { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+		.bento { grid-template-columns: repeat(4, 1fr); }
+		.tile.xl { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+		.tile.wide { grid-column: span 2; }
+		.big { font-size: 96px; }
+		.proof { grid-template-columns: repeat(4, 1fr); }
+		.proof b { font-size: 56px; }
+		.extras { grid-template-columns: 1fr 1fr; }
 	}
 </style>
