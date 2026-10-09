@@ -33,6 +33,7 @@ const PAGES = [
 	['/referrals/', 'Referral Program'],
 	['/rentals/', 'Rentals Module'],
 	['/pipelines/', 'Sales Pipelines'],
+	['/nurture/', 'Nurture and automated follow-up'],
 	['/developers/', 'For Property Developers'],
 	['/verify-your-agency/', 'Verified Agencies'],
 	['/docs/propertylist-mls-user-manual/credits/how-billing-works/', 'How billing works'],
