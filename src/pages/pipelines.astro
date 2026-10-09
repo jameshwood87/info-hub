@@ -151,16 +151,25 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 		</ul>
 	</div></section>
 
-	<section class="band tint"><div class="cx">
-		<h2>After a viewing, skip the typing. <b>Send a voice note.</b></h2>
-		<p class="sub">Tell CoAgent on WhatsApp what happened, naming the client. It turns the voice note into the CRM update, reads it back in your own words, and saves nothing until you reply YES. Your voice is never kept.</p>
-		<div class="vn" role="group" aria-label="Example exchange with CoAgent">
-			<div class="me"><span class="vnLabel">Voice note</span>Add a note to Marta: she wants to see it again Saturday.</div>
-			<div class="bot">Note for Marta's file: <b>wants a second viewing on Saturday.</b> Reply YES to save.</div>
-			<div class="me">YES</div>
+	<section class="band tint"><div class="cx coGrid">
+		<div>
+			<h2>Met a buyer? Skip the typing. <b>Send a voice note.</b></h2>
+			<p class="sub">Tell CoAgent on WhatsApp what the client wants. It drafts the contact, the property alert and the diary entry, shows you all three, and saves nothing until you reply YES. Then it looks for matches on the MLS. Your voice is never kept.</p>
+			<a class="coLink" href="/coagent/">How CoAgent works</a>
 		</div>
-		<p class="vnCap">An illustration of a CoAgent exchange, not a recording.</p>
-		<a class="coLink" href="/coagent/">How CoAgent works</a>
+		<figure class="coFig">
+			<div class="phone" role="group" aria-label="Example CoAgent chat on WhatsApp"><div class="screen">
+				<div class="bar"><i></i>PropertyList CoAgent</div>
+				<div class="me voice"><span class="srOnly">Voice note</span><span class="play"></span><span class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="dur">0:14</span>
+					<span class="said">"Just met Marta. She wants a modern 3-bed apartment in Estepona, frontline beach, up to €700,000. She can view next Monday at 9."</span></div>
+				<div class="bot">Ready to save:
+					<ul><li><b>New contact:</b> Marta</li><li><b>Property alert:</b> 3-bed apartment, Estepona, frontline beach, modern, up to €700,000</li><li><b>Calendar:</b> viewings with Marta, Monday 9:00</li></ul>
+					Reply YES to save.</div>
+				<div class="me">YES</div>
+				<div class="bot">Saved. I found <b>6 for Marta</b>: 1 frontline beach, 5 close to the beach. Want to see them?</div>
+			</div></div>
+			<figcaption>An illustration of a CoAgent chat, not a recording.</figcaption>
+		</figure>
 	</div></section>
 
 	<section class="band soft"><div class="cx">
@@ -245,13 +254,27 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	.boards p { margin: 0 0 16px; color: #28383f; max-width: 60ch; }
 	.boards p a { color: #0a6d61; font-weight: 700; }
 	.tint { background: #e6f7f4; }
-	.vn { display: grid; gap: 10px; margin-top: 22px; max-width: 520px; }
-	.vn .me { justify-self: end; max-width: 85%; background: #0a6d61; color: #fff; font-weight: 700; padding: 12px 16px; border-radius: 16px 16px 4px 16px; }
-	.vn .bot { justify-self: start; max-width: 85%; background: #fff; border: 1px solid #c9e4de; color: #0b1b22; padding: 12px 16px; border-radius: 16px 16px 16px 4px; }
-	.vn .bot b { color: #0a6d61; }
-	.vnLabel { display: block; font-size: 12px; font-weight: 600; opacity: .8; margin-bottom: 3px; }
-	.vnCap { font-size: 13px; color: #5b6b73; margin: 8px 0 0; }
+	.coGrid { display: grid; gap: 28px; align-items: center; }
 	.coLink { display: inline-block; margin-top: 18px; font-weight: 700; color: #0a6d61; text-decoration: underline; text-underline-offset: 3px; }
+	.coFig { margin: 0; }
+	.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+	.phone { width: 320px; max-width: 100%; margin: 0 auto; background: #0b1b22; border-radius: 36px; padding: 12px; box-shadow: 0 30px 60px rgba(11, 27, 34, 0.22); }
+	.screen { background: #f4f4f0; border-radius: 26px; padding: 14px 12px 16px; color: #182024; font-size: 14px; line-height: 1.4; display: grid; gap: 8px; }
+	.bar { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #3d4a4f; font-size: 13px; padding-bottom: 10px; border-bottom: 1px solid #e3e5e2; }
+	.bar i { width: 26px; height: 26px; border-radius: 50%; background: #0a6d61; display: inline-block; }
+	.screen .me { justify-self: end; max-width: 88%; background: #0a6d61; color: #fff; font-weight: 700; padding: 9px 12px; border-radius: 14px 14px 4px 14px; }
+	.screen .bot { justify-self: start; max-width: 92%; background: #fff; border: 1px solid #e2e5e3; padding: 9px 12px; border-radius: 14px 14px 14px 4px; }
+	.screen .bot b { color: #0a6d61; }
+	.screen .bot ul { margin: 6px 0; padding-left: 16px; display: grid; gap: 4px; }
+	.voice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+	.play { width: 0; height: 0; border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+	.wave { display: flex; align-items: center; gap: 2px; height: 22px; }
+	.wave i { width: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.85); height: 40%; }
+	.wave i:nth-child(3n) { height: 85%; } .wave i:nth-child(4n+1) { height: 60%; } .wave i:nth-child(5n+2) { height: 100%; }
+	.dur { font-size: 12px; font-weight: 600; opacity: 0.85; }
+	.said { flex-basis: 100%; font-weight: 500; font-size: 13px; line-height: 1.4; color: #e6f7f4; }
+	.coFig figcaption { font-size: 13px; color: #5b6b73; text-align: center; margin: 12px auto 0; max-width: 320px; }
+	@media (min-width: 900px) { .coGrid { grid-template-columns: 1.1fr 1fr; gap: 48px; } }
 	.auto { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
 	.auto li { padding: 0 0 0 30px; position: relative; font-size: 17px; line-height: 1.45; color: #0b1b22; max-width: 60ch; }
 	.auto li::before { content: ''; position: absolute; left: 0; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: #00ae9a; }
