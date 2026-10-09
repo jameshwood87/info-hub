@@ -15,7 +15,7 @@ const canonical = `${origin}/360-walkthrough/`;
 
 const title = '360 walkthroughs: let buyers walk through before they call';
 const description =
-	'A 3D walkthrough of your listing, filmed by an independent company on the Costa del Sol and attached to your MLS listing and microsite automatically. Apartments 129 EUR, townhouses 189 EUR, villas 249 EUR.';
+	'A 3D walkthrough of your listing, filmed by an independent company on the Costa del Sol and attached to your MLS listing and microsite automatically, with standard photos and videos from the scan. Apartments 129 EUR, townhouses 189 EUR, villas 249 EUR for agents registered on PropertyList, IVA included.';
 
 // Real example tours. Labels match what each one actually is - a mislabelled
 // demo would undo the whole page. brand=0 strips presenter branding.
@@ -35,7 +35,7 @@ const tiers = [
 const faqs = [
 	{
 		q: 'What exactly will I get?',
-		a: 'A professional 3D walkthrough of the property that buyers open in any browser, on any phone, with no app. It will attach to your MLS listing and your PropertyList microsite automatically, and you will get a link to add to your own website, included.',
+		a: 'A professional 3D walkthrough of the property that buyers open in any browser, on any phone, with no app, plus the standard photos and videos generated from the scan. The walkthrough will attach to your MLS listing and your PropertyList microsite automatically, and you will get a link to add to your own website, included. If you add the photos or videos to your MLS listing, the usual listing allowance applies: the first 25 photos per listing are free, extra photos are 1 credit each and each uploaded video is 5 credits (a video tour by YouTube link is free). If you are an agent registered on PropertyList and order a walkthrough, you can add a floor plan measured on site by our filming partner for 50 EUR plus IVA (60.50 EUR in total), on properties up to 500 m² of built area. Registered agents can also order a floor plan on its own; our filming partner quotes it. Mention the floor plan when our filming partner contacts you.',
 	},
 	{
 		q: 'Who films it?',
@@ -43,7 +43,7 @@ const faqs = [
 	},
 	{
 		q: 'What does it cost?',
-		a: 'Our filming partner sets the price and invoices you. Their prices, IVA included: 129 EUR for apartments, 189 EUR for townhouses and semi-detached homes, 249 EUR for villas, with the first 6 months of hosting included and 30 EUR a year after that. They can change these, so the price that counts is the one they quote you. PropertyList does not set the price and does not take payment for it.',
+		a: 'Our filming partner sets the price and invoices you. Their prices for agents registered on PropertyList, IVA included: 129 EUR for apartments, 189 EUR for townhouses and semi-detached homes, 249 EUR for villas, with the first 6 months of hosting included and 30 EUR a year after that. A floor plan measured on site is priced differently: 50 EUR plus IVA (60.50 EUR in total) for registered agents who order a walkthrough, on properties up to 500 m² of built area. They can change these, so the price that counts is the one they quote you. PropertyList does not set the price and does not take payment for it.',
 	},
 	{
 		q: 'When can I order one?',
@@ -183,6 +183,8 @@ const faqLd = {
 			<ul class="incl">
 				<li>Films the property on a visit</li>
 				<li>Hosts the 3D walkthrough</li>
+				<li>Delivers standard photos and videos from the scan</li>
+				<li>Measures a floor plan if you add one (registered agents with a walkthrough, &euro;50 + IVA, up to 500 m&sup2; of built area)</li>
 				<li>Quotes and invoices you directly</li>
 			</ul>
 			<p class="inclHead">What PropertyList does</p>
@@ -191,7 +193,7 @@ const faqLd = {
 				<li>Adds it to your microsite</li>
 				<li>Gives you a link for your own website</li>
 			</ul>
-			<p class="terms">These are our filming partner&rsquo;s prices, IVA included, and they can change them. Their first 6 months of hosting are included, then &euro;30 a year keeps the walkthrough live. You contract with them and they invoice you directly. PropertyList is paid a fee by them for the introduction, out of the price you pay rather than on top of it, and is not a party to your contract with them. Clause 3.10 of the <a href="/docs/propertylist-mls-user-manual/legal/terms-conditions/#clause-3-10">terms and conditions</a> sets this out. Costa del Sol for now.</p>
+			<p class="terms">These are our filming partner&rsquo;s prices for agents registered on PropertyList, IVA included, and they can change them. Their first 6 months of hosting are included, then &euro;30 a year keeps the walkthrough live. The floor plan is the exception to the IVA-included prices: for registered agents who order a walkthrough, a floor plan measured on site is &euro;50 + IVA (&euro;60.50 in total) on properties up to 500 m&sup2; of built area, and a floor plan on its own is quoted by them. Not registered yet? <a href="https://agents.propertylist.es/new_agency/new?locale=en">Creating an account is free</a>. You contract with them and they invoice you directly. PropertyList is paid a fee by them for the introduction, out of the price you pay rather than on top of it, and is not a party to your contract with them. Clause 3.10 of the <a href="/docs/propertylist-mls-user-manual/legal/terms-conditions/#clause-3-10">terms and conditions</a> sets this out. Costa del Sol for now.</p>
 
 			<div class="req" data-req hidden>
 				<div data-form>
@@ -209,7 +211,7 @@ const faqLd = {
 						<input type="email" data-f="email" placeholder="Email" autocomplete="email" />
 						<input type="text" data-f="pl_hp_x9" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
 					</div>
-					<p class="reqErr" data-err hidden>We need a phone number or an email to be in touch.</p>
+					<p class="reqErr" data-err hidden>Prices for agents registered on PropertyList. We need a phone number or an email to be in touch.</p>
 					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Send my details to our filming partner &rarr;</button>
 					<p class="reqPriv">By sending, you agree that PropertyList passes your name, agency, phone and email to the independent filming company that covers your area, so they can quote you. They are a separate data controller and will identify themselves when they get in touch. The service is supplied and invoiced by them under clause 3.10 of the <a href="/docs/propertylist-mls-user-manual/legal/terms-conditions/#clause-3-10">terms</a>; see the <a href="/docs/propertylist-mls-user-manual/legal/privacy-policy/#introductions-to-third-party-service-providers">privacy policy</a> for what we share and how long we keep it.</p>
 				</div>
@@ -232,8 +234,8 @@ const faqLd = {
 		</section>
 
 		<section class="close">
-			<h2>Be first through the door.</h2>
-			<p>Walkthroughs are coming to PropertyList listings soon. Leave your details now and yours can be among the first filmed.</p>
+			<h2>Ready when you are.</h2>
+			<p>Leave your details and our filming partner will quote you.</p>
 			<a class="btnP" href="#pricing" data-open-req data-umami-event="walk-close-cta">Request mine</a>
 		</section>
 	</div>

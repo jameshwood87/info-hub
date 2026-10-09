@@ -15,7 +15,7 @@ const canonical = `${origin}/es/recorrido-360/`;
 
 const title = 'Recorridos 360: deja que el comprador entre antes de llamar';
 const description =
-	'Un recorrido 3D de tu anuncio, filmado por una empresa independiente de la Costa del Sol y unido a tu anuncio del MLS y a tu microsite automáticamente. Pisos 129 EUR, adosados 189 EUR, villas 249 EUR.';
+	'Un recorrido 3D de tu anuncio, filmado por una empresa independiente de la Costa del Sol y unido a tu anuncio del MLS y a tu microsite automáticamente, con fotos y vídeos estándar del escaneo. Pisos 129 EUR, adosados 189 EUR, villas 249 EUR para agentes registrados en PropertyList, IVA incluido.';
 
 // Real example tours. Labels match what each one actually is - a mislabelled
 // demo would undo the whole page. brand=0 strips presenter branding.
@@ -35,7 +35,7 @@ const tiers = [
 const faqs = [
 	{
 		q: '¿Qué recibo exactamente?',
-		a: 'Un recorrido 3D profesional de la propiedad que el comprador abre en cualquier navegador y cualquier móvil, sin app. Se publicará automáticamente en tu anuncio del MLS y en tu microsite de PropertyList, y tendrás un enlace para añadir a tu propia web, incluido.',
+		a: 'Un recorrido 3D profesional de la propiedad que el comprador abre en cualquier navegador y cualquier móvil, sin app, más las fotos y vídeos estándar que se generan del escaneo. El recorrido se publicará automáticamente en tu anuncio del MLS y en tu microsite de PropertyList, y tendrás un enlace para añadir a tu propia web, incluido. Si añades las fotos o los vídeos a tu anuncio del MLS, se aplica la franquicia habitual del anuncio: las primeras 25 fotos por anuncio son gratis, cada foto extra cuesta 1 crédito y cada vídeo subido, 5 créditos (un vídeo tour por enlace de YouTube es gratis). Si eres un agente registrado en PropertyList y pides un recorrido, puedes añadir un plano medido en la propiedad por nuestro colaborador, por 50 EUR más IVA (60,50 EUR en total), en propiedades de hasta 500 m² de superficie construida. Los agentes registrados también pueden pedir solo el plano; lo presupuesta nuestro colaborador. Menciona el plano cuando nuestro colaborador te contacte.',
 	},
 	{
 		q: '¿Quién lo filma?',
@@ -43,7 +43,7 @@ const faqs = [
 	},
 	{
 		q: '¿Cuánto cuesta?',
-		a: 'Nuestro colaborador de filmación fija el precio y te factura. Sus precios, IVA incluido: 129 EUR para pisos, 189 EUR para adosados y pareados, 249 EUR para villas, con los primeros 6 meses de alojamiento incluidos y 30 EUR al año después. Pueden cambiarlos, así que el precio que cuenta es el que ellos te presupuesten. PropertyList no fija el precio ni cobra por él.',
+		a: 'Nuestro colaborador de filmación fija el precio y te factura. Sus precios para agentes registrados en PropertyList, IVA incluido: 129 EUR para pisos, 189 EUR para adosados y pareados, 249 EUR para villas, con los primeros 6 meses de alojamiento incluidos y 30 EUR al año después. Un plano medido en la propiedad tiene otro precio: 50 EUR más IVA (60,50 EUR en total) para agentes registrados que piden un recorrido, en propiedades de hasta 500 m² de superficie construida. Pueden cambiarlos, así que el precio que cuenta es el que ellos te presupuesten. PropertyList no fija el precio ni cobra por él.',
 	},
 	{
 		q: '¿Cuándo puedo pedirlo?',
@@ -183,6 +183,8 @@ const faqLd = {
 			<ul class="incl">
 				<li>Filma la propiedad en una visita</li>
 				<li>Aloja el recorrido 3D</li>
+				<li>Entrega fotos y vídeos estándar del escaneo</li>
+				<li>Mide un plano si lo añades (agentes registrados con un recorrido, 50 &euro; + IVA, hasta 500 m&sup2; de superficie construida)</li>
 				<li>Te presupuesta y te factura directamente</li>
 			</ul>
 			<p class="inclHead">Lo que hace PropertyList</p>
@@ -191,7 +193,7 @@ const faqLd = {
 				<li>Lo añade a tu microsite</li>
 				<li>Te da un enlace para tu propia web</li>
 			</ul>
-			<p class="terms">Estos son los precios de nuestro colaborador de filmación, IVA incluido, y pueden cambiarlos. Sus primeros 6 meses de alojamiento van incluidos, después 30 &euro; al año mantiene el recorrido activo. Contratas con ellos y ellos te facturan directamente. A PropertyList le pagan una remuneración por la presentación, con cargo al precio que pagas y no añadida a él, y no es parte de tu contrato con ellos. La cláusula 3.10 de los <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/#clause-3-10">términos y condiciones</a> lo detalla. De momento, solo en la Costa del Sol.</p>
+			<p class="terms">Estos son los precios de nuestro colaborador de filmación para agentes registrados en PropertyList, IVA incluido, y pueden cambiarlos. Sus primeros 6 meses de alojamiento van incluidos, después 30 &euro; al año mantiene el recorrido activo. El plano es la excepción a los precios con IVA incluido: para agentes registrados que piden un recorrido, un plano medido en la propiedad cuesta 50 &euro; + IVA (60,50 &euro; en total) en propiedades de hasta 500 m&sup2; de superficie construida, y el plano solo lo presupuestan ellos. ¿Aún no estás registrado? <a href="https://agents.propertylist.es/new_agency/new?locale=es">Crear una cuenta es gratis</a>. Contratas con ellos y ellos te facturan directamente. A PropertyList le pagan una remuneración por la presentación, con cargo al precio que pagas y no añadida a él, y no es parte de tu contrato con ellos. La cláusula 3.10 de los <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/#clause-3-10">términos y condiciones</a> lo detalla. De momento, solo en la Costa del Sol.</p>
 
 			<div class="req" data-req hidden>
 				<div data-form>
@@ -209,7 +211,7 @@ const faqLd = {
 						<input type="email" data-f="email" placeholder="Email" autocomplete="email" />
 						<input type="text" data-f="pl_hp_x9" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
 					</div>
-					<p class="reqErr" data-err hidden>Necesitamos un teléfono o un email para poder contactarte.</p>
+					<p class="reqErr" data-err hidden>Precios para agentes registrados en PropertyList. Necesitamos un teléfono o un email para poder contactarte.</p>
 					<button class="btnP reqSend" data-send data-umami-event="walk-lead">Enviar mis datos al colaborador &rarr;</button>
 					<p class="reqPriv">Al enviar, aceptas que PropertyList pase tu nombre, agencia, teléfono y email a la empresa de filmación independiente que cubre tu zona, para que pueda presupuestarte. Son responsables del tratamiento por separado y se identificarán al contactarte. El servicio lo presta y lo factura esa empresa conforme a la cláusula 3.10 de los <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/terms-conditions/#clause-3-10">términos</a>; consulta la <a href="/es/docs/propertylist-mls-manual-de-usuario/legal/privacy-policy/#presentaciones-a-proveedores-de-servicios-de-terceros">política de privacidad</a> para saber qué compartimos y cuánto lo conservamos.</p>
 				</div>
@@ -232,8 +234,8 @@ const faqLd = {
 		</section>
 
 		<section class="close">
-			<h2>Sé el primero en entrar.</h2>
-			<p>Los recorridos llegan muy pronto a los anuncios de PropertyList. Deja tus datos y los tuyos pueden estar entre los primeros filmados.</p>
+			<h2>Cuando quieras.</h2>
+			<p>Deja tus datos y nuestro colaborador te presupuestará.</p>
 			<a class="btnP" href="#pricing" data-open-req data-umami-event="walk-close-cta">Pedir el mío</a>
 		</section>
 	</div>
