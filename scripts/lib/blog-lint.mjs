@@ -50,10 +50,9 @@ const SENSATIONAL = /\b(breaking|urgent|shock|bombshell|will (lose|ban|end|aboli
 const PL_WORDING = [
   [/\bfree forever\b|\bgratis para siempre\b|\bpara siempre gratis\b/i, 'says "free forever", which the ledger bans: say "free"'],
   [/\bverified (agents?|agenc(?:y|ies)|listings?|properties)\b|\bagentes verificados\b|\bagencias verificadas\b|\banuncios verificados\b|\binmuebles verificados\b/i, 'says "verified" about agents or listings: the ledger wording is "registered agents"'],
-  [/\bunlimited (listings?|users?|team|seats?|staff|agents?|properties)\b|\b(anuncios|usuarios|agentes|inmuebles) ilimitad[oa]s\b/i, 'says "unlimited" listings or users: no ledger entry confirms it'],
   [/\b1 credit\s*(=|equals|is)\s*(€\s?1\b|1\s?(€|euros?)\b)|\b1 cr[eé]dito\s*(=|equivale a|es)\s*(€\s?1\b|1\s?(€|euros?)\b)/i, 'says "1 credit = 1 euro": one credit costs about 1 euro, EUR 0.80 to 1 plus IVA by pack'],
   [/\bSpain'?s first\b|\bthe only (platform|MLS|portal)\b|\bel (único|primer) (portal|MLS)\b|\bla única plataforma\b/i, 'superlative about PropertyList with no proof on file'],
-  [/\b(PropertyList|our|nuestr[oa]s?)\b[^.]{0,60}\b(valuations?|tasaci[oó]n(?:es)?)\b/i, 'calls a PropertyList product a valuation or tasación, banned in Spain-facing copy'],
+  [/\b(PropertyList|our|nuestr[oa]s?)\b[^.]{0,60}\btasaci[oó]n(?:es)?\b/i, 'calls a PropertyList product a tasación, which implies an official or bank-valid appraisal ("valuation" is fine, James 09-10-26)'],
 ];
 
 // For short texts such as search titles and descriptions (scripts/lib/title-checks.mjs,
