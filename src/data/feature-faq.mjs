@@ -147,7 +147,7 @@ export const featureFaqItems = [
     id: 'rentals-includes',
     q: 'What does the Rentals module include?',
     aHtml:
-      'A dedicated Tenants pipeline, a Tenancies ledger (live/expiring/ended leases with deposit status), automatic lease renewal reminders (multi-language), a maintenance workflow with supplier tracking, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
+      'A dedicated Tenants pipeline, a Tenancies ledger (live/expiring/ended leases with deposit status), automatic lease renewal reminders (multi-language), a maintenance workflow, a landlord portfolio view showing rent roll and renewals due, and a full audit log for deposit disputes.',
   },
   {
     id: 'rentals-cost',

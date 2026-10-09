@@ -147,7 +147,7 @@ export const featureFaqItemsEs = [
     id: 'rentals-includes',
     q: '¿Qué incluye el módulo de Alquileres?',
     aHtml:
-      'Un tablero de Tenants dedicado, un libro de arrendamientos (contratos vivos/en expiración/finalizados con estado de la fianza), avisos automáticos de renovación de contrato (multilingüe), flujo de trabajo de mantenimiento con seguimiento de proveedores, vista de cartera de propietarios con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas.',
+      'Un tablero de Tenants dedicado, un libro de arrendamientos (contratos vivos/en expiración/finalizados con estado de la fianza), avisos automáticos de renovación de contrato (multilingüe), flujo de trabajo de mantenimiento, vista de cartera de propietarios con renta y renovaciones pendientes, y un registro de auditoría completo para disputas de fianzas.',
   },
   {
     id: 'rentals-cost',
