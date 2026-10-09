@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-10-09
-Version: 8.5
+Version: 8.6
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -52,6 +52,9 @@ AI-written blog posts and area guides for agency websites, grounded in the agenc
 
 #### /coagent/ - PropertyList CoAgent (live, the CRM on WhatsApp)
 An assistant for estate agents that works over WhatsApp (+1 585 496 9911), with nothing to install. Send a voice note after a viewing and CoAgent proposes the CRM update (the note, the changed requirement, the follow-up reminder, the listings that now match) and saves nothing until the agent replies YES; audio is transcribed and discarded. Agents can also ask for listings from the shared MLS, their diary, a client brief or phone number, a listing by reference, what an area or a home is worth (notary-recorded sales, with a link to the public proof) and which of several listings is the best value; send photos to start a listing or read a Se Vende sign; move a client on the pipeline; ask another agency whether a listing is still available (the enquiry goes through the MLS); and answer their latest lead by email. Replies in English, Spanish, German, French, Portuguese, Bulgarian and Greek. Pricing: 20 free messages a month per agent (approving with YES never counts); the first 10 agents to message it have it free and unlimited until 1 November 2026 (those places have gone); unlimited is 50 credits a month per agent. Brochures are free. The first 3 market reports are free, then they cost credits at the same price as in the CRM. Not live yet: connecting the agent's own WhatsApp number, a dedicated work line, and the brief appearing on the caller screen. Spanish version: /es/coagent/. Also published in German /de/coagent/, French /fr/coagent/, Swedish /sv/coagent/ and Russian /ru/coagent/. CoAgent itself replies in English, Spanish, German, French, Portuguese, Bulgarian and Greek, so the Swedish and Russian pages say so and show the example conversation in English.
+
+#### /your-ai/ - Your PropertyList CRM inside the AI you already use (live)
+For estate agents: connect PropertyList to Claude (every plan, one custom connector on Free) or ChatGPT (free with limits, using the MCP key from the CRM under Settings, then API) and the assistant reads the agency's listings, leads, pipeline and diary. It drafts an email to a client or a viewing, shows the preview and waits for the agent's yes; nothing goes to a client without it. Sending listings, booking a viewing, moving a deal, qualifying a lead, assigning a listing and changing its status all wait for confirmation; adding a contact, a note or a draft listing saves straight away. Free with a PropertyList account; AI matching includes 200 searches a month, then 1 credit per 10. The MCP address is https://mcp.propertylist.es/mcp; the developer page is propertylist.es/en/mcp. Spanish version: /es/tu-ia/.
 
 #### /instant-documents/ - Instant Documents (coming soon)
 AI-generated estate agency documents - listing agreements, reservations, rental contracts - written from the CRM, signed electronically on any device, and filed against the property. Bilingual with a built-in AML due-diligence file. Creating documents will be free; signatures run on pay-as-you-go credits. Spanish version: /es/documentos-instantaneos/

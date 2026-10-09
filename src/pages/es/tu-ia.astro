@@ -1,0 +1,213 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPortalStats, statPlus } from '../../lib/portalStats';
+
+// Spanish twin of /your-ai/ (same layout, sections and design). Copy per PropertyList/mcp-page-audit-09-10-26/copy-es.md.
+const origin = 'https://info.propertylist.es';
+const canonical = `${origin}/es/tu-ia/`;
+const title = 'Tu CRM de PropertyList, dentro de la IA que ya usas | PropertyList';
+const description = 'Conecta PropertyList a Claude o ChatGPT. Tu asistente prepara el email y la visita desde tu CRM, te muestra lo que va a enviar y espera. Nada llega a un cliente sin tu sí.';
+const stats = await getPortalStats();
+const agents = statPlus(stats.agents, 'es');
+const agencies = statPlus(stats.agencies, 'es');
+const mcpUrl = 'https://mcp.propertylist.es/mcp';
+
+const faq = [
+	['¿Escribirá a mis clientes por su cuenta?', 'No. Enviar inmuebles, agendar una visita, mover una operación, calificar un lead, asignar un inmueble y cambiar su estado: en todos los casos te muestra una vista previa y espera tu sí. Añadir un contacto, una nota o un borrador de inmueble se guarda directamente en tu CRM, como si lo escribieras tú.'],
+	['¿Cuánto cuesta?', 'La conexión y tu clave de agencia son gratis con tu cuenta de PropertyList. La búsqueda con IA incluye 200 búsquedas al mes; después cuesta 1 crédito por cada 10 búsquedas, de tu monedero. Lo que cuesta créditos en tu CRM, como calificar un lead al tablero de compradores, cuesta lo mismo aquí, y el asistente te muestra el coste antes de que digas sí.'],
+	['¿Con qué asistentes de IA funciona?', 'Con Claude, en todos los planes, incluido el gratuito (el plan gratuito permite un conector personalizado). ChatGPT, gratis con límites, con la clave MCP de tu CRM. Gemini y Copilot aún no se conectan.'],
+	['¿Puede ver los datos de otras agencias?', 'No. Cada herramienta responde solo con los datos de tu agencia. Los anuncios públicos se buscan igual que los busca cualquiera en PropertyList.'],
+	['No uso ningún asistente de IA.', 'Entonces usa CoAgent: el mismo trabajo por WhatsApp, y pregunta antes de guardar o enviar nada.'],
+];
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
+const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+	{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+	{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+	{ '@type': 'ListItem', position: 3, name: 'Tu IA', item: canonical },
+] };
+---
+<Layout
+	lang="es"
+	title={title}
+	description={description}
+	canonical={canonical}
+	ogImage="https://info.propertylist.es/og/og-your-ai-es.jpg"
+	hideSearch
+	fullBleed
+	hreflangs={[
+		{ hreflang: 'en', href: `${origin}/your-ai/` },
+		{ hreflang: 'es', href: canonical },
+		{ hreflang: 'x-default', href: `${origin}/your-ai/` },
+	]}
+>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+
+	<section class="hero"><div class="cx grid">
+		<div>
+			<p class="kicker">¿Dejarías que la IA escriba a tus clientes? Nosotros tampoco.</p>
+			<h1>Tu CRM, dentro de la IA <b>que ya usas.</b></h1>
+			<p class="lead">Prepara el email y la visita desde tu CRM, te muestra lo que va a enviar y espera. <strong>Nada llega a un cliente sin tu sí.</strong></p>
+			<a class="btn" href="#conectar">Conecta PropertyList a tu IA</a>
+			<p class="fric">Gratis con tu cuenta de PropertyList, y sin nada que instalar.</p>
+		</div>
+		<div>
+			<div class="phone" aria-hidden="true"><div class="screen">
+				<div class="bar"><i></i>Asistente</div>
+				<div class="ai">Listo para ti:</div>
+				<div class="card">
+					<h4>Email a Juan</h4>
+					<div class="sub">3 viviendas para tu visita del jueves</div>
+					<div class="att"><span></span><span></span><span></span></div>
+					<div class="note">3 viviendas adjuntas</div>
+					<hr />
+					<h4>Visita</h4>
+					<div class="sub">Jueves 12:00, tu agenda</div>
+				</div>
+				<div class="ask">¿Enviar y agendar?</div>
+				<span class="mine">Sí, adelante.</span>
+				<div class="clr"></div>
+			</div></div>
+			<p class="cap">Ilustración de una conversación con un asistente, no una grabación.</p>
+		</div>
+	</div></section>
+
+	<section class="band"><div class="cx">
+		<h2>Prepara. Tú apruebas. <b>Después envía.</b></h2>
+		<div class="steps">
+			<div class="step"><h3>Prepara.</h3><p>Tu IA lee tus inmuebles, tus contactos y tu agenda, y prepara el email y la visita.</p></div>
+			<div class="step"><h3>Tú apruebas.</h3><p>Te muestra el destinatario, el asunto, el mensaje y los adjuntos. Responde sí, o cámbialo.</p></div>
+			<div class="step"><h3>Después envía.</h3><p>El email llega a tu cliente. La visita queda en tu agenda.</p></div>
+		</div>
+	</div></section>
+
+	<section class="band soft"><div class="cx">
+		<h2>Pídeselo como a un compañero.</h2>
+		<p class="sub">Seis cosas que los agentes piden un martes cualquiera. Cada una es una herramienta real de tu CRM.</p>
+		<div class="asks">
+			<div>"¿Qué ha entrado esta noche?"<span>Tus consultas más recientes</span></div>
+			<div>"¿Qué inmuebles míos no tienen fotos?"<span>Anuncios que no van a ninguna parte</span></div>
+			<div>"Mándale a Juan las tres mejores coincidencias."<span>Preparado, y luego tu sí</span></div>
+			<div>"Agenda el jueves a las 12:00 con María."<span>A tu agenda, tras tu sí</span></div>
+			<div>"¿En qué punto está la venta de los Pérez?"<span>Tu embudo de ventas</span></div>
+			<div>"Guarda una nota: el propietario quiere vender rápido."<span>En el contacto</span></div>
+		</div>
+		<div class="proof">
+			<div><b>{agents}</b><span>agentes en PropertyList</span></div>
+			<div><b>{agencies}</b><span>agencias</span></div>
+			<div><b>6</b><span>acciones que siempre esperan tu sí</span></div>
+			<div><b>200</b><span>búsquedas con IA gratis al mes</span></div>
+		</div>
+	</div></section>
+
+	<section class="band connect" id="conectar"><div class="cx">
+		<h2>Conecta en <b>tres pasos.</b></h2>
+		<p class="sub">Funciona en Claude con todos los planes, también el gratuito, y en ChatGPT. Gemini y Copilot: todavía no.</p>
+		<ol>
+			<li><div><b>Abre los conectores de tu IA</b><p>En Claude: Personalizar, luego Conectores, luego Añadir conector personalizado. En ChatGPT: añádelo como conector con tu clave MCP.</p></div></li>
+			<li><div><b>Pega esta dirección</b><p>Añade un conector personalizado y llámalo PropertyList.</p><code class="addr">{mcpUrl}</code></div></li>
+			<li><div><b>Inicia sesión, o pega tu clave</b><p>Claude te pide iniciar sesión con tu cuenta de PropertyList. ChatGPT usa la clave MCP de tu CRM: <a href="https://agents.propertylist.es/settings/api" rel="noopener">Ajustes, luego API</a>. Después pregúntale "¿qué ha entrado esta noche?" para comprobarlo.</p></div></li>
+		</ol>
+		<p class="ctaRow"><a class="btn" href="https://agents.propertylist.es/settings/api" rel="noopener">Consigue tu clave en el CRM</a></p>
+	</div></section>
+
+	<section class="band soft"><div class="cx">
+		<h2>Antes de preguntar.</h2>
+		<div class="faqwrap">
+			{faq.map(([q, a]) => (
+				<details class="faqItem"><summary>{q}</summary><p>{a}</p></details>
+			))}
+		</div>
+	</div></section>
+
+	<section class="band close"><div class="cx">
+		<h2>Nada llega a un cliente <b>sin tu sí.</b></h2>
+		<a class="btn btnLight" href="#conectar">Conecta PropertyList a tu IA</a>
+		<p class="alt">¿No tienes IA propia? <b>CoAgent también pregunta antes, en WhatsApp.</b> <a href="/es/coagent/">CoAgent en PropertyList</a></p>
+		<p class="dev">¿Eres desarrollador? El servidor MCP, las herramientas y las claves de API están en <a href="https://propertylist.es/mcp" rel="noopener">propertylist.es/mcp</a>.</p>
+	</div></section>
+</Layout>
+
+<style>
+	.cx { width: min(1120px, 100% - 32px); margin: 0 auto; }
+	.hero { padding: 28px 0 44px; }
+	.grid { display: grid; gap: 28px; }
+	.kicker { font-size: 17px; font-weight: 700; color: #0a6d61; margin: 0 0 14px; }
+	h1 { font-size: 40px; line-height: 1.06; letter-spacing: -0.03em; font-weight: 800; margin: 0; }
+	h1 b, h2 b { color: #00ae9a; }
+	.lead { font-size: 19px; line-height: 1.5; color: #28383f; margin: 18px 0 24px; max-width: 34ch; }
+	.lead strong { color: #0b1220; }
+	.btn { display: inline-block; background: #0a6d61; color: #fff; font-weight: 800; font-size: 18px; padding: 16px 24px; border-radius: 14px; text-decoration: none; }
+	.btn:hover { background: #008a7a; }
+	.fric { font-size: 15px; color: #5b6b73; margin: 12px 0 0; }
+	.phone { width: 300px; margin: 8px auto 0; background: #0b1b22; border-radius: 36px; padding: 12px; box-shadow: 0 30px 60px rgba(11,27,34,0.22); }
+	.screen { background: #f4f4f0; border-radius: 26px; padding: 14px 14px 16px; color: #182024; font-size: 14px; }
+	.bar { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #6b777c; font-size: 13px; padding-bottom: 10px; border-bottom: 1px solid #e3e5e2; margin-bottom: 10px; }
+	.bar i { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #9fd9d0, #3b8f86); }
+	.ai { color: #2b3438; font-weight: 600; margin: 0 2px 8px; }
+	.card { background: #fff; border: 1px solid #e2e5e3; border-radius: 14px; padding: 11px 12px; }
+	.card h4 { font-size: 16px; font-weight: 800; margin: 0 0 2px; }
+	.card .sub { font-size: 13px; color: #3d4a4f; font-weight: 600; margin: 0 0 6px; }
+	.card .att { display: flex; gap: 5px; margin-bottom: 6px; }
+	.card .att span { flex: 1; height: 34px; border-radius: 7px; background: linear-gradient(135deg, #f1e6d4, #dbe8e4); }
+	.card .note { font-size: 13px; font-weight: 700; color: #0a6d61; margin-bottom: 8px; }
+	.card hr { border: 0; border-top: 1px solid #e8ebe9; margin: 0 0 8px; }
+	.ask { font-weight: 800; font-size: 15px; margin: 10px 2px 8px; }
+	.mine { display: inline-block; float: right; background: #0a6d61; color: #fff; font-weight: 800; font-size: 14px; padding: 8px 12px; border-radius: 14px 14px 4px 14px; }
+	.clr { clear: both; }
+	.cap { font-size: 13px; color: #5b6b73; text-align: center; margin: 12px auto 0; max-width: 300px; }
+	.band { padding: 44px 0; border-top: 1px solid #e7eef1; background: #fff; }
+	.band.soft { background: #f6f8fc; }
+	h2 { font-size: 32px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 800; margin: 0; max-width: 18ch; }
+	.sub { font-size: 17px; color: #28383f; margin: 10px 0 0; max-width: 46ch; }
+	.steps { display: grid; gap: 22px; margin-top: 26px; }
+	.step { padding-top: 14px; border-top: 3px solid #00ae9a; }
+	.step h3 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
+	.step p { margin: 6px 0 0; color: #28383f; max-width: 38ch; }
+	.asks { display: grid; gap: 10px; margin-top: 22px; }
+	.asks div { background: #e6f7f4; border-radius: 14px; padding: 14px 16px; font-weight: 700; font-size: 17px; }
+	.asks div span { display: block; font-weight: 500; color: #5b6b73; font-size: 14px; margin-top: 3px; }
+	.proof { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+	.proof div { background: #e7eef1; border-radius: 14px; padding: 16px; }
+	.proof b { display: block; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; color: #0a6d61; line-height: 1; }
+	.proof span { font-size: 14px; color: #5b6b73; }
+	.connect ol { list-style: none; counter-reset: s; margin: 22px 0 0; padding: 0; display: grid; gap: 14px; }
+	.connect li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: start; }
+	.connect li::before { content: counter(s); width: 44px; height: 44px; border-radius: 50%; background: #0a6d61; color: #fff; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+	.connect li b { display: block; font-size: 19px; font-weight: 800; }
+	.connect li p { color: #28383f; margin: 2px 0 0; }
+	.connect li a { color: #0a6d61; font-weight: 700; }
+	.addr { display: inline-block; max-width: 100%; overflow-wrap: anywhere; margin-top: 8px; background: #0b1b22; color: #fff; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 15px; padding: 10px 14px; border-radius: 10px; user-select: all; }
+	.ctaRow { margin: 22px 0 0; }
+	.faqwrap { margin-top: 20px; }
+	.faqItem { border-top: 1px solid #e7eef1; padding: 14px 0; }
+	.faqItem:last-of-type { border-bottom: 1px solid #e7eef1; }
+	.faqItem summary { font-weight: 800; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+	.faqItem summary::-webkit-details-marker { display: none; }
+	.faqItem summary::after { content: '+'; color: #00ae9a; font-size: 26px; line-height: 1; }
+	.faqItem[open] summary::after { content: '\2013'; }
+	.faqItem p { margin: 10px 0 0; color: #28383f; max-width: 60ch; }
+	.close { background: #0b1b22; color: #fff; border-top: 0; }
+	.close h2 { color: #fff; }
+	.close h2 b { color: #7deede; }
+	.btnLight { background: #00ae9a; color: #0b1b22; margin-top: 22px; }
+	.btnLight:hover { background: #7deede; }
+	.alt { margin: 26px 0 0; color: #c9d6da; font-size: 16px; }
+	.alt b { color: #7deede; }
+	.alt a, .dev a { color: #fff; }
+	.dev { margin: 18px 0 0; font-size: 13px; color: #8fa0a6; }
+	@media (min-width: 900px) {
+		h1 { font-size: 64px; max-width: 13ch; }
+		.lead { font-size: 22px; }
+		.hero { padding: 48px 0 72px; }
+		.grid { grid-template-columns: 1.15fr 1fr; align-items: center; }
+		.phone { margin: 0 auto; }
+		h2 { font-size: 44px; }
+		.steps { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+		.asks { grid-template-columns: repeat(3, 1fr); }
+		.proof { grid-template-columns: repeat(4, 1fr); }
+		.connect ol { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+		.connect li { grid-template-columns: 1fr; }
+		.band { padding: 64px 0; }
+	}
+</style>
