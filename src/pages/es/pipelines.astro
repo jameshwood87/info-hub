@@ -2,129 +2,95 @@
 import Layout from '../../layouts/Layout.astro';
 import { getPortalStats, statPlus } from '../../lib/portalStats';
 
+// Espejo en español de /pipelines/ (reestructurada 09-10-26, auditoría PropertyList/pipelines-page-audit-09-10-26.md).
+// Misma sustancia, nueva forma: una línea grande por sección, una o dos líneas pequeñas debajo, el detalle tras un toque.
+// Precios según el ledger free-vs-paid y la hoja de precios 14-09-26: Buyer 5 primeros gratis y luego 1 crédito; Alquileres 50 créditos / 30 días.
+// Reglas de la casa: fuera las palabras vetadas de info-hub-security y del ledger free-vs-paid, y sin rayas.
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/pipelines/`;
 const title = 'Pipelines de CRM para Inmobiliarias | PropertyList';
 const description =
-	'Seis pipelines de CRM que hacen avanzar solos cada lead, cada anuncio y cada cliente antiguo. Tus anuncios y tus vendedores son gratis. Tú eliges cuál de ellos merece un crédito.';
+	'Seis pipelines de CRM que hacen avanzar solos cada lead, cada anuncio y cada cliente antiguo. Leads, Sellers y Property son gratis. Tú eliges qué contacto merece un crédito.';
 
-const __ps = await getPortalStats();
-const plAgents = statPlus(__ps.agents, 'es');
-const plAgencies = statPlus(__ps.agencies, 'es');
+const stats = await getPortalStats();
+const plAgents = statPlus(stats.agents, 'es');
+const plAgencies = statPlus(stats.agencies, 'es');
+const signup = 'https://agents.propertylist.es/new_agency/new?locale=es';
 
 const leaks = [
-	{
-		h: 'La consulta que esperó una hora',
-		p: 'Entra mientras estás en una visita. Cuando respondes, ya han hablado con tres agencias más. El primero que dice algo útil suele quedarse con el cliente.',
-	},
-	{
-		h: 'El seguimiento que hiciste de memoria',
-		p: 'El primer día llamas. El tercero piensas hacerlo. El séptimo ya se fue. Nadie decide abandonar un lead. Pasa en los huecos entre visitas.',
-	},
-	{
-		h: 'El cliente que ya cerraste',
-		p: 'Te compró hace cuatro años. Cuando venda, llamará a quien siguió en contacto. Muchas veces no es el agente que le vendió la casa.',
-	},
+	['La consulta que esperó una hora.', 'Entra mientras estás en una visita. Cuando respondes, ya han hablado con tres agencias más. El primero que dice algo útil suele quedarse con el cliente.'],
+	['El seguimiento que hiciste de memoria.', 'El primer día llamas. El tercero piensas hacerlo. El séptimo ya se fue. Nadie decide abandonar un lead. Pasa en los huecos entre visitas.'],
+	['El cliente que ya cerraste.', 'Te compró hace cuatro años. Cuando venda, llamará a quien siguió en contacto. Muchas veces no es el agente que le vendió la casa.'],
 ];
 
-const pipelines = [
-	{
-		name: 'Leads',
-		tag: 'Gratis',
-		desc: 'Cada consulta entra aquí y recibe respuesta antes de que cojas el teléfono. Las etapas son fijas, así que nada se desvía.',
-	},
-	{
-		name: 'Buyers',
-		tag: '5 créditos al meter uno',
-		desc: 'Financiación confirmada, visitas, oferta, negociación, arras, notaría y escritura firmada. Todo hasta cualificarlo es gratis. El crédito solo se gasta si decides que ese contacto merece entrar. Si dices que no, no pasa nada: se queda en tus contactos, simplemente no entra en el pipeline de Buyer.',
-	},
-	{
-		name: 'Sellers',
-		tag: 'Gratis',
-		desc: 'Valoración agendada, valoración hecha, contrato firmado, fotos y anuncio publicado. Gratis a propósito: los anuncios son lo que más queremos.',
-	},
-	{
-		name: 'Property',
-		tag: 'Gratis',
-		desc: 'Tu stock, de fuera de mercado hasta completado, con los días en mercado en cada tarjeta y recuperación en un clic si una venta se cae.',
-	},
-	{
-		name: 'Tenants',
-		href: '/es/alquileres/',
-		tag: 'Módulo de Alquileres',
-		desc: 'El camino hasta el contrato firmado, y después una tenancy que se renueva sola, revisa su renta y mantiene la fianza en regla.',
-	},
-	{
-		name: 'Nurture',
-		href: '/es/nurture/',
-		tag: 'Automatización',
-		desc: 'Todos los que ya cerraste, en contacto, y devueltos a ti en cuanto muestran interés por volver a moverse.',
-	},
+const boards = [
+	{ name: 'Leads', line: 'Cada consulta recibe respuesta antes de que cojas el teléfono.', tag: 'Gratis', free: true,
+		more: 'Las etapas son fijas, así que nada se desvía y los datos siguen siendo comparables entre agencias.' },
+	{ name: 'Buyers', line: 'De financiación confirmada a escritura firmada, con las visitas y la oferta en medio.', tag: 'Los 5 primeros gratis, luego 1 crédito', free: false,
+		more: 'Financiación confirmada, visitas, oferta, negociación, arras, notaría y escritura firmada. Todo hasta cualificarlo es gratis. El crédito solo se gasta cuando decides meter un lead cualificado. Si dices que no, se queda en tus contactos.' },
+	{ name: 'Sellers', line: 'De estimación de precio agendada a anuncio publicado.', tag: 'Gratis', free: true,
+		more: 'Estimación de precio agendada, estimación hecha, contrato firmado, fotos y anuncio publicado. Gratis a propósito: los anuncios son lo que más queremos.' },
+	{ name: 'Property', line: 'Tu stock de fuera de mercado a completado, con los días en mercado en cada tarjeta.', tag: 'Gratis', free: true,
+		more: 'Recuperación en un clic si una venta se cae.' },
+	{ name: 'Tenants', href: '/es/alquileres/', link: 'Sobre el Módulo de Alquileres', line: 'De la consulta a una tenancy que avisa de su propia renovación.', tag: 'Módulo de Alquileres', free: false,
+		more: 'Pasa a Renewal Pending antes de la fecha de fin, calcula la renta permitida en la actualización anual y redacta la notificación. 50 créditos por 30 días, gratis los primeros 30 días.' },
+	{ name: 'Nurture', href: '/es/nurture/', link: 'Sobre Nurture', line: 'Clientes antiguos en contacto, devueltos a ti cuando vuelven a moverse.', tag: 'Gratis', free: true,
+		more: 'Forma parte de Automation y Nurture. Cumpleaños, el aniversario del día que firmaron, una nota honesta sobre cuánto vale ahora su casa.' },
 ];
 
 const automatic = [
-	'Entra un lead y recibe acuse al momento por email y WhatsApp, mientras a ti te llega una notificación.',
-	'Se escribe por ti un plan de seguimiento en forma de tareas: día 0, día 1, día 3 y día 7, entre llamadas, WhatsApp y email.',
-	'Cualificas el lead y se mueve solo al pipeline correcto, con la alerta de propiedad del cliente ya configurada con lo que te contó.',
+	'Entra un lead y recibe acuse por email y WhatsApp. A ti te llega una notificación.',
+	'Se escribe un plan de seguimiento en forma de tareas: día 0, día 1, día 3 y día 7, entre llamadas, WhatsApp y email.',
+	'Cualificas el lead y se mueve al pipeline correcto, con la alerta de propiedad ya configurada.',
 	'Un anuncio se queda quieto y el tablero crea una tarea de revisión de precio en el intervalo que tú marques.',
-	'Una tenancy se acerca a su fin, pasa a Renewal Pending y hace al inquilino y al propietario la pregunta correcta en el momento correcto.',
-	'Una renta de larga duración le toca actualización anual, así que se calcula la renta permitida y se redacta la notificación al inquilino.',
+	'Una tenancy se acerca a su fin, pasa a Renewal Pending y hace al inquilino y al propietario la pregunta correcta a tiempo.',
+	'A una renta de larga duración le toca la actualización anual: se calcula la renta permitida y se redacta la notificación.',
+];
+
+const nurture = [
+	['Cumpleaños y el día que firmaron.', 'Con una nota honesta sobre cuánto vale ahora su casa.'],
+	['Se para en cuanto muestran interés.', 'Un clic en un enlace de estimación de precio, o tres aperturas del mismo email en una semana, y se te avisa de que llames, con el motivo.'],
+	['Como mucho, un email por contacto y semana.', 'Consentimiento registrado, bajas respetadas y un interruptor por contacto.'],
+	['Míralo antes de activarlo.', 'El tablero se llena y un contador te dice lo que ese mes habría salido. No sale nada hasta que tú lo digas.'],
 ];
 
 const queue = [
-	{ h: 'Primero los contactos calientes', p: 'Alguien que acaba de pinchar un enlace de valoración o ha abierto el mismo email tres veces esta semana, con el motivo en la tarjeta.' },
-	{ h: 'Leads nuevos todavía a tiempo', p: 'Aquellos en los que responder en los próximos minutos aún decide quién se queda al cliente.' },
-	{ h: 'Operaciones que se enfrían', p: 'Un comprador que lleva diez días en Viewings Booked y necesita un empujón hoy.' },
-	{ h: 'Las personales', p: 'Es el cumpleaños de un cliente antiguo. El email ya salió. Veinte segundos de WhatsApp valen más.' },
+	['Primero los contactos calientes', 'Alguien que acaba de pinchar un enlace de estimación de precio, con el motivo en la tarjeta.'],
+	['Leads nuevos todavía a tiempo', 'Aquellos en los que responder en los próximos minutos aún decide quién se queda al cliente.'],
+	['Operaciones que se enfrían', 'Un comprador que lleva diez días en Viewings Booked y necesita un empujón hoy.'],
+	['Las personales', 'El cumpleaños de un cliente antiguo. El email ya salió. Veinte segundos de WhatsApp valen más.'],
 ];
 
 const prices = [
-	{ what: 'Pipelines de Leads, Sellers y Property', cost: 'Gratis, sin límite' },
-	{ what: 'Lead de comprador', cost: '1 crédito, solo al meterlo en el pipeline de Buyer' },
-	{ what: 'Módulo de Alquileres: Tenants, Tenancies y Maintenance', cost: '50 créditos / 30 días, prueba gratis de 30 días' },
-	{ what: 'Automation y Nurture, con la Daily Action Queue incluida', cost: 'Gratis' },
-	{ what: 'Una consulta que resulta ser de otro agente', cost: 'Nunca se cobra' },
+	['Pipelines de Leads, Sellers y Property', 'Gratis, sin límite'],
+	['Lead de comprador', 'Los 5 primeros gratis, luego 1 crédito, solo al meter un lead cualificado en el pipeline de Buyer'],
+	['Módulo de Alquileres: Tenants, Tenancies y Maintenance', '50 créditos / 30 días, prueba gratis de 30 días'],
+	['Automation y Nurture, con la Daily Action Queue incluida', 'Gratis'],
+	['Una consulta que resulta ser de otro agente', 'Nunca se cobra'],
 ];
 
 const faqs = [
-	{
-		q: '¿Qué cuesta realmente?',
-		a: 'Los pipelines de Leads, Sellers y Property son gratis y sin límite. Un lead de comprador cuesta 1 crédito, que solo se gastan cuando decides meter ese contacto en el pipeline de Buyer. Cualificar no cuesta nada, y una consulta sin cualificar tampocola. El Módulo de Alquileres, que funciona solo, cuesta 50 créditos por período de 30 días, gratis los primeros 30 días. Automation y Nurture es gratis. Todo sale del mismo saldo de créditos que ya usas para destacar anuncios o sacar informes.',
-	},
-	{
-		q: '¿Tengo que configurar algo de esto?',
-		a: 'No. Los seis pipelines se configuran por ti, y tus contactos y propiedades actuales se colocan en el correcto desde el primer día. Los leads nuevos entran en New Lead y los anuncios nuevos en Active Listing. Puedes editar las etapas de Buyers y Property. Leads y Sellers son fijos para que los datos sigan siendo comparables entre agencias.',
-	},
-	{
-		q: '¿Va a escribir a mis clientes sin que yo lo sepa?',
-		a: 'Enviará, y siempre podrás ver exactamente qué. Cada contacto tiene un historial con lo que ha salido y lo que está programado, y puedes verlo, editarlo o saltártelo. El consentimiento de marketing se registra por contacto, se respetan las bajas, y ningún contacto recibe más de un email por semana, esté en las secuencias que esté. También puedes desactivar Nurture para una sola persona, o para un tipo de email, si sabes algo que el sistema no sabe.',
-	},
-	{
-		q: '¿Qué pasa cuando otro agente pregunta por mi anuncio?',
-		a: 'Se detecta solo, se etiqueta en rojo y nunca te cuesta un crédito. Además queda fuera de todos los emails automáticos, así que no le mandamos una valoración de vivienda a un agente colaborador. La etiqueta es un aviso, no un borrado, y se quita en un clic si nos equivocamos.',
-	},
-	{
-		q: '¿Y si no activo la Automatización?',
-		a: 'El tablero de Nurture se llena igual. Cada operación cerrada sigue colocando al contacto en él y los datos se siguen recogiendo, pero no se envía nada, y un contador te dice lo que ese mes habría salido. Si la activas más adelante, la máquina arranca con todo lo que lleva recogido y no desde cero.',
-	},
+	['¿Qué cuesta?', 'Los pipelines de Leads, Sellers y Property son gratis y sin límite. Un lead de comprador cuesta 1 crédito a partir de los 5 primeros, que solo se gasta cuando decides meter ese lead cualificado en el pipeline de Buyer. Cualificar no cuesta nada, y una consulta sin cualificar tampoco. El Módulo de Alquileres, que funciona solo, cuesta 50 créditos por período de 30 días, gratis los primeros 30 días. Automation y Nurture es gratis. Todo sale del mismo saldo de créditos que ya usas para destacar anuncios o sacar informes.'],
+	['¿Tengo que configurar algo de esto?', 'No. Los seis pipelines se configuran por ti, y tus contactos y propiedades actuales se colocan en el correcto desde el primer día. Los leads nuevos entran en New Lead y los anuncios nuevos en Active Listing. Puedes editar las etapas de Buyers y Property. Leads y Sellers son fijos para que los datos sigan siendo comparables entre agencias.'],
+	['¿Va a escribir a mis clientes sin que yo lo sepa?', 'Enviará, y siempre podrás ver exactamente qué. Cada contacto tiene un historial con lo que ha salido y lo que está programado, y puedes verlo, editarlo o saltártelo. El consentimiento de marketing se registra por contacto, se respetan las bajas, y ningún contacto recibe más de un email por semana, esté en las secuencias que esté. También puedes desactivar Nurture para una sola persona, o para un tipo de email, si sabes algo que el sistema no sabe.'],
+	['¿Qué pasa cuando otro agente pregunta por mi anuncio?', 'Se detecta solo, se etiqueta en rojo y nunca te cuesta un crédito. Además queda fuera de todos los emails automáticos, así que la estimación de precio de una vivienda nunca llega a un agente colaborador. La etiqueta es un aviso, no un borrado, y se quita en un clic si nos equivocamos.'],
+	['¿Y si no activo Automation?', 'El tablero de Nurture se llena igual. Cada operación cerrada sigue colocando al contacto en él y los datos se siguen recogiendo, pero no se envía nada, y un contador te dice lo que ese mes habría salido. Si la activas más adelante, arranca con todo lo que lleva recogido y no desde cero.'],
 ];
 
-const faqLd = {
-	'@context': 'https://schema.org',
-	'@type': 'FAQPage',
-	mainEntity: faqs.map((f) => ({
-		'@type': 'Question',
-		name: f.q,
-		acceptedAnswer: { '@type': 'Answer', text: f.a },
-	})),
-};
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
+const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+	{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${origin}/es/` },
+	{ '@type': 'ListItem', position: 2, name: 'Funciones', item: `${origin}/es/funciones/` },
+	{ '@type': 'ListItem', position: 3, name: 'Pipelines', item: canonical },
+] };
 ---
-
 <Layout
 	lang="es"
 	title={title}
 	description={description}
 	canonical={canonical}
+	hideSearch
+	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: `${origin}/pipelines/` },
 		{ hreflang: 'es', href: canonical },
@@ -132,613 +98,182 @@ const faqLd = {
 	]}
 >
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
 
-	<section class="hero">
-		<div class="heroInner">
-			<div class="kicker">El CRM de PropertyList</div>
-			<h1>Casi ninguna operación se pierde contra otra agencia. Se pierde porque nadie hizo el seguimiento.</h1>
-			<p class="lead">
-				Seis pipelines que llevan hacia adelante, por su cuenta, cada lead, cada anuncio y cada cliente antiguo. Tus anuncios y tus vendedores
-				siguen gratis. Tú eliges cuál de ellos merece un crédito.
-			</p>
-			<div class="ctaRow" aria-label="Únete a PropertyList">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
-					Crea tu cuenta de agencia gratis
-				</a>
-				<a class="btnSecondary" href="#que-cuesta">Ver qué cuesta</a>
-			</div>
-			<div class="note">{plAgencies} agencias y {plAgents} agentes ya están en la red. Sin tarjeta y sin coste de alta.</div>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Por dónde se escapa el dinero</h2>
-			<p>No por ser mal agente. Por la semana normal de uno que va lleno.</p>
-		</div>
-		<div class="grid3">
-			{
-				leaks.map((l) => (
-					<div class="card leakCard">
-						<h3>{l.h}</h3>
-						<p>{l.p}</p>
-					</div>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Seis pipelines, un solo flujo</h2>
-			<p>Cada uno cubre una parte del trabajo, y los contactos pasan de uno a otro según avanza la operación. Sin hojas de cálculo y sin teclear dos veces.</p>
-		</div>
-		<figure class="panelMock">
+	<section class="hero"><div class="cx">
+		<p class="kicker">El CRM de PropertyList</p>
+		<h1>La mayoría de las operaciones perdidas nunca tuvieron <b>seguimiento.</b></h1>
+		<p class="lead">No se perdieron contra otra agencia. Se escaparon en los huecos entre visitas. Seis pipelines llevan hacia adelante, por su cuenta, cada lead, cada anuncio y cada cliente antiguo. <strong>Leads, Sellers y Property son gratis.</strong></p>
+		<p class="ctaRow"><a class="btn" href={signup} target="_blank" rel="noopener">Crea tu cuenta de agencia gratis</a> <a class="btnLink" href="#que-cuesta">Ver qué cuesta</a></p>
+		<p class="fric">{plAgencies} agencias y {plAgents} agentes ya están en la red. Sin tarjeta y sin coste de alta.</p>
+		<figure class="shot">
 			<img
 				src="/img/pipelines-board.png"
 				alt="El tablero de Lead Pipeline de PropertyList: pestañas de Leads, Buyers, Sellers, Tenants, Properties y Nurture con su etiqueta de gratis o de pago, y tarjetas de leads en las etapas New Lead, Attempted Contact y Contacted"
-				loading="lazy"
 				width="1618"
 				height="700"
 			/>
-			<figcaption>
-				El Lead Pipeline tal y como se ve. Las pestañas de arriba son los seis tableros, cada uno con lo que cuesta, y el cronómetro de cada
-				tarjeta es el tiempo que lleva esperando ese lead.
-			</figcaption>
+			<figcaption>El Lead Pipeline tal y como se ve en el CRM. Las pestañas son los seis tableros, cada uno con su etiqueta de gratis o de pago. El cronómetro de cada tarjeta es el tiempo que lleva esperando ese lead.</figcaption>
 		</figure>
-		<div class="grid3" aria-label="Pipelines del CRM">
-			{
-				pipelines.map((b) => (
-					<div class="card">
-						<div class="boardHead">
-							<h3>{b.href ? <a href={b.href}>{b.name}</a> : b.name}</h3>
-							<span class={b.tag === 'Gratis' ? 'tag tagFree' : 'tag tagCredit'}>{b.tag}</span>
-						</div>
-						<p>{b.desc}</p>
-					</div>
-				))
-			}
-		</div>
-	</section>
+	</div></section>
 
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Lo que pasa mientras estás en una visita</h2>
-			<p>No son ajustes que tengas que acordarte de activar. Es lo que hacen los pipelines.</p>
+	<section class="band"><div class="cx">
+		<h2>Por dónde se escapa <b>el dinero.</b></h2>
+		<p class="sub">Se escapa en la semana normal de un agente que va lleno.</p>
+		<div class="steps">
+			{leaks.map(([h, p]) => (<div class="step"><h3>{h}</h3><p>{p}</p></div>))}
 		</div>
-		<ol class="flowList">
+	</div></section>
+
+	<section class="band soft"><div class="cx">
+		<h2>Seis tableros. <b>Un solo flujo.</b></h2>
+		<p class="sub">Cada uno cubre una parte del trabajo. Los contactos pasan de uno a otro según avanza la operación, así que no se teclea nada dos veces. Toca un tablero para ver el detalle.</p>
+		<div class="boards">
+			{boards.map((b) => (
+				<details>
+					<summary>
+						<span class="bName">{b.name}</span>
+						<span class={b.free ? 'bTag bFree' : 'bTag'}>{b.tag}</span>
+						<span class="bLine">{b.line}</span>
+					</summary>
+					<p>{b.more} {b.href && <a href={b.href}>{b.link}</a>}</p>
+				</details>
+			))}
+		</div>
+	</div></section>
+
+	<section class="band"><div class="cx">
+		<h2>Mientras estás en una visita, <b>sigue trabajando.</b></h2>
+		<p class="sub">Los pipelines lo hacen solos, sin ningún ajuste que recordar.</p>
+		<ul class="auto">
 			{automatic.map((a) => <li>{a}</li>)}
-		</ol>
-	</section>
+		</ul>
+	</div></section>
 
-	<section class="section">
-		<div class="grid2">
-			<div class="card">
-				<h2>La parte que casi nadie hace</h2>
-				<p>
-					Toda agencia sabe que debería mantener el contacto con sus clientes antiguos. Casi ninguna lo hace más allá del primer mes, porque
-					siempre hay una operación viva que hoy importa más.
-				</p>
-				<p>
-					Nurture los mantiene sin ti. Cumpleaños, el aniversario del día que firmaron, una nota honesta sobre cuánto vale ahora su casa. Cuando
-					uno pincha un enlace de valoración o abre el mismo email tres veces en una semana, los emails automáticos se paran y se te avisa de
-					que llames, con el motivo delante.
-				</p>
-				<p>Un lead que se apaga en marzo compra muchas veces en octubre, normalmente con quien siguió en contacto.</p>
-			</div>
-			<div class="card accent">
-				<h2>Puedes verlo antes de activarlo</h2>
-				<p>
-					Antes de activarlo, el tablero de Nurture se llena igual. Cada operación cerrada sigue entrando, los datos se siguen recogiendo, y un
-					contador te dice lo que ese mes habría enviado.
-				</p>
-				<p>
-					No sale nada hasta que tú decides que salga. Y cuando lo activas, arranca con todo lo que lleva recogido en vez de con una pantalla
-					vacía.
-				</p>
-				<div class="pillRow">
-					<span class="pill">Gratis</span>
-					<span class="pill">Un email por contacto y semana</span>
-					<span class="pill">Interruptor por contacto</span>
-				</div>
-			</div>
+	<section class="band soft"><div class="cx">
+		<h2>Clientes antiguos, en contacto <b>sin ti.</b></h2>
+		<p class="sub">Toda agencia quiere mantener el contacto. Casi ninguna lo hace más allá del primer mes, porque siempre hay una operación viva que hoy importa más. Un lead que se apaga en marzo a menudo compra en octubre, normalmente con quien siguió en contacto.</p>
+		<div class="asks">
+			{nurture.map(([h, p]) => (<div>{h}<span>{p}</span></div>))}
 		</div>
-	</section>
+	</div></section>
 
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Una pantalla que responde "qué hago hoy"</h2>
-			<p>
-				El email es la parte que se puede automatizar. Las llamadas y WhatsApp son las que cierran. Así que la automatización envía lo que puede
-				enviar y después te dice las pocas cosas que solo puedes hacer tú, ordenadas por lo que más probablemente genere dinero.
-			</p>
+	<section class="band"><div class="cx">
+		<h2>Una pantalla que responde <b>"qué hago hoy".</b></h2>
+		<p class="sub">El email se puede automatizar. Las llamadas y WhatsApp son lo que cierra. Así que envía lo que puede enviar y después te dice las pocas cosas que solo puedes hacer tú, ordenadas por lo que más probablemente genere dinero.</p>
+		<div class="asks four">
+			{queue.map(([h, p]) => (<div>{h}<span>{p}</span></div>))}
 		</div>
-		<div class="grid2">
-			{
-				queue.map((q, i) => (
-					<div class="card queueCard">
-						<div class="queueNum">{i + 1}</div>
-						<div>
-							<h3>{q.h}</h3>
-							<p>{q.p}</p>
-						</div>
-					</div>
-				))
-			}
-		</div>
-		<p class="quiet">
-			La lista se limita a unas diez acciones al día, a propósito. Una cola corta que terminas es mejor que una completa que aprendes a ignorar.
-			Cada tarjeta llama o abre WhatsApp con el mensaje ya escrito, y un toque registra cómo fue.
-		</p>
-	</section>
+		<p class="quiet">Limitada a unas diez acciones al día, a propósito: una cola corta que terminas es mejor que una completa que aprendes a ignorar. Cada tarjeta llama o abre WhatsApp con el mensaje ya escrito, y un toque registra cómo fue.</p>
+	</div></section>
 
-	<section class="section">
-		<div class="grid2">
-			<div class="card">
-				<h2>Otros agentes nunca te cuestan un crédito</h2>
-				<p>
-					Agentes de otras agencias preguntan por tus anuncios todo el día, que es justo para lo que existe una red compartida. Cada lead que entra se comprueba contra el registro de agentes de la red, por
-					email, por teléfono y por dominio de agencia.
-				</p>
-				<p>
-					Una coincidencia se etiqueta en rojo, nunca cuesta un crédito y queda fuera de todos los emails automáticos, así que nadie manda una
-					valoración de vivienda a un agente colaborador. Si nos equivocamos, un clic quita la etiqueta, y tu corrección se queda en tu cuenta en lugar de seguir a esa
-					persona por toda la red.
-				</p>
-			</div>
-			<div class="card" id="que-cuesta">
-				<h2>Qué cuesta</h2>
-				<ul class="priceList">
-					{
-						prices.map((p) => (
-							<li>
-								<span>{p.what}</span>
-								<strong>{p.cost}</strong>
-							</li>
-						))
-					}
-				</ul>
-				<p class="quiet">
-					Un solo saldo de créditos cubre todo, el mismo que usas para destacar un anuncio o sacar un informe. Los créditos que compras no
-					caducan. <a href="/es/precios/">Ver la lista completa de precios</a>.
-				</p>
-			</div>
-		</div>
-	</section>
+	<section class="band soft"><div class="cx">
+		<h2>Otros agentes <b>nunca te cuestan un crédito.</b></h2>
+		<p class="sub">Agentes de otras agencias preguntan por tus anuncios todo el día, que es justo para lo que existe una red compartida. Cada lead que entra se comprueba contra el registro de agentes de la red, por email, teléfono y dominio de agencia. Una coincidencia se etiqueta en rojo, nunca se cobra y queda fuera de todos los emails automáticos. Un clic quita la etiqueta si nos equivocamos, y la corrección se queda en tu cuenta.</p>
+	</div></section>
 
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Las preguntas que hacen los agentes</h2>
-		</div>
-		<div class="faqList">
-			{
-				faqs.map((f) => (
-					<details class="faqItem">
-						<summary>{f.q}</summary>
-						<p>{f.a}</p>
-					</details>
-				))
-			}
-		</div>
-	</section>
+	<section class="band" id="que-cuesta"><div class="cx">
+		<h2>Qué <b>cuesta.</b></h2>
+		<ul class="priceList">
+			{prices.map(([what, cost]) => (<li><span>{what}</span><strong>{cost}</strong></li>))}
+		</ul>
+		<p class="quiet">Un solo saldo de créditos cubre todo, el mismo que usas para destacar un anuncio o sacar un informe. <a href="/es/precios/">Ver la lista completa de precios</a>.</p>
+	</div></section>
 
-	<section class="section cta">
-		<div class="ctaInner">
-			<h2>Gratis para llevar tu agencia. Pagas cuando te traemos un comprador.</h2>
-			<p>
-				El MLS, el CRM, los anuncios ilimitados y las cuentas de equipo ilimitadas no cuestan nada. Activa las partes que trabajan mientras
-				duermes cuando te merezcan la pena. Una <a href="/es/bandeja-conectada/">bandeja conectada</a>, muy pronto, pondrá las respuestas del cliente en el contacto al que pertenecen, sin que copies nada a mano.
-			</p>
-			<div class="ctaRow" aria-label="Únete a PropertyList">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=es" target="_blank" rel="noopener">
-					Crea tu cuenta de agencia gratis
-				</a>
-				<a class="btnSecondary" href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/pipeline/">Leer la guía de pipelines</a>
-			</div>
+	<section class="band soft"><div class="cx">
+		<h2>Antes de que preguntes.</h2>
+		<div class="faqwrap">
+			{faqs.map(([q, a]) => (<details class="faqItem"><summary>{q}</summary><p>{a}</p></details>))}
 		</div>
-	</section>
+	</div></section>
+
+	<section class="band close"><div class="cx">
+		<h2>Gratis para llevar tu agencia. <b>Pagas solo cuando decides meter a un comprador.</b></h2>
+		<p class="alt">Publicar en el MLS, compartir con otras agencias y los pipelines de Leads, Sellers y Property no cuestan nada. Activa las partes automáticas cuando te merezcan la pena.</p>
+		<a class="btn btnLight" href={signup} target="_blank" rel="noopener">Crea tu cuenta de agencia gratis</a>
+		<p class="dev">¿Quieres el detalle primero? <a href="/es/docs/propertylist-mls-manual-de-usuario/pipeline-and-tasks/pipeline/">Lee la guía de pipelines</a>. Una <a href="/es/bandeja-conectada/">bandeja conectada</a>, muy pronto, pondrá las respuestas del cliente en el contacto al que pertenecen.</p>
+	</div></section>
 </Layout>
 
 <style>
-	:global(:root) {
-		--pl-accent: #00ae9a;
-		--pl-accent-rgb: 0, 174, 154;
-	}
-
-	h1,
-	h2,
-	h3 {
-		letter-spacing: -0.03em;
-	}
-
-	.hero {
-		border-radius: 22px;
-		padding: 16px;
-		margin: 0 0 16px;
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		background:
-			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
-			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
-	}
-
-	.heroInner {
-		background: rgba(255, 255, 255, 0.78);
-		border: 1px solid rgba(16, 24, 40, 0.06);
-		border-radius: 18px;
-		padding: 18px;
-	}
-
-	.kicker {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 10px;
-		border-radius: 999px;
-		background: rgba(var(--pl-accent-rgb), 0.12);
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
-		color: rgba(16, 24, 40, 0.86);
-		font-weight: 900;
-		font-size: 12px;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-	}
-
-	h1 {
-		margin: 10px 0 10px;
-		line-height: 1.06;
-	}
-
-	.lead {
-		margin: 0 0 14px;
-		color: rgba(16, 24, 40, 0.75);
-		max-width: 78ch;
-		line-height: 1.6;
-	}
-
-	.note {
-		color: rgba(16, 24, 40, 0.65);
-		font-weight: 700;
-		font-size: 13px;
-	}
-
-	.section {
-		margin: 0 0 14px;
-	}
-
-	.sectionHead {
-		background: rgba(255, 255, 255, 0.7);
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 18px;
-		padding: 14px;
-		margin-bottom: 12px;
-	}
-
-	.sectionHead p {
-		margin: 8px 0 0;
-		color: rgba(16, 24, 40, 0.72);
-		line-height: 1.6;
-		max-width: 88ch;
-	}
-
-	.grid2 {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 12px;
-	}
-
-	.grid3 {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 12px;
-	}
-
-	.card {
-		background: rgba(255, 255, 255, 0.86);
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 18px;
-		padding: 14px;
-	}
-
-	.card.accent {
-		border-color: rgba(var(--pl-accent-rgb), 0.25);
-		background:
-			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
-			rgba(255, 255, 255, 0.86);
-	}
-
-	.card h2 {
-		margin: 0 0 10px;
-	}
-
-	.card h3 {
-		margin: 0;
-		font-size: 16px;
-	}
-
-	.card p {
-		margin: 0 0 10px;
-		color: rgba(16, 24, 40, 0.78);
-		line-height: 1.6;
-	}
-
-	.boardHead {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-		margin-bottom: 8px;
-	}
-
-	.tag {
-		display: inline-flex;
-		align-items: center;
-		padding: 4px 8px;
-		border-radius: 999px;
-		font-weight: 900;
-		font-size: 11px;
-		letter-spacing: 0.04em;
-		white-space: nowrap;
-	}
-
-	.tagFree {
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.3);
-		background: rgba(var(--pl-accent-rgb), 0.12);
-		color: rgba(16, 24, 40, 0.82);
-	}
-
-	.tagCredit {
-		border: 1px solid rgba(16, 24, 40, 0.16);
-		background: rgba(247, 248, 250, 0.9);
-		color: rgba(16, 24, 40, 0.66);
-	}
-
-	.pillRow {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		margin-top: 4px;
-	}
-
-	.pill {
-		display: inline-flex;
-		align-items: center;
-		padding: 8px 10px;
-		border-radius: 999px;
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
-		background: rgba(var(--pl-accent-rgb), 0.1);
-		font-weight: 900;
-		color: rgba(16, 24, 40, 0.86);
-		font-size: 13px;
-	}
-
-	.cta {
-		border-radius: 22px;
-		padding: 16px;
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
-		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
-	}
-
-	.ctaInner {
-		background: rgba(255, 255, 255, 0.82);
-		border: 1px solid rgba(16, 24, 40, 0.06);
-		border-radius: 18px;
-		padding: 16px;
-	}
-
-	.ctaInner p {
-		margin: 8px 0 0;
-		color: rgba(16, 24, 40, 0.75);
-		line-height: 1.6;
-		max-width: 90ch;
-	}
-
-	.ctaRow {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-top: 14px;
-	}
-
-	.btnPrimary,
-	.btnSecondary {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 12px 14px;
-		border-radius: 14px;
-		border: 1px solid rgba(16, 24, 40, 0.14);
-		background: rgba(255, 255, 255, 0.92);
-		text-decoration: none;
-		font-weight: 950;
-		color: rgba(16, 24, 40, 0.88);
-	}
-
-	.btnPrimary {
-		border-color: rgba(var(--pl-accent-rgb), 0.35);
-		background: rgba(var(--pl-accent-rgb), 0.14);
-	}
-
-	.btnPrimary:hover,
-	.btnSecondary:hover {
-		border-color: rgba(var(--pl-accent-rgb), 0.45);
-	}
-
-	@media (max-width: 980px) {
-		.grid3 {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	@media (max-width: 860px) {
-		.grid2 {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	/* ---- sales-page components (rewrite 2026-07-28) ---- */
-	.leakCard h3 {
-		margin: 0 0 6px;
-		font-size: 16.5px;
-	}
-	.leakCard p {
-		margin: 0;
-		color: rgba(16, 24, 40, 0.7);
-		line-height: 1.6;
-	}
-
-	.flowList {
-		list-style: none;
-		counter-reset: flow;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 10px;
-	}
-	.flowList li {
-		counter-increment: flow;
-		position: relative;
-		background: #fff;
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 14px;
-		padding: 14px 18px 14px 56px;
-		color: rgba(16, 24, 40, 0.8);
-		line-height: 1.6;
-	}
-	.flowList li::before {
-		content: counter(flow);
-		position: absolute;
-		left: 16px;
-		top: 13px;
-		width: 26px;
-		height: 26px;
-		border-radius: 999px;
-		background: rgba(var(--pl-accent-rgb), 0.14);
-		color: #0a6d61;
-		font-weight: 800;
-		font-size: 13px;
-		display: grid;
-		place-items: center;
-	}
-
-	.queueCard {
-		display: flex;
-		gap: 14px;
-		align-items: flex-start;
-	}
-	.queueNum {
-		flex: 0 0 auto;
-		width: 30px;
-		height: 30px;
-		border-radius: 999px;
-		background: #101828;
-		color: #fff;
-		font-weight: 800;
-		font-size: 14px;
-		display: grid;
-		place-items: center;
-	}
-	.queueCard h3 {
-		margin: 2px 0 5px;
-		font-size: 16px;
-	}
-	.queueCard p {
-		margin: 0;
-		color: rgba(16, 24, 40, 0.7);
-		line-height: 1.55;
-	}
-
-	.quiet {
-		color: rgba(16, 24, 40, 0.62);
-		font-size: 14.5px;
-		line-height: 1.6;
-		margin: 14px 0 0;
-	}
-
-	.priceList {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-	.priceList li {
-		display: flex;
-		justify-content: space-between;
-		gap: 16px;
-		padding: 11px 0;
-		border-bottom: 1px dashed rgba(16, 24, 40, 0.14);
-		font-size: 14.5px;
-	}
-	.priceList li:last-child {
-		border-bottom: 0;
-	}
-	.priceList span {
-		color: rgba(16, 24, 40, 0.72);
-	}
-	.priceList strong {
-		white-space: nowrap;
-		color: #0a6d61;
-	}
-
-	.faqList {
-		display: grid;
-		gap: 10px;
-	}
-	.faqItem {
-		background: #fff;
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 14px;
-		padding: 14px 18px;
-	}
-	.faqItem summary {
-		cursor: pointer;
-		font-weight: 800;
-		letter-spacing: -0.01em;
-		color: #101828;
-	}
-	.faqItem p {
-		margin: 10px 0 0;
-		color: rgba(16, 24, 40, 0.75);
-		line-height: 1.65;
-	}
-
-	@media (max-width: 680px) {
-		.priceList li {
-			flex-direction: column;
-			gap: 4px;
-		}
-		.priceList strong {
-			white-space: normal;
-		}
-	}
-
-	.panelMock {
-		margin: 20px 0 0;
-	}
-
-	.panelMock img {
-		width: 100%;
-		height: auto;
-		border-radius: 12px;
-		border: 1px solid rgba(16, 24, 40, 0.12);
-		box-shadow: 0 8px 22px rgba(4, 33, 28, 0.08);
-	}
-
-	.panelMock figcaption {
-		margin-top: 10px;
-		font-size: 13px;
-		line-height: 1.55;
-		color: rgba(16, 24, 40, 0.55);
-	}
-
-
-
-
-	.boardHead h3 a {
-		color: inherit;
-		text-decoration: none;
-		border-bottom: 1px solid rgba(var(--pl-accent-rgb), 0.45);
-	}
-
-	.boardHead h3 a:hover {
-		border-bottom-color: var(--pl-accent);
+	.cx { width: min(1120px, 100% - 32px); margin: 0 auto; }
+	.hero { padding: 28px 0 40px; }
+	.kicker { font-size: 17px; font-weight: 700; color: #0a6d61; margin: 0 0 14px; max-width: 30ch; }
+	h1 { font-size: 40px; line-height: 1.06; letter-spacing: -0.03em; font-weight: 800; margin: 0; }
+	h1 b, h2 b { color: #008a7a; }
+	.lead { font-size: 19px; line-height: 1.5; color: #28383f; margin: 18px 0 24px; max-width: 40ch; }
+	.lead strong { color: #0b1b22; }
+	.btn { display: inline-block; background: #0a6d61; color: #fff; font-weight: 800; font-size: 18px; padding: 16px 24px; border-radius: 14px; text-decoration: none; }
+	.btn:hover { background: #08584e; }
+	.btnLink { display: inline-block; margin-left: 14px; font-weight: 700; color: #0a6d61; text-decoration: underline; text-underline-offset: 3px; }
+	.ctaRow { margin: 0; }
+	.fric { font-size: 15px; color: #5b6b73; margin: 12px 0 0; }
+	.shot { margin: 32px 0 0; }
+	.shot img { width: 100%; height: auto; border-radius: 12px; border: 1px solid #e2e5e3; box-shadow: 0 8px 22px rgba(4, 33, 28, 0.08); }
+	.shot figcaption { margin-top: 10px; font-size: 13px; line-height: 1.55; color: #5b6b73; max-width: 70ch; }
+	.band { padding: 44px 0; border-top: 1px solid #e7eef1; background: #fff; }
+	.soft { background: #f4f7f8; }
+	h2 { font-size: 32px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 800; margin: 0; max-width: 20ch; }
+	.sub { font-size: 17px; line-height: 1.5; color: #28383f; margin: 10px 0 0; max-width: 52ch; }
+	.steps { display: grid; gap: 22px; margin-top: 26px; }
+	.step { padding-top: 14px; border-top: 3px solid #00ae9a; }
+	.step h3 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
+	.step p { margin: 6px 0 0; color: #28383f; max-width: 38ch; }
+	.boards { margin-top: 22px; border-top: 1px solid #dfe6e8; }
+	.boards details { border-bottom: 1px solid #dfe6e8; }
+	.boards summary { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 14px 0; cursor: pointer; list-style: none; }
+	.boards summary::-webkit-details-marker { display: none; }
+	.bName { grid-column: 1; grid-row: 1; font-size: 19px; font-weight: 800; }
+	.bName::after { content: ' +'; color: #008a7a; }
+	.boards details[open] .bName::after { content: ' -'; }
+	.bTag { grid-column: 2; grid-row: 1; justify-self: end; font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: #e7eef1; color: #28383f; white-space: nowrap; }
+	.bFree { background: #e6f7f4; color: #0a6d61; }
+	.bLine { grid-column: 1 / -1; grid-row: 2; color: #28383f; font-size: 16px; }
+	.boards p { margin: 0 0 16px; color: #28383f; max-width: 60ch; }
+	.boards p a { color: #0a6d61; font-weight: 700; }
+	.auto { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
+	.auto li { padding: 0 0 0 30px; position: relative; font-size: 17px; line-height: 1.45; color: #0b1b22; max-width: 60ch; }
+	.auto li::before { content: ''; position: absolute; left: 0; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: #00ae9a; }
+	.asks { display: grid; gap: 10px; margin-top: 22px; }
+	.asks div { background: #e6f7f4; border-radius: 14px; padding: 14px 16px; font-weight: 700; font-size: 17px; }
+	.soft .asks div { background: #fff; border: 1px solid #dfe6e8; }
+	.asks div span { display: block; font-weight: 500; color: #3d4a4f; font-size: 15px; margin-top: 4px; }
+	.quiet { color: #5b6b73; font-size: 15px; line-height: 1.5; margin: 16px 0 0; max-width: 60ch; }
+	.priceList { list-style: none; margin: 22px 0 0; padding: 0; border-top: 1px solid #dfe6e8; }
+	.priceList li { display: flex; flex-direction: column; gap: 4px; padding: 12px 0; border-bottom: 1px solid #dfe6e8; font-size: 16px; }
+	.priceList span { color: #28383f; }
+	.priceList strong { color: #0a6d61; }
+	.faqwrap { margin-top: 20px; }
+	.faqItem { border-top: 1px solid #e7eef1; padding: 14px 0; }
+	.faqItem:last-child { border-bottom: 1px solid #e7eef1; }
+	.faqItem summary { font-weight: 800; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+	.faqItem summary::-webkit-details-marker { display: none; }
+	.faqItem summary::after { content: '+'; color: #008a7a; font-size: 26px; line-height: 1; }
+	.faqItem[open] summary::after { content: '-'; }
+	.faqItem p { margin: 10px 0 0; color: #28383f; max-width: 60ch; }
+	.close { background: #0b1b22; color: #fff; border-top: 0; }
+	.close h2 { max-width: 22ch; }
+	.close h2 b { color: #7deede; }
+	.btnLight { background: #00ae9a; color: #0b1b22; margin-top: 22px; }
+	.btnLight:hover { background: #2fe3cb; }
+	.alt { margin: 14px 0 0; color: #c9d6da; font-size: 17px; max-width: 52ch; }
+	.dev { margin: 18px 0 0; font-size: 14px; color: #8fa0a6; max-width: 60ch; }
+	.dev a { color: #c9d6da; }
+	@media (min-width: 900px) {
+		h1 { font-size: 64px; max-width: 13ch; }
+		.lead { font-size: 22px; }
+		.hero { padding: 48px 0 64px; }
+		.shot { margin-top: 44px; }
+		h2 { font-size: 44px; }
+		.steps { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+		.boards summary { grid-template-columns: 150px 1fr auto; gap: 12px; }
+		.bLine { grid-column: 2; grid-row: 1; }
+		.bTag { grid-column: 3; }
+		.auto { grid-template-columns: repeat(2, 1fr); gap: 14px 32px; }
+		.asks { grid-template-columns: repeat(2, 1fr); }
+		.asks.four { grid-template-columns: repeat(4, 1fr); }
+		.priceList li { flex-direction: row; justify-content: space-between; gap: 24px; }
+		.priceList strong { text-align: right; }
+		.band { padding: 64px 0; }
 	}
 </style>
