@@ -151,6 +151,18 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 		</ul>
 	</div></section>
 
+	<section class="band tint"><div class="cx">
+		<h2>After a viewing, skip the typing. <b>Send a voice note.</b></h2>
+		<p class="sub">Tell CoAgent on WhatsApp what happened, naming the client. It turns the voice note into the CRM update, reads it back in your own words, and saves nothing until you reply YES. Your voice is never kept.</p>
+		<div class="vn" role="group" aria-label="Example exchange with CoAgent">
+			<div class="me"><span class="vnLabel">Voice note</span>Add a note to Marta: she wants to see it again Saturday.</div>
+			<div class="bot">Note for Marta's file: <b>wants a second viewing on Saturday.</b> Reply YES to save.</div>
+			<div class="me">YES</div>
+		</div>
+		<p class="vnCap">An illustration of a CoAgent exchange, not a recording.</p>
+		<a class="coLink" href="/coagent/">How CoAgent works</a>
+	</div></section>
+
 	<section class="band soft"><div class="cx">
 		<h2>Past clients, kept warm <b>without you.</b></h2>
 		<p class="sub">Every agency means to stay in touch. Almost none do past the first month, because there is always a live deal that matters more today. A lead that goes quiet in March often buys in October, usually from whoever stayed in touch.</p>
@@ -232,6 +244,14 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	.bLine { grid-column: 1 / -1; grid-row: 2; color: #28383f; font-size: 16px; }
 	.boards p { margin: 0 0 16px; color: #28383f; max-width: 60ch; }
 	.boards p a { color: #0a6d61; font-weight: 700; }
+	.tint { background: #e6f7f4; }
+	.vn { display: grid; gap: 10px; margin-top: 22px; max-width: 520px; }
+	.vn .me { justify-self: end; max-width: 85%; background: #0a6d61; color: #fff; font-weight: 700; padding: 12px 16px; border-radius: 16px 16px 4px 16px; }
+	.vn .bot { justify-self: start; max-width: 85%; background: #fff; border: 1px solid #c9e4de; color: #0b1b22; padding: 12px 16px; border-radius: 16px 16px 16px 4px; }
+	.vn .bot b { color: #0a6d61; }
+	.vnLabel { display: block; font-size: 12px; font-weight: 600; opacity: .8; margin-bottom: 3px; }
+	.vnCap { font-size: 13px; color: #5b6b73; margin: 8px 0 0; }
+	.coLink { display: inline-block; margin-top: 18px; font-weight: 700; color: #0a6d61; text-decoration: underline; text-underline-offset: 3px; }
 	.auto { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
 	.auto li { padding: 0 0 0 30px; position: relative; font-size: 17px; line-height: 1.45; color: #0b1b22; max-width: 60ch; }
 	.auto li::before { content: ''; position: absolute; left: 0; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: #00ae9a; }
