@@ -1,128 +1,85 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+// /rentals/ rebuilt 09-10-26 (James: "should we fix the rental page also?" then "deploy"). Same substance as the live
+// page, new shape: layer cake, detail behind taps, plan card. The law block and every FAQ answer are kept word for word
+// from the page checked against the BOE on 08-10-26 (RDL 29/2026). Price: 50 credits per 30 days, 30 days free, and
+// rental leads come with the module with no per-lead charge (James 09-10-26).
 const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/rentals/`;
 const title = 'Rentals Management Module for Estate Agents | PropertyList';
 const description =
-	'The Rentals Module runs long-term lettings end to end - tenants pipeline, tenancies that update themselves, renewals, annual rent review, maintenance the tenant starts and deposit tracking, built for Spanish rental law. Bring your existing book in by CSV. Free 30-day trial. Holiday and short-let management is on the roadmap, not in the module today.';
+	'Long-term lettings inside your CRM: tenants pipeline, tenancies that update themselves, renewals, rent review, repairs and deposit tracking. 30 days free.';
+const signup = 'https://agents.propertylist.es/new_agency/new?locale=en';
+
+const waysIn = [
+	['Import CSV.', 'A button at the top of the Tenancies screen, not a buried setting. Bring a whole rental book over in one go.'],
+	['From the deal.', 'A rental deal that reaches Contract Signed writes its own tenancy: property, tenant, landlord, dates, rent and deposit. You fill the gaps.'],
+	['By hand.', 'New Tenancy, for the agreements that live nowhere else yet.'],
+];
+
+const stages = ['Rental Lead', 'Qualified, criteria defined', 'Matching properties', 'Viewings booked', 'Viewings in progress', 'Negotiating', 'Reservation paid', 'Contract review', 'Contract signed', 'Deposit paid', 'Awaiting move-in', 'Active tenancy', 'Renewal pending'];
+const keyStages = [9, 12];
 
 const features = [
-	{
-		name: 'Tenants pipeline',
-		desc: 'Thirteen stages from first enquiry to active tenancy, on its own board, beside the sales pipeline you already run.',
-	},
-	{
-		name: 'Tenancies that keep themselves current',
-		desc: 'One record per lease. Draft, then Active when the start date passes, then Expiring when the renewal window opens. You do not move it.',
-	},
-	{
-		name: 'Your existing book, imported',
-		desc: 'CSV import for a whole rental book, a manual option for one-offs, and new deals create their own tenancy.',
-	},
-	{
-		name: 'Renewal alerts',
-		desc: 'The tenancy moves to Renewal Pending and tells you before the lease ends, on a window you set at 60, 90 or 120 days.',
-	},
-	{
-		name: 'Annual rent review',
-		desc: 'It knows the anniversary and the current rent, works out the permitted new rent against the official index, and drafts the notice.',
-	},
-	{
-		name: 'Deposit tracking and audit log',
-		desc: 'Unpaid, Held, then Returned or partly withheld, every change timestamped against the agent responsible, with the lodging window watched where your region still requires it.',
-	},
-	{
-		name: 'Repairs the tenant starts',
-		desc: 'Tenants raise their own tickets by magic link with photos, no login, already attached to their tenancy. You triage rather than transcribe.',
-	},
-	{
-		name: 'Landlord approval thresholds',
-		desc: 'Small jobs go ahead. Anything above the threshold goes to the landlord with photos and quote, and they approve or decline in one click.',
-	},
-	{
-		name: 'Rentals dashboard',
-		desc: 'Live tenancies, expiring in 60 days, monthly rent roll, your monthly income as management commission at the rate set per tenancy, deposits and actions needed, plus your average days to resolve.',
-	},
+	{ name: 'Tenants pipeline', line: 'Thirteen stages, enquiry to active tenancy.', desc: 'Thirteen stages from first enquiry to active tenancy, on its own board, beside the sales pipeline you already run.' },
+	{ name: 'Tenancies that keep themselves current', line: 'Draft, Active, Expiring, without you moving it.', desc: 'One record per lease. Draft, then Active when the start date passes, then Expiring when the renewal window opens. You do not move it.' },
+	{ name: 'Your existing book, imported', line: 'CSV for the whole book, by hand for one-offs.', desc: 'CSV import for a whole rental book, a manual option for one-offs, and new deals create their own tenancy.' },
+	{ name: 'Renewal alerts', line: 'Told before the lease ends, at 60, 90 or 120 days.', desc: 'The tenancy moves to Renewal Pending and tells you before the lease ends, on a window you set at 60, 90 or 120 days.' },
+	{ name: 'Annual rent review', line: 'The permitted new rent, and the notice drafted.', desc: 'It knows the anniversary and the current rent, works out the permitted new rent against the official index, and drafts the notice.' },
+	{ name: 'Deposit tracking and audit log', line: 'Every change timestamped against the agent responsible.', desc: 'Unpaid, Held, then Returned or partly withheld, every change timestamped against the agent responsible, with the lodging window watched where your region still requires it.' },
+	{ name: 'Repairs the tenant starts', line: 'A magic link, photos, no login.', desc: 'Tenants raise their own tickets by magic link with photos, no login, already attached to their tenancy. You triage rather than transcribe.' },
+	{ name: 'Landlord approval thresholds', line: 'Small jobs go ahead; big ones need one click.', desc: 'Small jobs go ahead. Anything above the threshold goes to the landlord with photos and quote, and they approve or decline in one click.' },
+	{ name: 'Rentals dashboard', line: 'Rent roll, your income, deposits, actions needed.', desc: 'Live tenancies, expiring in 60 days, monthly rent roll, your monthly income as management commission at the rate set per tenancy, deposits and actions needed, plus your average days to resolve.' },
+];
+
+const lanes = [
+	{ who: 'Tenant', steps: ['Opens the <b>magic link</b> sent at move-in and repeated in their emails. No login, no app.', 'Describes the problem and <b>adds photos</b>. A plumber quoting from two photos often saves a visit.', 'Confirms the repair at the end, which is what closes the ticket.'] },
+	{ who: 'You', steps: ['The ticket arrives <b>already linked</b> to the tenancy, tenant and property. You triage it.', 'Send it to a supplier from the <b>directory</b>, with description, photos and address filled in. Response times and cost history build up per supplier.', 'Record <b>who pays</b>: landlord, tenant, agency or split.'] },
+	{ who: 'Landlord', steps: ['Nothing at all, if the cost is under the <b>approval threshold</b> you hold for them.', 'Above it, an email with the issue, the photos and the quote.', '<b>Approve or Decline</b> in one click, and the decision is on the record if it is ever disputed.'] },
+];
+
+const tiles = ['Live tenancies', 'Expiring in 60 days', 'Monthly rent roll', 'Your monthly income', 'Deposits', 'Actions needed'];
+
+const included = [
+	'The Tenants pipeline, thirteen stages',
+	'Enquiries on your rental listings go straight into the Tenants pipeline, and you can add your own leads. No charge per lead',
+	'Tenancies that update themselves',
+	'CSV import of your existing book',
+	'Renewal alerts and the annual rent review',
+	'Deposit tracking with an audit log',
+	'Repairs by magic link, with landlord approval thresholds',
+	'The rentals dashboard',
 ];
 
 const faqLd = {
 	'@context': 'https://schema.org',
 	'@type': 'FAQPage',
 	mainEntity: [
-		{
-			'@type': 'Question',
-			name: 'Can I bring the tenancies I already manage into it?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Yes. Import CSV sits at the top of the Tenancies screen and brings an existing rental book over in one go. There is a manual option for one-off agreements, and any new rental deal creates its tenancy automatically when it reaches Contract Signed, pre-filled from the deal.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'What does the Rentals module include?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'A Tenants pipeline of thirteen stages, tenancies that move through Draft, Active, Expiring and then Renewed, Periodic or Ended on their own, renewal alerts on a window you set, the annual rent review against the official index, deposit tracking with an audit log, maintenance tickets the tenant raises by magic link with landlord approval thresholds and a supplier directory, and a dashboard of live tenancies, expiring contracts, rent roll, your monthly income, deposits and actions needed. It covers long-term lettings.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'How much does the Rentals module cost, and what happens after the trial?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'The first 30 days are free and no card is needed. Nothing is charged when the trial ends. If you want to keep it you subscribe, and from then it is 50 credits per 30-day period taken from your prepaid credit balance. You can switch on auto top-up so a saved card refills the balance instead of the module pausing, and you can stop the subscription whenever you want.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'What happens to my tenancies if I stop paying for the module?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Nothing is deleted. The module is hidden until you subscribe again, and your tenancies, deposits and repair history are exactly where you left them when it comes back.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'Does it change anything on the sales side of my agency?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'No. Same login, same contacts, same listings, same sales pipeline. The module adds a Rentals section with Tenancies and Maintenance, and the Tenants pipeline board.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'Do tenants and landlords need accounts?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'No. Tenants report repairs through a magic link sent at move-in and repeated in their emails, with photos and no login. Landlords approve or decline a job above their threshold from an email, in one click.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'Does the Rentals module keep me compliant with Spanish rental law?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'It gives you the evidence, not the compliance. The audit log timestamps every status and deposit change with the agent responsible, which is what a deposit dispute under LAU art. 36 turns on. It does not lodge deposits with a regional body or issue a rental registration number: those stay your obligation. It files nothing with the police either, and for a long-term tenancy it never will, because a tenant living in the property as their home is not a traveller and the duty does not apply. Automatic guest registration is coming for holiday bookings only.',
-			},
-		},
-		{
-			'@type': 'Question',
-			name: 'Does it handle holiday lets?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Not today. Bookings, nightly rates, channel sync and guest registration with the police are on the roadmap, and the holiday page sets out what is coming and takes your name for it. If your book is holiday rather than long-term, this is not yet the tool for you. Seasonal contracts sit in between: talk to us before you move a temporada book across.',
-			},
-		},
+		{ '@type': 'Question', name: 'Can I bring the tenancies I already manage into it?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Import CSV sits at the top of the Tenancies screen and brings an existing rental book over in one go. There is a manual option for one-off agreements, and any new rental deal creates its tenancy automatically when it reaches Contract Signed, pre-filled from the deal.' } },
+		{ '@type': 'Question', name: 'What does the Rentals module include?', acceptedAnswer: { '@type': 'Answer', text: 'A Tenants pipeline of thirteen stages, tenancies that move through Draft, Active, Expiring and then Renewed, Periodic or Ended on their own, renewal alerts on a window you set, the annual rent review against the official index, deposit tracking with an audit log, maintenance tickets the tenant raises by magic link with landlord approval thresholds and a supplier directory, and a dashboard of live tenancies, expiring contracts, rent roll, your monthly income, deposits and actions needed. It covers long-term lettings.' } },
+		{ '@type': 'Question', name: 'How much does the Rentals module cost, and what happens after the trial?', acceptedAnswer: { '@type': 'Answer', text: 'The first 30 days are free and no card is needed. Nothing is charged when the trial ends. If you want to keep it you subscribe, and from then it is 50 credits per 30-day period taken from your prepaid credit balance. You can switch on auto top-up so a saved card refills the balance instead of the module pausing, and you can stop the subscription whenever you want.' } },
+		{ '@type': 'Question', name: 'What happens to my tenancies if I stop paying for the module?', acceptedAnswer: { '@type': 'Answer', text: 'Nothing is deleted. The module is hidden until you subscribe again, and your tenancies, deposits and repair history are exactly where you left them when it comes back.' } },
+		{ '@type': 'Question', name: 'Does it change anything on the sales side of my agency?', acceptedAnswer: { '@type': 'Answer', text: 'No. Same login, same contacts, same listings, same sales pipeline. The module adds a Rentals section with Tenancies and Maintenance, and the Tenants pipeline board.' } },
+		{ '@type': 'Question', name: 'Do tenants and landlords need accounts?', acceptedAnswer: { '@type': 'Answer', text: 'No. Tenants report repairs through a magic link sent at move-in and repeated in their emails, with photos and no login. Landlords approve or decline a job above their threshold from an email, in one click.' } },
+		{ '@type': 'Question', name: 'Does the Rentals module keep me compliant with Spanish rental law?', acceptedAnswer: { '@type': 'Answer', text: 'It gives you the evidence, not the compliance. The audit log timestamps every status and deposit change with the agent responsible, which is what a deposit dispute under LAU art. 36 turns on. It does not lodge deposits with a regional body or issue a rental registration number: those stay your obligation. It files nothing with the police either. Police guest registration (RD 933/2021) applies to lodging activities, and automatic guest registration is coming for holiday bookings only.' } },
+		{ '@type': 'Question', name: 'Does it handle holiday lets?', acceptedAnswer: { '@type': 'Answer', text: 'Not today. Bookings, nightly rates, channel sync and guest registration with the police are on the roadmap, and the holiday page sets out what is coming and takes your name for it. If your book is holiday rather than long-term, this is not yet the tool for you. Seasonal contracts sit in between: talk to us before you move a temporada book across.' } },
 	],
 };
+const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+	{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+	{ '@type': 'ListItem', position: 2, name: 'Features', item: `${origin}/features/` },
+	{ '@type': 'ListItem', position: 3, name: 'Rentals Module', item: canonical },
+] };
 ---
-
 <Layout
 	lang="en"
 	title={title}
 	description={description}
 	canonical={canonical}
+	ogImage="https://info.propertylist.es/og/og-rentals.jpg"
+	hideSearch
+	fullBleed
 	hreflangs={[
 		{ hreflang: 'en', href: canonical },
 		{ hreflang: 'es', href: `${origin}/es/alquileres/` },
@@ -130,899 +87,268 @@ const faqLd = {
 	]}
 >
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
 
-	<section class="hero">
-		<div class="heroInner">
-			<div class="kicker">Rentals Module</div>
-			<h1>Your rental book, out of the spreadsheet.</h1>
-			<p class="lead">
-				The Rentals Module runs long-term lettings inside the CRM you already use for sales: a tenants pipeline, one record per tenancy that
-				chases its own renewals and deposit deadlines, and repairs the tenant starts and the landlord approves. Import the book you already
-				manage by CSV. Free for 30 days, no card, and nothing is charged when the trial ends.
-			</p>
-			<div class="ctaRow" aria-label="Get started">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
-					Start the free trial
-				</a>
-				<a class="btnSecondary" href="#pricing">What it costs</a>
-			</div>
-			<div class="note">Already with PropertyList? Open the Rentals tab in your account. No credit card required.</div>
-		</div>
-	</section>
+	<section class="hero"><div class="cx">
+		<p class="kicker">Rentals Module</p>
+		<h1>Your rental book, <b>out of the spreadsheet.</b></h1>
+		<p class="lead">Long-term lettings inside the CRM you already use for sales. <strong>One record per tenancy that chases its own renewals, and repairs the tenant reports, with the landlord approving anything above a threshold you set.</strong></p>
+		<p class="ctaRow"><a class="btn" href={signup} target="_blank" rel="noopener">Start the free trial</a> <a class="btnLink" href="#pricing">What it costs</a></p>
+		<p class="fric">Free for 30 days, no card, and nothing is charged when the trial ends. Already with PropertyList? Open the Rentals tab in your account.</p>
+		<figure class="film">
+			<video autoplay muted loop playsinline preload="auto" poster="/hero/rentals-anim-poster.jpg" aria-label="An illustration of a tenancy record raising its own tasks as its dates arrive">
+				<source src="/hero/rentals-anim.mp4" type="video/mp4" />
+			</video>
+			<img class="still" src="/hero/rentals-anim-poster.jpg" alt="An illustration of a tenancy record with its rent update, notice window and fianza return dates" width="1280" height="640" loading="lazy" />
+			<figcaption>An illustration of the tenancy record, not a recording of the CRM. The property is a real long-term let on the PropertyList MLS, and the dates are the real ones: the IRAV update, the four-month notice window under LAU art. 10 as it stood on 9 October 2026, and the month after the keys come back, after which an unreturned fianza earns interest under art. 36.</figcaption>
+		</figure>
+		<nav class="modes" aria-label="Which kind of letting">
+			<a class="mode here" href="/rentals/" aria-current="page"><b>Long-term lettings</b><span>Live today. Free 30-day trial.</span></a>
+			<a class="mode" href="/holiday-rentals/"><b>Holiday and short lets</b><span>Coming soon. The rules that already apply, and the waitlist.</span></a>
+		</nav>
+	</div></section>
 
-	<figure class="film">
-		<video
-			class="filmVid"
-			autoplay
-			muted
-			loop
-			playsinline
-			preload="auto"
-			poster="/hero/rentals-anim-poster.jpg"
-			aria-label="An illustration of a tenancy record raising its own tasks as its dates arrive"
-		>
-			<source src="/hero/rentals-anim.mp4" type="video/mp4" />
-		</video>
-		<figcaption class="filmCap">
-			An illustration of the tenancy record, not a recording of the CRM. The property is a real long-term let on
-			the PropertyList MLS, and the dates are the real ones: the IRAV update, the four-month notice window under
-			LAU art. 10, and the one month to return the fianza under art. 36.
-		</figcaption>
-	</figure>
+	<section class="band"><div class="cx">
+		<h2>Start with the tenancies <b>you already manage.</b></h2>
+		<p class="sub">Three ways in, and none of them is typing it all again.</p>
+		<div class="steps">
+			{waysIn.map(([h, p]) => (<div class="step"><h3>{h}</h3><p>{p}</p></div>))}
+		</div>
+		<p class="quiet">Nothing changes on the sales side. Same login, same contacts, same listings, same <a href="/pipelines/">sales pipeline</a>. The module adds a Rentals section with Tenancies and Maintenance, and the Tenants board.</p>
+	</div></section>
 
+	<section class="band soft"><div class="cx">
+		<h2>From enquiry <b>to signed lease.</b></h2>
+		<p class="sub">The Tenants pipeline, exactly as it ships. Thirteen stages, and two of them do work for you.</p>
+		<ol class="stages" aria-label="The thirteen stages of the Tenants pipeline">
+			{stages.map((s, i) => (<li class={keyStages.includes(i + 1) ? 'on' : ''}><span>{i + 1}</span>{s}</li>))}
+		</ol>
+		<div class="beats">
+			<p><b>9. At Contract signed</b> the tenancy writes itself from the deal, and your listing is set to reserved. If the property belongs to another agency, they get an email asking them to update it, because PropertyList does not change another agency's listing. A lettings tool with no other agencies in it cannot do this at any price.</p>
+			<p><b>12. At Active tenancy</b> you are asked for the dates, the tenant and landlord details and marketing consent, and both go into <a href="/nurture/">Nurture</a>.</p>
+		</div>
+	</div></section>
 
-	<nav class="modePick" aria-label="Which kind of letting">
-		<a class="modeCard here" href="/rentals/" aria-current="page">
-			<span class="modeName">Long-term lettings</span>
-			<span class="modeState">Live today. Free 30-day trial.</span>
-		</a>
-		<a class="modeCard" href="/holiday-rentals/">
-			<span class="modeName">Holiday and short lets</span>
-			<span class="modeState">Coming soon. The rules that already apply, and the waitlist.</span>
-		</a>
-	</nav>
+	<section class="band"><div class="cx">
+		<h2>What is inside. <b>Open any line.</b></h2>
+		<p class="sub">Nine things the module does, most of them without being asked. All of it is long-term lettings.</p>
+		<div class="feats">
+			{features.map((f) => (
+				<details>
+					<summary><span class="fName">{f.name}</span><span class="fLine">{f.line}</span></summary>
+					<p>{f.desc}</p>
+				</details>
+			))}
+		</div>
+		<div class="states" aria-label="The life of a tenancy">
+			<span>Draft</span><span>Active</span><span>Expiring</span><span class="end">Renewed, Periodic or Ended</span>
+		</div>
+		<p class="quiet">One record per lease, and its status follows the dates rather than waiting for someone to remember. A renewal chains to a new linked tenancy, so the history stays intact.</p>
+	</div></section>
 
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Start with the tenancies you already manage</h2>
-			<p>Three ways in, and none of them is typing it all again.</p>
-		</div>
-		<div class="grid3" aria-label="Ways to bring tenancies in">
-			<div class="card">
-				<h3>Import CSV</h3>
-				<p>A button at the top of the Tenancies screen, not a buried setting. Bring a whole rental book over in one go.</p>
-			</div>
-			<div class="card">
-				<h3>From the deal</h3>
-				<p>A rental deal that reaches Contract Signed writes its own tenancy: property, tenant, landlord, dates, rent and deposit. You fill the gaps.</p>
-			</div>
-			<div class="card">
-				<h3>By hand</h3>
-				<p>New Tenancy, for the agreements that live nowhere else yet.</p>
-			</div>
-		</div>
-		<p class="aside">
-			Nothing changes on the sales side. Same login, same contacts, same listings, same <a href="/pipelines/">sales pipeline</a>. The module
-			adds a Rentals section with Tenancies and Maintenance, and the Tenants board.
-		</p>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>From enquiry to signed lease</h2>
-			<p>The Tenants pipeline, exactly as it ships. Thirteen stages, and two of them do work for you.</p>
-		</div>
-		<div class="dflow" aria-label="The thirteen stages of the Tenants pipeline">
-			<span class="dstep"><span class="n">1</span>Rental Lead</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">2</span>Qualified, criteria defined</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">3</span>Matching properties</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">4</span>Viewings booked</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">5</span>Viewings in progress</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">6</span>Negotiating</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">7</span>Reservation paid</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">8</span>Contract review</span><span class="darrow">&rarr;</span>
-			<span class="dstep on"><span class="n">9</span>Contract signed</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">10</span>Deposit paid</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">11</span>Awaiting move-in</span><span class="darrow">&rarr;</span>
-			<span class="dstep on"><span class="n">12</span>Active tenancy</span><span class="darrow">&rarr;</span>
-			<span class="dstep"><span class="n">13</span>Renewal pending</span>
-		</div>
-		<div class="dbeat">
-			<span class="tick">9</span>
-			<span>
-				<b>At Contract signed</b> the tenancy writes itself from the deal, and your listing is set to reserved. If the property belongs to
-				another agency, they get an email asking them to update it, because PropertyList does not change another agency's listing. A lettings
-				tool with no other agencies in it cannot do this at any price.
-			</span>
-		</div>
-		<div class="dbeat">
-			<span class="tick">12</span>
-			<span><b>At Active tenancy</b> you are asked for the dates, the tenant and landlord details and marketing consent, and both go into <a href="/nurture/">Nurture</a>.</span>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>What is inside</h2>
-			<p>
-				Nine things the module does, most of them without being asked. All of it is long-term lettings.
-			</p>
-		</div>
-		<div class="grid3" aria-label="Rentals module features">
-			{
-				features.map((f) => (
-					<div class="card">
-						<h3>{f.name}</h3>
-						<p>{f.desc}</p>
-					</div>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>What the tenancy does while you get on with selling</h2>
-			<p>One record per lease, and its status follows the dates rather than waiting for someone to remember.</p>
-		</div>
-		<div class="dhub">
-			<div class="dcore">
-				<h3>The tenancy</h3>
-				<p>Created from the deal, imported from your spreadsheet by CSV, or added by hand for the contracts you already manage.</p>
-			</div>
-			<div class="dspoke"><h4>Renewals</h4><p>Moves to Renewal Pending before the lease ends and tells you, on a window you set at 60, 90 or 120 days.</p></div>
-			<div class="dspoke"><h4>Annual rent review</h4><p>Knows the anniversary and the current rent, works out the permitted new rent against the official index, and drafts the notice to the tenant.</p></div>
-			<div class="dspoke"><h4>Deposit compliance</h4><p>Unpaid, Held, then Returned or partly withheld, every change timestamped. Where your region still requires lodging, it records that and chases it.</p></div>
-			<div class="dspoke"><h4>Notice deadlines</h4><p>You are warned before the deadline passes, not after.</p></div>
-			<div class="dspoke"><h4>Repair history</h4><p>Every maintenance ticket hangs off the tenancy, so a property's whole history sits in one place.</p></div>
-		</div>
-		<div class="dstates">
-			<span class="s">Draft</span><span class="darrow">&rarr;</span>
-			<span class="s">Active</span><span class="darrow">&rarr;</span>
-			<span class="s">Expiring</span><span class="darrow">&rarr;</span>
-			<span class="s end">Renewed</span><span>or</span><span class="s end">Periodic</span><span>or</span><span class="s end">Ended</span>
-			<span class="dstatesNote">A renewal chains to a new linked tenancy, so the history stays intact.</span>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>A repair, from the tenant's phone to closed</h2>
-			<p>The part that eats a letting agent's week. Three parties, one thread.</p>
-		</div>
-		<div class="dlanes">
-			<div class="dlane">
-				<header>Tenant</header>
-				<ol>
-					<li>Opens the <b>magic link</b> sent at move-in and repeated in their emails. No login, no app.</li>
-					<li>Describes the problem and <b>adds photos</b>. A plumber quoting from two photos often saves a visit.</li>
-					<li>Confirms the repair at the end, which is what closes the ticket.</li>
-				</ol>
-			</div>
-			<div class="dlane">
-				<header>You</header>
-				<ol>
-					<li>The ticket arrives <b>already linked</b> to the tenancy, tenant and property. You triage it.</li>
-					<li>Send it to a supplier from the <b>directory</b>, with description, photos and address filled in. Response times and cost history build up per supplier.</li>
-					<li>Record <b>who pays</b>: landlord, tenant, agency or split.</li>
-				</ol>
-				<p class="dfork">
-					Urgent jobs, a leak or no water or anything electrical, go straight to the Daily Action Queue with an SLA timer. Anything sitting a
-					week without an update surfaces like a stalled deal. The annual boiler revision and gas certificate raise their own ticket on the
-					anniversary.
-				</p>
-			</div>
-			<div class="dlane">
-				<header>Landlord</header>
-				<ol>
-					<li>Nothing at all, if the cost is under the <b>approval threshold</b> you hold for them.</li>
-					<li>Above it, an email with the issue, the photos and the quote.</li>
-					<li><b>Approve or Decline</b> in one click, and the decision is on the record if it is ever disputed.</li>
-				</ol>
-			</div>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Six numbers, one screen</h2>
-			<p>The rentals dashboard, so you can answer a landlord without opening a spreadsheet.</p>
-		</div>
-		<div class="dtiles">
-			<div class="dtile">Live tenancies</div>
-			<div class="dtile">Expiring in 60 days</div>
-			<div class="dtile">Monthly rent roll</div>
-			<div class="dtile">Your monthly income</div>
-			<div class="dtile">Deposits</div>
-			<div class="dtile">Actions needed</div>
-		</div>
-		<p class="aside">Your monthly income is your management commission, at the rate set on each tenancy, so the rent roll and what it actually pays you sit side by side. Plus your average days to resolve a repair, and views for live, expiring, ended and all.</p>
-	</section>
-
-	<section class="section">
-		<div class="grid2">
-			<div class="card accent">
-				<h2>Built for Spanish rental law</h2>
-				<p>
-					The audit log timestamps every status and deposit change against the agent responsible, giving you defensible evidence for deposit
-					disputes under LAU art. 36 and the deposit rules of your region.
-				</p>
-				<p>No more reconstructing who changed what, and when, after a dispute has already started.</p>
-				<p class="lawNote">
-					Two deadlines the module records but does not decide for you. To stop a contract renewing, LAU art. 10 gives the landlord four months
-					and the tenant two. And since 24 January 2026 an Andalusian landlord no longer lodges the fianza with AVRA (Ley 5/2025, DA 6&ordf;) -
-					it stays with the landlord. Lodging still applies in Catalonia, Madrid and Valencia, and deposits lodged before that date are still
-					returned through the old process.
-					<a href="/docs/laws-procedures/renting-a-property/long-term/tenancy-agreements/">The rules in full</a>.
-				</p>
-			</div>
-			<div class="card" id="pricing">
-				<h2>What it costs</h2>
-				<p>
-					The first 30 days are free and no card is needed. Nothing is charged when the trial ends. If you want to keep it you subscribe, and
-					from then it is 50 credits per 30-day period taken from your prepaid credit balance. Switch on auto top-up and a saved card refills the
-					balance rather than the module pausing. Stop the subscription whenever you want.
-				</p>
-				<p>If you stop, nothing is deleted. The module is hidden until you subscribe again, and your tenancies, deposits and repair history are
-					exactly where you left them when it comes back.</p>
-				<div class="pillRow">
-					<span class="pill">30 days free</span>
-					<span class="pill">No card to start</span>
-					<span class="pill">50 credits / 30 days</span>
-					<span class="pill">Stop any time</span>
+	<section class="band soft"><div class="cx">
+		<h2>A repair, from the tenant's phone <b>to closed.</b></h2>
+		<p class="sub">The part that eats a letting agent's week. Three parties, one thread.</p>
+		<div class="lanes">
+			{lanes.map((l) => (
+				<div class="lane">
+					<h3>{l.who}</h3>
+					<ol>{l.steps.map((s) => <li set:html={s}></li>)}</ol>
 				</div>
-			</div>
+			))}
 		</div>
-	</section>
+		<p class="quiet">Urgent jobs, a leak or no water or anything electrical, go straight to the Daily Action Queue with an SLA timer. Anything sitting a week without an update surfaces like a stalled deal. The annual boiler revision and gas certificate raise their own ticket on the anniversary.</p>
+	</div></section>
 
-	<section class="section">
-		<div class="sectionHead">
-			<h2>What it does not do</h2>
-			<p>Worth knowing before you start the trial rather than during it.</p>
+	<section class="band"><div class="cx">
+		<h2>Six numbers, <b>one screen.</b></h2>
+		<p class="sub">The rentals dashboard, so you can answer a landlord without opening a spreadsheet.</p>
+		<div class="tiles">
+			{tiles.map((t) => <div>{t}</div>)}
 		</div>
-		<div class="grid2">
-			<div class="card">
+		<p class="quiet">Your monthly income is your management commission, at the rate set on each tenancy, so the rent roll and what it actually pays you sit side by side. Plus your average days to resolve a repair, and views for live, expiring, ended and all.</p>
+	</div></section>
+
+	<section class="band dark"><div class="cx">
+		<h2>Built for Spanish <b>rental law.</b></h2>
+		<p class="alt">The audit log timestamps every status and deposit change against the agent responsible, giving you defensible evidence for deposit disputes under LAU art. 36 and the deposit rules of your region.</p>
+		<p class="alt">No more reconstructing who changed what, and when, after a dispute has already started.</p>
+		<p class="lawNote">Two deadlines the module records but does not decide for you. To stop a contract renewing once its minimum term is over, LAU art. 10 gives the landlord four months and the tenant two; from 15 November 2026, if it is validated, RDL 28/2026 would raise the landlord's notice to six months and, in most cases, oblige the landlord to compensate the tenant for not renewing, with transitional rules for contracts already running (those with under six months left on that date keep four months). And since 24 January 2026 the Junta de Andaluc&iacute;a no longer takes in fianzas (Ley 5/2025, DA 6&ordf;), so an Andalusian landlord keeps the deposit. Lodging still applies in Catalonia, Madrid and Valencia. Deposits lodged in Andalusia before that date are returned by the Junta as those contracts end, on request. <a href="/docs/laws-procedures/renting-a-property/long-term/tenancy-agreements/">The rules in full</a>.</p>
+	</div></section>
+
+	<section class="band tint" id="pricing"><div class="cx costGrid">
+		<div class="plan">
+			<p class="planName">Rentals Module</p>
+			<p class="planPrice">50 credits</p>
+			<p class="planNote">per 30-day period, from your prepaid credit balance. The first 30 days are free and no card is needed.</p>
+			<ul class="checks">
+				{included.map((i) => <li>{i}</li>)}
+			</ul>
+			<a class="btn" href={signup} target="_blank" rel="noopener">Start the free trial</a>
+		</div>
+		<div>
+			<h2>What it <b>costs.</b></h2>
+			<p class="sub">Nothing is charged when the trial ends. If you keep it, switch on auto top-up and a saved card refills your balance rather than the module pausing.</p>
+			<p class="sub">Stop whenever you want. Nothing is deleted: the module is hidden until you subscribe again, with your tenancies, deposits and repair history where you left them.</p>
+		</div>
+	</div></section>
+
+	<section class="band"><div class="cx">
+		<h2>What it does <b>not do.</b></h2>
+		<p class="sub">Worth knowing before you start the trial rather than during it.</p>
+		<div class="nots">
+			<div>
 				<h3>Not in the module</h3>
-				<ul class="plain">
+				<ul>
 					<li><b>It does not lodge your deposits.</b> Where your region still requires lodging, the tenancy records it and warns you before the window closes. Filing it stays yours.</li>
-					<li><b>It does not file with the police or issue registration numbers.</b> A long-term tenancy never triggers police registration at all, because a tenant is not a traveller. For holiday bookings, automatic guest registration is <a href="/holiday-rentals/">coming</a>. See <a href="/docs/laws-procedures/renting-a-property/short-term-holiday/guest-registration-police/">guest registration with the police</a> for the duty itself.</li>
+					<li><b>It does not file with the police or issue registration numbers.</b> Police guest registration (RD 933/2021) applies to lodging activities. For holiday bookings, automatic guest registration is <a href="/holiday-rentals/">coming</a>. See <a href="/docs/laws-procedures/renting-a-property/short-term-holiday/guest-registration-police/">guest registration with the police</a> for the duty itself.</li>
 					<li><b>Seasonal contracts.</b> The module is built around long-term lettings, and the annual rent review in particular assumes a long-term rent. Talk to us before you move a temporada book across.</li>
 				</ul>
 			</div>
-			<div class="card">
+			<div>
 				<h3>On the roadmap</h3>
-				<ul class="plain">
+				<ul>
 					<li><b>Holiday and short lets.</b> Bookings, nightly rates, channel sync and guest registration will come later. If your book is holiday rather than long-term, <a href="/holiday-rentals/">see what is being built and add your name</a>.</li>
 					<li><b>Landlord statements.</b> A periodic report per landlord covering repairs done, what they cost, the invoices, deposit status and rent roll. Every ticket already records who pays, so the data will be there when it ships.</li>
 				</ul>
 			</div>
 		</div>
-	</section>
+	</div></section>
 
-	<section class="section">
-		<div class="sectionHead">
-			<h2>Questions</h2>
+	<section class="band soft"><div class="cx">
+		<h2>Questions.</h2>
+		<div class="faqwrap">
+			{faqLd.mainEntity.map((qa) => (<details class="faqItem"><summary>{qa.name}</summary><p>{qa.acceptedAnswer.text}</p></details>))}
 		</div>
-		<div class="faq">
-			{
-				faqLd.mainEntity.map((qa) => (
-					<details>
-						<summary>{qa.name}</summary>
-						<p>{qa.acceptedAnswer.text}</p>
-					</details>
-				))
-			}
-		</div>
-	</section>
+	</div></section>
 
-	<section class="section cta">
-		<div class="ctaInner">
-			<h2>Run lettings the same place you run sales</h2>
-			<p>
-				One login, one contact database, one workflow for the whole agency. Already with PropertyList? The Rentals tab is in your account, with
-				Tenancies and Maintenance inside it.
-			</p>
-			<div class="ctaRow" aria-label="Join PropertyList">
-				<a class="btnPrimary" href="https://agents.propertylist.es/new_agency/new?locale=en" target="_blank" rel="noopener">
-					Agents: Get Started FREE
-				</a>
-				<a class="btnSecondary" href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/rentals-module/">Read the manual chapter</a>
-			</div>
-		</div>
-	</section>
+	<section class="band close"><div class="cx">
+		<h2>Run lettings the same place <b>you run sales.</b></h2>
+		<p class="alt">One login, one contact database, one workflow for the whole agency. Already with PropertyList? The Rentals tab is in your account, with Tenancies and Maintenance inside it.</p>
+		<p class="ctaRow"><a class="btn btnLight" href={signup} target="_blank" rel="noopener">Start the free trial</a> <a class="ghost" href="/docs/propertylist-mls-user-manual/pipeline-and-tasks/rentals-module/">Read the manual chapter</a></p>
+	</div></section>
 </Layout>
 
 <style>
-	:global(:root) {
-		--pl-accent: #00ae9a;
-		--pl-accent-rgb: 0, 174, 154;
-	}
+	.cx { width: min(1120px, 100% - 32px); margin: 0 auto; }
+	.hero { padding: 28px 0 40px; }
+	.kicker { font-size: 17px; font-weight: 700; color: #0a6d61; margin: 0 0 14px; }
+	h1 { font-size: 44px; line-height: 1.04; letter-spacing: -0.03em; font-weight: 800; margin: 0; max-width: 19ch; }
+	h1 b, h2 b { color: #008a7a; }
+	.lead { font-size: 19px; line-height: 1.5; color: #28383f; margin: 18px 0 24px; max-width: 52ch; }
+	.lead strong { color: #0b1b22; }
+	.ctaRow { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+	.btn { display: inline-block; background: #0a6d61; color: #fff; font-weight: 800; font-size: 18px; padding: 16px 24px; border-radius: 14px; text-decoration: none; }
+	.btn:hover { background: #08584e; }
+	.btnLink { font-weight: 700; color: #0a6d61; text-decoration: underline; text-underline-offset: 3px; }
+	.fric { font-size: 15px; color: #5b6b73; margin: 12px 0 0; max-width: 60ch; }
+	.film { margin: 32px 0 0; }
+	.film video, .film .still { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; border-radius: 16px; border: 1px solid #e2e5e3; box-shadow: 0 24px 50px rgba(11, 27, 34, 0.12); background: #f4f7f8; }
+	.film .still { display: none; }
+	@media (prefers-reduced-motion: reduce) { .film video { display: none; } .film .still { display: block; } }
+	.film figcaption { margin-top: 10px; font-size: 13px; line-height: 1.55; color: #5b6b73; max-width: 80ch; }
+	.modes { display: grid; gap: 10px; margin-top: 22px; }
+	.mode { display: grid; gap: 2px; padding: 14px 16px; border-radius: 14px; border: 1px solid #dfe6e8; background: #fff; text-decoration: none; color: #0b1b22; }
+	.mode b { font-size: 17px; }
+	.mode span { font-size: 14px; color: #3d4a4f; }
+	.mode.here { border: 2px solid #00ae9a; background: #e6f7f4; }
+	.mode:hover { border-color: #00ae9a; }
 
-	h1,
-	h2,
-	h3 {
-		letter-spacing: -0.03em;
-	}
+	.band { padding: 44px 0; border-top: 1px solid #e7eef1; background: #fff; }
+	.band[id] { scroll-margin-top: 72px; }
+	.soft { background: #f4f7f8; }
+	.tint { background: #e6f7f4; }
+	h2 { font-size: 32px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 800; margin: 0; max-width: 24ch; }
+	.sub { font-size: 17px; line-height: 1.5; color: #28383f; margin: 10px 0 0; max-width: 60ch; }
+	.quiet { color: #5b6b73; font-size: 15px; line-height: 1.55; margin: 18px 0 0; max-width: 70ch; }
+	.quiet a, .beats a, .nots a, .lawNote a { color: #0a6d61; font-weight: 700; }
+	.steps { display: grid; gap: 22px; margin-top: 26px; }
+	.step { padding-top: 14px; border-top: 3px solid #00ae9a; }
+	.step h3 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
+	.step p { margin: 6px 0 0; color: #28383f; max-width: 40ch; }
 
-	.lawNote {
-		margin-top: 12px;
-		padding-top: 12px;
-		border-top: 1px solid rgba(16, 24, 40, 0.1);
-		font-size: 14.5px;
-		color: #475467;
-	}
+	.stages { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+	.stages li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px 8px 8px; border-radius: 999px; background: #fff; border: 1px solid #dfe6e8; font-size: 14px; font-weight: 700; color: #28383f; }
+	.stages li span { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #e7eef1; color: #3d4a4f; font-size: 12px; font-weight: 800; }
+	.stages li.on { background: #0a6d61; border-color: #0a6d61; color: #fff; }
+	.stages li.on span { background: #fff; color: #0a6d61; }
+	.beats { display: grid; gap: 12px; margin-top: 22px; }
+	.beats p { margin: 0; padding: 14px 16px; background: #fff; border-left: 4px solid #0a6d61; border-radius: 10px; color: #28383f; line-height: 1.5; max-width: 80ch; }
+	.beats b { color: #0b1b22; }
 
-	.faq {
-		display: grid;
-		gap: 10px;
-	}
+	.feats { margin-top: 22px; border-top: 1px solid #dfe6e8; }
+	.feats details { border-bottom: 1px solid #dfe6e8; }
+	.feats summary { display: grid; gap: 4px; padding: 14px 0; cursor: pointer; list-style: none; }
+	.feats summary::-webkit-details-marker { display: none; }
+	.fName { font-size: 19px; font-weight: 800; }
+	.fName::after { content: ' +'; color: #008a7a; }
+	.feats details[open] .fName::after { content: ' -'; }
+	.fLine { font-size: 16px; color: #3d4a4f; }
+	.feats p { margin: 0 0 16px; color: #28383f; max-width: 64ch; }
+	.states { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+	.states span { padding: 8px 14px; border-radius: 10px; background: #f4f7f8; border: 1px solid #dfe6e8; font-weight: 800; font-size: 15px; }
+	.states span.end { background: #e6f7f4; border-color: #00ae9a; color: #0a6d61; }
 
-	.faq details {
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 14px;
-		padding: 14px 16px;
-		background: #fff;
-	}
+	.lanes { display: grid; gap: 14px; margin-top: 24px; }
+	.lane { background: #fff; border: 1px solid #dfe6e8; border-radius: 16px; padding: 18px; }
+	.lane h3 { margin: 0 0 10px; font-size: 20px; font-weight: 800; color: #0a6d61; }
+	.lane ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+	.lane li { font-size: 15px; line-height: 1.5; color: #28383f; }
 
-	.faq summary {
-		cursor: pointer;
-		font-weight: 700;
-		letter-spacing: -0.01em;
-	}
+	.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+	.tiles div { background: #e6f7f4; border-radius: 14px; padding: 18px 16px; font-weight: 800; font-size: 18px; color: #0a6d61; }
 
-	.faq details p {
-		margin: 10px 0 0;
-		color: #475467;
-	}
+	.dark { background: #0b1b22; color: #fff; border-top: 0; }
+	.dark h2 b { color: #7deede; }
+	.alt { margin: 16px 0 0; color: #c9d6da; font-size: 17px; line-height: 1.55; max-width: 64ch; }
+	.lawNote { margin: 22px 0 0; padding: 16px 18px; border-radius: 14px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.16); color: #e6f7f4; font-size: 15px; line-height: 1.6; max-width: 76ch; }
+	.dark .lawNote a { color: #7deede; }
 
-	.film {
-		margin: 0 0 20px;
-		padding: 0;
-	}
+	.costGrid { display: grid; gap: 32px; align-items: start; }
+	.plan { background: #fff; border: 2px solid #00ae9a; border-radius: 20px; padding: 24px; box-shadow: 0 24px 50px rgba(11, 27, 34, 0.1); }
+	.planName { font-size: 15px; font-weight: 800; color: #0a6d61; margin: 0; }
+	.planPrice { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin: 8px 0 6px; }
+	.planNote { font-size: 15px; color: #3d4a4f; margin: 0 0 16px; line-height: 1.5; }
+	.checks { list-style: none; margin: 0 0 20px; padding: 16px 0 0; border-top: 1px solid #dfe6e8; display: grid; gap: 9px; }
+	.checks li { position: relative; padding-left: 28px; font-size: 16px; line-height: 1.4; }
+	.checks li::before { content: ''; position: absolute; left: 0; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: #e6f7f4; }
+	.checks li::after { content: ''; position: absolute; left: 6px; top: 5px; width: 5px; height: 9px; border: solid #0a6d61; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
-	.filmVid {
-		display: block;
-		width: 100%;
-		aspect-ratio: 2 / 1;
-		object-fit: cover;
-		border-radius: 22px;
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		background: #f4f7f8;
-	}
+	.nots { display: grid; gap: 22px; margin-top: 24px; }
+	.nots h3 { margin: 0 0 10px; font-size: 20px; font-weight: 800; }
+	.nots ul { margin: 0; padding-left: 20px; display: grid; gap: 10px; }
+	.nots li { color: #28383f; line-height: 1.5; }
 
-	.filmCap {
-		margin: 9px 4px 0;
-		font-size: 12.5px;
-		line-height: 1.55;
-		color: rgba(16, 24, 40, 0.5);
-		max-width: 92ch;
-	}
+	.faqwrap { margin-top: 20px; }
+	.faqItem { border-top: 1px solid #e7eef1; padding: 14px 0; }
+	.faqItem:last-child { border-bottom: 1px solid #e7eef1; }
+	.faqItem summary { font-weight: 800; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+	.faqItem summary::-webkit-details-marker { display: none; }
+	.faqItem summary::after { content: '+'; color: #008a7a; font-size: 26px; line-height: 1; }
+	.faqItem[open] summary::after { content: '-'; }
+	.faqItem p { margin: 10px 0 0; color: #28383f; max-width: 64ch; }
 
-	/* Reduced motion gets the still, not a paused video element. */
-	@media (prefers-reduced-motion: reduce) {
-		.filmVid {
-			display: none;
-		}
-
-		.film {
-			aspect-ratio: 2 / 1;
-			border-radius: 22px;
-			border: 1px solid rgba(16, 24, 40, 0.08);
-			background: url('/hero/rentals-anim-poster.jpg') center / cover no-repeat;
-		}
-	}
-
-	.hero {
-		border-radius: 22px;
-		padding: 16px;
-		margin: 0 0 16px;
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		background:
-			radial-gradient(1200px 600px at 20% -10%, rgba(var(--pl-accent-rgb), 0.22), rgba(255, 255, 255, 0)),
-			radial-gradient(900px 500px at 90% 10%, rgba(var(--pl-accent-rgb), 0.12), rgba(255, 255, 255, 0));
-	}
-
-	.heroInner {
-		background: rgba(255, 255, 255, 0.78);
-		border: 1px solid rgba(16, 24, 40, 0.06);
-		border-radius: 18px;
-		padding: 18px;
-	}
-
-	.kicker {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 10px;
-		border-radius: 999px;
-		background: rgba(var(--pl-accent-rgb), 0.12);
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
-		color: rgba(16, 24, 40, 0.86);
-		font-weight: 900;
-		font-size: 12px;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-	}
-
-	h1 {
-		margin: 10px 0 10px;
-		line-height: 1.06;
-	}
-
-	.lead {
-		margin: 0 0 14px;
-		color: rgba(16, 24, 40, 0.75);
-		max-width: 78ch;
-		line-height: 1.6;
-	}
-
-	.note {
-		color: rgba(16, 24, 40, 0.65);
-		font-weight: 700;
-		font-size: 13px;
-	}
-
-	.section {
-		margin: 0 0 14px;
-	}
-
-	.sectionHead {
-		background: rgba(255, 255, 255, 0.7);
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 18px;
-		padding: 14px;
-		margin-bottom: 12px;
-	}
-
-	.sectionHead p {
-		margin: 8px 0 0;
-		color: rgba(16, 24, 40, 0.72);
-		line-height: 1.6;
-		max-width: 88ch;
-	}
-
-	.grid2 {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 12px;
-	}
-
-	.grid3 {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 12px;
-	}
-
-	.card {
-		background: rgba(255, 255, 255, 0.86);
-		border: 1px solid rgba(16, 24, 40, 0.08);
-		border-radius: 18px;
-		padding: 14px;
-	}
-
-	.card.accent {
-		border-color: rgba(var(--pl-accent-rgb), 0.25);
-		background:
-			linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.08), rgba(255, 255, 255, 0.86)),
-			rgba(255, 255, 255, 0.86);
-	}
-
-	.card h2 {
-		margin: 0 0 10px;
-	}
-
-	.card h3 {
-		margin: 0 0 8px;
-		font-size: 16px;
-	}
-
-	.card p {
-		margin: 0 0 10px;
-		color: rgba(16, 24, 40, 0.78);
-		line-height: 1.6;
-	}
-
-	.pillRow {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		margin-top: 4px;
-	}
-
-	.pill {
-		display: inline-flex;
-		align-items: center;
-		padding: 8px 10px;
-		border-radius: 999px;
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
-		background: rgba(var(--pl-accent-rgb), 0.1);
-		font-weight: 900;
-		color: rgba(16, 24, 40, 0.86);
-		font-size: 13px;
-	}
-
-	.cta {
-		border-radius: 22px;
-		padding: 16px;
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.22);
-		background: radial-gradient(1200px 600px at 30% 0%, rgba(var(--pl-accent-rgb), 0.18), rgba(255, 255, 255, 0));
-	}
-
-	.ctaInner {
-		background: rgba(255, 255, 255, 0.82);
-		border: 1px solid rgba(16, 24, 40, 0.06);
-		border-radius: 18px;
-		padding: 16px;
-	}
-
-	.ctaInner p {
-		margin: 8px 0 0;
-		color: rgba(16, 24, 40, 0.75);
-		line-height: 1.6;
-		max-width: 90ch;
-	}
-
-	.ctaRow {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-top: 14px;
-	}
-
-	.btnPrimary,
-	.btnSecondary {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 12px 14px;
-		border-radius: 14px;
-		border: 1px solid rgba(16, 24, 40, 0.14);
-		background: rgba(255, 255, 255, 0.92);
-		text-decoration: none;
-		font-weight: 950;
-		color: rgba(16, 24, 40, 0.88);
-	}
-
-	.btnPrimary {
-		border-color: rgba(var(--pl-accent-rgb), 0.35);
-		background: rgba(var(--pl-accent-rgb), 0.14);
-	}
-
-	.btnPrimary:hover,
-	.btnSecondary:hover {
-		border-color: rgba(var(--pl-accent-rgb), 0.45);
-	}
-
-	@media (max-width: 980px) {
-		.grid3 {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	@media (max-width: 860px) {
-		.grid2 {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	.aside {
-		margin: 14px 0 0;
-		font-size: 14.5px;
-		color: #475467;
-	}
-
-	ul.plain {
-		margin: 0;
-		padding-left: 18px;
-	}
-
-	ul.plain li {
-		margin: 0 0 10px;
-		color: #475467;
-		line-height: 1.55;
-	}
-
-	ul.plain li:last-child {
-		margin-bottom: 0;
-	}
-
-	ul.plain b {
-		color: #101828;
-	}
-
-	.dflow {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px 6px;
-		padding: 18px;
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 18px;
-		background: linear-gradient(180deg, rgba(var(--pl-accent-rgb), 0.05), rgba(255, 255, 255, 0));
-	}
-
-	.dstep {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 9px 13px;
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 999px;
-		background: #fff;
-		font-size: 14px;
-		font-weight: 600;
-		line-height: 1.2;
-	}
-
-	.dstep .n {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: rgba(var(--pl-accent-rgb), 0.12);
-		color: #067a6c;
-		font-size: 11.5px;
-		font-weight: 800;
-		flex: none;
-	}
-
-	.dstep.on {
-		border-color: rgba(var(--pl-accent-rgb), 0.55);
-		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
-	}
-
-	.dstep.on .n {
-		background: var(--pl-accent);
-		color: #fff;
-	}
-
-	.darrow {
-		align-self: center;
-		color: rgba(16, 24, 40, 0.28);
-		font-size: 13px;
-	}
-
-	@media (max-width: 560px) {
-		.dflow .darrow {
-			display: none;
-		}
-	}
-
-	.dbeat {
-		display: flex;
-		gap: 10px;
-		align-items: flex-start;
-		margin: 12px 0 0;
-		padding: 12px 14px;
-		border-radius: 14px;
-		background: rgba(var(--pl-accent-rgb), 0.07);
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.2);
-		font-size: 14.5px;
-		line-height: 1.55;
-		color: #12433d;
-	}
-
-	.dbeat b {
-		color: #0b5f55;
-	}
-
-	.dbeat .tick {
-		flex: none;
-		color: var(--pl-accent);
-		font-weight: 900;
-	}
-
-	.dhub {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-		gap: 12px;
-	}
+	.close { background: #0b1b22; color: #fff; border-top: 0; }
+	.close h2 b { color: #7deede; }
+	.close .ctaRow { margin-top: 24px; }
+	.btnLight { background: #00ae9a; color: #0b1b22; }
+	.btnLight:hover { background: #7deede; }
+	.ghost { color: #c9d6da; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 
 	@media (min-width: 900px) {
-		.dhub {
-			grid-template-columns: repeat(3, 1fr);
-		}
+		h1 { font-size: 66px; }
+		.lead { font-size: 22px; }
+		.hero { padding: 48px 0 64px; }
+		h2 { font-size: 44px; }
+		.band { padding: 64px 0; }
+		.modes { grid-template-columns: 1fr 1fr; }
+		.steps { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+		.beats { grid-template-columns: 1fr 1fr; }
+		.feats summary { grid-template-columns: 320px 1fr; align-items: baseline; gap: 16px; }
+		.lanes { grid-template-columns: repeat(3, 1fr); }
+		.tiles { grid-template-columns: repeat(6, 1fr); }
+		.tiles div { font-size: 17px; }
+		.costGrid { grid-template-columns: 1fr 1.1fr; gap: 56px; }
+		.nots { grid-template-columns: 1fr 1fr; gap: 40px; }
 	}
-
-	.dcore {
-		grid-column: 1 / -1;
-		padding: 16px 18px;
-		border-radius: 18px;
-		border: 1px solid rgba(var(--pl-accent-rgb), 0.35);
-		background: rgba(var(--pl-accent-rgb), 0.07);
-	}
-
-	.dcore h3 {
-		margin: 0 0 4px;
-		font-size: 17px;
-	}
-
-	.dcore p {
-		margin: 0;
-		color: #475467;
-		font-size: 14.5px;
-		line-height: 1.55;
-	}
-
-	.dspoke {
-		padding: 14px 16px;
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 16px;
-		background: #fff;
-	}
-
-	.dspoke h4 {
-		margin: 0 0 5px;
-		font-size: 15px;
-		letter-spacing: -0.01em;
-	}
-
-	.dspoke p {
-		margin: 0;
-		color: #475467;
-		font-size: 14px;
-		line-height: 1.5;
-	}
-
-	.dstates {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 6px;
-		margin-top: 12px;
-		padding: 12px 14px;
-		border: 1px dashed rgba(16, 24, 40, 0.1);
-		border-radius: 14px;
-		font-size: 13.5px;
-		color: #475467;
-	}
-
-	.dstates .s {
-		padding: 5px 10px;
-		border-radius: 999px;
-		background: rgba(16, 24, 40, 0.05);
-		font-weight: 600;
-		color: #101828;
-	}
-
-	.dstates .s.end {
-		background: rgba(var(--pl-accent-rgb), 0.12);
-		color: #0b5f55;
-	}
-
-	.dstatesNote {
-		flex-basis: 100%;
-		margin-top: 4px;
-	}
-
-	.dlanes {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		gap: 12px;
-		align-items: start;
-	}
-
-	.dlane {
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 16px;
-		overflow: hidden;
-		background: #fff;
-	}
-
-	.dlane header {
-		padding: 10px 14px;
-		font-size: 12px;
-		font-weight: 800;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: #0b5f55;
-		background: rgba(var(--pl-accent-rgb), 0.09);
-		border-bottom: 1px solid rgba(16, 24, 40, 0.1);
-	}
-
-	.dlane ol {
-		margin: 0;
-		padding: 12px 14px 14px 30px;
-	}
-
-	.dlane li {
-		margin: 0 0 8px;
-		font-size: 14px;
-		line-height: 1.5;
-		color: #475467;
-	}
-
-	.dlane li:last-child {
-		margin-bottom: 0;
-	}
-
-	.dlane li b {
-		color: #101828;
-	}
-
-	.dfork {
-		margin: 0 14px 14px;
-		padding: 11px 13px;
-		border-radius: 12px;
-		background: rgba(16, 24, 40, 0.035);
-		font-size: 13.5px;
-		line-height: 1.5;
-		color: #475467;
-	}
-
-	.dtiles {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-		gap: 10px;
-	}
-
-	.dtile {
-		padding: 16px;
-		border: 1px solid rgba(16, 24, 40, 0.1);
-		border-radius: 14px;
-		background: #fff;
-		font-weight: 700;
-		font-size: 14.5px;
-		letter-spacing: -0.01em;
-	}
-
-	.modePick {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 10px;
-		margin: 0 0 22px;
-	}
-
-	.modeCard {
-		display: block;
-		padding: 14px 16px;
-		border: 1px solid rgba(16, 24, 40, 0.12);
-		border-radius: 16px;
-		background: #fff;
-		text-decoration: none;
-		color: inherit;
-	}
-
-	.modeCard:hover {
-		border-color: rgba(var(--pl-accent-rgb), 0.45);
-	}
-
-	.modeCard.here {
-		border-color: rgba(var(--pl-accent-rgb), 0.55);
-		background: rgba(var(--pl-accent-rgb), 0.08);
-		box-shadow: 0 0 0 3px rgba(var(--pl-accent-rgb), 0.1);
-		cursor: default;
-	}
-
-	.modeName {
-		display: block;
-		font-weight: 800;
-		font-size: 15.5px;
-		letter-spacing: -0.01em;
-		color: #101828;
-	}
-
-	.modeCard.here .modeName::after {
-		content: 'You are here';
-		margin-left: 8px;
-		padding: 3px 8px;
-		border-radius: 999px;
-		background: rgba(var(--pl-accent-rgb), 0.16);
-		color: #0b5f55;
-		font-size: 10.5px;
-		font-weight: 900;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		vertical-align: middle;
-	}
-
-	.modeState {
-		display: block;
-		margin-top: 4px;
-		font-size: 13.5px;
-		line-height: 1.45;
-		color: #475467;
-	}
-
 </style>
