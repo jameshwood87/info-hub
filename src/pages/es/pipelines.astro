@@ -10,7 +10,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/es/pipelines/`;
 const title = 'Pipelines de CRM para Inmobiliarias | PropertyList';
 const description =
-	'Seis pipelines de CRM que hacen avanzar solos cada lead, cada anuncio y cada cliente antiguo. Leads, Sellers y Property son gratis. Tú eliges qué contacto merece un crédito.';
+	'Seis pipelines que mueven solos leads, anuncios y clientes antiguos. Añade un comprador con una nota de voz por WhatsApp. Leads, Sellers y Property, gratis.';
 
 const stats = await getPortalStats();
 const plAgents = statPlus(stats.agents, 'es');
@@ -89,6 +89,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	title={title}
 	description={description}
 	canonical={canonical}
+	ogImage="https://info.propertylist.es/og/og-pipelines-es.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[

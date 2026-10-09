@@ -3,7 +3,7 @@
 Source: https://info.propertylist.es/
 Full text: https://info.propertylist.es/llms-full.txt (complete markdown of every key page)
 Last Updated: 2026-10-09
-Version: 8.6
+Version: 8.7
 
 ### About This Site
 PropertyList is the estate agency system for Spain where the CRM is connected to the demand. An agency runs its whole workflow in one place (leads, buyers, sellers, stock, rentals and past clients) while the same listing is co-broked by {{AGENTS}} agents across {{AGENCIES}} agencies and shown to buyers on the public portal at https://propertylist.es.
@@ -119,8 +119,8 @@ Long-term lettings management for agencies: Tenants pipeline, Tenancies, Mainten
 #### /holiday-rentals/ - Holiday lets (coming soon)
 What Spanish law already requires of a holiday let - guest registration with the police within 24 hours (RD 933/2021, SES.HOSPEDAJES), Andalusian tourist registration (the RTA/VFT code, shown in every advert; the national number of RD 1312/2024 is no longer required after the Supreme Court annulled it in May 2026) and the three-fifths community approval required since 3 April 2025 - plus what PropertyList is building for holiday lets: bookings and a guest record, one calendar across both modes, nightly rates, guest messaging and turnover, deposits and owner statements, and automatic guest registration with a compliance dashboard. NONE of that is built today; the page carries a waitlist. Long-term lettings are live at /rentals/. Spanish version: /es/alquiler-vacacional/
 
-#### /pipelines/ - Sales Pipelines
-Visual deal pipelines and task management in the free CRM. Spanish version: /es/pipelines/
+#### /pipelines/ - CRM Pipelines for estate agents
+Six CRM pipelines (Leads, Buyers, Sellers, Property, Tenants, Nurture) that carry every lead, listing and past client forward on their own: new leads acknowledged by email and WhatsApp, a follow-up plan written as tasks, price-review tasks on quiet listings, tenancy renewal prompts, Nurture for past clients, a Daily Action Queue of what to do today, and enquiries from other agents detected, tagged and never charged. Agents can update it from a WhatsApp voice note through CoAgent, which drafts the contact, the property alert and the calendar entry and saves nothing until the agent replies YES. Prices: Leads, Sellers and Property pipelines free with no limit; a buyer lead is free for the first 5, then 1 credit, charged only when the agent moves a qualified lead into the Buyer pipeline; the Rentals Module (Tenants) is 50 credits per 30 days with a free 30-day trial; Automation and Nurture is free. Spanish version: /es/pipelines/
 
 #### /nurture/ - Nurture and automated follow-up (live)
 Automated relationship and opportunity emails to past clients, quiet buyers and landlords, running off dates captured when a deal is won (sign date, birthdays, live-in or investment, preferred language, marketing consent). Detects intent, for example a valuation-link click or repeated opens, then pauses the automation, tags the contact Hot and puts a call at the top of the Daily Action Queue. One email per contact per week, consent recorded per contact, per-contact off switch, agents excluded. Part of Automation and Nurture, which is free and also covers Hot detection and the Daily Action Queue. Before it is switched on the board still fills up and a counter shows what would have been sent. Spanish version: /es/nurture/

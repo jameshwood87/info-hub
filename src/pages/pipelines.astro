@@ -11,7 +11,7 @@ const origin = 'https://info.propertylist.es';
 const canonical = `${origin}/pipelines/`;
 const title = 'CRM Pipelines for Estate Agents | PropertyList';
 const description =
-	'Six CRM pipelines that move every lead, listing and past client along on their own. Leads, Sellers and Property are free. You choose which contact is worth a credit.';
+	'Six CRM pipelines that move every lead, listing and past client on their own. Add a buyer with a WhatsApp voice note. Leads, Sellers and Property are free.';
 
 const stats = await getPortalStats();
 const plAgents = statPlus(stats.agents, 'en');
@@ -90,6 +90,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 	title={title}
 	description={description}
 	canonical={canonical}
+	ogImage="https://info.propertylist.es/og/og-pipelines.jpg"
 	hideSearch
 	fullBleed
 	hreflangs={[
