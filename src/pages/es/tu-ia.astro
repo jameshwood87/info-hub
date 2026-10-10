@@ -15,7 +15,7 @@ const mcpUrl = 'https://mcp.propertylist.es/mcp';
 const faq = [
 	['¿Escribirá a mis clientes por su cuenta?', 'No. Enviar inmuebles, agendar una visita, mover una operación, calificar un lead, asignar un inmueble y cambiar su estado: en todos los casos te muestra una vista previa y espera tu sí. Añadir un contacto, una nota o un borrador de inmueble se guarda directamente en tu CRM, como si lo escribieras tú. Enviar una consulta sobre un anuncio a la agencia que lo comercializa no muestra una vista previa de PropertyList: sale cuando se lo pides.'],
 	['¿Cuánto cuesta?', 'Conectar y leer tu CRM es gratis con tu cuenta de PropertyList. La búsqueda con IA incluye 200 búsquedas cada 30 días para toda tu agencia; después cuesta 1 crédito por cada 10 búsquedas, de tu monedero. Hacer cambios desde tu asistente (las acciones que esperan tu sí) forma parte de MCP Pro: gratis para tu agencia durante 7 días desde tu primera conexión, y después 50 créditos al mes cuando un administrador de la agencia lo activa en el CRM. No se cobra nada automáticamente. Lo que cuesta créditos en tu CRM, como calificar un lead como comprador, cuesta lo mismo aquí, y el asistente te muestra el coste antes de que digas sí.'],
-	['¿Con qué asistentes de IA funciona?', 'Con Claude, en todos los planes, incluido el gratuito (el plan gratuito permite un conector personalizado), y con ChatGPT, también en su plan gratuito: añade PropertyList, inicia sesión con tu cuenta de PropertyList y leer tu CRM funciona desde el primer momento. Las acciones que esperan tu sí forman parte de MCP Pro (mira la respuesta sobre el coste). Todavía no hemos configurado Gemini ni Copilot.'],
+	['¿Con qué asistentes de IA funciona?', 'Con Claude, en todos los planes, incluido el gratuito (el plan gratuito permite un conector personalizado), y con ChatGPT, también en su plan gratuito: añade PropertyList, inicia sesión con tu cuenta de PropertyList y leer tu CRM funciona desde el primer momento. Las acciones que esperan tu sí forman parte de MCP Pro (mira la respuesta sobre el coste). Cualquier otra app de IA que pueda conectarse a un servidor MCP e iniciar sesión también puede usarlo, use el modelo que use. Solo hemos configurado y probado Claude y ChatGPT.'],
 	['¿Puede ver los datos de otras agencias?', 'No. Cada herramienta responde solo con los datos de tu agencia. Los anuncios públicos se buscan igual que los busca cualquiera en PropertyList.'],
 	['No uso ningún asistente de IA.', 'Entonces usa CoAgent: los trabajos principales por WhatsApp, y pregunta antes de guardar o enviar nada.'],
 ];
@@ -102,7 +102,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 
 	<section class="band connect" id="conectar"><div class="cx">
 		<h2>Conecta en <b>tres pasos.</b></h2>
-		<p class="sub">Claude, con todos los planes, también el gratuito, y ChatGPT, también en su plan gratuito: añade PropertyList e inicia sesión. Gemini y Copilot: todavía no.</p>
+		<p class="sub">Claude, con todos los planes, también el gratuito, y ChatGPT, también en su plan gratuito: añade PropertyList e inicia sesión. Otras apps de IA que se conectan a servidores MCP y permiten iniciar sesión también pueden usarlo.</p>
 		<ol>
 			<li><div><b>Abre los conectores de tu IA</b><p>En Claude: Customize, luego Connectors, luego Add custom connector. En ChatGPT: Plugins, luego Add, luego Add custom MCP server.</p></div></li>
 			<li><div><b>Pega esta dirección</b><p>Añade un conector personalizado y llámalo PropertyList.</p><code class="addr">{mcpUrl}</code></div></li>

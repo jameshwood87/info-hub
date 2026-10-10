@@ -17,7 +17,7 @@ const mcpUrl = 'https://mcp.propertylist.es/mcp';
 const faq = [
 	['Will it email my clients on its own?', 'No. Sending listings, booking a viewing, moving a deal, qualifying a lead, assigning a listing and changing its status all show you a preview and wait for your yes. Adding a contact, a note or a draft listing saves straight into your CRM, like typing it yourself. Sending an enquiry about a listing to the agency that markets it shows no PropertyList preview: it goes out when you ask.'],
 	['What does it cost?', 'Connecting and reading your CRM are free with your PropertyList account. AI matching includes 200 searches every 30 days for your whole agency; after that it is 1 credit per 10 searches from your wallet. Making changes from your assistant (the actions that wait for your yes) is part of MCP Pro: free for your agency for 7 days from your first connection, then 50 credits a month once an agency admin turns it on in the CRM. Nothing is charged automatically. Anything that costs credits in your CRM, such as qualifying a lead onto the Buyer board, costs the same here, and the assistant shows you the cost before you say yes.'],
-	['Which AI assistants work?', 'Claude, on every plan including the free one (the free plan allows one custom connector), and ChatGPT, including its free plan: add PropertyList, sign in with your PropertyList account, and reading your CRM works straight away. The actions that wait for your yes are part of MCP Pro (see the cost answer above). We have not set up Gemini or Copilot yet.'],
+	['Which AI assistants work?', 'Claude, on every plan including the free one (the free plan allows one custom connector), and ChatGPT, including its free plan: add PropertyList, sign in with your PropertyList account, and reading your CRM works straight away. The actions that wait for your yes are part of MCP Pro (see the cost answer above). Any other AI app that can connect to an MCP server and sign in can use it too, whichever model it runs. We have set up and tested only Claude and ChatGPT.'],
 	["Can it see other agencies' data?", 'No. Every tool answers only for your own agency. Public listings are searched the way anyone can search PropertyList.'],
 	["I don't use an AI assistant.", 'Then use CoAgent: the main jobs over WhatsApp, and it asks before it saves or sends anything.'],
 ];
@@ -104,7 +104,7 @@ const breadcrumbLd = { '@context': 'https://schema.org', '@type': 'BreadcrumbLis
 
 	<section class="band connect" id="connect"><div class="cx">
 		<h2>Connect in <b>three steps.</b></h2>
-		<p class="sub">Claude, on every plan including the free one, and ChatGPT, including its free plan: add PropertyList and sign in. Gemini and Copilot: not yet.</p>
+		<p class="sub">Claude, on every plan including the free one, and ChatGPT, including its free plan: add PropertyList and sign in. Other AI apps that connect to MCP servers and support sign-in can use it too.</p>
 		<ol>
 			<li><div><b>Open your AI's connectors</b><p>In Claude: Customize, then Connectors, then Add custom connector. In ChatGPT: Plugins, then Add, then Add custom MCP server.</p></div></li>
 			<li><div><b>Paste this address</b><p>Add a custom connector and name it PropertyList.</p><code class="addr">{mcpUrl}</code></div></li>
